@@ -1,0 +1,40 @@
+# Generated build output
+build/
+out/
+cmake-build-*/
+*.o
+*.a
+*.so
+*.log
+__pycache__/
+*.pyc
+
+# Local test data / commercial or freeware game assets
+test-data-cache/
+game-data/
+local-data/
+content/
+packages/
+*.wad
+*.WAD
+*.uqm
+*.UQM
+*.pk3
+*.pak
+
+# Amiga/firmware/media
+*.rom
+*.adf
+*.hdf
+*.img
+*.iso
+
+# Local instance/state
+AmigaChromeInstances/
+state/
+logs/
+reports/
+
+# Editor/OS
+.DS_Store
+*~
