@@ -16,6 +16,18 @@ This repository is being populated early as a public engineering safety snapshot
 
 See [PORT_STATUS.md](PORT_STATUS.md) for exact upstream pins, hashes and test gates.
 
+
+## Repository layout
+
+- `scripts/` — source preparation, build orchestration and field-test staging code.
+- `port-layer/acgame/` — AmigaChrome AGA presentation code, smoke test and unit tests.
+- `port-layer/uqm/` — UQM AROS bootstrap patcher and port notes.
+- `ports/*/build.sh` — standalone reproducible build recipes for the five compile-success ports.
+- `toolchain/aros-local/` — the AROS m68k toolchain bootstrap recovered from the AmigaChrome worktree.
+- `gameports/catalog.json` — exact upstream source pins.
+
+See [BUILDING.md](BUILDING.md) for a clean rebuild path on another Linux machine.
+
 ## Scope
 
 The repository contains AmigaChrome build recipes, compatibility notes, shims, test plans and source provenance. Upstream engine source remains in the upstream repositories and is fetched at exact pinned revisions.
