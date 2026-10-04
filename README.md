@@ -47,4 +47,16 @@ Compiled is deliberately not treated as tested.
 
 AmigaChrome-authored glue, scripts and documentation are MIT licensed unless a file says otherwise. Upstream projects retain their own licences. Game data retains its own rights and is not redistributed here.
 
+No upstream game source is committed here: the build recipes fetch each project at its pinned commit. Binaries built from them are covered by the upstream licence, so anyone distributing them must follow it, including offering the corresponding source.
+
+| Port | Upstream | Licence |
+|---|---|---|
+| The Ur-Quan Masters 0.8.0 | https://sc2.sourceforge.net/ | GPL-2.0-or-later (code); content packages under CC BY-NC-SA 2.5 |
+| Chocolate Doom | https://github.com/chocolate-doom/chocolate-doom | GPL-2.0-or-later |
+| SDLPoP | https://github.com/NagyD/SDLPoP | GPL-3.0-or-later |
+| OpenJazz | https://github.com/AlisterT/openjazz | GPL-2.0-or-later |
+| NXEngine-evo | https://github.com/nxengine/nxengine-evo | GPL-3.0 |
+
+Each project's own licence file at the pinned commit is authoritative.
+
 Copyright (c) 2026 Dalsin Limited.
