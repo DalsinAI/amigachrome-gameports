@@ -51,7 +51,7 @@ No upstream game source is committed here: the build recipes fetch each project 
 
 | Port | Upstream | Licence |
 |---|---|---|
-| The Ur-Quan Masters 0.8.0 | https://sc2.sourceforge.net/ | GPL-2.0 (code); content packages under CC BY-NC-SA 2.5 |
+| The Ur-Quan Masters 0.8.0 | https://sc2.sourceforge.net/ | GPL-2.0-or-later (code); content packages under CC BY-NC-SA 2.5 |
 | Chocolate Doom | https://github.com/chocolate-doom/chocolate-doom | GPL-2.0-or-later |
 | SDLPoP | https://github.com/NagyD/SDLPoP | GPL-3.0-or-later |
 | OpenJazz | https://github.com/AlisterT/openjazz | GPL-2.0-or-later |
