@@ -24,7 +24,8 @@ jobs:
           for rel in \
             ports/cdogs-sdl/build-amigaos3.sh \
             ports/cdogs-sdl/patches/0001-amigaos3-opengpu.patch \
-            toolchain/amigaos3-opengpu.cmake
+            toolchain/amigaos3-opengpu.cmake \
+            ports/uqm/build-amigaos3.sh
           do
             f="$R/$rel"
             test -f "$f"
