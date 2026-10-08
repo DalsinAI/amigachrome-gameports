@@ -26,4 +26,3 @@ AmigaChrome AGA instance, the same platform API is used by the game ports.
   BitMap planes. That is expected on the native AGA target and should fail
   closed on an incompatible RTG-only screen.
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]

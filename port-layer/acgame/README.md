@@ -28,4 +28,3 @@ The next platform layer will provide:
 
 No claim is made yet that these reference routines open an Amiga screen or that any of the four games links on 68k. They are the tested conversion seam on which those ports can converge.
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]
