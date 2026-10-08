@@ -1,0 +1,80 @@
+diff --git a/src/common.h b/src/common.h
+index 34d0ef7..aa101b7 100644
+--- a/src/common.h
++++ b/src/common.h
+@@ -21,6 +21,12 @@ The authors of this program may be contacted at https://forum.princed.org
+ #ifndef COMMON_H
+ #define COMMON_H
+ 
++#ifdef __amigaos__
++#ifndef alloca
++#define alloca __builtin_alloca
++#endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+diff --git a/src/main.c b/src/main.c
+index 4ff71e9..7779c88 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -19,6 +19,9 @@ The authors of this program may be contacted at https://forum.princed.org
+ */
+ 
+ #include "common.h"
++#ifdef __amigaos__
++#include <unistd.h>
++#endif
+ 
+ 
+ #ifdef __amigaos4__
+@@ -32,6 +35,9 @@ static const char stack[] = "$STACK:200000";
+ 
+ int main(int argc, char *argv[])
+ {
++#ifdef __amigaos__
++	chdir("PROGDIR:");
++#endif
+ 	#ifdef __PSP__
+ 	scePowerSetClockFrequency(333,333,166);
+ 	#endif
+diff --git a/src/midi.c b/src/midi.c
+index e3192e8..38b211e 100644
+--- a/src/midi.c
++++ b/src/midi.c
+@@ -237,7 +237,7 @@ void print_midi_event(int track_index, int event_index, midi_event_type* event)
+ 				float octaves_from_A4 = ((int)event->channel.param1 - 69) / 12.0f;
+ 				float frequency = powf(2.0f,  octaves_from_A4) * 440.0f;
+ 				float f_number_float = frequency * (float)(1 << 20) / 49716.0f;
+-				int b = (int)(log2f(f_number_float) - 9) & 7;
++				int b = (int)((logf(f_number_float) * 1.4426950408889634f) - 9) & 7;
+ 				int f = ((int)f_number_float >> b) & 1023;
+ 				printf(", freq = %.1f Hz, F=%d, b=%d", frequency, f, b);
+ 			}
+@@ -437,7 +437,7 @@ static void midi_note_on(midi_event_type* event) {
+ 			float octaves_from_A4 = ((int)event->channel.param1 - 69 - 12 + midi_semitones_higher) / 12.0f;
+ 			float frequency = powf(2.0f,  octaves_from_A4) * 440.0f;
+ 			float f_number_float = frequency * (float)(1 << 20) / 49716.0f;
+-			int block = (int)(log2f(f_number_float) - 9) & 7;
++			int block = (int)((logf(f_number_float) * 1.4426950408889634f) - 9) & 7;
+ 			int f = ((int)f_number_float >> block) & 1023;
+ 			word reg_offset = reg_single_offsets[voice];
+ //			opl_write_reg_masked(0xB0 + reg_offset, 0, 0x20); // Turn note off first (should not be necessary)
+diff --git a/src/stb_vorbis.c b/src/stb_vorbis.c
+index 3b57940..7e10a58 100644
+--- a/src/stb_vorbis.c
++++ b/src/stb_vorbis.c
+@@ -600,6 +600,12 @@ enum STBVorbisError
+ 
+ #include <limits.h>
+ 
++#ifdef __amigaos__
++#ifndef alloca
++#define alloca __builtin_alloca
++#endif
++#endif
++
+ #ifdef __MINGW32__
+    // eff you mingw:
+    //     "fixed":
