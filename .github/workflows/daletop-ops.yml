@@ -219,6 +219,39 @@ jobs:
               echo "UQM_REBUILD_PASS"
               ;;
 
+            "daletop: inspect-cdogs-lab")
+              LAB=/home/da1ek/AmigaChrome-dev/openup070lab
+              PKG="$GAMEPORTS/build/release/cdogs-sdl/C-Dogs"
+
+              echo "=== C-Dogs package ==="
+              test -d "$PKG"
+              du -sh "$PKG"
+              find "$PKG" -maxdepth 2 -type f -printf '%P\n' | sort | head -120
+              echo
+
+              echo "=== lab directory ==="
+              if [ -d "$LAB" ]; then
+                find "$LAB" -maxdepth 2 -type f -printf '%P\n' | sort | head -220
+              else
+                echo "NO openup070lab"
+              fi
+              echo
+
+              echo "=== run helper ==="
+              [ ! -f "$LAB/run.sh" ] || sed -n '1,260p' "$LAB/run.sh"
+              echo
+              echo "=== drive helper ==="
+              [ ! -f "$LAB/drive.py" ] || sed -n '1,340p' "$LAB/drive.py"
+              echo
+
+              echo "=== instances ==="
+              find "$LAB" -maxdepth 2 -type d -name 'Instance-*' -print 2>/dev/null | sort
+              echo
+
+              echo "=== active lab listeners ==="
+              ss -ltnp 2>/dev/null | grep -E ':(8938|8939|8788|8790)[[:space:]]' || true
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
