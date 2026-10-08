@@ -1,2 +1,2 @@
-setup-cdogs-lab
-trigger=1791501470860
+emit-cdogs-screenshot
+trigger=1791501570429
