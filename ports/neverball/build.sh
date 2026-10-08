@@ -20,7 +20,7 @@ mkdir -p "$OUT/bin" "$OUT/package/Neverball"
 PKG="$OUT/package/Neverball"
 
 SDL_CFLAGS=$("$SDL2_CONFIG" --cflags)
-SDL_LIBS=$("$SDL2_CONFIG" --libs)
+SDL_LIBS=$("$SDL2_CONFIG" --libs --gl)
 
 # Build only the runtime programs. Upstream already carries release .sol assets,
 # so the host-only map compiler is not part of the cross build.
@@ -32,10 +32,10 @@ make -C "$SRC" -j2 neverball neverputt \
   CXXFLAGS="-O2 -m$CPU -m68881 -fno-delete-null-pointer-checks" \
   CPPFLAGS="-DNDEBUG" \
   SDL_CPPFLAGS="$SDL_CFLAGS" SDL_LIBS="$SDL_LIBS" \
-  OGL_LIBS="-L$OPENUP_SDK/Lib -lGL" \
-  TTF_LIBS="-L$OPENUP_SDK/Lib -lSDL2_ttf" \
-  PNG_CPPFLAGS="-I$OPENUP_SDK/Include" PNG_LIBS="-lpng" \
-  JPEG_CPPFLAGS="-I$OPENUP_SDK/Include" JPEG_LIBS="-ljpeg" \
+  OGL_LIBS="" \
+  TTF_LIBS="-L$OPENUP_SDK/lib -lSDL2_ttf" \
+  PNG_CPPFLAGS="${PNG_CPPFLAGS:--I$OPENUP_SDK/include}" PNG_LIBS="${PNG_LIBS:--lpng}" \
+  JPEG_CPPFLAGS="${JPEG_CPPFLAGS:--I$OPENUP_SDK/include}" JPEG_LIBS="${JPEG_LIBS:--ljpeg}" \
   OGG_LIBS="-lvorbisfile -lvorbis -logg" \
   ENABLE_FETCH=0 ENABLE_NLS=0 \
   USERDIR="PROGDIR:User" DATADIR="PROGDIR:data" LOCALEDIR="PROGDIR:locale"
