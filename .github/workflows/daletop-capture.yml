@@ -1,0 +1,37 @@
+name: daletop capture
+
+on:
+  push:
+    branches:
+      - ops/daletop
+    paths:
+      - ops/capture.txt
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    if: github.actor == 'SacredTrees'
+    runs-on: [self-hosted, daletop, amigachrome, ac090]
+    timeout-minutes: 5
+    steps:
+      - name: Emit C-Dogs screenshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC=/home/da1ek/AmigaChrome-dev/openup070lab/shots/cdogs-firstlight.png
+          TMP=$(mktemp --suffix=.jpg)
+          trap 'rm -f "$TMP"' EXIT
+          python3 - "$SRC" "$TMP" <<'PY'
+          from PIL import Image
+          import sys
+          im=Image.open(sys.argv[1]).convert("RGB")
+          im.thumbnail((320,180))
+          im.save(sys.argv[2],"JPEG",quality=45,optimize=True)
+          print("SHOT_SIZE", im.size)
+          PY
+          echo "IMAGE_BEGIN"
+          base64 -w0 "$TMP"
+          echo
+          echo "IMAGE_END"
