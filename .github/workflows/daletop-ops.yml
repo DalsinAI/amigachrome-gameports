@@ -282,6 +282,92 @@ jobs:
                 \( -type f -o -type d \) -iname '*Neverball*' -print 2>/dev/null | head -120
               ;;
 
+            "daletop: inspect-neverball-launch")
+              N=/home/da1ek/AmigaChrome-dev/openup070lab/Instance-Neverball/devices/harddisks/DH1/Neverball
+              echo "=== Neverball start scripts ==="
+              find "$N" -maxdepth 1 -type f -name 'start-*' -print | sort
+              for script in "$N"/start-*; do
+                [ -f "$script" ] || continue
+                echo "--- $script ---"
+                sed -n '1,120p' "$script"
+              done
+              echo
+              echo "=== candidate C-Dogs ports ==="
+              ss -ltnp 2>/dev/null | grep -E ':(8958|8959)[[:space:]]' || echo "8958/8959 free"
+              ;;
+
+            "daletop: setup-cdogs-lab")
+              LAB=/home/da1ek/AmigaChrome-dev/openup070lab
+              BASE="$LAB/Instance-U"
+              I="$LAB/Instance-CDogs"
+              PKG="$GAMEPORTS/build/release/cdogs-sdl/C-Dogs"
+
+              if ss -ltn 2>/dev/null | grep -Eq ':(8958|8959)[[:space:]]'; then
+                echo "REFUSED: 8958/8959 already in use" >&2
+                exit 70
+              fi
+
+              echo "=== clone pristine instance ==="
+              rm -rf "$I"
+              cp -a --reflink=auto "$BASE" "$I"
+
+              echo "=== stage C-Dogs ==="
+              rm -rf "$I/devices/harddisks/DH1/C-Dogs"
+              cp -a "$PKG" "$I/devices/harddisks/DH1/C-Dogs"
+              cat > "$I/devices/harddisks/DH1/C-Dogs/start-cdogs" <<'EOF'
+          Stack 262144
+          CD DH1:C-Dogs
+          CDogs >DH1:C-Dogs/cdogs.log
+          EOF
+
+              echo "=== start isolated lab ==="
+              mkdir -p "$I/logs"
+              setsid nohup python3 /home/da1ek/AmigaChrome/host/amigachrome_host.py \
+                --root /home/da1ek/AmigaChrome \
+                --instance-root "$I" \
+                --storage "$I/devices" \
+                --port 8959 >"$I/logs/host-cdogs.log" 2>&1 < /dev/null &
+              HPID=$!
+              echo "$HPID" > "$LAB/cdogs-host.pid"
+              sleep 2
+              setsid nohup python3 /home/da1ek/AmigaChrome/host/native/native_bridge.py \
+                --instance-root "$I" \
+                --port 8958 \
+                --host-port 8959 \
+                --z3 256 \
+                --host-pid "$HPID" >"$I/logs/bridge-cdogs.log" 2>&1 < /dev/null &
+              BPID=$!
+              echo "$BPID" > "$LAB/cdogs-bridge.pid"
+
+              echo "host=$HPID bridge=$BPID"
+              sleep 12
+
+              echo "=== prelaunch screenshot ==="
+              LABPORT=8958 python3 "$LAB/drive.py" shot cdogs-prelaunch || true
+
+              echo "=== launch via Workbench Execute ==="
+              LABPORT=8958 python3 "$LAB/drive.py" key ramiga+e
+              sleep 1
+              LABPORT=8958 python3 "$LAB/drive.py" type "DH0:C/Execute DH1:C-Dogs/start-cdogs"
+              LABPORT=8958 python3 "$LAB/drive.py" key ret
+              sleep 20
+
+              echo "=== postlaunch screenshot ==="
+              LABPORT=8958 python3 "$LAB/drive.py" shot cdogs-firstlight || true
+
+              echo "=== process/listener state ==="
+              ss -ltnp 2>/dev/null | grep -E ':(8958|8959)[[:space:]]' || true
+              echo
+              echo "=== C-Dogs guest log ==="
+              cat "$I/devices/harddisks/DH1/C-Dogs/cdogs.log" 2>/dev/null || echo "NO cdogs.log"
+              echo
+              echo "=== host log tail ==="
+              tail -120 "$I/logs/host-cdogs.log" 2>/dev/null || true
+              echo
+              echo "=== bridge log tail ==="
+              tail -120 "$I/logs/bridge-cdogs.log" 2>/dev/null || true
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
