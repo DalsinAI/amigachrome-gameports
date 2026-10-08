@@ -24,3 +24,18 @@ These are compile results only unless the runtime column says otherwise.
 6. UQM with the official 0.8.0 base content package.
 
 The local test datasets are intentionally **not committed** to this repository.
+
+
+## 3D source intake
+
+Target remains **m68k / 68040-class AmigaChrome**, but these entries are source-preparation only.
+
+| Port | Upstream pin | Compile | Runtime | Notes |
+|---|---|---:|---:|---|
+| AssaultCube | `13f0d8eea4822dee5c976661218d022be74342e3` | NOT STARTED | NOT STARTED | First 3D target; SDL2/OpenGL/OpenAL/ENet stack |
+| Neverball | `a1ed09911dca262d80049c12a2824d683af494d6` | NOT STARTED | NOT STARTED | Optional early geometry/OpenGL test |
+| Serious Sam Classic | `80b9893e5b74e5a2160eaf63e6d6b3f3981dfbbd` | NOT STARTED | NOT STARTED | TFE first; user-supplied commercial data |
+| Warzone 2100 | `d7ce18df8d998c968915a5e6410a68626927813e` | NOT STARTED | NOT STARTED | Modern CMake/C++ dependency surface |
+| Doom 3 | `a9c49da5afb18201d31e3f0a429a037e56ce2b9a` | NOT STARTED | NOT STARTED | Official GPL source base; user-supplied data |
+
+Quake is intentionally not part of this intake.
