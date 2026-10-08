@@ -1,6 +1,6 @@
 # AssaultCube — AmigaChrome source intake
 
-**Status:** SOURCE PINNED / BUILD NOT STARTED  
+**Status:** AMIGA SERVER CROSS-BUILD GREEN / CLIENT PORT NEXT  
 **Priority:** first 3D port
 
 ## Upstream
@@ -27,3 +27,9 @@ The client is small by modern 3D-game standards and already uses a traditional C
 Executable starts -> menu -> offline bot map -> movement/input -> textured 3D scene -> audio -> clean exit.
 
 No upstream source or game data is committed to this repository.
+
+## Amiga server first light
+
+The pinned source now cross-builds a native AmigaOS `ac_server` with the gcc16 68040/FPU stove. The bootstrap patch removes Linux-only `-rdynamic`, supplies Amiga fallbacks for directory iteration, filesystem free-space probing, thread naming and millisecond sleeps, and keeps the standalone server SDL-free. ENet is built static for m68k and links through libnix `libsocket`, `libpthread` and the existing Amiga zlib archive.
+
+Current proof: `ac_server` is an AmigaOS loadseg executable (about 742 KiB). This is a compile/link gate only; runtime server validation is still required.
