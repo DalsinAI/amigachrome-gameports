@@ -818,6 +818,71 @@ jobs:
           PY
               ;;
 
+            "daletop: force-uqm-bundled-regex-rebuild")
+              R="$GAMEPORTS"
+              B="$R/ports/uqm/build-amigaos3.sh"
+              ROOT="$STOVE_ROOT"
+
+              echo "=== force UQM bundled regex on Amiga profile ==="
+              python3 - "$B" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1])
+          s=p.read_text()
+
+          anchor = """# libnix has readdir() but not readdir_r(), and does not expose _POSIX_NAME_MAX.
+          """
+          patch = r'''# The Amiga sysroot exposes regex.h without the POSIX reg* implementation.
+          # Build UQM's bundled GNU regex instead and make its header authoritative.
+          python3 - "$SC2/src/Makeinfo" <<'PY_UQM_REGEX'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1])
+          t=p.read_text()
+          t=t.replace(
+              'if [ "$uqm_HAVE_REGEX" = 0 ]; then',
+              'if [ "$HOST_SYSTEM" = "AROS" ] || [ "$uqm_HAVE_REGEX" = 0 ]; then',
+              1,
+          )
+          p.write_text(t)
+          PY_UQM_REGEX
+
+          '''
+          if "PY_UQM_REGEX" not in s:
+              if anchor not in s:
+                  raise SystemExit("UQM regex patch anchor not found")
+              s=s.replace(anchor, patch+anchor, 1)
+
+          # Ensure UQM's bundled regex.h wins over the incomplete sysroot header.
+          old='CFLAGS="-noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns -pthread -I$SDK/include -I$DEPS/include"'
+          new='CFLAGS="-noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns -pthread -I$SC2/src/regex -I$SDK/include -I$DEPS/include"'
+          s=s.replace(old,new,1)
+          old='CXXFLAGS="-noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns -pthread -I$SDK/include -I$DEPS/include"'
+          new='CXXFLAGS="-noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns -pthread -I$SC2/src/regex -I$SDK/include -I$DEPS/include"'
+          s=s.replace(old,new,1)
+
+          p.write_text(s)
+          print("bundled regex selection present")
+          PY
+
+              sh -n "$B"
+              STOVE="$ROOT" sh "$B"
+
+              EXE="$R/build/os3/uqm/out/uqm"
+              test -f "$EXE"
+              echo "=== UQM executable ==="
+              file "$EXE"
+              sha256sum "$EXE"
+              echo
+              echo "=== bundled regex object ==="
+              find "$R/build/os3/uqm/out/obj/release" -type f -path '*regex*' -name '*.o' -print | while read -r obj; do
+                echo "--- $obj ---"
+                "$STOVE_PREFIX/bin/m68k-amigaos-nm" -g "$obj" 2>/dev/null | \
+                  grep -E '(_regcomp|_regexec|_regfree|_regerror)' || true
+              done
+              echo "UQM_COMPILE_PASS_PROVISIONAL_OLD_STOVE"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
