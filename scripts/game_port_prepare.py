@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Prepare exact upstream inputs for the AGA/040 game-port workstream.
 
-Network access is permitted only by prepare. Check and verify are local.
+Network access is disabled by default, including during prepare. Check and verify
+are always local. Prepare reuses valid local source/cache data and only performs
+an external fetch when --allow-network is supplied after explicit approval.
 The prepared tree is therefore safe to consume from an offline Kitchen build.
 """
 from __future__ import annotations
@@ -81,18 +83,41 @@ def git_head(path: Path) -> str:
     return run(["git", "rev-parse", "HEAD"], cwd=path)
 
 
-def prepare_git(game_id: str, source: dict, dest: Path) -> dict:
+def require_network(allow_network: bool, what: str) -> None:
+    if not allow_network:
+        raise RuntimeError(
+            f"{what} requires external network access; rerun prepare with "
+            "--allow-network only after explicit approval"
+        )
+
+
+def submodules_need_update(dest: Path) -> bool:
+    status = run(["git", "submodule", "status", "--recursive"], cwd=dest)
+    return any(line[:1] in {"-", "+", "U"} for line in status.splitlines())
+
+
+def prepare_git(game_id: str, source: dict, dest: Path, *, allow_network: bool) -> dict:
     expected = source["commit"].lower()
     if dest.is_dir() and (dest / ".git").is_dir():
         got = git_head(dest).lower()
         if got == expected:
+            if bool(source.get("submodules")) and submodules_need_update(dest):
+                require_network(allow_network, f"{game_id}: submodule update")
+                run(
+                    ["git", "submodule", "update", "--init", "--recursive", "--depth", "1"],
+                    cwd=dest,
+                )
             return {"kind": "git", "commit": got, "path": str(dest)}
+        require_network(allow_network, f"{game_id}: source refresh")
         shutil.rmtree(dest)
     elif dest.exists():
+        require_network(allow_network, f"{game_id}: source refresh")
         if dest.is_dir():
             shutil.rmtree(dest)
         else:
             dest.unlink()
+    else:
+        require_network(allow_network, f"{game_id}: source fetch")
     dest.parent.mkdir(parents=True, exist_ok=True)
     run(["git", "init", str(dest)])
     run(["git", "remote", "add", "origin", str(source["url"])], cwd=dest)
@@ -117,12 +142,15 @@ def _safe_tar_members(tf: tarfile.TarFile):
     return members
 
 
-def prepare_archive(game_id: str, source: dict, cache: Path, dest: Path) -> dict:
+def prepare_archive(
+    game_id: str, source: dict, cache: Path, dest: Path, *, allow_network: bool
+) -> dict:
     cache.mkdir(parents=True, exist_ok=True)
     filename = str(source.get("filename") or f"{game_id}.archive")
     archive = cache / filename
     expected = str(source["sha256"]).lower()
     if not archive.is_file() or sha256_file(archive).lower() != expected:
+        require_network(allow_network, f"{game_id}: source archive fetch")
         tmp = archive.with_suffix(archive.suffix + ".part")
         tmp.unlink(missing_ok=True)
         urllib.request.urlretrieve(str(source["url"]), tmp)
@@ -149,7 +177,9 @@ def prepare_archive(game_id: str, source: dict, cache: Path, dest: Path) -> dict
     }
 
 
-def prepare_release_data(game_id: str, spec: dict, cache: Path, work: Path) -> dict | None:
+def prepare_release_data(
+    game_id: str, spec: dict, cache: Path, work: Path, *, allow_network: bool
+) -> dict | None:
     rd = spec.get("releaseData")
     if not isinstance(rd, dict):
         return None
@@ -161,6 +191,7 @@ def prepare_release_data(game_id: str, spec: dict, cache: Path, work: Path) -> d
     archive = cache / f"{game_id}-release-data.zip"
     cache.mkdir(parents=True, exist_ok=True)
     if not archive.is_file() or sha256_file(archive).lower() != expected:
+        require_network(allow_network, f"{game_id}: release-data fetch")
         tmp = archive.with_suffix(".part")
         tmp.unlink(missing_ok=True)
         urllib.request.urlretrieve(url, tmp)
@@ -191,7 +222,7 @@ def prepare_release_data(game_id: str, spec: dict, cache: Path, work: Path) -> d
     }
 
 
-def prepare(root: Path, catalog: dict, game: str) -> dict:
+def prepare(root: Path, catalog: dict, game: str, *, allow_network: bool) -> dict:
     work = root / WORK_REL
     sources = work / "sources"
     cache = work / "cache"
@@ -204,16 +235,22 @@ def prepare(root: Path, catalog: dict, game: str) -> dict:
     }
     for dep_id, source in sorted((catalog.get("buildDependencies") or {}).items()):
         dest = work / "dependencies" / dep_id
-        result["dependencies"][dep_id] = prepare_git(dep_id, source, dest)
+        result["dependencies"][dep_id] = prepare_git(
+            dep_id, source, dest, allow_network=allow_network
+        )
     for game_id, spec in selected_ports(catalog, game):
         source = spec["source"]
         dest = sources / game_id
         if source["kind"] == "git":
-            item = prepare_git(game_id, source, dest)
+            item = prepare_git(game_id, source, dest, allow_network=allow_network)
         else:
-            item = prepare_archive(game_id, source, cache, dest)
+            item = prepare_archive(
+                game_id, source, cache, dest, allow_network=allow_network
+            )
         item["title"] = spec.get("title", game_id)
-        runtime_data = prepare_release_data(game_id, spec, cache, work)
+        runtime_data = prepare_release_data(
+            game_id, spec, cache, work, allow_network=allow_network
+        )
         if runtime_data is not None:
             item["runtimeData"] = runtime_data
         result["ports"][game_id] = item
@@ -292,6 +329,11 @@ def main(argv=None) -> int:
     ap.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     ap.add_argument("--catalog", type=Path)
     ap.add_argument("--game", default="all")
+    ap.add_argument(
+        "--allow-network",
+        action="store_true",
+        help="permit external fetches during prepare; use only after explicit approval",
+    )
     args = ap.parse_args(argv)
     root = args.root.expanduser().resolve()
     catalog = read_catalog(root, args.catalog)
@@ -301,7 +343,11 @@ def main(argv=None) -> int:
             indent=2
         ))
     elif args.action == "prepare":
-        print(json.dumps(prepare(root, catalog, args.game), indent=2, sort_keys=True))
+        print(json.dumps(
+            prepare(root, catalog, args.game, allow_network=args.allow_network),
+            indent=2,
+            sort_keys=True,
+        ))
     else:
         print(json.dumps(verify(root, catalog, args.game), indent=2, sort_keys=True))
     return 0
