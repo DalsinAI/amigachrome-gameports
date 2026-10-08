@@ -782,6 +782,42 @@ jobs:
               echo "UQM_COMPILE_PASS_PROVISIONAL_OLD_STOVE"
               ;;
 
+            "daletop: inspect-cdogs-source-state")
+              R="$GAMEPORTS"
+              C="$R/build/game-ports/sources/cdogs-sdl"
+
+              echo "=== C-Dogs exact source ==="
+              git -C "$C" rev-parse HEAD
+              git -C "$C" remote -v || true
+              echo
+              echo "=== C-Dogs source status ==="
+              git -C "$C" status --short
+              echo
+              echo "=== ENet Amiga files ==="
+              for file in \
+                "$C/src/cdogs/enet/amiga.c" \
+                "$C/src/cdogs/enet/include/enet/amiga.h"
+              do
+                echo "--- $file ---"
+                if [ -f "$file" ]; then
+                  sed -n '1,320p' "$file"
+                else
+                  echo "MISSING"
+                fi
+              done
+              echo
+              echo "=== local catalog C-Dogs entry ==="
+              python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("/home/da1ek/AmigaChrome-dev/gameports-wt/gameports/catalog.json")
+          d=json.loads(p.read_text())
+          for key,val in d.get("ports",{}).items():
+              if "dog" in key.lower() or "dog" in str(val.get("title","")).lower():
+                  print(key, json.dumps(val, indent=2, sort_keys=True))
+          PY
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
