@@ -506,6 +506,33 @@ jobs:
               echo "UQM_REBUILD_PASS"
               ;;
 
+            "daletop: rebuild-uqm-correct-stove")
+              R="$GAMEPORTS"
+              B="$R/ports/uqm/build-amigaos3.sh"
+              ROOT=/home/da1ek/AmigaChrome/stoves/os32-gcc16
+
+              echo "=== UQM build with correct stove root ==="
+              echo "STOVE_ROOT=$ROOT"
+              test -x "$ROOT/prefix/bin/m68k-amigaos-gcc"
+              "$ROOT/prefix/bin/m68k-amigaos-gcc" --version | head -1
+
+              STOVE="$ROOT" sh "$B"
+
+              echo
+              echo "=== UQM target executables ==="
+              found=0
+              while IFS= read -r exe; do
+                found=1
+                file "$exe"
+                sha256sum "$exe"
+              done < <(find "$R/build/os3/uqm" -type f -name 'uqm*' -perm -111 -print | sort)
+              if [ "$found" -eq 0 ]; then
+                echo "NO_UQM_EXECUTABLE"
+                exit 22
+              fi
+              echo "UQM_REBUILD_PASS"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
