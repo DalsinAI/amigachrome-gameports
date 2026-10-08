@@ -28,7 +28,7 @@ valid engineering work unless a fixed-stove A/B test shows otherwise.
 | Chocolate Doom | COMPILED; staged | PENDING | Current provisional binary SHA-256: `5ecb67c242a002378bd79ea70760b6561285d622923bc32bca0435afb26eacfc`. Runtime requires an approved external/test IWAD. |
 | OpenJazz | COMPILED; staged | PENDING | Current provisional binary SHA-256: `1ac53c090503687002559eaafcc5653674ea153e9374474834b299ff730d7177`. Runtime data remains external. |
 | SDLPoP | COMPILED; staged | PENDING | Current provisional binary SHA-256: `51097f931538140895659af40f021d58ff20c348751c174bd093881c23600f6a`. Runtime data remains external. |
-| UQM 0.8.0 | BUILDING | PENDING | AmigaOS 3/OpenGPU lane is removing cross-config portability assumptions. `NAME_MAX` and symbol-detection issues have been isolated; final fixed-stove build/runtime still required. |
+| UQM 0.8.0 | COMPILED | PENDING | Full AmigaOS/OpenGPU executable final-links using UQM's bundled regex and Amiga portability fixes. Provisional old-stove SHA-256 `4173391559e65d7cfb6c330cd2820bc33cb97a6402175f895c11c3f057f386b8`; fixed-stove rebuild and user-supplied content runtime qualification remain. |
 | NXEngine-evo | Previous compile exists; current rebuild deferred | PENDING | The latest revival rebuild was stopped because unrelated toolchain work was saturating the host, not because of a port failure. Rebuild directly with the approved fixed stove. |
 | AssaultCube | Client + server COMPILED | PENDING | OpenGPU client bring-up work is preserved. Clean fixed-stove rebuild, audio integration and AC090 runtime qualification remain. |
 | Serious Sam Classic | SOURCE PINNED | NOT STARTED | TFE first. |

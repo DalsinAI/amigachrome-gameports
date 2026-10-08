@@ -1,46 +1,64 @@
-# The Ur-Quan Masters 0.8.0 — m68k AROS
+# The Ur-Quan Masters 0.8.0 — AmigaOS 3.x / AmigaChrome
 
-**Status:** COMPILED / RUNTIME TEST PENDING
+Target: **AC090 / AmigaOS 3.x / 68040 + FPU**
 
-## Upstream
+The source archive is already pinned in `gameports/catalog.json` by URL and
+SHA-256. Source and game content remain separate inputs.
 
-- source archive: https://downloads.sourceforge.net/project/sc2/UQM/0.8/uqm-0.8.0-src.tgz
-- source archive SHA-256: `24f2f7db9cf7faf53b95f9e2580e6f596205a98ed0c335cfe834c64785ad4f5a`
+## Current status
 
-## Compile result
+**COMPILED — provisional old-stove artifact.**
 
-- target: m68k AROS / 68040
-- executable: `uqm-aros`
-- observed size: 2,039,984 bytes
-- SHA-256: `6cec31c74a6e5425723dd0fdedf5bb670c3741b277a2a1215619bbe161c052fc`
+The AmigaOS/OpenGPU lane now compiles and final-links the full UQM executable.
+The successful provisional old-stove binary is an AmigaOS loadseg executable
+with SHA-256:
 
-## Build shape
+`4173391559e65d7cfb6c330cd2820bc33cb97a6402175f895c11c3f057f386b8`
 
-The successful bootstrap uses the AROS m68k cross tools through wrapper names expected by UQM's build system.
+It is not a release binary. The installed GCC 16.2.0b stove has known compiler
+defects on AC090/68040 and the port must be rebuilt and runtime-qualified with
+the approved fixed stove.
 
-Environment highlights:
+## Portability work
 
-    BUILD_HOST=AROS
-    BUILD_HOST_ENDIAN=big
-    AROS_SDK=$AROS_SYSROOT
-    CFLAGS="--sysroot=$AROS_SYSROOT -m68040"
-    CXXFLAGS="--sysroot=$AROS_SYSROOT -m68040"
-    LDFLAGS="--sysroot=$AROS_SYSROOT -m68040"
+The build recipe keeps the upstream source pristine and applies the Amiga
+adaptation to its copied build tree. The important target fixes are:
 
-First-light configuration uses SDL2 graphics, internal MixSDL, disables Ogg codec support and disables netplay.
+- reuse UQM's AROS cross-build profile as a generic big-endian m68k profile;
+- use the AmigaOS/OpenGPU SDL2, GL and pthread personality;
+- supply `NAME_MAX=255` for Amiga where POSIX `_POSIX_NAME_MAX` is absent;
+- use libnix `readdir()` rather than absent `readdir_r()`;
+- use the existing `HOME` path on Amiga instead of Unix `getpwuid()`;
+- account for libnix `strcasecmp` / `stricmp` despite UQM's cross-probe not
+  seeing their declarations;
+- force UQM's own bundled GNU regex implementation because the Amiga sysroot
+  exposes `regex.h` without a linkable POSIX `regcomp/regexec` provider.
 
-## Content
+The bundled regex object was verified to provide `regcomp`, `regexec`,
+`regfree` and `regerror` in the successful final link.
 
-The official UQM 0.8.0 base content package is used locally for testing and is not committed here.
+## Local dependencies
 
-Expected layout:
+The build uses:
 
-    content/packages/uqm-0.8.0-content.uqm
+- the selected Amiga GCC stove root via `STOVE`;
+- the AmigaOS/OpenGPU SDK below that stove;
+- `UQM_DEPS` for the current local libpng/zlib compatibility root.
 
-Launch:
+No source or dependency fetch is performed by this build script.
 
-    uqm-aros -n content
+## Runtime/content gate
 
-## Gate
+UQM game content is deliberately not bundled. Runtime qualification requires
+an already-authorised local UQM 0.8 content tree, or explicit approval before
+any external content fetch.
 
-Main menu -> new game -> solar-system view -> one alien conversation -> input/audio -> clean exit.
+Required first visible gate:
+
+1. main menu;
+2. start a new game;
+3. solar-system view;
+4. one alien conversation screen;
+5. then input/audio/save/clean-exit qualification.
+
+**DONE means RELEASE.**
