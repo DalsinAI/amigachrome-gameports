@@ -36,7 +36,7 @@ command -v "$AROS_RANLIB" >/dev/null 2>&1 && ln -sf "$(command -v "$AROS_RANLIB"
 
 (
   cd "$SC2"
-  PATH="$BUILD/tools:$PATH"   BUILD_HOST=AROS   BUILD_HOST_ENDIAN=big   AROS_SDK="$AROS_SYSROOT"   BUILD_WORK="$BUILD/out"   CFLAGS="--sysroot=$AROS_SYSROOT -m$CPU"   CXXFLAGS="--sysroot=$AROS_SYSROOT -m$CPU"   LDFLAGS="--sysroot=$AROS_SYSROOT -m$CPU"   /bin/sh build.sh uqm
+  PATH="$BUILD/tools:$PATH"   BUILD_HOST=AROS   BUILD_HOST_ENDIAN=big   AROS_SDK="$AROS_SYSROOT"   BUILD_WORK="$BUILD/out"   CFLAGS="--sysroot=$AROS_SYSROOT -m$CPU -fno-delete-null-pointer-checks"   CXXFLAGS="--sysroot=$AROS_SYSROOT -m$CPU -fno-delete-null-pointer-checks"   LDFLAGS="--sysroot=$AROS_SYSROOT -m$CPU"   /bin/sh build.sh uqm
 )
 
 echo "UQM build completed under: $BUILD"

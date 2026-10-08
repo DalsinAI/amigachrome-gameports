@@ -29,6 +29,9 @@ if GAMEPORT_CPU_TARGET not in {"68020", "68030", "68040"}:
         "AMIGACHROME_GAMEPORTS_MCPU must be one of 68020, 68030 or 68040"
     )
 CPU_FLAG = f"-m{GAMEPORT_CPU_TARGET}"
+# Address 0 is memory on an Amiga: without this flag GCC puts TRAP #7
+# (Software Failure 80000027) where it proves a pointer null.
+NULL_FLAG = "-fno-delete-null-pointer-checks"
 GAME_TARGET = f"m68k-aros/{GAMEPORT_CPU_TARGET}"
 OUTPUT_DIR_NAME = (
     "out" if GAMEPORT_CPU_TARGET == CANONICAL_CPU_TARGET
@@ -332,12 +335,12 @@ def _write_cmake_toolchain(
 ) -> None:
     cxx_line = f'set(CMAKE_CXX_COMPILER "{cxx}")\n' if cxx else ""
     cxx_flags = (
-        f'set(CMAKE_CXX_FLAGS_INIT "--sysroot={sysroot} {CPU_FLAG}")\n'
+        f'set(CMAKE_CXX_FLAGS_INIT "--sysroot={sysroot} {CPU_FLAG} {NULL_FLAG}")\n'
         if cxx else ""
     )
     body = f"""set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_C_COMPILER "{cc}")
-{cxx_line}set(CMAKE_C_FLAGS_INIT "--sysroot={sysroot} {CPU_FLAG}")
+{cxx_line}set(CMAKE_C_FLAGS_INIT "--sysroot={sysroot} {CPU_FLAG} {NULL_FLAG}")
 {cxx_flags}set(CMAKE_EXE_LINKER_FLAGS_INIT "--sysroot={sysroot} {CPU_FLAG}")
 set(CMAKE_FIND_ROOT_PATH "{sysroot}")
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
@@ -632,8 +635,8 @@ def build_uqm(
         "BUILD_HOST_ENDIAN": "big",
         "AROS_SDK": str(sysroot),
         "BUILD_WORK": str(build_work),
-        "CFLAGS": f"--sysroot={sysroot} {CPU_FLAG}",
-        "CXXFLAGS": f"--sysroot={sysroot} {CPU_FLAG}",
+        "CFLAGS": f"--sysroot={sysroot} {CPU_FLAG} {NULL_FLAG}",
+        "CXXFLAGS": f"--sysroot={sysroot} {CPU_FLAG} {NULL_FLAG}",
         "LDFLAGS": f"--sysroot={sysroot} {CPU_FLAG}",
     })
     run(["/bin/sh", "build.sh", "uqm"], cwd=sc2, env=env)
@@ -695,7 +698,7 @@ def build_offline(root: Path) -> None:
     lib = out / f"libacgame-{GAMEPORT_CPU_TARGET}.a"
     smoke = out / "acgame-aga-smoke"
     common = [
-        str(cc), f"--sysroot={sysroot}", "-std=gnu11", "-O2", CPU_FLAG,
+        str(cc), f"--sysroot={sysroot}", "-std=gnu11", "-O2", CPU_FLAG, NULL_FLAG,
         "-Wall", "-Wextra", "-Werror", "-Wno-volatile-register-var",
         "-I", str(acgame / "include"),
     ]
