@@ -1,41 +1,39 @@
-# Chocolate Doom — m68k AROS
+# Chocolate Doom — AmigaOS 3.x / AmigaChrome
 
-**Status:** COMPILED / RUNTIME TEST PENDING
+Target: **AC090 / AmigaOS 3.x / 68040 + FPU**
 
-## Upstream
+Pinned upstream commit: `895f581c5d91497bdda0516612da803fe5843e28`.
 
-- repository: https://github.com/chocolate-doom/chocolate-doom.git
-- pinned commit: `895f581c5d91497bdda0516612da803fe5843e28`
+## Status
 
-## Compile result
+**COMPILED — provisional old-stove artifact.**
 
-- target: m68k AROS / 68040
-- executable: `chocolate-doom`
-- observed size: 1,689,112 bytes
-- SHA-256: `b99fe3a2b55497bce6240413474c899b3ba4da2cf9a22140c8e46f561af04b5f`
+A pristine local archive of the exact pin rebuilt successfully with no network
+access using `build-amigaos3.sh`.
 
-## Required compatibility shim
+Clean provisional SHA-256:
 
-The AROS SDK provides static `libSDL2_mixer.a`, while Chocolate Doom's CMake expects the target `SDL2_mixer::SDL2_mixer`.
+`d3ae7440920fe9bc2213a945c5aeec3576f7a4405147d86f9774d654a63b16b0`
 
-For the successful build we created an imported CMake target with that name, pointing at:
+The binary is not a release artifact. It must be rebuilt and runtime-qualified
+with the approved fixed GCC stove.
 
-    $AROS_SYSROOT/lib/libSDL2_mixer.a
+## Platform route
 
-and exposed:
+- SDL2 presentation/input → Open-family SDL/OpenGPU/OpenInput stack;
+- SDL2_mixer → current SDL/AHI audio route;
+- SDL2_net disabled for the first runtime gate;
+- target flags: 68040 + FPU.
 
-    $AROS_SYSROOT/include/SDL2
+## Runtime data
 
-SDL2 networking was disabled for first light.
+Chocolate Doom requires a compatible IWAD. No Doom IWAD is stored here.
+Freedoom or another explicitly authorised compatible IWAD may be used for
+runtime qualification.
 
-## First-light data
+## Release gate
 
-Use **Freedoom** or a user-supplied compatible IWAD. No Doom IWAD is stored here.
+Title/menu → start map → framebuffer/rendering → keyboard/controller → audio →
+save/config → clean exit, then repeat on a clean fixed-stove instance.
 
-Suggested first test:
-
-    chocolate-doom -iwad freedoom1.wad
-
-## Gate
-
-Title/menu -> start map -> software framebuffer -> keyboard/controller input -> audio status -> clean exit.
+**DONE means RELEASE.**
