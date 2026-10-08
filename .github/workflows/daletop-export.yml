@@ -25,7 +25,12 @@ jobs:
             ports/cdogs-sdl/build-amigaos3.sh \
             ports/cdogs-sdl/patches/0001-amigaos3-opengpu.patch \
             toolchain/amigaos3-opengpu.cmake \
-            ports/uqm/build-amigaos3.sh
+            ports/uqm/build-amigaos3.sh \
+            ports/chocolate-doom/build-amigaos3.sh \
+            ports/openjazz/build-amigaos3.sh \
+            ports/openjazz/patches/0001-amigaos3-opengpu.patch \
+            ports/sdlpop/build-amigaos3.sh \
+            ports/sdlpop/patches/0001-amigaos3-opengpu.patch
           do
             f="$R/$rel"
             test -f "$f"
