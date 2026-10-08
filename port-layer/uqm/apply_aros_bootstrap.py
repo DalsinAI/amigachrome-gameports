@@ -85,7 +85,7 @@ def apply(source: Path) -> Path:
         'SYSTEM_HOST_CFLAGS=""\n\n# LDFLAGS\nSYSTEM_HOST_LDFLAGS=""\n',
         '''case "$HOST_SYSTEM" in
 	AROS)
-		SYSTEM_HOST_CFLAGS="--sysroot=$AROS_SDK -m68040 -I$AROS_SDK/include -I$AROS_SDK/include/SDL2"
+		SYSTEM_HOST_CFLAGS="--sysroot=$AROS_SDK -m68040 -fno-delete-null-pointer-checks -I$AROS_SDK/include -I$AROS_SDK/include/SDL2"
 		SYSTEM_HOST_LDFLAGS="--sysroot=$AROS_SDK -m68040"
 		;;
 	*)
