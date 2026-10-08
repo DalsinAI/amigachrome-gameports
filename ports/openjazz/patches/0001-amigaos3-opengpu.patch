@@ -1,0 +1,12 @@
+diff --git a/src/jj1/save/jj1save.cpp b/src/jj1/save/jj1save.cpp
+index 440977b..c12af9f 100644
+--- a/src/jj1/save/jj1save.cpp
++++ b/src/jj1/save/jj1save.cpp
+@@ -19,6 +19,7 @@
+ #include "jj1save.h"
+ #include "util.h"
+ #include "io/log.h"
++#include <ctime>
+ 
+ /* This algorithm has been found out by CYBERDEViL by analysing the Assembly in
+  * DoxBox-X. For more information see: https://codeberg.org/CYBERDEV/JJSave/
