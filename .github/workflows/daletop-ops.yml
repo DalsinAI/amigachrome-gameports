@@ -111,6 +111,91 @@ jobs:
               sha256sum "$R/build/os3/cdogs/src/cdogs-sdl"
               ;;
 
+            "daletop: fix-uqm-package-cdogs")
+              R="$GAMEPORTS"
+              UBUILD="$R/ports/uqm/build-amigaos3.sh"
+              U="$R/build/game-ports/sources/uqm/uqm-0.8.0"
+              C="$R/build/game-ports/sources/cdogs-sdl"
+              COUT="$R/build/os3/cdogs/src/cdogs-sdl"
+              CPKG="$R/build/release/cdogs-sdl"
+
+              echo "=== patch UQM build recipe ==="
+              python3 - "$UBUILD" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1])
+          s=p.read_text()
+          needle="""# libnix has readdir() but not readdir_r(), and does not expose _POSIX_NAME_MAX.
+          python3 - "$SC2/src/libs/uio/uioport.h" "$SC2/src/libs/uio/stdio/stdio.c" <<'PY'
+          """
+          if '"$SC2/src/port.h"' not in s:
+              old="""python3 - "$SC2/src/libs/uio/uioport.h" "$SC2/src/libs/uio/stdio/stdio.c" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1]); s=p.read_text()
+          """
+              new="""python3 - "$SC2/src/port.h" "$SC2/src/libs/uio/uioport.h" "$SC2/src/libs/uio/stdio/stdio.c" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1]); s=p.read_text()
+          s=s.replace('#\\tifndef NAME_MAX\\n#\\t\\tdefine NAME_MAX _POSIX_NAME_MAX\\n#\\tendif', '#\\tifndef NAME_MAX\\n#\\t\\tif defined(__amigaos__)\\n#\\t\\t\\tdefine NAME_MAX 255\\n#\\t\\telse\\n#\\t\\t\\tdefine NAME_MAX _POSIX_NAME_MAX\\n#\\t\\tendif\\n#\\tendif',1); p.write_text(s)
+          p=Path(sys.argv[2]); s=p.read_text()
+          """
+              if old not in s:
+                  raise SystemExit("expected UQM portability patch block not found")
+              s=s.replace(old,new,1)
+              s=s.replace('p=Path(sys.argv[2]); s=p.read_text()\ns=s.replace', 'p=Path(sys.argv[3]); s=p.read_text()\ns=s.replace', 1)
+              p.write_text(s)
+          print("UQM build recipe updated")
+          PY
+              sh -n "$UBUILD"
+
+              echo
+              echo "=== rebuild UQM (local sources only) ==="
+              if sh "$UBUILD"; then
+                echo "UQM_BUILD_PASS"
+              else
+                echo "UQM_BUILD_FAIL"
+                exit 21
+              fi
+
+              echo
+              echo "=== locate UQM executable ==="
+              find "$R/build/os3/uqm" -type f -name 'uqm*' -perm -111 -print -exec file {} \; -exec sha256sum {} \;
+
+              echo
+              echo "=== package C-Dogs ==="
+              test -f "$COUT"
+              rm -rf "$CPKG"
+              mkdir -p "$CPKG/C-Dogs"
+              cp "$COUT" "$CPKG/C-Dogs/CDogs"
+              for d in data dogfights missions graphics music sounds; do
+                if [ -e "$C/$d" ]; then
+                  cp -a "$C/$d" "$CPKG/C-Dogs/"
+                fi
+              done
+              for f in LICENSE LICENSE.md COPYING COPYING.txt README README.md CHANGELOG CHANGELOG.md; do
+                if [ -f "$C/$f" ]; then
+                  cp "$C/$f" "$CPKG/C-Dogs/"
+                fi
+              done
+              cat > "$CPKG/C-Dogs/OPENUP-RELEASE.txt" <<'EOF'
+          C-Dogs SDL for OpenUp / AmigaChrome
+          Target: AmigaOS 3.x, 68040 + FPU
+          Graphics/input/audio: Open platform SDL2 path
+          Runtime data: bundled upstream redistributable data from the pinned source tree
+          Status: compiled/package staged; runtime qualification still required
+          EOF
+              (
+                cd "$CPKG"
+                find C-Dogs -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+              )
+              file "$CPKG/C-Dogs/CDogs"
+              sha256sum "$CPKG/C-Dogs/CDogs"
+              du -sh "$CPKG/C-Dogs"
+              echo "CDOGS_PACKAGE_PASS"
+              ;;
+
             *)
               echo "REFUSED: task is not on the approved allow-list: $TASK" >&2
               exit 64
