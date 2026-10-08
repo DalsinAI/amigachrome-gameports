@@ -1025,6 +1025,18 @@ jobs:
               echo "REVIVAL_THREE_PRISTINE_PASS"
               ;;
 
+            "daletop: inspect-revival-stager")
+              R="$GAMEPORTS"
+              echo "=== staging script ==="
+              sed -n '1,360p' "$R/scripts/stage-revival-release.sh"
+              echo
+              echo "=== candidate binaries ==="
+              find "$R/build/os3" -maxdepth 4 -type f \
+                \( -name chocolate-doom -o -name OpenJazz -o -name prince -o -name cdogs-sdl \
+                   -o -name nxengine-evo -o -name uqm \) \
+                -print -exec file {} \; 2>/dev/null | sort
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
