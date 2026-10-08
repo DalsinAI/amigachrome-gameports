@@ -700,6 +700,88 @@ jobs:
               sed -n '475,505p' "$U/build/unix/build.config"
               ;;
 
+            "daletop: fix-uqm-final-link-rebuild")
+              R="$GAMEPORTS"
+              B="$R/ports/uqm/build-amigaos3.sh"
+              ROOT="$STOVE_ROOT"
+
+              echo "=== add final Amiga portability fixes to build recipe ==="
+              python3 - "$B" <<'PY'
+          from pathlib import Path
+          import sys
+
+          p = Path(sys.argv[1])
+          s = p.read_text()
+
+          # 1. A regex.h in the Amiga sysroot is not enough: the matching POSIX
+          #    regcomp/regexec implementation is absent. Force UQM's own bundled
+          #    regex implementation through its normal fallback path.
+          regex_anchor = """s=s.replace('SYMBOL_stricmp_EXTRA="#include <string.h>"',
+          '''SYMBOL_stricmp_EXTRA="extern int stricmp(const char *, const char *);"''')
+          """
+          regex_patch = """s=s.replace('HEADER_regex_EXTRA="#include <sys/types.h>"',
+          '''HEADER_regex_EXTRA="#include <sys/types.h>"
+          HEADER_regex_DETECT="false"''')
+          """
+          if 'HEADER_regex_DETECT="false"' not in s:
+              if regex_anchor not in s:
+                  raise SystemExit("regex patch anchor not found")
+              s = s.replace(regex_anchor, regex_anchor + regex_patch, 1)
+
+          # 2. AmigaOS has no Unix passwd database. getHomeDir() already prefers
+          #    HOME; on Amiga stop there instead of falling through to getpwuid().
+          dirs_anchor = """# libnix has readdir() but not readdir_r(), and does not expose _POSIX_NAME_MAX.
+          """
+          dirs_patch = r'''# AmigaOS has no Unix passwd database; use HOME only.
+          python3 - "$SC2/src/libs/file/dirs.c" <<'PY_UQM_DIRS'
+          from pathlib import Path
+          import sys
+          p = Path(sys.argv[1])
+          t = p.read_text()
+          t = t.replace(
+              '#ifdef WIN32\n#\tinclude <direct.h>\n'
+              '\t\t\t// For _getdcwd()\n#else\n'
+              '#\tinclude <pwd.h>\n\t\t\t// For getpwuid()\n#endif',
+              '#ifdef WIN32\n#\tinclude <direct.h>\n'
+              '\t\t\t// For _getdcwd()\n'
+              '#elif !defined(__amigaos__)\n'
+              '#\tinclude <pwd.h>\n\t\t\t// For getpwuid()\n#endif',
+              1,
+          )
+          t = t.replace(
+              '#ifdef WIN32\n\treturn getenv ("HOME");\n#else',
+              '#if defined(WIN32) || defined(__amigaos__)\n'
+              '\treturn getenv ("HOME");\n#else',
+              1,
+          )
+          p.write_text(t)
+          PY_UQM_DIRS
+
+          '''
+          if "PY_UQM_DIRS" not in s:
+              if dirs_anchor not in s:
+                  raise SystemExit("dirs patch anchor not found")
+              s = s.replace(dirs_anchor, dirs_patch + dirs_anchor, 1)
+
+          p.write_text(s)
+          print("final UQM portability fixes present")
+          PY
+
+              sh -n "$B"
+
+              echo
+              echo "=== rebuild UQM from local prepared source ==="
+              STOVE="$ROOT" sh "$B"
+
+              echo
+              echo "=== UQM target executable ==="
+              EXE="$R/build/os3/uqm/out/uqm"
+              test -f "$EXE"
+              file "$EXE"
+              sha256sum "$EXE"
+              echo "UQM_COMPILE_PASS_PROVISIONAL_OLD_STOVE"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
