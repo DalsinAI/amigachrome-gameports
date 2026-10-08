@@ -1,0 +1,616 @@
+diff --git a/source/src/jpegenc.h b/source/src/jpegenc.h
+index a3a4675..d1d4911 100644
+--- a/source/src/jpegenc.h
++++ b/source/src/jpegenc.h
+@@ -5,33 +5,33 @@
+ // Based on work by Cristian Cuturicu
+ // http://www.wotsit.org/download.asp?f=jpeg&sc=335837440
+ 
+-typedef uint8_t BYTE;
++typedef unsigned char JBYTE;
+ typedef int8_t SBYTE;
+ typedef int16_t SWORD;
+-typedef uint16_t WORD;
++typedef unsigned short JWORD;
+ typedef int32_t SDWORD;
+ 
+-typedef struct { BYTE length; WORD value;} bitstring;
++typedef struct { JBYTE length; JWORD value;} bitstring;
+ 
+-#define  Y(R,G,B) ((BYTE)( (YRtab[(R)]+YGtab[(G)]+YBtab[(B)])>>16 ) - 128);
+-#define Cb(R,G,B) ((BYTE)( (CbRtab[(R)]+CbGtab[(G)]+CbBtab[(B)])>>16 ));
+-#define Cr(R,G,B) ((BYTE)( (CrRtab[(R)]+CrGtab[(G)]+CrBtab[(B)])>>16 ));
++#define  Y(R,G,B) ((JBYTE)( (YRtab[(R)]+YGtab[(G)]+YBtab[(B)])>>16 ) - 128);
++#define Cb(R,G,B) ((JBYTE)( (CbRtab[(R)]+CbGtab[(G)]+CbBtab[(B)])>>16 ));
++#define Cr(R,G,B) ((JBYTE)( (CrRtab[(R)]+CrGtab[(G)]+CrBtab[(B)])>>16 ));
+ 
+ #define writebyte(b) fp_jpeg_stream->putchar(b);
+ #define writeword(w) writebyte((w)/256);writebyte((w)%256);
+ 
+ struct APP0infotype
+ {
+-    WORD marker;
+-    WORD length;
+-    BYTE JFIFsignature[5];
+-    BYTE versionhi;
+-    BYTE versionlo;
+-    BYTE xyunits;
+-    WORD xdensity;
+-    WORD ydensity;
+-    BYTE thumbnwidth;
+-    BYTE thumbnheight;
++    JWORD marker;
++    JWORD length;
++    JBYTE JFIFsignature[5];
++    JBYTE versionhi;
++    JBYTE versionlo;
++    JBYTE xyunits;
++    JWORD xdensity;
++    JWORD ydensity;
++    JBYTE thumbnwidth;
++    JBYTE thumbnheight;
+     APP0infotype()
+     {
+         marker = 0xFFE0;
+@@ -53,8 +53,8 @@ struct APP0infotype
+ 
+ struct APP1infotype
+ {
+-    WORD marker;
+-    WORD length;
++    JWORD marker;
++    JWORD length;
+     const char *sig1, *sig2;
+     APP1infotype()
+     {
+@@ -69,21 +69,21 @@ struct APP1infotype
+ 
+ struct  SOF0infotype
+ {
+-    WORD marker;
+-    WORD length;
+-    BYTE precision ;
+-    WORD height ;
+-    WORD width;
+-    BYTE nrofcomponents;
+-    BYTE IdY;
+-    BYTE HVY;
+-    BYTE QTY;
+-    BYTE IdCb;
+-    BYTE HVCb;
+-    BYTE QTCb;
+-    BYTE IdCr;
+-    BYTE HVCr;
+-    BYTE QTCr;
++    JWORD marker;
++    JWORD length;
++    JBYTE precision ;
++    JWORD height ;
++    JWORD width;
++    JBYTE nrofcomponents;
++    JBYTE IdY;
++    JBYTE HVY;
++    JBYTE QTY;
++    JBYTE IdCb;
++    JBYTE HVCb;
++    JBYTE QTCb;
++    JBYTE IdCr;
++    JBYTE HVCr;
++    JBYTE QTCr;
+ 
+     SOF0infotype()
+     {
+@@ -107,12 +107,12 @@ struct  SOF0infotype
+ 
+ struct DQTinfotype
+ {
+-    WORD marker;
+-    WORD length;
+-    BYTE QTYinfo;
+-    BYTE Ytable[64];
+-    BYTE QTCbinfo;
+-    BYTE Cbtable[64];
++    JWORD marker;
++    JWORD length;
++    JBYTE QTYinfo;
++    JBYTE Ytable[64];
++    JBYTE QTCbinfo;
++    JBYTE Cbtable[64];
+     DQTinfotype()
+     {
+         marker = 0xFFDB;
+@@ -126,20 +126,20 @@ struct DQTinfotype
+ 
+ struct DHTinfotype
+ {
+-    WORD marker;
+-    WORD length;
+-    BYTE HTYDCinfo;
+-    BYTE YDC_nrcodes[16];
+-    BYTE YDC_values[12];
+-    BYTE HTYACinfo;
+-    BYTE YAC_nrcodes[16];
+-    BYTE YAC_values[162];
+-    BYTE HTCbDCinfo;
+-    BYTE CbDC_nrcodes[16];
+-    BYTE CbDC_values[12];
+-    BYTE HTCbACinfo;
+-    BYTE CbAC_nrcodes[16];
+-    BYTE CbAC_values[162];
++    JWORD marker;
++    JWORD length;
++    JBYTE HTYDCinfo;
++    JBYTE YDC_nrcodes[16];
++    JBYTE YDC_values[12];
++    JBYTE HTYACinfo;
++    JBYTE YAC_nrcodes[16];
++    JBYTE YAC_values[162];
++    JBYTE HTCbDCinfo;
++    JBYTE CbDC_nrcodes[16];
++    JBYTE CbDC_values[12];
++    JBYTE HTCbACinfo;
++    JBYTE CbAC_nrcodes[16];
++    JBYTE CbAC_values[162];
+     DHTinfotype()
+     {
+         marker = 0xFFC4;
+@@ -161,16 +161,16 @@ struct DHTinfotype
+ 
+ struct SOSinfotype
+ {
+-    WORD marker;
+-    WORD length;
+-    BYTE nrofcomponents;
+-    BYTE IdY;
+-    BYTE HTY;
+-    BYTE IdCb;
+-    BYTE HTCb;
+-    BYTE IdCr;
+-    BYTE HTCr;
+-    BYTE Ss,Se,Bf;
++    JWORD marker;
++    JWORD length;
++    JBYTE nrofcomponents;
++    JBYTE IdY;
++    JBYTE HTY;
++    JBYTE IdCb;
++    JBYTE HTCb;
++    JBYTE IdCr;
++    JBYTE HTCr;
++    JBYTE Ss,Se,Bf;
+     SOSinfotype()
+     {
+         marker = 0xFFDA;
+@@ -191,18 +191,18 @@ struct SOSinfotype
+ class jpegenc
+ {
+     private:
+-        static BYTE zigzag[];
+-        static BYTE std_luminance_qt[];
+-        static BYTE std_chrominance_qt[];
+-        static BYTE std_dc_luminance_nrcodes[];
+-        static BYTE std_dc_luminance_values[];
+-        static BYTE std_dc_chrominance_nrcodes[];
+-        static BYTE std_dc_chrominance_values[];
+-        static BYTE std_ac_luminance_nrcodes[];
+-        static BYTE std_ac_luminance_values[];
+-        static BYTE std_ac_chrominance_nrcodes[];
+-        static BYTE std_ac_chrominance_values[];
+-        static WORD mask[];
++        static JBYTE zigzag[];
++        static JBYTE std_luminance_qt[];
++        static JBYTE std_chrominance_qt[];
++        static JBYTE std_dc_luminance_nrcodes[];
++        static JBYTE std_dc_luminance_values[];
++        static JBYTE std_dc_chrominance_nrcodes[];
++        static JBYTE std_dc_chrominance_values[];
++        static JBYTE std_ac_luminance_nrcodes[];
++        static JBYTE std_ac_luminance_values[];
++        static JBYTE std_ac_chrominance_nrcodes[];
++        static JBYTE std_ac_chrominance_values[];
++        static JWORD mask[];
+ 
+         APP0infotype APP0info;
+         APP1infotype APP1info;
+@@ -211,21 +211,21 @@ class jpegenc
+         SOSinfotype SOSinfo;
+         DHTinfotype DHTinfo;
+ 
+-        BYTE bytenew;
++        JBYTE bytenew;
+         SBYTE bytepos;
+ 
+         void write_APP0info(void);
+         void write_APP1info(void);
+         void write_SOF0info(void);
+         void write_DQTinfo(void);
+-        void set_quant_table(BYTE *basic_table, BYTE scale_factor, BYTE *newtable);
++        void set_quant_table(JBYTE *basic_table, JBYTE scale_factor, JBYTE *newtable);
+         void set_DQTinfo(int quality);
+         void write_DHTinfo(void);
+         void set_DHTinfo(void);
+         void write_SOSinfo(void);
+         void write_comment(const char *comment);
+         void writebits(bitstring bs);
+-        void compute_Huffman_table(BYTE *nrcodes, BYTE *std_table, bitstring *HT);
++        void compute_Huffman_table(JBYTE *nrcodes, JBYTE *std_table, bitstring *HT);
+         void init_Huffman_tables(void);
+         int set_numbers_category_and_bitcode();
+         void precalculate_YCbCr_tables();
+@@ -233,7 +233,7 @@ class jpegenc
+         void fdct_and_quantization(SBYTE *data, float *fdtbl, SWORD *outdata);
+ 
+         void process_DU(SBYTE *ComponentDU, float *fdtbl,SWORD *DC, bitstring *HTDC, bitstring *HTAC);
+-        void load_data_units_from_RGB_buffer(WORD xpos, WORD ypos);
++        void load_data_units_from_RGB_buffer(JWORD xpos, JWORD ypos);
+ 
+         void main_encoder(void);
+         void init_all(int qfactor);
+@@ -250,8 +250,8 @@ class jpegenc
+         bitstring  YAC_HT[256];
+         bitstring CbAC_HT[256];
+ 
+-        BYTE *category_alloc;
+-        BYTE *category;
++        JBYTE *category_alloc;
++        JBYTE *category;
+         bitstring *bitcode_alloc;
+         bitstring *bitcode;
+ 
+@@ -267,8 +267,8 @@ class jpegenc
+         SWORD DU_DCT[64];
+         SWORD DU[64];
+ 
+-        BYTE *RGB_buffer;       //image to be encoded
+-        WORD width, height;     //image dimensions divisible by 8
++        JBYTE *RGB_buffer;       //image to be encoded
++        JWORD width, height;     //image dimensions divisible by 8
+         int pitch;
+ 
+         stream *fp_jpeg_stream;
+@@ -276,7 +276,7 @@ class jpegenc
+         int encode(const char *filename, SDL_Surface *image, int jpegquality, const char *comment);
+ };
+ 
+-BYTE jpegenc::zigzag[64] = {
++JBYTE jpegenc::zigzag[64] = {
+         0, 1, 5, 6,14,15,27,28,
+         2, 4, 7,13,16,26,29,42,
+         3, 8,12,17,25,30,41,43,
+@@ -287,7 +287,7 @@ BYTE jpegenc::zigzag[64] = {
+         35,36,48,49,57,58,62,63
+ };
+ 
+-BYTE jpegenc::std_luminance_qt[64] = {
++JBYTE jpegenc::std_luminance_qt[64] = {
+     16,  11,  10,  16,  24,  40,  51,  61,
+     12,  12,  14,  19,  26,  58,  60,  55,
+     14,  13,  16,  24,  40,  57,  69,  56,
+@@ -298,7 +298,7 @@ BYTE jpegenc::std_luminance_qt[64] = {
+     72,  92,  95,  98, 112, 100, 103,  99
+ };
+ 
+-BYTE jpegenc::std_chrominance_qt[64] = {
++JBYTE jpegenc::std_chrominance_qt[64] = {
+     17,  18,  24,  47,  99,  99,  99,  99,
+     18,  21,  26,  66,  99,  99,  99,  99,
+     24,  26,  56,  99,  99,  99,  99,  99,
+@@ -309,12 +309,12 @@ BYTE jpegenc::std_chrominance_qt[64] = {
+     99,  99,  99,  99,  99,  99,  99,  99
+ };
+ 
+-BYTE jpegenc::std_dc_luminance_nrcodes[17] = {0,0,1,5,1,1,1,1,1,1,0,0,0,0,0,0,0};
+-BYTE jpegenc::std_dc_luminance_values[12] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+-BYTE jpegenc::std_dc_chrominance_nrcodes[17] = {0,0,3,1,1,1,1,1,1,1,1,1,0,0,0,0,0};
+-BYTE jpegenc::std_dc_chrominance_values[12] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+-BYTE jpegenc::std_ac_luminance_nrcodes[17] = {0,0,2,1,3,3,2,4,3,5,5,4,4,0,0,1,0x7d };
+-BYTE jpegenc::std_ac_luminance_values[162] = {
++JBYTE jpegenc::std_dc_luminance_nrcodes[17] = {0,0,1,5,1,1,1,1,1,1,0,0,0,0,0,0,0};
++JBYTE jpegenc::std_dc_luminance_values[12] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
++JBYTE jpegenc::std_dc_chrominance_nrcodes[17] = {0,0,3,1,1,1,1,1,1,1,1,1,0,0,0,0,0};
++JBYTE jpegenc::std_dc_chrominance_values[12] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
++JBYTE jpegenc::std_ac_luminance_nrcodes[17] = {0,0,2,1,3,3,2,4,3,5,5,4,4,0,0,1,0x7d };
++JBYTE jpegenc::std_ac_luminance_values[162] = {
+       0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12,
+       0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07,
+       0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xa1, 0x08,
+@@ -338,8 +338,8 @@ BYTE jpegenc::std_ac_luminance_values[162] = {
+       0xf9, 0xfa
+ };
+ 
+-BYTE jpegenc::std_ac_chrominance_nrcodes[17] = {0,0,2,1,2,4,4,3,4,7,5,4,4,0,1,2,0x77};
+-BYTE jpegenc::std_ac_chrominance_values[162] = {
++JBYTE jpegenc::std_ac_chrominance_nrcodes[17] = {0,0,2,1,2,4,4,3,4,7,5,4,4,0,1,2,0x77};
++JBYTE jpegenc::std_ac_chrominance_values[162] = {
+       0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21,
+       0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71,
+       0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91,
+@@ -363,7 +363,7 @@ BYTE jpegenc::std_ac_chrominance_values[162] = {
+       0xf9, 0xfa
+ };
+ 
+-WORD jpegenc::mask[16] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768};
++JWORD jpegenc::mask[16] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768};
+ 
+ void jpegenc::write_APP0info() //Nothing to overwrite for APP0info
+ {
+@@ -412,7 +412,7 @@ void jpegenc::write_SOF0info()
+ 
+ void jpegenc::write_DQTinfo()
+ {
+-    BYTE i;
++    JBYTE i;
+     writeword(DQTinfo.marker);
+     writeword(DQTinfo.length);
+     writebyte(DQTinfo.QTYinfo);
+@@ -423,16 +423,16 @@ void jpegenc::write_DQTinfo()
+         writebyte(DQTinfo.Cbtable[i]);
+ }
+ 
+-void jpegenc::set_quant_table(BYTE *basic_table, BYTE scale_factor, BYTE *newtable)
++void jpegenc::set_quant_table(JBYTE *basic_table, JBYTE scale_factor, JBYTE *newtable)
+ {
+-    BYTE i;
++    JBYTE i;
+     long temp;
+     for (i=0; i<64; i++)
+     {
+         temp = ((long) basic_table[i] * scale_factor + 50L) / 100L;
+         if (temp <= 0L) temp = 1L;
+         if (temp > 255L) temp = 255L;
+-        newtable[zigzag[i]] = (BYTE) temp;
++        newtable[zigzag[i]] = (JBYTE) temp;
+     }
+ }
+ 
+@@ -453,7 +453,7 @@ void jpegenc::set_DQTinfo(int quality)
+ 
+ void jpegenc::write_DHTinfo()
+ {
+-    BYTE i;
++    JBYTE i;
+     writeword(DHTinfo.marker);
+     writeword(DHTinfo.length);
+     writebyte(DHTinfo.HTYDCinfo);
+@@ -480,7 +480,7 @@ void jpegenc::write_DHTinfo()
+ 
+ void jpegenc::set_DHTinfo()
+ {
+-    BYTE i;
++    JBYTE i;
+     DHTinfo.marker = 0xFFC4;
+     DHTinfo.length = 0x01A2;
+     DHTinfo.HTYDCinfo = 0;
+@@ -523,9 +523,9 @@ void jpegenc::write_SOSinfo() //Nothing to overwrite for SOSinfo
+ 
+ void jpegenc::write_comment(const char *comment)
+ {
+-    WORD i, length;
++    JWORD i, length;
+     writeword(0xFFFE);
+-    length = (WORD) strlen((const char *)comment);
++    length = (JWORD) strlen((const char *)comment);
+     writeword(length + 2);
+     for (i=0; i<length; i++)
+         writebyte(comment[i]);
+@@ -533,7 +533,7 @@ void jpegenc::write_comment(const char *comment)
+ 
+ void jpegenc::writebits(bitstring bs) // A portable version; it should be done in assembler
+ {
+-    WORD value;
++    JWORD value;
+     SBYTE posval;
+     value = bs.value;
+     posval = bs.length - 1;
+@@ -558,11 +558,11 @@ void jpegenc::writebits(bitstring bs) // A portable version; it should be done i
+     }
+ }
+ 
+-void jpegenc::compute_Huffman_table(BYTE *nrcodes, BYTE *std_table, bitstring *HT)
++void jpegenc::compute_Huffman_table(JBYTE *nrcodes, JBYTE *std_table, bitstring *HT)
+ {
+-    BYTE k,j;
+-    BYTE pos_in_table;
+-    WORD codevalue;
++    JBYTE k,j;
++    JBYTE pos_in_table;
++    JWORD codevalue;
+     codevalue = 0;
+     pos_in_table = 0;
+     for (k=1; k<=16; k++)
+@@ -590,8 +590,8 @@ int jpegenc::set_numbers_category_and_bitcode()
+ {
+     SDWORD nr;
+     SDWORD nrlower, nrupper;
+-    BYTE cat;
+-    category_alloc = (BYTE *)malloc(65535*sizeof(BYTE));
++    JBYTE cat;
++    category_alloc = (JBYTE *)malloc(65535*sizeof(JBYTE));
+     if (category_alloc == NULL) return -1;
+     category = category_alloc + 32767;
+     bitcode_alloc=(bitstring *)malloc(65535*sizeof(bitstring));
+@@ -605,13 +605,13 @@ int jpegenc::set_numbers_category_and_bitcode()
+         {
+             category[nr] = cat;
+             bitcode[nr].length = cat;
+-            bitcode[nr].value = (WORD)nr;
++            bitcode[nr].value = (JWORD)nr;
+         }
+         for (nr=-(nrupper-1); nr<=-nrlower; nr++)
+         {
+             category[nr] = cat;
+             bitcode[nr].length = cat;
+-            bitcode[nr].value = (WORD)(nrupper-1+nr);
++            bitcode[nr].value = (JWORD)(nrupper-1+nr);
+         }
+         nrlower <<= 1;
+         nrupper <<= 1;
+@@ -621,7 +621,7 @@ int jpegenc::set_numbers_category_and_bitcode()
+ 
+ void jpegenc::precalculate_YCbCr_tables()
+ {
+-    WORD R,G,B;
++    JWORD R,G,B;
+     for (R=0; R<256; R++)
+     {
+         YRtab[R] = (SDWORD)(65536*0.299+0.5)*R;
+@@ -647,8 +647,8 @@ void jpegenc::prepare_quant_tables()
+     double aanscalefactor[8] = {
+         1.0, 1.387039845, 1.306562965, 1.175875602,
+         1.0, 0.785694958, 0.541196100, 0.275899379};
+-    BYTE row, col;
+-    BYTE i = 0;
++    JBYTE row, col;
++    JBYTE i = 0;
+     for (row = 0; row < 8; row++)
+     {
+         for (col = 0; col < 8; col++)
+@@ -671,7 +671,7 @@ void jpegenc::fdct_and_quantization(SBYTE *data, float *fdtbl, SWORD *outdata)
+     float datafloat[64];
+     float temp;
+     SBYTE ctr;
+-    BYTE i;
++    JBYTE i;
+     for (i=0; i<64; i++) datafloat[i] = data[i];
+     dataptr = datafloat;
+     for (ctr = 7; ctr >= 0; ctr--)
+@@ -754,11 +754,11 @@ void jpegenc::process_DU(SBYTE *ComponentDU,float *fdtbl,SWORD *DC, bitstring *H
+ {
+     bitstring EOB = HTAC[0x00];
+     bitstring M16zeroes = HTAC[0xF0];
+-    BYTE i;
+-    BYTE startpos;
+-    BYTE end0pos;
+-    BYTE nrzeroes;
+-    BYTE nrmarker;
++    JBYTE i;
++    JBYTE startpos;
++    JBYTE end0pos;
++    JBYTE nrzeroes;
++    JBYTE nrmarker;
+     SWORD Diff;
+     fdct_and_quantization(ComponentDU, fdtbl, DU_DCT);
+     for (i=0; i<64; i++) DU[zigzag[i]]=DU_DCT[i];
+@@ -789,15 +789,15 @@ void jpegenc::process_DU(SBYTE *ComponentDU,float *fdtbl,SWORD *DC, bitstring *H
+     if (end0pos != 63) writebits(EOB);
+ }
+ 
+-void jpegenc::load_data_units_from_RGB_buffer(WORD xpos, WORD ypos)
++void jpegenc::load_data_units_from_RGB_buffer(JWORD xpos, JWORD ypos)
+ {
+-    BYTE x, y;
+-    BYTE pos = 0;
+-    BYTE R, G, B, *location0 = RGB_buffer + (ypos * pitch + xpos * 3);
+-    WORD width8 = width - xpos, height8 = height - ypos;
++    JBYTE x, y;
++    JBYTE pos = 0;
++    JBYTE R, G, B, *location0 = RGB_buffer + (ypos * pitch + xpos * 3);
++    JWORD width8 = width - xpos, height8 = height - ypos;
+     for (y=0; y<8; y++)
+     {
+-        BYTE *location = location0;
++        JBYTE *location = location0;
+         for (x=0; x<8; x++)
+         {
+             if(x < width8 && y < height8)
+@@ -819,7 +819,7 @@ void jpegenc::load_data_units_from_RGB_buffer(WORD xpos, WORD ypos)
+ void jpegenc::main_encoder()
+ {
+     SWORD DCY = 0, DCCb = 0, DCCr = 0;
+-    WORD xpos, ypos;
++    JWORD xpos, ypos;
+     for (ypos=0; ypos<height; ypos+=8)
+     {
+         for (xpos=0; xpos<width; xpos+=8)
+@@ -834,7 +834,7 @@ void jpegenc::main_encoder()
+ 
+ int jpegenc::encode(const char *filename, SDL_Surface *image, int jpegquality, const char *comment)
+ {
+-    RGB_buffer = (BYTE *)image->pixels;
++    RGB_buffer = (JBYTE *)image->pixels;
+     width =  image->w;
+     height = image->h;
+     pitch = image->pitch;
+diff --git a/home/da1ek/AmigaChrome-dev/gameports-3d-intake/build/game-ports/sources/assaultcube/source/include/ogg/config_types.h b/source/include/ogg/config_types.h
+new file mode 100644
+index 0000000..81b80d2
+--- /dev/null
++++ b/source/include/ogg/config_types.h
+@@ -0,0 +1,10 @@
++#ifndef __CONFIG_TYPES_H__
++#define __CONFIG_TYPES_H__
++#include <stdint.h>
++typedef int16_t ogg_int16_t;
++typedef uint16_t ogg_uint16_t;
++typedef int32_t ogg_int32_t;
++typedef uint32_t ogg_uint32_t;
++typedef int64_t ogg_int64_t;
++typedef uint64_t ogg_uint64_t;
++#endif
+diff --git a/home/da1ek/AmigaChrome-dev/gameports-3d-intake/build/game-ports/sources/assaultcube/source/src/amiga_audio_stub.cpp b/source/src/amiga_audio_stub.cpp
+new file mode 100644
+index 0000000..fb37ce0
+--- /dev/null
++++ b/source/src/amiga_audio_stub.cpp
+@@ -0,0 +1,51 @@
++/* First-light Amiga audio backend.
++ * Deliberately reports no OpenAL device so AssaultCube runs in nosound mode.
++ * Replace with OpenAudio once the graphics/input client is proven. */
++#include <AL/al.h>
++#include <AL/alc.h>
++#include <vorbis/vorbisfile.h>
++#include <string.h>
++
++extern "C" {
++const ALchar *alGetString(ALenum) { return (const ALchar *)"OpenAL unavailable (Amiga first-light)"; }
++ALenum alGetError(void) { return AL_NO_ERROR; }
++void alListenerf(ALenum, ALfloat) {}
++void alListenerfv(ALenum, const ALfloat *) {}
++void alGenSources(ALsizei n, ALuint *p) { if(p) while(n-- > 0) *p++ = 0; }
++void alDeleteSources(ALsizei, const ALuint *) {}
++ALboolean alIsSource(ALuint) { return AL_FALSE; }
++void alSourcef(ALuint, ALenum, ALfloat) {}
++void alSource3f(ALuint, ALenum, ALfloat, ALfloat, ALfloat) {}
++void alSourcei(ALuint, ALenum, ALint) {}
++void alGetSourcef(ALuint, ALenum, ALfloat *v) { if(v) *v = 0; }
++void alGetSourcefv(ALuint, ALenum, ALfloat *v) { if(v) v[0]=v[1]=v[2]=0; }
++void alGetSourcei(ALuint, ALenum, ALint *v) { if(v) *v = 0; }
++void alSourcePlay(ALuint) {}
++void alSourceStop(ALuint) {}
++void alSourceRewind(ALuint) {}
++void alSourceQueueBuffers(ALuint, ALsizei, const ALuint *) {}
++void alSourceUnqueueBuffers(ALuint, ALsizei n, ALuint *p) { if(p) while(n-- > 0) *p++ = 0; }
++void alGenBuffers(ALsizei n, ALuint *p) { if(p) while(n-- > 0) *p++ = 0; }
++void alDeleteBuffers(ALsizei, const ALuint *) {}
++ALboolean alIsBuffer(ALuint) { return AL_FALSE; }
++void alBufferData(ALuint, ALenum, const ALvoid *, ALsizei, ALsizei) {}
++void alDistanceModel(ALenum) {}
++
++ALCdevice *alcOpenDevice(const ALCchar *) { return 0; }
++ALCboolean alcCloseDevice(ALCdevice *) { return ALC_TRUE; }
++ALCcontext *alcCreateContext(ALCdevice *, const ALCint *) { return 0; }
++ALCboolean alcMakeContextCurrent(ALCcontext *) { return ALC_TRUE; }
++void alcProcessContext(ALCcontext *) {}
++void alcSuspendContext(ALCcontext *) {}
++void alcDestroyContext(ALCcontext *) {}
++ALCboolean alcIsExtensionPresent(ALCdevice *, const ALCchar *) { return ALC_FALSE; }
++const ALCchar *alcGetString(ALCdevice *, ALCenum) { return (const ALCchar *)"OpenAudio pending"; }
++
++int ov_clear(OggVorbis_File *) { return 0; }
++int ov_open_callbacks(void *, OggVorbis_File *, char *, long, ov_callbacks) { return OV_EIMPL; }
++double ov_time_total(OggVorbis_File *, int) { return 0.0; }
++int ov_pcm_seek(OggVorbis_File *, ogg_int64_t) { return OV_EIMPL; }
++int ov_time_seek_page(OggVorbis_File *, double) { return OV_EIMPL; }
++vorbis_info *ov_info(OggVorbis_File *, int) { return 0; }
++long ov_read(OggVorbis_File *, char *, int, int, int, int, int *) { return OV_EIMPL; }
++}
+diff --git a/home/da1ek/AmigaChrome-dev/gameports-3d-intake/build/game-ports/sources/assaultcube/source/src/amiga_runtime.cpp b/source/src/amiga_runtime.cpp
+new file mode 100644
+index 0000000..f948dbe
+--- /dev/null
++++ b/source/src/amiga_runtime.cpp
+@@ -0,0 +1,4 @@
++/* OpenGPU SDK contract: GL executes on the application's stack. */
++#ifdef __amigaos__
++extern "C" unsigned long __stack = 1024UL * 1024UL;
++#endif

@@ -1,6 +1,6 @@
 # AssaultCube — AmigaChrome source intake
 
-**Status:** AMIGA SERVER CROSS-BUILD GREEN / CLIENT PORT NEXT  
+**Status:** AMIGA CLIENT CROSS-BUILD GREEN VIA OPENGPU SDK / RUNTIME FIRST-LIGHT NEXT  
 **Priority:** first 3D port
 
 ## Upstream
@@ -33,3 +33,7 @@ No upstream source or game data is committed to this repository.
 The pinned source now cross-builds a native AmigaOS `ac_server` with the gcc16 68040/FPU stove. The bootstrap patch removes Linux-only `-rdynamic`, supplies Amiga fallbacks for directory iteration, filesystem free-space probing, thread naming and millisecond sleeps, and keeps the standalone server SDL-free. ENet is built static for m68k and links through libnix `libsocket`, `libpthread` and the existing Amiga zlib archive.
 
 Current proof: `ac_server` is an AmigaOS loadseg executable (about 742 KiB). This is a compile/link gate only; runtime server validation is still required.
+
+## OpenGPU SDK client first light
+
+The native client now cross-builds against the packaged OpenGPU SDK in the gcc16 stove rather than loose SDL/GL artefacts. `sdl2-config` supplies SDL 2.32.10, libGL, the 68040/FPU ABI flags and the GCC 16 loop-miscompile workaround. The Amiga client requests a 1 MiB stack as required by the OpenGPU GL runtime. Graphics, input, networking, maps, bots and game logic link successfully. Audio is deliberately stubbed for the first runtime proof and will move to OpenAudio after graphics/input first light.
