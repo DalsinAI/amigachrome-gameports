@@ -1,1 +1,2 @@
 package-cdogs
+trigger=2
