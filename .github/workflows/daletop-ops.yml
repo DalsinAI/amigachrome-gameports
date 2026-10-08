@@ -638,6 +638,44 @@ jobs:
               echo "UQM_UIO_PATCH_REPAIRED"
               ;;
 
+            "daletop: inspect-uqm-final-link")
+              R="$GAMEPORTS"
+              U="$R/build/game-ports/sources/uqm/uqm-0.8.0"
+              O="$R/build/os3/uqm/out/obj/release"
+
+              echo "=== dirs.c getpwuid context ==="
+              grep -n -A70 -B50 -E 'getpwuid|getuid|passwd|HOME|home' "$U/src/libs/file/dirs.c" | head -260 || true
+              echo
+
+              echo "=== bundled regex files ==="
+              find "$U/src" -maxdepth 3 -type f \( -name 'regex.c' -o -name 'regex.h' -o -name '*regex*' \) -print | sort
+              echo
+
+              echo "=== regex build references ==="
+              grep -RIn -E 'HAVE_REGEX|HEADER_regex|regex\.c|regex\.h|regcomp|regexec|regfree|regerror' \
+                "$U/build" "$U/src" 2>/dev/null | head -360 || true
+              echo
+
+              echo "=== compiled regex object symbols ==="
+              find "$O" -type f -path '*regex*' -name '*.o' -print | while read -r obj; do
+                echo "--- $obj ---"
+                "$STOVE_PREFIX/bin/m68k-amigaos-nm" -g "$obj" 2>/dev/null | \
+                  grep -E '(_regcomp|_regexec|_regfree|_regerror|regcomp|regexec|regfree|regerror)' || true
+              done
+              echo
+
+              echo "=== generated config regex state ==="
+              for cfg in \
+                "$R/build/os3/uqm/work/build/unix/config_proginfo_host" \
+                "$R/build/os3/uqm/work/src/config_unix.h" \
+                "$R/build/os3/uqm/out/config.state"
+              do
+                [ -f "$cfg" ] || continue
+                echo "--- $cfg ---"
+                grep -n -E 'regex|REGEX|HAVE_REGEX|HEADER_REGEX' "$cfg" | head -120 || true
+              done
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
