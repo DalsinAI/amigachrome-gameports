@@ -93,4 +93,3 @@ build_config_fingerprint() {
     'PREBUILT_TOOLCHAIN=yes' | sha256sum | awk '{print $1}'
 }
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]

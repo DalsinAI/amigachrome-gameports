@@ -33,4 +33,3 @@ This is the SDL2 bootstrap gate. Once it reaches the menu/solar system, its
 graphics backend can be replaced by the shared ACGame indexed AGA presenter;
 conversation portraits remain a strong HAM8 presentation candidate.
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]
