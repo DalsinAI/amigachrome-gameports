@@ -177,6 +177,48 @@ jobs:
               grep -RIn -A60 -B20 "SYMBOL_.*_EXTRA" "$U/build/unix" | head -240 || true
               ;;
 
+            "daletop: fix-uqm-probe-rebuild")
+              R="$GAMEPORTS"
+              B="$R/ports/uqm/build-amigaos3.sh"
+
+              echo "=== patch UQM Amiga configure probes ==="
+              python3 - "$B" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1])
+          s=p.read_text()
+          anchor="""s=s.replace('LIB_zlib_LDFLAGS="-lz"',
+          '''LIB_zlib_LDFLAGS="-L$UQM_DEPS/lib -lz"''')
+          """
+          addition="""s=s.replace('SYMBOL_strcasecmp_EXTRA="#include <strings.h>"',
+          '''SYMBOL_strcasecmp_EXTRA="extern int strcasecmp(const char *, const char *);"''')
+          s=s.replace('SYMBOL_stricmp_EXTRA="#include <string.h>"',
+          '''SYMBOL_stricmp_EXTRA="extern int stricmp(const char *, const char *);"''')
+          """
+          if 'extern int strcasecmp(const char *, const char *);' not in s:
+              if anchor not in s:
+                  raise SystemExit("config_proginfo_host patch anchor not found")
+              s=s.replace(anchor, anchor + addition, 1)
+              p.write_text(s)
+          print("probe declarations present")
+          PY
+
+              sh -n "$B"
+              grep -n -A10 -B6 'SYMBOL_strcasecmp_EXTRA' "$B" || true
+
+              echo
+              echo "=== rebuild UQM, local prepared source only ==="
+              sh "$B"
+
+              echo
+              echo "=== UQM target executables ==="
+              find "$R/build/os3/uqm" -type f -name 'uqm*' -perm -111 -print | sort | while read -r exe; do
+                file "$exe"
+                sha256sum "$exe"
+              done
+              echo "UQM_REBUILD_PASS"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
