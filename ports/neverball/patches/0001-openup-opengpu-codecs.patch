@@ -1,0 +1,1073 @@
+diff --git a/Makefile b/Makefile
+index 8635646..5bf9aaa 100644
+--- a/Makefile
++++ b/Makefile
+@@ -80,8 +80,8 @@ ALL_CXXFLAGS := -fno-rtti -fno-exceptions $(CXXFLAGS)
+ # Preprocessor...
+ 
+ SDL_CPPFLAGS := $(shell sdl2-config --cflags)
+-PNG_CPPFLAGS := $(shell libpng-config --cflags)
+-JPEG_CPPFLAGS := $(shell pkg-config --cflags libjpeg)
++PNG_CPPFLAGS :=
++JPEG_CPPFLAGS :=
+ 
+ ALL_CPPFLAGS := $(SDL_CPPFLAGS) $(JPEG_CPPFLAGS) $(PNG_CPPFLAGS) -Ishare
+ 
+@@ -162,8 +162,8 @@ ALL_CPPFLAGS += $(HMD_CPPFLAGS)
+ # Libraries
+ 
+ SDL_LIBS := $(shell sdl2-config --libs)
+-PNG_LIBS := $(shell libpng-config --ldflags)
+-JPEG_LIBS := $(shell pkg-config --libs libjpeg)
++PNG_LIBS :=
++JPEG_LIBS :=
+ 
+ ENABLE_FS := stdio
+ ifeq ($(ENABLE_FS),stdio)
+@@ -235,8 +235,8 @@ ifeq ($(PLATFORM),darwin)
+                                                    /opt/homebrew/lib))
+ endif
+ 
+-OGG_LIBS := -lvorbisfile
+-TTF_LIBS := -lSDL2_ttf
++OGG_LIBS :=
++TTF_LIBS := -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+ 
+ ifeq ($(PLATFORM),haiku)
+ 	TTF_LIBS := -lSDL2_ttf -lfreetype
+@@ -282,8 +282,6 @@ MAPC_OBJS := \
+ 	share/base_config.o \
+ 	share/common.o      \
+ 	share/fs_common.o   \
+-	share/fs_png.o      \
+-	share/fs_jpg.o      \
+ 	share/dir.o         \
+ 	share/array.o       \
+ 	share/list.o        \
+@@ -325,9 +323,6 @@ BALL_OBJS := \
+ 	share/fbo.o         \
+ 	share/glsl.o        \
+ 	share/fs_common.o   \
+-	share/fs_png.o      \
+-	share/fs_jpg.o      \
+-	share/fs_ov.o       \
+ 	share/log.o         \
+ 	share/joy.o         \
+ 	share/package.o     \
+@@ -395,9 +390,6 @@ PUTT_OBJS := \
+ 	share/common.o      \
+ 	share/list.o        \
+ 	share/fs_common.o   \
+-	share/fs_png.o      \
+-	share/fs_jpg.o      \
+-	share/fs_ov.o       \
+ 	share/dir.o         \
+ 	share/fbo.o         \
+ 	share/glsl.o        \
+diff --git a/share/audio.c b/share/audio.c
+index 4674a55..6aabbd3 100644
+--- a/share/audio.c
++++ b/share/audio.c
+@@ -1,501 +1,229 @@
+ /*
+- * Copyright (C) 2003 Robert Kooima
+- *
+- * NEVERBALL is  free software; you can redistribute  it and/or modify
+- * it under the  terms of the GNU General  Public License as published
+- * by the Free  Software Foundation; either version 2  of the License,
+- * or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT  ANY  WARRANTY;  without   even  the  implied  warranty  of
+- * MERCHANTABILITY or  FITNESS FOR A PARTICULAR PURPOSE.   See the GNU
+- * General Public License for more details.
++ * Neverball OpenUp audio backend.
++ * Uses OpenGPU SDL2_mixer -> SDL2 audio -> AHI.
++ * GPL-2.0-or-later, matching Neverball.
+  */
+-
+ #include <SDL.h>
+-
+-#define OV_EXCLUDE_STATIC_CALLBACKS
+-#include <vorbis/codec.h>
+-#include <vorbis/vorbisfile.h>
+-
+-#include <string.h>
++#include <SDL_mixer.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <math.h>
+ 
+ #include "config.h"
+ #include "audio.h"
+-#include "common.h"
+ #include "fs.h"
+-#include "fs_ov.h"
+ #include "log.h"
+ 
+-/*---------------------------------------------------------------------------*/
+-
+ #define AUDIO_RATE 44100
+ #define AUDIO_CHAN 2
+ 
+-struct voice
+-{
+-    OggVorbis_File  vf;
+-    float          amp;
+-    float         damp;
+-    int           chan;
+-    int           play;
+-    int           loop;
+-    char         *name;
+-    struct voice *next;
++struct sound_cache {
++    char *name;
++    Mix_Chunk *chunk;
++    struct sound_cache *next;
+ };
+ 
+-static int   audio_state = 0;
+-static float sound_vol   = 1.0f;
+-static float music_vol   = 1.0f;
+-
+-static SDL_AudioSpec spec;
+-
+-static struct voice *music  = NULL;
+-static struct voice *queue  = NULL;
+-static struct voice *voices = NULL;
+-static short        *buffer = NULL;
+-
+-static ov_callbacks callbacks = {
+-    fs_ov_read, fs_ov_seek, fs_ov_close, fs_ov_tell
+-};
+-
+-/*---------------------------------------------------------------------------*/
++static int audio_state = 0;
++static float sound_vol = 1.0f;
++static float music_vol = 1.0f;
++static struct sound_cache *sounds = NULL;
++static Mix_Music *music = NULL;
++static char *music_name = NULL;
+ 
+ #define LOG_VOLUME(v) ((float) pow((double) (v), 2.0))
+ 
+-#define MIX(d, s) {                           \
+-        int T = (int) (d) + (int) (s);        \
+-        if      (T >  32767) (d) =  32767;    \
+-        else if (T < -32768) (d) = -32768;    \
+-        else                 (d) = (short) T; \
+-    }
+-
+-static int voice_step(struct voice *V, float volume, Uint8 *stream, int length)
++static float clamp01(float v)
+ {
+-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+-    int order = 1;
+-#else
+-    int order = 0;
+-#endif
+-
+-    short *obuf = (short *) stream;
+-    char  *ibuf = (char  *) buffer;
+-
+-    int i, b = 0, n = 1, c = 0, r = 0;
+-
+-    /* Compute the total request size for the current stream. */
+-
+-    if (V->chan == 1) r = length / 2;
+-    if (V->chan == 2) r = length    ;
+-
+-    /* While data is coming in and data is still needed... */
+-
+-    while (n > 0 && r > 0)
+-    {
+-        /* Read audio from the stream. */
+-
+-        if ((n = (int) ov_read(&V->vf, ibuf, r, order, 2, 1, &b)) > 0)
+-        {
+-            /* Mix mono audio. */
+-
+-            if (V->chan == 1)
+-                for (i = 0; i < n / 2; i += 1)
+-                {
+-                    short M = (short) (LOG_VOLUME(V->amp) * volume * buffer[i]);
+-
+-                    MIX(obuf[c], M); c++;
+-                    MIX(obuf[c], M); c++;
+-
+-                    V->amp += V->damp;
+-
+-                    if (V->amp < 0.0f) V->amp = 0.0;
+-                    if (V->amp > 1.0f) V->amp = 1.0;
+-                }
+-
+-            /* Mix stereo audio. */
+-
+-            if (V->chan == 2)
+-                for (i = 0; i < n / 2; i += 2)
+-                {
+-                    short L = (short) (LOG_VOLUME(V->amp) * volume * buffer[i + 0]);
+-                    short R = (short) (LOG_VOLUME(V->amp) * volume * buffer[i + 1]);
+-
+-                    MIX(obuf[c], L); c++;
+-                    MIX(obuf[c], R); c++;
+-
+-                    V->amp += V->damp;
+-
+-                    if (V->amp < 0.0f) V->amp = 0.0;
+-                    if (V->amp > 1.0f) V->amp = 1.0;
+-                }
+-
+-            r -= n;
+-        }
+-        else
+-        {
+-            /* We're at EOF.  Loop or end the voice. */
+-
+-            if (V->loop)
+-            {
+-                ov_raw_seek(&V->vf, 0);
+-                n = 1;
+-            }
+-            else return 1;
+-        }
+-    }
+-    return 0;
++    if (v < 0.0f) return 0.0f;
++    if (v > 1.0f) return 1.0f;
++    return v;
+ }
+ 
+-static struct voice *voice_init(const char *filename, float a)
++static Mix_Chunk *sound_get(const char *filename)
+ {
+-    struct voice *V;
+-    fs_file      fp;
+-
+-    if (!filename)
++    struct sound_cache *s;
++    int len = 0;
++    void *data;
++    SDL_RWops *rw;
++    Mix_Chunk *chunk;
++
++    for (s = sounds; s; s = s->next)
++        if (strcmp(s->name, filename) == 0)
++            return s->chunk;
++
++    data = fs_load(filename, &len);
++    if (!data || len <= 0)
+         return NULL;
+ 
+-    /* Allocate and initialize a new voice structure. */
+-
+-    if ((V = (struct voice *) calloc(1, sizeof (struct voice))))
+-    {
+-        if (!(V->name = strdup(filename)))
+-        {
+-            free(V);
+-            return NULL;
+-        }
+-
+-        /* Attempt to open the named Ogg stream. */
+-
+-        if ((fp = fs_open_read(filename)))
+-        {
+-            if (ov_open_callbacks(fp, &V->vf, NULL, 0, callbacks) == 0)
+-            {
+-                vorbis_info *info = ov_info(&V->vf, -1);
+-
+-                /* On success, configure the voice. */
+-
+-                V->amp  = a;
+-                V->damp = 0;
+-                V->chan = info->channels;
+-                V->play = 1;
+-                V->loop = 0;
+-
+-                if (V->amp > 1.0f) V->amp = 1.0;
+-                if (V->amp < 0.0f) V->amp = 0.0;
+-
+-                /* The file will be closed when the Ogg is cleared. */
+-                return V;
+-            }
+-            else fs_close(fp);
+-        }
++    rw = SDL_RWFromConstMem(data, len);
++    chunk = rw ? Mix_LoadWAV_RW(rw, 1) : NULL;
++    free(data);
++    if (!chunk)
++        return NULL;
+ 
+-        free(V->name);
+-        free(V);
++    s = (struct sound_cache *) calloc(1, sizeof(*s));
++    if (!s) {
++        Mix_FreeChunk(chunk);
++        return NULL;
+     }
+-    return NULL;
+-}
+-
+-static void voice_free(struct voice *V)
+-{
+-    if (V)
+-    {
+-        ov_clear(&V->vf);
+-
+-        free(V->name);
+-        free(V);
++    s->name = strdup(filename);
++    if (!s->name) {
++        Mix_FreeChunk(chunk);
++        free(s);
++        return NULL;
+     }
++    s->chunk = chunk;
++    s->next = sounds;
++    sounds = s;
++    return chunk;
+ }
+ 
+-/*---------------------------------------------------------------------------*/
+-
+-static void audio_step(void *data, Uint8 *stream, int length)
++static void music_free(void)
+ {
+-    struct voice *V = voices;
+-    struct voice *P = NULL;
+-
+-    /* Zero the output buffer. */
+-
+-    memset(stream, 0, length);
+-
+-    /* Mix the background music. */
+-
++    Mix_HaltMusic();
+     if (music)
+-    {
+-        voice_step(music, music_vol, stream, length);
+-
+-        /* If the track has faded out, move to a queued track. */
+-
+-        if (music->amp <= 0.0f && music->damp < 0.0f && queue)
+-        {
+-            voice_free(music);
+-            music = queue;
+-            queue = NULL;
+-        }
+-    }
+-
+-    /* Iterate over all active voices. */
+-
+-    while (V)
+-    {
+-        /* Mix this voice. */
+-
+-        if (V->play && voice_step(V, sound_vol, stream, length))
+-        {
+-            /* Delete a finished voice... */
+-
+-            struct voice *T = V;
+-
+-            if (P)
+-                V = P->next = V->next;
+-            else
+-                V = voices  = V->next;
++        Mix_FreeMusic(music);
++    music = NULL;
++    free(music_name);
++    music_name = NULL;
++}
+ 
+-            voice_free(T);
+-        }
+-        else
+-        {
+-            /* ... or continue to the next. */
++static int music_load(const char *filename)
++{
++    const char *path;
+ 
+-            P = V;
+-            V = V->next;
+-        }
+-    }
++    if (!filename)
++        return 0;
++    if (music_name && strcmp(music_name, filename) == 0 && music)
++        return 1;
++
++    music_free();
++    path = fs_resolve(filename);
++    if (!path)
++        path = filename;
++    music = Mix_LoadMUS(path);
++    if (!music)
++        return 0;
++    music_name = strdup(filename);
++    if (!music_name) {
++        Mix_FreeMusic(music);
++        music = NULL;
++        return 0;
++    }
++    return 1;
+ }
+ 
+-/*---------------------------------------------------------------------------*/
+-
+ void audio_init(void)
+ {
+-    if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+-    {
+-        log_printf("Failure to initialize audio (%s)\n", SDL_GetError());
+-        return;
+-    }
+-
+-    audio_state = 0;
+-
+-    /* Configure the audio. */
++    int samples = config_get_d(CONFIG_AUDIO_BUFF);
+ 
+-    spec.format   = AUDIO_S16SYS;
+-    spec.channels = AUDIO_CHAN;
+-    spec.samples  = config_get_d(CONFIG_AUDIO_BUFF);
+-    spec.freq     = AUDIO_RATE;
+-    spec.callback = audio_step;
++    if (samples <= 0)
++        samples = 1024;
+ 
+-    /* Allocate an input buffer. */
+-
+-    if ((buffer = (short *) malloc(spec.samples * 4)))
+-    {
+-        /* Start the audio thread. */
+-
+-        if (SDL_OpenAudio(&spec, NULL) == 0)
+-        {
+-            audio_state = 1;
+-            SDL_PauseAudio(0);
+-        }
+-        else log_printf("Failure to open audio device (%s)\n", SDL_GetError());
++    if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
++        log_printf("Failure to initialize audio (%s)\\n", SDL_GetError());
++        return;
+     }
+ 
+-    /* Set the initial volumes. */
++    if (Mix_OpenAudio(AUDIO_RATE, AUDIO_S16SYS, AUDIO_CHAN, samples) < 0) {
++        log_printf("Failure to open audio device (%s)\\n", Mix_GetError());
++        SDL_QuitSubSystem(SDL_INIT_AUDIO);
++        return;
++    }
+ 
++    Mix_AllocateChannels(16);
++    audio_state = 1;
+     audio_volume(config_get_d(CONFIG_SOUND_VOLUME),
+                  config_get_d(CONFIG_MUSIC_VOLUME));
+ }
+ 
+ void audio_free(void)
+ {
+-    struct voice *V;
+-
+-    /* Halt the audio thread. */
+-
+-    SDL_CloseAudio();
++    struct sound_cache *s, *n;
+ 
+-    /* Release the input buffer. */
+-
+-    free(buffer);
+-    buffer = NULL;
+-
+-    /* Free the voices. */
+-
+-    voice_free(music);
+-    voice_free(queue);
++    if (!audio_state)
++        return;
+ 
+-    V = voices;
++    music_free();
++    Mix_HaltChannel(-1);
+ 
+-    while (V)
+-    {
+-        struct voice *N = V->next;
+-        voice_free(V);
+-        V = N;
++    for (s = sounds; s; s = n) {
++        n = s->next;
++        Mix_FreeChunk(s->chunk);
++        free(s->name);
++        free(s);
+     }
++    sounds = NULL;
+ 
+-    voices = NULL;
+-    music = NULL;
+-    queue = NULL;
+-
++    Mix_CloseAudio();
+     SDL_QuitSubSystem(SDL_INIT_AUDIO);
++    audio_state = 0;
+ }
+ 
+ void audio_play(const char *filename, float a)
+ {
+-    if (audio_state)
+-    {
+-        struct voice *V;
+-
+-        /* If we're already playing this sound, preempt the running copy. */
+-
+-        SDL_LockAudio();
+-        {
+-            for (V = voices; V; V = V->next)
+-                if (V->name && strcmp(V->name, filename) == 0)
+-                {
+-                    ov_raw_seek(&V->vf, 0);
+-
+-                    V->amp = a;
+-
+-                    if (V->amp > 1.0f) V->amp = 1.0;
+-                    if (V->amp < 0.0f) V->amp = 0.0;
+-
+-                    SDL_UnlockAudio();
+-                    return;
+-                }
+-        }
+-        SDL_UnlockAudio();
+-
+-        /* Create a new voice structure. */
+-
+-        if ((V = voice_init(filename, a)))
+-        {
+-            /* Add it to the list of sounding voices. */
+-
+-            SDL_LockAudio();
+-            {
+-                V->next = voices;
+-                voices  = V;
+-            }
+-            SDL_UnlockAudio();
+-        }
+-    }
+-}
++    Mix_Chunk *chunk;
++    int channel;
+ 
+-/*---------------------------------------------------------------------------*/
++    if (!audio_state || !filename)
++        return;
+ 
+-static void audio_music_play(const char *filename)
+-{
+-    if (audio_state)
+-    {
+-        audio_music_stop();
+-
+-        SDL_LockAudio();
+-        {
+-            if ((music = voice_init(filename, 0.0f)))
+-            {
+-                music->loop = 1;
+-            }
+-        }
+-        SDL_UnlockAudio();
+-    }
+-}
++    chunk = sound_get(filename);
++    if (!chunk)
++        return;
+ 
+-static void audio_music_queue(const char *filename, float t)
+-{
+-    if (audio_state)
+-    {
+-        SDL_LockAudio();
+-        {
+-            if ((queue = voice_init(filename, 0.0f)))
+-            {
+-                queue->loop = 1;
+-
+-                if (t > 0.0f)
+-                    queue->damp = +1.0f / (AUDIO_RATE * t);
+-            }
+-        }
+-        SDL_UnlockAudio();
+-    }
++    channel = Mix_PlayChannel(-1, chunk, 0);
++    if (channel >= 0)
++        Mix_Volume(channel, (int)(MIX_MAX_VOLUME * sound_vol * clamp01(a)));
+ }
+ 
+ void audio_music_stop(void)
+ {
+     if (audio_state)
+-    {
+-        SDL_LockAudio();
+-        {
+-            if (music)
+-            {
+-                voice_free(music);
+-            }
+-            music = NULL;
+-        }
+-        SDL_UnlockAudio();
+-    }
++        music_free();
+ }
+ 
+-/*---------------------------------------------------------------------------*/
+-
+ void audio_music_fade_out(float t)
+ {
+-    SDL_LockAudio();
+-    {
+-        if (music) music->damp = -1.0f / (AUDIO_RATE * t);
+-    }
+-    SDL_UnlockAudio();
++    if (audio_state && music)
++        Mix_FadeOutMusic((int)(t * 1000.0f));
+ }
+ 
+ void audio_music_fade_in(float t)
+ {
+-    SDL_LockAudio();
+-    {
+-        if (music) music->damp = +1.0f / (AUDIO_RATE * t);
+-    }
+-    SDL_UnlockAudio();
++    if (!audio_state || !music)
++        return;
++    Mix_VolumeMusic((int)(MIX_MAX_VOLUME * music_vol));
++    if (!Mix_PlayingMusic())
++        Mix_FadeInMusic(music, -1, (int)(t * 1000.0f));
+ }
+ 
+ void audio_music_fade_to(float t, const char *filename)
+ {
+-    if (music)
+-    {
+-        if (!music->name || strcmp(filename, music->name) != 0)
+-        {
+-            audio_music_fade_out(t);
+-            audio_music_queue(filename, t);
+-        }
+-        else
+-        {
+-            /*
+-             * We're fading to the current track.  Chances are,
+-             * whatever track is still in the queue, we don't want to
+-             * hear it anymore.
+-             */
+-
+-            if (queue)
+-            {
+-                voice_free(queue);
+-                queue = NULL;
+-            }
+-
+-            audio_music_fade_in(t);
+-        }
+-    }
+-    else
+-    {
+-        audio_music_play(filename);
++    if (!audio_state || !filename)
++        return;
++
++    if (music_name && music && strcmp(music_name, filename) == 0) {
+         audio_music_fade_in(t);
++        return;
++    }
++
++    if (music_load(filename)) {
++        Mix_VolumeMusic((int)(MIX_MAX_VOLUME * music_vol));
++        Mix_FadeInMusic(music, -1, (int)(t * 1000.0f));
+     }
+ }
+ 
+-/*
+- * Logarithmic volume control.
+- */
+ void audio_volume(int s, int m)
+ {
+-    float sl = (float) s / 10.0f;
+-    float ml = (float) m / 10.0f;
++    float sl = clamp01((float)s / 10.0f);
++    float ml = clamp01((float)m / 10.0f);
+ 
+     sound_vol = LOG_VOLUME(sl);
+     music_vol = LOG_VOLUME(ml);
+-}
+ 
+-/*---------------------------------------------------------------------------*/
++    if (audio_state) {
++        Mix_Volume(-1, (int)(MIX_MAX_VOLUME * sound_vol));
++        Mix_VolumeMusic((int)(MIX_MAX_VOLUME * music_vol));
++    }
++}
+diff --git a/share/base_image.c b/share/base_image.c
+index 60c84a3..dc210dc 100644
+--- a/share/base_image.c
++++ b/share/base_image.c
+@@ -12,19 +12,16 @@
+  * General Public License for more details.
+  */
+ 
+-#include <png.h>
+-#include <jpeglib.h>
++#include <SDL.h>
++#include <SDL_image.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <assert.h>
+-#include <setjmp.h>
+ 
+ #include "base_config.h"
+ #include "base_image.h"
+ 
+ #include "fs.h"
+-#include "fs_png.h"
+-#include "fs_jpg.h"
+ 
+ /*---------------------------------------------------------------------------*/
+ 
+@@ -51,189 +48,44 @@ void image_near2(int *W, int *H, int w, int h)
+ 
+ /*---------------------------------------------------------------------------*/
+ 
+-static void *image_load_png(const char *filename, int *width,
+-                                                  int *height,
+-                                                  int *bytes)
++static void *image_load_sdl(const char *filename, int *width, int *height, int *bytes)
+ {
+-    fs_file fh;
++    int len = 0, y;
++    void *data = fs_load(filename, &len);
++    SDL_RWops *rw;
++    SDL_Surface *src = NULL, *rgba = NULL;
++    unsigned char *out = NULL;
+ 
+-    png_structp readp = NULL;
+-    png_infop   infop = NULL;
+-    png_bytep  *bytep = NULL;
+-    unsigned char  *p = NULL;
+-
+-    /* Initialize all PNG import data structures. */
+-
+-    if (!(fh = fs_open_read(filename)))
++    if (!data || len <= 0)
+         return NULL;
+ 
+-    if (!(readp = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0)))
+-        return NULL;
+-
+-    if (!(infop = png_create_info_struct(readp)))
+-        return NULL;
+-
+-    /* Enable the default PNG error handler. */
+-
+-    if (setjmp(png_jmpbuf(readp)) == 0)
+-    {
+-        int w, h, b, i;
+-
+-        /* Read the PNG header. */
+-
+-        png_set_read_fn(readp, fh, fs_png_read);
+-        png_read_info(readp, infop);
+-
+-        png_set_expand(readp);
+-        png_set_strip_16(readp);
+-        png_set_packing(readp);
+-
+-        png_read_update_info(readp, infop);
+-
+-        /* Extract and check image properties. */
+-
+-        w = (int) png_get_image_width (readp, infop);
+-        h = (int) png_get_image_height(readp, infop);
+-
+-        switch (png_get_color_type(readp, infop))
+-        {
+-        case PNG_COLOR_TYPE_GRAY:       b = 1; break;
+-        case PNG_COLOR_TYPE_GRAY_ALPHA: b = 2; break;
+-        case PNG_COLOR_TYPE_RGB:        b = 3; break;
+-        case PNG_COLOR_TYPE_RGB_ALPHA:  b = 4; break;
+-
+-        default: longjmp(png_jmpbuf(readp), -1);
+-        }
+-
+-        if (!(bytep = png_malloc(readp, h * sizeof (png_bytep))))
+-            longjmp(png_jmpbuf(readp), -1);
+-
+-        /* Allocate the final pixel buffer and read pixels there. */
+-
+-        if ((p = (unsigned char *) malloc(w * h * b)))
+-        {
+-            for (i = 0; i < h; i++)
+-                bytep[i] = p + w * b * (h - i - 1);
+-
+-            png_read_image(readp, bytep);
+-            png_read_end(readp, NULL);
+-
+-            if (width)  *width  = w;
+-            if (height) *height = h;
+-            if (bytes)  *bytes  = b;
+-        }
+-
+-        png_free(readp, bytep);
+-    }
+-    else p = NULL;
+-
+-    /* Free all resources. */
+-
+-    png_destroy_read_struct(&readp, &infop, NULL);
+-    fs_close(fh);
+-
+-    return p;
+-}
+-
+-/*
+- * JPEG error manager wrapper so that we don't exit() on JPEG errors.
+- */
+-struct image_jpg_error
+-{
+-    struct jpeg_error_mgr mgr;
+-
+-    jmp_buf setjmp_buffer;
+-};
+-
+-static void image_jpg_error_exit(j_common_ptr cinfo)
+-{
+-    struct image_jpg_error *err = (struct image_jpg_error *) cinfo->err;
+-
+-    cinfo->err->output_message(cinfo);
+-
+-    longjmp(err->setjmp_buffer, 1);
+-}
+-
+-static void *image_load_jpg(const char *filename, int *width,
+-                                                  int *height,
+-                                                  int *bytes)
+-{
+-    unsigned char *p = NULL;
+-    fs_file fp;
+-
+-    if ((fp = fs_open_read(filename)))
+-    {
+-        struct jpeg_decompress_struct cinfo;
+-        struct image_jpg_error err;
+-
+-        int w, h, b, i = 0;
+-
+-        /* Initialize the JPG decompressor. */
+-
+-        memset(&cinfo, 0, sizeof (cinfo));
+-
+-        /* Install our error_exit replacement. */
+-
+-        cinfo.err = jpeg_std_error(&err.mgr);
+-
+-        err.mgr.error_exit = image_jpg_error_exit;
+-
+-        if (setjmp(err.setjmp_buffer) == 0)
+-        {
+-            jpeg_create_decompress(&cinfo);
+-
+-            /* Set up a VFS source manager. */
+-
+-            fs_jpg_src(&cinfo, fp);
+-
+-            /* Grab the JPG header info. */
+-
+-            jpeg_read_header(&cinfo, TRUE);
+-            jpeg_start_decompress(&cinfo);
+-
+-            w = cinfo.output_width;
+-            h = cinfo.output_height;
+-            b = cinfo.output_components;
+-
+-            /* Allocate the final pixel buffer and copy pixels there. */
+-
+-            if ((p = (unsigned char *) malloc (w * h * b)))
+-            {
+-                while (cinfo.output_scanline < cinfo.output_height)
+-                {
+-                    unsigned char *buffer = p + w * b * (h - i - 1);
+-                    i += jpeg_read_scanlines(&cinfo, &buffer, 1);
+-                }
+-
+-                if (width)  *width  = w;
+-                if (height) *height = h;
+-                if (bytes)  *bytes  = b;
+-            }
+-
+-            jpeg_finish_decompress(&cinfo);
+-        }
+-        jpeg_destroy_decompress(&cinfo);
+-
+-        fs_close(fp);
++    rw = SDL_RWFromConstMem(data, len);
++    if (rw)
++        src = IMG_Load_RW(rw, 1);
++    if (src)
++        rgba = SDL_ConvertSurfaceFormat(src, SDL_PIXELFORMAT_RGBA32, 0);
++    if (src)
++        SDL_FreeSurface(src);
++
++    if (rgba && (out = (unsigned char *) malloc((size_t) rgba->w * rgba->h * 4))) {
++        for (y = 0; y < rgba->h; ++y)
++            memcpy(out + (size_t)(rgba->h - 1 - y) * rgba->w * 4,
++                   (unsigned char *)rgba->pixels + (size_t)y * rgba->pitch,
++                   (size_t)rgba->w * 4);
++        if (width)  *width  = rgba->w;
++        if (height) *height = rgba->h;
++        if (bytes)  *bytes  = 4;
+     }
+ 
+-    return p;
++    if (rgba)
++        SDL_FreeSurface(rgba);
++    free(data);
++    return out;
+ }
+ 
+-void *image_load(const char *filename, int *width,
+-                                       int *height,
+-                                       int *bytes)
++void *image_load(const char *filename, int *width, int *height, int *bytes)
+ {
+-    if (filename && strlen(filename) > 4)
+-    {
+-        const char *ext = filename + strlen(filename) - 4;
+-
+-        if      (strcmp(ext, ".png") == 0 || strcmp(ext, ".PNG") == 0)
+-            return image_load_png(filename, width, height, bytes);
+-        else if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".JPG") == 0)
+-            return image_load_jpg(filename, width, height, bytes);
+-    }
+-    return NULL;
++    return filename ? image_load_sdl(filename, width, height, bytes) : NULL;
+ }
+ 
+ /*---------------------------------------------------------------------------*/
+diff --git a/share/fetch_null.c b/share/fetch_null.c
+index f3fe94e..a745da8 100644
+--- a/share/fetch_null.c
++++ b/share/fetch_null.c
+@@ -14,6 +14,8 @@
+ 
+ #include "fetch.h"
+ 
++unsigned long FETCH_EVENT = (unsigned long) -1;
++
+ void fetch_enable(int enable)
+ {
+ }
+diff --git a/share/image.c b/share/image.c
+index 40de5b2..74641b9 100644
+--- a/share/image.c
++++ b/share/image.c
+@@ -14,9 +14,9 @@
+ 
+ #include <SDL.h>
+ #include <SDL_ttf.h>
++#include <SDL_image.h>
+ #include <string.h>
+ #include <math.h>
+-#include <png.h>
+ #include <stdlib.h>
+ 
+ #include "glext.h"
+@@ -26,76 +26,29 @@
+ #include "video.h"
+ 
+ #include "fs.h"
+-#include "fs_png.h"
+ 
+ /*---------------------------------------------------------------------------*/
+ 
+ int image_save_png(const char *filename, const unsigned char *p, int w, int h)
+ {
+-    fs_file     filep  = NULL;
+-    png_structp writep = NULL;
+-    png_infop   infop  = NULL;
+-    png_bytep  *bytep  = NULL;
+-    int i, success = 0;
++    SDL_Surface *srf;
++    int y, rc;
+ 
+     if (!filename || !p || w <= 0 || h <= 0)
+         return 0;
+ 
+-    /* Initialize all PNG export data structures. */
+-
+-    if (!(filep = fs_open_write(filename)))
+-        return 0;
+-    if (!(writep = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0)))
+-    {
+-        fs_close(filep);
+-        return 0;
+-    }
+-    if (!(infop = png_create_info_struct(writep)))
+-    {
+-        png_destroy_write_struct(&writep, NULL);
+-        fs_close(filep);
++    srf = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
++    if (!srf)
+         return 0;
+-    }
+-
+-    /* Enable the default PNG error handler. */
+-
+-    if (setjmp(png_jmpbuf(writep)) == 0)
+-    {
+-        /* Initialize the PNG header. */
+-
+-        png_set_write_fn(writep, filep, fs_png_write, fs_png_flush);
+-        png_set_IHDR(writep, infop, w, h, 8,
+-                     PNG_COLOR_TYPE_RGB,
+-                     PNG_INTERLACE_NONE,
+-                     PNG_COMPRESSION_TYPE_DEFAULT,
+-                     PNG_FILTER_TYPE_DEFAULT);
+-        png_set_compression_level(writep, 1);
+-
+-        /* Allocate and initialize the row pointers. */
+-
+-        if ((bytep = (png_bytep *) png_malloc(writep, h * sizeof (png_bytep))))
+-        {
+-            for (i = 0; i < h; ++i)
+-                bytep[h - i - 1] = (png_bytep) (p + i * w * 4);
+-
+-            /* Write the PNG image file. */
+-
+-            png_write_info(writep, infop);
+-            png_set_filler(writep, 0, PNG_FILLER_AFTER);
+-            png_write_image(writep, bytep);
+-            png_write_end(writep, infop);
+-
+-            free(bytep);
+-            success = 1;
+-        }
+-    }
+-
+-    /* Release all resources. */
+ 
+-    png_destroy_write_struct(&writep, &infop);
+-    fs_close(filep);
++    for (y = 0; y < h; ++y)
++        memcpy((unsigned char *)srf->pixels + (size_t)y * srf->pitch,
++               p + (size_t)(h - 1 - y) * w * 4,
++               (size_t)w * 4);
+ 
+-    return success;
++    rc = IMG_SavePNG(srf, filename);
++    SDL_FreeSurface(srf);
++    return rc == 0;
+ }
+ 
+ void image_snap(const char *filename)

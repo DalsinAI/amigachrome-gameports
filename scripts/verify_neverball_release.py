@@ -5,7 +5,7 @@ This is deliberately strict: it verifies package completeness and provenance.
 It does not turn a package into RELEASE; runtime qualification remains mandatory.
 """
 from __future__ import annotations
-import argparse, hashlib, json
+import argparse, hashlib, json, zipfile
 from pathlib import Path
 
 PIN = "a1ed09911dca262d80049c12a2824d683af494d6"
@@ -41,7 +41,15 @@ def main() -> int:
     data=root/"data"
     if data.is_dir():
         sols=list(data.rglob("*.sol"))
-        if not sols:
+        pk3=data/"data-1.6.0.pk3"
+        pk3_sols=0
+        if pk3.is_file():
+            if sha256(pk3) != "b2eddfbe05443e36719541639cb6246c5dd81260bce67a053d0d2c0ad34bc58c":
+                failures.append("official data-1.6.0.pk3 hash mismatch")
+            else:
+                with zipfile.ZipFile(pk3) as zf:
+                    pk3_sols=sum(1 for n in zf.namelist() if n.lower().endswith(".sol"))
+        if not sols and pk3_sols == 0:
             failures.append("no compiled .sol level assets found")
     legal=root/"doc"/"legal"
     if not legal.is_dir():
