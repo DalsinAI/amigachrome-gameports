@@ -1037,6 +1037,173 @@ jobs:
                 -print -exec file {} \; 2>/dev/null | sort
               ;;
 
+            "daletop: repair-test-revival-stager")
+              R="$GAMEPORTS"
+              S="$R/scripts/stage-revival-release.sh"
+              TESTOUT="$R/build/release/revival-stager-test"
+
+              cat > "$S" <<'SH'
+          #!/bin/sh
+          set -eu
+
+          HERE=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+          OUT=${1:-"$HERE/build/release/revival"}
+          SRC="$HERE/build/game-ports/sources"
+          QUALIFIED=${COMPILER_QUALIFIED:-0}
+
+          rm -rf "$OUT"
+          mkdir -p "$OUT"
+
+          STATUS="$OUT/STAGING_STATUS.tsv"
+          printf 'port\tstatus\tnote\n' > "$STATUS"
+
+          record() {
+              printf '%s\t%s\t%s\n' "$1" "$2" "$3" >> "$STATUS"
+          }
+
+          stage_common() {
+              slug=$1
+              source=$2
+              dir="$OUT/$slug"
+              mkdir -p "$dir"
+              for file in "$source"/LICENSE* "$source"/COPYING* "$source"/README*; do
+                  [ -f "$file" ] && cp "$file" "$dir/" || true
+              done
+              mkdir -p "$dir/Icons"
+              printf '%s\n' 'ICON ART PENDING — see docs/GARY-ICON-BRIEF-REVIVAL-PORTS.md' > "$dir/Icons/README.txt"
+          }
+
+          launcher() {
+              dir=$1
+              bin=$2
+              shift 2
+              {
+                  echo 'CD PROGDIR:'
+                  printf 'PROGDIR:%s' "$bin"
+                  for arg in "$@"; do printf ' %s' "$arg"; done
+                  echo
+              } > "$dir/Run"
+          }
+
+          mark_provisional() {
+              dir=$1
+              if [ "$QUALIFIED" != 1 ]; then
+                  cat > "$dir/PROVISIONAL-COMPILER.txt" <<'EOF'
+          This artifact was staged without COMPILER_QUALIFIED=1.
+          It is engineering/test evidence only and must not be promoted to RELEASE.
+          EOF
+              fi
+          }
+
+          stage_binary() {
+              slug=$1
+              source=$2
+              binary=$3
+              outname=$4
+              shift 4
+              if [ ! -f "$binary" ]; then
+                  record "$slug" MISSING_BINARY "$binary"
+                  return 1
+              fi
+              stage_common "$slug" "$source"
+              cp "$binary" "$OUT/$slug/$outname"
+              launcher "$OUT/$slug" "$outname" "$@"
+              mark_provisional "$OUT/$slug"
+              sha256sum "$OUT/$slug/$outname" > "$OUT/$slug/SHA256SUMS"
+              return 0
+          }
+
+          # Chocolate Doom: engine only; IWAD remains external.
+          if stage_binary chocolate-doom "$SRC/chocolate-doom" \
+              "$HERE/build/os3/chocolate-doom/src/chocolate-doom" ChocolateDoom; then
+              cat > "$OUT/chocolate-doom/CONTENT.txt" <<'EOF'
+          No Doom IWAD is bundled. Supply an authorised compatible IWAD such as Freedoom or a legally owned Doom data file.
+          EOF
+              record chocolate-doom STAGED_ENGINE_ONLY "IWAD required for runtime"
+          fi
+
+          # SDLPoP: stage redistributable engine/support files only.
+          if stage_binary sdlpop "$SRC/sdlpop" "$SRC/sdlpop/prince" SDLPoP; then
+              for dir in data mods replays; do
+                  [ -d "$SRC/sdlpop/$dir" ] && cp -a "$SRC/sdlpop/$dir" "$OUT/sdlpop/" || true
+              done
+              [ -f "$SRC/sdlpop/SDLPoP.ini" ] && cp "$SRC/sdlpop/SDLPoP.ini" "$OUT/sdlpop/" || true
+              cat > "$OUT/sdlpop/CONTENT.txt" <<'EOF'
+          This staging area contains only upstream engine/support files. Do not add commercial Prince of Persia material to public archives.
+          EOF
+              record sdlpop STAGED_SUPPORT "runtime qualification still required"
+          fi
+
+          # OpenJazz: engine only; Jazz data remains external.
+          if stage_binary openjazz "$SRC/openjazz" \
+              "$HERE/build/os3/openjazz/OpenJazz" OpenJazz; then
+              cat > "$OUT/openjazz/CONTENT.txt" <<'EOF'
+          Jazz Jackrabbit game data is not bundled. Add only authorised/shareware-compatible data for runtime qualification.
+          EOF
+              record openjazz STAGED_ENGINE_ONLY "Jazz data required for runtime"
+          fi
+
+          # NXEngine-evo: missing binary must not abort the rest of the wave.
+          if stage_binary nxengine-evo "$SRC/nxengine-evo" \
+              "$HERE/build/os3/nxengine-evo/nxengine-evo" NXEngine; then
+              [ -d "$SRC/nxengine-evo/data" ] && cp -a "$SRC/nxengine-evo/data" "$OUT/nxengine-evo/" || true
+              cat > "$OUT/nxengine-evo/CONTENT.txt" <<'EOF'
+          Cave Story game data is not bundled. Add the required authorised/freeware data according to NXEngine-evo upstream instructions.
+          EOF
+              record nxengine-evo STAGED_ENGINE_ONLY "Cave Story data required for runtime"
+          fi
+
+          # C-Dogs: do not stage the data-bearing package into a public release
+          # tree until the historical asset-provenance review is closed.
+          if [ -f "$HERE/build/os3/cdogs/src/cdogs-sdl" ]; then
+              mkdir -p "$OUT/_holds/cdogs-sdl"
+              cp "$HERE/build/os3/cdogs/src/cdogs-sdl" "$OUT/_holds/cdogs-sdl/CDogs"
+              sha256sum "$OUT/_holds/cdogs-sdl/CDogs" > "$OUT/_holds/cdogs-sdl/SHA256SUMS"
+              cat > "$OUT/_holds/cdogs-sdl/HOLD.txt" <<'EOF'
+          C-Dogs is intentionally excluded from the public release staging tree.
+          Close the upstream data/sound provenance review and pass fixed-stove runtime qualification before promotion.
+          EOF
+              record cdogs-sdl HOLD_DATA_PROVENANCE "_holds/cdogs-sdl"
+          else
+              record cdogs-sdl MISSING_BINARY "$HERE/build/os3/cdogs/src/cdogs-sdl"
+          fi
+
+          # UQM: engine only; content package remains separate.
+          if stage_binary uqm "$SRC/uqm/uqm-0.8.0" \
+              "$HERE/build/os3/uqm/out/uqm" UQM -n PROGDIR:content; then
+              mkdir -p "$OUT/uqm/content/packages"
+              cat > "$OUT/uqm/CONTENT.txt" <<'EOF'
+          The Ur-Quan Masters content packages are not bundled. Install authorised compatible content below content/packages/ before runtime qualification.
+          EOF
+              record uqm STAGED_ENGINE_ONLY "UQM content required for runtime"
+          fi
+
+          echo "=== revival staging status ==="
+          cat "$STATUS"
+          echo
+          echo "=== staged executable checksums ==="
+          find "$OUT" -type f -name SHA256SUMS -print -exec cat {} \;
+
+          echo "Revival staging completed at $OUT"
+          SH
+
+              sh -n "$S"
+              rm -rf "$TESTOUT"
+              sh "$S" "$TESTOUT"
+
+              echo
+              echo "=== assertions ==="
+              grep -q '^nxengine-evo[[:space:]]MISSING_BINARY' "$TESTOUT/STAGING_STATUS.tsv"
+              grep -q '^cdogs-sdl[[:space:]]HOLD_DATA_PROVENANCE' "$TESTOUT/STAGING_STATUS.tsv"
+              grep -q '^uqm[[:space:]]STAGED_ENGINE_ONLY' "$TESTOUT/STAGING_STATUS.tsv"
+              grep -q '^chocolate-doom[[:space:]]STAGED_ENGINE_ONLY' "$TESTOUT/STAGING_STATUS.tsv"
+              grep -q '^openjazz[[:space:]]STAGED_ENGINE_ONLY' "$TESTOUT/STAGING_STATUS.tsv"
+              grep -q '^sdlpop[[:space:]]STAGED_SUPPORT' "$TESTOUT/STAGING_STATUS.tsv"
+              test ! -d "$TESTOUT/cdogs-sdl"
+              test -d "$TESTOUT/_holds/cdogs-sdl"
+              echo "REVIVAL_STAGER_TEST_PASS"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
