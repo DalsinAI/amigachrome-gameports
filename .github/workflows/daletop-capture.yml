@@ -27,8 +27,8 @@ jobs:
           from PIL import Image
           import sys
           im=Image.open(sys.argv[1]).convert("RGB")
-          im.thumbnail((320,180))
-          im.save(sys.argv[2],"JPEG",quality=45,optimize=True)
+          im.thumbnail((640,360))
+          im.save(sys.argv[2],"JPEG",quality=60,optimize=True)
           print("SHOT_SIZE", im.size)
           PY
           echo "IMAGE_BEGIN"
