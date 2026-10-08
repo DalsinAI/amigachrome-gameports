@@ -9,6 +9,15 @@ The catalog pins every source by full Git commit or archive SHA-256.
     python3 scripts/game_port_prepare.py prepare --root . --game all
     python3 scripts/game_port_prepare.py verify --root . --game all
 
+The first command is offline by default. If an exact pinned source or archive is
+not already present locally, it stops before making a network request. Only
+after explicit approval, rerun that preparation with:
+
+    python3 scripts/game_port_prepare.py prepare --root . --game all --allow-network
+
+The flag is deliberately explicit so an existing build recipe cannot silently
+turn source preparation into a network operation.
+
 Prepared source is placed below `build/game-ports/sources/`, which is intentionally ignored by Git.
 
 ## 2. Provide an AROS m68k SDK
