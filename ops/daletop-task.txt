@@ -1,2 +1,2 @@
-inspect-gameports
-trigger=1791500913597
+inspect-uqm-strcasecmp
+trigger=1791501206313
