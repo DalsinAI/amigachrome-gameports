@@ -534,6 +534,110 @@ jobs:
               echo "UQM_REBUILD_PASS"
               ;;
 
+            "daletop: repair-uqm-uio-patch")
+              R="$GAMEPORTS"
+              B="$R/ports/uqm/build-amigaos3.sh"
+
+              echo "=== current portability block ==="
+              grep -n -A70 -B8 'libnix has readdir' "$B" || true
+
+              python3 - "$B" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1])
+          s=p.read_text()
+
+          start=s.index("# libnix has readdir() but not readdir_r(), and does not expose _POSIX_NAME_MAX.")
+          end=s.index('ln -sf "$P/bin/m68k-amigaos-gcc" "$BUILD/tools/gcc"', start)
+
+          block=r'''# libnix has readdir() but not readdir_r(), and does not expose _POSIX_NAME_MAX.
+          python3 - "$SC2/src/port.h" "$SC2/src/libs/uio/uioport.h" "$SC2/src/libs/uio/stdio/stdio.c" <<'PY_UQM_PORT'
+          from pathlib import Path
+          import sys
+
+          # General UQM portability header.
+          p = Path(sys.argv[1])
+          t = p.read_text()
+          t = t.replace(
+              '#\tifndef NAME_MAX\n#\t\tdefine NAME_MAX _POSIX_NAME_MAX\n#\tendif',
+              '#\tifndef NAME_MAX\n'
+              '#\t\tif defined(__amigaos__)\n'
+              '#\t\t\tdefine NAME_MAX 255\n'
+              '#\t\telse\n'
+              '#\t\t\tdefine NAME_MAX _POSIX_NAME_MAX\n'
+              '#\t\tendif\n'
+              '#\tendif',
+              1,
+          )
+          p.write_text(t)
+
+          # UIO has its own portability header with the same NAME_MAX assumption.
+          p = Path(sys.argv[2])
+          t = p.read_text()
+          t = t.replace(
+              '#\tifndef NAME_MAX\n#\t\tdefine NAME_MAX _POSIX_NAME_MAX\n#\tendif',
+              '#\tifndef NAME_MAX\n'
+              '#\t\tif defined(__amigaos__)\n'
+              '#\t\t\tdefine NAME_MAX 255\n'
+              '#\t\telse\n'
+              '#\t\t\tdefine NAME_MAX _POSIX_NAME_MAX\n'
+              '#\t\tendif\n'
+              '#\tendif',
+              1,
+          )
+          p.write_text(t)
+
+          # libnix provides readdir(), not readdir_r().
+          p = Path(sys.argv[3])
+          t = p.read_text()
+          t = t.replace(
+              '\tresult = stdio_EntriesIterator_new(dirHandle);\n'
+              '\tresult->status = readdir_r(dirHandle, result->direntBuffer,\n'
+              '\t\t\t&result->entry);\n',
+              '\tresult = stdio_EntriesIterator_new(dirHandle);\n'
+              '#ifdef __amigaos__\n'
+              '\tresult->entry = readdir(dirHandle);\n'
+              '\tresult->status = 0;\n'
+              '#else\n'
+              '\tresult->status = readdir_r(dirHandle, result->direntBuffer,\n'
+              '\t\t\t&result->entry);\n'
+              '#endif\n',
+              1,
+          )
+          t = t.replace(
+              '#else\n'
+              '\tfor (; iterator->status == 0 && iterator->entry != NULL;\n'
+              '\t\t\titerator->status = readdir_r(iterator->dirHandle,\n'
+              '\t\t\titerator->direntBuffer, &iterator->entry))\n'
+              '#endif\n',
+              '#else\n'
+              '#ifdef __amigaos__\n'
+              '\tfor (; iterator->entry != NULL;\n'
+              '\t\t\titerator->entry = readdir(iterator->dirHandle))\n'
+              '#else\n'
+              '\tfor (; iterator->status == 0 && iterator->entry != NULL;\n'
+              '\t\t\titerator->status = readdir_r(iterator->dirHandle,\n'
+              '\t\t\titerator->direntBuffer, &iterator->entry))\n'
+              '#endif\n'
+              '#endif\n',
+              1,
+          )
+          p.write_text(t)
+          PY_UQM_PORT
+
+          '''
+          s=s[:start]+block+s[end:]
+          p.write_text(s)
+          print("clean UQM portability block installed")
+          PY
+
+              sh -n "$B"
+              echo
+              echo "=== repaired block ==="
+              grep -n -A105 -B4 'libnix has readdir' "$B" | head -140
+              echo "UQM_UIO_PATCH_REPAIRED"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
