@@ -443,6 +443,69 @@ jobs:
               echo "CDOGS_FIRSTLIGHT_ATTEMPT_COMPLETE"
               ;;
 
+            "daletop: fix-uqm-detect-rebuild")
+              R="$GAMEPORTS"
+              B="$R/ports/uqm/build-amigaos3.sh"
+              TMP=$(mktemp -d)
+              trap 'rm -rf "$TMP"' EXIT
+
+              echo "=== prove toolchain symbols ==="
+              cat > "$TMP/strcasecmp.c" <<'EOF'
+          extern int strcasecmp(const char *, const char *);
+          int main(void) { return strcasecmp("OpenUp","openup"); }
+          EOF
+              "$STOVE/bin/m68k-amigaos-gcc" -noixemul -m68040 -m68881 \
+                "$TMP/strcasecmp.c" -o "$TMP/strcasecmp"
+              file "$TMP/strcasecmp"
+
+              cat > "$TMP/stricmp.c" <<'EOF'
+          extern int stricmp(const char *, const char *);
+          int main(void) { return stricmp("Amiga","amiga"); }
+          EOF
+              "$STOVE/bin/m68k-amigaos-gcc" -noixemul -m68040 -m68881 \
+                "$TMP/stricmp.c" -o "$TMP/stricmp"
+              file "$TMP/stricmp"
+              echo "UQM_COMPARE_SYMBOLS_LINK_PASS"
+
+              echo
+              echo "=== teach UQM cross-probe verified result ==="
+              python3 - "$B" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1])
+          s=p.read_text()
+          needle="""s=s.replace('SYMBOL_stricmp_EXTRA="#include <string.h>"',
+          '''SYMBOL_stricmp_EXTRA="extern int stricmp(const char *, const char *);"''')
+          """
+          addition="""s=s.replace('SYMBOL_strcasecmp_DEFNAME="HAVE_STRCASECMP_UQM"',
+          '''SYMBOL_strcasecmp_DEFNAME="HAVE_STRCASECMP_UQM"
+          SYMBOL_strcasecmp_DETECT="true"''')
+          s=s.replace('SYMBOL_stricmp_EXTRA="extern int stricmp(const char *, const char *);"',
+          '''SYMBOL_stricmp_EXTRA="extern int stricmp(const char *, const char *);"
+          SYMBOL_stricmp_DETECT="true"''')
+          """
+          if 'SYMBOL_strcasecmp_DETECT="true"' not in s:
+              if needle not in s:
+                  raise SystemExit("UQM probe patch anchor not found")
+              s=s.replace(needle, needle + addition, 1)
+              p.write_text(s)
+          print("verified cross-probe override present")
+          PY
+              sh -n "$B"
+
+              echo
+              echo "=== rebuild UQM from prepared local source ==="
+              sh "$B"
+
+              echo
+              echo "=== UQM target executables ==="
+              find "$R/build/os3/uqm" -type f -name 'uqm*' -perm -111 -print | sort | while read -r exe; do
+                file "$exe"
+                sha256sum "$exe"
+              done
+              echo "UQM_REBUILD_PASS"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
