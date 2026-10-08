@@ -386,6 +386,63 @@ jobs:
               echo "CDOGS_SCREENSHOT_BASE64_END"
               ;;
 
+            "daletop: run-cdogs-firstlight")
+              LAB=/home/da1ek/AmigaChrome-dev/openup070lab
+              I="$LAB/Instance-CDogs"
+
+              if ss -ltn 2>/dev/null | grep -Eq ':(8958|8959)[[:space:]]'; then
+                echo "REFUSED: 8958/8959 already in use" >&2
+                exit 70
+              fi
+
+              echo "=== start C-Dogs lab ==="
+              mkdir -p "$I/logs"
+              RUNNER_TRACKING_ID= setsid nohup python3 /home/da1ek/AmigaChrome/host/amigachrome_host.py \
+                --root /home/da1ek/AmigaChrome \
+                --instance-root "$I" \
+                --storage "$I/devices" \
+                --port 8959 >"$I/logs/host-cdogs2.log" 2>&1 < /dev/null &
+              HPID=$!
+              sleep 2
+              RUNNER_TRACKING_ID= setsid nohup python3 /home/da1ek/AmigaChrome/host/native/native_bridge.py \
+                --instance-root "$I" \
+                --port 8958 \
+                --host-port 8959 \
+                --z3 256 \
+                --host-pid "$HPID" >"$I/logs/bridge-cdogs2.log" 2>&1 < /dev/null &
+              BPID=$!
+              echo "host=$HPID bridge=$BPID"
+              sleep 12
+
+              echo "=== dismiss OpenUp Setup: Later ==="
+              LABPORT=8958 python3 "$LAB/drive.py" click 1050 570
+              sleep 3
+              LABPORT=8958 python3 "$LAB/drive.py" shot cdogs-after-later || true
+
+              echo "=== launch C-Dogs ==="
+              LABPORT=8958 python3 "$LAB/drive.py" key ramiga+e
+              sleep 1
+              LABPORT=8958 python3 "$LAB/drive.py" type "DH0:C/Execute DH1:C-Dogs/start-cdogs"
+              LABPORT=8958 python3 "$LAB/drive.py" key ret
+              sleep 25
+              LABPORT=8958 python3 "$LAB/drive.py" shot cdogs-firstlight2 || true
+
+              echo "=== guest file activity ==="
+              ls -l "$I/devices/harddisks/DH1/C-Dogs/cdogs.log" 2>/dev/null || true
+              cat "$I/devices/harddisks/DH1/C-Dogs/cdogs.log" 2>/dev/null || true
+              echo
+              echo "=== C-Dogs storage hits ==="
+              grep -E 'C-Dogs|CDogs|SDL|opengpu|OpenInput|AHI' "$I/logs/host-cdogs2.log" | tail -160 || true
+              echo
+              echo "=== bridge tail ==="
+              tail -80 "$I/logs/bridge-cdogs2.log" || true
+
+              kill "$BPID" 2>/dev/null || true
+              sleep 2
+              kill "$HPID" 2>/dev/null || true
+              echo "CDOGS_FIRSTLIGHT_ATTEMPT_COMPLETE"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
