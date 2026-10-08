@@ -883,6 +883,63 @@ jobs:
               echo "UQM_COMPILE_PASS_PROVISIONAL_OLD_STOVE"
               ;;
 
+            "daletop: regen-verify-cdogs-patch")
+              R="$GAMEPORTS"
+              C="$R/build/game-ports/sources/cdogs-sdl"
+              PATCH="$R/ports/cdogs-sdl/patches/0001-amigaos3-opengpu.patch"
+              BUILD_SCRIPT="$R/ports/cdogs-sdl/build-amigaos3.sh"
+              TMP=$(mktemp -d)
+              trap 'rm -rf "$TMP"' EXIT
+
+              echo "=== source pin ==="
+              PIN=$(git -C "$C" rev-parse HEAD)
+              echo "$PIN"
+              test "$PIN" = "8263a6f0200a71498f8c47bd0fce0f2d2d678d84"
+
+              echo "=== regenerate complete patch ==="
+              (
+                cd "$C"
+                git diff -- \
+                  CMakeLists.txt \
+                  src/cdogs.c \
+                  src/cdogs/cwolfmap/zip/miniz.h \
+                  src/cdogs/enet/CMakeLists.txt \
+                  src/cdogs/enet/include/enet/enet.h \
+                  src/cdogs/enet/unix.c \
+                  src/cdogs/files.c \
+                  src/cdogs/find_steam_game.h \
+                  src/cdogs/rlutil/rlutil.h
+                git diff --no-index -- /dev/null src/cdogs/enet/amiga.c || test $? -eq 1
+                git diff --no-index -- /dev/null src/cdogs/enet/include/enet/amiga.h || test $? -eq 1
+              ) > "$TMP/complete.patch"
+
+              grep -q 'src/cdogs/enet/amiga.c' "$TMP/complete.patch"
+              grep -q 'src/cdogs/enet/include/enet/amiga.h' "$TMP/complete.patch"
+              cp "$TMP/complete.patch" "$PATCH"
+              echo "patch bytes: $(wc -c < "$PATCH")"
+
+              echo "=== pristine local source ==="
+              mkdir -p "$TMP/src"
+              git -C "$C" archive HEAD | tar -xf - -C "$TMP/src"
+              git -C "$C" diff --quiet HEAD -- || true
+
+              echo "=== patch applies to pristine source ==="
+              git -C "$TMP/src" init -q
+              git -C "$TMP/src" add -A
+              git -C "$TMP/src" -c user.name=local -c user.email=local@example.invalid commit -qm pristine
+              git -C "$TMP/src" apply --check "$PATCH"
+              echo "CDOGS_PATCH_APPLY_PASS"
+
+              echo "=== pristine local rebuild, no network ==="
+              AMIGA_STOVE="$STOVE_ROOT" STOVE="$STOVE_ROOT" \
+                sh "$BUILD_SCRIPT" "$TMP/src" "$TMP/build"
+              BIN="$TMP/build/src/cdogs-sdl"
+              test -f "$BIN"
+              file "$BIN"
+              sha256sum "$BIN"
+              echo "CDOGS_PRISTINE_REBUILD_PASS_PROVISIONAL_OLD_STOVE"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
