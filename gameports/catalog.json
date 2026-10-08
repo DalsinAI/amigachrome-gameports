@@ -72,6 +72,50 @@
         "member": "neverball-1.6.0/data/data-1.6.0.pk3",
         "memberSha256": "b2eddfbe05443e36719541639cb6246c5dd81260bce67a053d0d2c0ad34bc58c"
       }
+    },
+    "assaultcube": {
+      "order": 7,
+      "title": "AssaultCube",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/assaultcube/AC.git",
+        "commit": "13f0d8eea4822dee5c976661218d022be74342e3",
+        "submodules": false
+      },
+      "contentPolicy": "Source code is zlib-like. The shipped media uses mixed per-asset licences; do not redistribute game data until its individual/package licence has been checked."
+    },
+    "serious-sam-classic": {
+      "order": 8,
+      "title": "Serious Sam Classic (TFE/TSE)",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/tx00100xt/SeriousSamClassic.git",
+        "commit": "80b9893e5b74e5a2160eaf63e6d6b3f3981dfbbd",
+        "submodules": false
+      },
+      "contentPolicy": "Engine source is GPL-2.0. Original Serious Sam game data is not open and must be supplied by the user; do not commit or redistribute it."
+    },
+    "warzone2100": {
+      "order": 9,
+      "title": "Warzone 2100",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/Warzone2100/warzone2100.git",
+        "commit": "d7ce18df8d998c968915a5e6410a68626927813e",
+        "submodules": true
+      },
+      "contentPolicy": "GPL-2.0 project with additional third-party notices and submodules. Preserve COPYING/COPYING.NONGPL/COPYING.README and review submodule/data licences before packaging."
+    },
+    "doom3": {
+      "order": 10,
+      "title": "Doom 3 GPL source",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/id-Software/DOOM-3.git",
+        "commit": "a9c49da5afb18201d31e3f0a429a037e56ce2b9a",
+        "submodules": false
+      },
+      "contentPolicy": "Engine source is GPL-3.0 with id Software's additional terms in COPYING.txt. Original Doom 3 game data is proprietary and must be user-supplied."
     }
   }
 }
