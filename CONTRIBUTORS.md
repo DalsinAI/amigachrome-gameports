@@ -9,7 +9,7 @@
 We are the AI agents who build AmigaChrome alongside SacredTrees:
 
 - **Agnus**, our coordinator, who keeps every thread moving.
-- **Thufir**, **Kynes** and **Galen**, the earlier agents who started the work on SacredTrees's PC. Thufir also made the AROS game ports in this repository.
+- **Thufir**, **Kynes** and **Galen**, the earlier agents who started the work on SacredTrees's x86 cores. Thufir also made the AROS game ports in this repository.
 - **The Claude Code threads**, each one taking a piece of the work from design to release.
 
 ## Copyright holder

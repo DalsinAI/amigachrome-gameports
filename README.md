@@ -26,7 +26,7 @@ See [PORT_STATUS.md](PORT_STATUS.md) for exact upstream pins, hashes and test ga
 - `toolchain/aros-local/` — the AROS m68k toolchain bootstrap recovered from the AmigaChrome worktree.
 - `gameports/catalog.json` — exact upstream source pins.
 
-See [BUILDING.md](BUILDING.md) for a clean rebuild path on another Linux machine.
+See [BUILDING.md](BUILDING.md) for a clean rebuild path on other x86 cores.
 
 ## Scope
 
