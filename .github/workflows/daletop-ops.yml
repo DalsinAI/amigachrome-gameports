@@ -196,6 +196,62 @@ jobs:
               echo "CDOGS_PACKAGE_PASS"
               ;;
 
+            "daletop: package-cdogs")
+              R="$GAMEPORTS"
+              C="$R/build/game-ports/sources/cdogs-sdl"
+              COUT="$R/build/os3/cdogs/src/cdogs-sdl"
+              CPKG="$R/build/release/cdogs-sdl"
+
+              test -f "$COUT"
+              rm -rf "$CPKG"
+              mkdir -p "$CPKG/C-Dogs"
+              cp "$COUT" "$CPKG/C-Dogs/CDogs"
+              for d in data dogfights missions graphics music sounds; do
+                [ ! -e "$C/$d" ] || cp -a "$C/$d" "$CPKG/C-Dogs/"
+              done
+              for f in LICENSE LICENSE.md COPYING COPYING.txt README README.md CHANGELOG CHANGELOG.md; do
+                [ ! -f "$C/$f" ] || cp "$C/$f" "$CPKG/C-Dogs/"
+              done
+              cat > "$CPKG/C-Dogs/OPENUP-RELEASE.txt" <<'EOF'
+          C-Dogs SDL for OpenUp / AmigaChrome
+          Target: AmigaOS 3.x, 68040 + FPU
+          Graphics/input/audio: Open platform SDL2 path
+          Runtime data: bundled upstream redistributable data from the pinned source tree
+          Status: compiled/package staged; runtime qualification still required
+          EOF
+              (
+                cd "$CPKG"
+                find C-Dogs -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+              )
+              file "$CPKG/C-Dogs/CDogs"
+              sha256sum "$CPKG/C-Dogs/CDogs"
+              du -sh "$CPKG/C-Dogs"
+              echo "CDOGS_PACKAGE_PASS"
+              ;;
+
+            "daletop: inspect-uqm-strcasecmp")
+              R="$GAMEPORTS"
+              U="$R/build/game-ports/sources/uqm/uqm-0.8.0"
+              SYS="$STOVE/m68k-amigaos"
+
+              echo "=== UQM case-insensitive compare logic ==="
+              grep -n -A20 -B12 -E 'strcasecmp|stricmp' "$U/src/port.h" | head -120
+              echo
+              echo "=== sysroot declarations ==="
+              grep -RIn --include='*.h' -E 'strcasecmp|stricmp|strncasecmp|strnicmp' "$SYS/include" "$SYS/ndk-include" 2>/dev/null | head -120 || true
+              echo
+              echo "=== libraries exporting symbols ==="
+              for a in "$SYS"/lib/*.a "$SYS"/libnix/lib/*.a; do
+                [ -f "$a" ] || continue
+                "$STOVE/bin/m68k-amigaos-nm" -g "$a" 2>/dev/null | \
+                  grep -E '(^|[[:space:]])(_?strcasecmp|_?stricmp|_?strncasecmp|_?strnicmp)          esac
+ && echo "IN $a" || true
+              done
+              echo
+              echo "=== config host compare probes ==="
+              grep -n -A20 -B10 -E 'strcasecmp|stricmp' "$U/build/unix/config_proginfo_host" | head -140 || true
+              ;;
+
             *)
               echo "REFUSED: task is not on the approved allow-list: $TASK" >&2
               exit 64
