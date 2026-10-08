@@ -1,0 +1,384 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4beb0b02..49dfa03a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,6 +4,13 @@ cmake_policy(SET CMP0072 NEW)
+ set(CMAKE_OSX_DEPLOYMENT_TARGET 10.13)
+ project(cdogs-sdl C)
+ 
++# AmigaOS 3.x (bebbo's m68k-amigaos-gcc, libnix) against our SDL 2
++# (openamigasdl). No editor, and network play stubbed out for now.
++option(AMIGA_OS3 "Build for AmigaOS 3.x with openamigasdl's SDL 2" OFF)
++if(AMIGA_OS3)
++	set(BUILD_EDITOR OFF CACHE BOOL "" FORCE)
++endif()
++
+ set(VERSION_MAJOR "2")
+ set(VERSION_MINOR "4")
+ set(VERSION_PATCH "0")
+@@ -66,10 +73,17 @@ set(CMAKE_MODULE_PATH
+ 	${CMAKE_MODULE_PATH}
+ 	"${CMAKE_SOURCE_DIR}/src/proto/nanopb/extra")
+ 	
+-find_package(Nanopb 0.4.5...<1.0.0 REQUIRED)
+-find_package(SDL2 REQUIRED)
++if(AMIGA_OS3)
++	# Generated nanopb runtime is already in-tree. SDL comes from OpenGPU SDK.
++	set(NANOPB_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/proto/nanopb")
++	find_package(SDL2 CONFIG REQUIRED)
++	find_package(SDL2_mixer CONFIG REQUIRED)
++else()
++	find_package(Nanopb 0.4.5...<1.0.0 REQUIRED)
++	find_package(SDL2 REQUIRED)
++	find_package(SDL2_mixer REQUIRED)
++endif()
+ message("SDL2 include dir: ${SDL2_INCLUDE_DIRS}")
+-find_package(SDL2_mixer REQUIRED)
+ if(BUILD_EDITOR)
+ 	find_package(OpenGL REQUIRED)
+ endif()
+diff --git a/src/cdogs.c b/src/cdogs.c
+index d64a3b95..e744588d 100644
+--- a/src/cdogs.c
++++ b/src/cdogs.c
+@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
+ 
+ #ifndef __EMSCRIPTEN__
+ 	const int sdlFlags = SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO |
+-						 SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER;
++						 SDL_INIT_GAMECONTROLLER;
+ #else
+ 	const int sdlFlags = SDL_INIT_AUDIO | SDL_INIT_VIDEO;
+ #endif
+diff --git a/src/cdogs/cwolfmap/zip/miniz.h b/src/cdogs/cwolfmap/zip/miniz.h
+index 1a95fb4b..901dfde5 100644
+--- a/src/cdogs/cwolfmap/zip/miniz.h
++++ b/src/cdogs/cwolfmap/zip/miniz.h
+@@ -4995,7 +4995,7 @@ static int mz_mkdir(const char *pDirname) {
+ #define MZ_FCLOSE fclose
+ #define MZ_FREAD fread
+ #define MZ_FWRITE fwrite
+-#ifdef __STRICT_ANSI__
++#if defined(__STRICT_ANSI__) || defined(__amigaos__) /* libnix has no ftello/fseeko */
+ #define MZ_FTELL64 ftell
+ #define MZ_FSEEK64 fseek
+ #else
+diff --git a/src/cdogs/enet/CMakeLists.txt b/src/cdogs/enet/CMakeLists.txt
+index bb1e3310..9de9a07a 100644
+--- a/src/cdogs/enet/CMakeLists.txt
++++ b/src/cdogs/enet/CMakeLists.txt
+@@ -69,4 +69,5 @@ add_library(enet STATIC
+         protocol.c
+         unix.c
+         win32.c
++        amiga.c
+     )
+diff --git a/src/cdogs/enet/include/enet/enet.h b/src/cdogs/enet/include/enet/enet.h
+index c7624538..a72cd95d 100644
+--- a/src/cdogs/enet/include/enet/enet.h
++++ b/src/cdogs/enet/include/enet/enet.h
+@@ -14,6 +14,8 @@ extern "C"
+ 
+ #ifdef _WIN32
+ #include "enet/win32.h"
++#elif defined(__amigaos__)
++#include "enet/amiga.h"
+ #else
+ #include "enet/unix.h"
+ #endif
+diff --git a/src/cdogs/enet/unix.c b/src/cdogs/enet/unix.c
+index f3ea21eb..aee9ac21 100644
+--- a/src/cdogs/enet/unix.c
++++ b/src/cdogs/enet/unix.c
+@@ -2,7 +2,7 @@
+  @file  unix.c
+  @brief ENet Unix system specific functions
+ */
+-#ifndef _WIN32
++#if !defined(_WIN32) && !defined(__amigaos__)
+ 
+ #define _POSIX_C_SOURCE 200112L
+ 
+diff --git a/src/cdogs/files.c b/src/cdogs/files.c
+index b1ff5cc0..24cf8c40 100644
+--- a/src/cdogs/files.c
++++ b/src/cdogs/files.c
+@@ -616,6 +616,10 @@ const char *GetHomeDirectory(void)
+ char cfpath[CDOGS_PATH_MAX];
+ const char *GetConfigFilePath(const char *name)
+ {
++#ifdef __amigaos__
++	snprintf(cfpath, sizeof cfpath, "PROGDIR:Prefs/%s", name);
++	return cfpath;
++#endif
+ 	const char *xdgConfigDir = getenv("XDG_CONFIG_HOME");
+ 	if (xdgConfigDir != NULL)
+ 	{
+diff --git a/src/cdogs/find_steam_game.h b/src/cdogs/find_steam_game.h
+index 2d90e5f8..72ff3665 100644
+--- a/src/cdogs/find_steam_game.h
++++ b/src/cdogs/find_steam_game.h
+@@ -115,7 +115,12 @@ extern "C"
+ 	void fsg_get_steam_game_path(char *out, const char *name)
+ 	{
+ 		out[0] = '\0';
+-#if defined(_WIN64) || defined(_WIN32)
++#if defined(__amigaos__)
++		// No Steam on AmigaOS 3.x.
++		(void)name;
++		(void)_fsg_dir_exists;
++		return;
++#elif defined(_WIN64) || defined(_WIN32)
+ 		char steam_path[_FSG_PATH_MAX];
+ 		char buf[_FSG_PATH_MAX];
+ 		_fsg_query_reg_key(
+diff --git a/src/cdogs/rlutil/rlutil.h b/src/cdogs/rlutil/rlutil.h
+index 82fbd424..78282aea 100644
+--- a/src/cdogs/rlutil/rlutil.h
++++ b/src/cdogs/rlutil/rlutil.h
+@@ -59,6 +59,12 @@
+ 	#include <conio.h>    // for getch() and kbhit()
+ 	#define getch _getch
+ 	#define kbhit _kbhit
++#elif defined(__amigaos__)
++	#include <unistd.h>
++	#include <sys/time.h>
++	// AmigaOS 3.x (libnix) has no termios: a plain read, and no key waiting.
++	RLUTIL_INLINE int getch(void) { return getchar(); }
++	RLUTIL_INLINE int kbhit(void) { return 0; }
+ #else
+ 	#include <termios.h> // for getch() and kbhit()
+ 	#include <unistd.h> // for getch(), kbhit() and (u)sleep()
+diff --git a/src/cdogs/enet/amiga.c b/src/cdogs/enet/amiga.c
+new file mode 100644
+index 00000000..9a05f4a2
+--- /dev/null
++++ b/src/cdogs/enet/amiga.c
+@@ -0,0 +1,181 @@
++/**
++ @file  amiga.c
++ @brief ENet AmigaOS 3.x system functions, without a network for now.
++
++ Initialising succeeds, so the game runs; every socket call fails, so
++ enet_host_create returns NULL and C-Dogs carries on without network play.
++ A bsdsocket.library (OpenSocket) version can replace this later.
++*/
++#ifdef __amigaos__
++
++#include <string.h>
++#include <time.h>
++#include <sys/time.h>
++#define ENET_BUILDING_LIB 1
++#include "enet/enet.h"
++
++static enet_uint32 timeBase = 0;
++
++int
++enet_initialize (void)
++{
++    return 0;
++}
++
++void
++enet_deinitialize (void)
++{
++}
++
++enet_uint32
++enet_host_random_seed (void)
++{
++    return (enet_uint32) time (NULL);
++}
++
++enet_uint32
++enet_time_get (void)
++{
++    struct timeval timeVal;
++
++    gettimeofday (& timeVal, NULL);
++
++    return timeVal.tv_sec * 1000 + timeVal.tv_usec / 1000 - timeBase;
++}
++
++void
++enet_time_set (enet_uint32 newTimeBase)
++{
++    struct timeval timeVal;
++
++    gettimeofday (& timeVal, NULL);
++
++    timeBase = timeVal.tv_sec * 1000 + timeVal.tv_usec / 1000 - newTimeBase;
++}
++
++int
++enet_address_set_host_ip (ENetAddress * address, const char * name)
++{
++    (void) address; (void) name;
++    return -1;
++}
++
++int
++enet_address_set_host (ENetAddress * address, const char * name)
++{
++    (void) address; (void) name;
++    return -1;
++}
++
++int
++enet_address_get_host_ip (const ENetAddress * address, char * name, size_t nameLength)
++{
++    (void) address; (void) name; (void) nameLength;
++    return -1;
++}
++
++int
++enet_address_get_host (const ENetAddress * address, char * name, size_t nameLength)
++{
++    (void) address; (void) name; (void) nameLength;
++    return -1;
++}
++
++int
++enet_socket_bind (ENetSocket socket, const ENetAddress * address)
++{
++    (void) socket; (void) address;
++    return -1;
++}
++
++int
++enet_socket_get_address (ENetSocket socket, ENetAddress * address)
++{
++    (void) socket; (void) address;
++    return -1;
++}
++
++int
++enet_socket_listen (ENetSocket socket, int backlog)
++{
++    (void) socket; (void) backlog;
++    return -1;
++}
++
++ENetSocket
++enet_socket_create (ENetSocketType type)
++{
++    (void) type;
++    return ENET_SOCKET_NULL;
++}
++
++int
++enet_socket_set_option (ENetSocket socket, ENetSocketOption option, int value)
++{
++    (void) socket; (void) option; (void) value;
++    return -1;
++}
++
++int
++enet_socket_get_option (ENetSocket socket, ENetSocketOption option, int * value)
++{
++    (void) socket; (void) option; (void) value;
++    return -1;
++}
++
++int
++enet_socket_connect (ENetSocket socket, const ENetAddress * address)
++{
++    (void) socket; (void) address;
++    return -1;
++}
++
++ENetSocket
++enet_socket_accept (ENetSocket socket, ENetAddress * address)
++{
++    (void) socket; (void) address;
++    return ENET_SOCKET_NULL;
++}
++
++int
++enet_socket_shutdown (ENetSocket socket, ENetSocketShutdown how)
++{
++    (void) socket; (void) how;
++    return -1;
++}
++
++void
++enet_socket_destroy (ENetSocket socket)
++{
++    (void) socket;
++}
++
++int
++enet_socket_send (ENetSocket socket, const ENetAddress * address, const ENetBuffer * buffers, size_t bufferCount)
++{
++    (void) socket; (void) address; (void) buffers; (void) bufferCount;
++    return -1;
++}
++
++int
++enet_socket_receive (ENetSocket socket, ENetAddress * address, ENetBuffer * buffers, size_t bufferCount)
++{
++    (void) socket; (void) address; (void) buffers; (void) bufferCount;
++    return -1;
++}
++
++int
++enet_socketset_select (ENetSocket maxSocket, ENetSocketSet * readSet, ENetSocketSet * writeSet, enet_uint32 timeout)
++{
++    (void) maxSocket; (void) readSet; (void) writeSet; (void) timeout;
++    return -1;
++}
++
++int
++enet_socket_wait (ENetSocket socket, enet_uint32 * condition, enet_uint32 timeout)
++{
++    (void) socket; (void) condition; (void) timeout;
++    return -1;
++}
++
++#endif
+diff --git a/src/cdogs/enet/include/enet/amiga.h b/src/cdogs/enet/include/enet/amiga.h
+new file mode 100644
+index 00000000..53399e9b
+--- /dev/null
++++ b/src/cdogs/enet/include/enet/amiga.h
+@@ -0,0 +1,40 @@
++/**
++ @file  amiga.h
++ @brief ENet AmigaOS 3.x header: no network yet (amiga.c fails every socket call)
++*/
++#ifndef __ENET_AMIGA_H__
++#define __ENET_AMIGA_H__
++
++#include <stdlib.h>
++#include <sys/time.h>
++#include <sys/types.h>
++
++typedef int ENetSocket;
++
++#define ENET_SOCKET_NULL -1
++
++/* m68k is big-endian: network order is host order. */
++#define ENET_HOST_TO_NET_16(value) ((enet_uint16) (value))
++#define ENET_HOST_TO_NET_32(value) ((enet_uint32) (value))
++
++#define ENET_NET_TO_HOST_16(value) ((enet_uint16) (value))
++#define ENET_NET_TO_HOST_32(value) ((enet_uint32) (value))
++
++typedef struct
++{
++    void * data;
++    size_t dataLength;
++} ENetBuffer;
++
++#define ENET_CALLBACK
++
++#define ENET_API extern
++
++typedef struct { unsigned long bits; } ENetSocketSet;
++
++#define ENET_SOCKETSET_EMPTY(sockset)          ((sockset).bits = 0)
++#define ENET_SOCKETSET_ADD(sockset, socket)    ((sockset).bits |= 1UL << ((socket) & 31))
++#define ENET_SOCKETSET_REMOVE(sockset, socket) ((sockset).bits &= ~(1UL << ((socket) & 31)))
++#define ENET_SOCKETSET_CHECK(sockset, socket)  (((sockset).bits >> ((socket) & 31)) & 1)
++
++#endif /* __ENET_AMIGA_H__ */
