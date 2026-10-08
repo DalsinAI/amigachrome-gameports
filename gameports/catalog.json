@@ -116,6 +116,17 @@
         "submodules": false
       },
       "contentPolicy": "Engine source is GPL-3.0 with id Software's additional terms in COPYING.txt. Original Doom 3 game data is proprietary and must be user-supplied."
+    },
+    "cdogs-sdl": {
+      "order": 11,
+      "title": "C-Dogs SDL",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/cxong/cdogs-sdl.git",
+        "commit": "8263a6f0200a71498f8c47bd0fce0f2d2d678d84",
+        "submodules": false
+      },
+      "contentPolicy": "Code is GPLv2 with BSD components. Upstream data is described as CC0/CC-BY/CC-BY-SA, but doc/README_DATA.md records historical provenance caveats for some legacy campaigns/sounds; do not publish the bundled-data package until that review is closed."
     }
   }
 }
