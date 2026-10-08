@@ -149,6 +149,48 @@ def prepare_archive(game_id: str, source: dict, cache: Path, dest: Path) -> dict
     }
 
 
+def prepare_release_data(game_id: str, spec: dict, cache: Path, work: Path) -> dict | None:
+    rd = spec.get("releaseData")
+    if not isinstance(rd, dict):
+        return None
+    import zipfile
+    url = str(rd["url"])
+    expected = str(rd["sha256"]).lower()
+    member = str(rd["member"])
+    member_expected = str(rd["memberSha256"]).lower()
+    archive = cache / f"{game_id}-release-data.zip"
+    cache.mkdir(parents=True, exist_ok=True)
+    if not archive.is_file() or sha256_file(archive).lower() != expected:
+        tmp = archive.with_suffix(".part")
+        tmp.unlink(missing_ok=True)
+        urllib.request.urlretrieve(url, tmp)
+        got = sha256_file(tmp).lower()
+        if got != expected:
+            tmp.unlink(missing_ok=True)
+            raise RuntimeError(f"{game_id}: release-data SHA-256 {got}, expected {expected}")
+        os.replace(tmp, archive)
+    outdir = work / "runtime-assets" / game_id
+    outdir.mkdir(parents=True, exist_ok=True)
+    out = outdir / PurePosixPath(member).name
+    with zipfile.ZipFile(archive) as zf:
+        info = zf.getinfo(member)
+        if info.is_dir():
+            raise ValueError(f"{game_id}: release-data member is a directory")
+        with zf.open(info) as src, out.open("wb") as dst:
+            shutil.copyfileobj(src, dst)
+    got = sha256_file(out).lower()
+    if got != member_expected:
+        out.unlink(missing_ok=True)
+        raise RuntimeError(f"{game_id}: extracted release-data SHA-256 {got}, expected {member_expected}")
+    return {
+        "archive": str(archive),
+        "archiveSha256": expected,
+        "path": str(out),
+        "sha256": got,
+        "member": member,
+    }
+
+
 def prepare(root: Path, catalog: dict, game: str) -> dict:
     work = root / WORK_REL
     sources = work / "sources"
@@ -171,6 +213,9 @@ def prepare(root: Path, catalog: dict, game: str) -> dict:
         else:
             item = prepare_archive(game_id, source, cache, dest)
         item["title"] = spec.get("title", game_id)
+        runtime_data = prepare_release_data(game_id, spec, cache, work)
+        if runtime_data is not None:
+            item["runtimeData"] = runtime_data
         result["ports"][game_id] = item
     marker = work / "PREPARED.json"
     if marker.is_file() and game != "all":
@@ -220,6 +265,16 @@ def verify(root: Path, catalog: dict, game: str) -> dict:
             if got != source["commit"].lower():
                 raise ValueError(f"{game_id}: prepared commit changed: {got}")
             checked[game_id] = {"commit": got, "path": str(path)}
+            rd = spec.get("releaseData")
+            if isinstance(rd, dict):
+                runtime = item.get("runtimeData") or {}
+                runtime_path = Path(str(runtime.get("path") or ""))
+                if not runtime_path.is_file():
+                    raise ValueError(f"{game_id}: prepared release data is missing")
+                rd_got = sha256_file(runtime_path).lower()
+                if rd_got != str(rd["memberSha256"]).lower():
+                    raise ValueError(f"{game_id}: prepared release data changed: {rd_got}")
+                checked[game_id]["runtimeData"] = {"path": str(runtime_path), "sha256": rd_got}
         else:
             archive = Path(str(item.get("archive") or ""))
             got = sha256_file(archive).lower()
@@ -255,4 +310,3 @@ def main(argv=None) -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]

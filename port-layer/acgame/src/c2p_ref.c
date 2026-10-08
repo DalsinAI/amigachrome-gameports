@@ -55,4 +55,3 @@ int acgame_p2c8_ref(uint8_t *chunky, size_t chunky_pitch,
     return 0;
 }
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]

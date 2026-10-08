@@ -24,4 +24,3 @@ Program code is GPL. UQM content has separate Creative Commons/custom terms incl
 
 Reach the main menu, start a new game, display the solar-system view and open one alien conversation screen; HAM8 is optional at the first gate but is the intended second visual milestone.
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]

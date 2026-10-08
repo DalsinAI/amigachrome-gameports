@@ -55,6 +55,23 @@
         "submodules": false
       },
       "contentPolicy": "Engine follows upstream licensing. Cave Story data is external."
+    },
+    "neverball": {
+      "order": 6,
+      "title": "Neverball / Neverputt",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/Neverball/neverball.git",
+        "commit": "a1ed09911dca262d80049c12a2824d683af494d6",
+        "submodules": false
+      },
+      "contentPolicy": "GPL-2.0-or-later. Release bundle carries upstream data, fonts and notices exactly as licensed by upstream.",
+      "releaseData": {
+        "url": "https://neverball.org/neverball-1.6.0.zip",
+        "sha256": "865391cc041208e526401a8eb1f14fba44323f17d7e818c5e65e82393ff747fb",
+        "member": "neverball-1.6.0/data/data-1.6.0.pk3",
+        "memberSha256": "b2eddfbe05443e36719541639cb6246c5dd81260bce67a053d0d2c0ad34bc58c"
+      }
     }
   }
 }
