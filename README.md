@@ -17,6 +17,21 @@ This repository is being populated early as a public engineering safety snapshot
 See [PORT_STATUS.md](PORT_STATUS.md) for exact upstream pins, hashes and test gates.
 
 
+## 3D source intake
+
+These are **pinned for porting work only**. None has been compiled for AmigaChrome yet.
+
+| Port | Source status | First target |
+|---|---|---|
+| AssaultCube | PINNED | first 3D port |
+| Neverball | PINNED | optional early OpenGL/geometry validation |
+| Serious Sam Classic | PINNED | TFE first, after the first GL/OpenGPU game |
+| Warzone 2100 | PINNED | later large 3D/application stress test |
+| Doom 3 | PINNED | long-range renderer/engine stress target |
+
+The repository continues to keep upstream engine source out of Git: `scripts/game_port_prepare.py` fetches the exact catalog pins into the local build tree.
+
+
 ## Repository layout
 
 - `scripts/` — source preparation, build orchestration and field-test staging code.
