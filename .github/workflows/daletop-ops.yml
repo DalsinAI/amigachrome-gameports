@@ -244,7 +244,18 @@ jobs:
               for a in "$SYS"/lib/*.a "$SYS"/libnix/lib/*.a; do
                 [ -f "$a" ] || continue
                 "$STOVE/bin/m68k-amigaos-nm" -g "$a" 2>/dev/null | \
-                  grep -E '(^|[[:space:]])(_?strcasecmp|_?stricmp|_?strncasecmp|_?strnicmp)          esac
+                  grep -E '(^|[[:space:]])(_?strcasecmp|_?stricmp|_?strncasecmp|_?strnicmp)
+              done
+              echo
+              echo "=== config host compare probes ==="
+              grep -n -A20 -B10 -E 'strcasecmp|stricmp' "$U/build/unix/config_proginfo_host" | head -140 || true
+              ;;
+
+            *)
+              echo "REFUSED: task is not on the approved allow-list: $TASK" >&2
+              exit 64
+              ;;
+          esac
  && echo "IN $a" || true
               done
               echo
