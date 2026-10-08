@@ -252,6 +252,36 @@ jobs:
               ss -ltnp 2>/dev/null | grep -E ':(8938|8939|8788|8790)[[:space:]]' || true
               ;;
 
+            "daletop: inspect-uqm-generated-and-cdogs-layout")
+              R="$GAMEPORTS"
+              W="$R/build/os3/uqm/work"
+              echo "=== generated UQM probe definitions ==="
+              if [ -f "$W/build/unix/config_proginfo_host" ]; then
+                sed -n '333,348p' "$W/build/unix/config_proginfo_host"
+              else
+                echo "NO generated config_proginfo_host"
+              fi
+              echo
+              echo "=== UQM temp/config artifacts ==="
+              find "$R/build/os3/uqm" -maxdepth 4 -type f \
+                \( -name '*config*log*' -o -name 'config.state' -o -name '*.err' -o -name '*.out' \) \
+                -print 2>/dev/null | sort | head -120
+              echo
+              echo "=== active lab command lines ==="
+              ps -eo pid,args | grep -E '(amigachrome_host.py|native_bridge.py)' | grep -v grep || true
+              echo
+              echo "=== instance sizes ==="
+              du -sh /home/da1ek/AmigaChrome-dev/openup070lab/Instance-U \
+                     /home/da1ek/AmigaChrome-dev/openup070lab/Instance-Neverball 2>/dev/null || true
+              echo
+              echo "=== Instance-U devices ==="
+              find /home/da1ek/AmigaChrome-dev/openup070lab/Instance-U/devices -maxdepth 3 -type d -print 2>/dev/null | sort | head -160
+              echo
+              echo "=== Neverball staged guest paths ==="
+              find /home/da1ek/AmigaChrome-dev/openup070lab/Instance-Neverball/devices -maxdepth 5 \
+                \( -type f -o -type d \) -iname '*Neverball*' -print 2>/dev/null | head -120
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
