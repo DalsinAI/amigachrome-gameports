@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - ops/daletop
+    paths:
+      - .github/workflows/daletop-smoke.yml
 
 permissions:
   contents: read
