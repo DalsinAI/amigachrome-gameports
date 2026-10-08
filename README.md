@@ -1,63 +1,76 @@
 # AmigaChrome Game Ports
 
-Open-source game-port and compatibility work for **m68k AROS** and **AmigaChrome**.
+Open-source game-port and compatibility work for **m68k AROS**, **AmigaOS 3.x** and **AmigaChrome**.
 
-This repository is being populated early as a public engineering safety snapshot. The first ports listed here have **compiled successfully for m68k AROS / 68040**, but they have **not yet completed first-light runtime testing on AmigaChrome Instance-22**.
+The repository contains compiled revival ports, the Neverball/OpenGPU release lane, and the next 3D source-intake targets. Compile success is useful evidence, but it is **not** synonymous with release readiness. See [RELEASE_POLICY.md](RELEASE_POLICY.md).
 
-## Current compiled ports
+## Current port state
 
-| Port | Compile | Runtime test | Target |
+| Port | Build state | Runtime state | Target / notes |
 |---|---|---|---|
-| The Ur-Quan Masters 0.8.0 | PASS | PENDING | m68k AROS / 68040 |
-| Chocolate Doom | PASS | PENDING | m68k AROS / 68040 |
-| SDLPoP | PASS | PENDING | m68k AROS / 68040 |
-| OpenJazz | PASS | PENDING | m68k AROS / 68040 |
-| NXEngine-evo | PASS | PENDING | m68k AROS / 68040 |
+| The Ur-Quan Masters 0.8.0 | COMPILED | PENDING | m68k / 68040 |
+| Chocolate Doom | COMPILED | PENDING | m68k / 68040 |
+| SDLPoP | COMPILED | PENDING | m68k / 68040 |
+| OpenJazz | COMPILED | PENDING | m68k / 68040 |
+| NXEngine-evo | COMPILED | PENDING | m68k / 68040 |
+| Neverball / Neverputt | COMPILED + PACKAGE VERIFIED | TESTING | softpipe title/menu renders; accelerated virgl black-frame issue remains |
+| AssaultCube | CLIENT + SERVER COMPILED | PENDING | OpenGPU first-light client; audio still stubbed for initial bring-up |
+| Serious Sam Classic | SOURCE PINNED | NOT STARTED | TFE first |
+| Warzone 2100 | SOURCE PINNED | NOT STARTED | later large 3D/application stress target |
+| Doom 3 | SOURCE PINNED | NOT STARTED | long-range renderer/engine stress target |
 
-See [PORT_STATUS.md](PORT_STATUS.md) for exact upstream pins, hashes and test gates.
-
+See [PORT_STATUS.md](PORT_STATUS.md) and the individual files under `ports/` for exact source pins, hashes, content boundaries and test gates.
 
 ## Repository layout
 
 - `scripts/` — source preparation, build orchestration and field-test staging code.
 - `port-layer/acgame/` — AmigaChrome AGA presentation code, smoke test and unit tests.
 - `port-layer/uqm/` — UQM AROS bootstrap patcher and port notes.
-- `ports/*/build.sh` — standalone reproducible build recipes for the five compile-success ports.
+- `ports/*/` — per-port build recipes, patches, release notes and qualification gates.
 - `toolchain/aros-local/` — the AROS m68k toolchain bootstrap recovered from the AmigaChrome worktree.
-- `gameports/catalog.json` — exact upstream source pins.
+- `gameports/catalog.json` — exact upstream source pins and content policy.
 
-See [BUILDING.md](BUILDING.md) for a clean rebuild path on other x86 cores.
+See [BUILDING.md](BUILDING.md) for the rebuild path.
 
-## Scope
+## Source preparation and network policy
 
-The repository contains AmigaChrome build recipes, compatibility notes, shims, test plans and source provenance. Upstream engine source remains in the upstream repositories and is fetched at exact pinned revisions.
+Upstream engine source remains in the upstream repositories and is referenced by exact pinned revisions or archive hashes.
 
-Game data, ROMs, proprietary assets and local test caches are **not** part of this repository.
+Source preparation is **offline by default**. Existing valid prepared sources and cached archives are reused locally. If preparation would require an external fetch, it stops unless the caller explicitly supplies `--allow-network` after approval. An existing build or preparation script is not permission to access the network.
+
+Game data, ROMs, proprietary assets and local test caches are **not** part of this repository unless a port's upstream licence explicitly permits redistribution and the release recipe records that provenance.
 
 ## Status language
 
-- **COMPILED** means the pinned source has produced an m68k AROS executable.
-- **FIRST LIGHT** means the executable has launched on an AmigaChrome A1200/AGA guest.
-- **TESTED** means graphics, input, audio and clean exit have been exercised.
-- **AGA** means the port has passed its native/AmigaChrome AGA presentation gate.
+- **SOURCE PINNED** means the exact upstream input has been selected but no successful target build is claimed.
+- **COMPILED** means the pinned source has produced the target m68k executable.
+- **FIRST LIGHT** means the executable has launched on an AmigaChrome guest.
+- **TESTING** means runtime qualification is underway and at least one required release gate remains open.
+- **TESTED** means the stated graphics, input, audio, persistence and clean-exit gates have been exercised.
+- **RELEASE** means the port has passed its complete release gates, package/provenance checks and clean-instance runtime qualification.
 
-Compiled is deliberately not treated as tested.
+**DONE means RELEASE.** Compiled, First Light and Testing are intermediate states.
 
 ## Licence
 
-AmigaChrome-authored glue, scripts and documentation are MIT licensed unless a file says otherwise. Upstream projects retain their own licences. Game data retains its own rights and is not redistributed here.
+AmigaChrome-authored glue, scripts and documentation are MIT licensed unless a file says otherwise. Upstream projects retain their own licences. Game data retains its own rights and is not redistributed unless its licence and the port's release policy permit it.
 
-No upstream game source is committed here: the build recipes fetch each project at its pinned commit. Binaries built from them are covered by the upstream licence, so anyone distributing them must follow it, including offering the corresponding source.
+No upstream game engine source is committed here. Prepared sources live outside Git at their pinned revision. Binaries built from them remain subject to the upstream licence, including source-offer and notice obligations where applicable.
 
-| Port | Upstream | Licence |
+| Port | Upstream | Licence / data boundary |
 |---|---|---|
-| The Ur-Quan Masters 0.8.0 | https://sc2.sourceforge.net/ | GPL-2.0-or-later (code); content packages under CC BY-NC-SA 2.5 |
-| Chocolate Doom | https://github.com/chocolate-doom/chocolate-doom | GPL-2.0-or-later |
-| SDLPoP | https://github.com/NagyD/SDLPoP | GPL-3.0-or-later |
-| OpenJazz | https://github.com/AlisterT/openjazz | GPL-2.0-or-later |
-| NXEngine-evo | https://github.com/nxengine/nxengine-evo | GPL-3.0 |
+| The Ur-Quan Masters 0.8.0 | https://sc2.sourceforge.net/ | GPL-2.0-or-later code; content packages separate |
+| Chocolate Doom | https://github.com/chocolate-doom/chocolate-doom | GPL-2.0-or-later; IWAD external |
+| SDLPoP | https://github.com/NagyD/SDLPoP | GPL-3.0-or-later; commercial game data external |
+| OpenJazz | https://github.com/AlisterT/openjazz | GPL-2.0-or-later; Jazz data external |
+| NXEngine-evo | https://github.com/nxengine/nxengine-evo | GPL-3.0; Cave Story data external |
+| Neverball | https://github.com/Neverball/neverball | GPL-2.0-or-later with upstream third-party notices/data terms preserved |
+| AssaultCube | https://github.com/assaultcube/AC | zlib-like engine source; media licences reviewed separately |
+| Serious Sam Classic | https://github.com/tx00100xt/SeriousSamClassic | GPL-2.0 engine; original game data external |
+| Warzone 2100 | https://github.com/Warzone2100/warzone2100 | GPL-2.0 project plus third-party/submodule notices |
+| Doom 3 | https://github.com/id-Software/DOOM-3 | GPL-3.0 source; original game data external |
 
-Each project's own licence file at the pinned commit is authoritative.
+Each project's own licence files at the pinned revision are authoritative.
 
 Copyright (c) 2026 Dalsin Limited.
 
