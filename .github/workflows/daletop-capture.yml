@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SRC=/home/da1ek/AmigaChrome-dev/openup070lab/shots/cdogs-firstlight.png
+          SRC=/home/da1ek/AmigaChrome-dev/openup070lab/shots/cdogs-firstlight2.png
           TMP=$(mktemp --suffix=.jpg)
           trap 'rm -f "$TMP"' EXIT
           python3 - "$SRC" "$TMP" <<'PY'
