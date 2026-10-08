@@ -1,2 +1,2 @@
-inspect-revival-three
-trigger=1791503106323
+verify-revival-three-pristine
+trigger=1791503154563
