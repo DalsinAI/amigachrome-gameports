@@ -1,0 +1,35 @@
+name: daletop export
+
+on:
+  push:
+    branches:
+      - ops/daletop
+    paths:
+      - ops/export.txt
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    if: github.actor == 'SacredTrees'
+    runs-on: [self-hosted, daletop, amigachrome, ac090]
+    timeout-minutes: 5
+    steps:
+      - name: Export stable revival files
+        shell: bash
+        run: |
+          set -euo pipefail
+          R=/home/da1ek/AmigaChrome-dev/gameports-wt
+          for rel in \
+            ports/cdogs-sdl/build-amigaos3.sh \
+            ports/cdogs-sdl/patches/0001-amigaos3-opengpu.patch \
+            toolchain/amigaos3-opengpu.cmake
+          do
+            f="$R/$rel"
+            test -f "$f"
+            echo "FILE_BEGIN:$rel"
+            base64 -w0 "$f"
+            echo
+            echo "FILE_END:$rel"
+          done
