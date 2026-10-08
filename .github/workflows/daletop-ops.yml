@@ -676,6 +676,30 @@ jobs:
               done
               ;;
 
+            "daletop: inspect-uqm-fallback-conditionals")
+              U="$GAMEPORTS/build/game-ports/sources/uqm/uqm-0.8.0"
+              W="$GAMEPORTS/build/os3/uqm/work"
+
+              echo "=== dirs.c includes ==="
+              sed -n '20,60p' "$U/src/libs/file/dirs.c"
+              echo
+              echo "=== dirs.c getHomeDir ==="
+              sed -n '232,262p' "$U/src/libs/file/dirs.c"
+              echo
+              echo "=== src Makeinfo regex selection ==="
+              sed -n '1,45p' "$U/src/Makeinfo"
+              echo
+              echo "=== match.h regex include ==="
+              sed -n '20,105p' "$U/src/libs/uio/match.h"
+              echo
+              echo "=== generated build variables ==="
+              grep -n -E 'uqm_HAVE_REGEX|HAVE_REGEX_H|regex' "$GAMEPORTS/build/os3/uqm/out/config.state" 2>/dev/null || true
+              echo
+              echo "=== build config regex definitions ==="
+              sed -n '60,82p' "$U/build/unix/build.config"
+              sed -n '475,505p' "$U/build/unix/build.config"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
