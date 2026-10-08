@@ -940,6 +940,27 @@ jobs:
               echo "CDOGS_PRISTINE_REBUILD_PASS_PROVISIONAL_OLD_STOVE"
               ;;
 
+            "daletop: inspect-uqm-port-layer-state")
+              R="$GAMEPORTS"
+              echo "=== UQM-related worktree status ==="
+              git -C "$R" status --short -- \
+                ports/uqm \
+                port-layer/uqm \
+                toolchain/amigaos3-opengpu.cmake
+              echo
+              echo "=== UQM port-layer diff stat ==="
+              git -C "$R" diff --stat -- port-layer/uqm ports/uqm toolchain/amigaos3-opengpu.cmake
+              echo
+              echo "=== UQM bootstrap diff ==="
+              git -C "$R" diff -- port-layer/uqm/apply_aros_bootstrap.py | head -420 || true
+              echo
+              echo "=== UQM docs diffs ==="
+              git -C "$R" diff -- port-layer/uqm/AROS_BOOTSTRAP.md port-layer/uqm/PORT.md | head -520 || true
+              echo
+              echo "=== UQM build script ==="
+              sed -n '1,380p' "$R/ports/uqm/build-amigaos3.sh"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
