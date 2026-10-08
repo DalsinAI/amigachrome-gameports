@@ -1,37 +1,38 @@
-# SDLPoP — m68k AROS
+# SDLPoP — AmigaOS 3.x / AmigaChrome
 
-**Status:** COMPILED / RUNTIME TEST PENDING
+Target: **AC090 / AmigaOS 3.x / 68040 + FPU**
 
-## Upstream
+Pinned upstream commit: `3c5add5fb7f83d4ceb542823ab66d00146c4271b`.
 
-- repository: https://github.com/NagyD/SDLPoP.git
-- pinned commit: `3c5add5fb7f83d4ceb542823ab66d00146c4271b`
+## Status
 
-## Compile result
+**COMPILED — provisional old-stove artifact.**
 
-- target: m68k AROS / 68040
-- executable: `prince`
-- observed size: 1,149,368 bytes
-- SHA-256: `a332101d35b6486111d2832d87b502fe211c12dd6edee938cee765b5e8fc7961`
+A pristine local archive of the exact pin rebuilt successfully with no network
+access using the checked Amiga/OpenGPU patch.
 
-## Successful portability bridge
+Clean provisional SHA-256:
 
-The old code uses `alloca()` through a macro but the AROS/GCC build did not see a prototype and the project promotes the warning to an error.
+`51097f931538140895659af40f021d58ff20c348751c174bd093881c23600f6a`
 
-The successful build added:
+The Amiga portability patch supplies the expected stack allocation behaviour,
+uses `PROGDIR:` as the runtime directory, avoids the unavailable `log2f`
+path, and applies the same allocation bridge inside stb_vorbis.
 
-    -Dalloca=__builtin_alloca
+## Platform route
 
-together with the AROS include path and `-m68040`.
+- SDL2 presentation/input → Open-family stack;
+- target flags: 68040 + FPU;
+- runtime path rooted at `PROGDIR:`.
 
-This is a compile-success bridge. The preferred final port is a tiny explicit source portability fix.
+## Runtime data
 
-## Data
+The source tree contains the engine runtime data used by the port, but original
+commercial Prince of Persia material is not silently bundled or fetched.
 
-The pinned SDLPoP source includes the engine runtime `data/` tree used by our field-test staging. Original commercial Prince of Persia installs are not included here.
+## Release gate
 
-A separate two-level demo can be used as a comparison fixture during local testing.
+Start game → level one → animation/timing → keyboard/controller → audio →
+save/config → clean exit, followed by a fixed-stove clean-instance repeat.
 
-## Gate
-
-Start game -> level one -> animation timing -> keyboard/controller input -> save behaviour -> audio -> clean exit.
+**DONE means RELEASE.**
