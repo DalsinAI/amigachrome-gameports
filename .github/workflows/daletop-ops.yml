@@ -120,6 +120,51 @@ jobs:
               grep -n -A24 -B12 -E 'strcasecmp|stricmp' "$U/build/unix/config_proginfo_host" | head -180 || true
               ;;
 
+            "daletop: probe-uqm-compare-link")
+              TMP=$(mktemp -d)
+              trap 'rm -rf "$TMP"' EXIT
+              SYS="$STOVE/m68k-amigaos"
+
+              cat > "$TMP/test.c" <<'EOF'
+          extern int strcasecmp(const char *, const char *);
+          extern int stricmp(const char *, const char *);
+          int main(void) {
+              return strcasecmp("OpenUp","openup") || stricmp("Amiga","amiga");
+          }
+          EOF
+
+              echo "=== default link ==="
+              if "$STOVE/bin/m68k-amigaos-gcc" -noixemul -m68040 -m68881 "$TMP/test.c" -o "$TMP/test-default"; then
+                file "$TMP/test-default"
+                echo "DEFAULT_COMPARE_LINK_PASS"
+              else
+                echo "DEFAULT_COMPARE_LINK_FAIL"
+              fi
+
+              echo
+              echo "=== explicit libc ==="
+              if "$STOVE/bin/m68k-amigaos-gcc" -noixemul -m68040 -m68881 "$TMP/test.c" -L"$SYS/lib" -lc -o "$TMP/test-libc"; then
+                file "$TMP/test-libc"
+                echo "LIBC_COMPARE_LINK_PASS"
+              else
+                echo "LIBC_COMPARE_LINK_FAIL"
+              fi
+
+              echo
+              echo "=== explicit libnix ==="
+              if "$STOVE/bin/m68k-amigaos-gcc" -noixemul -m68040 -m68881 "$TMP/test.c" -L"$SYS/libnix/lib" -lnix -o "$TMP/test-libnix"; then
+                file "$TMP/test-libnix"
+                echo "LIBNIX_COMPARE_LINK_PASS"
+              else
+                echo "LIBNIX_COMPARE_LINK_FAIL"
+              fi
+
+              echo
+              echo "=== UQM configure fatal ==="
+              U="$GAMEPORTS/build/game-ports/sources/uqm/uqm-0.8.0"
+              grep -RIn -A12 -B12 "neither strcasecmp" "$U/build" "$U/src" | head -120 || true
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
