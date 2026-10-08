@@ -961,6 +961,25 @@ jobs:
               sed -n '1,380p' "$R/ports/uqm/build-amigaos3.sh"
               ;;
 
+            "daletop: inspect-revival-three")
+              R="$GAMEPORTS"
+              for port in chocolate-doom openjazz sdlpop; do
+                C="$R/build/game-ports/sources/$port"
+                echo "=== $port source ==="
+                if [ -d "$C/.git" ]; then
+                  git -C "$C" rev-parse HEAD
+                  git -C "$C" status --short
+                else
+                  echo "NO git source at $C"
+                fi
+                echo "=== $port Amiga build recipe ==="
+                sed -n '1,320p' "$R/ports/$port/build-amigaos3.sh" 2>/dev/null || echo "NO build-amigaos3.sh"
+                echo "=== $port patches ==="
+                find "$R/ports/$port" -maxdepth 3 -type f -path '*/patches/*' -print -exec sh -c 'echo "--- $1 ---"; sed -n "1,420p" "$1"' sh {} \; 2>/dev/null || true
+                echo
+              done
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
