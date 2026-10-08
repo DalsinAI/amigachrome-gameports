@@ -86,6 +86,8 @@ def prepare_git(game_id: str, source: dict, dest: Path) -> dict:
     if dest.is_dir() and (dest / ".git").is_dir():
         got = git_head(dest).lower()
         if got == expected:
+            if bool(source.get("submodules")):
+                run(["git", "submodule", "update", "--init", "--recursive", "--depth", "1"], cwd=dest)
             return {"kind": "git", "commit": got, "path": str(dest)}
         shutil.rmtree(dest)
     elif dest.exists():
