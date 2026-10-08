@@ -53,4 +53,3 @@ else
 fi
 echo "Local AROS builder self-check: OK"
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]

@@ -297,4 +297,3 @@ int acgame_platform_audio_s16stereo(const int16_t *samples, unsigned frames,
 
 #endif
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]

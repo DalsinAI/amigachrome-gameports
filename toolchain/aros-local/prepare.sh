@@ -132,4 +132,3 @@ check_toolchain_marker
 echo "AROS local environment prepared: $WORK_ROOT"
 echo "Reusable toolchain: $AROS_TOOLCHAIN_DIR"
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]

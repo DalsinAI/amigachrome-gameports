@@ -92,4 +92,3 @@ int acgame_ham8_encode_row(const acgame_rgb8 *src, unsigned width,
     return 0;
 }
 
-[executed on device: daletop (557d2ffd-2bd4-42f8-8777-9a5024193e1e)]
