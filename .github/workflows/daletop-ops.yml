@@ -1,0 +1,88 @@
+name: daletop ops
+
+on:
+  push:
+    branches:
+      - ops/daletop
+    paths:
+      - ops/daletop-task.txt
+
+permissions:
+  contents: read
+
+jobs:
+  ops:
+    name: daletop named task
+    if: github.actor == 'SacredTrees'
+    runs-on: [self-hosted, daletop, amigachrome, ac090]
+    timeout-minutes: 20
+    env:
+      STOVE: /home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix
+      GAMEPORTS: /home/da1ek/AmigaChrome-dev/gameports-wt
+
+    steps:
+      - name: Execute approved task
+        shell: bash
+        env:
+          TASK: ${{ github.event.head_commit.message }}
+        run: |
+          set -euo pipefail
+          export PATH="$STOVE/bin:$PATH"
+
+          echo "Runner: $(hostname) / $(whoami)"
+          echo "Task: $TASK"
+          echo
+
+          case "$TASK" in
+            "daletop: inspect-gameports")
+              R="$GAMEPORTS"
+              test -d "$R"
+
+              echo "=== repository ==="
+              git -C "$R" status --short --branch
+              git -C "$R" log --oneline --decorate -8
+              echo
+
+              echo "=== active game-port processes ==="
+              ps -eo pid,etime,pcpu,pmem,args |                 grep -E "(gameports-wt|m68k-amigaos-gcc|m68k-amigaos-g\+\+)" |                 grep -v grep || true
+              echo
+
+              echo "=== revival build log tail ==="
+              if [ -f "$R/build/revival-local-build.log" ]; then
+                tail -120 "$R/build/revival-local-build.log"
+              else
+                echo "NO revival-local-build.log"
+              fi
+              echo
+
+              echo "=== known target binaries ==="
+              find "$R/build" -type f \
+                \( -name chocolate-doom -o -name OpenJazz -o -name SDLPoP \
+                   -o -name nxengine-evo -o -name cdogs-sdl -o -name uqm \) \
+                -print 2>/dev/null | sort | while read -r f; do
+                  file "$f"
+                  sha256sum "$f"
+                done
+              echo
+
+              echo "=== prepared sources ==="
+              if [ -f "$R/build/game-ports/PREPARED.json" ]; then
+                python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("/home/da1ek/AmigaChrome-dev/gameports-wt/build/game-ports/PREPARED.json")
+          d=json.loads(p.read_text())
+          for k,v in sorted(d.get("ports",{}).items()):
+              src=v.get("source",{})
+              print(k, src.get("commit") or src.get("sha256"), v.get("path"))
+          PY
+              else
+                echo "NO PREPARED.json"
+              fi
+              ;;
+
+            *)
+              echo "REFUSED: task is not on the approved allow-list: $TASK" >&2
+              exit 64
+              ;;
+          esac
