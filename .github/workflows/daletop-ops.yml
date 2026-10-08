@@ -81,6 +81,36 @@ jobs:
               fi
               ;;
 
+            "daletop: inspect-uqm-cdogs")
+              R="$GAMEPORTS"
+              U="$R/build/game-ports/sources/uqm/uqm-0.8.0"
+              C="$R/build/game-ports/sources/cdogs-sdl"
+
+              echo "=== UQM port.h ==="
+              sed -n '105,145p' "$U/src/port.h"
+              echo
+              echo "=== UQM uioport.h ==="
+              sed -n '90,135p' "$U/src/libs/uio/uioport.h"
+              echo
+              echo "=== UQM build script ==="
+              sed -n '1,260p' "$R/ports/uqm/build-amigaos3.sh"
+              echo
+              echo "=== toolchain NAME_MAX macros ==="
+              "$STOVE/bin/m68k-amigaos-gcc" -dM -E -x c /dev/null |                 grep -E '(_POSIX_NAME_MAX|NAME_MAX|PATH_MAX)' || true
+              echo
+              echo "=== C-Dogs build script ==="
+              sed -n '1,260p' "$R/ports/cdogs-sdl/build-amigaos3.sh"
+              echo
+              echo "=== C-Dogs likely runtime data ==="
+              find "$C" -maxdepth 3 -type d \
+                \( -name dogfights -o -name missions -o -name graphics -o -name music -o -name sounds -o -name data \) \
+                -print 2>/dev/null | sort
+              echo
+              echo "=== C-Dogs binary ==="
+              file "$R/build/os3/cdogs/src/cdogs-sdl"
+              sha256sum "$R/build/os3/cdogs/src/cdogs-sdl"
+              ;;
+
             *)
               echo "REFUSED: task is not on the approved allow-list: $TASK" >&2
               exit 64
