@@ -1,0 +1,132 @@
+diff --git a/source/src/Makefile b/source/src/Makefile
+index bf06195..2e7730a 100644
+--- a/source/src/Makefile
++++ b/source/src/Makefile
+@@ -38,7 +38,7 @@ ifneq (,$(findstring clang,$(CXX)))
+ 	override CXXFLAGS+= -Wall -fsigned-char
+ else
+ 	CXXFLAGS= -O3 -fomit-frame-pointer
+-	override CXXFLAGS+= -Wall -fsigned-char -ffast-math -rdynamic -Wno-format-zero-length
++	override CXXFLAGS+= -Wall -fsigned-char -ffast-math -Wno-format-zero-length
+ 	ifeq "$(shell expr 'gcc -dumpversion' \>= 8)" "1"
+ 		override CXXFLAGS+= -Wno-stringop-truncation
+ 	endif
+diff --git a/source/src/stream.cpp b/source/src/stream.cpp
+index 3a549c5..b9d85ee 100644
+--- a/source/src/stream.cpp
++++ b/source/src/stream.cpp
+@@ -281,6 +281,13 @@ const char *stream_capabilities()
+ #if !defined(WIN32)
+ int readdir_r_(DIR *d, struct dirent *b, struct dirent **de)
+ {
++    #ifdef __amigaos__
++    struct dirent *r = readdir(d);
++    if(!r) { *de = NULL; return 0; }
++    *b = *r;
++    *de = b;
++    return 0;
++    #else
+     #ifdef __USE_POSIX
+     #pragma GCC diagnostic push
+     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+@@ -289,6 +296,7 @@ int readdir_r_(DIR *d, struct dirent *b, struct dirent **de)
+     #ifdef __USE_POSIX
+     #pragma GCC diagnostic pop
+     #endif
++    #endif
+ }
+ #endif
+ 
+@@ -552,7 +560,7 @@ bool stream::getline(char *str, int len)
+     return true;
+ }
+ 
+-#ifndef WIN32
++#if !defined(WIN32) && !defined(__amigaos__)
+ #include <sys/statvfs.h>
+ const int64_t MINFSSIZE = 50000000;         // 50MB
+ #endif
+@@ -568,7 +576,7 @@ struct filestream : stream
+     {
+         if(file) return false;
+         file = fopen(name, mode);
+-#ifndef WIN32
++#if !defined(WIN32) && !defined(__amigaos__)
+         struct statvfs buf;
+         if(file && strchr(mode,'w'))
+         {
+diff --git a/source/src/tools.cpp b/source/src/tools.cpp
+index 75a5128..279d28c 100644
+--- a/source/src/tools.cpp
++++ b/source/src/tools.cpp
+@@ -706,6 +706,10 @@ bool glmatrixf::invert(const glmatrixf &m, float mindet)
+     return true;
+ }
+ 
++#ifdef __amigaos__
++#include <proto/dos.h>
++#endif
++
+ // multithreading and ipc tools wrapper for the server
+ // all embedded servers and all standalone servers except on linux use SDL
+ // the standalone linux version uses native linux libraries - and also makes use of shared memory
+@@ -716,7 +720,9 @@ bool glmatrixf::invert(const glmatrixf &m, float mindet)
+ #else
+     #include <pthread.h>
+     #include <semaphore.h>
++    #ifndef __amigaos__
+     #include <sys/shm.h>
++    #endif
+ #endif
+ 
+ static int sl_sem_errorcountdummy = 0;
+@@ -787,6 +793,16 @@ int sl_semaphore::trywait()
+ 
+ int sl_semaphore::timedwait(int howlongmillis)
+ {
++    #ifdef __amigaos__
++    int waited = 0;
++    while(waited <= howlongmillis)
++    {
++        if(sem_trywait((sem_t *) data) == 0) return 0;
++        Delay(1);
++        waited += 20;
++    }
++    return -1;
++    #else
+     struct timespec t;
+     if(clock_gettime(CLOCK_REALTIME, &t))
+     {
+@@ -797,6 +813,7 @@ int sl_semaphore::timedwait(int howlongmillis)
+     t.tv_nsec = (howlongmillis % 1000) * 1000000;
+     t.tv_sec += howlongmillis / 1000;
+     return sem_timedwait((sem_t *) data, &t);
++    #endif
+ }
+ 
+ int sl_semaphore::getvalue()
+@@ -889,7 +906,11 @@ void *sl_createthread(int (*fn)(void *), void *data, const char *name)
+     ti->fn = fn;
+     ti->done = 0;
+     pthread_create(&(ti->handle), NULL, sl_thread_indir, ti);
++    #ifndef __amigaos__
+     if(name) pthread_setname_np(ti->handle, name);
++    #else
++    (void)name;
++    #endif
+     return (void *) ti;
+ }
+ 
+@@ -936,8 +957,12 @@ void sl_sleep(int duration)
+ #else
+ void sl_sleep(int duration)
+ {
++    #ifdef __amigaos__
++    Delay((unsigned long)((duration + 19) / 20));
++    #else
+     struct timespec t = { duration / 1000, (duration % 1000) * 1000000 };
+     nanosleep(&t, NULL);
++    #endif
+ }
+ #endif
+ 
