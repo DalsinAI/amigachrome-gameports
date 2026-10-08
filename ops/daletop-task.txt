@@ -1,2 +1,2 @@
-probe-uqm-compare-link
-trigger=1791501248073
+inspect-uqm-probe-engine
+trigger=1791501280962
