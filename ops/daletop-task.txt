@@ -1,1 +1,1 @@
-inspect-uqm-cdogs
+fix-uqm-package-cdogs
