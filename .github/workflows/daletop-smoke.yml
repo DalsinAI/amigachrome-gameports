@@ -1,0 +1,46 @@
+name: daletop smoke
+
+on:
+  push:
+    branches:
+      - ops/daletop
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: daletop control-plane smoke
+    runs-on: [self-hosted, daletop, amigachrome, ac090]
+    timeout-minutes: 5
+
+    steps:
+      - name: Host identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== identity ==="
+          hostname
+          whoami
+          uname -a
+          echo
+          echo "=== toolchain ==="
+          git --version
+          python3 --version
+          if command -v m68k-amigaos-gcc >/dev/null 2>&1; then
+            m68k-amigaos-gcc --version | head -1
+          else
+            echo "m68k-amigaos-gcc not on PATH"
+          fi
+          echo
+          echo "=== expected paths ==="
+          for p in             /home/da1ek/AmigaChrome             /home/da1ek/AmigaChrome-dev             /home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc
+          do
+            if [ -e "$p" ]; then
+              echo "FOUND $p"
+            else
+              echo "MISSING $p"
+            fi
+          done
+          echo
+          echo "SMOKE_OK"
