@@ -15,7 +15,7 @@ jobs:
     name: daletop named task
     if: github.actor == 'SacredTrees'
     runs-on: [self-hosted, daletop, amigachrome, ac090]
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       STOVE: /home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix
       GAMEPORTS: /home/da1ek/AmigaChrome-dev/gameports-wt
@@ -28,7 +28,6 @@ jobs:
         run: |
           set -euo pipefail
           export PATH="$STOVE/bin:$PATH"
-
           echo "Runner: $(hostname) / $(whoami)"
           echo "Task: $TASK"
           echo
@@ -36,196 +35,61 @@ jobs:
           case "$TASK" in
             "daletop: inspect-gameports")
               R="$GAMEPORTS"
-              test -d "$R"
-
               echo "=== repository ==="
               git -C "$R" status --short --branch
-              git -C "$R" log --oneline --decorate -8
               echo
-
-              echo "=== active game-port processes ==="
-              ps -eo pid,etime,pcpu,pmem,args |                 grep -E "(gameports-wt|m68k-amigaos-gcc|m68k-amigaos-g\+\+)" |                 grep -v grep || true
+              echo "=== revival log ==="
+              tail -100 "$R/build/revival-local-build.log" 2>/dev/null || true
               echo
-
-              echo "=== revival build log tail ==="
-              if [ -f "$R/build/revival-local-build.log" ]; then
-                tail -120 "$R/build/revival-local-build.log"
-              else
-                echo "NO revival-local-build.log"
-              fi
-              echo
-
-              echo "=== known target binaries ==="
+              echo "=== binaries ==="
               find "$R/build" -type f \
                 \( -name chocolate-doom -o -name OpenJazz -o -name SDLPoP \
                    -o -name nxengine-evo -o -name cdogs-sdl -o -name uqm \) \
-                -print 2>/dev/null | sort | while read -r f; do
-                  file "$f"
-                  sha256sum "$f"
+                -print 2>/dev/null | sort | while read -r file; do
+                  file "$file"
+                  sha256sum "$file"
                 done
-              echo
-
-              echo "=== prepared sources ==="
-              if [ -f "$R/build/game-ports/PREPARED.json" ]; then
-                python3 - <<'PY'
-          import json
-          from pathlib import Path
-          p=Path("/home/da1ek/AmigaChrome-dev/gameports-wt/build/game-ports/PREPARED.json")
-          d=json.loads(p.read_text())
-          for k,v in sorted(d.get("ports",{}).items()):
-              src=v.get("source",{})
-              print(k, src.get("commit") or src.get("sha256"), v.get("path"))
-          PY
-              else
-                echo "NO PREPARED.json"
-              fi
-              ;;
-
-            "daletop: inspect-uqm-cdogs")
-              R="$GAMEPORTS"
-              U="$R/build/game-ports/sources/uqm/uqm-0.8.0"
-              C="$R/build/game-ports/sources/cdogs-sdl"
-
-              echo "=== UQM port.h ==="
-              sed -n '105,145p' "$U/src/port.h"
-              echo
-              echo "=== UQM uioport.h ==="
-              sed -n '90,135p' "$U/src/libs/uio/uioport.h"
-              echo
-              echo "=== UQM build script ==="
-              sed -n '1,260p' "$R/ports/uqm/build-amigaos3.sh"
-              echo
-              echo "=== toolchain NAME_MAX macros ==="
-              "$STOVE/bin/m68k-amigaos-gcc" -dM -E -x c /dev/null |                 grep -E '(_POSIX_NAME_MAX|NAME_MAX|PATH_MAX)' || true
-              echo
-              echo "=== C-Dogs build script ==="
-              sed -n '1,260p' "$R/ports/cdogs-sdl/build-amigaos3.sh"
-              echo
-              echo "=== C-Dogs likely runtime data ==="
-              find "$C" -maxdepth 3 -type d \
-                \( -name dogfights -o -name missions -o -name graphics -o -name music -o -name sounds -o -name data \) \
-                -print 2>/dev/null | sort
-              echo
-              echo "=== C-Dogs binary ==="
-              file "$R/build/os3/cdogs/src/cdogs-sdl"
-              sha256sum "$R/build/os3/cdogs/src/cdogs-sdl"
-              ;;
-
-            "daletop: fix-uqm-package-cdogs")
-              R="$GAMEPORTS"
-              UBUILD="$R/ports/uqm/build-amigaos3.sh"
-              U="$R/build/game-ports/sources/uqm/uqm-0.8.0"
-              C="$R/build/game-ports/sources/cdogs-sdl"
-              COUT="$R/build/os3/cdogs/src/cdogs-sdl"
-              CPKG="$R/build/release/cdogs-sdl"
-
-              echo "=== patch UQM build recipe ==="
-              python3 - "$UBUILD" <<'PY'
-          from pathlib import Path
-          import sys
-          p=Path(sys.argv[1])
-          s=p.read_text()
-          needle="""# libnix has readdir() but not readdir_r(), and does not expose _POSIX_NAME_MAX.
-          python3 - "$SC2/src/libs/uio/uioport.h" "$SC2/src/libs/uio/stdio/stdio.c" <<'PY'
-          """
-          if '"$SC2/src/port.h"' not in s:
-              old="""python3 - "$SC2/src/libs/uio/uioport.h" "$SC2/src/libs/uio/stdio/stdio.c" <<'PY'
-          from pathlib import Path
-          import sys
-          p=Path(sys.argv[1]); s=p.read_text()
-          """
-              new="""python3 - "$SC2/src/port.h" "$SC2/src/libs/uio/uioport.h" "$SC2/src/libs/uio/stdio/stdio.c" <<'PY'
-          from pathlib import Path
-          import sys
-          p=Path(sys.argv[1]); s=p.read_text()
-          s=s.replace('#\\tifndef NAME_MAX\\n#\\t\\tdefine NAME_MAX _POSIX_NAME_MAX\\n#\\tendif', '#\\tifndef NAME_MAX\\n#\\t\\tif defined(__amigaos__)\\n#\\t\\t\\tdefine NAME_MAX 255\\n#\\t\\telse\\n#\\t\\t\\tdefine NAME_MAX _POSIX_NAME_MAX\\n#\\t\\tendif\\n#\\tendif',1); p.write_text(s)
-          p=Path(sys.argv[2]); s=p.read_text()
-          """
-              if old not in s:
-                  raise SystemExit("expected UQM portability patch block not found")
-              s=s.replace(old,new,1)
-              s=s.replace('p=Path(sys.argv[2]); s=p.read_text()\ns=s.replace', 'p=Path(sys.argv[3]); s=p.read_text()\ns=s.replace', 1)
-              p.write_text(s)
-          print("UQM build recipe updated")
-          PY
-              sh -n "$UBUILD"
-
-              echo
-              echo "=== rebuild UQM (local sources only) ==="
-              if sh "$UBUILD"; then
-                echo "UQM_BUILD_PASS"
-              else
-                echo "UQM_BUILD_FAIL"
-                exit 21
-              fi
-
-              echo
-              echo "=== locate UQM executable ==="
-              find "$R/build/os3/uqm" -type f -name 'uqm*' -perm -111 -print -exec file {} \; -exec sha256sum {} \;
-
-              echo
-              echo "=== package C-Dogs ==="
-              test -f "$COUT"
-              rm -rf "$CPKG"
-              mkdir -p "$CPKG/C-Dogs"
-              cp "$COUT" "$CPKG/C-Dogs/CDogs"
-              for d in data dogfights missions graphics music sounds; do
-                if [ -e "$C/$d" ]; then
-                  cp -a "$C/$d" "$CPKG/C-Dogs/"
-                fi
-              done
-              for f in LICENSE LICENSE.md COPYING COPYING.txt README README.md CHANGELOG CHANGELOG.md; do
-                if [ -f "$C/$f" ]; then
-                  cp "$C/$f" "$CPKG/C-Dogs/"
-                fi
-              done
-              cat > "$CPKG/C-Dogs/OPENUP-RELEASE.txt" <<'EOF'
-          C-Dogs SDL for OpenUp / AmigaChrome
-          Target: AmigaOS 3.x, 68040 + FPU
-          Graphics/input/audio: Open platform SDL2 path
-          Runtime data: bundled upstream redistributable data from the pinned source tree
-          Status: compiled/package staged; runtime qualification still required
-          EOF
-              (
-                cd "$CPKG"
-                find C-Dogs -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
-              )
-              file "$CPKG/C-Dogs/CDogs"
-              sha256sum "$CPKG/C-Dogs/CDogs"
-              du -sh "$CPKG/C-Dogs"
-              echo "CDOGS_PACKAGE_PASS"
               ;;
 
             "daletop: package-cdogs")
               R="$GAMEPORTS"
               C="$R/build/game-ports/sources/cdogs-sdl"
-              COUT="$R/build/os3/cdogs/src/cdogs-sdl"
-              CPKG="$R/build/release/cdogs-sdl"
+              BIN="$R/build/os3/cdogs/src/cdogs-sdl"
+              OUT="$R/build/release/cdogs-sdl"
 
-              test -f "$COUT"
-              rm -rf "$CPKG"
-              mkdir -p "$CPKG/C-Dogs"
-              cp "$COUT" "$CPKG/C-Dogs/CDogs"
-              for d in data dogfights missions graphics music sounds; do
-                [ ! -e "$C/$d" ] || cp -a "$C/$d" "$CPKG/C-Dogs/"
+              test -f "$BIN"
+              rm -rf "$OUT"
+              mkdir -p "$OUT/C-Dogs"
+              cp "$BIN" "$OUT/C-Dogs/CDogs"
+
+              for dir in data dogfights missions graphics music sounds; do
+                if [ -e "$C/$dir" ]; then
+                  cp -a "$C/$dir" "$OUT/C-Dogs/"
+                fi
               done
-              for f in LICENSE LICENSE.md COPYING COPYING.txt README README.md CHANGELOG CHANGELOG.md; do
-                [ ! -f "$C/$f" ] || cp "$C/$f" "$CPKG/C-Dogs/"
+
+              for doc in LICENSE LICENSE.md COPYING COPYING.txt README README.md CHANGELOG CHANGELOG.md; do
+                if [ -f "$C/$doc" ]; then
+                  cp "$C/$doc" "$OUT/C-Dogs/"
+                fi
               done
-              cat > "$CPKG/C-Dogs/OPENUP-RELEASE.txt" <<'EOF'
-          C-Dogs SDL for OpenUp / AmigaChrome
-          Target: AmigaOS 3.x, 68040 + FPU
-          Graphics/input/audio: Open platform SDL2 path
-          Runtime data: bundled upstream redistributable data from the pinned source tree
-          Status: compiled/package staged; runtime qualification still required
-          EOF
+
+              printf '%s\n' \
+                'C-Dogs SDL for OpenUp / AmigaChrome' \
+                'Target: AmigaOS 3.x, 68040 + FPU' \
+                'Graphics/input/audio: Open platform SDL2 path' \
+                'Runtime data: bundled upstream redistributable data from pinned source' \
+                'Status: COMPILED + PACKAGE STAGED; runtime qualification required' \
+                > "$OUT/C-Dogs/OPENUP-RELEASE.txt"
+
               (
-                cd "$CPKG"
+                cd "$OUT"
                 find C-Dogs -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
               )
-              file "$CPKG/C-Dogs/CDogs"
-              sha256sum "$CPKG/C-Dogs/CDogs"
-              du -sh "$CPKG/C-Dogs"
+
+              file "$OUT/C-Dogs/CDogs"
+              sha256sum "$OUT/C-Dogs/CDogs"
+              du -sh "$OUT/C-Dogs"
               echo "CDOGS_PACKAGE_PASS"
               ;;
 
@@ -234,37 +98,30 @@ jobs:
               U="$R/build/game-ports/sources/uqm/uqm-0.8.0"
               SYS="$STOVE/m68k-amigaos"
 
-              echo "=== UQM case-insensitive compare logic ==="
-              grep -n -A20 -B12 -E 'strcasecmp|stricmp' "$U/src/port.h" | head -120
+              echo "=== UQM port.h compare logic ==="
+              grep -n -A24 -B14 -E 'strcasecmp|stricmp' "$U/src/port.h" | head -160 || true
               echo
-              echo "=== sysroot declarations ==="
-              grep -RIn --include='*.h' -E 'strcasecmp|stricmp|strncasecmp|strnicmp' "$SYS/include" "$SYS/ndk-include" 2>/dev/null | head -120 || true
+              echo "=== declarations in sysroot ==="
+              grep -RIn --include='*.h' -E 'strcasecmp|stricmp|strncasecmp|strnicmp' \
+                "$SYS/include" "$SYS/ndk-include" 2>/dev/null | head -160 || true
               echo
-              echo "=== libraries exporting symbols ==="
-              for a in "$SYS"/lib/*.a "$SYS"/libnix/lib/*.a; do
-                [ -f "$a" ] || continue
-                "$STOVE/bin/m68k-amigaos-nm" -g "$a" 2>/dev/null | \
-                  grep -E '(^|[[:space:]])(_?strcasecmp|_?stricmp|_?strncasecmp|_?strnicmp)
+              echo "=== exported symbols ==="
+              for archive in "$SYS"/lib/*.a "$SYS"/libnix/lib/*.a; do
+                [ -f "$archive" ] || continue
+                hits=$("$STOVE/bin/m68k-amigaos-nm" -g "$archive" 2>/dev/null | \
+                  grep -E '(_?strcasecmp|_?stricmp|_?strncasecmp|_?strnicmp)' || true)
+                if [ -n "$hits" ]; then
+                  echo "IN $archive"
+                  printf '%s\n' "$hits"
+                fi
               done
               echo
-              echo "=== config host compare probes ==="
-              grep -n -A20 -B10 -E 'strcasecmp|stricmp' "$U/build/unix/config_proginfo_host" | head -140 || true
+              echo "=== UQM configure probe ==="
+              grep -n -A24 -B12 -E 'strcasecmp|stricmp' "$U/build/unix/config_proginfo_host" | head -180 || true
               ;;
 
             *)
-              echo "REFUSED: task is not on the approved allow-list: $TASK" >&2
-              exit 64
-              ;;
-          esac
- && echo "IN $a" || true
-              done
-              echo
-              echo "=== config host compare probes ==="
-              grep -n -A20 -B10 -E 'strcasecmp|stricmp' "$U/build/unix/config_proginfo_host" | head -140 || true
-              ;;
-
-            *)
-              echo "REFUSED: task is not on the approved allow-list: $TASK" >&2
+              echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
               ;;
           esac
