@@ -1,2 +1,2 @@
-inspect-uqm-strcasecmp
-trigger=1791501206313
+probe-uqm-compare-link
+trigger=1791501248073
