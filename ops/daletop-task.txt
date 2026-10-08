@@ -1,2 +1,2 @@
-emit-cdogs-screenshot
-trigger=1791501570429
+run-cdogs-firstlight
+trigger=1791501693363
