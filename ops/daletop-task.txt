@@ -1,2 +1,2 @@
 package-cdogs
-trigger=2
+trigger=clean-1
