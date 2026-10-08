@@ -165,6 +165,18 @@ jobs:
               grep -RIn -A12 -B12 "neither strcasecmp" "$U/build" "$U/src" | head -120 || true
               ;;
 
+            "daletop: inspect-uqm-probe-engine")
+              U="$GAMEPORTS/build/game-ports/sources/uqm/uqm-0.8.0"
+              echo "=== define_have_symbol implementation ==="
+              grep -RIn -A70 -B20 "define_have_symbol()" "$U/build" | head -220 || true
+              echo
+              echo "=== have_symbol implementation ==="
+              grep -RIn -A50 -B20 "have_symbol()" "$U/build" | head -180 || true
+              echo
+              echo "=== probe source generation ==="
+              grep -RIn -A60 -B20 "SYMBOL_.*_EXTRA" "$U/build/unix" | head -240 || true
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
