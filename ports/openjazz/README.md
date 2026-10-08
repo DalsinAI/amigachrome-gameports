@@ -1,37 +1,40 @@
-# OpenJazz — m68k AROS
+# OpenJazz — AmigaOS 3.x / AmigaChrome
 
-**Status:** COMPILED / RUNTIME TEST PENDING
+Target: **AC090 / AmigaOS 3.x / 68040 + FPU**
 
-## Upstream
+Pinned upstream commit: `a1626f4edd4a7af72c54103021790c56d8ecfced`.
 
-- repository: https://github.com/AlisterT/openjazz.git
-- pinned commit: `a1626f4edd4a7af72c54103021790c56d8ecfced`
+## Status
 
-## Compile result
+**COMPILED — provisional old-stove artifact.**
 
-- target: m68k AROS / 68040
-- executable: `OpenJazz`
-- observed size: 2,340,948 bytes
-- SHA-256: `b60483559a5fffc1aca2a079a8bc45a6b5c8d0283de25503082f78e72e2d8f21`
+A pristine local archive of the exact pin rebuilt successfully with no network
+access using only the checked Amiga patch and build recipe.
 
-## Successful configuration
+Clean provisional SHA-256:
 
-- SDL2
-- `NETWORK=OFF`
-- `SCALE=OFF`
-- `SDL_VERSION=2`
-- Release build
+`c6f48d76e5c42fc264e134cef0d41d2b6769fc2dbb0448429bff1aad311a934e`
 
-Compilation reached 100%. The first final link left the GCC signed-integer division helper `__divsi3` unresolved.
+The only source portability patch currently required adds the standard C++
+`<ctime>` declaration needed by the pinned source.
 
-The successful relink appended the target GCC runtime returned by:
+## Platform route
 
-    m68k-aros-g++ --sysroot="$AROS_SYSROOT" -m68040 -print-libgcc-file-name
+- SDL2 → Open-family SDL/OpenGPU/OpenInput stack;
+- network disabled for the first gate;
+- scaling disabled in the port build;
+- portable file layout;
+- target flags: 68040 + FPU.
 
-## Data
+## Runtime data
 
-OpenJazz requires Jazz Jackrabbit game data. For first-light testing we use the **Jazz Jackrabbit 1.1 shareware** dataset locally. It is not committed here.
+OpenJazz requires Jazz Jackrabbit game data. That data is external and is not
+committed to this repository.
 
-## Gate
+## Release gate
 
-Title/menu -> enter shareware level -> scrolling -> keyboard/controller input -> audio -> clean exit.
+Title/menu → enter an authorised test level → scrolling/rendering →
+keyboard/controller → audio → save/config → clean exit, followed by the
+fixed-stove clean-instance repeat.
+
+**DONE means RELEASE.**
