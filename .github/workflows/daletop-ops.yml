@@ -368,6 +368,24 @@ jobs:
               tail -120 "$I/logs/bridge-cdogs.log" 2>/dev/null || true
               ;;
 
+            "daletop: emit-cdogs-screenshot")
+              SRC=/home/da1ek/AmigaChrome-dev/openup070lab/shots/cdogs-firstlight.png
+              TMP=$(mktemp --suffix=.jpg)
+              trap 'rm -f "$TMP"' EXIT
+              python3 - "$SRC" "$TMP" <<'PY'
+          from PIL import Image
+          import sys
+          im=Image.open(sys.argv[1]).convert("RGB")
+          im.thumbnail((320,180))
+          im.save(sys.argv[2],"JPEG",quality=45,optimize=True)
+          print("SHOT_SIZE", im.size)
+          PY
+              echo "CDOGS_SCREENSHOT_BASE64_BEGIN"
+              base64 -w0 "$TMP"
+              echo
+              echo "CDOGS_SCREENSHOT_BASE64_END"
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
