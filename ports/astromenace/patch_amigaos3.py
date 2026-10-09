@@ -208,9 +208,11 @@ old_vfs = """    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) 
 """
 new_vfs = """    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {
 #ifdef AMIGACHROME
+        AMDiag("VFS missing - starting first-launch pack");
         std::cerr << __func__ << "(): creating gamedata.vfs from bundled gamedata/ on first launch.\\n";
         if (ConvertFS2VFS(GetDataPath() + "gamedata/", GetDataPath() + "gamedata.vfs") == 0
             && vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) == 0) {
+            AMDiag("VFS pack complete");
             std::cerr << __func__ << "(): gamedata.vfs created successfully.\\n";
         } else {
             std::cerr << __func__ << "(): bundled gamedata could not be packed/opened.\\n";
