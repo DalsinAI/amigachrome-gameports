@@ -91,4 +91,3 @@ int acgame_ham8_encode_row(const acgame_rgb8 *src, unsigned width,
     }
     return 0;
 }
-
