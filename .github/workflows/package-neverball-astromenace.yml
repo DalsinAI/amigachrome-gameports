@@ -1,4 +1,4 @@
-name: Package Neverball and AstroMenace
+name: Games Workshop
 
 on:
   push:
@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   package:
-    name: Build and package two games
+    name: Create Games Workshop
     runs-on: self-hosted
     timeout-minutes: 240
 
