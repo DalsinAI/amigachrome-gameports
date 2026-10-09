@@ -65,7 +65,10 @@ copy_if build/os3/nxengine-evo/nxengine-evo "$PAYLOAD/NXEngine-evo/nxengine-evo"
 copy_if build/os3/nxengine-evo/NXENGINE_RUN.txt "$PAYLOAD/NXEngine-evo/NXENGINE_RUN.txt"
 
 run_port 03-astromenace env STOVE="$STOVE" JOBS="${JOBS:-4}" sh ports/astromenace/build-amigaos3.sh
-copy_if build/os3/astromenace/astromenace "$PAYLOAD/AstroMenace/astromenace"
+if [ -d build/os3/astromenace/package/AstroMenace ]; then
+  mkdir -p "$PAYLOAD"
+  cp -a build/os3/astromenace/package/AstroMenace "$PAYLOAD/AstroMenace"
+fi
 copy_if build/os3/astromenace/ASTROMENACE_RUN.txt "$PAYLOAD/AstroMenace/ASTROMENACE_RUN.txt"
 
 {
