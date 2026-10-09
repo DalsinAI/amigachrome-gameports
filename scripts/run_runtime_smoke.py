@@ -342,9 +342,18 @@ def runtime_smoke(source: Path, slug: str, spec: dict):
 
         # User-Startup deliberately waits 60 seconds before launching the game,
         # so the browser can capture the ordinary Amiga display first.
-        baseline = canvas_sample(page)
+        baseline = None
+        for _ in range(20):
+            candidate = canvas_sample(page)
+            if len(set(candidate.get("samples", []))) > 2:
+                baseline = candidate
+                break
+            page.wait_for_timeout(500)
+        if baseline is None:
+            baseline = canvas_sample(page)
         page.locator("#video").screenshot(path=str(result_dir / "baseline.png"))
-        captures.append({"phase": "baseline", "sample": baseline})
+        captures.append({"phase": "baseline", "sample": baseline,
+                         "unique": len(set(baseline.get("samples", [])))})
 
         marker_deadline = time.time() + 45
         while time.time() < marker_deadline:
