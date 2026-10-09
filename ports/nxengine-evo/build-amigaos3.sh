@@ -47,11 +47,12 @@ MIX_LIB=$(find_file libSDL2_mixer.a "$SYS" "$P" || true)
 IMG_LIB=$(find_file libSDL2_image.a "$SYS" "$P" || true)
 PNG_LIB=$(find_file 'libpng*.a' "$SYS" "$P" "$FALLBACK" || true)
 JPEG_LIB=$(find_file 'libjpeg*.a' "$SYS" "$P" "$FALLBACK" || true)
+ZLIB_LIB=$(find_file 'libz.a' "$SYS" "$P" "$FALLBACK" || true)
 PNG_HEADER=$(find_file png.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
 JPEG_HEADER=$(find_file jpeglib.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
 
 missing=0
-for pair in "SDL2:$SDL_LIB" "SDL2_mixer:$MIX_LIB" "SDL2_image:$IMG_LIB" "PNG:$PNG_LIB" "JPEG:$JPEG_LIB" "PNG headers:$PNG_HEADER" "JPEG headers:$JPEG_HEADER"; do
+for pair in "SDL2:$SDL_LIB" "SDL2_mixer:$MIX_LIB" "SDL2_image:$IMG_LIB" "PNG:$PNG_LIB" "JPEG:$JPEG_LIB" "zlib:$ZLIB_LIB" "PNG headers:$PNG_HEADER" "JPEG headers:$JPEG_HEADER"; do
   name=${pair%%:*}
   value=${pair#*:}
   if [ -z "$value" ] || [ ! -f "$value" ]; then
@@ -89,6 +90,7 @@ cmake -S "$SRC" -B "$OUT" \
   -DPNG_LIBRARY="$PNG_LIB" \
   -DJPEG_INCLUDE_DIR="$JPEG_INC" \
   -DJPEG_LIBRARY="$JPEG_LIB" \
+  -DZLIB_LIBRARY="$ZLIB_LIB" \
   -DCMAKE_EXE_LINKER_FLAGS="$SDL_LIBS"
 
 cmake --build "$OUT" --target nx -j${JOBS:-4}
