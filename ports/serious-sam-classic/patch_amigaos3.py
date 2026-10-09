@@ -184,6 +184,27 @@ def patch_types(src: Path) -> None:
     path.write_text(text, encoding="latin-1")
 
 
+def patch_game(src: Path) -> None:
+    path = src / "GameMP" / "Game.cpp"
+    text = path.read_text(encoding="latin-1")
+    text = replace_once(
+        text,
+        """    memcpy(&gm_ahseHighScores[i].hse_gdDifficulty, pub, sizeof(INDEX));
+    BYTESWAP(gm_ahseHighScores[i].hse_gdDifficulty);
+    pub += sizeof(INDEX);
+""",
+        """    INDEX iDifficulty;
+    memcpy(&iDifficulty, pub, sizeof(INDEX));
+    BYTESWAP(iDifficulty);
+    gm_ahseHighScores[i].hse_gdDifficulty =
+      (CSessionProperties::GameDifficulty)iDifficulty;
+    pub += sizeof(INDEX);
+""",
+        "big-endian high-score enum",
+    )
+    path.write_text(text, encoding="latin-1")
+
+
 def patch_synchronization(src: Path) -> None:
     path = src / "Engine" / "Base" / "Synchronization.h"
     text = path.read_text(encoding="latin-1")
@@ -394,6 +415,7 @@ def main() -> int:
     if not src.is_dir():
         raise SystemExit(f"not a SeriousSamClassic checkout: {root}")
     patch_types(src)
+    patch_game(src)
     patch_synchronization(src)
     patch_base(src)
     make_loader(src)
