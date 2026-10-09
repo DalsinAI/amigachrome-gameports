@@ -24,7 +24,7 @@ RESULT_ROOT = ROOT / "build" / "runtime-smoke"
 PAYLOAD_ROOT = ROOT / "build" / "runtime-payload"
 
 ESC = 0x45
-INPUT_SCRIPT = f"20:k:{ESC}:0,20.1:k:{ESC|0x80}:0,28:k:{ESC}:0,28.1:k:{ESC|0x80}:0"
+INPUT_SCRIPT = ""
 
 def run(cmd, *, cwd=None, check=True, env=None, capture=False):
     print("+", " ".join(str(x) for x in cmd), flush=True)
@@ -272,7 +272,33 @@ def frame_to_ppm(data: bytes, out: Path):
     out.write_bytes(f"P6\n{vw} {vh}\n255\n".encode() + rgb)
     return True
 
+def canvas_sample(page):
+    return page.locator("#video").evaluate("""c => {
+        const ctx = c.getContext('2d');
+        if (!ctx) return {w:c.width,h:c.height,samples:[]};
+        const d = ctx.getImageData(0,0,c.width,c.height).data;
+        const sx = Math.max(1, Math.floor(c.width / 80));
+        const sy = Math.max(1, Math.floor(c.height / 32));
+        const out = [];
+        for (let y = 0; y < c.height; y += sy) {
+          for (let x = 0; x < c.width; x += sx) {
+            const i = (y * c.width + x) * 4;
+            out.push((d[i]<<16) | (d[i+1]<<8) | d[i+2]);
+          }
+        }
+        return {w:c.width,h:c.height,samples:out};
+    }""")
+
+def sample_diff(a, b):
+    aa, bb = (a or {}).get("samples", []), (b or {}).get("samples", [])
+    n = min(len(aa), len(bb))
+    if not n:
+        return 0.0
+    return sum(1 for i in range(n) if aa[i] != bb[i]) / n
+
 def runtime_smoke(source: Path, slug: str, spec: dict):
+    from playwright.sync_api import sync_playwright
+
     result_dir = RESULT_ROOT / slug
     result_dir.mkdir(parents=True, exist_ok=True)
     lab = RUN_ROOT / slug
@@ -281,75 +307,126 @@ def runtime_smoke(source: Path, slug: str, spec: dict):
         shutil.rmtree(lab, ignore_errors=True)
     run(["python3", str(LAB_TOOL), "copy", str(source), str(lab), "--who", "Thufir"])
     marker = amend_startup(lab, spec["dir"], spec["command"], slug)
-    envs = ["AC_PACE_HZ=0", "AC090_COUNTED=1", "AC_RTC_AT=1790960000", "INPUT_SCRIPT=" + INPUT_SCRIPT,
+    output_file = dh0_of(lab) / "GamePortsTest" / (slug + ".out")
+    envs = ["AC_PACE_HZ=0", "AC090_COUNTED=1", "AC_RTC_AT=1790960000",
             "AC_WATCHDOG=1", "JIT_HIST=1"]
     cmd = ["python3", str(LAB_TOOL), "start", str(lab), "--who", "Thufir", "--purpose", "game port runtime smoke " + slug]
-    for e in envs: cmd += ["--env", e]
+    for e in envs:
+        cmd += ["--env", e]
     started = run(cmd, capture=True)
     print(started.stdout or "")
     rec = json.loads((lab / "LAB.json").read_text())
     port = int(rec["run"]["bridgePort"])
     base = f"http://127.0.0.1:{port}/"
 
-    observations=[]
-    frames=[]
-    first_after_start = None
-    last_full = None
-    deadline=time.time()+38
-    while time.time()<deadline:
-        try:
-            http_post(base, viewer_record())
-            data=http_get(base,"native/frame")
-            fi=frame_info(data)
-            if fi:
-                frames.append(fi)
-                if marker.is_file() and first_after_start is None:
-                    first_after_start=fi
-                if fi.get("full"):
-                    last_full=data
-        except Exception as e:
-            observations.append("frame:" + repr(e))
-        if marker.is_file():
-            txt=marker.read_text(encoding="latin-1",errors="replace")
-            if "RETURNED" in txt:
-                break
-        time.sleep(0.75)
+    observations = []
+    captures = []
+    baseline = None
+    max_change = 0.0
+    input_change = 0.0
+    browser_status = ""
+    display_diag = ""
 
-    debug_text=""
+    chromium = os.environ.get("AMIGACHROME_CHROMIUM", "/usr/bin/chromium")
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(executable_path=chromium, headless=True,
+                                     args=["--no-sandbox", "--mute-audio"])
+        ctx = browser.new_context(viewport={"width": 1600, "height": 900})
+        page = ctx.new_page()
+        page.goto(base, wait_until="domcontentloaded", timeout=15000)
+        page.locator("#video").wait_for(state="visible", timeout=10000)
+
+        # User-Startup deliberately waits 60 seconds before launching the game,
+        # so the browser can capture the ordinary Amiga display first.
+        baseline = canvas_sample(page)
+        page.locator("#video").screenshot(path=str(result_dir / "baseline.png"))
+        captures.append({"phase": "baseline", "sample": baseline})
+
+        marker_deadline = time.time() + 45
+        while time.time() < marker_deadline:
+            if marker.is_file() and "STARTED" in marker.read_text(encoding="latin-1", errors="replace"):
+                break
+            page.wait_for_timeout(500)
+
+        started_marker = marker.is_file() and "STARTED" in marker.read_text(encoding="latin-1", errors="replace")
+        if started_marker:
+            for n in range(12):
+                page.wait_for_timeout(1000)
+                s = canvas_sample(page)
+                d = sample_diff(baseline, s)
+                max_change = max(max_change, d)
+                captures.append({"phase": f"game-{n}", "changedFraction": d, "sample": s})
+                if n in (2, 6, 11):
+                    page.locator("#video").screenshot(path=str(result_dir / f"game-{n}.png"))
+
+            # Exercise the same browser keyboard path a person uses.
+            before_key = canvas_sample(page)
+            page.locator("#video").hover()
+            page.keyboard.press("Escape")
+            page.wait_for_timeout(1200)
+            after_key = canvas_sample(page)
+            input_change = sample_diff(before_key, after_key)
+            page.locator("#video").screenshot(path=str(result_dir / "after-escape.png"))
+        try:
+            browser_status = page.locator("#status").inner_text(timeout=1000)
+        except Exception:
+            pass
+        try:
+            display_diag = page.locator("#display-geometry-diagnostic").inner_text(timeout=1000)
+        except Exception:
+            pass
+        page.screenshot(path=str(result_dir / "runtime-page.png"), full_page=True)
+        browser.close()
+
+    debug_text = ""
     try:
         http_post(base, debug_watch_record())
-        debug_text=http_get(base,"native/debug").decode("utf-8","replace")
-        (result_dir/"native-debug.txt").write_text(debug_text,encoding="utf-8")
+        debug_text = http_get(base, "native/debug").decode("utf-8", "replace")
+        (result_dir / "native-debug.txt").write_text(debug_text, encoding="utf-8")
     except Exception as e:
         observations.append("debug:" + repr(e))
 
-    status_text=marker.read_text(encoding="latin-1",errors="replace") if marker.is_file() else ""
-    native_log=lab/"logs/native-runtime.log"
-    log_text=native_log.read_text(encoding="utf-8",errors="replace") if native_log.is_file() else ""
-    (result_dir/"native-runtime.log").write_text(log_text,encoding="utf-8")
-    for name in ("bridge-lab.log","host-lab.log"):
-        p=lab/"logs"/name
-        if p.is_file(): shutil.copy2(p,result_dir/name)
-    if last_full:
-        (result_dir/"last-frame.acf4").write_bytes(last_full)
-        frame_to_ppm(last_full,result_dir/"last-frame.ppm")
+    status_text = marker.read_text(encoding="latin-1", errors="replace") if marker.is_file() else ""
+    guest_output = output_file.read_text(encoding="latin-1", errors="replace") if output_file.is_file() else ""
+    (result_dir / "guest-output.txt").write_text(guest_output, encoding="utf-8")
+    native_log = lab / "logs/native-runtime.log"
+    log_text = native_log.read_text(encoding="utf-8", errors="replace") if native_log.is_file() else ""
+    (result_dir / "native-runtime.log").write_text(log_text, encoding="utf-8")
+    for name in ("bridge-lab.log", "host-lab.log"):
+        p = lab / "logs" / name
+        if p.is_file():
+            shutil.copy2(p, result_dir / name)
 
-    crash_terms=["Software Failure","80000005","TRAP #7","divide by zero","Address Error","Bus Error","Illegal Instruction"]
-    crashes=[term for term in crash_terms if term.lower() in log_text.lower() or term.lower() in debug_text.lower()]
-    post_hashes={f.get("pixelSha256") for f in frames if f.get("pixelSha256")}
-    graphic_alive=bool(spec.get("graphics") and first_after_start and first_after_start.get("sampleUnique",0)>2 and len(post_hashes)>=1)
-    started_marker="STARTED" in status_text
-    returned="RETURNED" in status_text
-    verdict = "FAIL_CRASH" if crashes else ("FIRST_LIGHT" if started_marker and (graphic_alive or not spec.get("graphics")) else "NO_FIRST_LIGHT")
-    result={
-        "slug":slug,"sourceInstance":str(source),"lab":str(lab),"bridgePort":port,
-        "command":spec["command"],"data":spec.get("data"),"startedMarker":started_marker,
-        "returned":returned,"graphicsExpected":bool(spec.get("graphics")),"graphicsObserved":graphic_alive,
-        "framesSeen":len(frames),"distinctPixelFrames":len(post_hashes),"firstAfterStart":first_after_start,
-        "crashTerms":crashes,"observations":observations[-20:],"verdict":verdict
+    crash_terms = ["Software Failure", "80000005", "TRAP #7", "divide by zero",
+                   "Address Error", "Bus Error", "Illegal Instruction"]
+    all_text = "\n".join((log_text, debug_text, guest_output))
+    crashes = [term for term in crash_terms if term.lower() in all_text.lower()]
+    returned = "RETURNED" in status_text
+    graphics_alive = bool(spec.get("graphics") and started_marker and max_change >= 0.08)
+    if crashes:
+        verdict = "FAIL_CRASH"
+    elif not started_marker:
+        verdict = "NO_START"
+    elif not spec.get("graphics"):
+        verdict = "FIRST_LIGHT"
+    elif graphics_alive:
+        verdict = "FIRST_LIGHT"
+    else:
+        verdict = "NO_VISIBLE_GAME_FRAME"
+
+    result = {
+        "slug": slug, "sourceInstance": str(source), "lab": str(lab), "bridgePort": port,
+        "command": spec["command"], "data": spec.get("data"), "startedMarker": started_marker,
+        "returned": returned, "graphicsExpected": bool(spec.get("graphics")),
+        "graphicsObserved": graphics_alive, "maxCanvasChangedFraction": round(max_change, 4),
+        "escapeChangedFraction": round(input_change, 4),
+        "browserStatus": browser_status, "displayDiagnostic": display_diag,
+        "crashTerms": crashes, "guestOutputTail": guest_output[-4000:],
+        "observations": observations[-20:], "verdict": verdict
     }
-    (result_dir/"result.json").write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
-    run(["python3",str(LAB_TOOL),"stop",str(lab)],check=False)
+    (result_dir / "canvas-samples.json").write_text(json.dumps(captures, indent=2) + "\n", encoding="utf-8")
+    (result_dir / "result.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    run(["python3", str(LAB_TOOL), "stop", str(lab)], check=False)
     return result
 
 def main():
