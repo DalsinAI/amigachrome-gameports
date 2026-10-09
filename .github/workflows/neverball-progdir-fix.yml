@@ -1,0 +1,56 @@
+name: Neverball Amiga PROGDIR Fix
+
+on:
+  push:
+    branches:
+      - fix/neverball-amiga-progdir-20261009
+  workflow_dispatch:
+
+concurrency:
+  group: neverball-amiga-progdir-fix
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Rebuild Neverball/Neverputt
+    runs-on: self-hosted
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Prepare Neverball source/data
+        shell: bash
+        run: |
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game neverball --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game neverball
+
+      - name: Build Neverball and Neverputt
+        shell: bash
+        run: |
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16/prefix" \
+          OPENUP_SDK="$HOME/AmigaChrome/stoves/os32-gcc16/prefix" \
+          JOBS=6 \
+          sh ports/neverball/build.sh \
+            build/game-ports/sources/neverball \
+            build/os3/neverball-progdir-fix
+
+      - name: Package fixed build
+        shell: bash
+        run: |
+          cd build/os3/neverball-progdir-fix/package
+          zip -qr ../Neverball-Neverputt-AC090-PROGDIR-FIX.zip Neverball
+          cd ..
+          sha256sum Neverball-Neverputt-AC090-PROGDIR-FIX.zip > SHA256SUMS
+
+      - name: Upload fixed build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Neverball-Neverputt-AC090-PROGDIR-FIX-${{ github.run_id }}
+          path: |
+            build/os3/neverball-progdir-fix/Neverball-Neverputt-AC090-PROGDIR-FIX.zip
+            build/os3/neverball-progdir-fix/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 30
