@@ -56,7 +56,7 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | OpenLoco | CANDIDATE | SDL / OpenGPU | TBD | Attractive management title and 2D workload; modern C++ requirements. |
 | OpenRCT2 | CANDIDATE | SDL / OpenGPU | TBD | Highly desirable and portable, but large/modern with meaningful memory footprint. |
 | DevilutionX | CANDIDATE | SDL / OpenGPU | TBD | Mature Diablo engine; modern C++ and original data required. |
-| ScummVM | CANDIDATE | SDL / OpenGPU | TBD | Enormous value but huge multi-engine scope; should be deliberately scoped. |
+| ScummVM | REVIVAL CANDIDATE | SDL / OpenGPU / OpenAudio / OpenInput | P1 | AROS patches, classic 68k and modern OS4/MorphOS ports exist. Start with a deliberately small engine set and strongest Amiga-family backend. |
 | Naev | CANDIDATE | SDL / OpenGPU | TBD | 2D space game with SDL/OpenGL heritage; Lua/GL/dependency footprint. |
 | Stratagus | CANDIDATE | SDL / OpenGPU | TBD | Mature RTS engine; Lua and data/import workflow are the main integration points. |
 | Wargus | CANDIDATE | SDL / OpenGPU | TBD | Warcraft II game module/content workflow on Stratagus; original data boundary applies. |
@@ -71,9 +71,19 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | C&C Red Alert source | CANDIDATE | SDL / OpenGPU | TBD | Same family as Tiberian Dawn; large C++/platform adaptation job. |
 | OpenEnroth | CANDIDATE | SDL / OpenGPU | TBD | Might & Magic engine recreation; modern C++ and large runtime/data scope. |
 | OpenNox | INVESTIGATE | Unknown / tooling | TBD | Attractive classic-engine target, but Go toolchain makes native m68k difficult; investigate alternatives first. |
-| RetroArch | CANDIDATE - platform enabler | Open-family frontend / libretro | TBD | GPLv3 reference frontend for libretro. Potentially high reuse value if its video/audio/input/lifecycle backends map cleanly to OpenGPU/OpenAudio/OpenInput; would unlock multiple emulator/game cores rather than a single title. |
-| MAME | INVESTIGATE / STRETCH | OpenGPU / OpenAudio / OpenInput | TBD | Current MAME is very large modern C++ and GPL-2.0+. Evaluate a deliberately scoped machine/core set or a libretro-oriented route rather than assuming the whole current tree is a sensible first 68k target. |
-| PCSX-ReARMed (interpreter first) | INVESTIGATE / CANDIDATE | RetroArch / libretro or standalone SDL | TBD | GPLv2 PlayStation emulator. Start from the interpreter build, not ARM dynarec assumptions; assess software-rendered GPU path, BIOS/HLE options, endian/alignment issues and realistic AC090 performance. User-supplied PS1 BIOS/disc images remain external. |
+| RetroArch | REVIVAL CANDIDATE - platform enabler | Open-family frontend / libretro | P1 | 68k AmigaOS RetroArch 1.20 already exists, with OS4/MorphOS relatives and core packs. Modernise the 68k backend onto OpenGPU/OpenAudio/OpenInput/OpenMulticore and prove one lightweight core first. |
+| MAME | REVIVAL / SCOPING | OpenGPU / OpenAudio / OpenInput | P2 | AROS 0.36, classic 0.106-ish and MorphOS 0.148 lineages give useful prior art. Compare a period-appropriate MAME generation with libretro MAME cores rather than assuming current monolithic MAME. |
+| PCSX-ReARMed (interpreter first) | CANDIDATE | RetroArch / libretro | P2 | Preferred PlayStation-specific experiment. Start with interpreter mode under RetroArch; assess endian/alignment, software GPU path and realistic AC090 performance. User-supplied BIOS/disc images remain external. |
+| FinalBurn Neo | REVIVAL CANDIDATE | SDL / OpenGPU or libretro | P1 | Current MorphOS SDL2 prior art makes this a strong arcade target and potentially a better near-term fit than full modern MAME. Compare standalone and libretro routes. |
+| DOSBox | REVIVAL CANDIDATE | SDL / OpenGPU / OpenAudio | P2 | AROS, classic Amiga and MorphOS precedent exists. Review interpreter versus dynamic-core/JIT options and native backend work. |
+| Mednafen | PRIOR ART / CANDIDATE | SDL / OpenGPU / OpenAudio | P2 | AmigaOS 4 port includes PlayStation support. Mine backend and PS1 lessons; selected cores may be more useful than the whole frontend. |
+| VICE | REVIVAL CANDIDATE | RetroArch / libretro or standalone | P2 | AROS/MorphOS precedent. Prefer core-first under RetroArch unless standalone integration buys something important. |
+| mGBA / VBA-M | REVIVAL CANDIDATE | RetroArch / libretro | P2 | AROS VBA-M and OS4 mGBA precedent. Prefer a core-first route. |
+| Basilisk II | REVIVAL CANDIDATE | Native 68k Macintosh emulator | P2 | Strong candidate: Basilisk II already has an AmigaOS 3.x port and can use the real 68k processor on AmigaOS rather than emulating the CPU. Modernise graphics/audio/input/network/filesystem integration for AC090. Mac ROM/System software remain user supplied. |
+| Mini vMac | CANDIDATE | Native / OpenGPU / OpenAudio | P2 | Lightweight classic Macintosh route. Assess a 68k-host build and whether its simpler machine model makes a useful companion to Basilisk II. Macintosh ROM/System software remain external. |
+| Hatari | REVIVAL CANDIDATE | SDL / OpenGPU / OpenAudio / OpenInput | P2 | Atari ST/STe/TT/Falcon emulator with Amiga-family port history. Use EmuTOS for a legal free first-light path, then optional user TOS ROMs for compatibility. |
+| ARAnyM | CANDIDATE | SDL / OpenGPU / OpenAudio | P2 | Atari TT/Falcon-oriented emulator. Evaluate against Hatari for high-end Atari coverage rather than duplicating effort blindly. |
+| E-UAE / UAE family | PRIOR ART / TOOL | Existing Amiga emulation lineage | PARK | Keep as architecture/tooling prior art only unless a specific subsystem lesson or compatibility use-case emerges. |
 | Endless Sky | STRETCH | SDL / OpenGPU | TBD | Long-range capability target. |
 | Pioneer | STRETCH | OpenGPU | TBD | Long-range 3D engine/capability target. |
 | OpenMW | STRETCH | OpenGPU | TBD | Long-range capability target with very large engine/dependency surface. |
