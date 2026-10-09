@@ -41,7 +41,7 @@ python3 "$HERE/patch_amigaos3.py" "$SRC"
 test -x "$HOST/ecc"
 
 export OPENUP_SDK="$P"
-export SDL2_RUNTIME="-mcrt=nix20"
+export SDL2_RUNTIME="-noixemul"
 
 cmake -S "$SRC/SamTFE/Sources" -B "$BUILD" \
   -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" \
