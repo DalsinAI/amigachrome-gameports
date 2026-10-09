@@ -1,0 +1,65 @@
+name: Serious Sam TFE OpenUp
+
+on:
+  push:
+    branches:
+      - games/serious-sam-openup-tfe-20261009
+  workflow_dispatch:
+
+concurrency:
+  group: serious-sam-tfe-openup
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: AC090 TFE first light
+    runs-on: self-hosted
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout game-port recipes
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Prepare pinned Serious Sam source
+        shell: bash
+        run: |
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game serious-sam-classic --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game serious-sam-classic
+
+      - name: Build TFE for OpenUp
+        shell: bash
+        run: |
+          chmod +x ports/serious-sam-classic/build-amigaos3.sh
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" JOBS=6             sh ports/serious-sam-classic/build-amigaos3.sh
+
+      - name: Audit runtime dependencies
+        shell: bash
+        run: |
+          EXE=build/os3/serious-sam-tfe/package/SeriousSam-TFE/SeriousSam
+          test -f "$EXE"
+          strings "$EXE" | grep -E 'libSDL|libGL|libpthread|libEntities|libGame|libShaders|\.so([.0-9]*)?$' && {
+            echo "unexpected Unix/shared-library dependency marker in Amiga build" >&2
+            exit 20
+          } || true
+          grep -q 'Serious Sam TFE first-light package' build/os3/serious-sam-tfe/OPENUP_BUILD_MARKER 2>/dev/null || true
+
+      - name: Package evidence
+        shell: bash
+        run: |
+          cd build/os3/serious-sam-tfe/package
+          zip -qr ../SeriousSam-TFE-AC090-OpenUp-firstlight.zip SeriousSam-TFE
+          cd ..
+          sha256sum SeriousSam-TFE-AC090-OpenUp-firstlight.zip >> SHA256SUMS
+
+      - name: Upload first-light package
+        uses: actions/upload-artifact@v4
+        with:
+          name: SeriousSam-TFE-AC090-OpenUp-${{ github.run_id }}
+          path: |
+            build/os3/serious-sam-tfe/SeriousSam-TFE-AC090-OpenUp-firstlight.zip
+            build/os3/serious-sam-tfe/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 90
