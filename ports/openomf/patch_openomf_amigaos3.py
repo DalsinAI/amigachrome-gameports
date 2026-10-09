@@ -208,6 +208,41 @@ endif()
             raise RuntimeError("OpenOMF tmpdir marker missing")
         text = text.replace(unix_tmp, amiga_tmp, 1)
 
+    resolve_old = """bool path_resolve(path *p) {
+    char *resolved = realpath(p->buf, NULL);
+    if(resolved == NULL) {
+        return false;
+    }
+    strncpy_or_abort(p->buf, resolved, PATH_MAX_LENGTH);
+    free(resolved);
+    return true;
+}
+"""
+    resolve_new = """bool path_resolve(path *p) {
+#if defined(__AROS__) || defined(__amigaos__)
+    /*
+     * AmigaDOS paths are already meaningful DOS paths (PROGDIR:, T:, volume:)
+     * and the GCC16 libc does not expose a useful realpath() contract here.
+     * For the native port, resolution therefore means confirming that the
+     * named object exists while preserving its AmigaDOS spelling.
+     */
+    return access(p->buf, F_OK) == 0;
+#else
+    char *resolved = realpath(p->buf, NULL);
+    if(resolved == NULL) {
+        return false;
+    }
+    strncpy_or_abort(p->buf, resolved, PATH_MAX_LENGTH);
+    free(resolved);
+    return true;
+#endif
+}
+"""
+    if "AmigaDOS paths are already meaningful DOS paths" not in text:
+        if resolve_old not in text:
+            raise RuntimeError("OpenOMF path_resolve marker missing")
+        text = text.replace(resolve_old, resolve_new, 1)
+
     path_c.write_text(text, encoding="utf-8")
 
     print(f"patched OpenOMF AmigaOS 3 portability in {source}")
