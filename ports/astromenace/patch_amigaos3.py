@@ -114,15 +114,63 @@ if "AMDBG:" not in main_text:
         raise RuntimeError("AstroMenace SDL include marker missing")
     main_text = main_text.replace(include_anchor, diag_include, 1)
 
+# First-light Amiga startup: initialise SDL in explicit stages and leave
+# joystick disabled until video/VFS/GL are proven. This avoids hiding an
+# early task/device failure behind SDL_Init(SDL_INIT_EVERYTHING-ish).
+old_sdl_init = """    Uint32 SDL_Init_Flags = SDL_INIT_TIMER |
+                            SDL_INIT_EVENTS |
+                            SDL_INIT_JOYSTICK |
+                            SDL_INIT_VIDEO;
+
+    if (SDL_Init(SDL_Init_Flags) != 0) {
+        std::cerr << __func__ << "(): " << "Couldn't init SDL: " << SDL_GetError() << "\\n";
+        return 1;
+    }
+"""
+new_sdl_init = """    AMDiag("before SDL base init");
+    if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
+        std::cerr << __func__ << "(): Couldn't init SDL base: " << SDL_GetError() << "\\n";
+        return 1;
+    }
+    AMDiag("after SDL base init");
+
+    AMDiag("before SDL video init");
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
+        std::cerr << __func__ << "(): Couldn't init SDL video: " << SDL_GetError() << "\\n";
+        SDL_Quit();
+        return 1;
+    }
+    AMDiag("after SDL video init");
+"""
+if "before SDL base init" not in main_text:
+    if old_sdl_init not in main_text:
+        raise RuntimeError("AstroMenace SDL init block marker missing")
+    main_text = main_text.replace(old_sdl_init, new_sdl_init, 1)
+
+# Do not touch joystick APIs in the first-light diagnostic build. SDL joystick
+# is reintroduced after the title/menu path is stable.
+old_joystick = """    // should be called after vw_InitTimeThread(0)
+    JoystickInit(vw_GetTimeThread(0));
+"""
+new_joystick = """    // Amiga first-light: joystick intentionally deferred until runtime is stable.
+#ifdef AMIGACHROME
+    AMDiag("joystick deferred");
+#else
+    JoystickInit(vw_GetTimeThread(0));
+#endif
+"""
+if "joystick deferred" not in main_text:
+    if old_joystick not in main_text:
+        raise RuntimeError("AstroMenace joystick init marker missing")
+    main_text = main_text.replace(old_joystick, new_joystick, 1)
+
 replacements = [
     ('int main(int argc, char *argv[])\n{',
      'int main(int argc, char *argv[])\n{\n    AMDiag("entered main");'),
     ('    LogGameAndLibsVersion();',
      '    AMDiag("before SDL version query");\n    LogGameAndLibsVersion();\n    AMDiag("after SDL version query");'),
-    ('    if (SDL_Init(SDL_Init_Flags) != 0) {',
-     '    AMDiag("before SDL_Init");\n    if (SDL_Init(SDL_Init_Flags) != 0) {'),
     ('    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {',
-     '    AMDiag("after SDL_Init");\n    AMDiag("before VFS open");\n    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {'),
+     '    AMDiag("before VFS open");\n    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {'),
     ('    if (vw_InitText("lang/text.csv",',
      '    AMDiag("after VFS open");\n    AMDiag("before text init");\n    if (vw_InitText("lang/text.csv",'),
     ('    bool FirstStart = LoadXMLConfigFile(NeedResetConfig);',
