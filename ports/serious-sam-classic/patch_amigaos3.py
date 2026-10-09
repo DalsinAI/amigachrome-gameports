@@ -44,6 +44,57 @@ def shader_names(src: Path) -> list[str]:
     return sorted(names)
 
 
+def make_firstlight_decoder(src: Path) -> None:
+    # Sound effects stay on Serious Engine's SDL mixer.  Streaming Ogg/MP3
+    # plugins are deliberately absent until they are mapped to OpenMedia.
+    out = src / "Engine" / "Sound" / "Amiga"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "AmigaSoundDecoder.cpp").write_text(r'''/* OpenUp first-light streaming decoder.
+ * PCM/game sound continues through SoundLibrary -> SDL2 -> OpenAudio/AHI.
+ * Ogg/MP3 music is intentionally silent until the OpenMedia pass. */
+#include <string.h>
+#include <Engine/StdH.h>
+#include <Engine/Base/CTString.h>
+#include <Engine/Sound/SoundDecoder.h>
+
+BOOL _bAMP11Enabled = FALSE;
+BOOL _bOVEnabled = FALSE;
+
+void CSoundDecoder::InitPlugins(void) {}
+void CSoundDecoder::EndPlugins(void) {}
+
+CSoundDecoder::CSoundDecoder(const CTFileName &)
+{
+  sdc_pmpeg = NULL;
+  sdc_pogg = NULL;
+}
+
+CSoundDecoder::~CSoundDecoder(void) { Clear(); }
+
+void CSoundDecoder::Clear(void)
+{
+  sdc_pmpeg = NULL;
+  sdc_pogg = NULL;
+}
+
+BOOL CSoundDecoder::IsOpen(void) { return FALSE; }
+
+void CSoundDecoder::GetFormat(WAVEFORMATEX &wfe)
+{
+  memset(&wfe, 0, sizeof(wfe));
+}
+
+INDEX CSoundDecoder::Decode(void *pvDestBuffer, INDEX ctBytesToDecode)
+{
+  if (pvDestBuffer && ctBytesToDecode > 0)
+    memset(pvDestBuffer, 0, ctBytesToDecode);
+  return ctBytesToDecode;
+}
+
+void CSoundDecoder::Reset(void) {}
+''', encoding="latin-1")
+
+
 def make_local_network(src: Path) -> None:
     # First light deliberately keeps Serious Engine's local packet transport
     # and removes remote BSD sockets/GameAgent.  Multiplayer comes back as an
@@ -678,6 +729,10 @@ endif()
         "Engine/GameAgent/GameAgent.cpp",
         "Engine/GameAgent/Amiga/AmigaGameAgent.cpp",
     )
+    text = text.replace(
+        "Engine/Sound/SoundDecoder.cpp",
+        "Engine/Sound/Amiga/AmigaSoundDecoder.cpp",
+    )
 
     text = text.replace("add_library(${ENTITIESMPLIB} SHARED", "add_library(${ENTITIESMPLIB} OBJECT")
     text = text.replace("add_library(${GAMEMPLIB} SHARED", "add_library(${GAMEMPLIB} OBJECT")
@@ -752,6 +807,7 @@ def main() -> int:
     patch_game(src)
     patch_synchronization(src)
     patch_base(src)
+    make_firstlight_decoder(src)
     make_local_network(src)
     make_loader(src)
     patch_cmake(src)
