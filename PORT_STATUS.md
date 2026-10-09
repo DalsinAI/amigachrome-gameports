@@ -34,6 +34,11 @@ valid engineering work unless a fixed-stove A/B test shows otherwise.
 | Serious Sam Classic | SOURCE PINNED | NOT STARTED | TFE first. |
 | Warzone 2100 | SOURCE PINNED | NOT STARTED | Large 3D/application stress target. |
 | Doom 3 GPL source | SOURCE PINNED | NOT STARTED | Long-range renderer/engine stress target. |
+| OpenLara | SOURCE PINNED | NOT STARTED | 3D engine target; original Tomb Raider data remains external. |
+| OpenTTD | SOURCE PINNED | NOT STARTED | Large C++/SDL application stress target for graphics, audio, filesystem, networking and persistence. |
+| The Battle for Wesnoth | SOURCE PINNED | NOT STARTED | Large C++/SDL strategy-engine target with substantial data/localisation footprint. |
+| The Dark Mod | SOURCE PINNED | NOT STARTED | Long-range idTech 4-derived renderer/engine stretch target; engine source only. |
+| Hedgewars | SOURCE PINNED | NOT STARTED | SDL/audio/networking/physics target with a large mixed-license asset payload. |
 
 C-Dogs provisional old-stove binary SHA-256:
 `acf1b1cd8d42e8c9ccd93b246313481acbba79c71913bbf52551becb28573bfc`.
