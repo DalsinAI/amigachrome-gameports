@@ -61,7 +61,7 @@ python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
 rm -rf "$OUT"
 mkdir -p "$OUT"
 
-SDL_LIBS=$(SDL2_RUNTIME=-mcrt=nix20 "$SDL2_CONFIG" --libs)
+SDL_LIBS=$(SDL2_RUNTIME=-noixemul "$SDL2_CONFIG" --libs)
 
 cmake -S "$SRC" -B "$OUT" \
   -DCMAKE_TOOLCHAIN_FILE="$ROOT/toolchain/amigaos3-opengpu.cmake" \
