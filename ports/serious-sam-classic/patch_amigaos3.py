@@ -127,6 +127,60 @@ def patch_types(src: Path) -> None:
         "#if defined(__m68k__) || defined(__mc68000__) || defined(__aarch64__) || defined(__arm__) || PLATFORM_RISCV64",
         1,
     )
+
+    # libnix already provides char *strupr(char *).  Upstream's Unix helper
+    # becomes a second, void-return declaration after the _strupr macro.
+    text = replace_once(
+        text,
+        """    inline void _strupr(char *str)
+    {
+        if (str != NULL)
+        {
+            for (char *ptr = str; *ptr; ptr++)
+               *ptr = toupper(*ptr);
+        }
+    }
+""",
+        """    #if !defined(PLATFORM_AMIGA)
+    inline void _strupr(char *str)
+    {
+        if (str != NULL)
+        {
+            for (char *ptr = str; *ptr; ptr++)
+               *ptr = toupper(*ptr);
+        }
+    }
+    #endif
+""",
+        "libnix strupr",
+    )
+
+    # On the Amiga Unix-compat personality BOOL and SLONG are both int32_t.
+    # The SLONG endian helper therefore already covers BOOL; defining both is
+    # an illegal duplicate C++ overload.
+    text = replace_once(
+        text,
+        """    static inline void BYTESWAP(BOOL &val)
+    {
+        // !!! FIXME: reinterpret_cast ?
+        ULONG uval = *((ULONG *) &val);
+        BYTESWAP(uval);
+        val = *((BOOL *) &uval);
+    }
+""",
+        """    #if !defined(PLATFORM_AMIGA)
+    static inline void BYTESWAP(BOOL &val)
+    {
+        // !!! FIXME: reinterpret_cast ?
+        ULONG uval = *((ULONG *) &val);
+        BYTESWAP(uval);
+        val = *((BOOL *) &uval);
+    }
+    #endif
+""",
+        "Amiga BOOL byteswap alias",
+    )
+
     path.write_text(text, encoding="latin-1")
 
 
