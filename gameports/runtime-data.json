@@ -21,13 +21,12 @@
       ],
       "filename": "cavestory-nx-data.zip",
       "urls": [
-        "https://sarcasticat.com/cavestoryen.zip",
-        "https://www.cavestory.org/downloads/cavestoryen.zip"
+        "https://www.cavestory.one/downloads/data.zip"
       ],
-      "sha256": "aa87fa30bee9b4980640c7e104791354e0f1f6411ee0d45a70af70046aa0685f",
+      "sha256": null,
       "availability": "freeware-public-download",
       "packaging": "fetch-on-demand",
-      "notes": "NXEngine upstream itself consumes cavestoryen.zip. Do not republish the game data in source control; fetch and stage for the user/test instance."
+      "notes": "Pre-extracted NXEngine-compatible data mirror for the original freeware Cave Story. The fetcher records the observed SHA-256; do not commit or republish this archive from AmigaChrome."
     },
     "uqm-0.8.0-content": {
       "games": [
