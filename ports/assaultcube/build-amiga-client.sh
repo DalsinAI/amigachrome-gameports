@@ -17,6 +17,6 @@ SDK_LIBS="$(SDL2_RUNTIME=-mcrt=nix20 "$P/bin/sdl2-config" --libs)"
 make client CXX="$CXX" PLATFORM=AmigaOS \
  CXXFLAGS="$SDK_CFLAGS -O2 -fomit-frame-pointer -Wall -fsigned-char" \
  CLIENT_INCLUDES="-I. -Ibot -I../enet/include -I../include -I$ZLIB_ROOT/include" \
- CLIENT_LIBS="amiga_runtime.o amiga_audio_stub.o -L../enet/.libs -lenet -lSDL2_image $SDK_LIBS -L$ZLIB_ROOT/lib -lz -lpthread -lsocket -lamiga -lm"
+ CLIENT_LIBS="amiga_runtime.o amiga_audio_stub.o -L../enet/.libs -lenet -lSDL2_image -lGL $SDK_LIBS -L$ZLIB_ROOT/lib -lz -lpthread -lsocket -lamiga -lm"
 file ac_client
 sha256sum ac_client
