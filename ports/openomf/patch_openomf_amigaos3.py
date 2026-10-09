@@ -93,6 +93,9 @@ endif()
             raise RuntimeError("OpenOMF final ENet link marker missing")
         text = text.replace(final_old, final_new, 1)
 
+    text = text.replace("AROS_SDK", "AMIGA_SDK")
+    text = text.replace("AROS/Developer sysroot", "AmigaOS 3 GCC16 sysroot")
+
     cmake.write_text(text, encoding="utf-8")
 
     dst = source / "src" / "resources" / "modmanager_amiga_stub.c"
