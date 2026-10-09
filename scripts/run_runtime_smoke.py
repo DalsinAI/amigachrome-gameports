@@ -158,7 +158,7 @@ def package_payloads():
         d = PAYLOAD_ROOT / "UQM"; (d / "content/packages").mkdir(parents=True)
         shutil.copy2(uqm_bin, d / "uqm")
         pkg = ROOT / "build/test-data/uqm-0.8.0-content.uqm"
-        if download("https://sourceforge.net/projects/sc2/files/UQM/0.8/uqm-0.8.0-content.uqm/download", pkg):
+        if download("https://downloads.sourceforge.net/project/sc2/UQM/0.8/uqm-0.8.0-content.uqm", pkg):
             shutil.copy2(pkg, d / "content/packages/uqm-0.8.0-content.uqm")
             out["uqm"] = {"dir": "UQM", "command": "uqm -n content", "graphics": True, "data": "official UQM 0.8 base content"}
         else:
@@ -199,7 +199,10 @@ def package_payloads():
             out["assaultcube-client"] = {"blocked": "runtime packages absent from pinned source checkout"}
 
     # Explicit status for known campaign gaps.
-    if not (ROOT / "build/os3/openomf/openomf").is_file():
+    openomf_bin = ROOT / "build/os3/openomf/openomf"
+    if openomf_bin.is_file():
+        out["openomf"] = {"blocked": "build green; original OMF2097 runtime data is still required for qualification"}
+    else:
         out["openomf"] = {"blocked": "build did not produce OpenOMF binary"}
     out["nxengine-evo"] = {"blocked": "not part of current fixed-GCC campaign"}
 
@@ -431,25 +434,46 @@ def runtime_smoke(source: Path, slug: str, spec: dict):
     return result
 
 def main():
-    ap=argparse.ArgumentParser()
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    ap = argparse.ArgumentParser()
     ap.add_argument("--source")
-    args=ap.parse_args()
-    RESULT_ROOT.mkdir(parents=True,exist_ok=True)
-    source=Path(args.source).expanduser().resolve() if args.source else choose_source()
-    payloads=package_payloads()
-    results={}
-    for slug,spec in payloads.items():
+    args = ap.parse_args()
+    shutil.rmtree(RESULT_ROOT, ignore_errors=True)
+    RESULT_ROOT.mkdir(parents=True, exist_ok=True)
+    source = Path(args.source).expanduser().resolve() if args.source else choose_source()
+    payloads = package_payloads()
+    results = {}
+    runnable = {}
+
+    for slug, spec in payloads.items():
         if "blocked" in spec:
-            results[slug]={"slug":slug,"verdict":"BLOCKED","reason":spec["blocked"]}
-            continue
-        try:
-            results[slug]=runtime_smoke(source,slug,spec)
-        except Exception as e:
-            results[slug]={"slug":slug,"verdict":"HARNESS_ERROR","error":repr(e)}
-            print(slug,"HARNESS ERROR",repr(e))
-    summary={"schema":1,"at":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),"sourceInstance":str(source),"results":results}
-    (RESULT_ROOT/"summary.json").write_text(json.dumps(summary,indent=2,sort_keys=True)+"\n")
-    print(json.dumps(summary,indent=2,sort_keys=True))
+            results[slug] = {"slug": slug, "verdict": "BLOCKED", "reason": spec["blocked"]}
+        else:
+            runnable[slug] = spec
+
+    # Labs have separate disks and the lab tool allocates separate port blocks.
+    # Three at once keeps disk-copy pressure reasonable while using the machine
+    # we actually designed for parallel work.
+    with ThreadPoolExecutor(max_workers=min(3, max(1, len(runnable)))) as pool:
+        future_slug = {pool.submit(runtime_smoke, source, slug, spec): slug
+                       for slug, spec in runnable.items()}
+        for future in as_completed(future_slug):
+            slug = future_slug[future]
+            try:
+                results[slug] = future.result()
+            except Exception as e:
+                results[slug] = {"slug": slug, "verdict": "HARNESS_ERROR", "error": repr(e)}
+                print(slug, "HARNESS ERROR", repr(e), flush=True)
+
+    summary = {
+        "schema": 1,
+        "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "sourceInstance": str(source),
+        "results": dict(sorted(results.items())),
+    }
+    (RESULT_ROOT / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+    print(json.dumps(summary, indent=2, sort_keys=True))
     # Runtime failures are evidence, not a workflow infrastructure failure.
     return 0
 
