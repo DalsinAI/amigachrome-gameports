@@ -31,28 +31,17 @@ find_file() {
 FALLBACK="$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"
 SDL_INC="$SYS/include/SDL2"
 GL_INC="$SYS/include"
-SDL_LIB=$(find_file libSDL2.a "$SYS" "$P")
-GL_LIB=$(find_file 'libGL.a' "$SYS" "$P")
-OPENAL_LIB=$(find_file 'libopenal*.a' "$SYS" "$P" || true)
-[ -n "$OPENAL_LIB" ] || OPENAL_LIB=$(find_file 'libOpenAL*.a' "$SYS" "$P" || true)
-ALUT_LIB=$(find_file 'libalut*.a' "$SYS" "$P" || true)
-OGG_LIB=$(find_file 'libogg*.a' "$SYS" "$P" "$FALLBACK" || true)
-VORBIS_LIB=$(find_file 'libvorbis.a' "$SYS" "$P" "$FALLBACK" || true)
-VORBISFILE_LIB=$(find_file 'libvorbisfile.a' "$SYS" "$P" "$FALLBACK" || true)
+SDL_LIB=$(find_file libSDL2.a "$SYS" "$P" || true)
+MIX_LIB=$(find_file libSDL2_mixer.a "$SYS" "$P" || true)
+[ -n "$MIX_LIB" ] || MIX_LIB=$(find_file libSDL2_mixer_static.a "$SYS" "$P" || true)
+GL_LIB=$(find_file 'libGL.a' "$SYS" "$P" || true)
 FREETYPE_LIB=$(find_file 'libfreetype*.a' "$SYS" "$P" "$FALLBACK" || true)
-
-OPENAL_HEADER=$(find_file al.h "$SYS/include" "$P/include" || true)
-ALUT_HEADER=$(find_file alut.h "$SYS/include" "$P/include" || true)
-OGG_HEADER=$(find_file ogg.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
-VORBIS_HEADER=$(find_file vorbisfile.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
 FT_HEADER=$(find_file ft2build.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
 
 missing=0
 for pair in \
-  "SDL2:$SDL_LIB" "OpenGL:$GL_LIB" "OpenAL:$OPENAL_LIB" "ALUT:$ALUT_LIB" \
-  "Ogg:$OGG_LIB" "Vorbis:$VORBIS_LIB" "Vorbisfile:$VORBISFILE_LIB" "FreeType:$FREETYPE_LIB" \
-  "OpenAL headers:$OPENAL_HEADER" "ALUT headers:$ALUT_HEADER" "Ogg headers:$OGG_HEADER" \
-  "Vorbis headers:$VORBIS_HEADER" "FreeType headers:$FT_HEADER"; do
+  "SDL2:$SDL_LIB" "SDL2_mixer/OpenAudio:$MIX_LIB" "OpenGL:$GL_LIB" \
+  "FreeType:$FREETYPE_LIB" "FreeType headers:$FT_HEADER"; do
   name=${pair%%:*}
   value=${pair#*:}
   if [ -z "$value" ] || [ ! -f "$value" ]; then
@@ -62,13 +51,12 @@ for pair in \
     echo "ASTROMENACE_FOUND: $name -> $value"
   fi
 done
+[ -f "$SDL_INC/SDL_mixer.h" ] || { echo "ASTROMENACE_MISSING: SDL_mixer headers"; missing=1; }
 [ "$missing" -eq 0 ] || exit 4
 
-OPENAL_INC=$(dirname "$OPENAL_HEADER")
-ALUT_INC=$(dirname "$ALUT_HEADER")
-OGG_INC=$(dirname "$(dirname "$OGG_HEADER")")
-VORBIS_INC=$(dirname "$(dirname "$VORBIS_HEADER")")
 FT_INC=$(dirname "$FT_HEADER")
+
+python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
 
 rm -rf "$OUT"
 mkdir -p "$OUT"
@@ -79,23 +67,17 @@ cmake -S "$SRC" -B "$OUT" \
   -DCMAKE_TOOLCHAIN_FILE="$ROOT/toolchain/amigaos3-opengpu.cmake" \
   -DCMAKE_BUILD_TYPE=Release \
   -DAMIGA_STOVE="$STOVE" \
+  -DAMIGACHROME=ON \
   -DDONTCREATEVFS=1 \
   -DCMAKE_INCLUDE_PATH="$SYS/include;$SYS/include/SDL2;$FALLBACK/include" \
   -DCMAKE_LIBRARY_PATH="$SYS/lib;$P/lib;$FALLBACK/lib" \
   -DINSTALL_DESKTOP_FILES=OFF \
   -DSDL2_INCLUDE_DIR="$SDL_INC" \
   -DSDL2_LIBRARY_TEMP="$SDL_LIB" \
+  -DSDL2_MIXER_INCLUDE_DIR="$SDL_INC" \
+  -DSDL2_MIXER_LIBRARY="$MIX_LIB" \
   -DOPENGL_INCLUDE_DIR="$GL_INC" \
   -DOPENGL_gl_LIBRARY="$GL_LIB" \
-  -DOPENAL_INCLUDE_DIR="$OPENAL_INC" \
-  -DOPENAL_LIBRARY="$OPENAL_LIB" \
-  -DALUT_INCLUDE_DIR="$ALUT_INC" \
-  -DALUT_LIBRARY="$ALUT_LIB" \
-  -DOGG_INCLUDE_DIR="$OGG_INC" \
-  -DOGG_LIBRARY="$OGG_LIB" \
-  -DVORBISFILE_INCLUDE_DIR="$VORBIS_INC" \
-  -DVORBISFILE_LIBRARY="$VORBISFILE_LIB" \
-  -DVORBIS_LIBRARY="$VORBIS_LIB" \
   -DFREETYPE_INCLUDE_DIRS="$FT_INC" \
   -DFREETYPE_LIBRARY_RELEASE="$FREETYPE_LIB" \
   -DCMAKE_EXE_LINKER_FLAGS="$SDL_LIBS"
@@ -114,7 +96,7 @@ Upstream pin: bbdb3ac5af2774c92b85c4d9b2a238f606911e66
 Target: AmigaOS 3.x / AC090 / 68040 + FPU
 Compiler: $("$CC" --version | head -1)
 Graphics: OpenGPU SDL2 + GL
-Audio: OpenAudio/OpenAL compatibility path
+Audio: OpenGPU SDL2_mixer -> OpenAudio/AHI path
 VFS generation intentionally disabled during cross-build.
 Runtime gate: title -> ship/menu -> first mission -> input -> audio -> rendered 3D scene -> clean exit.
 EOF
