@@ -90,15 +90,32 @@ copy_if() {
 set -e
 
 run_port "2/8" "01-openomf" env STOVE="$STOVE" GUEST_PORT_LAYER="$GUEST"   sh ports/openomf/build-amigaos3.sh
-copy_if build/os3/openomf/openomf "$PAYLOAD/OpenOMF/openomf"
-copy_if build/os3/openomf/OPENOMF_RUN.txt "$PAYLOAD/OpenOMF/OPENOMF_RUN.txt"
+if grep -q "^PASS$" "$STATUS/01-openomf"; then
+  copy_if build/os3/openomf/openomf "$PAYLOAD/OpenOMF/openomf"
+  copy_if build/os3/openomf/OPENOMF_RUN.txt "$PAYLOAD/OpenOMF/OPENOMF_RUN.txt"
+  if [ -d build/os3/openomf/work/resources ]; then
+    mkdir -p "$PAYLOAD/OpenOMF"
+    cp -a build/os3/openomf/work/resources "$PAYLOAD/OpenOMF/resources"
+  fi
+fi
 
+rm -rf build/os3/neverball-release
 run_port "3/8" "02-neverball" env STOVE="$PREFIX" OPENUP_SDK="$PREFIX" CPU=68040   sh ports/neverball/build.sh build/game-ports/sources/neverball build/os3/neverball-release
-copy_if build/os3/neverball-release/package/Neverball "$PAYLOAD/Neverball"
-copy_if build/os3/neverball-release/package/SHA256SUMS "$PAYLOAD/Neverball-SHA256SUMS"
+if grep -q "^PASS$" "$STATUS/02-neverball"; then
+  copy_if build/os3/neverball-release/package/Neverball "$PAYLOAD/Neverball"
+  copy_if build/os3/neverball-release/package/SHA256SUMS "$PAYLOAD/Neverball-SHA256SUMS"
+fi
 
 run_port "4/8" "03-cdogs" env STOVE="$STOVE"   sh ports/cdogs-sdl/build-amigaos3.sh
-copy_if build/os3/cdogs/src/cdogs-sdl "$PAYLOAD/C-Dogs/cdogs-sdl"
+if grep -q "^PASS$" "$STATUS/03-cdogs"; then
+  copy_if build/os3/cdogs/src/cdogs-sdl "$PAYLOAD/C-Dogs/cdogs-sdl"
+  for asset in data dogfights missions graphics music sounds; do
+    if [ -d "build/game-ports/sources/cdogs-sdl/$asset" ]; then
+      mkdir -p "$PAYLOAD/C-Dogs"
+      cp -a "build/game-ports/sources/cdogs-sdl/$asset" "$PAYLOAD/C-Dogs/$asset"
+    fi
+  done
+fi
 
 run_port "5/8" "04-uqm" env STOVE="$STOVE"   sh ports/uqm/build-amigaos3.sh
 UQM_BIN=$(find build/os3/uqm -type f -name 'uqm*' -perm -111 2>/dev/null | head -1 || true)
@@ -122,8 +139,13 @@ copy_if build/os3/nxengine-evo/NXENGINE_RUN.txt "$PAYLOAD/NXEngine-evo/NXENGINE_
 
 run_port "6/8e" "09-astromenace" env STOVE="$STOVE" JOBS="${JOBS:-4}" \
   sh ports/astromenace/build-amigaos3.sh
-copy_if build/os3/astromenace/astromenace "$PAYLOAD/AstroMenace/astromenace"
-copy_if build/os3/astromenace/ASTROMENACE_RUN.txt "$PAYLOAD/AstroMenace/ASTROMENACE_RUN.txt"
+if grep -q "^PASS$" "$STATUS/09-astromenace"; then
+  if [ -d build/os3/astromenace/package/AstroMenace ]; then
+    mkdir -p "$PAYLOAD"
+    cp -a build/os3/astromenace/package/AstroMenace "$PAYLOAD/AstroMenace"
+  fi
+  copy_if build/os3/astromenace/ASTROMENACE_RUN.txt "$PAYLOAD/AstroMenace/ASTROMENACE_RUN.txt"
+fi
 
 echo "=== Preparing AssaultCube patches ==="
 ACROOT="$ROOT/build/game-ports/sources/assaultcube"
@@ -200,8 +222,16 @@ EOF
   done
 } | tee "$CAMPAIGN/CAMPAIGN_STATUS.txt"
 
-find "$PAYLOAD" -type f -print0 2>/dev/null | sort -z | xargs -0 -r sha256sum > "$CAMPAIGN/SHA256SUMS"
+(
+  cd "$PAYLOAD"
+  find . -type f -print0 2>/dev/null | sort -z | xargs -0 -r sha256sum
+) > "$CAMPAIGN/SHA256SUMS"
 find "$CAMPAIGN" -maxdepth 3 -type f -printf '%P\n' | sort > "$CAMPAIGN/CONTENTS.txt"
 
 echo "=== 8/8 campaign complete ==="
 cat "$CAMPAIGN/CAMPAIGN_STATUS.txt"
+
+if grep -Rqs '^FAIL' "$STATUS"; then
+  echo "One or more game-port lanes failed; evidence was retained." >&2
+  exit 30
+fi
