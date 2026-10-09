@@ -46,5 +46,43 @@ test -f build/os3/astromenace/package/AstroMenace/LICENSE.md
   sha256sum *.zip > SHA256SUMS
 )
 
+AMIGACHROME_ROOT="${AMIGACHROME_ROOT:-$HOME/AmigaChrome}"
+MEDIA_REPO=$(python3 - "$AMIGACHROME_ROOT" <<'PY'
+import json
+import os
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1]).expanduser()
+cfg = root / "config" / "paths.json"
+chosen = None
+try:
+    data = json.loads(cfg.read_text(encoding="utf-8"))
+    raw = data.get("mediaRepository")
+    if isinstance(raw, str) and raw.strip():
+        chosen = Path(raw).expanduser()
+except (OSError, ValueError):
+    pass
+
+if chosen is None:
+    env = os.environ.get("AMIGACHROME_MEDIA_REPOSITORY")
+    chosen = Path(env).expanduser() if env else Path.home() / ".local" / "share" / "amigachrome" / "install-media"
+
+print(chosen.resolve())
+PY
+)
+
+test -d "$MEDIA_REPO" || {
+  echo "Media Repository does not exist: $MEDIA_REPO" >&2
+  exit 6
+}
+
+cp -f "$PKG/Neverball-Neverputt-AC090-GCC16-0009.zip" "$MEDIA_REPO/"
+cp -f "$PKG/AstroMenace-AC090-GCC16-0009.zip" "$MEDIA_REPO/"
+cp -f "$PKG/SHA256SUMS" "$MEDIA_REPO/Neverball-AstroMenace-AC090-GCC16-0009-SHA256SUMS"
+
 printf 'Neverball/Neverputt and AstroMenace packages complete.\n'
+printf 'Media Repository: %s\n' "$MEDIA_REPO"
+ls -lh "$MEDIA_REPO/Neverball-Neverputt-AC090-GCC16-0009.zip" \
+       "$MEDIA_REPO/AstroMenace-AC090-GCC16-0009.zip"
 cat "$PKG/SHA256SUMS"
