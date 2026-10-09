@@ -127,6 +127,61 @@
         "submodules": false
       },
       "contentPolicy": "Code is GPLv2 with BSD components. Upstream data is described as CC0/CC-BY/CC-BY-SA, but doc/README_DATA.md records historical provenance caveats for some legacy campaigns/sounds; do not publish the bundled-data package until that review is closed."
+    },
+    "openlara": {
+      "order": 12,
+      "title": "OpenLara",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/XProger/OpenLara.git",
+        "commit": "3b268ca4bf986c380f44a26ffd9218bf6d376249",
+        "submodules": false
+      },
+      "contentPolicy": "Engine source is open; original Tomb Raider game data remains external. Do not commit or redistribute commercial game assets."
+    },
+    "openttd": {
+      "order": 13,
+      "title": "OpenTTD",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/OpenTTD/OpenTTD.git",
+        "commit": "d48d693d7ff09b643846e23a5f033cf3582ab27f",
+        "submodules": false
+      },
+      "contentPolicy": "Preserve upstream licensing and third-party notices. OpenGFX/OpenSFX/OpenMSX or other runtime content must be reviewed and packaged separately with recorded provenance."
+    },
+    "wesnoth": {
+      "order": 14,
+      "title": "The Battle for Wesnoth",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/wesnoth/wesnoth.git",
+        "commit": "9ec35a2f4cbaf036dedf9e96272a03387d7bc03a",
+        "submodules": false
+      },
+      "contentPolicy": "Preserve upstream code, data, translation and third-party licensing. Treat the large data tree as a separately reviewed release payload."
+    },
+    "darkmod": {
+      "order": 15,
+      "title": "The Dark Mod",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/stgatilov/darkmod_src.git",
+        "commit": "693d138e0632095b9c1c93081ce049609542c6cb",
+        "submodules": false
+      },
+      "contentPolicy": "Engine source only. The full Dark Mod installation, missions and game assets are separate runtime content and must not be assumed redistributable with the engine build."
+    },
+    "hedgewars": {
+      "order": 16,
+      "title": "Hedgewars",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/hedgewars/hw.git",
+        "commit": "1e2216af1b5b259e5714a87747fa2b091bd4f986",
+        "submodules": false
+      },
+      "contentPolicy": "Preserve upstream code and mixed asset licensing. Review bundled data, fonts, music, sounds and translations before creating a public AmigaChrome release archive."
     }
   }
 }
