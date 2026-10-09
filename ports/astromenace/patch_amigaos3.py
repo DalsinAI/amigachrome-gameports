@@ -50,6 +50,37 @@ if "audio_amigachrome.cpp" not in text:
 
 cmake.write_text(text, encoding="utf-8")
 
+# Amiga system headers define short coordinate-style macros that collide with
+# AstroMenace's private _X constructor parameter. Rename the local parameters
+# without changing behaviour.
+font_cpp = source / "src" / "core" / "font" / "font.cpp"
+font_text = font_cpp.read_text(encoding="utf-8")
+old_metrics = """    explicit sFontMetrics(const int _X, const int _Y,
+                          const unsigned _Width, const unsigned _Height,
+                          const long _AdvanceX /* in 1/64th of points */) :
+        X{_X},
+        Y{_Y},
+        Width{_Width},
+        Height{_Height},
+        /* we are safe with static_cast here, since 'advance.x' will not exceed 'float' */
+        AdvanceX{static_cast<float>(_AdvanceX) / 64.0f}
+"""
+new_metrics = """    explicit sFontMetrics(const int amiga_x, const int amiga_y,
+                          const unsigned amiga_width, const unsigned amiga_height,
+                          const long amiga_advance_x /* in 1/64th of points */) :
+        X{amiga_x},
+        Y{amiga_y},
+        Width{amiga_width},
+        Height{amiga_height},
+        /* we are safe with static_cast here, since 'advance.x' will not exceed 'float' */
+        AdvanceX{static_cast<float>(amiga_advance_x) / 64.0f}
+"""
+if old_metrics in font_text:
+    font_text = font_text.replace(old_metrics, new_metrics, 1)
+elif "amiga_advance_x" not in font_text:
+    raise RuntimeError("AstroMenace font metrics portability marker missing")
+font_cpp.write_text(font_text, encoding="utf-8")
+
 dst = source / "src" / "core" / "audio" / "audio_amigachrome.cpp"
 shutil.copy2(adapter, dst)
 
