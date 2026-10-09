@@ -19,6 +19,10 @@
 #undef HAS_FCNTL
 #endif
 
+#ifdef HAS_POLL
+#undef HAS_POLL
+#endif
+
 #ifndef ENET_AMIGA_SOCKET_MIN_VERSION
 #define ENET_AMIGA_SOCKET_MIN_VERSION 4
 #endif
