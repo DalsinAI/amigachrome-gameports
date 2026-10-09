@@ -18,6 +18,11 @@ The repository contains compiled revival ports, the Neverball/OpenGPU release la
 | Serious Sam Classic | SOURCE PINNED | NOT STARTED | TFE first |
 | Warzone 2100 | SOURCE PINNED | NOT STARTED | later large 3D/application stress target |
 | Doom 3 | SOURCE PINNED | NOT STARTED | long-range renderer/engine stress target |
+| OpenLara | SOURCE PINNED | NOT STARTED | 3D engine / OpenGPU target |
+| OpenTTD | SOURCE PINNED | NOT STARTED | large C++/SDL application target |
+| The Battle for Wesnoth | SOURCE PINNED | NOT STARTED | large C++/SDL strategy target |
+| The Dark Mod | SOURCE PINNED | NOT STARTED | long-range idTech 4-derived stretch target |
+| Hedgewars | SOURCE PINNED | NOT STARTED | SDL/audio/networking/physics target |
 
 See [PORT_STATUS.md](PORT_STATUS.md) and the individual files under `ports/` for exact source pins, hashes, content boundaries and test gates.
 
@@ -69,6 +74,11 @@ No upstream game engine source is committed here. Prepared sources live outside 
 | Serious Sam Classic | https://github.com/tx00100xt/SeriousSamClassic | GPL-2.0 engine; original game data external |
 | Warzone 2100 | https://github.com/Warzone2100/warzone2100 | GPL-2.0 project plus third-party/submodule notices |
 | Doom 3 | https://github.com/id-Software/DOOM-3 | GPL-3.0 source; original game data external |
+| OpenLara | https://github.com/XProger/OpenLara | engine source only for intake; original Tomb Raider data external |
+| OpenTTD | https://github.com/OpenTTD/OpenTTD | preserve upstream and third-party notices; runtime asset packs reviewed separately |
+| The Battle for Wesnoth | https://github.com/wesnoth/wesnoth | preserve upstream code/data/translation licensing |
+| The Dark Mod | https://github.com/stgatilov/darkmod_src | official engine mirror; missions/full installation external |
+| Hedgewars | https://github.com/hedgewars/hw | preserve upstream code and mixed asset licensing |
 
 Each project's own licence files at the pinned revision are authoritative.
 
