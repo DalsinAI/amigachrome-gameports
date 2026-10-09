@@ -161,7 +161,7 @@ endif()
     include_extra = (
         "#include <stdarg.h>\n"
         "#include <stdlib.h>\n"
-        "#if defined(__AROS__) || defined(__amigaos__)\n"
+        "#if defined(__AROS__)\n"
         "#include <aros/posixc/stdlib.h>\n"
         "#endif\n"
     )
