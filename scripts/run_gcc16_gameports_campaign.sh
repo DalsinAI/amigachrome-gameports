@@ -8,11 +8,11 @@ cd "$ROOT"
 STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
 PREFIX="$STOVE/prefix"
 CC="$PREFIX/bin/m68k-amigaos-gcc"
-CAMPAIGN="$ROOT/build/campaign/AC090-GamePorts-0008"
+CAMPAIGN="$ROOT/build/campaign/AC090-GamePorts-open1"
 LOGS="$CAMPAIGN/logs"
 STATUS="$CAMPAIGN/status"
 PAYLOAD="$CAMPAIGN/payload"
-OPENAMIGAGCC_COMMIT=8a7b846d3946413b5848d3384905f3c1ff85cbe3
+OPENAMIGAGCC_COMMIT=787ced6420bebefaacfb6dfe05c2fc083487aaeb
 GUEST_COMMIT=8c570397a613f1df1adc4702164603a37b5956dd
 
 rm -rf "$CAMPAIGN"
@@ -25,7 +25,7 @@ die() { echo "FATAL: $*" >&2; exit 1; }
 [ -x "$PREFIX/bin/sdl2-config" ] || die "OpenGPU SDK is not installed in the GCC16 stove"
 
 {
-  echo "campaign=AC090-GamePorts-0008"
+  echo "campaign=AC090-GamePorts-open1"
   echo "gameports_commit=$(git rev-parse HEAD)"
   echo "guest_commit=$GUEST_COMMIT"
   echo "openamigagcc_commit=$OPENAMIGAGCC_COMMIT"
@@ -34,15 +34,15 @@ die() { echo "FATAL: $*" >&2; exit 1; }
   "$PREFIX/bin/sdl2-config" --version || true
 } | tee "$CAMPAIGN/BUILD_IDENTITY.txt"
 
-echo "=== 1/8 GCC16 + 0008 hard qualification gate ==="
+echo "=== 1/8 GCC16 open1 hard qualification gate ==="
 GCCSRC="$ROOT/build/campaign/openamigagcc"
 rm -rf "$GCCSRC"
 git init -q "$GCCSRC"
 git -C "$GCCSRC" remote add origin https://github.com/DalsinAI/openamigagcc.git
 git -C "$GCCSRC" fetch -q --depth 1 origin "$OPENAMIGAGCC_COMMIT" || die "cannot fetch OpenAmigaGCC proof source"
 git -C "$GCCSRC" checkout -q --detach FETCH_HEAD
-[ -f "$GCCSRC/patches/gcc/0008-m68k-a-DImode-shift-by-32-pushed-from-a-stack-slot-r.patch" ] ||
-  die "OpenAmigaGCC 0008 patch is absent from proof source"
+[ -f "$GCCSRC/patches/gcc/0009-loop-distribution-on-libnix-builds-mem-routines-without-it.patch" ] ||
+  die "OpenAmigaGCC 0009 patch is absent from proof source"
 command -v qemu-m68k >/dev/null 2>&1 || die "qemu-m68k is required for the GCC16 proof gate"
 if ! bash "$GCCSRC/tests/repro/prove.sh" "$PREFIX/bin" 2>&1 | tee "$LOGS/00-compiler-proof.log"; then
   die "GCC16 reproducer suite failed; no game ports will be built"
@@ -130,7 +130,7 @@ run_port "7/8b" "09-assaultcube-client" env STOVE="$STOVE"   sh ports/assaultcub
 copy_if "$ACROOT/source/src/ac_client" "$PAYLOAD/AssaultCube/ac_client"
 
 cat > "$CAMPAIGN/FIRST_LIGHT_TEST_PLAN.txt" <<'EOF'
-AC090 GCC16/0008 Game Ports - First-Light Order
+AC090 GCC16/open1 Game Ports - First-Light Order
 ================================================
 
 Use one clean AC090 / AmigaOS 3.x / 68040 + FPU instance and this exact payload.
@@ -173,7 +173,7 @@ Use one clean AC090 / AmigaOS 3.x / 68040 + FPU instance and this exact payload.
 EOF
 
 {
-  echo "AC090 GCC16/0008 game-port campaign status"
+  echo "AC090 GCC16/open1 game-port campaign status"
   echo "=========================================="
   for f in "$STATUS"/*; do
     [ -f "$f" ] || continue
