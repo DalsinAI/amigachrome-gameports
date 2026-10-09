@@ -48,7 +48,7 @@ jobs:
           name: AC090-GamePorts-Runtime-${{ github.run_id }}
           path: |
             build/runtime-smoke
-            build/campaign/AC090-GamePorts-0008/CAMPAIGN_STATUS.txt
-            build/campaign/AC090-GamePorts-0008/BUILD_IDENTITY.txt
+            build/campaign/AC090-GamePorts-open1/CAMPAIGN_STATUS.txt
+            build/campaign/AC090-GamePorts-open1/BUILD_IDENTITY.txt
           if-no-files-found: warn
           retention-days: 14
