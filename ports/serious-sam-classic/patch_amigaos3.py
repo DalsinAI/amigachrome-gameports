@@ -603,6 +603,34 @@ def patch_runtime_boundaries(src: Path) -> None:
 """,
         "Amiga high resolution clock",
     )
+    text = replace_once(
+        text,
+        """void sys_precise_clock(uint64_t *result)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	*result = (uint64_t) tv.tv_sec * (uint64_t) 1000000 +
+	          (uint64_t) tv.tv_usec;
+}
+""",
+        """void sys_precise_clock(uint64_t *result)
+{
+#ifdef PLATFORM_AMIGA
+  const Uint64 counter = SDL_GetPerformanceCounter();
+  const Uint64 freq = SDL_GetPerformanceFrequency();
+  if (freq == 0) { *result = 0; return; }
+  *result = (uint64_t)((counter / freq) * 1000000ULL
+      + ((counter % freq) * 1000000ULL) / freq);
+#else
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  *result = (uint64_t) tv.tv_sec * (uint64_t) 1000000 +
+            (uint64_t) tv.tv_usec;
+#endif
+}
+""",
+        "Amiga precise microsecond clock",
+    )
     path.write_text(text, encoding="latin-1")
 
     path = src / "Engine" / "Base" / "Profiling.cpp"
