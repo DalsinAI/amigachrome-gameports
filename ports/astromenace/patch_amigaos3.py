@@ -86,6 +86,41 @@ elif "amiga_advance_x" not in font_text:
     raise RuntimeError("AstroMenace font metrics portability marker missing")
 font_cpp.write_text(font_text, encoding="utf-8")
 
+# AmigaChrome one-click packaging: if gamedata.vfs is absent but the
+# redistributable upstream gamedata/ tree is present beside the executable,
+# build the VFS automatically on first launch and then continue normally.
+main_cpp = source / "src" / "main.cpp"
+main_text = main_cpp.read_text(encoding="utf-8")
+old_vfs = """    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {
+        std::cerr << __func__ << "(): " << "gamedata.vfs file not found or corrupted.\\n";
+        SDL_Quit();
+        return 1;
+    }
+"""
+new_vfs = """    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {
+#ifdef AMIGACHROME
+        std::cerr << __func__ << "(): creating gamedata.vfs from bundled gamedata/ on first launch.\\n";
+        if (ConvertFS2VFS(GetDataPath() + "gamedata/", GetDataPath() + "gamedata.vfs") == 0
+            && vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) == 0) {
+            std::cerr << __func__ << "(): gamedata.vfs created successfully.\\n";
+        } else {
+            std::cerr << __func__ << "(): bundled gamedata could not be packed/opened.\\n";
+            SDL_Quit();
+            return 1;
+        }
+#else
+        std::cerr << __func__ << "(): " << "gamedata.vfs file not found or corrupted.\\n";
+        SDL_Quit();
+        return 1;
+#endif
+    }
+"""
+if "creating gamedata.vfs from bundled gamedata/" not in main_text:
+    if old_vfs not in main_text:
+        raise RuntimeError("AstroMenace VFS-open marker missing")
+    main_text = main_text.replace(old_vfs, new_vfs, 1)
+main_cpp.write_text(main_text, encoding="utf-8")
+
 dst = source / "src" / "core" / "audio" / "audio_amigachrome.cpp"
 shutil.copy2(adapter, dst)
 
