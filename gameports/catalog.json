@@ -128,6 +128,17 @@
       },
       "contentPolicy": "Code is GPLv2 with BSD components. Upstream data is described as CC0/CC-BY/CC-BY-SA, but doc/README_DATA.md records historical provenance caveats for some legacy campaigns/sounds; do not publish the bundled-data package until that review is closed."
     },
+    "openomf": {
+      "order": 12,
+      "title": "OpenOMF / OMFAGA",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/omf2097/openomf.git",
+        "commit": "4a94a754bac06d9b43780f8355307a83e0a52d04",
+        "submodules": false
+      },
+      "contentPolicy": "Engine source is MIT. Original One Must Fall 2097 data is user-supplied and is not bundled."
+    },
     "openlara": {
       "order": 12,
       "title": "OpenLara",
