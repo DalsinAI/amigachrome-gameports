@@ -164,7 +164,7 @@ typedef struct sockaddr    SOCKADDR;
 CPacketBufferStats _pbsSend;
 CPacketBufferStats _pbsRecv;
 
-static CClientInterface cm_aciClients[SERVER_CLIENTS];
+CClientInterface cm_aciClients[SERVER_CLIENTS];
 static CClientInterface cm_ciLocalClient;
 static CClientInterface cm_ciBroadcast;
 static CTCriticalSection cm_csComm;
@@ -422,7 +422,8 @@ void *_LocalNet_Thread(void *) { return 0; }
 
 
 def make_loader(src: Path) -> None:
-    entities = entity_classes(src)
+    # Upstream deliberately excludes GhostBusterRay from the TFE release build.
+    entities = [name for name in entity_classes(src) if name != "CGhostBusterRay"]
     shaders = shader_names(src)
     out = src / "Engine" / "Base" / "Amiga"
     out.mkdir(parents=True, exist_ok=True)
@@ -561,6 +562,130 @@ def patch_types(src: Path) -> None:
     path.write_text(text, encoding="latin-1")
 
 
+def patch_runtime_boundaries(src: Path) -> None:
+    # OpenGPU SDL2 is the Amiga timing provider.  Do not inherit POSIX
+    # clock_gettime merely because Serious Engine calls this PLATFORM_UNIX.
+    path = src / "Engine" / "Base" / "Timer.cpp"
+    text = path.read_text(encoding="latin-1")
+    text = replace_once(
+        text,
+        """#if defined PLATFORM_UNIX
+#include <sys/time.h>
+#include <pthread.h>
+#endif
+""",
+        """#if defined(PLATFORM_AMIGA)
+#include "SDL.h"
+#elif defined PLATFORM_UNIX
+#include <sys/time.h>
+#include <pthread.h>
+#endif
+""",
+        "Amiga SDL timer include",
+    )
+    text = replace_once(
+        text,
+        """#if PLATFORM_NOT_X86 || NOT_USE_ASM
+  struct timespec tp;
+  clock_gettime(CLOCK_MONOTONIC, &tp);
+  return( (((__int64) tp.tv_sec) * 1000000000LL) + ((__int64) tp.tv_nsec));
+""",
+        """#if defined(PLATFORM_AMIGA)
+  const Uint64 counter = SDL_GetPerformanceCounter();
+  const Uint64 freq = SDL_GetPerformanceFrequency();
+  if (freq == 0) return 0;
+  return (__int64)((counter / freq) * 1000000000ULL
+      + ((counter % freq) * 1000000000ULL) / freq);
+#elif PLATFORM_NOT_X86 || NOT_USE_ASM
+  struct timespec tp;
+  clock_gettime(CLOCK_MONOTONIC, &tp);
+  return( (((__int64) tp.tv_sec) * 1000000000LL) + ((__int64) tp.tv_nsec));
+""",
+        "Amiga high resolution clock",
+    )
+    path.write_text(text, encoding="latin-1")
+
+    path = src / "Engine" / "Base" / "Profiling.cpp"
+    text = path.read_text(encoding="latin-1")
+    text = replace_once(
+        text,
+        """#if (defined PLATFORM_UNIX) && !defined(__GNU_INLINE_X86_32__)
+#include <sys/time.h>
+#endif
+""",
+        """#if defined(PLATFORM_AMIGA)
+#include "SDL.h"
+#elif (defined PLATFORM_UNIX) && !defined(__GNU_INLINE_X86_32__)
+#include <sys/time.h>
+#endif
+""",
+        "Amiga SDL profiling include",
+    )
+    text = replace_once(
+        text,
+        """#if PLATFORM_NOT_X86 || NOT_USE_ASM
+  struct timespec tv;
+  clock_gettime(CLOCK_MONOTONIC, &tv);
+  return( (((__int64) tv.tv_sec) * 1000) + (((__int64) tv.tv_nsec) / 1000000) );
+""",
+        """#if defined(PLATFORM_AMIGA)
+  const Uint64 counter = SDL_GetPerformanceCounter();
+  const Uint64 freq = SDL_GetPerformanceFrequency();
+  if (freq == 0) return 0;
+  return (__int64)((counter / freq) * 1000ULL
+      + ((counter % freq) * 1000ULL) / freq);
+#elif PLATFORM_NOT_X86 || NOT_USE_ASM
+  struct timespec tv;
+  clock_gettime(CLOCK_MONOTONIC, &tv);
+  return( (((__int64) tv.tv_sec) * 1000) + (((__int64) tv.tv_nsec) / 1000000) );
+""",
+        "Amiga profiling clock",
+    )
+    path.write_text(text, encoding="latin-1")
+
+    path = src / "Engine" / "Math" / "Functions.h"
+    text = path.read_text(encoding="latin-1")
+    text = replace_once(
+        text,
+        "#if ((defined(_WIN64) && (_MSC_VER >= 1800)) || defined(PLATFORM_UNIX))",
+        "#if ((defined(_WIN64) && (_MSC_VER >= 1800)) || (defined(PLATFORM_UNIX) && !defined(PLATFORM_AMIGA)))",
+        "portable Amiga Log2",
+    )
+    path.write_text(text, encoding="latin-1")
+
+    # These are public Engine helpers declared in Render.h.  With a static
+    # monolithic build GCC may discard an out-of-line copy of an inline body.
+    path = src / "Engine" / "Ska" / "RMRender.cpp"
+    text = path.read_text(encoding="latin-1")
+    for signature in (
+        "MatrixVectorToMatrix12",
+        "Matrix12ToMatrixVector",
+        "TransformVertex",
+        "RotateVector",
+        "Matrix12ToQVect",
+        "QVectToMatrix12",
+        "MatrixTranspose",
+    ):
+        text = text.replace("inline void " + signature, "void " + signature, 1)
+    path.write_text(text, encoding="latin-1")
+
+    # The Unix install discovery scans /usr and passwd databases.  On Amiga
+    # the application/data root remains the SDL base path (PROGDIR semantics).
+    path = src / "Engine" / "Engine.cpp"
+    text = path.read_text(encoding="latin-1")
+    text = replace_once(
+        text,
+        """#ifdef PLATFORM_UNIX
+#if defined(__OpenBSD__) || defined(__FreeBSD__)
+""",
+        """#if defined(PLATFORM_UNIX) && !defined(PLATFORM_AMIGA)
+#if defined(__OpenBSD__) || defined(__FreeBSD__)
+""",
+        "no Unix install search on Amiga",
+    )
+    path.write_text(text, encoding="latin-1")
+
+
 def patch_serioussam(src: Path) -> None:
     path = src / "SeriousSam" / "SeriousSam.cpp"
     text = path.read_text(encoding="latin-1")
@@ -576,6 +701,38 @@ def patch_serioussam(src: Path) -> None:
         '#include "SeriousSam/StdH.h"\n',
         '#include "SeriousSam/StdH.h"\n\n#ifdef PLATFORM_AMIGA\nextern "C" unsigned long __stack = 1024UL * 1024UL;\n#endif\n',
         "Amiga native stack symbol",
+    )
+    text = replace_once(
+        text,
+        """void CheckModReload(void)
+{
+""",
+        """void CheckModReload(void)
+{
+#ifdef PLATFORM_AMIGA
+  if (_fnmModToLoad!="") {
+    CPrintF(TRANSV("OpenUp first-light build: mod relaunch is not enabled.\\n"));
+    _fnmModToLoad = "";
+  }
+  return;
+#else
+""",
+        "Amiga no mod reexec start",
+    )
+    text = replace_once(
+        text,
+        """  }
+}
+
+void CheckTeaser(void)
+""",
+        """  }
+#endif
+}
+
+void CheckTeaser(void)
+""",
+        "Amiga no mod reexec end",
     )
     path.write_text(text, encoding="latin-1")
 
@@ -758,6 +915,32 @@ endif()
     text = text.replace("add_library(${SHADERSLIB} SHARED", "add_library(${SHADERSLIB} OBJECT")
     text = text.replace("add_library(${ENGINELIB} SHARED", "add_library(${ENGINELIB} STATIC")
 
+    # safemath and Engine call into each other.  Two static archives therefore
+    # have an order-dependent cycle; fold safemath objects into Engine instead.
+    text = text.replace(
+        "add_library(engine_safemath${MP} STATIC",
+        "add_library(engine_safemath${MP} OBJECT",
+        1,
+    )
+    text = replace_once(
+        text,
+        """add_library(${ENGINELIB} STATIC
+     ${ENGINE_SRCS}
+)
+""",
+        """add_library(${ENGINELIB} STATIC
+     ${ENGINE_SRCS}
+     $<TARGET_OBJECTS:engine_safemath${MP}>
+)
+""",
+        "fold safemath into Engine",
+    )
+    text = text.replace(
+        "target_link_libraries(${ENGINELIB} engine_safemath${MP})",
+        "# engine_safemath objects are folded directly into Engine on Amiga",
+        1,
+    )
+
     text = replace_once(
         text,
         """add_executable(SeriousSam${MP}
@@ -776,7 +959,7 @@ endif()
         "target_link_libraries(SeriousSam${MP} ${ENGINELIB})\n",
         """target_link_libraries(SeriousSam${MP} ${ENGINELIB})
 if(AMIGAOS3)
-    target_link_libraries(SeriousSam${MP} ${SDL2_LIBRARY} m)
+    target_link_libraries(SeriousSam${MP} ${SDL2_LIBRARY} m pthread)
 endif()
 """,
         "OpenUp runtime links",
@@ -823,6 +1006,7 @@ def main() -> int:
     if not src.is_dir():
         raise SystemExit(f"not a SeriousSamClassic checkout: {root}")
     patch_types(src)
+    patch_runtime_boundaries(src)
     patch_serioussam(src)
     patch_game(src)
     patch_synchronization(src)
