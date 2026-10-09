@@ -48,6 +48,11 @@ if "audio_amigachrome.cpp" not in text:
         raise RuntimeError("AstroMenace source-glob marker missing")
     text = text.replace(glob_marker, insert, 1)
 
+if "TARGET_LINK_LIBRARIES(astromenace ${ALL_LIBRARIES})" in text:
+    text = text.replace("TARGET_LINK_LIBRARIES(astromenace ${ALL_LIBRARIES})", "TARGET_LINK_LIBRARIES(astromenace ${ALL_LIBRARIES} ${AMIGACHROME_PNG_LIBRARY} ${AMIGACHROME_ZLIB_LIBRARY})", 1)
+elif "TARGET_LINK_LIBRARIES(astromenace ${ALL_LIBRARIES} ${AMIGACHROME_PNG_LIBRARY} ${AMIGACHROME_ZLIB_LIBRARY})" not in text:
+    raise RuntimeError("AstroMenace final link marker missing")
+
 cmake.write_text(text, encoding="utf-8")
 
 # Amiga system headers define short coordinate-style macros that collide with
