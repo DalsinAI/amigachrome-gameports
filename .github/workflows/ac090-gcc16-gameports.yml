@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   campaign:
+    if: github.event_name == 'workflow_dispatch'
     name: GCC16 0009 -> finish three ports
     runs-on: self-hosted
     timeout-minutes: 240
