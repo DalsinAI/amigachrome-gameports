@@ -46,11 +46,9 @@ OpenJazz compiled to 100% but its final link initially left `__divsi3` unresolve
 
 ### NXEngine-evo
 
-Current upstream's `ResourceManager.cpp` does not recognise AROS as a Unix-like platform. The compile-success probe used:
+Current upstream's `ResourceManager.cpp` does not recognise AROS in its stat-based resource lookup path. The original compile-success probe used `-D__unix__`.
 
-    -D__unix__
-
-This should be replaced with a proper small `__AROS__` portability patch before declaring the port complete.
+The game-port lane now carries a small explicit `__AROS__` patch and the NXEngine build applies it before configuration. The Unix impersonation flag has been removed. A clean current-toolchain rebuild and runtime qualification remain before release.
 
 ### SDLPoP
 
