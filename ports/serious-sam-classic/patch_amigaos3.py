@@ -713,6 +713,17 @@ def patch_runtime_boundaries(src: Path) -> None:
     )
     path.write_text(text, encoding="latin-1")
 
+    path = src / "Entities" / "Common" / "LightFixes.h"
+    text = path.read_text(encoding="latin-1")
+    text, count = re.subn(
+        r"(?m)^FLOAT (_f[A-Za-z0-9_]+Coordinates\[)",
+        r"inline FLOAT \1",
+        text,
+    )
+    if count == 0:
+        raise SystemExit("patch marker missing: monolithic LightFix coordinate tables")
+    path.write_text(text, encoding="latin-1")
+
 
 def patch_serioussam(src: Path) -> None:
     path = src / "SeriousSam" / "SeriousSam.cpp"
@@ -729,6 +740,25 @@ def patch_serioussam(src: Path) -> None:
         '#include "SeriousSam/StdH.h"\n',
         '#include "SeriousSam/StdH.h"\n\n#ifdef PLATFORM_AMIGA\nextern "C" unsigned long __stack = 1024UL * 1024UL;\n#endif\n',
         "Amiga native stack symbol",
+    )
+
+    text = replace_once(
+        text,
+        """#ifdef PLATFORM_UNIX
+ENGINE_API FLOAT _fWeaponFOVAdjuster;
+ENGINE_API FLOAT _fPlayerFOVAdjuster;
+ENGINE_API FLOAT _fArmorHeightAdjuster;
+ENGINE_API FLOAT _fFragScorerHeightAdjuster;
+#else
+""",
+        """#if defined(PLATFORM_UNIX) && !defined(PLATFORM_AMIGA)
+ENGINE_API FLOAT _fWeaponFOVAdjuster;
+ENGINE_API FLOAT _fPlayerFOVAdjuster;
+ENGINE_API FLOAT _fArmorHeightAdjuster;
+ENGINE_API FLOAT _fFragScorerHeightAdjuster;
+#else
+""",
+        "single owner for Amiga FOV adjusters",
     )
     text = replace_once(
         text,
