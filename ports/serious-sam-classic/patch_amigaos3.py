@@ -184,6 +184,22 @@ def patch_types(src: Path) -> None:
     path.write_text(text, encoding="latin-1")
 
 
+def patch_synchronization(src: Path) -> None:
+    path = src / "Engine" / "Base" / "Synchronization.h"
+    text = path.read_text(encoding="latin-1")
+    text = text.replace(
+        "#ifdef PLATFORM_UNIX\n#include <pthread.h>\n#endif",
+        "#if defined(PLATFORM_UNIX) && !defined(SINGLE_THREADED)\n#include <pthread.h>\n#endif",
+        1,
+    )
+    text = text.replace(
+        "#ifdef PLATFORM_UNIX\ntemplate <typename T>",
+        "#if defined(PLATFORM_UNIX) && !defined(SINGLE_THREADED)\ntemplate <typename T>",
+        1,
+    )
+    path.write_text(text, encoding="latin-1")
+
+
 def patch_base(src: Path) -> None:
     path = src / "Engine" / "Base" / "Base.h"
     text = path.read_text(encoding="latin-1")
@@ -378,6 +394,7 @@ def main() -> int:
     if not src.is_dir():
         raise SystemExit(f"not a SeriousSamClassic checkout: {root}")
     patch_types(src)
+    patch_synchronization(src)
     patch_base(src)
     make_loader(src)
     patch_cmake(src)
