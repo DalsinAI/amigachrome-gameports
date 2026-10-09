@@ -11,7 +11,7 @@ on:
 
 concurrency:
   group: ac090-gcc16-gameports
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   campaign:
