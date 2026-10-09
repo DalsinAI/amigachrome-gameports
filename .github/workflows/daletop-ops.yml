@@ -1204,6 +1204,67 @@ jobs:
               echo "REVIVAL_STAGER_TEST_PASS"
               ;;
 
+            "daletop: inspect-omfaga-ready")
+              R="$GAMEPORTS"
+              echo "=== candidate GCC16 stoves ==="
+              find /home/da1ek/AmigaChrome /home/da1ek/AmigaChrome-dev -maxdepth 6 \
+                -type f -path '*/prefix/bin/m68k-amigaos-gcc' -print 2>/dev/null | sort | while read -r gcc; do
+                  echo "--- $gcc ---"
+                  "$gcc" --version | head -1 || true
+                  root=${gcc%/prefix/bin/m68k-amigaos-gcc}
+                  find "$root" -maxdepth 3 -type f \
+                    \( -iname '*release*' -o -iname '*version*' -o -iname '*0008*' -o -iname '*manifest*' \) \
+                    -print 2>/dev/null | head -40 || true
+                done
+              echo
+              echo "=== fixed compiler breadcrumbs ==="
+              grep -RIl --exclude='*.a' --exclude='*.o' --exclude='*.so' \
+                -E '16\.2\.0-open1|patch 0008|0008.*68040|68040.*0008' \
+                /home/da1ek/AmigaChrome-dev/jaim-gcc162 /home/da1ek/AmigaChrome/stoves 2>/dev/null | head -80 || true
+              echo
+              echo "=== gameports worktree ==="
+              git -C "$R" status --short --branch
+              git -C "$R" rev-parse HEAD
+              echo
+              echo "=== OpenOMF prepared source ==="
+              python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("/home/da1ek/AmigaChrome-dev/gameports-wt/build/game-ports/PREPARED.json")
+          if not p.exists():
+              print("NO PREPARED.json")
+          else:
+              d=json.loads(p.read_text())
+              print(json.dumps(d.get("ports",{}).get("openomf"),indent=2,sort_keys=True))
+          PY
+              O="$R/build/game-ports/sources/openomf"
+              if [ -d "$O/.git" ]; then
+                git -C "$O" rev-parse HEAD
+                git -C "$O" status --short
+              else
+                echo "NO OpenOMF git source at $O"
+              fi
+              echo
+              echo "=== local guest/ACGame candidates ==="
+              for g in \
+                /home/da1ek/AmigaChrome-dev/amigachrome-guest \
+                /home/da1ek/AmigaChrome-dev/guest-wt \
+                "$R/build/game-ports/port-layer"
+              do
+                if [ -d "$g" ]; then
+                  echo "--- $g ---"
+                  [ ! -d "$g/.git" ] || git -C "$g" rev-parse HEAD
+                  [ ! -f "$g/gameports/acgame/include/acgame/platform.h" ] || sha256sum "$g/gameports/acgame/include/acgame/platform.h"
+                fi
+              done
+              echo
+              echo "=== current OpenOMF build pin ==="
+              grep -n 'GUEST_PORT_COMMIT' "$R/scripts/build_game_ports_job.py" || true
+              echo
+              echo "=== OpenOMF profile files ==="
+              find "$R/build/game-ports/port-layer/gameports/openomf" -maxdepth 4 -type f -print 2>/dev/null | sort | head -120
+              ;;
+
             *)
               echo "REFUSED: task is not on approved allow-list: $TASK" >&2
               exit 64
