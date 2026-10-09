@@ -144,8 +144,7 @@ def main() -> int:
     ap.add_argument(
         "--compat-header",
         type=Path,
-        default=Path(__file__).resolve().parents[1]
-        / "ports" / "openomf" / "enet_amiga_compat.h",
+        default=Path(__file__).resolve().with_name("enet_amiga_compat.h"),
     )
     ns = ap.parse_args()
 
