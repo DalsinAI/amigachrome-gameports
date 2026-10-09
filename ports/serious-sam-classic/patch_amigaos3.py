@@ -561,6 +561,18 @@ def patch_types(src: Path) -> None:
     path.write_text(text, encoding="latin-1")
 
 
+def patch_serioussam(src: Path) -> None:
+    path = src / "SeriousSam" / "SeriousSam.cpp"
+    text = path.read_text(encoding="latin-1")
+    text = replace_once(
+        text,
+        "#if !defined(PLATFORM_MACOSX) && !defined(PLATFORM_FREEBSD)\n    #include <mntent.h>\n  #endif",
+        "#if !defined(PLATFORM_AMIGA) && !defined(PLATFORM_MACOSX) && !defined(PLATFORM_FREEBSD)\n    #include <mntent.h>\n  #endif",
+        "no Linux mount table on Amiga",
+    )
+    path.write_text(text, encoding="latin-1")
+
+
 def patch_game(src: Path) -> None:
     path = src / "GameMP" / "Game.cpp"
     text = path.read_text(encoding="latin-1")
@@ -804,6 +816,7 @@ def main() -> int:
     if not src.is_dir():
         raise SystemExit(f"not a SeriousSamClassic checkout: {root}")
     patch_types(src)
+    patch_serioussam(src)
     patch_game(src)
     patch_synchronization(src)
     patch_base(src)
