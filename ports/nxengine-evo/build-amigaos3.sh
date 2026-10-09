@@ -40,18 +40,30 @@ find_file() {
 
 FALLBACK="$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"
 SDL_INC="$SYS/include/SDL2"
-SDL_LIB=$(find_file libSDL2.a "$SYS" "$P")
-MIX_LIB=$(find_file libSDL2_mixer.a "$SYS" "$P")
-IMG_LIB=$(find_file libSDL2_image.a "$SYS" "$P")
-PNG_LIB=$(find_file 'libpng*.a' "$SYS" "$P" "$FALLBACK")
-JPEG_LIB=$(find_file 'libjpeg*.a' "$SYS" "$P" "$FALLBACK")
-PNG_INC=$(dirname "$(find_file png.h "$SYS/include" "$P/include" "$FALLBACK/include")")
-JPEG_INC=$(dirname "$(find_file jpeglib.h "$SYS/include" "$P/include" "$FALLBACK/include")")
+SDL_LIB=$(find_file libSDL2.a "$SYS" "$P" || true)
+MIX_LIB=$(find_file libSDL2_mixer.a "$SYS" "$P" || true)
+IMG_LIB=$(find_file libSDL2_image.a "$SYS" "$P" || true)
+PNG_LIB=$(find_file 'libpng*.a' "$SYS" "$P" "$FALLBACK" || true)
+JPEG_LIB=$(find_file 'libjpeg*.a' "$SYS" "$P" "$FALLBACK" || true)
+PNG_HEADER=$(find_file png.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
+JPEG_HEADER=$(find_file jpeglib.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
 
-for item in "$SDL_LIB" "$MIX_LIB" "$IMG_LIB" "$PNG_LIB" "$JPEG_LIB"; do
-  [ -f "$item" ] || { echo "missing required NXEngine library: $item" >&2; exit 4; }
+missing=0
+for pair in "SDL2:$SDL_LIB" "SDL2_mixer:$MIX_LIB" "SDL2_image:$IMG_LIB" "PNG:$PNG_LIB" "JPEG:$JPEG_LIB" "PNG headers:$PNG_HEADER" "JPEG headers:$JPEG_HEADER"; do
+  name=${pair%%:*}
+  value=${pair#*:}
+  if [ -z "$value" ] || [ ! -f "$value" ]; then
+    echo "NXENGINE_MISSING: $name"
+    missing=1
+  else
+    echo "NXENGINE_FOUND: $name -> $value"
+  fi
 done
-[ -f "$SDL_INC/SDL.h" ] || { echo "missing SDL2 headers" >&2; exit 4; }
+[ -f "$SDL_INC/SDL.h" ] || { echo "NXENGINE_MISSING: SDL2 headers at $SDL_INC"; missing=1; }
+[ "$missing" -eq 0 ] || exit 4
+
+PNG_INC=$(dirname "$PNG_HEADER")
+JPEG_INC=$(dirname "$JPEG_HEADER")
 
 rm -rf "$OUT"
 mkdir -p "$OUT"
@@ -63,6 +75,8 @@ cmake -S "$SRC" -B "$OUT" \
   -DCMAKE_BUILD_TYPE=Release \
   -DAMIGA_STOVE="$STOVE" \
   -DPLATFORM=pc \
+  -DCMAKE_INCLUDE_PATH="$SYS/include;$SYS/include/SDL2;$FALLBACK/include" \
+  -DCMAKE_LIBRARY_PATH="$SYS/lib;$P/lib;$FALLBACK/lib" \
   -DSDL2_INCLUDE_DIR="$SDL_INC" \
   -DSDL2_LIBRARY_TEMP="$SDL_LIB" \
   -DSDL2_MIXER_INCLUDE_DIR="$SDL_INC" \
