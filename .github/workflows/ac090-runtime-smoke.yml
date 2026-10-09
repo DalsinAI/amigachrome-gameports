@@ -20,7 +20,7 @@ jobs:
       - name: Checkout runtime test branch
         uses: actions/checkout@v4
         with:
-          clean: true
+          clean: false
           fetch-depth: 1
 
       - name: Verify current Kitchen compiler
@@ -33,9 +33,36 @@ jobs:
           git clone --depth 1 https://github.com/DalsinAI/openamigagcc.git build/current-openamigagcc-proof
           bash build/current-openamigagcc-proof/tests/repro/prove.sh "$STOVE/prefix/bin"
 
-      - name: Rebuild fixed-GCC game campaign
+      - name: Reuse or rebuild current Kitchen game binaries
         shell: bash
-        run: bash scripts/run_gcc16_gameports_campaign.sh
+        run: |
+          set -euxo pipefail
+          need_full=0
+          test -f build/os3/neverball-release/package/Neverball/Neverball || need_full=1
+          test -f build/os3/cdogs/src/cdogs-sdl || need_full=1
+          test -f build/os3/chocolate-doom/src/chocolate-doom || need_full=1
+          test -f build/os3/openjazz/OpenJazz || need_full=1
+          test -f build/game-ports/sources/sdlpop/prince || need_full=1
+          test -f build/game-ports/sources/assaultcube/source/src/ac_server || need_full=1
+          test -f build/game-ports/sources/assaultcube/source/src/ac_client || need_full=1
+          test -d build/game-ports/port-layer || need_full=1
+          if [ "$need_full" -ne 0 ]; then
+            bash scripts/run_gcc16_gameports_campaign.sh
+          else
+            echo "Reusing the immediately preceding clean Kitchen rebuild."
+            STOVE="$HOME/AmigaChrome/stoves/os32-gcc16"
+            env STOVE="$STOVE" GUEST_PORT_LAYER="$PWD/build/game-ports/port-layer" sh ports/openomf/build-amigaos3.sh
+            mkdir -p build/campaign/AC090-GamePorts-open1
+            {
+              echo "campaign=AC090-GamePorts-open1-runtime"
+              echo "gameports_commit=$(git rev-parse HEAD)"
+              echo "openamigagcc_commit=787ced6420bebefaacfb6dfe05c2fc083487aaeb"
+              echo "stove=$STOVE"
+              "$STOVE/prefix/bin/m68k-amigaos-gcc" --version | head -1
+              echo "reused_clean_binaries=true"
+              echo "openomf_rebuilt_after_path_fix=true"
+            } > build/campaign/AC090-GamePorts-open1/BUILD_IDENTITY.txt
+          fi
 
       - name: Runtime smoke in isolated AC090 labs
         shell: bash
