@@ -34,3 +34,11 @@ The platform layer is still to provide:
 - timer and file wrappers suitable for AmigaOS 3.x and AROS 68k.
 
 The backend opens AGA and RTG screens on OS 3.2.3 and reads pads through OpenInput (tested on an AmigaChrome lab instance, 9 October 2026). No claim is made yet that any of the four games links on 68k against this backend.
+
+
+## Canonical copy
+
+The canonical ACGame source currently lives in `DalsinAI/amigachrome-guest/gameports/acgame/`.
+This copy is kept as a synchronized mirror for the game-ports repository. The Kitchen build job
+and the OpenOMF AGA profile consume the guest copy at the pinned `GUEST_PORT_COMMIT`; changes
+must land there first so the two trees do not become independent implementations.
