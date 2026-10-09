@@ -94,6 +94,38 @@ BIN="$OUT/astromenace"
 
 file "$BIN"
 sha256sum "$BIN"
+
+PKG="$OUT/package/AstroMenace"
+rm -rf "$OUT/package"
+mkdir -p "$PKG"
+cp "$BIN" "$PKG/AstroMenace"
+cp -a "$SRC/gamedata" "$PKG/gamedata"
+cp "$SRC/LICENSE.md" "$PKG/LICENSE.md"
+cp -a "$SRC/licenses" "$PKG/licenses"
+cat > "$PKG/README-AmigaChrome.txt" <<EOF
+AstroMenace for AmigaChrome
+===========================
+
+Target: AmigaOS 3.x / AC090 / 68040 + FPU
+Graphics: OpenGPU SDL2 + GL
+Audio: OpenGPU SDL2_mixer -> OpenAudio/AHI
+
+Launch AstroMenace from this directory.
+
+On the first launch, if gamedata.vfs is not present, the AmigaChrome build
+creates it automatically from the bundled, redistributable upstream gamedata/
+tree. Subsequent launches use gamedata.vfs directly.
+
+Upstream source:
+https://github.com/viewizard/astromenace
+Pinned commit:
+bbdb3ac5af2774c92b85c4d9b2a238f606911e66
+
+Licensing:
+See LICENSE.md and licenses/. Upstream explicitly licenses the game assets for
+redistribution under GPL-3.0, CC BY-SA 4.0 and OFL 1.1 as documented there.
+EOF
+
 cat > "$OUT/ASTROMENACE_RUN.txt" <<EOF
 AstroMenace first-light engine build
 Upstream pin: bbdb3ac5af2774c92b85c4d9b2a238f606911e66
