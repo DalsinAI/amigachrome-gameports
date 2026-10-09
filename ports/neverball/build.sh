@@ -28,17 +28,20 @@ DATA_SHA=b2eddfbe05443e36719541639cb6246c5dd81260bce67a053d0d2c0ad34bc58c
 SDL2_CONFIG=${SDL2_CONFIG:-"$OPENUP_SDK/bin/sdl2-config"}
 [ -x "$SDL2_CONFIG" ] || { echo "missing OpenGPU sdl2-config: $SDL2_CONFIG" >&2; exit 2; }
 
-PATCH="$HERE/patches/0001-openup-opengpu-codecs.patch"
-[ -f "$PATCH" ] || { echo "missing Neverball OpenUp patch: $PATCH" >&2; exit 2; }
-
-if git -C "$SRC" apply --check "$PATCH" >/dev/null 2>&1; then
-    git -C "$SRC" apply "$PATCH"
-elif git -C "$SRC" apply --reverse --check "$PATCH" >/dev/null 2>&1; then
-    : # already applied
-else
-    echo "Neverball OpenUp patch does not apply cleanly to pinned source" >&2
-    exit 3
-fi
+for PATCH in \
+  "$HERE/patches/0001-openup-opengpu-codecs.patch" \
+  "$HERE/patches/0002-amiga-progdir-paths.patch"
+do
+    [ -f "$PATCH" ] || { echo "missing Neverball patch: $PATCH" >&2; exit 2; }
+    if git -C "$SRC" apply --check "$PATCH" >/dev/null 2>&1; then
+        git -C "$SRC" apply "$PATCH"
+    elif git -C "$SRC" apply --reverse --check "$PATCH" >/dev/null 2>&1; then
+        : # already applied
+    else
+        echo "Neverball patch does not apply cleanly: $PATCH" >&2
+        exit 3
+    fi
+done
 
 mkdir -p "$OUT/bin" "$OUT/package/Neverball"
 PKG="$OUT/package/Neverball"
