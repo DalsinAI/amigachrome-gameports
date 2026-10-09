@@ -103,8 +103,7 @@ endif()
         raise FileNotFoundError(ns.stub)
     shutil.copy2(ns.stub, dst)
 
-    psm_stub = (Path(__file__).resolve().parents[1]
-                / "ports" / "openomf" / "psm_source_amiga_stub.c")
+    psm_stub = Path(__file__).resolve().parent / "psm_source_amiga_stub.c"
     if not psm_stub.is_file():
         raise FileNotFoundError(psm_stub)
     shutil.copy2(psm_stub, source / "src" / "audio" / "music_sources" / "psm_source_amiga_stub.c")
