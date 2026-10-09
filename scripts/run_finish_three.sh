@@ -82,6 +82,61 @@ copy_if build/os3/astromenace/ASTROMENACE_RUN.txt "$PAYLOAD/AstroMenace/ASTROMEN
  echo "============================================"
  for f in "$STATUS"/*; do printf "%-24s %s\n" "$(basename "$f")" "$(cat "$f")"; done
 } | tee "$OUT/CAMPAIGN_STATUS.txt"
+
+echo "=== Package finished ports ==="
+PACKAGES="$OUT/packages"
+mkdir -p "$PACKAGES"
+
+package_dir() {
+  local src="$1" zipname="$2"
+  [ -d "$src" ] || return 0
+  (
+    cd "$(dirname "$src")"
+    zip -qr "$PACKAGES/$zipname" "$(basename "$src")"
+  )
+}
+
+if grep -q "^PASS$" "$STATUS/01-openomf"; then
+  cat > "$PAYLOAD/OpenOMF/README-AmigaChrome.txt" <<'EOF'
+OpenOMF / OMFAGA for AmigaChrome
+================================
+Target: AC090 / AmigaOS 3.x / 68040 + FPU
+Renderer: native ACGame indexed AGA
+Audio: NULL first-light backend
+
+The engine resources are included. One Must Fall 2097 freeware game data is
+not republished in this archive. Use the recorded AmigaChrome runtime-data
+fetch/staging path, or place compatible OMF2097 data beneath PROGDIR:resources.
+
+Runtime release gate: launch -> native AGA frame -> arena -> input -> clean exit.
+EOF
+  package_dir "$PAYLOAD/OpenOMF" "OpenOMF-OMFAGA-AC090-GCC16-0009.zip"
+fi
+
+if grep -q "^PASS$" "$STATUS/02-nxengine-evo"; then
+  cat > "$PAYLOAD/NXEngine-evo/README-AmigaChrome.txt" <<'EOF'
+NXEngine-evo for AmigaChrome
+============================
+Target: AC090 / AmigaOS 3.x / 68040 + FPU
+Graphics/input/audio: OpenGPU SDL2 satellite stack
+
+Cave Story freeware data is not republished in this archive. Use the recorded
+AmigaChrome runtime-data fetch/staging path to place the public NXEngine-
+compatible dataset beside the engine.
+
+Runtime release gate: opening room -> map/sprites -> movement -> input -> audio -> clean exit.
+EOF
+  package_dir "$PAYLOAD/NXEngine-evo" "NXEngine-evo-AC090-GCC16-0009.zip"
+fi
+
+if grep -q "^PASS$" "$STATUS/03-astromenace"; then
+  package_dir "$PAYLOAD/AstroMenace" "AstroMenace-AC090-GCC16-0009.zip"
+fi
+
+(
+  cd "$PACKAGES"
+  find . -type f -name '*.zip' -print0 | sort -z | xargs -0 -r sha256sum
+) > "$OUT/PACKAGE_SHA256SUMS"
 (
   cd "$PAYLOAD"
   find . -type f -print0 2>/dev/null | sort -z | xargs -0 -r sha256sum
