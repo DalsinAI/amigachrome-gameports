@@ -36,7 +36,7 @@ python3 "$HERE/patch_amigaos3.py" "$SRC"
   flex -oEcc/Scanner.cpp Ecc/Scanner.l
   bison -oEcc/Parser.cpp Ecc/Parser.y -d
   cp Ecc/Parser.hpp Ecc/Parser.h
-  c++ -std=c++14 -O2 -I. Ecc/Main.cpp Ecc/Parser.cpp Ecc/Scanner.cpp -o "$HOST/ecc"
+  c++ -std=c++14 -O2 -DPLATFORM_UNIX=1 -I. Ecc/Main.cpp Ecc/Parser.cpp Ecc/Scanner.cpp -o "$HOST/ecc"
 )
 test -x "$HOST/ecc"
 
