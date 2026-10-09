@@ -1,0 +1,54 @@
+name: AC090 Game Ports Runtime Smoke
+
+on:
+  push:
+    branches:
+      - runtime/gameports-lab-20261009
+  workflow_dispatch:
+
+concurrency:
+  group: ac090-gameports-runtime-smoke
+  cancel-in-progress: false
+
+jobs:
+  runtime-smoke:
+    name: Fixed Kitchen -> AC090 runtime smoke
+    runs-on: self-hosted
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout runtime test branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Verify current Kitchen compiler
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16"
+          "$STOVE/prefix/bin/m68k-amigaos-gcc" --version | head -1
+          rm -rf build/current-openamigagcc-proof
+          git clone --depth 1 https://github.com/DalsinAI/openamigagcc.git build/current-openamigagcc-proof
+          bash build/current-openamigagcc-proof/tests/repro/prove.sh "$STOVE/prefix/bin"
+
+      - name: Rebuild fixed-GCC game campaign
+        shell: bash
+        run: bash scripts/run_gcc16_gameports_campaign.sh
+
+      - name: Runtime smoke in isolated AC090 labs
+        shell: bash
+        run: python3 scripts/run_runtime_smoke.py
+
+      - name: Publish runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AC090-GamePorts-Runtime-${{ github.run_id }}
+          path: |
+            build/runtime-smoke
+            build/campaign/AC090-GamePorts-0008/CAMPAIGN_STATUS.txt
+            build/campaign/AC090-GamePorts-0008/BUILD_IDENTITY.txt
+          if-no-files-found: warn
+          retention-days: 14
