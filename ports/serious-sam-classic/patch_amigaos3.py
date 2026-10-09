@@ -99,6 +99,8 @@ typedef struct sockaddr    SOCKADDR;
     (out / "AmigaCommunicationInterface.cpp").write_text(r'''/* Serious Engine local-only transport for AmigaChrome first light.
  * Remote networking is intentionally absent until the OpenSocket pass. */
 #include <Engine/StdH.h>
+#include <Engine/Base/Console.h>
+#include <Engine/Base/CTString.h>
 #include <Engine/Base/ErrorReporting.h>
 #include <Engine/Base/Synchronization.h>
 #include <Engine/Base/Translation.h>
@@ -342,6 +344,7 @@ BOOL CCommunicationInterface::Client_Update(void)
     ga.mkdir(parents=True, exist_ok=True)
     (ga / "AmigaGameAgent.cpp").write_text(r'''/* No master-server/network discovery in first-light local-play build. */
 #include <Engine/StdH.h>
+#include <Engine/Base/CTString.h>
 #include <Engine/GameAgent/GameAgent.h>
 
 CTString ga_strServer = "";
