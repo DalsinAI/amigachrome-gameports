@@ -82,4 +82,14 @@ if old not in text and new not in text:
 text = text.replace(old, new, 1)
 spd.write_text(text, encoding="utf-8")
 
-print("patched NXEngine-evo bundled json/spdlog for AmigaOS 3")
+cmake = root / "CMakeLists.txt"
+text = cmake.read_text(encoding="utf-8")
+old_link = "target_link_libraries(nx ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${PNG_LIBRARY} ${JPEG_LIBRARY})"
+new_link = "target_link_libraries(nx ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${PNG_LIBRARY} ${JPEG_LIBRARY} ${ZLIB_LIBRARY})"
+if old_link in text:
+    text = text.replace(old_link, new_link, 1)
+elif new_link not in text:
+    raise RuntimeError("NXEngine target link marker missing")
+cmake.write_text(text, encoding="utf-8")
+
+print("patched NXEngine-evo bundled json/spdlog and static PNG/zlib link for AmigaOS 3")
