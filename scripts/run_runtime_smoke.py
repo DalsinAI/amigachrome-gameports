@@ -276,33 +276,120 @@ def frame_to_ppm(data: bytes, out: Path):
     out.write_bytes(f"P6\n{vw} {vh}\n255\n".encode() + rgb)
     return True
 
-def canvas_sample(page):
-    return page.locator("#video").evaluate("""c => {
-        const ctx = c.getContext('2d');
-        if (!ctx) return {w:c.width,h:c.height,samples:[]};
-        const d = ctx.getImageData(0,0,c.width,c.height).data;
-        const sx = Math.max(1, Math.floor(c.width / 80));
-        const sy = Math.max(1, Math.floor(c.height / 32));
-        const out = [];
-        for (let y = 0; y < c.height; y += sy) {
-          for (let x = 0; x < c.width; x += sx) {
-            const i = (y * c.width + x) * 4;
-            out.push((d[i]<<16) | (d[i+1]<<8) | d[i+2]);
-          }
-        }
-        return {w:c.width,h:c.height,samples:out};
-    }""")
+def fetch_frame(base: str, since: int):
+    url = base + f"native/frame?since={since}&next=1&view=1"
+    try:
+        with urllib.request.urlopen(url, timeout=4) as r:
+            if r.status == 204:
+                return since, None
+            data = r.read()
+    except urllib.error.HTTPError as e:
+        if e.code == 204:
+            return since, None
+        raise
+    if len(data) < 32:
+        return since, None
 
-def sample_diff(a, b):
-    aa, bb = (a or {}).get("samples", []), (b or {}).get("samples", [])
+    magic = struct.unpack_from("<I", data, 0)[0]
+    v4 = magic == 0x34464341
+    v3 = v4 or magic == 0x33464341
+    v2 = magic == 0x32464341
+    off = 64 if v4 else 48 if v3 else 32 if v2 else 16
+    hdr_count = 16 if v4 else 12 if v3 else 8
+    if len(data) < min(off, hdr_count * 4):
+        return since, None
+    hdr = struct.unpack_from("<" + "I" * hdr_count, data, 0)
+    seq = int(hdr[1])
+    w, h = int(hdr[2]), int(hdr[3])
+    vx = int(hdr[4]) if (v2 or v3) else 0
+    vy = int(hdr[5]) if (v2 or v3) else 0
+    vw = int(hdr[6]) if (v2 or v3) else w
+    vh = int(hdr[7]) if (v2 or v3) else h
+    flags = int(hdr[9]) if v3 and len(hdr) > 9 else 0
+    tick = int(hdr[8]) if v3 and len(hdr) > 8 else 0
+    if flags & 1:
+        return seq, {"same": True, "seq": seq, "tick": tick}
+    if w <= 0 or h <= 0 or vw <= 0 or vh <= 0:
+        return seq, None
+    need = off + w * h * 4
+    if len(data) < need:
+        return seq, {"bad": True, "seq": seq, "tick": tick,
+                     "need": need, "bytes": len(data), "w": w, "h": h,
+                     "view": [vx, vy, vw, vh], "flags": flags}
+
+    cut = bool(flags & 2)
+    sx, sy = (0, 0) if cut else (vx, vy)
+    if sx + vw > w or sy + vh > h:
+        return seq, {"bad": True, "seq": seq, "tick": tick,
+                     "reason": "view-outside-frame", "w": w, "h": h,
+                     "view": [vx, vy, vw, vh], "flags": flags}
+    pixels = memoryview(data)[off:need]
+
+    def pixel(x, y):
+        at = ((sy + y) * w + (sx + x)) * 4
+        return struct.unpack_from("<I", pixels, at)[0] & 0x00ffffff
+
+    samples = []
+    gx_n, gy_n = 80, 32
+    for gy in range(gy_n):
+        y = min(vh - 1, (gy * vh) // gy_n)
+        for gx in range(gx_n):
+            x = min(vw - 1, (gx * vw) // gx_n)
+            samples.append(pixel(x, y))
+    sample_bytes = b"".join(struct.pack("<I", p) for p in samples)
+    return seq, {
+        "same": False, "seq": seq, "tick": tick, "flags": flags,
+        "w": w, "h": h, "view": [vx, vy, vw, vh],
+        "samples": samples,
+        "sampleUnique": len(set(samples)),
+        "sampleSha256": hashlib.sha256(sample_bytes).hexdigest(),
+        "_pixels": pixels.tobytes(), "_off": off, "_sx": sx, "_sy": sy,
+    }
+
+
+def frame_change(a, b):
+    if not a or not b:
+        return 0.0
+    aa, bb = a.get("samples", []), b.get("samples", [])
     n = min(len(aa), len(bb))
     if not n:
         return 0.0
     return sum(1 for i in range(n) if aa[i] != bb[i]) / n
 
-def runtime_smoke(source: Path, slug: str, spec: dict):
-    from playwright.sync_api import sync_playwright
 
+def public_frame(f):
+    if not f:
+        return None
+    return {k: v for k, v in f.items() if not k.startswith("_") and k != "samples"}
+
+
+def write_frame_ppm(f, out: Path):
+    if not f or f.get("same") or f.get("bad") or "_pixels" not in f:
+        return False
+    w, h = int(f["w"]), int(f["h"])
+    vx, vy, vw, vh = map(int, f["view"])
+    sx, sy = int(f["_sx"]), int(f["_sy"])
+    raw = f["_pixels"]
+    rgb = bytearray(vw * vh * 3)
+    o = 0
+    for y in range(vh):
+        for x in range(vw):
+            at = ((sy + y) * w + (sx + x)) * 4
+            p = struct.unpack_from("<I", raw, at)[0]
+            rgb[o] = (p >> 16) & 255
+            rgb[o + 1] = (p >> 8) & 255
+            rgb[o + 2] = p & 255
+            o += 3
+    out.write_bytes(f"P6\n{vw} {vh}\n255\n".encode("ascii") + rgb)
+    return True
+
+
+def send_raw_key(base: str, raw: int):
+    rec = struct.pack("<BBhhH", 1, 0, raw & 0xff, 0, 0)
+    http_post(base, rec)
+
+
+def runtime_smoke(source: Path, slug: str, spec: dict):
     result_dir = RESULT_ROOT / slug
     result_dir.mkdir(parents=True, exist_ok=True)
     lab = RUN_ROOT / slug
@@ -314,7 +401,8 @@ def runtime_smoke(source: Path, slug: str, spec: dict):
     output_file = dh0_of(lab) / "GamePortsTest" / (slug + ".out")
     envs = ["AC_PACE_HZ=0", "AC090_COUNTED=1", "AC_RTC_AT=1790960000",
             "AC_WATCHDOG=1", "JIT_HIST=1"]
-    cmd = ["python3", str(LAB_TOOL), "start", str(lab), "--who", "Thufir", "--purpose", "game port runtime smoke " + slug]
+    cmd = ["python3", str(LAB_TOOL), "start", str(lab), "--who", "Thufir",
+           "--purpose", "game port runtime smoke " + slug]
     for e in envs:
         cmd += ["--env", e]
     started = run(cmd, capture=True)
@@ -324,72 +412,89 @@ def runtime_smoke(source: Path, slug: str, spec: dict):
     base = f"http://127.0.0.1:{port}/"
 
     observations = []
-    captures = []
+    seq = -1
     baseline = None
+    last_full = None
+
+    # Wait for a real Amiga picture while User-Startup is still in its
+    # deliberate 60-second pre-launch hold.
+    baseline_deadline = time.time() + 25
+    while time.time() < baseline_deadline:
+        try:
+            seq, f = fetch_frame(base, seq)
+            if f and not f.get("same") and not f.get("bad"):
+                last_full = f
+                if f.get("sampleUnique", 0) > 2:
+                    baseline = f
+                    break
+        except Exception as e:
+            observations.append("baseline-frame:" + repr(e))
+        time.sleep(0.25)
+
+    if baseline:
+        write_frame_ppm(baseline, result_dir / "baseline.ppm")
+
+    # Wait until the Amiga itself says it launched the program.
+    marker_deadline = time.time() + 65
+    while time.time() < marker_deadline:
+        if marker.is_file():
+            status_now = marker.read_text(encoding="latin-1", errors="replace")
+            if "STARTED" in status_now:
+                break
+        time.sleep(0.25)
+    started_marker = marker.is_file() and "STARTED" in marker.read_text(
+        encoding="latin-1", errors="replace"
+    )
+
+    captures = []
     max_change = 0.0
-    input_change = 0.0
-    browser_status = ""
-    display_diag = ""
+    best_frame = None
+    if started_marker:
+        game_deadline = time.time() + 14
+        next_sample = 0.0
+        while time.time() < game_deadline:
+            try:
+                seq, f = fetch_frame(base, seq)
+                if f and not f.get("same") and not f.get("bad"):
+                    last_full = f
+                    if time.time() >= next_sample:
+                        d = frame_change(baseline, f)
+                        captures.append({"changedFraction": round(d, 4),
+                                         "frame": public_frame(f)})
+                        if d > max_change:
+                            max_change = d
+                            best_frame = f
+                        next_sample = time.time() + 0.7
+            except Exception as e:
+                observations.append("game-frame:" + repr(e))
+                time.sleep(0.2)
 
-    chromium = os.environ.get("AMIGACHROME_CHROMIUM", "/usr/bin/chromium")
-    with sync_playwright() as pw:
-        browser = pw.chromium.launch(executable_path=chromium, headless=True,
-                                     args=["--no-sandbox", "--mute-audio"])
-        ctx = browser.new_context(viewport={"width": 1600, "height": 900})
-        page = ctx.new_page()
-        page.goto(base, wait_until="domcontentloaded", timeout=15000)
-        page.locator("#video").wait_for(state="visible", timeout=10000)
+        if best_frame:
+            write_frame_ppm(best_frame, result_dir / "game-best.ppm")
 
-        # User-Startup deliberately waits 60 seconds before launching the game,
-        # so the browser can capture the ordinary Amiga display first.
-        baseline = None
-        for _ in range(20):
-            candidate = canvas_sample(page)
-            if len(set(candidate.get("samples", []))) > 2:
-                baseline = candidate
-                break
-            page.wait_for_timeout(500)
-        if baseline is None:
-            baseline = canvas_sample(page)
-        page.locator("#video").screenshot(path=str(result_dir / "baseline.png"))
-        captures.append({"phase": "baseline", "sample": baseline,
-                         "unique": len(set(baseline.get("samples", [])))})
-
-        marker_deadline = time.time() + 45
-        while time.time() < marker_deadline:
-            if marker.is_file() and "STARTED" in marker.read_text(encoding="latin-1", errors="replace"):
-                break
-            page.wait_for_timeout(500)
-
-        started_marker = marker.is_file() and "STARTED" in marker.read_text(encoding="latin-1", errors="replace")
-        if started_marker:
-            for n in range(12):
-                page.wait_for_timeout(1000)
-                s = canvas_sample(page)
-                d = sample_diff(baseline, s)
-                max_change = max(max_change, d)
-                captures.append({"phase": f"game-{n}", "changedFraction": d, "sample": s})
-                if n in (2, 6, 11):
-                    page.locator("#video").screenshot(path=str(result_dir / f"game-{n}.png"))
-
-            # Exercise the same browser keyboard path a person uses.
-            before_key = canvas_sample(page)
-            page.locator("#video").hover()
-            page.keyboard.press("Escape")
-            page.wait_for_timeout(1200)
-            after_key = canvas_sample(page)
-            input_change = sample_diff(before_key, after_key)
-            page.locator("#video").screenshot(path=str(result_dir / "after-escape.png"))
+        # Exercise the real native raw-key path: Escape down/up.
+        before_key = last_full
         try:
-            browser_status = page.locator("#status").inner_text(timeout=1000)
-        except Exception:
-            pass
-        try:
-            display_diag = page.locator("#display-geometry-diagnostic").inner_text(timeout=1000)
-        except Exception:
-            pass
-        page.screenshot(path=str(result_dir / "runtime-page.png"), full_page=True)
-        browser.close()
+            send_raw_key(base, ESC)
+            time.sleep(0.08)
+            send_raw_key(base, ESC | 0x80)
+        except Exception as e:
+            observations.append("escape-send:" + repr(e))
+        input_change = 0.0
+        key_deadline = time.time() + 2.5
+        while time.time() < key_deadline:
+            try:
+                seq, f = fetch_frame(base, seq)
+                if f and not f.get("same") and not f.get("bad"):
+                    last_full = f
+                    input_change = max(input_change, frame_change(before_key, f))
+            except Exception as e:
+                observations.append("post-key-frame:" + repr(e))
+            time.sleep(0.1)
+        if last_full:
+            write_frame_ppm(last_full, result_dir / "after-escape.ppm")
+    else:
+        input_change = 0.0
 
     debug_text = ""
     try:
@@ -415,7 +520,8 @@ def runtime_smoke(source: Path, slug: str, spec: dict):
     all_text = "\n".join((log_text, debug_text, guest_output))
     crashes = [term for term in crash_terms if term.lower() in all_text.lower()]
     returned = "RETURNED" in status_text
-    graphics_alive = bool(spec.get("graphics") and started_marker and max_change >= 0.08)
+    graphics_alive = bool(spec.get("graphics") and started_marker and
+                          baseline and max_change >= 0.08)
     if crashes:
         verdict = "FAIL_CRASH"
     elif not started_marker:
@@ -429,16 +535,22 @@ def runtime_smoke(source: Path, slug: str, spec: dict):
 
     result = {
         "slug": slug, "sourceInstance": str(source), "lab": str(lab), "bridgePort": port,
-        "command": spec["command"], "data": spec.get("data"), "startedMarker": started_marker,
-        "returned": returned, "graphicsExpected": bool(spec.get("graphics")),
-        "graphicsObserved": graphics_alive, "maxCanvasChangedFraction": round(max_change, 4),
+        "command": spec["command"], "data": spec.get("data"),
+        "startedMarker": started_marker, "returned": returned,
+        "graphicsExpected": bool(spec.get("graphics")),
+        "graphicsObserved": graphics_alive,
+        "baseline": public_frame(baseline),
+        "maxFrameChangedFraction": round(max_change, 4),
         "escapeChangedFraction": round(input_change, 4),
-        "browserStatus": browser_status, "displayDiagnostic": display_diag,
         "crashTerms": crashes, "guestOutputTail": guest_output[-4000:],
-        "observations": observations[-20:], "verdict": verdict
+        "observations": observations[-30:], "verdict": verdict,
     }
-    (result_dir / "canvas-samples.json").write_text(json.dumps(captures, indent=2) + "\n", encoding="utf-8")
-    (result_dir / "result.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    (result_dir / "frame-samples.json").write_text(
+        json.dumps(captures, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    (result_dir / "result.json").write_text(
+        json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     run(["python3", str(LAB_TOOL), "stop", str(lab)], check=False)
     return result
 
