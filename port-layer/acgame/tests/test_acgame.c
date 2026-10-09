@@ -30,6 +30,30 @@ static void test_c2p_bit_order(void) {
     for (unsigned p = 1; p < 8; ++p) assert(mem[p] == 0);
 }
 
+/* The fast converter gives the reference's planes, byte for byte, over every
+ * pixel value in every position and a pitch wider than the frame. */
+static void test_c2p_fast_matches_ref(void) {
+    enum { W = 64, H = 9, CP = W + 5, PP = W / 8 + 3 };
+    uint8_t chunky[CP * H];
+    uint8_t ref_mem[8][PP * H];
+    uint8_t fast_mem[8][PP * H];
+    uint8_t *ref[8];
+    uint8_t *fast[8];
+    uint32_t seed = 12345u;
+    unsigned i, p;
+    for (i = 0; i < sizeof chunky; ++i) {
+        seed = seed * 1103515245u + 12345u;
+        chunky[i] = (uint8_t)(i < 256 ? i : (seed >> 16));
+    }
+    memset(ref_mem, 0x5a, sizeof ref_mem);
+    memset(fast_mem, 0x5a, sizeof fast_mem);
+    for (p = 0; p < 8; ++p) { ref[p] = ref_mem[p]; fast[p] = fast_mem[p]; }
+    assert(acgame_c2p8_ref(chunky, CP, ref, PP, W, H) == 0);
+    assert(acgame_c2p8_fast(chunky, CP, fast, PP, W, H) == 0);
+    assert(memcmp(ref_mem, fast_mem, sizeof ref_mem) == 0);
+    assert(acgame_c2p8_fast(chunky, CP, fast, PP, 12, H) == -1);
+}
+
 static void test_ham8_controls(void) {
     acgame_rgb8 pal[64] = {{0}};
     acgame_rgb8 src[4] = {
@@ -66,9 +90,9 @@ static void test_ham8_palette_reset(void) {
 int main(void) {
     test_c2p_roundtrip();
     test_c2p_bit_order();
+    test_c2p_fast_matches_ref();
     test_ham8_controls();
     test_ham8_palette_reset();
     puts("acgame reference tests: OK");
     return 0;
 }
-
