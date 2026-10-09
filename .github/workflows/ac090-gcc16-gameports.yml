@@ -1,0 +1,51 @@
+name: AC090 GCC16 Game Ports
+
+on:
+  push:
+    branches:
+      - runner/gcc16-gameports-20261009
+  workflow_dispatch:
+
+concurrency:
+  group: ac090-gcc16-gameports
+  cancel-in-progress: false
+
+jobs:
+  campaign:
+    name: GCC16 0008 -> AC090 game ports
+    runs-on: self-hosted
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout campaign branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Runner identity
+        shell: bash
+        run: |
+          set -eux
+          hostname
+          uname -a
+          echo "HOME=$HOME"
+          git rev-parse HEAD
+          test -x "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc"
+          "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc" --version | head -1
+          test -x "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config"
+          "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
+          command -v qemu-m68k
+
+      - name: Ordered GCC16 game-port campaign
+        shell: bash
+        run: bash scripts/run_gcc16_gameports_campaign.sh
+
+      - name: Publish qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AC090-GamePorts-0008-${{ github.run_id }}
+          path: build/campaign/AC090-GamePorts-0008
+          if-no-files-found: warn
+          retention-days: 14
