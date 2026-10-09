@@ -570,6 +570,13 @@ def patch_serioussam(src: Path) -> None:
         "#if !defined(PLATFORM_AMIGA) && !defined(PLATFORM_MACOSX) && !defined(PLATFORM_FREEBSD)\n    #include <mntent.h>\n  #endif",
         "no Linux mount table on Amiga",
     )
+
+    text = replace_once(
+        text,
+        '#include "SeriousSam/StdH.h"\n',
+        '#include "SeriousSam/StdH.h"\n\n#ifdef PLATFORM_AMIGA\nextern "C" unsigned long __stack = 1024UL * 1024UL;\n#endif\n',
+        "Amiga native stack symbol",
+    )
     path.write_text(text, encoding="latin-1")
 
 
@@ -769,7 +776,7 @@ endif()
         "target_link_libraries(SeriousSam${MP} ${ENGINELIB})\n",
         """target_link_libraries(SeriousSam${MP} ${ENGINELIB})
 if(AMIGAOS3)
-    target_link_libraries(SeriousSam${MP} ${SDL2_LIBRARY} m socket)
+    target_link_libraries(SeriousSam${MP} ${SDL2_LIBRARY} m)
 endif()
 """,
         "OpenUp runtime links",
