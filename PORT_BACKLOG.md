@@ -9,7 +9,7 @@ source-pinned work, near-term candidates and stretch targets in one list so prio
 decided across the whole field instead of inheriting the old Tier A / B / C grouping.
 
 **Priority is intentionally TBD for every entry.** The next prioritisation pass should rank
-the whole list together.
+the whole list together using: **P0 = finish now, P1 = next wave, P2 = planned, P3 = stretch, PARK = research / low-return for now**.
 
 Status words are descriptive, not release claims. **DONE means RELEASE** and still requires
 the normal clean-build, provenance, packaging and AC090 runtime gates.
@@ -71,6 +71,9 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | C&C Red Alert source | CANDIDATE | SDL / OpenGPU | TBD | Same family as Tiberian Dawn; large C++/platform adaptation job. |
 | OpenEnroth | CANDIDATE | SDL / OpenGPU | TBD | Might & Magic engine recreation; modern C++ and large runtime/data scope. |
 | OpenNox | INVESTIGATE | Unknown / tooling | TBD | Attractive classic-engine target, but Go toolchain makes native m68k difficult; investigate alternatives first. |
+| RetroArch | CANDIDATE - platform enabler | Open-family frontend / libretro | TBD | GPLv3 reference frontend for libretro. Potentially high reuse value if its video/audio/input/lifecycle backends map cleanly to OpenGPU/OpenAudio/OpenInput; would unlock multiple emulator/game cores rather than a single title. |
+| MAME | INVESTIGATE / STRETCH | OpenGPU / OpenAudio / OpenInput | TBD | Current MAME is very large modern C++ and GPL-2.0+. Evaluate a deliberately scoped machine/core set or a libretro-oriented route rather than assuming the whole current tree is a sensible first 68k target. |
+| PCSX-ReARMed (interpreter first) | INVESTIGATE / CANDIDATE | RetroArch / libretro or standalone SDL | TBD | GPLv2 PlayStation emulator. Start from the interpreter build, not ARM dynarec assumptions; assess software-rendered GPU path, BIOS/HLE options, endian/alignment issues and realistic AC090 performance. User-supplied PS1 BIOS/disc images remain external. |
 | Endless Sky | STRETCH | SDL / OpenGPU | TBD | Long-range capability target. |
 | Pioneer | STRETCH | OpenGPU | TBD | Long-range 3D engine/capability target. |
 | OpenMW | STRETCH | OpenGPU | TBD | Long-range capability target with very large engine/dependency surface. |
