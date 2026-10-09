@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   campaign:
-    name: GCC16 0008 -> AC090 game ports
+    name: GCC16 0009 -> AC090 game ports
     runs-on: self-hosted
     timeout-minutes: 240
 
@@ -48,7 +48,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: AC090-GamePorts-0008-${{ github.run_id }}
-          path: build/campaign/AC090-GamePorts-0008
+          name: AC090-GamePorts-0009-${{ github.run_id }}
+          path: build/campaign/AC090-GamePorts-0009
           if-no-files-found: warn
           retention-days: 14
