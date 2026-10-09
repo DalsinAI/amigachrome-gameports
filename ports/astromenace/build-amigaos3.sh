@@ -36,12 +36,14 @@ MIX_LIB=$(find_file libSDL2_mixer.a "$SYS" "$P" || true)
 [ -n "$MIX_LIB" ] || MIX_LIB=$(find_file libSDL2_mixer_static.a "$SYS" "$P" || true)
 GL_LIB=$(find_file 'libGL.a' "$SYS" "$P" || true)
 FREETYPE_LIB=$(find_file 'libfreetype*.a' "$SYS" "$P" "$FALLBACK" || true)
+PNG_LIB=$(find_file 'libpng*.a' "$SYS" "$P" "$FALLBACK" || true)
+ZLIB_LIB=$(find_file 'libz.a' "$SYS" "$P" "$FALLBACK" || true)
 FT_HEADER=$(find_file ft2build.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
 
 missing=0
 for pair in \
   "SDL2:$SDL_LIB" "SDL2_mixer/OpenAudio:$MIX_LIB" "OpenGL:$GL_LIB" \
-  "FreeType:$FREETYPE_LIB" "FreeType headers:$FT_HEADER"; do
+  "FreeType:$FREETYPE_LIB" "PNG:$PNG_LIB" "zlib:$ZLIB_LIB" "FreeType headers:$FT_HEADER"; do
   name=${pair%%:*}
   value=${pair#*:}
   if [ -z "$value" ] || [ ! -f "$value" ]; then
@@ -80,6 +82,8 @@ cmake -S "$SRC" -B "$OUT" \
   -DOPENGL_gl_LIBRARY="$GL_LIB" \
   -DFREETYPE_INCLUDE_DIRS="$FT_INC" \
   -DFREETYPE_LIBRARY_RELEASE="$FREETYPE_LIB" \
+  -DAMIGACHROME_PNG_LIBRARY="$PNG_LIB" \
+  -DAMIGACHROME_ZLIB_LIBRARY="$ZLIB_LIB" \
   -DCMAKE_EXE_LINKER_FLAGS="$SDL_LIBS"
 
 cmake --build "$OUT" --target astromenace -j${JOBS:-4}
