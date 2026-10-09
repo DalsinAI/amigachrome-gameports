@@ -17,7 +17,7 @@ ACTIONS = {
     "prepare": "Preparing exact upstream game-port sources (network allowed)",
     "build": "Building ACGame plus four AROS/68040 game lanes offline",
 }
-GUEST_PORT_COMMIT = "68395f4fc49f4e8f7aecd25e93bfffd59b030261"
+GUEST_PORT_COMMIT = "7a67157604a30895fb090f72c2603560e6d3a58e"
 GUEST_REPOSITORY = "https://github.com/DalsinAI/amigachrome-guest.git"
 
 CANONICAL_CPU_TARGET = "68040"
