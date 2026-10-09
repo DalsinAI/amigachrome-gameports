@@ -8,11 +8,11 @@ cd "$ROOT"
 STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
 PREFIX="$STOVE/prefix"
 CC="$PREFIX/bin/m68k-amigaos-gcc"
-CAMPAIGN="$ROOT/build/campaign/AC090-GamePorts-0008"
+CAMPAIGN="$ROOT/build/campaign/AC090-GamePorts-0009"
 LOGS="$CAMPAIGN/logs"
 STATUS="$CAMPAIGN/status"
 PAYLOAD="$CAMPAIGN/payload"
-OPENAMIGAGCC_COMMIT=8a7b846d3946413b5848d3384905f3c1ff85cbe3
+OPENAMIGAGCC_COMMIT=787ced6420bebefaacfb6dfe05c2fc083487aaeb
 GUEST_COMMIT=8c570397a613f1df1adc4702164603a37b5956dd
 
 rm -rf "$CAMPAIGN"
@@ -25,7 +25,7 @@ die() { echo "FATAL: $*" >&2; exit 1; }
 [ -x "$PREFIX/bin/sdl2-config" ] || die "OpenGPU SDK is not installed in the GCC16 stove"
 
 {
-  echo "campaign=AC090-GamePorts-0008"
+  echo "campaign=AC090-GamePorts-0009"
   echo "gameports_commit=$(git rev-parse HEAD)"
   echo "guest_commit=$GUEST_COMMIT"
   echo "openamigagcc_commit=$OPENAMIGAGCC_COMMIT"
@@ -34,15 +34,15 @@ die() { echo "FATAL: $*" >&2; exit 1; }
   "$PREFIX/bin/sdl2-config" --version || true
 } | tee "$CAMPAIGN/BUILD_IDENTITY.txt"
 
-echo "=== 1/8 GCC16 + 0008 hard qualification gate ==="
+echo "=== 1/8 GCC16 + 0009 hard qualification gate ==="
 GCCSRC="$ROOT/build/campaign/openamigagcc"
 rm -rf "$GCCSRC"
 git init -q "$GCCSRC"
 git -C "$GCCSRC" remote add origin https://github.com/DalsinAI/openamigagcc.git
 git -C "$GCCSRC" fetch -q --depth 1 origin "$OPENAMIGAGCC_COMMIT" || die "cannot fetch OpenAmigaGCC proof source"
 git -C "$GCCSRC" checkout -q --detach FETCH_HEAD
-[ -f "$GCCSRC/patches/gcc/0008-m68k-a-DImode-shift-by-32-pushed-from-a-stack-slot-r.patch" ] ||
-  die "OpenAmigaGCC 0008 patch is absent from proof source"
+[ -f "$GCCSRC/patches/gcc/0009-amigaos-loop-distribution-stays-on-by-default.patch" ] ||
+  die "OpenAmigaGCC 0009 patch is absent from proof source"
 command -v qemu-m68k >/dev/null 2>&1 || die "qemu-m68k is required for the GCC16 proof gate"
 if ! bash "$GCCSRC/tests/repro/prove.sh" "$PREFIX/bin" 2>&1 | tee "$LOGS/00-compiler-proof.log"; then
   die "GCC16 reproducer suite failed; no game ports will be built"
@@ -50,7 +50,7 @@ fi
 echo PASS > "$STATUS/00-compiler-proof"
 
 echo "=== Preparing exact pinned source inputs ==="
-for game in openomf cdogs-sdl neverball uqm chocolate-doom openjazz sdlpop assaultcube; do
+for game in openomf cdogs-sdl neverball uqm chocolate-doom openjazz sdlpop assaultcube nxengine-evo astromenace; do
   python3 scripts/game_port_prepare.py prepare --root "$ROOT" --game "$game" --allow-network     2>&1 | tee "$LOGS/prepare-$game.log" || die "source preparation failed for $game"
   python3 scripts/game_port_prepare.py verify --root "$ROOT" --game "$game"     2>&1 | tee -a "$LOGS/prepare-$game.log" || die "source verification failed for $game"
 done
@@ -115,6 +115,16 @@ copy_if build/game-ports/sources/sdlpop/prince "$PAYLOAD/SDLPoP/prince"
 copy_if build/game-ports/sources/sdlpop/data "$PAYLOAD/SDLPoP/data"
 copy_if build/game-ports/sources/sdlpop/SDLPoP.ini "$PAYLOAD/SDLPoP/SDLPoP.ini"
 
+run_port "6/8d" "08-nxengine-evo" env STOVE="$STOVE" JOBS="${JOBS:-4}" \
+  sh ports/nxengine-evo/build-amigaos3.sh
+copy_if build/os3/nxengine-evo/nxengine-evo "$PAYLOAD/NXEngine-evo/nxengine-evo"
+copy_if build/os3/nxengine-evo/NXENGINE_RUN.txt "$PAYLOAD/NXEngine-evo/NXENGINE_RUN.txt"
+
+run_port "6/8e" "09-astromenace" env STOVE="$STOVE" JOBS="${JOBS:-4}" \
+  sh ports/astromenace/build-amigaos3.sh
+copy_if build/os3/astromenace/astromenace "$PAYLOAD/AstroMenace/astromenace"
+copy_if build/os3/astromenace/ASTROMENACE_RUN.txt "$PAYLOAD/AstroMenace/ASTROMENACE_RUN.txt"
+
 echo "=== Preparing AssaultCube patches ==="
 ACROOT="$ROOT/build/game-ports/sources/assaultcube"
 if git -C "$ACROOT" apply --check "$ROOT/ports/assaultcube/patches/0001-amigaos-server-bootstrap.patch" >/dev/null 2>&1; then
@@ -123,14 +133,14 @@ fi
 if git -C "$ACROOT" apply --check "$ROOT/ports/assaultcube/patches/0002-opengpu-sdk-client-first-light.patch" >/dev/null 2>&1; then
   git -C "$ACROOT" apply "$ROOT/ports/assaultcube/patches/0002-opengpu-sdk-client-first-light.patch"
 fi
-run_port "7/8a" "08-assaultcube-server" env STOVE="$STOVE"   sh ports/assaultcube/build-amiga-server.sh
+run_port "7/8a" "10-assaultcube-server" env STOVE="$STOVE"   sh ports/assaultcube/build-amiga-server.sh
 copy_if "$ACROOT/source/src/ac_server" "$PAYLOAD/AssaultCube/ac_server"
 
-run_port "7/8b" "09-assaultcube-client" env STOVE="$STOVE"   sh ports/assaultcube/build-amiga-client.sh
+run_port "7/8b" "11-assaultcube-client" env STOVE="$STOVE"   sh ports/assaultcube/build-amiga-client.sh
 copy_if "$ACROOT/source/src/ac_client" "$PAYLOAD/AssaultCube/ac_client"
 
 cat > "$CAMPAIGN/FIRST_LIGHT_TEST_PLAN.txt" <<'EOF'
-AC090 GCC16/0008 Game Ports - First-Light Order
+AC090 GCC16/0009 Game Ports - First-Light Order
 ================================================
 
 Use one clean AC090 / AmigaOS 3.x / 68040 + FPU instance and this exact payload.
@@ -165,7 +175,16 @@ Use one clean AC090 / AmigaOS 3.x / 68040 + FPU instance and this exact payload.
    Use the staged project runtime data.
    Gate: level one -> animation -> input -> audio -> clean exit.
 
-8. AssaultCube
+8. NXEngine-evo
+   Supply Cave Story freeware data locally.
+   Gate: opening room -> map/sprites -> movement -> input -> audio -> clean exit.
+
+9. AstroMenace
+   Use the pinned upstream data/artwork under its published licences.
+   Gate: title -> ship/menu -> first mission -> input -> audio -> rendered 3D scene -> clean exit.
+   Cross-build deliberately does not run the target binary to generate gamedata.vfs.
+
+10. AssaultCube
    Use authorised game data.
    Server: launch/listen/clean stop.
    Client: menu -> offline bot map -> movement -> textured 3D scene -> input -> clean exit.
@@ -173,7 +192,7 @@ Use one clean AC090 / AmigaOS 3.x / 68040 + FPU instance and this exact payload.
 EOF
 
 {
-  echo "AC090 GCC16/0008 game-port campaign status"
+  echo "AC090 GCC16/0009 game-port campaign status"
   echo "=========================================="
   for f in "$STATUS"/*; do
     [ -f "$f" ] || continue
