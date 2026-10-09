@@ -185,6 +185,19 @@ endif()
 
     text = replace_once(
         text,
+        """            if(LOCAL_INSTALL)
+\t\t\t    add_compile_options(-march=native)
+            elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i586|i686|x86|amd64|AMD64|x86_64")
+""",
+        """            if(LOCAL_INSTALL AND NOT AMIGAOS3)
+\t\t\t    add_compile_options(-march=native)
+            elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i586|i686|x86|amd64|AMD64|x86_64")
+""",
+        "no host march on m68k cross target",
+    )
+
+    text = replace_once(
+        text,
         """\tif(MACOSX)
 \t\tadd_definitions(-DPLATFORM_UNIX=1)
 """,
