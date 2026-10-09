@@ -1,0 +1,55 @@
+name: AstroMenace Runtime Diagnostic
+
+on:
+  push:
+    branches:
+      - fix/astromenace-runtime-diagnostics-20261009
+  workflow_dispatch:
+
+concurrency:
+  group: astromenace-runtime-diagnostic
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build AstroMenace diagnostic
+    runs-on: self-hosted
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Prepare AstroMenace source
+        shell: bash
+        run: |
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game astromenace
+
+      - name: Build diagnostic binary
+        shell: bash
+        run: |
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          sh ports/astromenace/build-amigaos3.sh \
+            build/game-ports/sources/astromenace \
+            build/os3/astromenace-runtime-diagnostic
+
+      - name: Package diagnostic replacement
+        shell: bash
+        run: |
+          cd build/os3/astromenace-runtime-diagnostic/package
+          zip -qr ../AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip AstroMenace
+          cd ..
+          sha256sum AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip > SHA256SUMS
+
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-AC090-RUNTIME-DIAGNOSTIC-${{ github.run_id }}
+          path: |
+            build/os3/astromenace-runtime-diagnostic/AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip
+            build/os3/astromenace-runtime-diagnostic/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 30
