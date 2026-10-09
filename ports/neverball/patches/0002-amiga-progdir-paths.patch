@@ -1,0 +1,49 @@
+diff --git a/share/common.c b/share/common.c
+index 1c62be9..a0a0a0a 100644
+--- a/share/common.c
++++ b/share/common.c
+@@ -111,6 +111,13 @@ int path_is_abs(const char *path)
+     if (path_is_sep(path[0]))
+         return 1;
+ 
++#if defined(__amigaos__) || defined(__AMIGA__) || defined(AMIGA)
++    /* AmigaDOS device/volume/assign syntax is absolute: DH0:foo,
++       PROGDIR:data, ENV:foo, etc. */
++    if (path && strchr(path, ':'))
++        return 1;
++#endif
++
+ #ifdef _WIN32
+     if (isalpha(path[0]) && path[1] == ':' && path_is_sep(path[2]))
+         return 1;
+@@ -124,6 +131,13 @@ char *path_join(const char *head, const char *tail)
+         return tail ? strdup(tail) : NULL;
+     if (!tail || !*tail)
+         return strdup(head);
++
++#if defined(__amigaos__) || defined(__AMIGA__) || defined(AMIGA)
++    /* Never emit PROGDIR:/foo or DH0:/foo.  After an AmigaDOS colon the
++       child name follows immediately. */
++    if (head[strlen(head) - 1] == ':')
++        return concat_string(head, tail, NULL);
++#endif
++
+     return concat_string(head, "/", tail, NULL);
+ }
+ 
+diff --git a/share/base_config.c b/share/base_config.c
+index d61d0e0..b0b0b0b 100644
+--- a/share/base_config.c
++++ b/share/base_config.c
+@@ -88,7 +88,10 @@ void config_paths(const char *arg_data_path)
+     /* Force IndexedDB-backed location created during Module['preRun']. */
+     user = strdup("/neverball");
+ #else
+-    user = concat_string(home, "/", CONFIG_USER, NULL);
++    if (path_is_abs(CONFIG_USER))
++        user = strdup(CONFIG_USER);
++    else
++        user = path_join(home, CONFIG_USER);
+ #endif
+ 
+     /* Set up directory for writing, create if needed. */
