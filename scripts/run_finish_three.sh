@@ -57,8 +57,14 @@ copy_if(){ [ -e "$1" ] || return 0; mkdir -p "$(dirname "$2")"; cp -a "$1" "$2";
 
 set -e
 run_port 01-openomf env STOVE="$STOVE" GUEST_PORT_LAYER="$GUEST" sh ports/openomf/build-amigaos3.sh
-copy_if build/os3/openomf/openomf "$PAYLOAD/OpenOMF/openomf"
-copy_if build/os3/openomf/OPENOMF_RUN.txt "$PAYLOAD/OpenOMF/OPENOMF_RUN.txt"
+if grep -q "^PASS$" "$STATUS/01-openomf"; then
+  copy_if build/os3/openomf/openomf "$PAYLOAD/OpenOMF/openomf"
+  copy_if build/os3/openomf/OPENOMF_RUN.txt "$PAYLOAD/OpenOMF/OPENOMF_RUN.txt"
+  if [ -d build/os3/openomf/work/resources ]; then
+    mkdir -p "$PAYLOAD/OpenOMF"
+    cp -a build/os3/openomf/work/resources "$PAYLOAD/OpenOMF/resources"
+  fi
+fi
 
 run_port 02-nxengine-evo env STOVE="$STOVE" JOBS="${JOBS:-4}" sh ports/nxengine-evo/build-amigaos3.sh
 copy_if build/os3/nxengine-evo/nxengine-evo "$PAYLOAD/NXEngine-evo/nxengine-evo"
@@ -76,7 +82,10 @@ copy_if build/os3/astromenace/ASTROMENACE_RUN.txt "$PAYLOAD/AstroMenace/ASTROMEN
  echo "============================================"
  for f in "$STATUS"/*; do printf "%-24s %s\n" "$(basename "$f")" "$(cat "$f")"; done
 } | tee "$OUT/CAMPAIGN_STATUS.txt"
-find "$PAYLOAD" -type f -print0 2>/dev/null | sort -z | xargs -0 -r sha256sum > "$OUT/SHA256SUMS"
+(
+  cd "$PAYLOAD"
+  find . -type f -print0 2>/dev/null | sort -z | xargs -0 -r sha256sum
+) > "$OUT/SHA256SUMS"
 
 grep -q "^PASS$" "$STATUS/01-openomf" || exit 20
 grep -q "^PASS$" "$STATUS/02-nxengine-evo" || exit 21
