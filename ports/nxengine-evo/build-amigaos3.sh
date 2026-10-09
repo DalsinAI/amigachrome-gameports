@@ -27,6 +27,8 @@ else
   exit 3
 fi
 
+python3 "$HERE/patch_amigaos3_deps.py" "$SRC"
+
 find_file() {
   name="$1"
   shift
