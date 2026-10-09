@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - runner/gcc16-gameports-20261009
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 concurrency:
