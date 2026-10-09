@@ -98,6 +98,14 @@ endif()
 
     cmake.write_text(text, encoding="utf-8")
 
+    # Upstream vga_image.c includes png.h unconditionally even when USE_LIBPNG=OFF.
+    # The actual PNG reader/writer implementations already provide no-PNG stubs,
+    # so remove the unused include for the first-light AmigaOS build.
+    vga_image = source / "src" / "formats" / "vga_image.c"
+    vga_text = vga_image.read_text(encoding="utf-8")
+    vga_text = vga_text.replace("#include <png.h>\n", "", 1)
+    vga_image.write_text(vga_text, encoding="utf-8")
+
     dst = source / "src" / "resources" / "modmanager_amiga_stub.c"
     if not ns.stub.is_file():
         raise FileNotFoundError(ns.stub)
