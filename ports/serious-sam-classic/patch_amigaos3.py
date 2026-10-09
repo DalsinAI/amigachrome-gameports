@@ -44,6 +44,329 @@ def shader_names(src: Path) -> list[str]:
     return sorted(names)
 
 
+def make_local_network(src: Path) -> None:
+    # First light deliberately keeps Serious Engine's local packet transport
+    # and removes remote BSD sockets/GameAgent.  Multiplayer comes back as an
+    # explicit OpenSocket integration after the playable gate.
+    hdr = src / "Engine" / "Network" / "CommunicationInterface.h"
+    text = hdr.read_text(encoding="latin-1")
+    text = replace_once(
+        text,
+        """#ifdef PLATFORM_UNIX
+#include <fcntl.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR   -1
+#define closesocket close
+typedef int SOCKET;
+typedef struct hostent HOSTENT;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr    SOCKADDR;
+#define WSAGetLastError() (INDEX) errno
+#endif
+""",
+        """#if defined(PLATFORM_AMIGA)
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR   -1
+typedef int SOCKET;
+#elif defined(PLATFORM_UNIX)
+#include <fcntl.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR   -1
+#define closesocket close
+typedef int SOCKET;
+typedef struct hostent HOSTENT;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr    SOCKADDR;
+#define WSAGetLastError() (INDEX) errno
+#endif
+""",
+        "Amiga local-only network header",
+    )
+    hdr.write_text(text, encoding="latin-1")
+
+    out = src / "Engine" / "Network" / "Amiga"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "AmigaCommunicationInterface.cpp").write_text(r'''/* Serious Engine local-only transport for AmigaChrome first light.
+ * Remote networking is intentionally absent until the OpenSocket pass. */
+#include <Engine/StdH.h>
+#include <Engine/Base/ErrorReporting.h>
+#include <Engine/Base/Synchronization.h>
+#include <Engine/Base/Translation.h>
+#include <Engine/Network/ClientInterface.h>
+#include <Engine/Network/CommunicationInterface.h>
+#include <Engine/Network/Network.h>
+
+#define SERVER_LOCAL_CLIENT 0
+
+CPacketBufferStats _pbsSend;
+CPacketBufferStats _pbsRecv;
+
+static CClientInterface cm_aciClients[SERVER_CLIENTS];
+static CClientInterface cm_ciLocalClient;
+static CClientInterface cm_ciBroadcast;
+static CTCriticalSection cm_csComm;
+static BOOL cm_bNetworkInitialized = FALSE;
+static CTString cm_strName = "AmigaChrome";
+static CTString cm_strAddress = "local";
+
+CCommunicationInterface _cmiComm;
+
+CTString AddressToString(ULONG ulHost)
+{
+  (void)ulHost;
+  return CTString("local");
+}
+
+ULONG StringToAddress(const CTString &strAddress)
+{
+  (void)strAddress;
+  return 0;
+}
+
+CCommunicationInterface::CCommunicationInterface(void)
+{
+  cm_csComm.cs_iIndex = -1;
+  cci_bSocketOpen = FALSE;
+  cci_bBound = FALSE;
+  cci_bInitialized = FALSE;
+  cci_bWinSockOpen = FALSE;
+  cci_bServerInitialized = FALSE;
+  cci_bClientInitialized = FALSE;
+  cci_hSocket = INVALID_SOCKET;
+}
+
+void CCommunicationInterface::Init(void)
+{
+  CTSingleLock lock(&cm_csComm, TRUE);
+  _pbsSend.Clear();
+  _pbsRecv.Clear();
+  cci_pbMasterInput.Clear();
+  cci_pbMasterOutput.Clear();
+  cci_bInitialized = TRUE;
+  cci_bSocketOpen = FALSE;
+  cci_bBound = FALSE;
+  cci_bWinSockOpen = FALSE;
+  cci_bServerInitialized = FALSE;
+  cci_bClientInitialized = FALSE;
+  cm_bNetworkInitialized = FALSE;
+}
+
+void CCommunicationInterface::Close(void)
+{
+  CTSingleLock lock(&cm_csComm, TRUE);
+  cm_ciLocalClient.Clear();
+  cm_ciBroadcast.Clear();
+  for (INDEX i=0; i<SERVER_CLIENTS; ++i) cm_aciClients[i].Clear();
+  cci_pbMasterInput.Clear();
+  cci_pbMasterOutput.Clear();
+  cci_bInitialized = FALSE;
+  cci_bServerInitialized = FALSE;
+  cci_bClientInitialized = FALSE;
+}
+
+void CCommunicationInterface::InitWinsock(void) { cci_bWinSockOpen = FALSE; }
+void CCommunicationInterface::EndWinsock(void)  { cci_bWinSockOpen = FALSE; }
+
+void CCommunicationInterface::PrepareForUse(BOOL bUseNetwork, BOOL bClient)
+{
+  (void)bClient;
+  cm_bNetworkInitialized = FALSE;
+  if (bUseNetwork)
+    CPrintF(TRANSV("OpenUp first-light build: remote networking disabled; local play only.\n"));
+}
+
+void CCommunicationInterface::Unprepare(void)
+{
+  cm_bNetworkInitialized = FALSE;
+  cci_bWinSockOpen = FALSE;
+  cci_bBound = FALSE;
+}
+
+BOOL CCommunicationInterface::IsNetworkEnabled(void) { return FALSE; }
+
+void CCommunicationInterface::GetHostName(CTString &strName, CTString &strAddress)
+{
+  strName = cm_strName;
+  strAddress = cm_strAddress;
+}
+
+void CCommunicationInterface::CreateSocket_t(void)
+{ ThrowF_t(TRANS("Remote networking is not enabled in this OpenUp first-light build.")); }
+void CCommunicationInterface::Bind_t(ULONG, ULONG)
+{ ThrowF_t(TRANS("Remote networking is not enabled in this OpenUp first-light build.")); }
+void CCommunicationInterface::SetNonBlocking_t(void) {}
+CTString CCommunicationInterface::GetSocketError(INDEX)
+{ return CTString("OpenSocket not enabled in first-light build"); }
+void CCommunicationInterface::OpenSocket_t(ULONG, ULONG)
+{ ThrowF_t(TRANS("Remote networking is not enabled in this OpenUp first-light build.")); }
+void CCommunicationInterface::GetLocalAddress_t(ULONG &host, ULONG &port) { host=0; port=0; }
+void CCommunicationInterface::GetRemoteAddress_t(ULONG &host, ULONG &port) { host=0; port=0; }
+void CCommunicationInterface::Broadcast_Send(const void *, SLONG, CAddress &) {}
+BOOL CCommunicationInterface::Broadcast_Receive(void *, SLONG &, CAddress &) { return FALSE; }
+void CCommunicationInterface::Broadcast_Update_t(void) {}
+void CCommunicationInterface::UpdateMasterBuffers(void) {}
+
+void CCommunicationInterface::Server_Init_t(void)
+{
+  CTSingleLock lock(&cm_csComm, TRUE);
+  for (INDEX i=0; i<SERVER_CLIENTS; ++i) {
+    cm_aciClients[i].Clear();
+    cm_aciClients[i].ci_pbOutputBuffer.pb_ppbsStats = &_pbsSend;
+    cm_aciClients[i].ci_pbInputBuffer.pb_ppbsStats = &_pbsRecv;
+  }
+  cm_aciClients[SERVER_LOCAL_CLIENT].ci_bClientLocal = TRUE;
+  cm_aciClients[SERVER_LOCAL_CLIENT].ci_bUsed = TRUE;
+  cm_ciLocalClient.Clear();
+  cm_ciLocalClient.ci_bUsed = TRUE;
+  cm_ciLocalClient.ci_bClientLocal = TRUE;
+  cm_ciLocalClient.ci_pbOutputBuffer.pb_ppbsStats = &_pbsSend;
+  cm_ciLocalClient.ci_pbInputBuffer.pb_ppbsStats = &_pbsRecv;
+  cci_bServerInitialized = TRUE;
+}
+
+void CCommunicationInterface::Server_Close(void)
+{
+  CTSingleLock lock(&cm_csComm, TRUE);
+  for (INDEX i=0; i<SERVER_CLIENTS; ++i) cm_aciClients[i].Clear();
+  cci_bServerInitialized = FALSE;
+}
+
+void CCommunicationInterface::Server_ClearClient(INDEX iClient)
+{
+  if (iClient>=0 && iClient<SERVER_CLIENTS) cm_aciClients[iClient].Clear();
+}
+BOOL CCommunicationInterface::Server_IsClientLocal(INDEX iClient) { return iClient==SERVER_LOCAL_CLIENT; }
+BOOL CCommunicationInterface::Server_IsClientUsed(INDEX iClient)
+{ return (iClient>=0 && iClient<SERVER_CLIENTS) ? cm_aciClients[iClient].ci_bUsed : FALSE; }
+CTString CCommunicationInterface::Server_GetClientName(INDEX iClient)
+{ return Server_IsClientLocal(iClient) ? CTString("Local machine") : CTString(""); }
+
+void CCommunicationInterface::Server_Send_Reliable(INDEX i, const void *p, SLONG n)
+{ cm_aciClients[i].Send(p,n,TRUE); }
+BOOL CCommunicationInterface::Server_Receive_Reliable(INDEX i, void *p, SLONG &n)
+{ return cm_aciClients[i].Receive(p,n,TRUE); }
+void CCommunicationInterface::Server_Send_Unreliable(INDEX i, const void *p, SLONG n)
+{ cm_aciClients[i].Send(p,n,FALSE); }
+BOOL CCommunicationInterface::Server_Receive_Unreliable(INDEX i, void *p, SLONG &n)
+{ return cm_aciClients[i].Receive(p,n,FALSE); }
+
+BOOL CCommunicationInterface::Server_Update(void)
+{
+  if (cm_ciLocalClient.ci_bUsed && cm_ciLocalClient.ci_pciOther)
+    cm_ciLocalClient.ExchangeBuffers();
+  cm_aciClients[SERVER_LOCAL_CLIENT].UpdateOutputBuffers();
+  cm_aciClients[SERVER_LOCAL_CLIENT].UpdateInputBuffers();
+  cm_ciLocalClient.UpdateOutputBuffers();
+  cm_ciLocalClient.UpdateInputBuffers();
+  return TRUE;
+}
+
+void CCommunicationInterface::Client_Init_t(char *)
+{
+  if (!cci_bServerInitialized)
+    ThrowF_t(TRANS("Remote networking is not enabled in this OpenUp first-light build."));
+  Client_Init_t((ULONG)0);
+}
+
+void CCommunicationInterface::Client_Init_t(ULONG)
+{
+  CTSingleLock lock(&cm_csComm, TRUE);
+  if (!cci_bServerInitialized)
+    ThrowF_t(TRANS("Remote networking is not enabled in this OpenUp first-light build."));
+  cm_ciLocalClient.Clear();
+  cm_ciLocalClient.ci_pbOutputBuffer.pb_ppbsStats = &_pbsSend;
+  cm_ciLocalClient.ci_pbInputBuffer.pb_ppbsStats = &_pbsRecv;
+  cm_ciLocalClient.ci_bClientLocal = TRUE;
+  Client_OpenLocal();
+  cci_bClientInitialized = TRUE;
+}
+
+void CCommunicationInterface::Client_Close(void)
+{
+  cm_ciLocalClient.Clear();
+  cm_ciLocalClient.ci_bClientLocal = FALSE;
+  cci_bClientInitialized = FALSE;
+}
+
+void CCommunicationInterface::Client_OpenLocal(void)
+{
+  CClientInterface &client = cm_ciLocalClient;
+  CClientInterface &server = cm_aciClients[SERVER_LOCAL_CLIENT];
+  client.ci_bUsed = TRUE;
+  client.SetLocal(&server);
+  server.ci_bUsed = TRUE;
+  server.SetLocal(&client);
+}
+
+void CCommunicationInterface::Client_OpenNet_t(ULONG)
+{ ThrowF_t(TRANS("Remote networking is not enabled in this OpenUp first-light build.")); }
+
+void CCommunicationInterface::Client_Clear(void) { cm_ciLocalClient.Clear(); }
+BOOL CCommunicationInterface::Client_IsConnected(void) { return cm_ciLocalClient.ci_bUsed; }
+void CCommunicationInterface::Client_Send_Reliable(const void *p, SLONG n)
+{ cm_ciLocalClient.Send(p,n,TRUE); }
+BOOL CCommunicationInterface::Client_Receive_Reliable(void *p, SLONG &n)
+{ return cm_ciLocalClient.Receive(p,n,TRUE); }
+BOOL CCommunicationInterface::Client_Receive_Reliable(CTStream &s)
+{ return cm_ciLocalClient.Receive(s,TRUE); }
+void CCommunicationInterface::Client_PeekSize_Reliable(SLONG &expected, SLONG &received)
+{ expected=cm_ciLocalClient.GetExpectedReliableSize(); received=cm_ciLocalClient.GetCurrentReliableSize(); }
+void CCommunicationInterface::Client_Send_Unreliable(const void *p, SLONG n)
+{ cm_ciLocalClient.Send(p,n,FALSE); }
+BOOL CCommunicationInterface::Client_Receive_Unreliable(void *p, SLONG &n)
+{ return cm_ciLocalClient.Receive(p,n,FALSE); }
+
+BOOL CCommunicationInterface::Client_Update(void)
+{
+  if (cm_ciLocalClient.ci_bUsed && cm_ciLocalClient.ci_pciOther)
+    cm_ciLocalClient.ExchangeBuffers();
+  cm_ciLocalClient.UpdateOutputBuffers();
+  cm_ciLocalClient.UpdateInputBuffers();
+  cm_aciClients[SERVER_LOCAL_CLIENT].UpdateOutputBuffers();
+  cm_aciClients[SERVER_LOCAL_CLIENT].UpdateInputBuffers();
+  return TRUE;
+}
+''', encoding="latin-1")
+
+    ga = src / "Engine" / "GameAgent" / "Amiga"
+    ga.mkdir(parents=True, exist_ok=True)
+    (ga / "AmigaGameAgent.cpp").write_text(r'''/* No master-server/network discovery in first-light local-play build. */
+#include <Engine/StdH.h>
+#include <Engine/GameAgent/GameAgent.h>
+
+CTString ga_strServer = "";
+CTString ga_strMSLegacy = "";
+BOOL ga_bMSLegacy = FALSE;
+
+CServerRequest::CServerRequest(void) { Clear(); }
+CServerRequest::~CServerRequest(void) {}
+void CServerRequest::Clear(void)
+{
+  sr_ulAddress=0; sr_iPort=0; sr_tmRequestTime=0;
+}
+
+void GameAgent_ServerInit(void) {}
+void GameAgent_ServerEnd(void) {}
+void GameAgent_ServerUpdate(void) {}
+void GameAgent_ServerStateChanged(void) {}
+void GameAgent_EnumTrigger(BOOL) {}
+void GameAgent_EnumUpdate(void) {}
+void GameAgent_EnumCancel(void) {}
+void *_MS_Thread(void *) { return 0; }
+void *_LocalNet_Thread(void *) { return 0; }
+''', encoding="latin-1")
+
+
 def make_loader(src: Path) -> None:
     entities = entity_classes(src)
     shaders = shader_names(src)
@@ -344,6 +667,14 @@ endif()
         "Engine/Base/Unix/UnixDynamicLoader.cpp",
         "Engine/Base/Amiga/AmigaDynamicLoader.cpp",
     )
+    text = text.replace(
+        "Engine/Network/CommunicationInterface.cpp",
+        "Engine/Network/Amiga/AmigaCommunicationInterface.cpp",
+    )
+    text = text.replace(
+        "Engine/GameAgent/GameAgent.cpp",
+        "Engine/GameAgent/Amiga/AmigaGameAgent.cpp",
+    )
 
     text = text.replace("add_library(${ENTITIESMPLIB} SHARED", "add_library(${ENTITIESMPLIB} OBJECT")
     text = text.replace("add_library(${GAMEMPLIB} SHARED", "add_library(${GAMEMPLIB} OBJECT")
@@ -418,6 +749,7 @@ def main() -> int:
     patch_game(src)
     patch_synchronization(src)
     patch_base(src)
+    make_local_network(src)
     make_loader(src)
     patch_cmake(src)
     print("Serious Sam TFE patched for AmigaChrome/OpenUp")
