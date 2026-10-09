@@ -122,6 +122,27 @@ def patch_types(src: Path) -> None:
         "#elif defined(__m68k__) || defined(__mc68000__) || defined(__i386) || defined(_M_IX86) || defined(__arm__) || defined(_M_ARM) || defined(__POWERPC__) \\\n      || defined(_M_PPC)",
         "m68k 32 bit",
     )
+    text = text.replace(
+        "#if defined(__aarch64__) || defined(__arm__) || PLATFORM_RISCV64",
+        "#if defined(__m68k__) || defined(__mc68000__) || defined(__aarch64__) || defined(__arm__) || PLATFORM_RISCV64",
+        1,
+    )
+    path.write_text(text, encoding="latin-1")
+
+
+def patch_base(src: Path) -> None:
+    path = src / "Engine" / "Base" / "Base.h"
+    text = path.read_text(encoding="latin-1")
+    text = replace_once(
+        text,
+        "#elif (defined __linux__) ",
+        """#elif defined(PLATFORM_AMIGA) || defined(__amigaos__) || defined(__AMIGA__)
+    #ifndef PLATFORM_AMIGA
+      #define PLATFORM_AMIGA 1
+    #endif
+#elif (defined __linux__) """,
+        "Amiga platform recognition",
+    )
     path.write_text(text, encoding="latin-1")
 
 
@@ -158,18 +179,23 @@ endif()
     if(NOT DEFINED ENV{OPENUP_SDK})
         message(FATAL_ERROR "OPENUP_SDK must name the OpenGPU/OpenUp SDK root")
     endif()
-    set(SDL2_INCLUDE_DIR "$ENV{OPENUP_SDK}/include/SDL2")
+    execute_process(
+        COMMAND "$ENV{OPENUP_SDK}/bin/sdl2-config" --cflags
+        OUTPUT_VARIABLE _AMIGA_SDL_CFLAGS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE _AMIGA_SDL_CFLAGS_RC)
     execute_process(
         COMMAND "$ENV{OPENUP_SDK}/bin/sdl2-config" --libs --gl
         OUTPUT_VARIABLE _AMIGA_SDL_LIBS
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        RESULT_VARIABLE _AMIGA_SDL_RC)
-    if(NOT _AMIGA_SDL_RC EQUAL 0)
+        RESULT_VARIABLE _AMIGA_SDL_LIBS_RC)
+    if(NOT _AMIGA_SDL_CFLAGS_RC EQUAL 0 OR NOT _AMIGA_SDL_LIBS_RC EQUAL 0)
         message(FATAL_ERROR "OpenGPU sdl2-config failed")
     endif()
+    separate_arguments(_AMIGA_SDL_CFLAGS UNIX_COMMAND "${_AMIGA_SDL_CFLAGS}")
     separate_arguments(SDL2_LIBRARY UNIX_COMMAND "${_AMIGA_SDL_LIBS}")
+    add_compile_options(${_AMIGA_SDL_CFLAGS})
     set(SDL2_FOUND TRUE)
-    include_directories("${SDL2_INCLUDE_DIR}")
 elseif(NOT USE_SYSTEM_SDL2)
     include_directories(${CMAKE_SOURCE_DIR}/External/SDL2)
 else()
@@ -194,6 +220,16 @@ endif()
             elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i586|i686|x86|amd64|AMD64|x86_64")
 """,
         "no host march on m68k cross target",
+    )
+
+    # Position-independent shared-library code is host baggage here: the
+    # Amiga target is one monolithic LoadSeg executable.
+    text = text.replace(
+        "\tadd_compile_options(-fPIC)",
+        """    if(NOT AMIGAOS3)
+\t  add_compile_options(-fPIC)
+    endif()""",
+        1,
     )
 
     text = replace_once(
@@ -288,6 +324,7 @@ def main() -> int:
     if not src.is_dir():
         raise SystemExit(f"not a SeriousSamClassic checkout: {root}")
     patch_types(src)
+    patch_base(src)
     make_loader(src)
     patch_cmake(src)
     print("Serious Sam TFE patched for AmigaChrome/OpenUp")
