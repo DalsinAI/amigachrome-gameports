@@ -41,7 +41,7 @@ git init -q "$GCCSRC"
 git -C "$GCCSRC" remote add origin https://github.com/DalsinAI/openamigagcc.git
 git -C "$GCCSRC" fetch -q --depth 1 origin "$OPENAMIGAGCC_COMMIT" || die "cannot fetch OpenAmigaGCC proof source"
 git -C "$GCCSRC" checkout -q --detach FETCH_HEAD
-[ -f "$GCCSRC/patches/gcc/0009-loop-distribution-on-libnix-builds-mem-routines-without-it.patch" ] ||
+[ -f "$GCCSRC/patches/gcc/0009-amigaos-loop-distribution-stays-on-by-default.patch" ] ||
   die "OpenAmigaGCC 0009 patch is absent from proof source"
 command -v qemu-m68k >/dev/null 2>&1 || die "qemu-m68k is required for the GCC16 proof gate"
 if ! bash "$GCCSRC/tests/repro/prove.sh" "$PREFIX/bin" 2>&1 | tee "$LOGS/00-compiler-proof.log"; then
