@@ -44,6 +44,17 @@ jobs:
           cd ..
           sha256sum AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip > SHA256SUMS
 
+      - name: Deploy to Instance-32 DH1
+        shell: bash
+        run: |
+          TARGET="$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/AstroMenace-DIAG"
+          test -d "$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+          rm -rf "$TARGET"
+          mkdir -p "$TARGET"
+          cp -a build/os3/astromenace-runtime-diagnostic/package/AstroMenace/. "$TARGET/"
+          printf 'AstroMenace diagnostic deployed to %s\n' "$TARGET"
+          find "$TARGET" -maxdepth 2 -type f | sort | head -50
+
       - name: Upload diagnostic
         uses: actions/upload-artifact@v4
         with:
