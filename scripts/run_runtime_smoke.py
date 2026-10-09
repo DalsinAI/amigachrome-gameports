@@ -216,10 +216,11 @@ def amend_startup(lab: Path, rel_dir: str, command: str, slug: str):
     block = (
         "\n;BEGIN GamePorts Runtime Smoke\n"
         "FailAt 21\n"
-        "Wait 5\n"
-        f"Echo STARTED >DH0:GamePortsTest/{slug}.status\n"
+        f"Echo BASELINE >DH0:GamePortsTest/{slug}.status\n"
+        "Wait 60\n"
+        f"Echo STARTED >>DH0:GamePortsTest/{slug}.status\n"
         f"CD DH0:GamePortsTest/{rel_dir}\n"
-        f"{command}\n"
+        f"{command} >DH0:GamePortsTest/{slug}.out\n"
         f"Echo RETURNED >>DH0:GamePortsTest/{slug}.status\n"
         ";END GamePorts Runtime Smoke\n"
     )
