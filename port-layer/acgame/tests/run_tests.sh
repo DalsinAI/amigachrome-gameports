@@ -11,4 +11,3 @@ cc -std=c11 -Wall -Wextra -Werror \
   "$ROOT/tests/test_acgame.c" \
   -o "$OUT"
 "$OUT"
-
