@@ -4,6 +4,7 @@ set -eu
 HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
 SRC=${1:-"$ROOT/build/game-ports/sources/astromenace"}
+OUT=${2:-"$ROOT/build/os3/astromenace-runtime-diagnostic"}
 
 # Apply the normal AmigaChrome integration first because the target-random
 # patch adds its post-SDL reseed immediately after the diagnostic SDL marker.
@@ -15,6 +16,18 @@ python3 "$HERE/patch_amiga_random.py" "$SRC"
 # raw AMDBG markers and target-safe random seed) was compiled out.
 python3 "$HERE/patch_amiga_compile_define.py" "$SRC"
 
-# The regular builder's patch pass is idempotent. Keeping it as the final
-# build authority avoids a second copy of the compiler/library/package logic.
-exec sh "$HERE/build-amigaos3.sh" "$@"
+# Existing AstroMenace VFS assets are little-endian.  Make the target reader
+# and recovery writer explicit instead of serialising native 68k integers.
+python3 "$HERE/patch_vfs_little_endian.py" "$SRC"
+
+# Keep the regular builder as the compiler/library/package authority.
+sh "$HERE/build-amigaos3.sh" "$@"
+
+# Do not make the AC090 spend its first launch rebuilding tens of megabytes of
+# redistributable data.  Ship a verified canonical VFS beside the executable;
+# the corrected target-side packer remains available as a recovery path.
+python3 "$HERE/build_gamedata_vfs.py" \
+    "$SRC" \
+    "$OUT/package/AstroMenace/gamedata.vfs"
+
+sha256sum "$OUT/package/AstroMenace/gamedata.vfs"
