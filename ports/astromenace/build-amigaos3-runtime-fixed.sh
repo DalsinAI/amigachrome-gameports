@@ -15,11 +15,11 @@ python3 "$HERE/patch_joystick_runtime.py" "$SRC"
 python3 "$HERE/patch_amiga_random.py" "$SRC"
 
 # Runtime probes are deliberately absent from release packages. CI enables
-# them explicitly to leave stage files, capture menu/mission framebuffers,
+# them explicitly to leave stage files, capture menu/workshop/mission frames,
 # prove mixer playback and exercise the SDL keyboard path plus clean shutdown.
 if [ "$DIAGNOSTICS" = "1" ]; then
     python3 "$HERE/patch_first_frame_probe.py" "$SRC"
-    python3 "$HERE/patch_first_mission_probe.py" "$SRC"
+    python3 "$HERE/patch_player_journey_probe.py" "$SRC"
     python3 "$HERE/patch_audio_runtime_probe.py" "$SRC"
     python3 "$HERE/patch_input_exit_probe.py" "$SRC"
 else
@@ -85,7 +85,9 @@ AmigaChrome qualification:
 - SDL2, OpenAudio and VirGL context creation;
 - complete model and texture load;
 - fully rendered main menu;
-- normal transition into mission one;
+- normal mission selection and shipyard workshop transition;
+- captured configured-ship workshop frame;
+- normal workshop fade into mission one;
 - captured first playable 3D mission frame.
 
 Licensing:
