@@ -15,6 +15,25 @@ This is intentionally not a separate SDL/Mesa port.
 
 The upstream game/core code remains unchanged unless a proven Amiga-specific defect requires a patch.
 
+## Paths and music
+
+The game is built with `DATADIR="PROGDIR:data"`, `USERDIR="PROGDIR:User"` and
+`LOCALEDIR="PROGDIR:locale"`. `PROGDIR:` is the home folder of the process
+that has it: a thread, or any library working in another process, asking for
+`PROGDIR:data/...` makes AmigaDOS ask for a volume, and the game's own base
+folder joined with a "/" (`./PROGDIR:data`) names a volume called
+`./PROGDIR`. So `patches/0002` turns `PROGDIR:` into the program's real
+folder when the game starts (`GetProgramDir()` and `NameFromLock()`, in
+`fs_init`, before anything reads a path), and builds the data, user and locale
+folders from that: every path the game uses is a full path
+(`DH1:Games/Neverball/data`). `path_is_abs` knows a volume's `NAME:` as a full
+path on the Amiga. Run from a Shell, from a drawer, from Workbench or by
+`Run`, it finds its data the same way.
+
+The music is read through the game's own file system, like the sounds, and
+handed to SDL2_mixer from memory (`Mix_LoadMUS_RW`): the tracks are in the
+data archive, not files on the disk, so there is no name to give the mixer.
+
 ## Upstream pin
 
 Neverball 1.6.0, commit:

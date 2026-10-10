@@ -28,16 +28,24 @@ DATA_SHA=b2eddfbe05443e36719541639cb6246c5dd81260bce67a053d0d2c0ad34bc58c
 SDL2_CONFIG=${SDL2_CONFIG:-"$OPENUP_SDK/bin/sdl2-config"}
 [ -x "$SDL2_CONFIG" ] || { echo "missing OpenGPU sdl2-config: $SDL2_CONFIG" >&2; exit 2; }
 
-PATCH="$HERE/patches/0001-openup-opengpu-codecs.patch"
-[ -f "$PATCH" ] || { echo "missing Neverball OpenUp patch: $PATCH" >&2; exit 2; }
-
-if git -C "$SRC" apply --check "$PATCH" >/dev/null 2>&1; then
-    git -C "$SRC" apply "$PATCH"
-elif git -C "$SRC" apply --reverse --check "$PATCH" >/dev/null 2>&1; then
-    : # already applied
-else
-    echo "Neverball OpenUp patch does not apply cleanly to pinned source" >&2
-    exit 3
+# The patches apply in order. A tree they were applied to before (a second run) is left as it is:
+# the git directory keeps the checksum of the set that was applied. One patched by an older
+# build.sh (the first patch alone, no checksum) skips the patches it already has.
+STAMP=$(git -C "$SRC" rev-parse --absolute-git-dir)/openup-patches-applied
+SUM=$(cat "$HERE"/patches/*.patch | sha256sum | cut -d' ' -f1)
+if [ "$(cat "$STAMP" 2>/dev/null)" != "$SUM" ]; then
+    for PATCH in "$HERE"/patches/*.patch; do
+        [ -f "$PATCH" ] || { echo "missing Neverball OpenUp patch: $PATCH" >&2; exit 2; }
+        if git -C "$SRC" apply --check "$PATCH" >/dev/null 2>&1; then
+            git -C "$SRC" apply "$PATCH"
+        elif [ ! -f "$STAMP" ] && git -C "$SRC" apply --reverse --check "$PATCH" >/dev/null 2>&1; then
+            : # already applied by an older build.sh
+        else
+            echo "Neverball patch $(basename "$PATCH") does not apply cleanly to pinned source" >&2
+            exit 3
+        fi
+    done
+    echo "$SUM" > "$STAMP"
 fi
 
 mkdir -p "$OUT/bin" "$OUT/package/Neverball"
