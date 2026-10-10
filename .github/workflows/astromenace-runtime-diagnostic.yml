@@ -48,6 +48,7 @@ jobs:
           test "$NEW" != "$OLD"
           strings "$BIN" | grep -F 'AMDBG: '
           strings "$BIN" | grep -F 'random engine reseeded'
+          strings "$BIN" | grep -F 'stage-first-frame-captured'
           strings "$BIN" | grep -F 'stage-first-frame-presented'
           test -s "$VFS"
           python3 - "$VFS" <<'PY'
@@ -73,7 +74,7 @@ jobs:
           cd ..
           sha256sum AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip > SHA256SUMS
 
-      - name: Run through the first presented menu frame in disposable Instance-32 lab
+      - name: Render, capture and present the first menu frame in disposable Instance-32 lab
         shell: bash
         run: |
           set -euo pipefail
@@ -111,16 +112,13 @@ jobs:
           touch "$USER_STARTUP"
           printf '\nRun >NIL: <NIL: Execute S:AstroMenace-AutoTest\n' >> "$USER_STARTUP"
 
-          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace first-frame qualification ${GITHUB_RUN_ID}"
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace framebuffer qualification ${GITHUB_RUN_ID}"
           printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
 
-          # AmigaDOS redirection may buffer the live program's final console
-          # output. Guest-owned marker files are therefore the authoritative
-          # boundaries for asset load, menu init and the first completed swap.
           reached=0
           for attempt in $(seq 1 36); do
             if test -f "$TARGET/stage-first-frame-presented"; then
-              echo "AstroMenace presented its first menu frame after $((attempt * 5)) seconds."
+              echo "AstroMenace captured and presented its first menu frame after $((attempt * 5)) seconds."
               reached=1
               sleep 2
               break
@@ -134,6 +132,7 @@ jobs:
           done
 
           cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-first-frame.bmp" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
           cp "$TARGET"/stage-* "$EVIDENCE/" 2>/dev/null || true
@@ -148,17 +147,20 @@ jobs:
           cat "$EVIDENCE/AstroMenace-run.log"
           echo '--- AstroMenace stage files ---'
           find "$EVIDENCE" -maxdepth 1 -name 'stage-*' -printf '%f\n' | sort
+          echo '--- AstroMenace captured framebuffer ---'
+          file "$EVIDENCE/AstroMenace-first-frame.bmp"
+          stat -c '%n %s bytes' "$EVIDENCE/AstroMenace-first-frame.bmp"
 
-          # Release gate for this correction: a real AC090 instance must open
-          # the VFS, create the VirGL window/context, finish all assets, set up
-          # the main menu, and return from the first SDL_GL_SwapWindow frame.
           grep -F 'AMDBG: after VFS open' "$EVIDENCE/AstroMenace-run.log"
           grep -F 'AMDBG: window and GL context ready' "$EVIDENCE/AstroMenace-run.log"
           test -f "$EVIDENCE/stage-after-asset-load"
           test -f "$EVIDENCE/stage-main-menu-ready"
           test -f "$EVIDENCE/stage-loop-enter"
           test -f "$EVIDENCE/stage-menu-drawn"
+          test -f "$EVIDENCE/stage-first-frame-captured"
           test -f "$EVIDENCE/stage-first-frame-presented"
+          test -s "$EVIDENCE/AstroMenace-first-frame.bmp"
+          test "$(stat -c %s "$EVIDENCE/AstroMenace-first-frame.bmp")" -gt 100000
           test "$reached" -eq 1
 
       - name: Upload corrected package and runtime evidence
