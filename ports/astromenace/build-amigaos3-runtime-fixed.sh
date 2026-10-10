@@ -16,9 +16,11 @@ python3 "$HERE/patch_amiga_random.py" "$SRC"
 # raw AMDBG markers and target-safe random seed) was compiled out.
 python3 "$HERE/patch_amiga_compile_define.py" "$SRC"
 
-# Existing AstroMenace VFS assets are little-endian.  Make the target reader
-# and recovery writer explicit instead of serialising native 68k integers.
+# Existing AstroMenace VFS and VW3D model assets are little-endian.  Make the
+# target readers and recovery writers explicit instead of treating on-disk
+# bytes as native big-endian 68k integers/floats.
 python3 "$HERE/patch_vfs_little_endian.py" "$SRC"
+python3 "$HERE/patch_vw3d_little_endian.py" "$SRC"
 
 # Keep the regular builder as the compiler/library/package authority.
 sh "$HERE/build-amigaos3.sh" "$@"
