@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Add one-shot first-frame milestones to AstroMenace on AmigaOS.
+"""Add one-shot first-frame milestones and framebuffer proof on AmigaOS.
 
 Console output redirected by AmigaDOS can remain buffered while the game is
-alive.  Small guest-owned marker files give the qualification runner an
-unambiguous boundary without printing from every frame.
+alive. Small guest-owned marker files give the qualification runner an
+unambiguous boundary. The first fully drawn back buffer is also read back via
+AstroMenace's own OpenGL screenshot path before SDL_GL_SwapWindow, proving the
+pixels produced by the game rather than relying on the Workbench preview.
 """
 
 from pathlib import Path
@@ -13,8 +15,8 @@ source = Path(sys.argv[1]).resolve()
 loop_cpp = source / "src" / "loop_proc.cpp"
 text = loop_cpp.read_text(encoding="utf-8")
 
-if "stage-first-frame-presented" in text:
-    print("AstroMenace first-frame probe already present")
+if "stage-first-frame-captured" in text:
+    print("AstroMenace first-frame capture probe already present")
     raise SystemExit(0)
 
 include_anchor = '#include "SDL2/SDL.h"\n'
@@ -113,7 +115,17 @@ overlay_insert = '''    cFPS::GetInstance().Draw();
 
     vw_End2DMode();
 #ifdef AMIGACHROME
-    if (FirstFrameProbe) AMFirstFrameStage("PROGDIR:stage-2d-ended");
+    if (FirstFrameProbe) {
+        AMFirstFrameStage("PROGDIR:stage-2d-ended");
+        AMFirstFrameStage("PROGDIR:stage-frame-ready-for-readback");
+        if (vw_Screenshot(GameConfig().Width,
+                          GameConfig().Height,
+                          "PROGDIR:AstroMenace-first-frame.bmp") == 0) {
+            AMFirstFrameStage("PROGDIR:stage-first-frame-captured");
+        } else {
+            AMFirstFrameStage("PROGDIR:stage-first-frame-capture-failed");
+        }
+    }
 #endif
     vw_EndRendering();
 #ifdef AMIGACHROME
@@ -128,4 +140,4 @@ if overlay_anchor not in text:
 text = text.replace(overlay_anchor, overlay_insert, 1)
 
 loop_cpp.write_text(text, encoding="utf-8")
-print("patched AstroMenace first-frame render milestones")
+print("patched AstroMenace first-frame milestones and framebuffer capture")
