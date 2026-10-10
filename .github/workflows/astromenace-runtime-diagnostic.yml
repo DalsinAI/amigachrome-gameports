@@ -50,6 +50,8 @@ jobs:
           strings "$BIN" | grep -F 'random engine reseeded'
           strings "$BIN" | grep -F 'stage-first-frame-captured'
           strings "$BIN" | grep -F 'stage-first-frame-presented'
+          strings "$BIN" | grep -F 'stage-first-game-frame-captured'
+          strings "$BIN" | grep -F 'stage-first-game-frame-presented'
           test -s "$VFS"
           python3 - "$VFS" <<'PY'
           from pathlib import Path
@@ -74,7 +76,7 @@ jobs:
           cd ..
           sha256sum AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip > SHA256SUMS
 
-      - name: Render, capture and present the first menu frame in disposable Instance-32 lab
+      - name: Render and capture menu plus first playable mission
         shell: bash
         run: |
           set -euo pipefail
@@ -96,6 +98,7 @@ jobs:
           rm -rf "$TARGET"
           mkdir -p "$TARGET"
           cp -a build/os3/astromenace-runtime-diagnostic/package/AstroMenace/. "$TARGET/"
+          : > "$TARGET/AUTOTEST_FIRST_MISSION"
 
           TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AstroMenace-AutoTest"
           USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
@@ -112,20 +115,20 @@ jobs:
           touch "$USER_STARTUP"
           printf '\nRun >NIL: <NIL: Execute S:AstroMenace-AutoTest\n' >> "$USER_STARTUP"
 
-          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace framebuffer qualification ${GITHUB_RUN_ID}"
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace first-mission qualification ${GITHUB_RUN_ID}"
           printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
 
           reached=0
-          for attempt in $(seq 1 36); do
-            if test -f "$TARGET/stage-first-frame-presented"; then
-              echo "AstroMenace captured and presented its first menu frame after $((attempt * 5)) seconds."
+          for attempt in $(seq 1 60); do
+            if test -f "$TARGET/stage-first-game-frame-presented"; then
+              echo "AstroMenace presented a captured first-mission frame after $((attempt * 5)) seconds."
               reached=1
               sleep 2
               break
             fi
             if test -f "$TARGET/AstroMenace-run.log" && \
                grep -Fq 'ASTROTEST: returned RC' "$TARGET/AstroMenace-run.log"; then
-              echo "AstroMenace returned before its first frame after $((attempt * 5)) seconds."
+              echo "AstroMenace returned before its first mission frame after $((attempt * 5)) seconds."
               break
             fi
             sleep 5
@@ -133,6 +136,7 @@ jobs:
 
           cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$TARGET/AstroMenace-first-frame.bmp" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-first-mission.bmp" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
           cp "$TARGET"/stage-* "$EVIDENCE/" 2>/dev/null || true
@@ -147,20 +151,36 @@ jobs:
           cat "$EVIDENCE/AstroMenace-run.log"
           echo '--- AstroMenace stage files ---'
           find "$EVIDENCE" -maxdepth 1 -name 'stage-*' -printf '%f\n' | sort
-          echo '--- AstroMenace captured framebuffer ---'
+          echo '--- AstroMenace captured framebuffers ---'
           file "$EVIDENCE/AstroMenace-first-frame.bmp"
-          stat -c '%n %s bytes' "$EVIDENCE/AstroMenace-first-frame.bmp"
+          file "$EVIDENCE/AstroMenace-first-mission.bmp"
+          stat -c '%n %s bytes' \
+            "$EVIDENCE/AstroMenace-first-frame.bmp" \
+            "$EVIDENCE/AstroMenace-first-mission.bmp"
+          sha256sum \
+            "$EVIDENCE/AstroMenace-first-frame.bmp" \
+            "$EVIDENCE/AstroMenace-first-mission.bmp"
 
           grep -F 'AMDBG: after VFS open' "$EVIDENCE/AstroMenace-run.log"
           grep -F 'AMDBG: window and GL context ready' "$EVIDENCE/AstroMenace-run.log"
           test -f "$EVIDENCE/stage-after-asset-load"
           test -f "$EVIDENCE/stage-main-menu-ready"
-          test -f "$EVIDENCE/stage-loop-enter"
-          test -f "$EVIDENCE/stage-menu-drawn"
           test -f "$EVIDENCE/stage-first-frame-captured"
           test -f "$EVIDENCE/stage-first-frame-presented"
+          test -f "$EVIDENCE/stage-first-mission-requested"
+          test -f "$EVIDENCE/stage-before-game-prepare"
+          test -f "$EVIDENCE/stage-before-game-init"
+          test -f "$EVIDENCE/stage-game-init-complete"
+          test -f "$EVIDENCE/stage-first-game-enter"
+          test -f "$EVIDENCE/stage-first-game-drawn"
+          test -f "$EVIDENCE/stage-first-game-frame-captured"
+          test -f "$EVIDENCE/stage-first-game-frame-presented"
           test -s "$EVIDENCE/AstroMenace-first-frame.bmp"
+          test -s "$EVIDENCE/AstroMenace-first-mission.bmp"
           test "$(stat -c %s "$EVIDENCE/AstroMenace-first-frame.bmp")" -gt 100000
+          test "$(stat -c %s "$EVIDENCE/AstroMenace-first-mission.bmp")" -gt 100000
+          test "$(sha256sum "$EVIDENCE/AstroMenace-first-frame.bmp" | awk '{print $1}')" != \
+               "$(sha256sum "$EVIDENCE/AstroMenace-first-mission.bmp" | awk '{print $1}')"
           test "$reached" -eq 1
 
       - name: Upload corrected package and runtime evidence
