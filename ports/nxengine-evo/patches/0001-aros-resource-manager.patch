@@ -1,0 +1,22 @@
+diff --git a/src/ResourceManager.cpp b/src/ResourceManager.cpp
+index 1111111..2222222 100644
+--- a/src/ResourceManager.cpp
++++ b/src/ResourceManager.cpp
+@@ -3,7 +3,7 @@
+ #include <stdexcept>
+ #include <string>
+ 
+-#if defined(__unix__) || defined(__APPLE__) || defined(__VITA__) || defined(__SWITCH__)
++#if defined(__unix__) || defined(__AROS__) || defined(__amigaos__) || defined(__AMIGA__) || defined(AMIGA) || defined(__APPLE__) || defined(__VITA__) || defined(__SWITCH__)
+ #include <sys/stat.h>
+ #elif defined(__HAIKU__)
+ #include <posix/sys/stat.h> // ugh
+@@ -20,7 +20,7 @@
+ 
+ bool ResourceManager::fileExists(const std::string &filename)
+ {
+-#if defined(__unix__) || defined(__APPLE__) || defined(__HAIKU__) || defined(__VITA__) || defined(__SWITCH__)
++#if defined(__unix__) || defined(__AROS__) || defined(__amigaos__) || defined(__AMIGA__) || defined(AMIGA) || defined(__APPLE__) || defined(__HAIKU__) || defined(__VITA__) || defined(__SWITCH__)
+   struct stat st;
+ 
+   if (stat(filename.c_str(), &st) == 0)

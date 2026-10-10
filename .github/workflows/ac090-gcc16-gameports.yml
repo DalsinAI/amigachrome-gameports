@@ -1,0 +1,58 @@
+name: AC090 GCC16 Game Ports
+
+on:
+  push:
+    branches:
+      - runner/gcc16-gameports-20261009
+  workflow_dispatch:
+
+concurrency:
+  group: ac090-gcc16-gameports
+  cancel-in-progress: true
+
+jobs:
+  campaign:
+    if: github.event_name == 'workflow_dispatch'
+    name: GCC16 0009 -> finish three ports
+    runs-on: self-hosted
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout campaign branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Runner identity
+        shell: bash
+        run: |
+          set -eux
+          hostname
+          uname -a
+          echo "HOME=$HOME"
+          git rev-parse HEAD
+          test -x "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc"
+          "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc" --version | head -1
+          test -x "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config"
+          "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
+          command -v qemu-m68k
+
+      - name: Validate runtime-data tooling
+        shell: bash
+        run: |
+          python3 -m py_compile scripts/fetch_runtime_data.py scripts/stage_game_ports_for_test.py
+          python3 scripts/fetch_runtime_data.py --root . --game nxengine-evo || test $? -eq 2
+
+      - name: Ordered GCC16 game-port campaign
+        shell: bash
+        run: bash scripts/run_finish_three.sh
+
+      - name: Publish qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AC090-FinishThree-0009-${{ github.run_id }}
+          path: build/campaign/AC090-FinishThree-0009
+          if-no-files-found: warn
+          retention-days: 90

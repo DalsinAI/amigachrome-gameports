@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "policy": "Bundle data when redistribution is clearly licensed. Otherwise fetch public/freeware/shareware/demo data from the recorded upstream/public source and stage it locally without committing it to source control.",
+  "datasets": {
+    "freedoom-0.13.0": {
+      "games": [
+        "chocolate-doom"
+      ],
+      "filename": "freedoom-0.13.0.zip",
+      "urls": [
+        "https://github.com/freedoom/freedoom/releases/download/v0.13.0/freedoom-0.13.0.zip"
+      ],
+      "sha256": "3f9b264f3e3ce503b4fb7f6bdcb1f419d93c7b546f4df3e874dd878db9688f59",
+      "availability": "open-content",
+      "packaging": "bundle-ok",
+      "notes": "Freedoom is free content intended for Doom-compatible engines."
+    },
+    "cave-story-english-1006": {
+      "games": [
+        "nxengine-evo"
+      ],
+      "filename": "cavestory-nx-data.zip",
+      "urls": [
+        "https://www.cavestory.one/downloads/data.zip"
+      ],
+      "sha256": null,
+      "availability": "freeware-public-download",
+      "packaging": "fetch-on-demand",
+      "notes": "Pre-extracted NXEngine-compatible data mirror for the original freeware Cave Story. The fetcher records the observed SHA-256; do not commit or republish this archive from AmigaChrome."
+    },
+    "uqm-0.8.0-content": {
+      "games": [
+        "uqm"
+      ],
+      "filename": "uqm-0.8.0-content.uqm",
+      "urls": [
+        "https://sourceforge.net/projects/sc2/files/UQM/0.8/uqm-0.8.0-content.uqm/download"
+      ],
+      "sha256": "77d75ac25e6fb755a33c4ba3b38a7b7bc41fcbc02896891b0cc9ac9214b72eef",
+      "availability": "official-public-content",
+      "packaging": "fetch-or-bundle",
+      "notes": "Official UQM 0.8 base-content package."
+    },
+    "omf2097-assets": {
+      "games": [
+        "openomf"
+      ],
+      "filename": "openomf-assets.zip",
+      "urls": [
+        "https://www.omf2097.com/pub/files/omf/openomf-assets.zip"
+      ],
+      "sha256": null,
+      "availability": "freeware-public-download",
+      "packaging": "fetch-on-demand",
+      "notes": "This is the data archive linked directly by OpenOMF upstream BUILD.md. Record the observed SHA-256 after fetch until a publisher checksum is pinned."
+    },
+    "jazz-shareware-1.1": {
+      "games": [
+        "openjazz"
+      ],
+      "filename": "jazz-shareware-1.1.zip",
+      "urls": [
+        "https://www.dosgamesarchive.com/file.php?id=2031"
+      ],
+      "sha256": null,
+      "availability": "shareware-public-download",
+      "packaging": "fetch-on-demand",
+      "notes": "Shareware episode only. Never substitute or bundle registered/full Jazz Jackrabbit data."
+    },
+    "pop1-demo": {
+      "games": [
+        "sdlpop"
+      ],
+      "filename": "pop1-demo.zip",
+      "urls": [
+        "https://www.popot.org/get_the_games/software/PoP1_demo.zip"
+      ],
+      "sha256": null,
+      "availability": "demo-public-download",
+      "packaging": "fetch-on-demand",
+      "notes": "Two-level Prince of Persia demo reference dataset. SDLPoP source also carries its own project runtime data."
+    }
+  }
+}

@@ -7,6 +7,8 @@ import os
 import hashlib
 import json
 import shutil
+import subprocess
+import sys
 import time
 import zipfile
 from pathlib import Path
@@ -131,8 +133,8 @@ def stage(root: Path) -> Path:
         engine_resources = root / "build" / "game-ports" / "work" / "openomf" / "resources"
         copy_tree(engine_resources, target / "resources")
         (target / "OMF2097-DATA-REQUIRED.txt").write_text(
-            "Original One Must Fall 2097 data is not bundled.\n"
-            "Supply your own game data before first-light testing.\n",
+            "OpenOMF requires the original One Must Fall 2097 freeware data.\n"
+            "Use --fetch-public-data when staging to download the public OpenOMF asset archive automatically.\n",
             encoding="utf-8",
         )
         manifest["entries"]["openomf"] = {
@@ -153,8 +155,8 @@ def stage(root: Path) -> Path:
         copy_file(out / "uqm-aros", target / "uqm-aros")
         copy_file(out / "UQM_RUN.txt", target / "UQM_RUN.txt")
         (target / "UQM-CONTENT-REQUIRED.txt").write_text(
-            "UQM 0.8 content is not bundled.\n"
-            "Launch with: uqm-aros -n <path-to-extracted-UQM-0.8-content>\n",
+            "UQM 0.8 base content is available publicly from the project.\n"
+            "Use --fetch-public-data when staging to fetch and install it automatically.\n",
             encoding="utf-8",
         )
         manifest["entries"]["uqm"] = {
@@ -173,8 +175,8 @@ def stage(root: Path) -> Path:
         target = field / "OpenJazz"
         copy_file(openjazz_bin, target / "OpenJazz")
         (target / "JAZZ-DATA-REQUIRED.txt").write_text(
-            "OpenJazz requires files from an original Jazz Jackrabbit game.\n"
-            "Game data is not bundled. Place the required files alongside OpenJazz or in a supported data path.\n",
+            "OpenJazz requires Jazz Jackrabbit data.\n"
+            "Use --fetch-public-data when staging to fetch the public shareware episode automatically, or supply your registered game data.\n",
             encoding="utf-8",
         )
         manifest["entries"]["openjazz"] = {
@@ -191,8 +193,8 @@ def stage(root: Path) -> Path:
         target = field / "NXEngine"
         copy_file(nx_bin, target / "nxengine-evo")
         (target / "CAVE-STORY-DATA-REQUIRED.txt").write_text(
-            "NXEngine-evo requires user-supplied Cave Story game data.\n"
-            "Original game data is not bundled in the AmigaChrome field-test payload.\n",
+            "NXEngine-evo requires Cave Story freeware data.\n"
+            "Use --fetch-public-data when staging to fetch the public NXEngine-compatible dataset automatically.\n",
             encoding="utf-8",
         )
         manifest["entries"]["nxengine-evo"] = {
@@ -308,6 +310,31 @@ def stage(root: Path) -> Path:
             "source": "pinned SDLPoP source tree; demo https://www.popot.org/get_the_games/software/PoP1_demo.zip",
             "sha256Demo": demo_hash,
             "rights": "local test use; demo is explicitly the two-level demo, not a full commercial install",
+        }
+
+    omf_assets = test_cache / "openomf-assets.zip"
+    omf_target = field / "OpenOMF"
+    if omf_assets.is_file() and omf_target.is_dir():
+        with zipfile.ZipFile(omf_assets) as zf:
+            zf.extractall(omf_target)
+        children = [p for p in omf_target.iterdir() if p.is_dir() and p.name.lower().startswith("openomf-assets")]
+        if len(children) == 1:
+            nested = children[0]
+            for item in list(nested.iterdir()):
+                target_path = omf_target / item.name
+                if target_path.exists() and target_path.is_dir() and item.is_dir():
+                    copy_tree(item, target_path)
+                    shutil.rmtree(item)
+                elif not target_path.exists():
+                    shutil.move(str(item), str(target_path))
+            if nested.exists() and not any(nested.iterdir()):
+                nested.rmdir()
+        manifest["entries"]["openomf"]["state"] = "ready-freeware-test"
+        provenance["openomf"] = {
+            "dataset": "One Must Fall 2097 freeware assets for OpenOMF",
+            "source": "https://www.omf2097.com/pub/files/omf/openomf-assets.zip",
+            "sha256": sha256(omf_assets),
+            "rights": "public freeware dataset fetched from the URL documented by OpenOMF upstream",
         }
 
     uqm_pkg = test_cache / "uqm-0.8.0-content.uqm"
@@ -459,16 +486,33 @@ def install(root: Path, instance: Path, volume: str) -> Path:
     return target
 
 
+
+def fetch_public_data(root: Path) -> None:
+    cmd = [
+        sys.executable,
+        str(root / "scripts" / "fetch_runtime_data.py"),
+        "--root",
+        str(root),
+        "--allow-network",
+    ]
+    subprocess.run(cmd, check=True)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", type=Path, required=True)
     ap.add_argument("--instance", type=Path)
     ap.add_argument("--volume", default="DH1")
+    ap.add_argument("--fetch-public-data", action="store_true",
+                    help="download publicly available/freeware/shareware/demo datasets before staging")
     args = ap.parse_args(argv)
+    root = args.root.resolve()
+    if args.fetch_public_data:
+        fetch_public_data(root)
     if args.instance:
-        print(install(args.root, args.instance, args.volume))
+        print(install(root, args.instance, args.volume))
     else:
-        print(stage(args.root))
+        print(stage(root))
     return 0
 
 

@@ -22,14 +22,12 @@ set(CMAKE_STRIP        "${AMIGA_PREFIX}/bin/m68k-amigaos-strip" CACHE FILEPATH "
 
 set(AMIGA_CPU_FLAGS "-m68040 -m68881" CACHE STRING "Amiga CPU/FPU flags")
 set(AMIGA_RUNTIME "-noixemul" CACHE STRING "Amiga C runtime")
-# Kept as defence-in-depth even after compiler fixes; not relied upon for correctness.
-set(AMIGA_GCC16_WORKAROUND "-fno-tree-loop-distribute-patterns" CACHE STRING "Conservative GCC16 build flag")
 set(AMIGA_THREAD_FLAGS "-pthread" CACHE STRING "Amiga pthread personality")
 
 set(CMAKE_C_FLAGS_INIT
-    "${AMIGA_RUNTIME} ${AMIGA_CPU_FLAGS} ${AMIGA_GCC16_WORKAROUND} ${AMIGA_THREAD_FLAGS}")
+    "${AMIGA_RUNTIME} ${AMIGA_CPU_FLAGS} ${AMIGA_THREAD_FLAGS}")
 set(CMAKE_CXX_FLAGS_INIT
-    "${AMIGA_RUNTIME} ${AMIGA_CPU_FLAGS} ${AMIGA_GCC16_WORKAROUND} ${AMIGA_THREAD_FLAGS}")
+    "${AMIGA_RUNTIME} ${AMIGA_CPU_FLAGS} ${AMIGA_THREAD_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS_INIT
     "${AMIGA_RUNTIME} ${AMIGA_CPU_FLAGS} ${AMIGA_THREAD_FLAGS}")
 

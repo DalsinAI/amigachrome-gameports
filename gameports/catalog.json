@@ -10,7 +10,12 @@
         "filename": "uqm-0.8.0-src.tgz",
         "sha256": "24f2f7db9cf7faf53b95f9e2580e6f596205a98ed0c335cfe834c64785ad4f5a"
       },
-      "contentPolicy": "Code is GPL; content has separate Creative Commons/custom terms. Content is not bundled."
+      "contentPolicy": "Code is GPL; content has separate Creative Commons/custom terms. Content is not bundled.",
+      "runtimeData": {
+        "mode": "auto-fetch",
+        "dataset": "uqm-0.8.0-content",
+        "manifest": "gameports/runtime-data.json"
+      }
     },
     "chocolate-doom": {
       "order": 2,
@@ -21,7 +26,12 @@
         "commit": "895f581c5d91497bdda0516612da803fe5843e28",
         "submodules": false
       },
-      "contentPolicy": "Engine follows upstream free-software licensing. IWAD data remains external."
+      "contentPolicy": "Engine follows upstream free-software licensing. IWAD data remains external.",
+      "runtimeData": {
+        "mode": "auto-fetch",
+        "dataset": "freedoom-0.13.0",
+        "manifest": "gameports/runtime-data.json"
+      }
     },
     "sdlpop": {
       "order": 3,
@@ -32,7 +42,12 @@
         "commit": "3c5add5fb7f83d4ceb542823ab66d00146c4271b",
         "submodules": false
       },
-      "contentPolicy": "Preserve upstream notices. Commercial Prince of Persia data is not bundled."
+      "contentPolicy": "Preserve upstream notices. Commercial Prince of Persia data is not bundled.",
+      "runtimeData": {
+        "mode": "project-data-plus-auto-fetch-demo",
+        "dataset": "pop1-demo",
+        "manifest": "gameports/runtime-data.json"
+      }
     },
     "openjazz": {
       "order": 4,
@@ -43,7 +58,12 @@
         "commit": "a1626f4edd4a7af72c54103021790c56d8ecfced",
         "submodules": false
       },
-      "contentPolicy": "Preserve upstream notices. Jazz Jackrabbit data is external."
+      "contentPolicy": "Preserve upstream notices. Jazz Jackrabbit data is external.",
+      "runtimeData": {
+        "mode": "auto-fetch-shareware",
+        "dataset": "jazz-shareware-1.1",
+        "manifest": "gameports/runtime-data.json"
+      }
     },
     "nxengine-evo": {
       "order": 5,
@@ -54,7 +74,12 @@
         "commit": "1f093d1423cc395eb199230cd609b806ef1daa36",
         "submodules": false
       },
-      "contentPolicy": "Engine follows upstream licensing. Cave Story data is external."
+      "contentPolicy": "Engine follows upstream licensing. Cave Story data is external.",
+      "runtimeData": {
+        "mode": "auto-fetch",
+        "dataset": "cave-story-english-1006",
+        "manifest": "gameports/runtime-data.json"
+      }
     },
     "neverball": {
       "order": 6,
@@ -71,6 +96,10 @@
         "sha256": "865391cc041208e526401a8eb1f14fba44323f17d7e818c5e65e82393ff747fb",
         "member": "neverball-1.6.0/data/data-1.6.0.pk3",
         "memberSha256": "b2eddfbe05443e36719541639cb6246c5dd81260bce67a053d0d2c0ad34bc58c"
+      },
+      "runtimeData": {
+        "mode": "bundled",
+        "source": "releaseData"
       }
     },
     "assaultcube": {
@@ -127,6 +156,22 @@
         "submodules": false
       },
       "contentPolicy": "Code is GPLv2 with BSD components. Upstream data is described as CC0/CC-BY/CC-BY-SA, but doc/README_DATA.md records historical provenance caveats for some legacy campaigns/sounds; do not publish the bundled-data package until that review is closed."
+    },
+    "openomf": {
+      "order": 12,
+      "title": "OpenOMF / OMFAGA",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/omf2097/openomf.git",
+        "commit": "4a94a754bac06d9b43780f8355307a83e0a52d04",
+        "submodules": false
+      },
+      "contentPolicy": "Engine source is MIT. Original One Must Fall 2097 data is user-supplied and is not bundled.",
+      "runtimeData": {
+        "mode": "auto-fetch",
+        "dataset": "omf2097-assets",
+        "manifest": "gameports/runtime-data.json"
+      }
     },
     "openlara": {
       "order": 12,
@@ -192,7 +237,12 @@
         "commit": "bbdb3ac5af2774c92b85c4d9b2a238f606911e66",
         "submodules": false
       },
-      "contentPolicy": "Source code is GPL-3.0-or-later. Preserve upstream artwork/font licences and notices; review the generated gamedata.vfs payload and bundled asset licences before public packaging."
+      "contentPolicy": "Source code is GPL-3.0-or-later. Preserve upstream artwork/font licences and notices; review generated gamedata.vfs and bundled asset licences before public packaging.",
+      "runtimeData": {
+        "mode": "bundled",
+        "source": "pinned upstream gamedata tree",
+        "firstLaunch": "build gamedata.vfs automatically"
+      }
     }
   }
 }
