@@ -156,23 +156,21 @@ int main(int argc, char *argv[])
         raise RuntimeError("AstroMenace main-entry diagnostic marker missing")
     main_text = main_text.replace(entry_anchor, entry_insert, 1)
 
-asset_anchor = '    AMDiag("after asset load");\n'
+asset_anchor = '    AMDiag("after asset load");'
 asset_insert = '''    AMDiag("after asset load");
 #ifdef AMIGACHROME
     AMStageFile("PROGDIR:stage-after-asset-load");
-#endif
-'''
+#endif'''
 if 'stage-after-asset-load' not in main_text:
     if asset_anchor not in main_text:
         raise RuntimeError("AstroMenace after-assets diagnostic marker missing")
     main_text = main_text.replace(asset_anchor, asset_insert, 1)
 
-menu_anchor = '    AMDiag("main menu ready");\n'
+menu_anchor = '    AMDiag("main menu ready");'
 menu_insert = '''    AMDiag("main menu ready");
 #ifdef AMIGACHROME
     AMStageFile("PROGDIR:stage-main-menu-ready");
-#endif
-'''
+#endif'''
 if 'stage-main-menu-ready' not in main_text:
     if menu_anchor not in main_text:
         raise RuntimeError("AstroMenace main-menu diagnostic marker missing")
