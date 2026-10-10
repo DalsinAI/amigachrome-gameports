@@ -1,10 +1,10 @@
 # AmigaChrome Game-Port Test Releases
 
-Snapshot: 9 October 2026
+Snapshot: 10 October 2026
 
 ## Rule
 
-**DONE means RELEASE.** These are test-release payloads until the AC090 runtime gates are complete.
+**DONE means RELEASE.** These remain test-release payloads until each port clears its own AC090 runtime gates. AstroMenace has now cleared its automated AC090 software gate and is an AC090 GCC16/0010 release candidate pending the listed human field checks.
 
 Runtime data follows one of three policies:
 
@@ -24,7 +24,7 @@ The machine-readable source of truth is:
 | Port | Engine/build state | Runtime data | Test experience |
 |---|---|---|---|
 | Neverball / Neverputt | built/package path established | **BUNDLED** | self-contained package |
-| AstroMenace | GCC16/0009 AmigaOS build PASS | **BUNDLED** | self-contained package; first launch creates `gamedata.vfs` from bundled licensed `gamedata/` |
+| AstroMenace | **AC090 GCC16/0010 automated runtime gate PASS** | **BUNDLED** | self-contained release candidate with verified canonical `gamedata.vfs`; qualified main menu, mission selection, configured-ship workshop, mission-one rendering, live mixer channel, keyboard event path and clean guest return code `0` |
 | Chocolate Doom | fixed-GCC build lane | **AUTO-FETCH / BUNDLE-OK** Freedoom 0.13.0 | staging fetches verified Freedoom and installs `freedoom1.wad` |
 | NXEngine-evo | GCC16/0009 AmigaOS build PASS | **AUTO-FETCH** Cave Story freeware data | staging fetches public NXEngine-compatible data and installs it beside the engine |
 | The Ur-Quan Masters | build green in fixed-GCC lane | **AUTO-FETCH** official UQM 0.8 base content | staging downloads verified official content and puts it under `content/packages` |
@@ -33,6 +33,18 @@ The machine-readable source of truth is:
 | SDLPoP | build green in fixed-GCC lane | project runtime data + **AUTO-FETCH** two-level demo reference | staging uses the pinned project data and optionally fetches the public demo |
 | C-Dogs SDL | build green; local self-contained test package exists | local test package only for now | upstream data provenance review remains open before public release packaging |
 | AssaultCube | client/server build green | upstream package-data review still required | not yet in one-click test-release state |
+
+## AstroMenace field checks still open
+
+The automated AC090 gate proves the executable, data, graphics, audio channel, keyboard event and shutdown paths. It does not replace human observation of:
+
+- audible music/SFX quality and latency;
+- physical gamepad mapping and feel;
+- mouse control and pointer capture/release;
+- a longer gameplay/performance soak;
+- additional missions, settings, profiles and save persistence.
+
+Qualification evidence is documented in `ports/astromenace/README.md`.
 
 ## One-command field-test staging
 
@@ -74,9 +86,9 @@ GitHub repository:
 
 `DalsinAI/amigachrome-gameports`
 
-Active GCC16 qualification branch:
+Active AstroMenace qualification branch:
 
-`runner/gcc16-gameports-20261009`
+`fix/astromenace-runtime-diagnostics-20261009`
 
 ### Local build/cache - disposable
 
@@ -85,18 +97,24 @@ Relative to a working checkout:
 - `build/os3/` - current AmigaOS build outputs
 - `build/game-ports/test-data-cache/` - fetched public runtime datasets
 - `build/game-ports/out/field-test/` - staged field-test tree where the legacy aggregate lane is used
+- `build/releases/astromenace-ac090-0010/` - reproducible AstroMenace production package and manifest
 
 These paths are build products and may be cleaned/rebuilt.
 
 ### GitHub Actions test artifacts
 
-The GCC16 Kitchen workflow publishes the focused payload as:
+The older aggregate GCC16 Kitchen workflow publishes focused test payloads as:
 
 `AC090-FinishThree-0009-<run-id>`
 
-Artifact retention is **90 days** on the current qualification workflow.
+AstroMenace now has focused workflows that publish:
 
-GitHub Actions artifacts are test evidence, not the permanent public release channel. Once a port clears the runtime release gates it should be promoted to a versioned GitHub Release package.
+- `AstroMenace-AC090-RUNTIME-DIAGNOSTIC-<run-id>` - disposable qualification binary and runtime evidence;
+- `AstroMenace-AC090-GCC16-0010` - lean production release candidate, manifest and SHA-256 file.
+
+Artifact retention is 30 days for runtime diagnostics and 90 days for the production candidate.
+
+GitHub Actions artifacts are qualification evidence, not the permanent public release channel. Once the human field checks are complete, the candidate should be promoted to a versioned GitHub Release package.
 
 ## Public data currently recorded
 
