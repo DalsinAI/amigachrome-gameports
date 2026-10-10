@@ -58,8 +58,17 @@ done
 
 FT_INC=$(dirname "$FT_HEADER")
 
-python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
-python3 "$HERE/patch_amiga_random.py" "$SRC"
+# Standalone callers receive the normal AmigaChrome integration here. The
+# release/runtime wrapper prepares a richer source tree first and sets
+# ASTROMENACE_SOURCE_PREPATCHED=1; re-copying audio_amigachrome.cpp at this
+# point would silently erase diagnostic or release-specific changes just
+# before compilation.
+if [ "${ASTROMENACE_SOURCE_PREPATCHED:-0}" != "1" ]; then
+  python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
+  python3 "$HERE/patch_amiga_random.py" "$SRC"
+else
+  echo "ASTROMENACE_SOURCE_PREPATCHED: preserving prepared source tree"
+fi
 
 rm -rf "$OUT"
 mkdir -p "$OUT"
