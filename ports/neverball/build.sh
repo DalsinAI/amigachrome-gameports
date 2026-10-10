@@ -77,6 +77,17 @@ cp "$SRC/neverputt" "$OUT/bin/Neverputt"
 cp "$OUT/bin/Neverball" "$PKG/Neverball"
 cp "$OUT/bin/Neverputt" "$PKG/Neverputt"
 cp "$DATA_PK3" "$PKG/data/data-1.6.0.pk3"
+# OpenUp's own data beside the archive (the game reads a folder's files before an archive's): the
+# Boing Ball (patches/0003 makes it the default ball). Its solid is the basic ball's from the release
+# data, the material's name changed (the same length, in the solid's fixed-size field).
+cp -R "$HERE/overlay/data/." "$PKG/data/"
+python3 - "$DATA_PK3" "$PKG/data/ball/boing-ball/boing-ball-solid.sol" <<'PY_SOL'
+import sys, zipfile
+sol = zipfile.ZipFile(sys.argv[1]).read("ball/basic-ball/basic-ball-solid.sol")
+old, new = b"ball/basic-ball/basic-ball", b"ball/boing-ball/boing-ball"
+assert len(old) == len(new) and sol.count(old) == 1, "the basic ball's solid is not as expected"
+open(sys.argv[2], "wb").write(sol.replace(old, new))
+PY_SOL
 cp "$SRC/LICENSE.md" "$PKG/"
 for f in authors.txt manual.txt release-notes.md; do
     [ ! -f "$SRC/doc/$f" ] || cp "$SRC/doc/$f" "$PKG/doc/"

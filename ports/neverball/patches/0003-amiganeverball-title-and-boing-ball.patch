@@ -1,0 +1,49 @@
+diff --git a/ball/main.c b/ball/main.c
+index 32228da..f704cf5 100644
+--- a/ball/main.c
++++ b/ball/main.c
+@@ -61,7 +61,7 @@
+ #include "st_package.h"
+ #include "st_game_link.h"
+ 
+-const char TITLE[] = "Neverball";
++const char TITLE[] = "AmigaNeverBall";
+ const char ICON[] = "icon/neverball.png";
+ 
+ /*---------------------------------------------------------------------------*/
+diff --git a/ball/st_title.c b/ball/st_title.c
+index 716e137..748bf4f 100644
+--- a/ball/st_title.c
++++ b/ball/st_title.c
+@@ -183,7 +183,8 @@ static int title_gui(void)
+     {
+         if ((id = gui_vstack(root_id)))
+         {
+-            if ((jd = gui_label(id, "  Neverball  ", GUI_LRG, 0, 0)))
++            /* OpenUp: the Amiga's own, in the Boing Ball's white and red */
++            if ((jd = gui_label(id, " AmigaNeverBall ", GUI_LRG, gui_wht, gui_red)))
+             {
+                 gui_set_fill(jd);
+                 gui_set_slide(jd, GUI_N | GUI_FLING | GUI_EASE_ELASTIC, 0, 1.6f, 0);
+@@ -221,7 +222,7 @@ static int title_gui(void)
+         }
+ 
+ #if ENABLE_VERSION
+-        if ((id = gui_label(root_id, "Neverball " VERSION, GUI_TNY, gui_wht2, gui_wht2)))
++        if ((id = gui_label(root_id, "AmigaNeverBall " VERSION " for OpenUp", GUI_TNY, gui_wht2, gui_wht2)))
+         {
+             gui_clr_rect(id);
+             gui_set_slide(id, GUI_S, 0.85f, 0.4f, 0);
+diff --git a/share/config.c b/share/config.c
+index 0ca152d..8ab5ec6 100644
+--- a/share/config.c
++++ b/share/config.c
+@@ -280,7 +280,7 @@ static struct
+     char       *cur;
+ } option_s[] = {
+     { &CONFIG_PLAYER,       "player",       "" },
+-    { &CONFIG_BALL_FILE,    "ball_file",    "ball/basic-ball/basic-ball" },
++    { &CONFIG_BALL_FILE,    "ball_file",    "ball/boing-ball/boing-ball" },
+     { &CONFIG_WIIMOTE_ADDR, "wiimote_addr", "" },
+     { &CONFIG_REPLAY_NAME,  "replay_name",  "%s-%l" },
+     { &CONFIG_LANGUAGE,     "language",     "" },
