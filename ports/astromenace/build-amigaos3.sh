@@ -59,6 +59,7 @@ done
 FT_INC=$(dirname "$FT_HEADER")
 
 python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
+python3 "$HERE/patch_amiga_random.py" "$SRC"
 
 rm -rf "$OUT"
 mkdir -p "$OUT"
