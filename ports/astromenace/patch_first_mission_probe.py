@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Add a diagnostic-only first-mission gate to AstroMenace on AmigaOS.
 
-When PROGDIR:AUTOTEST_FIRST_MISSION exists, the target dismisses the first-run
+When PROGDIR:AUTOTEST_FIRST_MISSION exists, the target clears the first-run
 language requestor, presents one real main-menu frame, requests the normal
 SWITCH_FROM_MENU_TO_GAME command, runs the ordinary InitGame path, draws
 repeated game frames, captures a later mission frame, and leaves guest-owned
@@ -53,9 +53,9 @@ static bool AMFirstMissionRequested()
         !MissionAutotestPrepared &&
         AMFirstMissionRequested()) {
         // On a fresh installation AstroMenace opens the language requestor
-        // before entering Loop(). Dismiss it only for the sentinel-driven CI
-        // path so the evidence shows the actual menu and mission beneath it.
-        CloseDialog();
+        // before entering Loop(). Reset dialog state only for the sentinel-
+        // driven CI path so evidence shows the actual menu and mission.
+        InitDialogBoxes();
         AMFirstFrameStage("PROGDIR:stage-autotest-dialog-closed");
         MissionAutotestPrepared = true;
     }
