@@ -24,7 +24,7 @@ from pathlib import Path
 import sys
 p=Path(sys.argv[1]); s=p.read_text()
 s=s.replace('SYSTEM_HOST_CFLAGS="--sysroot=$AROS_SDK -m68040 -I$AROS_SDK/include -I$AROS_SDK/include/SDL2"',
-'''SYSTEM_HOST_CFLAGS="-noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns -pthread -I$AROS_SDK/include -I$AROS_SDK/include/SDL2 -I$UQM_DEPS/include"''')
+'''SYSTEM_HOST_CFLAGS="-noixemul -m68040 -m68881 -pthread -I$AROS_SDK/include -I$AROS_SDK/include/SDL2 -I$UQM_DEPS/include"''')
 s=s.replace('SYSTEM_HOST_LDFLAGS="--sysroot=$AROS_SDK -m68040"',
 '''SYSTEM_HOST_LDFLAGS="-noixemul -m68040 -m68881 -pthread -L$AROS_SDK/lib -L$UQM_DEPS/lib"''')
 s=s.replace('LIB_SDL2_CFLAGS="-I$AROS_SDK/include/SDL2"',
@@ -193,8 +193,8 @@ cp "$BUILD/config.state" "$BUILD/out/config.state"
  PATH="$BUILD/tools:$PATH" \
  BUILD_HOST=AROS BUILD_HOST_ENDIAN=big AROS_SDK="$SDK" UQM_DEPS="$DEPS" \
  BUILD_WORK="$BUILD/out" \
- CFLAGS="-noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns -pthread -I$SC2/src/regex -I$SDK/include -I$DEPS/include" \
- CXXFLAGS="-noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns -pthread -I$SC2/src/regex -I$SDK/include -I$DEPS/include" \
+ CFLAGS="-noixemul -m68040 -m68881 -pthread -I$SC2/src/regex -I$SDK/include -I$DEPS/include" \
+ CXXFLAGS="-noixemul -m68040 -m68881 -pthread -I$SC2/src/regex -I$SDK/include -I$DEPS/include" \
  LDFLAGS="-noixemul -m68040 -m68881 -pthread -L$SDK/lib -L$DEPS/lib" \
  /bin/sh build.sh uqm </dev/null
 )

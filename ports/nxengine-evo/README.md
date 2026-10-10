@@ -14,15 +14,13 @@
 - observed size: 17,390,596 bytes
 - SHA-256: `3f36ae8bcf0efb89db9317e2891cd8f6da3b0ef0aa7acf4f5178b789202e0abe`
 
-## Successful portability bridge
+## AROS portability
 
-Upstream `ResourceManager.cpp` currently recognises a set of Unix-like platforms but not AROS. The compile-success probe used:
+Upstream `ResourceManager.cpp` recognises several Unix-like targets but not AROS. The preserved compile-success probe previously forced `-D__unix__`.
 
-    -D__unix__
+The AmigaChrome lane now carries `patches/0001-aros-resource-manager.patch`, which recognises `__AROS__` explicitly for the existing stat-based resource lookup path. The build script applies and verifies that patch and no longer impersonates a Unix target.
 
-CMake then produced the full m68k AROS executable.
-
-This flag is intentionally documented as a bridge, not the final solution. The proper port should recognise `__AROS__` directly and audit any remaining Unix assumptions.
+The remaining gate is a clean rebuild with the current AROS GCC16 toolchain followed by AC090 runtime qualification.
 
 ## Data
 
