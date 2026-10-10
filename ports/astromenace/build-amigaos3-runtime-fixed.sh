@@ -15,10 +15,13 @@ python3 "$HERE/patch_joystick_runtime.py" "$SRC"
 python3 "$HERE/patch_amiga_random.py" "$SRC"
 
 # Runtime probes are deliberately absent from release packages. CI enables
-# them explicitly to leave stage files and capture menu/mission framebuffers.
+# them explicitly to leave stage files, capture menu/mission framebuffers,
+# prove mixer playback and exercise the SDL keyboard path plus clean shutdown.
 if [ "$DIAGNOSTICS" = "1" ]; then
     python3 "$HERE/patch_first_frame_probe.py" "$SRC"
     python3 "$HERE/patch_first_mission_probe.py" "$SRC"
+    python3 "$HERE/patch_audio_runtime_probe.py" "$SRC"
+    python3 "$HERE/patch_input_exit_probe.py" "$SRC"
 else
     python3 "$HERE/patch_release_cleanup.py" "$SRC"
 fi
@@ -96,5 +99,8 @@ Data format: VFS v1.6 build 250208, explicit little-endian readers
 Diagnostics included: $DIAGNOSTICS
 EOF
 
-sha256sum "$BIN" "$VFS" > "$PKG/SHA256SUMS"
+(
+    cd "$PKG"
+    sha256sum AstroMenace gamedata.vfs > SHA256SUMS
+)
 sha256sum "$VFS"
