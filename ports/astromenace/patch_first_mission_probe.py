@@ -4,7 +4,7 @@
 When PROGDIR:AUTOTEST_FIRST_MISSION exists, the target presents one real main
 menu frame, requests the normal SWITCH_FROM_MENU_TO_GAME command, runs the
 ordinary InitGame path, draws repeated game frames, captures a later mission
-frame, and leaves guest-owned stage files.  Without the sentinel file the game
+frame, and leaves guest-owned stage files. Without the sentinel file the game
 behaves normally.
 """
 
@@ -88,13 +88,10 @@ static bool AMFirstMissionRequested()
         !MissionFrameCaptureAttempted) {
         MissionFrameCaptureAttempted = true;
         AMFirstFrameStage("PROGDIR:stage-first-game-frame-ready");
-        if (vw_Screenshot(GameConfig().Width,
-                          GameConfig().Height,
-                          "PROGDIR:AstroMenace-first-mission.bmp") == 0) {
-            AMFirstFrameStage("PROGDIR:stage-first-game-frame-captured");
-        } else {
-            AMFirstFrameStage("PROGDIR:stage-first-game-frame-capture-failed");
-        }
+        vw_ArmDiagnosticFrameCapture(
+            "PROGDIR:AstroMenace-first-mission.bmp",
+            "PROGDIR:stage-first-game-frame-captured",
+            "PROGDIR:stage-first-game-frame-capture-failed");
     }
     if (FirstFrameProbe) {
 '''
