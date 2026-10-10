@@ -5,6 +5,8 @@ AstroMenace normally renders into an FBO and resolves it to the window inside
 vw_EndRendering(). Reading pixels earlier captures the stale/default surface,
 not the frame that is about to be presented. Arm a diagnostic capture from the
 main loop, then perform it after the FBO resolve and before SDL_GL_SwapWindow.
+The menu capture waits for its normal fade-in so the runtime gate proves a
+fully visible frame rather than accepting the intentionally dark first tick.
 """
 
 from pathlib import Path
@@ -61,6 +63,7 @@ static void AMFirstFrameStage(const char *Name)
 #ifdef AMIGACHROME
     static bool FirstFrameProbe = true;
     if (FirstFrameProbe) AMFirstFrameStage("PROGDIR:stage-loop-enter");
+    static bool FirstFrameCaptureArmed = false;
 #endif
     CursorUpdate();
 #ifdef AMIGACHROME
@@ -114,16 +117,28 @@ static void AMFirstFrameStage(const char *Name)
     vw_End2DMode();
 #ifdef AMIGACHROME
     if (FirstFrameProbe) {
-        AMFirstFrameStage("PROGDIR:stage-2d-ended");
-        AMFirstFrameStage("PROGDIR:stage-frame-ready-for-readback");
-        vw_ArmDiagnosticFrameCapture(
-            "PROGDIR:AstroMenace-first-frame.bmp",
-            "PROGDIR:stage-first-frame-captured",
-            "PROGDIR:stage-first-frame-capture-failed");
+        // InitMenu deliberately starts from a black fade. Wait until the menu
+        // content has reached full opacity before arming the one-shot capture.
+        if (!FirstFrameCaptureArmed &&
+            MenuStatus == eMenuStatus::MAIN_MENU &&
+            MenuContentTransp >= 0.99f) {
+            AMFirstFrameStage("PROGDIR:stage-2d-ended");
+            AMFirstFrameStage("PROGDIR:stage-frame-ready-for-readback");
+            vw_ArmDiagnosticFrameCapture(
+                "PROGDIR:AstroMenace-first-frame.bmp",
+                "PROGDIR:stage-first-frame-captured",
+                "PROGDIR:stage-first-frame-capture-failed");
+            FirstFrameCaptureArmed = true;
+        }
     }
 #endif
     vw_EndRendering();
 #ifdef AMIGACHROME
+    // Keep advancing the real menu fade, but do not proceed to the mission
+    // request until a fully visible menu frame has actually been presented.
+    if (FirstFrameProbe && !FirstFrameCaptureArmed) {
+        return;
+    }
     if (FirstFrameProbe) {
         AMFirstFrameStage("PROGDIR:stage-first-frame-presented");
         FirstFrameProbe = false;
