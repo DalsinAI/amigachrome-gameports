@@ -43,7 +43,9 @@ python3 "$HERE/patch_vw3d_little_endian.py" "$SRC"
 python3 "$HERE/patch_vw2d_little_endian.py" "$SRC"
 python3 "$HERE/patch_tga_little_endian.py" "$SRC"
 
-# Keep the regular builder as the compiler/library/package authority.
+# Keep the regular builder as the compiler/library/package authority, but tell
+# it not to overwrite the richer source tree prepared above.
+ASTROMENACE_SOURCE_PREPATCHED=1 \
 sh "$HERE/build-amigaos3.sh" "$SRC" "$OUT"
 
 PKG="$OUT/package/AstroMenace"
