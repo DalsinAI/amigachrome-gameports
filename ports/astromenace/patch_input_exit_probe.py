@@ -37,6 +37,26 @@ static bool AMFirstMissionStageExists(const char *Name)
         raise RuntimeError("AstroMenace mission sentinel helper marker missing")
     loop_text = loop_text.replace(helper_anchor, helper_insert, 1)
 
+    declaration_anchor = '''/*
+ * Main loop.
+ */
+void Loop_Proc()
+'''
+    declaration_insert = '''#ifdef AMIGACHROME
+// Defined in main.cpp; the runtime probe uses the game's ordinary loop exit.
+void QuitFromMainLoop();
+#endif
+
+/*
+ * Main loop.
+ */
+void Loop_Proc()
+'''
+    if "void QuitFromMainLoop();" not in loop_text:
+        if declaration_anchor not in loop_text:
+            raise RuntimeError("AstroMenace main-loop declaration marker missing")
+        loop_text = loop_text.replace(declaration_anchor, declaration_insert, 1)
+
     locals_anchor = '''    static bool MissionFrameCaptureAttempted = false;
     static bool MissionFramePresented = false;
 '''
