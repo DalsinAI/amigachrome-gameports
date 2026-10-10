@@ -12,9 +12,9 @@ concurrency:
 
 jobs:
   build:
-    name: Build AstroMenace diagnostic
+    name: Build and run AstroMenace diagnostic
     runs-on: self-hosted
-    timeout-minutes: 180
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -36,6 +36,17 @@ jobs:
             build/game-ports/sources/astromenace \
             build/os3/astromenace-runtime-diagnostic
 
+      - name: Prove Amiga diagnostic code is present
+        shell: bash
+        run: |
+          BIN=build/os3/astromenace-runtime-diagnostic/astromenace
+          OLD=debd8bed9823c7c1792f4f58467171ea0df8881045a8c122d56639361f6b2c1f
+          NEW=$(sha256sum "$BIN" | awk '{print $1}')
+          test "$NEW" != "$OLD"
+          strings "$BIN" | grep -F 'AMDBG: '
+          strings "$BIN" | grep -F 'random engine reseeded'
+          printf 'ASTROMENACE_DIAGNOSTIC_BINARY=%s\n' "$NEW"
+
       - name: Package diagnostic replacement
         shell: bash
         run: |
@@ -44,23 +55,85 @@ jobs:
           cd ..
           sha256sum AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip > SHA256SUMS
 
-      - name: Deploy to Instance-32 DH1
+      - name: Run in disposable Instance-32 lab
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/astromenace-runtime-labs"
+          LAB="$LAB_ROOT/Instance-Astro-${GITHUB_RUN_ID}"
+          EVIDENCE="$PWD/build/os3/astromenace-runtime-diagnostic/runtime-evidence"
+          LAB_TOOL="$APP/scripts/lab_instance.py"
+
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
+
+          cleanup() {
+            python3 "$LAB_TOOL" stop "$LAB" || true
+          }
+          trap cleanup EXIT
+
+          TARGET="$LAB/devices/harddisks/DH1/AstroMenace-DIAG"
+          rm -rf "$TARGET"
+          mkdir -p "$TARGET"
+          cp -a build/os3/astromenace-runtime-diagnostic/package/AstroMenace/. "$TARGET/"
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AstroMenace-AutoTest"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          mkdir -p "$(dirname "$TEST_SCRIPT")"
+          cat > "$TEST_SCRIPT" <<'AMIGA'
+          FailAt 21
+          Wait 5
+          Stack 1000000
+          CD DH1:AstroMenace-DIAG
+          Echo "ASTROTEST: starting" >AstroMenace-run.log
+          AstroMenace >>AstroMenace-run.log
+          Echo "ASTROTEST: returned RC $RC" >>AstroMenace-run.log
+          AMIGA
+          touch "$USER_STARTUP"
+          printf '\nRun >NIL: <NIL: Execute S:AstroMenace-AutoTest\n' >> "$USER_STARTUP"
+
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace corrected runtime ${GITHUB_RUN_ID}"
+          printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
+
+          # Give first launch time to create/open its VFS and reach the menu.
+          sleep 240
+
+          cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
+          find "$TARGET" -maxdepth 2 -type f -printf '%P %s bytes\n' | sort > "$EVIDENCE/package-files.txt"
+
+          cleanup
+          trap - EXIT
+
+          echo '--- AstroMenace guest output ---'
+          if test -s "$EVIDENCE/AstroMenace-run.log"; then
+            cat "$EVIDENCE/AstroMenace-run.log"
+          else
+            echo 'No guest output file was produced.'
+          fi
+
+          # The corrected target must at least execute main and print its first marker.
+          grep -F 'AMDBG: entered main' "$EVIDENCE/AstroMenace-run.log"
+
+      - name: Deploy corrected build to Instance-32 DH1
         shell: bash
         run: |
           TARGET="$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/AstroMenace-DIAG"
-          test -d "$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+          python3 "$HOME/AmigaChrome/scripts/lab_instance.py" guard-write "$TARGET"
           rm -rf "$TARGET"
           mkdir -p "$TARGET"
           cp -a build/os3/astromenace-runtime-diagnostic/package/AstroMenace/. "$TARGET/"
           printf 'AstroMenace diagnostic deployed to %s\n' "$TARGET"
-          find "$TARGET" -maxdepth 2 -type f | sort | head -50
 
-      - name: Upload diagnostic
+      - name: Upload diagnostic and runtime evidence
         uses: actions/upload-artifact@v4
         with:
           name: AstroMenace-AC090-RUNTIME-DIAGNOSTIC-${{ github.run_id }}
           path: |
             build/os3/astromenace-runtime-diagnostic/AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip
             build/os3/astromenace-runtime-diagnostic/SHA256SUMS
+            build/os3/astromenace-runtime-diagnostic/runtime-evidence/
           if-no-files-found: error
           retention-days: 30
