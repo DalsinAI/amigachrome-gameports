@@ -27,7 +27,7 @@ jobs:
           python3 scripts/game_port_prepare.py prepare --root "$PWD" --game astromenace --allow-network
           python3 scripts/game_port_prepare.py verify --root "$PWD" --game astromenace
 
-      - name: Build diagnostic binary
+      - name: Build corrected binary and VFS
         shell: bash
         run: |
           STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
@@ -36,18 +36,35 @@ jobs:
             build/game-ports/sources/astromenace \
             build/os3/astromenace-runtime-diagnostic
 
-      - name: Prove Amiga diagnostic code is present
+      - name: Verify corrected package
         shell: bash
         run: |
-          BIN=build/os3/astromenace-runtime-diagnostic/astromenace
+          set -euo pipefail
+          OUT=build/os3/astromenace-runtime-diagnostic
+          BIN="$OUT/astromenace"
+          VFS="$OUT/package/AstroMenace/gamedata.vfs"
           OLD=debd8bed9823c7c1792f4f58467171ea0df8881045a8c122d56639361f6b2c1f
           NEW=$(sha256sum "$BIN" | awk '{print $1}')
           test "$NEW" != "$OLD"
           strings "$BIN" | grep -F 'AMDBG: '
           strings "$BIN" | grep -F 'random engine reseeded'
+          test -s "$VFS"
+          python3 - "$VFS" <<'PY'
+          from pathlib import Path
+          import struct, sys
+          p = Path(sys.argv[1])
+          b = p.read_bytes()
+          sign, version, build, table = struct.unpack_from('<4s4sII', b, 0)
+          assert sign == b'VFS_' and version == b'v1.6'
+          assert build == 250208
+          assert 16 < table < len(b)
+          assert len(b) > 50_000_000
+          print(f'VERIFIED_VFS size={len(b)} build={build} table={table}')
+          PY
           printf 'ASTROMENACE_DIAGNOSTIC_BINARY=%s\n' "$NEW"
+          sha256sum "$BIN" "$VFS"
 
-      - name: Package diagnostic replacement
+      - name: Package corrected replacement
         shell: bash
         run: |
           cd build/os3/astromenace-runtime-diagnostic/package
@@ -55,7 +72,7 @@ jobs:
           cd ..
           sha256sum AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip > SHA256SUMS
 
-      - name: Run in disposable Instance-32 lab
+      - name: Run to the main menu in disposable Instance-32 lab
         shell: bash
         run: |
           set -euo pipefail
@@ -93,41 +110,35 @@ jobs:
           touch "$USER_STARTUP"
           printf '\nRun >NIL: <NIL: Execute S:AstroMenace-AutoTest\n' >> "$USER_STARTUP"
 
-          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace corrected runtime ${GITHUB_RUN_ID}"
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace main-menu qualification ${GITHUB_RUN_ID}"
           printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
 
-          # Give first launch time to create/open its VFS and reach the menu.
+          # With gamedata.vfs prebuilt, this is startup/rendering time rather
+          # than a several-minute archive conversion allowance.
           sleep 240
 
           cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
           find "$TARGET" -maxdepth 2 -type f -printf '%P %s bytes\n' | sort > "$EVIDENCE/package-files.txt"
+          sha256sum "$TARGET/AstroMenace" "$TARGET/gamedata.vfs" > "$EVIDENCE/runtime-package-sha256.txt"
 
           cleanup
           trap - EXIT
 
           echo '--- AstroMenace guest output ---'
-          if test -s "$EVIDENCE/AstroMenace-run.log"; then
-            cat "$EVIDENCE/AstroMenace-run.log"
-          else
-            echo 'No guest output file was produced.'
-          fi
+          test -s "$EVIDENCE/AstroMenace-run.log"
+          cat "$EVIDENCE/AstroMenace-run.log"
 
-          # The corrected target must at least execute main and print its first marker.
-          grep -F 'AMDBG: entered main' "$EVIDENCE/AstroMenace-run.log"
+          # Release gate for this fix: the real AC090 instance must open the
+          # VFS, create its window/GL state, load assets and reach the menu.
+          grep -F 'AMDBG: after VFS open' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'AMDBG: window and GL context ready' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'AMDBG: after asset load' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'AMDBG: main menu ready' "$EVIDENCE/AstroMenace-run.log"
 
-      - name: Deploy corrected build to Instance-32 DH1
-        shell: bash
-        run: |
-          TARGET="$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/AstroMenace-DIAG"
-          python3 "$HOME/AmigaChrome/scripts/lab_instance.py" guard-write "$TARGET"
-          rm -rf "$TARGET"
-          mkdir -p "$TARGET"
-          cp -a build/os3/astromenace-runtime-diagnostic/package/AstroMenace/. "$TARGET/"
-          printf 'AstroMenace diagnostic deployed to %s\n' "$TARGET"
-
-      - name: Upload diagnostic and runtime evidence
+      - name: Upload corrected package and runtime evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: AstroMenace-AC090-RUNTIME-DIAGNOSTIC-${{ github.run_id }}
@@ -135,5 +146,5 @@ jobs:
             build/os3/astromenace-runtime-diagnostic/AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip
             build/os3/astromenace-runtime-diagnostic/SHA256SUMS
             build/os3/astromenace-runtime-diagnostic/runtime-evidence/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
