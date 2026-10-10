@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Add a diagnostic-only first-mission gate to AstroMenace on AmigaOS.
+"""Add a diagnostic-only player journey through AstroMenace on AmigaOS.
 
 When PROGDIR:AUTOTEST_FIRST_MISSION exists, the target clears the first-run
-language requestor, presents one real main-menu frame, requests the normal
-SWITCH_FROM_MENU_TO_GAME command, runs the ordinary InitGame path, draws
-repeated game frames, captures a later mission frame, and leaves guest-owned
-stage files. Without the sentinel file the game behaves normally.
+language requestor, presents one real main-menu frame, prepares a deterministic
+pilot, follows the normal mission-menu transition, creates and presents the
+shipyard workshop, captures that configured-ship frame, follows the workshop's
+ordinary fade-to-game path, draws repeated mission frames, captures a playable
+mission frame, and leaves guest-owned stage files. Without the sentinel file
+the game behaves normally.
 """
 
 from pathlib import Path
@@ -46,6 +48,10 @@ static bool AMFirstMissionRequested()
     locals_insert = '''    static bool FirstFrameProbe = true;
     static bool MissionAutotestPrepared = false;
     static bool MissionAutotestRequested = false;
+    static bool WorkshopAutotestRequested = false;
+    static bool WorkshopFrameCaptureAttempted = false;
+    static bool WorkshopFramePresented = false;
+    static bool GameAutotestRequested = false;
     static unsigned MissionFrameCount = 0;
     static bool MissionFrameCaptureAttempted = false;
     static bool MissionFramePresented = false;
@@ -54,9 +60,24 @@ static bool AMFirstMissionRequested()
         AMFirstMissionRequested()) {
         // On a fresh installation AstroMenace opens the language requestor
         // before entering Loop(). Reset dialog state only for the sentinel-
-        // driven CI path so evidence shows the actual menu and mission.
+        // driven CI path so evidence shows the actual menu and player journey.
         InitDialogBoxes();
+
+        // Build the same valid default pilot that a first-time player receives,
+        // without driving text entry in the automated guest. Mission and
+        // workshop code can then use the ordinary profile-backed data paths.
+        CurrentProfile = 0;
+        ChangeGameConfig().LastProfile = CurrentProfile;
+        ChangeGameConfig().Profile[CurrentProfile].Used = true;
+        CurrentMission = 0;
+        ChangeGameConfig().Profile[CurrentProfile].LastMission = CurrentMission;
+        ChangeGameConfig().Profile[CurrentProfile].OpenLevelNum = 0;
+        for (unsigned Hint = 0; Hint < config::MAX_HINTS; ++Hint) {
+            ChangeGameConfig().NeedShowHint[Hint] = false;
+        }
+
         AMFirstFrameStage("PROGDIR:stage-autotest-dialog-closed");
+        AMFirstFrameStage("PROGDIR:stage-autotest-profile-ready");
         MissionAutotestPrepared = true;
     }
     if (FirstFrameProbe) AMFirstFrameStage("PROGDIR:stage-loop-enter");
@@ -94,6 +115,16 @@ static bool AMFirstMissionRequested()
 '''
     end2d_insert = '''    vw_End2DMode();
 #ifdef AMIGACHROME
+    if (MenuStatus == eMenuStatus::WORKSHOP &&
+        MenuContentTransp >= 0.99f &&
+        !WorkshopFrameCaptureAttempted) {
+        WorkshopFrameCaptureAttempted = true;
+        AMFirstFrameStage("PROGDIR:stage-workshop-ready");
+        vw_ArmDiagnosticFrameCapture(
+            "PROGDIR:AstroMenace-workshop.bmp",
+            "PROGDIR:stage-workshop-frame-captured",
+            "PROGDIR:stage-workshop-frame-capture-failed");
+    }
     if (MenuStatus == eMenuStatus::GAME &&
         MissionFrameCount >= 20 &&
         !MissionFrameCaptureAttempted) {
@@ -114,14 +145,6 @@ static bool AMFirstMissionRequested()
         AMFirstFrameStage("PROGDIR:stage-first-frame-presented");
         FirstFrameProbe = false;
     }
-#endif
-
-    if (vw_GetKeyStatus(SDLK_ESCAPE)) {
-'''
-    presented_insert = '''    if (FirstFrameProbe) {
-        AMFirstFrameStage("PROGDIR:stage-first-frame-presented");
-        FirstFrameProbe = false;
-    }
     if (MenuStatus == eMenuStatus::GAME &&
         MissionFrameCaptureAttempted &&
         !MissionFramePresented) {
@@ -134,6 +157,56 @@ static bool AMFirstMissionRequested()
         AMFirstMissionRequested()) {
         AMFirstFrameStage("PROGDIR:stage-first-mission-requested");
         cCommand::GetInstance().Set(eCommand::SWITCH_FROM_MENU_TO_GAME);
+        MissionAutotestRequested = true;
+    }
+#endif
+
+    if (vw_GetKeyStatus(SDLK_ESCAPE)) {
+'''
+    presented_insert = '''    if (FirstFrameProbe) {
+        AMFirstFrameStage("PROGDIR:stage-first-frame-presented");
+        FirstFrameProbe = false;
+    }
+    if (MenuStatus == eMenuStatus::WORKSHOP &&
+        WorkshopFrameCaptureAttempted &&
+        !WorkshopFramePresented) {
+        AMFirstFrameStage("PROGDIR:stage-workshop-frame-presented");
+        WorkshopFramePresented = true;
+    }
+    if (WorkshopFramePresented && !GameAutotestRequested) {
+        // Follow the workshop START button's ordinary fade-to-game route.
+        // DrawMenu() will release workshop objects and enqueue the normal
+        // SWITCH_FROM_MENU_TO_GAME command after the black fade completes.
+        MenuContentTransp = 0.98f;
+        LastMenuOnOffUpdateTime = vw_GetTimeThread(0);
+        NeedOffMenu = true;
+        AMFirstFrameStage("PROGDIR:stage-workshop-start-requested");
+        GameAutotestRequested = true;
+    }
+    if (!WorkshopAutotestRequested &&
+        MissionAutotestRequested &&
+        MenuStatus == eMenuStatus::MISSION &&
+        MenuContentTransp >= 0.99f &&
+        AMFirstMissionRequested()) {
+        AMFirstFrameStage("PROGDIR:stage-mission-menu-ready");
+        CurrentWorkshop = 1;
+        WorkshopCreate();
+        cCommand::GetInstance().Set(eCommand::SWITCH_TO_WORKSHOP);
+        AMFirstFrameStage("PROGDIR:stage-workshop-requested");
+        WorkshopAutotestRequested = true;
+    }
+    if (MenuStatus == eMenuStatus::GAME &&
+        MissionFrameCaptureAttempted &&
+        !MissionFramePresented) {
+        AMFirstFrameStage("PROGDIR:stage-first-game-frame-presented");
+        MissionFramePresented = true;
+    }
+    if (!MissionAutotestRequested &&
+        !FirstFrameProbe &&
+        MenuStatus == eMenuStatus::MAIN_MENU &&
+        AMFirstMissionRequested()) {
+        AMFirstFrameStage("PROGDIR:stage-mission-menu-requested");
+        cCommand::GetInstance().Set(eCommand::SWITCH_TO_MISSION);
         MissionAutotestRequested = true;
     }
 #endif
@@ -215,4 +288,4 @@ static void AMCommandStage(const char *Name)
 
     command_cpp.write_text(command_text, encoding="utf-8")
 
-print("patched AstroMenace gated first-mission runtime probe")
+print("patched AstroMenace mission selection, workshop and first-game probe")
