@@ -50,7 +50,8 @@ jobs:
           strings "$BIN" | grep -F 'AMDBG: '
           strings "$BIN" | grep -F 'random engine reseeded'
           strings "$BIN" | grep -F 'stage-first-frame-captured'
-          strings "$BIN" | grep -F 'stage-first-frame-presented'
+          strings "$BIN" | grep -F 'stage-workshop-frame-captured'
+          strings "$BIN" | grep -F 'stage-workshop-frame-presented'
           strings "$BIN" | grep -F 'stage-first-game-frame-captured'
           strings "$BIN" | grep -F 'stage-first-game-frame-presented'
           strings "$BIN" | grep -F 'stage-audio-channel-active'
@@ -80,7 +81,7 @@ jobs:
           cd ..
           sha256sum AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip > SHA256SUMS
 
-      - name: Qualify menu mission audio input and clean exit
+      - name: Qualify menu mission workshop audio input and clean exit
         shell: bash
         run: |
           set -euo pipefail
@@ -119,7 +120,7 @@ jobs:
           touch "$USER_STARTUP"
           printf '\nRun >NIL: <NIL: Execute S:AstroMenace-AutoTest\n' >> "$USER_STARTUP"
 
-          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace full runtime qualification ${GITHUB_RUN_ID}"
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace full player-journey qualification ${GITHUB_RUN_ID}"
           printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
 
           reached=0
@@ -131,7 +132,7 @@ jobs:
             if test -f "$TARGET/stage-shutdown-complete" && \
                test -f "$TARGET/AstroMenace-run.log" && \
                grep -Fq 'ASTROTEST: returned RC 0' "$TARGET/AstroMenace-run.log"; then
-              echo "AstroMenace rendered the mission, processed input and exited cleanly after $((attempt * 5)) seconds."
+              echo "AstroMenace traversed mission selection and shipyard, rendered the mission, processed input and exited cleanly after $((attempt * 5)) seconds."
               clean_exit=1
               sleep 2
               break
@@ -147,6 +148,7 @@ jobs:
 
           cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$TARGET/AstroMenace-first-frame.bmp" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-workshop.bmp" "$EVIDENCE/" 2>/dev/null || true
           cp "$TARGET/AstroMenace-first-mission.bmp" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
@@ -164,17 +166,23 @@ jobs:
           find "$EVIDENCE" -maxdepth 1 -name 'stage-*' -printf '%f\n' | sort
           echo '--- AstroMenace captured framebuffers ---'
           file "$EVIDENCE/AstroMenace-first-frame.bmp"
+          file "$EVIDENCE/AstroMenace-workshop.bmp"
           file "$EVIDENCE/AstroMenace-first-mission.bmp"
           stat -c '%n %s bytes' \
             "$EVIDENCE/AstroMenace-first-frame.bmp" \
+            "$EVIDENCE/AstroMenace-workshop.bmp" \
             "$EVIDENCE/AstroMenace-first-mission.bmp"
           sha256sum \
             "$EVIDENCE/AstroMenace-first-frame.bmp" \
+            "$EVIDENCE/AstroMenace-workshop.bmp" \
             "$EVIDENCE/AstroMenace-first-mission.bmp"
 
           python3 scripts/validate_bmp_frame.py \
             "$EVIDENCE/AstroMenace-first-frame.bmp" \
             | tee "$EVIDENCE/menu-frame-validation.json"
+          python3 scripts/validate_bmp_frame.py \
+            "$EVIDENCE/AstroMenace-workshop.bmp" \
+            | tee "$EVIDENCE/workshop-frame-validation.json"
           python3 scripts/validate_bmp_frame.py \
             "$EVIDENCE/AstroMenace-first-mission.bmp" \
             | tee "$EVIDENCE/mission-frame-validation.json"
@@ -187,9 +195,16 @@ jobs:
           test -f "$EVIDENCE/stage-after-asset-load"
           test -f "$EVIDENCE/stage-main-menu-ready"
           test -f "$EVIDENCE/stage-autotest-dialog-closed"
+          test -f "$EVIDENCE/stage-autotest-profile-ready"
           test -f "$EVIDENCE/stage-first-frame-captured"
           test -f "$EVIDENCE/stage-first-frame-presented"
-          test -f "$EVIDENCE/stage-first-mission-requested"
+          test -f "$EVIDENCE/stage-mission-menu-requested"
+          test -f "$EVIDENCE/stage-mission-menu-ready"
+          test -f "$EVIDENCE/stage-workshop-requested"
+          test -f "$EVIDENCE/stage-workshop-ready"
+          test -f "$EVIDENCE/stage-workshop-frame-captured"
+          test -f "$EVIDENCE/stage-workshop-frame-presented"
+          test -f "$EVIDENCE/stage-workshop-start-requested"
           test -f "$EVIDENCE/stage-before-game-prepare"
           test -f "$EVIDENCE/stage-before-game-init"
           test -f "$EVIDENCE/stage-game-init-complete"
@@ -208,11 +223,17 @@ jobs:
           test -f "$EVIDENCE/stage-audio-shutdown"
           test -f "$EVIDENCE/stage-shutdown-complete"
           test -s "$EVIDENCE/AstroMenace-first-frame.bmp"
+          test -s "$EVIDENCE/AstroMenace-workshop.bmp"
           test -s "$EVIDENCE/AstroMenace-first-mission.bmp"
           test "$(stat -c %s "$EVIDENCE/AstroMenace-first-frame.bmp")" -gt 100000
+          test "$(stat -c %s "$EVIDENCE/AstroMenace-workshop.bmp")" -gt 100000
           test "$(stat -c %s "$EVIDENCE/AstroMenace-first-mission.bmp")" -gt 100000
-          test "$(sha256sum "$EVIDENCE/AstroMenace-first-frame.bmp" | awk '{print $1}')" != \
-               "$(sha256sum "$EVIDENCE/AstroMenace-first-mission.bmp" | awk '{print $1}')"
+          MENU_SHA=$(sha256sum "$EVIDENCE/AstroMenace-first-frame.bmp" | awk '{print $1}')
+          WORKSHOP_SHA=$(sha256sum "$EVIDENCE/AstroMenace-workshop.bmp" | awk '{print $1}')
+          MISSION_SHA=$(sha256sum "$EVIDENCE/AstroMenace-first-mission.bmp" | awk '{print $1}')
+          test "$MENU_SHA" != "$WORKSHOP_SHA"
+          test "$MENU_SHA" != "$MISSION_SHA"
+          test "$WORKSHOP_SHA" != "$MISSION_SHA"
           test "$reached" -eq 1
           test "$clean_exit" -eq 1
 
