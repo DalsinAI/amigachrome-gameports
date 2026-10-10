@@ -8,9 +8,10 @@ that first use can happen from a global constructor and terminate before
 main().  Use a safe non-zero seed on the Amiga target and reseed once SDL's
 timer subsystem is alive.
 
-The target also installs explicit new/terminate diagnostics and traces each
-texture preload with free/largest memory figures.  This keeps the next failure
-boundary visible even when the C++ runtime can only report "Program aborted".
+The target also installs explicit new/terminate diagnostics and small,
+constant-string asset milestones.  Do not format asset names after rendering
+callbacks: the earlier per-texture diagnostic became intrusive at the final
+callback and could itself keep the target inside formatting code.
 """
 
 from pathlib import Path
@@ -21,7 +22,7 @@ source = Path(sys.argv[1]).resolve()
 rand_cpp = source / "src" / "core" / "math" / "rand.cpp"
 math_h = source / "src" / "core" / "math" / "math.h"
 main_cpp = source / "src" / "main.cpp"
-texture_cpp = source / "src" / "assets" / "texture.cpp"
+loading_cpp = source / "src" / "assets" / "loading.cpp"
 
 rand_text = rand_cpp.read_text(encoding="utf-8")
 old_seed = "    static std::default_random_engine gen{std::random_device{}()};"
@@ -111,6 +112,16 @@ static void AMMemory(const char *Where)
            (ULONG)AvailMem(MEMF_LARGEST));
 }
 
+static void AMStageFile(const char *Name)
+{
+    BPTR File = Open((CONST_STRPTR)Name, MODE_NEWFILE);
+    if (File) {
+        static const char Ready[] = \"ready\\n\";
+        Write(File, Ready, sizeof(Ready) - 1);
+        Close(File);
+    }
+}
+
 static void AMOutOfMemory()
 {
     AMMemory(\"new_handler\");
@@ -145,73 +156,73 @@ int main(int argc, char *argv[])
         raise RuntimeError("AstroMenace main-entry diagnostic marker missing")
     main_text = main_text.replace(entry_anchor, entry_insert, 1)
 
+asset_anchor = '    AMDiag("after asset load");\n'
+asset_insert = '''    AMDiag("after asset load");
+#ifdef AMIGACHROME
+    AMStageFile("PROGDIR:stage-after-asset-load");
+#endif
+'''
+if 'stage-after-asset-load' not in main_text:
+    if asset_anchor not in main_text:
+        raise RuntimeError("AstroMenace after-assets diagnostic marker missing")
+    main_text = main_text.replace(asset_anchor, asset_insert, 1)
+
+menu_anchor = '    AMDiag("main menu ready");\n'
+menu_insert = '''    AMDiag("main menu ready");
+#ifdef AMIGACHROME
+    AMStageFile("PROGDIR:stage-main-menu-ready");
+#endif
+'''
+if 'stage-main-menu-ready' not in main_text:
+    if menu_anchor not in main_text:
+        raise RuntimeError("AstroMenace main-menu diagnostic marker missing")
+    main_text = main_text.replace(menu_anchor, menu_insert, 1)
+
 main_cpp.write_text(main_text, encoding="utf-8")
 
-texture_text = texture_cpp.read_text(encoding="utf-8")
-if "AMTEX: begin" not in texture_text:
-    include_anchor = '#include "../config/config.h"\n'
-    include_insert = '''#include "../config/config.h"
+loading_text = loading_cpp.read_text(encoding="utf-8")
+if "AMLOAD:" not in loading_text:
+    include_anchor = '#include "SDL2/SDL.h"\n'
+    include_insert = '''#include "SDL2/SDL.h"
 #ifdef AMIGACHROME
 #include <proto/dos.h>
-#include <proto/exec.h>
-#include <exec/memory.h>
-#endif
-'''
-    if include_anchor not in texture_text:
-        raise RuntimeError("AstroMenace texture include marker missing")
-    texture_text = texture_text.replace(include_anchor, include_insert, 1)
-
-    old_loop = '''    for (auto &tmpAsset : TextureMap) {
-        vw_SetTextureProp(sTextureFilter{tmpAsset.second.TextFilter},
-                          tmpAsset.second.NeedAnisotropy ? GameConfig().AnisotropyLevel : 1,
-                          sTextureWrap{tmpAsset.second.TextWrap}, tmpAsset.second.Alpha,
-                          tmpAsset.second.AlphaMode, tmpAsset.second.MipMap);
-        tmpAsset.second.PreloadedTexture = vw_LoadTexture(tmpAsset.second.TextureFile);
-        function(TextureLoadValue);
+#include <dos/dos.h>
+static void AMAssetDiag(const char *Message)
+{
+    BPTR Out = Output();
+    if (Out) {
+        FPuts(Out, (CONST_STRPTR)"AMLOAD: ");
+        FPuts(Out, (CONST_STRPTR)Message);
+        FPuts(Out, (CONST_STRPTR)"\\n");
     }
+}
+#else
+static void AMAssetDiag(const char *) {}
+#endif
 '''
-    new_loop = '''#ifdef AMIGACHROME
-    ULONG AmigaTextureIndex = 0;
-#endif
-    for (auto &tmpAsset : TextureMap) {
-#ifdef AMIGACHROME
-        ++AmigaTextureIndex;
-        Printf((CONST_STRPTR)"AMTEX: begin %lu/%lu %s free=%lu largest=%lu\\n",
-               AmigaTextureIndex,
-               (ULONG)TextureMap.size(),
-               tmpAsset.second.TextureFile.c_str(),
-               (ULONG)AvailMem(MEMF_ANY),
-               (ULONG)AvailMem(MEMF_LARGEST));
-#endif
-        vw_SetTextureProp(sTextureFilter{tmpAsset.second.TextFilter},
-                          tmpAsset.second.NeedAnisotropy ? GameConfig().AnisotropyLevel : 1,
-                          sTextureWrap{tmpAsset.second.TextWrap}, tmpAsset.second.Alpha,
-                          tmpAsset.second.AlphaMode, tmpAsset.second.MipMap);
-        tmpAsset.second.PreloadedTexture = vw_LoadTexture(tmpAsset.second.TextureFile);
-#ifdef AMIGACHROME
-        Printf((CONST_STRPTR)"AMTEX: loaded %lu/%lu %s id=%lu free=%lu largest=%lu\\n",
-               AmigaTextureIndex,
-               (ULONG)TextureMap.size(),
-               tmpAsset.second.TextureFile.c_str(),
-               (ULONG)tmpAsset.second.PreloadedTexture,
-               (ULONG)AvailMem(MEMF_ANY),
-               (ULONG)AvailMem(MEMF_LARGEST));
-#endif
-        function(TextureLoadValue);
-#ifdef AMIGACHROME
-        Printf((CONST_STRPTR)"AMTEX: done %lu/%lu %s free=%lu largest=%lu\\n",
-               AmigaTextureIndex,
-               (ULONG)TextureMap.size(),
-               tmpAsset.second.TextureFile.c_str(),
-               (ULONG)AvailMem(MEMF_ANY),
-               (ULONG)AvailMem(MEMF_LARGEST));
-#endif
-    }
-'''
-    if old_loop not in texture_text:
-        raise RuntimeError("AstroMenace texture preload loop marker missing")
-    texture_text = texture_text.replace(old_loop, new_loop, 1)
+    if include_anchor not in loading_text:
+        raise RuntimeError("AstroMenace loading include marker missing")
+    loading_text = loading_text.replace(include_anchor, include_insert, 1)
 
-texture_cpp.write_text(texture_text, encoding="utf-8")
+    phase_replacements = [
+        ('    ForEachAudioAssetLoad(UpdateLoadStatus);\n',
+         '    AMAssetDiag("before audio assets");\n    ForEachAudioAssetLoad(UpdateLoadStatus);\n    AMAssetDiag("after audio assets");\n'),
+        ('    ForEachModel3DAssetLoad(UpdateLoadStatus);\n',
+         '    AMAssetDiag("before model assets");\n    ForEachModel3DAssetLoad(UpdateLoadStatus);\n    AMAssetDiag("after model assets");\n'),
+        ('    ForEachTextureAssetLoad(UpdateLoadStatus);\n',
+         '    AMAssetDiag("before texture assets");\n    ForEachTextureAssetLoad(UpdateLoadStatus);\n    AMAssetDiag("after texture assets");\n'),
+        ('    vw_ReleaseTexture(ProgressBar);\n',
+         '    AMAssetDiag("before progress texture release");\n    vw_ReleaseTexture(ProgressBar);\n    AMAssetDiag("after progress bar release");\n'),
+        ('    vw_ReleaseTexture(ProgressBarBorder);\n',
+         '    vw_ReleaseTexture(ProgressBarBorder);\n    AMAssetDiag("after progress border release");\n'),
+        ('    vw_ReleaseTexture(Background);\n',
+         '    vw_ReleaseTexture(Background);\n    AMAssetDiag("asset loader returning");\n'),
+    ]
+    for old, new in phase_replacements:
+        if old not in loading_text:
+            raise RuntimeError("AstroMenace loading phase marker missing: " + old.strip())
+        loading_text = loading_text.replace(old, new, 1)
 
-print("patched AstroMenace Amiga random startup and texture/memory diagnostics")
+loading_cpp.write_text(loading_text, encoding="utf-8")
+
+print("patched AstroMenace Amiga random startup and safe asset milestones")
