@@ -5,7 +5,22 @@ on:
     branches:
       - fix/astromenace-runtime-diagnostics-20261009
     paths:
-      - ports/astromenace/**
+      - ports/astromenace/GL/glu.h
+      - ports/astromenace/audio_amigachrome.cpp
+      - ports/astromenace/build-amigaos3-runtime-fixed.sh
+      - ports/astromenace/build-amigaos3.sh
+      - ports/astromenace/build_gamedata_vfs.py
+      - ports/astromenace/glu_amigachrome.cpp
+      - ports/astromenace/patch_amiga_compile_define.py
+      - ports/astromenace/patch_amiga_random.py
+      - ports/astromenace/patch_amigaos3.py
+      - ports/astromenace/patch_joystick_runtime.py
+      - ports/astromenace/patch_release_cleanup.py
+      - ports/astromenace/patch_screenshot_rgba.py
+      - ports/astromenace/patch_tga_little_endian.py
+      - ports/astromenace/patch_vfs_little_endian.py
+      - ports/astromenace/patch_vw2d_little_endian.py
+      - ports/astromenace/patch_vw3d_little_endian.py
       - scripts/build_astromenace_release.sh
       - scripts/game_port_prepare.py
       - toolchain/amigaos3-opengpu.cmake
