@@ -1,5 +1,7 @@
 # Game Port Candidate Catalogue
 
+> **Unified priority backlog:** all active, planned, candidate and stretch ports now live in [PORT_BACKLOG.md](PORT_BACKLOG.md). Use that single list for priority discussions. This catalogue remains the supporting candidate research and historical screening detail.
+
 Initial screening source: [bobeff/open-source-games](https://github.com/bobeff/open-source-games).
 
 This is a **candidate list**, not a build claim. Projects move into `gameports/catalog.json`

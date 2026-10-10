@@ -182,6 +182,17 @@
         "submodules": false
       },
       "contentPolicy": "Preserve upstream code and mixed asset licensing. Review bundled data, fonts, music, sounds and translations before creating a public AmigaChrome release archive."
+    },
+    "astromenace": {
+      "order": 17,
+      "title": "AstroMenace",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/viewizard/astromenace.git",
+        "commit": "bbdb3ac5af2774c92b85c4d9b2a238f606911e66",
+        "submodules": false
+      },
+      "contentPolicy": "Source code is GPL-3.0-or-later. Preserve upstream artwork/font licences and notices; review the generated gamedata.vfs payload and bundled asset licences before public packaging."
     }
   }
 }
