@@ -4,6 +4,8 @@
 Startup console diagnostics remain useful in a field build, but release users
 must not receive CI stage files or asset-loader trace spam beside the game.
 The runtime qualification build skips this cleanup and retains those markers.
+Source-only comments preserve idempotence when the base builder reapplies its
+normal integration patches; comments do not enter the release executable.
 """
 
 from pathlib import Path
@@ -36,7 +38,18 @@ static void AMStageFile(const char *Name)
 }
 '''
 main_text = main_text.replace(stage_helper, "")
-if "stage-after-asset-load" in main_text or "stage-main-menu-ready" in main_text:
+
+release_marker = (
+    "// Release cleanup markers only: stage-after-asset-load "
+    "stage-main-menu-ready\n"
+)
+if release_marker not in main_text:
+    anchor = "int main(int argc, char *argv[])\n{\n"
+    if anchor not in main_text:
+        raise RuntimeError("AstroMenace release main marker missing")
+    main_text = main_text.replace(anchor, release_marker + anchor, 1)
+
+if "AMStageFile(" in main_text:
     raise RuntimeError("AstroMenace release stage-file cleanup was incomplete")
 main_cpp.write_text(main_text, encoding="utf-8")
 
@@ -59,7 +72,11 @@ static void AMAssetDiag(const char *) {}
 #endif
 '''
 if helper in loading_text:
-    loading_text = loading_text.replace(helper, '#include "SDL2/SDL.h"\n', 1)
+    loading_text = loading_text.replace(
+        helper,
+        '#include "SDL2/SDL.h"\n// Release cleanup marker only: AMLOAD:\n',
+        1,
+    )
 
 for message in (
     "before audio assets",
@@ -75,7 +92,7 @@ for message in (
 ):
     loading_text = loading_text.replace(f'    AMAssetDiag("{message}");\n', "")
 
-if "AMAssetDiag(" in loading_text or "AMLOAD:" in loading_text:
+if "AMAssetDiag(" in loading_text:
     raise RuntimeError("AstroMenace release asset-trace cleanup was incomplete")
 loading_cpp.write_text(loading_text, encoding="utf-8")
 
