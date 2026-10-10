@@ -237,11 +237,17 @@
         "commit": "bbdb3ac5af2774c92b85c4d9b2a238f606911e66",
         "submodules": false
       },
-      "contentPolicy": "Source code is GPL-3.0-or-later. Preserve upstream artwork/font licences and notices; review generated gamedata.vfs and bundled asset licences before public packaging.",
+      "contentPolicy": "Source code is GPL-3.0-or-later. Release packaging preserves upstream GPL, CC BY-SA 4.0 and OFL 1.1 notices; the canonical gamedata.vfs is built reproducibly from the pinned upstream gamedata tree.",
       "runtimeData": {
         "mode": "bundled",
         "source": "pinned upstream gamedata tree",
-        "firstLaunch": "build gamedata.vfs automatically"
+        "delivery": "verified canonical gamedata.vfs",
+        "vfsBuild": 250208,
+        "vfsSha256": "0e457c97cc3ad4e41a30933f660064d2bc7b6d9ece0f372c0419e6fd38d86852",
+        "qualification": {
+          "status": "ac090-runtime-pass",
+          "workflowRun": 38091891845
+        }
       }
     }
   }
