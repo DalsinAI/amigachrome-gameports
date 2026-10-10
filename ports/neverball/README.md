@@ -71,3 +71,11 @@ All are mandatory:
 13. Test is repeated on a clean instance, not only the development instance.
 
 Only after all thirteen gates pass may README/PORT_STATUS say **RELEASE**.
+
+## AmigaNeverBall (OpenUp, 10 October 2026)
+
+`patches/0003` names the game AmigaNeverBall on its title screen (white over red, the Boing
+Ball's colours) and in its window title, and makes the Boing Ball the default ball. The ball is
+`overlay/data/ball/boing-ball` (our own red and white checks); `build.sh` copies it beside the
+release data and makes its solid from the basic ball's in that data. The other balls stay in
+Options > Ball.
