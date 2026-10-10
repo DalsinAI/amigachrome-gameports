@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Add a diagnostic-only first-mission gate to AstroMenace on AmigaOS.
 
-When PROGDIR:AUTOTEST_FIRST_MISSION exists, the target presents one real main
-menu frame, requests the normal SWITCH_FROM_MENU_TO_GAME command, runs the
-ordinary InitGame path, draws repeated game frames, captures a later mission
-frame, and leaves guest-owned stage files. Without the sentinel file the game
-behaves normally.
+When PROGDIR:AUTOTEST_FIRST_MISSION exists, the target dismisses the first-run
+language requestor, presents one real main-menu frame, requests the normal
+SWITCH_FROM_MENU_TO_GAME command, runs the ordinary InitGame path, draws
+repeated game frames, captures a later mission frame, and leaves guest-owned
+stage files. Without the sentinel file the game behaves normally.
 """
 
 from pathlib import Path
@@ -44,10 +44,21 @@ static bool AMFirstMissionRequested()
     if (FirstFrameProbe) AMFirstFrameStage("PROGDIR:stage-loop-enter");
 '''
     locals_insert = '''    static bool FirstFrameProbe = true;
+    static bool MissionAutotestPrepared = false;
     static bool MissionAutotestRequested = false;
     static unsigned MissionFrameCount = 0;
     static bool MissionFrameCaptureAttempted = false;
     static bool MissionFramePresented = false;
+    if (FirstFrameProbe &&
+        !MissionAutotestPrepared &&
+        AMFirstMissionRequested()) {
+        // On a fresh installation AstroMenace opens the language requestor
+        // before entering Loop(). Dismiss it only for the sentinel-driven CI
+        // path so the evidence shows the actual menu and mission beneath it.
+        CloseDialog();
+        AMFirstFrameStage("PROGDIR:stage-autotest-dialog-closed");
+        MissionAutotestPrepared = true;
+    }
     if (FirstFrameProbe) AMFirstFrameStage("PROGDIR:stage-loop-enter");
 '''
     if locals_anchor not in loop_text:
