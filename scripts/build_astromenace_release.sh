@@ -20,7 +20,8 @@ sh "$ROOT/ports/astromenace/build-amigaos3-runtime-fixed.sh" "$SRC" "$BUILD"
 PKG="$BUILD/package/AstroMenace"
 BIN="$PKG/AstroMenace"
 VFS="$PKG/gamedata.vfs"
-ARCHIVE="$OUT/AstroMenace-AC090-GCC16-$RELEASE_ID.zip"
+ARCHIVE_NAME="AstroMenace-AC090-GCC16-$RELEASE_ID.zip"
+ARCHIVE="$OUT/$ARCHIVE_NAME"
 
 [ -s "$BIN" ] || { echo "missing release binary: $BIN" >&2; exit 10; }
 [ -s "$VFS" ] || { echo "missing release VFS: $VFS" >&2; exit 11; }
@@ -38,6 +39,10 @@ file "$BIN"
 if strings "$BIN" | grep -E 'AUTOTEST_FIRST_MISSION|PROGDIR:stage-|AMLOAD:'; then
     echo "qualification-only strings leaked into release binary" >&2
     exit 18
+fi
+if find "$PKG" -maxdepth 1 -type f -name 'stage-*' -print -quit | grep -q .; then
+    echo "qualification-only stage file leaked into release package" >&2
+    exit 19
 fi
 strings "$BIN" | grep -F 'random engine reseeded'
 strings "$BIN" | grep -F 'before joystick subsystem init'
@@ -71,18 +76,30 @@ PY
     zip -qr "$ARCHIVE" AstroMenace
 )
 
-sha256sum "$ARCHIVE" > "$OUT/SHA256SUMS"
+(
+    cd "$OUT"
+    sha256sum "$ARCHIVE_NAME" > SHA256SUMS
+)
+
 python3 - "$BIN" "$VFS" "$ARCHIVE" "$OUT/RELEASE-MANIFEST.json" "$RELEASE_ID" <<'PY'
 from pathlib import Path
 import hashlib
 import json
 import sys
 
-binary, vfs, archive, destination, release_id = map(Path, sys.argv[1:5]) + [sys.argv[5]] if False else (Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]), Path(sys.argv[4]), sys.argv[5])
+binary = Path(sys.argv[1])
+vfs = Path(sys.argv[2])
+archive = Path(sys.argv[3])
+destination = Path(sys.argv[4])
+release_id = sys.argv[5]
 
 def record(path: Path) -> dict[str, object]:
     data = path.read_bytes()
-    return {'name': path.name, 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
+    return {
+        'name': path.name,
+        'bytes': len(data),
+        'sha256': hashlib.sha256(data).hexdigest(),
+    }
 
 manifest = {
     'schema': 'amigachrome-astromenace-release',
@@ -92,7 +109,10 @@ manifest = {
     'target': 'AmigaOS 3.x / AC090 / 68040 + FPU',
     'files': [record(binary), record(vfs), record(archive)],
 }
-destination.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+destination.write_text(
+    json.dumps(manifest, indent=2, sort_keys=True) + '\n',
+    encoding='utf-8',
+)
 print(destination.read_text(encoding='utf-8'))
 PY
 
