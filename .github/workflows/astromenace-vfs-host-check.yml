@@ -1,0 +1,75 @@
+name: AstroMenace VFS Host Check
+
+on:
+  push:
+    branches:
+      - fix/astromenace-runtime-diagnostics-20261009
+  workflow_dispatch:
+
+jobs:
+  vfs:
+    name: Validate endian patch and canonical VFS
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare pinned AstroMenace source
+        run: |
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game astromenace
+
+      - name: Apply VFS endian patch
+        run: |
+          python3 ports/astromenace/patch_vfs_little_endian.py \
+            build/game-ports/sources/astromenace
+          grep -F 'AstroMenace VFS v1.6 integers are little-endian on disk' \
+            build/game-ports/sources/astromenace/src/core/vfs/vfs.cpp
+          grep -F 'ReadLE32(VFSList.front()->File, VFSEntriesMap[tmpName].Offset);' \
+            build/game-ports/sources/astromenace/src/core/vfs/vfs.cpp
+          grep -F 'WriteLE32(TempVFS->File, static_cast<uint32_t>(BuildNumber));' \
+            build/game-ports/sources/astromenace/src/core/vfs/vfs.cpp
+
+      - name: Build and fully parse canonical VFS
+        run: |
+          python3 ports/astromenace/build_gamedata_vfs.py \
+            build/game-ports/sources/astromenace \
+            build/gamedata.vfs
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+
+          p = Path('build/gamedata.vfs')
+          data = p.read_bytes()
+          sign, version, build, table = struct.unpack_from('<4s4sII', data, 0)
+          assert (sign, version, build) == (b'VFS_', b'v1.6', 250208)
+          assert 16 < table < len(data)
+          pos = table
+          count = 0
+          names = set()
+          while pos < len(data):
+              assert pos + 2 <= len(data)
+              n = struct.unpack_from('<H', data, pos)[0]
+              pos += 2
+              assert n and pos + n + 8 <= len(data)
+              name = data[pos:pos+n].decode('utf-8')
+              pos += n
+              offset, size = struct.unpack_from('<II', data, pos)
+              pos += 8
+              assert name not in names
+              assert 16 <= offset <= table
+              assert offset + size <= table
+              names.add(name)
+              count += 1
+          assert pos == len(data)
+          assert count > 100
+          assert len(data) > 50_000_000
+          print(f'canonical VFS OK: {count} entries, {len(data)} bytes, table {table}')
+          PY
+
+      - name: Upload canonical VFS proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-canonical-VFS-${{ github.run_id }}
+          path: build/gamedata.vfs
+          retention-days: 7
