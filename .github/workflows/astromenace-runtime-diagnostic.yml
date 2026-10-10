@@ -53,6 +53,9 @@ jobs:
           strings "$BIN" | grep -F 'stage-first-frame-presented'
           strings "$BIN" | grep -F 'stage-first-game-frame-captured'
           strings "$BIN" | grep -F 'stage-first-game-frame-presented'
+          strings "$BIN" | grep -F 'stage-audio-channel-active'
+          strings "$BIN" | grep -F 'stage-keyboard-events-queued'
+          strings "$BIN" | grep -F 'stage-shutdown-complete'
           test -s "$VFS"
           python3 - "$VFS" <<'PY'
           from pathlib import Path
@@ -77,7 +80,7 @@ jobs:
           cd ..
           sha256sum AstroMenace-AC090-RUNTIME-DIAGNOSTIC.zip > SHA256SUMS
 
-      - name: Render and capture menu plus first playable mission
+      - name: Qualify menu mission audio input and clean exit
         shell: bash
         run: |
           set -euo pipefail
@@ -116,20 +119,27 @@ jobs:
           touch "$USER_STARTUP"
           printf '\nRun >NIL: <NIL: Execute S:AstroMenace-AutoTest\n' >> "$USER_STARTUP"
 
-          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace first-mission qualification ${GITHUB_RUN_ID}"
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace full runtime qualification ${GITHUB_RUN_ID}"
           printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
 
           reached=0
+          clean_exit=0
           for attempt in $(seq 1 60); do
             if test -f "$TARGET/stage-first-game-frame-presented"; then
-              echo "AstroMenace presented a captured first-mission frame after $((attempt * 5)) seconds."
               reached=1
+            fi
+            if test -f "$TARGET/stage-shutdown-complete" && \
+               test -f "$TARGET/AstroMenace-run.log" && \
+               grep -Fq 'ASTROTEST: returned RC 0' "$TARGET/AstroMenace-run.log"; then
+              echo "AstroMenace rendered the mission, processed input and exited cleanly after $((attempt * 5)) seconds."
+              clean_exit=1
               sleep 2
               break
             fi
             if test -f "$TARGET/AstroMenace-run.log" && \
-               grep -Fq 'ASTROTEST: returned RC' "$TARGET/AstroMenace-run.log"; then
-              echo "AstroMenace returned before its first mission frame after $((attempt * 5)) seconds."
+               grep -Fq 'ASTROTEST: returned RC' "$TARGET/AstroMenace-run.log" && \
+               ! grep -Fq 'ASTROTEST: returned RC 0' "$TARGET/AstroMenace-run.log"; then
+              echo "AstroMenace returned with a non-zero code after $((attempt * 5)) seconds."
               break
             fi
             sleep 5
@@ -170,7 +180,10 @@ jobs:
             | tee "$EVIDENCE/mission-frame-validation.json"
 
           grep -F 'AMDBG: after VFS open' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'AMDBG: joystick subsystem ready' "$EVIDENCE/AstroMenace-run.log"
           grep -F 'AMDBG: window and GL context ready' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'Audio      : AmigaChrome OpenGPU SDL2_mixer' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'ASTROTEST: returned RC 0' "$EVIDENCE/AstroMenace-run.log"
           test -f "$EVIDENCE/stage-after-asset-load"
           test -f "$EVIDENCE/stage-main-menu-ready"
           test -f "$EVIDENCE/stage-autotest-dialog-closed"
@@ -184,6 +197,16 @@ jobs:
           test -f "$EVIDENCE/stage-first-game-drawn"
           test -f "$EVIDENCE/stage-first-game-frame-captured"
           test -f "$EVIDENCE/stage-first-game-frame-presented"
+          test -f "$EVIDENCE/stage-audio-open"
+          test -f "$EVIDENCE/stage-audio-channel-started"
+          test -f "$EVIDENCE/stage-audio-channel-active"
+          test -f "$EVIDENCE/stage-keyboard-events-queued"
+          test -f "$EVIDENCE/stage-keydown-received"
+          test -f "$EVIDENCE/stage-keyup-received"
+          test -f "$EVIDENCE/stage-clean-exit-requested"
+          test -f "$EVIDENCE/stage-loop-exited"
+          test -f "$EVIDENCE/stage-audio-shutdown"
+          test -f "$EVIDENCE/stage-shutdown-complete"
           test -s "$EVIDENCE/AstroMenace-first-frame.bmp"
           test -s "$EVIDENCE/AstroMenace-first-mission.bmp"
           test "$(stat -c %s "$EVIDENCE/AstroMenace-first-frame.bmp")" -gt 100000
@@ -191,6 +214,7 @@ jobs:
           test "$(sha256sum "$EVIDENCE/AstroMenace-first-frame.bmp" | awk '{print $1}')" != \
                "$(sha256sum "$EVIDENCE/AstroMenace-first-mission.bmp" | awk '{print $1}')"
           test "$reached" -eq 1
+          test "$clean_exit" -eq 1
 
       - name: Upload corrected package and runtime evidence
         if: always()
