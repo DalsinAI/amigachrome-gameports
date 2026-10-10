@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Make AstroMenace's VW3D model format explicitly little-endian.
 
-The shipped models.pack was produced on a little-endian host.  Upstream checks
+The shipped models.pack was produced on a little-endian host. Upstream checks
 the four-byte VW3D signature correctly on either byte order, but then reads
 all chunk counts, formats, floats, vertex data and indices directly into native
-objects.  On a big-endian 68k this turns valid model metadata into nonsense,
+objects. On a big-endian 68k this turns valid model metadata into nonsense,
 so every model fails during LoadAllGameAssets and the game aborts before its
 main menu.
 
-VW3D is an on-disk interchange format.  Preserve the established little-endian
-representation and decode/encode it explicitly on every host.
+VW3D is an on-disk interchange format. Preserve the established little-endian
+representation and decode/encode it explicitly on every host. Large vertex
+and index arrays are read in one block and byte-swapped in place on big-endian
+hosts; doing one VFS read per float would make first launch needlessly slow.
 """
 
 from pathlib import Path
@@ -38,7 +40,7 @@ std::unordered_map<std::string, std::shared_ptr<cModel3DWrapper>> ModelsMap;
 helpers = r'''// All loaded models.
 std::unordered_map<std::string, std::shared_ptr<cModel3DWrapper>> ModelsMap;
 
-// AstroMenace VW3D integers and floats are little-endian on disk.  Existing
+// AstroMenace VW3D integers and floats are little-endian on disk. Existing
 // model assets use that representation; never read or write native 68k words.
 static bool ReadVW3DLE32(cFILE &File, uint32_t &Value)
 {
@@ -64,32 +66,41 @@ static bool ReadVW3DLEFloat(cFILE &File, float &Value)
     return true;
 }
 
+static void SwapVW3DWords32(void *Data, size_t Count)
+{
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    auto *Bytes = static_cast<unsigned char*>(Data);
+    for (size_t i = 0; i < Count; ++i, Bytes += 4) {
+        const unsigned char B0 = Bytes[0];
+        const unsigned char B1 = Bytes[1];
+        Bytes[0] = Bytes[3];
+        Bytes[1] = Bytes[2];
+        Bytes[2] = B1;
+        Bytes[3] = B0;
+    }
+#else
+    (void)Data;
+    (void)Count;
+#endif
+}
+
 static bool ReadVW3DLEFloatArray(cFILE &File, float *Values, size_t Count)
 {
-    if (!Values && Count) {
+    static_assert(sizeof(float) == 4, "VW3D requires 32-bit float");
+    if ((!Values && Count) || File.fread(Values, sizeof(float), Count) != Count) {
         return false;
     }
-    for (size_t i = 0; i < Count; ++i) {
-        if (!ReadVW3DLEFloat(File, Values[i])) {
-            return false;
-        }
-    }
+    SwapVW3DWords32(Values, Count);
     return true;
 }
 
 static bool ReadVW3DLE32Array(cFILE &File, unsigned *Values, size_t Count)
 {
-    static_assert(sizeof(unsigned) == sizeof(uint32_t), "VW3D requires 32-bit unsigned");
-    if (!Values && Count) {
+    static_assert(sizeof(unsigned) == 4, "VW3D requires 32-bit unsigned");
+    if ((!Values && Count) || File.fread(Values, sizeof(unsigned), Count) != Count) {
         return false;
     }
-    for (size_t i = 0; i < Count; ++i) {
-        uint32_t Value{0};
-        if (!ReadVW3DLE32(File, Value)) {
-            return false;
-        }
-        Values[i] = static_cast<unsigned>(Value);
-    }
+    SwapVW3DWords32(Values, Count);
     return true;
 }
 
