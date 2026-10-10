@@ -10,6 +10,11 @@ SRC=${1:-"$ROOT/build/game-ports/sources/astromenace"}
 python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
 python3 "$HERE/patch_amiga_random.py" "$SRC"
 
-# The regular builder's patch pass is idempotent.  Keeping it as the final
+# -DAMIGACHROME=ON is a CMake option, not a C/C++ preprocessor definition.
+# Without this target definition every #ifdef AMIGACHROME path (including the
+# raw AMDBG markers and target-safe random seed) was compiled out.
+python3 "$HERE/patch_amiga_compile_define.py" "$SRC"
+
+# The regular builder's patch pass is idempotent. Keeping it as the final
 # build authority avoids a second copy of the compiler/library/package logic.
 exec sh "$HERE/build-amigaos3.sh" "$@"
