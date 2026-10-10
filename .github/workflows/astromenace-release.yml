@@ -1,0 +1,57 @@
+name: AstroMenace AC090 Release
+
+on:
+  push:
+    branches:
+      - fix/astromenace-runtime-diagnostics-20261009
+    paths:
+      - ports/astromenace/**
+      - scripts/build_astromenace_release.sh
+      - scripts/game_port_prepare.py
+      - toolchain/amigaos3-opengpu.cmake
+      - .github/workflows/astromenace-release.yml
+  workflow_dispatch:
+
+concurrency:
+  group: astromenace-ac090-release
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Build AstroMenace AC090 GCC16 0010
+    runs-on: self-hosted
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Prepare pinned AstroMenace source
+        shell: bash
+        run: |
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game astromenace
+
+      - name: Build and verify production package
+        shell: bash
+        run: |
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_RELEASE_ID=0010 \
+          sh scripts/build_astromenace_release.sh \
+            "$PWD" \
+            "$PWD/build/game-ports/sources/astromenace" \
+            "$PWD/build/releases/astromenace-ac090-0010"
+
+      - name: Upload release candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-AC090-GCC16-0010
+          path: |
+            build/releases/astromenace-ac090-0010/AstroMenace-AC090-GCC16-0010.zip
+            build/releases/astromenace-ac090-0010/SHA256SUMS
+            build/releases/astromenace-ac090-0010/RELEASE-MANIFEST.json
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
