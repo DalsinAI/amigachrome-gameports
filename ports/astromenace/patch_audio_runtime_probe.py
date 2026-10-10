@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Add qualification-only audio milestones to the AmigaChrome backend.
 
-The runtime gate already proves SDL audio opens.  These markers go further:
+The runtime gate already proves SDL audio opens. These markers go further:
 they require an Ogg asset to decode into a Mix_Chunk, a mixer channel to start
 and report active, and the audio subsystem to close during a clean game exit.
-They are applied only when ASTROMENACE_DIAGNOSTICS=1.
+The patch itself is applied only when ASTROMENACE_DIAGNOSTICS=1, so marker
+writes do not need to depend on a second runtime sentinel lookup.
 """
 
 from pathlib import Path
@@ -37,17 +38,8 @@ namespace_insert = '''namespace viewizard {
 namespace {
 
 #ifdef AMIGACHROME
-static bool AMAudioProbeEnabled()
-{
-    BPTR File = Open((CONST_STRPTR)"PROGDIR:AUTOTEST_FIRST_MISSION", MODE_OLDFILE);
-    if (!File) return false;
-    Close(File);
-    return true;
-}
-
 static void AMAudioProbeStage(const char *Name)
 {
-    if (!AMAudioProbeEnabled()) return;
     BPTR File = Open((CONST_STRPTR)Name, MODE_NEWFILE);
     if (File) {
         static const char Ready[] = "ready\\n";
@@ -126,6 +118,34 @@ playing_insert = '''bool vw_IsAnyMusicPlaying()
 if playing_anchor not in text:
     raise RuntimeError("AstroMenace any-music-playing marker missing")
 text = text.replace(playing_anchor, playing_insert, 1)
+
+update_anchor = '''        uint32_t delta = now - m.lastTick;
+        m.lastTick = now;
+        bool erase = false;
+
+        if (m.fadeIn || m.fadeOut) {
+'''
+update_insert = '''        uint32_t delta = now - m.lastTick;
+        m.lastTick = now;
+        bool erase = false;
+
+#ifdef AMIGACHROME
+        // Some SDL_mixer targets do not report the channel active until the
+        // first mixer/update pass. Qualify actual playback here as well as at
+        // Mix_PlayChannel return time.
+        if (!AudioProbeActiveMarked &&
+            m.channel >= 0 &&
+            Mix_Playing(m.channel)) {
+            AMAudioProbeStage("PROGDIR:stage-audio-channel-active");
+            AudioProbeActiveMarked = true;
+        }
+#endif
+
+        if (m.fadeIn || m.fadeOut) {
+'''
+if update_anchor not in text:
+    raise RuntimeError("AstroMenace music update marker missing")
+text = text.replace(update_anchor, update_insert, 1)
 
 shutdown_anchor = '''    SDL_QuitSubSystem(SDL_INIT_AUDIO);
     AudioReady = false;
