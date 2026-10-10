@@ -32,7 +32,7 @@ jobs:
         run: |
           STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
           JOBS=4 \
-          sh ports/astromenace/build-amigaos3.sh \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
             build/game-ports/sources/astromenace \
             build/os3/astromenace-runtime-diagnostic
 
