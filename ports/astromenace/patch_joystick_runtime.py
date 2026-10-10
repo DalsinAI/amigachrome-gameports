@@ -2,9 +2,9 @@
 """Restore AstroMenace joystick startup after the first-light bring-up.
 
 The initial AC090 port deliberately deferred all joystick calls while SDL,
-VirGL, VFS and asset loading were being isolated.  Those paths are now stable.
+VirGL, VFS and asset loading were being isolated. Those paths are now stable.
 Initialize SDL's joystick subsystem as a non-fatal optional service and then
-run AstroMenace's normal joystick discovery.  Machines without a controller
+run AstroMenace's normal joystick discovery. Machines without a controller
 continue normally and hot-plug events remain available to the main loop.
 """
 
@@ -22,9 +22,10 @@ old = '''    // Amiga first-light: joystick intentionally deferred until runtime
     JoystickInit(vw_GetTimeThread(0));
 #endif
 '''
-new = '''    // Joystick is optional on AmigaChrome. Initialise its SDL subsystem only
-    // after timer, VFS, configuration and font setup are known-good; failure
-    // must not prevent keyboard or mouse play.
+new = '''    // The first-light joystick deferred phase is complete. Joystick remains
+    // optional on AmigaChrome: initialise its SDL subsystem only after timer,
+    // VFS, configuration and font setup are known-good. Failure must not
+    // prevent keyboard or mouse play.
 #ifdef AMIGACHROME
     AMDiag("before joystick subsystem init");
     if (SDL_InitSubSystem(SDL_INIT_JOYSTICK) != 0) {
