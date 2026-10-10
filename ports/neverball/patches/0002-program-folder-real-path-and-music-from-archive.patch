@@ -1,0 +1,303 @@
+diff --git a/share/audio.c b/share/audio.c
+index 6aabbd3..91154ec 100644
+--- a/share/audio.c
++++ b/share/audio.c
+@@ -29,6 +29,7 @@ static float music_vol = 1.0f;
+ static struct sound_cache *sounds = NULL;
+ static Mix_Music *music = NULL;
+ static char *music_name = NULL;
++static void *music_data = NULL;     /* the music's file, in memory while it plays */
+ 
+ #define LOG_VOLUME(v) ((float) pow((double) (v), 2.0))
+ 
+@@ -84,13 +85,17 @@ static void music_free(void)
+     if (music)
+         Mix_FreeMusic(music);
+     music = NULL;
++    free(music_data);
++    music_data = NULL;
+     free(music_name);
+     music_name = NULL;
+ }
+ 
+ static int music_load(const char *filename)
+ {
+-    const char *path;
++    int len = 0;
++    void *data;
++    SDL_RWops *rw;
+ 
+     if (!filename)
+         return 0;
+@@ -98,16 +103,25 @@ static int music_load(const char *filename)
+         return 1;
+ 
+     music_free();
+-    path = fs_resolve(filename);
+-    if (!path)
+-        path = filename;
+-    music = Mix_LoadMUS(path);
+-    if (!music)
++
++    /* The game's files are in its data archive, not on the disk by name: read
++     * the music through the game's own file system, as the sounds are, and
++     * give the mixer the memory. It stays until the music is freed. */
++    data = fs_load(filename, &len);
++    if (!data || len <= 0) {
++        free(data);
+         return 0;
++    }
++    rw = SDL_RWFromConstMem(data, len);
++    music = rw ? Mix_LoadMUS_RW(rw, 1) : NULL;
++    if (!music) {
++        free(data);
++        return 0;
++    }
++    music_data = data;
+     music_name = strdup(filename);
+     if (!music_name) {
+-        Mix_FreeMusic(music);
+-        music = NULL;
++        music_free();
+         return 0;
+     }
+     return 1;
+diff --git a/share/base_config.c b/share/base_config.c
+index 3f52f08..f7cec63 100644
+--- a/share/base_config.c
++++ b/share/base_config.c
+@@ -43,7 +43,7 @@ static const char *pick_data_path(const char *arg_data_path)
+         return env;
+ 
+     if (path_is_abs(CONFIG_DATA))
+-        return CONFIG_DATA;
++        return fs_amiga_path(CONFIG_DATA);
+ 
+     SAFECPY(dir, fs_base_dir());
+     SAFECAT(dir, "/");
+@@ -82,6 +82,7 @@ static const char *pick_home_path(void)
+ void config_paths(const char *arg_data_path)
+ {
+     const char *data, *home, *user;
++    const char *leaf = CONFIG_USER;
+ 
+     /*
+      * Scan in turn the game data and user directories for archives,
+@@ -105,7 +106,16 @@ void config_paths(const char *arg_data_path)
+     /* Force IndexedDB-backed location created during Module['preRun']. */
+     user = strdup("/neverball");
+ #else
+-    user = concat_string(home, "/", CONFIG_USER, NULL);
++    if (fs_amiga_progdir(CONFIG_USER))
++    {
++        /* PROGDIR:User is a folder of the program's own: its real path, and
++         * the program's folder is where to make it. */
++        user = strdup(fs_amiga_path(CONFIG_USER));
++        leaf = CONFIG_USER + fs_amiga_progdir(CONFIG_USER);
++        home = fs_base_dir();
++    }
++    else
++        user = concat_string(home, "/", CONFIG_USER, NULL);
+ #endif
+ 
+     /* Set up directory for writing, create if needed. */
+@@ -117,7 +127,7 @@ void config_paths(const char *arg_data_path)
+         log_printf("Failure to establish write directory. First run?\n");
+ 
+         if (fs_set_write_dir(home))
+-            if (fs_mkdir(CONFIG_USER))
++            if (fs_mkdir(leaf))
+                 if (fs_set_write_dir(user))
+                     success = 1;
+ 
+diff --git a/share/common.c b/share/common.c
+index 512ef2a..7299376 100644
+--- a/share/common.c
++++ b/share/common.c
+@@ -232,6 +232,17 @@ int path_is_abs(const char *path)
+     if (path_is_sep(path[0]))
+         return 1;
+ 
++#ifdef __amigaos__
++    /* A volume or assign ("DH1:Games", "PROGDIR:data") starts a full path. */
++    {
++        const char *colon = strchr(path, ':');
++        const char *slash = strchr(path, '/');
++
++        if (colon && (!slash || colon < slash))
++            return 1;
++    }
++#endif
++
+ #ifdef _WIN32
+     if (isalpha(path[0]) && path[1] == ':' && path_is_sep(path[2]))
+         return 1;
+diff --git a/share/fs.h b/share/fs.h
+index 9a014d4..a726be2 100644
+--- a/share/fs.h
++++ b/share/fs.h
+@@ -9,6 +9,8 @@ int fs_quit(void);
+ const char *fs_error(void);
+ 
+ const char *fs_base_dir(void);
++const char *fs_amiga_path(const char *);   /* PROGDIR:x as the program folder's real path + x; else unchanged */
++int         fs_amiga_progdir(const char *); /* length of a leading PROGDIR:, else 0 (always 0 off the Amiga) */
+ int         fs_add_path(const char *);
+ void        fs_remove_path(const char *);
+ int         fs_add_path_with_archives(const char *);
+diff --git a/share/fs_stdio.c b/share/fs_stdio.c
+index 7832c73..e265934 100644
+--- a/share/fs_stdio.c
++++ b/share/fs_stdio.c
+@@ -17,6 +17,7 @@
+ #include <assert.h>
+ #include <string.h>
+ #include <errno.h>
++#include <ctype.h>
+ 
+ #include "fs.h"
+ #include "dir.h"
+@@ -26,6 +27,11 @@
+ #include "log.h"
+ #include "zip.h"
+ 
++#ifdef __amigaos__
++#include <proto/dos.h>
++#include <dos/dos.h>
++#endif
++
+ /*
+  * This file implements the low-level virtual file system routines
+  * using stdio.
+@@ -96,9 +102,118 @@ static char *fs_dir_write;
+ static List  fs_path;
+ static int   fs_logging = 1;
+ 
++#ifdef __amigaos__
++
++/*
++ * PROGDIR: names the folder the program was started from, but only for
++ * this process: a thread or a helper that another library starts has no
++ * such folder, and a file asked for there makes AmigaDOS ask for a volume
++ * called PROGDIR:.  Joined to the base folder, it is worse still:
++ * "./PROGDIR:data" is read as a volume called "./PROGDIR".  So at start-up
++ * PROGDIR: is turned into the folder's real path ("DH1:Games/Neverball"),
++ * and every path the game uses is built from that.
++ */
++
++static char amiga_progdir[MAXSTR];
++
++static void amiga_progdir_init(void)
++{
++    BPTR lock;
++
++    amiga_progdir[0] = '\0';
++
++    lock = GetProgramDir();
++    if (lock && NameFromLock(lock, amiga_progdir, sizeof (amiga_progdir)))
++        return;
++
++    amiga_progdir[0] = '\0';
++
++    /* Started without a program folder: the current directory. */
++
++    lock = Lock("", SHARED_LOCK);
++    if (lock)
++    {
++        if (!NameFromLock(lock, amiga_progdir, sizeof (amiga_progdir)))
++            amiga_progdir[0] = '\0';
++        UnLock(lock);
++    }
++}
++
++static int amiga_has_progdir(const char *path)
++{
++    static const char prefix[] = "PROGDIR:";
++    int i;
++
++    if (!path)
++        return 0;
++
++    for (i = 0; prefix[i]; i++)
++        if (!path[i] || toupper((unsigned char) path[i]) != prefix[i])
++            return 0;
++
++    return 1;
++}
++
++int fs_amiga_progdir(const char *path)
++{
++    return amiga_has_progdir(path) ? 8 : 0;
++}
++
++const char *fs_amiga_path(const char *path)
++{
++    static char buff[4][MAXSTR];
++    static int  next;
++
++    char *dst;
++    size_t len;
++
++    if (!amiga_has_progdir(path) || !amiga_progdir[0])
++        return path;
++
++    dst = buff[next++ & 3];
++
++    /* (SAFECPY and SAFECAT size a char array, not a pointer.) */
++    strncpy(dst, amiga_progdir, MAXSTR - 1);
++    dst[MAXSTR - 1] = '\0';
++
++    if (path[8])
++    {
++        len = strlen(dst);
++
++        if (len && len < MAXSTR - 1 && dst[len - 1] != ':' && dst[len - 1] != '/')
++            dst[len++] = '/';
++
++        strncpy(dst + len, path + 8, MAXSTR - 1 - len);
++        dst[MAXSTR - 1] = '\0';
++    }
++
++    return dst;
++}
++
++#else
++
++int fs_amiga_progdir(const char *path)
++{
++    (void) path;
++    return 0;
++}
++
++const char *fs_amiga_path(const char *path)
++{
++    return path;
++}
++
++#endif
++
+ int fs_init(const char *argv0)
+ {
++#ifdef __amigaos__
++    amiga_progdir_init();
++    fs_dir_base = strdup(amiga_progdir[0] ? amiga_progdir :
++                         argv0 && *argv0 ? dir_name(argv0) : ".");
++#else
+     fs_dir_base  = strdup(argv0 && *argv0 ? dir_name(argv0) : ".");
++#endif
+     fs_dir_write = NULL;
+     fs_path      = NULL;
+     fs_logging   = 1;
+diff --git a/share/lang.c b/share/lang.c
+index d119b21..637ab33 100644
+--- a/share/lang.c
++++ b/share/lang.c
+@@ -44,7 +44,7 @@ void gt_init(const char *domain, const char *pref)
+     if (!dir)
+     {
+         if (path_is_abs(CONFIG_LOCALE))
+-            dir = strdup(CONFIG_LOCALE);
++            dir = strdup(fs_amiga_path(CONFIG_LOCALE));
+         else
+             dir = concat_string(fs_base_dir(), "/", CONFIG_LOCALE, NULL);
+     }
