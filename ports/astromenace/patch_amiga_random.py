@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""Remove AstroMenace's pre-main std::random_device dependency on AmigaOS.
+"""Fix and diagnose AstroMenace startup/runtime on AmigaOS.
 
-AstroMenace deliberately uses the random engine from global constructors.  The
-upstream GCC 16 fix correctly moved the engine to a function-local static, but
-it still seeds that engine with std::random_device on first use.  The classic
-AmigaOS libstdc++ build has no reliable random_device entropy backend; its
-constructor can therefore throw while global constructors are running.  That
-happens before main(), so Workbench can show only "Program aborted" and none
-of the normal AMDBG markers are reached.
+The upstream GCC 16 fix moved the random engine to a function-local static,
+but it still seeds that engine with std::random_device on first use.  The
+classic AmigaOS libstdc++ build has no reliable random_device entropy backend;
+that first use can happen from a global constructor and terminate before
+main().  Use a safe non-zero seed on the Amiga target and reseed once SDL's
+timer subsystem is alive.
 
-For the AmigaChrome target we initialise with a safe non-zero seed and reseed
-once SDL's timer subsystem is alive in main().  Other platforms keep the
-upstream std::random_device behaviour unchanged.
+The target also installs explicit new/terminate diagnostics and traces each
+texture preload with free/largest memory figures.  This keeps the next failure
+boundary visible even when the C++ runtime can only report "Program aborted".
 """
 
 from pathlib import Path
@@ -22,6 +21,7 @@ source = Path(sys.argv[1]).resolve()
 rand_cpp = source / "src" / "core" / "math" / "rand.cpp"
 math_h = source / "src" / "core" / "math" / "math.h"
 main_cpp = source / "src" / "main.cpp"
+texture_cpp = source / "src" / "assets" / "texture.cpp"
 
 rand_text = rand_cpp.read_text(encoding="utf-8")
 old_seed = "    static std::default_random_engine gen{std::random_device{}()};"
@@ -87,6 +87,131 @@ if 'AMDiag("random engine reseeded")' not in main_text:
     if main_anchor not in main_text:
         raise RuntimeError("AstroMenace post-SDL diagnostic marker missing")
     main_text = main_text.replace(main_anchor, main_insert, 1)
+
+if "AMMEM:" not in main_text:
+    include_anchor = "#include <dos/dos.h>\n"
+    include_insert = """#include <dos/dos.h>
+#include <proto/exec.h>
+#include <exec/memory.h>
+#include <new>
+#include <exception>
+#include <cstdlib>
+"""
+    if include_anchor not in main_text:
+        raise RuntimeError("AstroMenace Amiga diagnostic include marker missing")
+    main_text = main_text.replace(include_anchor, include_insert, 1)
+
+    function_anchor = "int main(int argc, char *argv[])\n{\n"
+    diagnostic_functions = """#ifdef AMIGACHROME
+static void AMMemory(const char *Where)
+{
+    Printf((CONST_STRPTR)\"AMMEM: %s free=%lu largest=%lu\\n\",
+           Where,
+           (ULONG)AvailMem(MEMF_ANY),
+           (ULONG)AvailMem(MEMF_LARGEST));
+}
+
+static void AMOutOfMemory()
+{
+    AMMemory(\"new_handler\");
+    AMDiag(\"out of memory\");
+    std::abort();
+}
+
+static void AMTerminateFailure()
+{
+    AMMemory(\"terminate\");
+    AMDiag(\"std::terminate\");
+    std::abort();
+}
+#endif
+
+int main(int argc, char *argv[])
+{
+"""
+    if function_anchor not in main_text:
+        raise RuntimeError("AstroMenace main function marker missing")
+    main_text = main_text.replace(function_anchor, diagnostic_functions, 1)
+
+    entry_anchor = '    AMDiag("entered main");\n'
+    entry_insert = '''    AMDiag("entered main");
+#ifdef AMIGACHROME
+    std::set_new_handler(AMOutOfMemory);
+    std::set_terminate(AMTerminateFailure);
+    AMMemory("main start");
+#endif
+'''
+    if entry_anchor not in main_text:
+        raise RuntimeError("AstroMenace main-entry diagnostic marker missing")
+    main_text = main_text.replace(entry_anchor, entry_insert, 1)
+
 main_cpp.write_text(main_text, encoding="utf-8")
 
-print("patched AstroMenace Amiga random startup: no std::random_device before main")
+texture_text = texture_cpp.read_text(encoding="utf-8")
+if "AMTEX: begin" not in texture_text:
+    include_anchor = '#include "../config/config.h"\n'
+    include_insert = '''#include "../config/config.h"
+#ifdef AMIGACHROME
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <exec/memory.h>
+#endif
+'''
+    if include_anchor not in texture_text:
+        raise RuntimeError("AstroMenace texture include marker missing")
+    texture_text = texture_text.replace(include_anchor, include_insert, 1)
+
+    old_loop = '''    for (auto &tmpAsset : TextureMap) {
+        vw_SetTextureProp(sTextureFilter{tmpAsset.second.TextFilter},
+                          tmpAsset.second.NeedAnisotropy ? GameConfig().AnisotropyLevel : 1,
+                          sTextureWrap{tmpAsset.second.TextWrap}, tmpAsset.second.Alpha,
+                          tmpAsset.second.AlphaMode, tmpAsset.second.MipMap);
+        tmpAsset.second.PreloadedTexture = vw_LoadTexture(tmpAsset.second.TextureFile);
+        function(TextureLoadValue);
+    }
+'''
+    new_loop = '''#ifdef AMIGACHROME
+    ULONG AmigaTextureIndex = 0;
+#endif
+    for (auto &tmpAsset : TextureMap) {
+#ifdef AMIGACHROME
+        ++AmigaTextureIndex;
+        Printf((CONST_STRPTR)"AMTEX: begin %lu/%lu %s free=%lu largest=%lu\\n",
+               AmigaTextureIndex,
+               (ULONG)TextureMap.size(),
+               tmpAsset.second.TextureFile.c_str(),
+               (ULONG)AvailMem(MEMF_ANY),
+               (ULONG)AvailMem(MEMF_LARGEST));
+#endif
+        vw_SetTextureProp(sTextureFilter{tmpAsset.second.TextFilter},
+                          tmpAsset.second.NeedAnisotropy ? GameConfig().AnisotropyLevel : 1,
+                          sTextureWrap{tmpAsset.second.TextWrap}, tmpAsset.second.Alpha,
+                          tmpAsset.second.AlphaMode, tmpAsset.second.MipMap);
+        tmpAsset.second.PreloadedTexture = vw_LoadTexture(tmpAsset.second.TextureFile);
+#ifdef AMIGACHROME
+        Printf((CONST_STRPTR)"AMTEX: loaded %lu/%lu %s id=%lu free=%lu largest=%lu\\n",
+               AmigaTextureIndex,
+               (ULONG)TextureMap.size(),
+               tmpAsset.second.TextureFile.c_str(),
+               (ULONG)tmpAsset.second.PreloadedTexture,
+               (ULONG)AvailMem(MEMF_ANY),
+               (ULONG)AvailMem(MEMF_LARGEST));
+#endif
+        function(TextureLoadValue);
+#ifdef AMIGACHROME
+        Printf((CONST_STRPTR)"AMTEX: done %lu/%lu %s free=%lu largest=%lu\\n",
+               AmigaTextureIndex,
+               (ULONG)TextureMap.size(),
+               tmpAsset.second.TextureFile.c_str(),
+               (ULONG)AvailMem(MEMF_ANY),
+               (ULONG)AvailMem(MEMF_LARGEST));
+#endif
+    }
+'''
+    if old_loop not in texture_text:
+        raise RuntimeError("AstroMenace texture preload loop marker missing")
+    texture_text = texture_text.replace(old_loop, new_loop, 1)
+
+texture_cpp.write_text(texture_text, encoding="utf-8")
+
+print("patched AstroMenace Amiga random startup and texture/memory diagnostics")
