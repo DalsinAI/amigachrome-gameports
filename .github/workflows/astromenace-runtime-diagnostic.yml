@@ -113,9 +113,21 @@ jobs:
           python3 "$LAB_TOOL" start "$LAB" --who ChatGPT --purpose "AstroMenace main-menu qualification ${GITHUB_RUN_ID}"
           printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
 
-          # With gamedata.vfs prebuilt, this is startup/rendering time rather
-          # than a several-minute archive conversion allowance.
-          sleep 240
+          # Poll the guest-owned log. Stop immediately when the title/menu is
+          # ready or when AstroMenace returns; retain a three-minute ceiling.
+          for attempt in $(seq 1 36); do
+            if test -f "$TARGET/AstroMenace-run.log"; then
+              if grep -Fq 'AMDBG: main menu ready' "$TARGET/AstroMenace-run.log"; then
+                echo "AstroMenace reached the main menu after $((attempt * 5)) seconds."
+                break
+              fi
+              if grep -Fq 'ASTROTEST: returned RC' "$TARGET/AstroMenace-run.log"; then
+                echo "AstroMenace returned before the main menu after $((attempt * 5)) seconds."
+                break
+              fi
+            fi
+            sleep 5
+          done
 
           cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
