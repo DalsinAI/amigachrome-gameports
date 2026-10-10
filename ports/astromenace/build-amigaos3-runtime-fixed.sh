@@ -10,6 +10,7 @@ OUT=${2:-"$ROOT/build/os3/astromenace-runtime-diagnostic"}
 # patch adds its post-SDL reseed immediately after the diagnostic SDL marker.
 python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
 python3 "$HERE/patch_amiga_random.py" "$SRC"
+python3 "$HERE/patch_first_frame_probe.py" "$SRC"
 
 # -DAMIGACHROME=ON is a CMake option, not a C/C++ preprocessor definition.
 # Without this target definition every #ifdef AMIGACHROME path (including the
