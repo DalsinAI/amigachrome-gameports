@@ -32,6 +32,7 @@ jobs:
         run: |
           STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
           JOBS=4 \
+          ASTROMENACE_DIAGNOSTICS=1 \
           sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
             build/game-ports/sources/astromenace \
             build/os3/astromenace-runtime-diagnostic
@@ -161,10 +162,18 @@ jobs:
             "$EVIDENCE/AstroMenace-first-frame.bmp" \
             "$EVIDENCE/AstroMenace-first-mission.bmp"
 
+          python3 scripts/validate_bmp_frame.py \
+            "$EVIDENCE/AstroMenace-first-frame.bmp" \
+            | tee "$EVIDENCE/menu-frame-validation.json"
+          python3 scripts/validate_bmp_frame.py \
+            "$EVIDENCE/AstroMenace-first-mission.bmp" \
+            | tee "$EVIDENCE/mission-frame-validation.json"
+
           grep -F 'AMDBG: after VFS open' "$EVIDENCE/AstroMenace-run.log"
           grep -F 'AMDBG: window and GL context ready' "$EVIDENCE/AstroMenace-run.log"
           test -f "$EVIDENCE/stage-after-asset-load"
           test -f "$EVIDENCE/stage-main-menu-ready"
+          test -f "$EVIDENCE/stage-autotest-dialog-closed"
           test -f "$EVIDENCE/stage-first-frame-captured"
           test -f "$EVIDENCE/stage-first-frame-presented"
           test -f "$EVIDENCE/stage-first-mission-requested"
