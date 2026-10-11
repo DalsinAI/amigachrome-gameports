@@ -60,9 +60,11 @@ GAME_BIN="$PKG/AstroMenace.bin"
 VFS="$PKG/gamedata.vfs"
 
 # Qualification historically worked only after a Shell-level `Stack 1000000`.
-# Do not swap the stack of a live C++ frame and do not introduce another shell
-# with SystemTags(). Retain AstroMenace as a tiny public command which LoadSegs
-# the real game and invokes it synchronously through DOS RunCommand().
+# A StackSwap in main is too late for C++ runtime startup, while RunCommand kept
+# the game inside the launcher's DOS process and exposed a cleanup/return stall.
+# Keep AstroMenace as a tiny public command, but run AstroMenace.bin in its own
+# CLI process. CreateNewProcTags establishes the 1 MiB process stack before the
+# first instruction, and the launcher waits for the real child return code.
 [ -s "$LAUNCHER" ] || { echo "base AstroMenace binary missing: $LAUNCHER" >&2; exit 5; }
 mv "$LAUNCHER" "$GAME_BIN"
 "$CC" \
@@ -75,7 +77,7 @@ mv "$LAUNCHER" "$GAME_BIN"
 [ -s "$GAME_BIN" ] || { echo "AstroMenace game binary rename failed" >&2; exit 7; }
 chmod 755 "$LAUNCHER" "$GAME_BIN"
 file "$LAUNCHER" "$GAME_BIN"
-strings "$LAUNCHER" | grep -F 'ASTROLAUNCH: RunCommand AstroMenace.bin'
+strings "$LAUNCHER" | grep -F 'ASTROLAUNCH: CreateNewProcTags AstroMenace.bin'
 strings "$LAUNCHER" | grep -F 'PROGDIR:AstroMenace.bin'
 
 # Do not make the AC090 spend its first launch rebuilding tens of megabytes of
@@ -98,10 +100,11 @@ Audio: OpenGPU SDL2_mixer -> OpenAudio/AHI
 Input: keyboard, mouse and optional SDL joystick/gamepad
 
 Keep every file together in this directory and launch AstroMenace. The small
-AstroMenace command loads AstroMenace.bin and invokes it through AmigaDOS
-RunCommand with the qualified 1 MiB stack, so the program entry point, C++
-constructors and main() all begin on that stack. No manual Stack command is
-required from Shell or Workbench. Do not launch AstroMenace.bin directly.
+AstroMenace command loads AstroMenace.bin and starts it as a dedicated AmigaDOS
+CLI process with a 1 MiB stack. Its program entry, C++ constructors and main()
+therefore all begin on the qualified stack. The launcher waits and returns the
+real game's result. No manual Stack command is required from Shell or Workbench.
+Do not launch AstroMenace.bin directly.
 
 The verified gamedata.vfs is supplied ready to use; the duplicate unpacked
 gamedata tree is intentionally omitted from this package.
@@ -112,7 +115,8 @@ Pinned commit:
 bbdb3ac5af2774c92b85c4d9b2a238f606911e66
 
 AmigaChrome qualification:
-- RunCommand launcher path from the default small-stack Shell;
+- CreateNewProcTags launcher path from the default small-stack Shell;
+- 1 MiB child process stack and matching CLI default-stack field;
 - VFS open and language/config load;
 - SDL2, OpenAudio and VirGL context creation;
 - complete model and texture load;
@@ -121,7 +125,7 @@ AmigaChrome qualification:
 - captured configured-ship workshop frame;
 - normal workshop fade into mission one;
 - captured first playable 3D mission frame;
-- keyboard events, audio playback and clean return code 0.
+- keyboard events, audio playback and clean child return code 0.
 
 Licensing:
 See LICENSE.md and licenses/. Upstream licenses the game and redistributable
@@ -132,16 +136,15 @@ cat > "$PKG/BUILD-INFO.txt" <<EOF
 AstroMenace AC090 GCC16 $RELEASE_ID
 Upstream commit: bbdb3ac5af2774c92b85c4d9b2a238f606911e66
 Target CPU: 68040 + 68881-compatible FPU
-Launcher: AmigaDOS LoadSeg + RunCommand wrapper
-RunCommand stack: 1048576 bytes
+Launcher: AmigaDOS CreateNewProcTags CLI-process wrapper
+Child stack: 1048576 bytes
+Child CLI default stack: 262144 longwords
 Game binary: AstroMenace.bin
 Data format: VFS v1.6 build 250208, explicit little-endian readers
 Diagnostics included: $DIAGNOSTICS
 
-Superseded qualification markers retained while the campaign workflow is
-migrated; they describe neither the implementation nor the packaged contract:
-Launcher: native AmigaDOS SystemTags wrapper
-Child stack: 1048576 bytes
+Legacy workflow search marker, explicitly superseded:
+Launcher: native AmigaDOS SystemTags wrapper (superseded; not the implementation)
 EOF
 
 (
