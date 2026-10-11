@@ -1,0 +1,234 @@
+name: Chocolate Doom AC090 First Light
+
+on:
+  push:
+    branches:
+      - runtime/chocolate-doom-firstlight-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: chocolate-doom-ac090-firstlight
+  cancel-in-progress: true
+
+jobs:
+  firstlight:
+    name: Rebuild Chocolate Doom and run Freedoom timedemos on AC090
+    runs-on: self-hosted
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout first-light branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Preflight daletop and clear stale labs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = daletop
+          APP="$HOME/AmigaChrome"
+          LIVE="$HOME/AmigaChromeInstances/Instance-32"
+          test -x "$APP/scripts/lab_instance.py"
+          test -x "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc"
+          test -x "$APP/stoves/os32-gcc16/prefix/bin/sdl2-config"
+          test -d "$LIVE/devices/harddisks/DH0"
+          test -d "$LIVE/devices/harddisks/DH1"
+          "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc" --version | head -1
+          "$APP/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
+
+          LAB_ROOT="$HOME/AmigaChrome-dev/chocolate-doom-firstlight-labs"
+          mkdir -p "$LAB_ROOT"
+          for lab in "$LAB_ROOT"/Instance-ChocolateDoom-*; do
+            test -d "$lab" || continue
+            python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
+            rm -rf "$lab"
+          done
+
+      - name: Prepare pinned engine, fetch verified Freedoom and rebuild
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/chocolate-doom-firstlight"
+          SRC="$PWD/build/game-ports/sources/chocolate-doom"
+          OUT="$PWD/build/os3/chocolate-doom-firstlight"
+          CACHE="$PWD/build/game-ports/test-data-cache"
+          rm -rf "$ROOT" "$SRC" "$OUT"
+          mkdir -p "$ROOT/evidence"
+
+          python3 scripts/game_port_prepare.py prepare \
+            --root "$PWD" --game chocolate-doom --allow-network
+          python3 scripts/game_port_prepare.py verify \
+            --root "$PWD" --game chocolate-doom
+          test "$(git -C "$SRC" rev-parse HEAD)" = \
+            895f581c5d91497bdda0516612da803fe5843e28
+          git -C "$SRC" rev-parse HEAD | tee "$ROOT/evidence/upstream-head.txt"
+
+          python3 scripts/fetch_runtime_data.py \
+            --root "$PWD" --game chocolate-doom --allow-network \
+            | tee "$ROOT/evidence/runtime-data-fetch.json"
+          test -s "$CACHE/freedoom-0.13.0.zip"
+          echo '3f9b264f3e3ce503b4fb7f6bdcb1f419d93c7b546f4df3e874dd878db9688f59  '"$CACHE/freedoom-0.13.0.zip" \
+            | sha256sum -c -
+
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+            sh ports/chocolate-doom/build-amigaos3.sh "$SRC" "$OUT" \
+            2>&1 | tee "$ROOT/evidence/build.log"
+
+          EXE="$OUT/src/chocolate-doom"
+          test -x "$EXE"
+          file "$EXE" | tee "$ROOT/evidence/binary-type.txt"
+          sha256sum "$EXE" | tee "$ROOT/evidence/binary-sha256.txt"
+
+      - name: Assemble private first-light payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/chocolate-doom-firstlight"
+          OUT="$PWD/build/os3/chocolate-doom-firstlight"
+          CACHE="$PWD/build/game-ports/test-data-cache"
+          PKG="$ROOT/package/ChocolateDoom"
+          EXTRACT="$ROOT/freedoom"
+          rm -rf "$ROOT/package" "$EXTRACT"
+          mkdir -p "$PKG" "$EXTRACT"
+          unzip -q "$CACHE/freedoom-0.13.0.zip" -d "$EXTRACT"
+          WAD=$(find "$EXTRACT" -type f -iname 'freedoom1.wad' -print -quit)
+          test -n "$WAD"
+
+          cp -p "$OUT/src/chocolate-doom" "$PKG/chocolate-doom"
+          cp -p "$WAD" "$PKG/freedoom1.wad"
+          chmod 755 "$PKG/chocolate-doom"
+          cat > "$PKG/TEST-BUILD.txt" <<EOF
+          Chocolate Doom AC090 GCC16 OpenGPU first-light build
+          Engine: 895f581c5d91497bdda0516612da803fe5843e28
+          Content: Freedoom 0.13.0, verified SHA-256
+          Gate A: OpenGPU-forced no-audio timedemo and clean exit.
+          Gate B: OpenGPU-forced SDL_mixer/AHI timedemo and clean exit.
+          EOF
+          test -s "$PKG/freedoom1.wad"
+          du -sh "$PKG" | tee "$ROOT/evidence/private-payload-size.txt"
+          sha256sum "$PKG/chocolate-doom" "$PKG/freedoom1.wad" \
+            | tee "$ROOT/evidence/payload-sha256.txt"
+
+      - name: Run graphics and audio timedemo journeys
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_TOOL="$APP/scripts/lab_instance.py"
+          ROOT="$PWD/build/chocolate-doom-firstlight"
+          PKG="$ROOT/package/ChocolateDoom"
+          EVIDENCE="$ROOT/evidence/runtime"
+          LAB_ROOT="$HOME/AmigaChrome-dev/chocolate-doom-firstlight-labs"
+          LAB="$LAB_ROOT/Instance-ChocolateDoom-${GITHUB_RUN_ID}"
+          TARGET="$LAB/devices/harddisks/DH1/ChocolateDoom-FLIGHT"
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          rm -rf "$LAB"
+          python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
+
+          cleanup() {
+            python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
+            rm -rf "$LAB"
+          }
+          trap cleanup EXIT
+
+          mkdir -p "$TARGET"
+          cp -a "$PKG/." "$TARGET/"
+          chmod 755 "$TARGET/chocolate-doom"
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/ChocolateDoom-FirstLight"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          mkdir -p "$(dirname "$TEST_SCRIPT")"
+          cat > "$TEST_SCRIPT" <<'AMIGA'
+          FailAt 21
+          Wait 5
+          CD DH1:ChocolateDoom-FLIGHT
+          SetEnv SDL_RENDER_DRIVER opengpu
+          SetEnv SDL_OPENGPU_STATS 1
+          Echo "DOOMTEST: graphics timedemo starting" >ChocolateDoom-run.log
+          chocolate-doom -iwad freedoom1.wad -timedemo demo1 -window -width 640 -height 480 -nosound -nomusic >>ChocolateDoom-run.log
+          Echo "DOOMTEST: graphics returned RC $RC" >>ChocolateDoom-run.log
+          Echo "DOOMTEST: audio timedemo starting" >>ChocolateDoom-run.log
+          chocolate-doom -iwad freedoom1.wad -timedemo demo1 -window -width 640 -height 480 -nomusic >>ChocolateDoom-run.log
+          Echo "DOOMTEST: audio returned RC $RC" >>ChocolateDoom-run.log
+          UnsetEnv SDL_OPENGPU_STATS
+          UnsetEnv SDL_RENDER_DRIVER
+          AMIGA
+          touch "$USER_STARTUP"
+          printf '\nRun >NIL: <NIL: Execute S:ChocolateDoom-FirstLight\n' >> "$USER_STARTUP"
+
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
+            --purpose "Chocolate Doom OpenGPU/Freedoom first light ${GITHUB_RUN_ID}"
+
+          complete=0
+          for attempt in $(seq 1 36); do
+            if test "$attempt" -le 12; then
+              cp "$LAB/state/current-screen.jpg" \
+                "$EVIDENCE/screen-${attempt}s.jpg" 2>/dev/null || true
+            fi
+            if test -f "$TARGET/ChocolateDoom-run.log" && \
+               grep -Fq 'DOOMTEST: audio returned RC 0' "$TARGET/ChocolateDoom-run.log"; then
+              complete=1
+              cp "$LAB/state/current-screen.jpg" \
+                "$EVIDENCE/screen-after-return.jpg" 2>/dev/null || true
+              break
+            fi
+            sleep 1
+          done
+
+          cp "$TARGET/ChocolateDoom-run.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/state/current-screen.jpg" "$EVIDENCE/screen-final.jpg" 2>/dev/null || true
+          find "$TARGET" -maxdepth 1 -type f \
+            \( -iname '*.cfg' -o -iname '*.log' \) \
+            -exec cp -p {} "$EVIDENCE/" \; 2>/dev/null || true
+          python3 "$LAB_TOOL" status "$LAB" > "$EVIDENCE/lab-status.txt" 2>&1 || true
+
+          python3 - "$EVIDENCE" <<'PY'
+          from pathlib import Path
+          import json
+          import sys
+          try:
+              from PIL import Image, ImageStat
+          except Exception as exc:
+              print(f"Pillow unavailable: {exc}")
+              raise SystemExit(0)
+          root = Path(sys.argv[1])
+          report = {}
+          for image_path in sorted(root.glob("screen-*.jpg")):
+              with Image.open(image_path).convert("RGB") as image:
+                  stat = ImageStat.Stat(image)
+                  report[image_path.name] = {
+                      "size": list(image.size),
+                      "mean": [round(v, 2) for v in stat.mean],
+                      "stddev": [round(v, 2) for v in stat.stddev],
+                      "extrema": [list(v) for v in image.getextrema()],
+                  }
+          (root / "screen-analysis.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+
+          cleanup
+          trap - EXIT
+
+          echo "complete=$complete" | tee "$EVIDENCE/result.txt"
+          test -s "$EVIDENCE/ChocolateDoom-run.log"
+          grep -F 'DOOMTEST: graphics returned RC 0' "$EVIDENCE/ChocolateDoom-run.log"
+          grep -F 'DOOMTEST: audio returned RC 0' "$EVIDENCE/ChocolateDoom-run.log"
+          ! grep -Eiq 'program failed|software failure|0x8000000|divide by zero' \
+            "$EVIDENCE/native-runtime.log"
+          test "$complete" -eq 1
+
+      - name: Upload first-light evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChocolateDoom-FirstLight-${{ github.run_id }}
+          path: build/chocolate-doom-firstlight/evidence/
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 0
