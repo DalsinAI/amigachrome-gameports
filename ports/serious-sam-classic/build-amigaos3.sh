@@ -86,8 +86,17 @@ Place the executable in a legitimate TFE data directory (or stage that data
 beside it) and launch SeriousSam.
 EOF
 
-"$P/bin/m68k-amigaos-strip" "$PKG/SeriousSam" 2>/dev/null || true
-file "$PKG/SeriousSam" || true
-sha256sum "$PKG/SeriousSam" > "$OUT/SHA256SUMS"
+# Do not silently ship an unstripped binary if the toolchain is incomplete.
+"$P/bin/m68k-amigaos-strip" "$PKG/SeriousSam"
+test -s "$PKG/SeriousSam"
+
+# The checksum manifest belongs INSIDE the distributable directory. Hash the
+# final (stripped) executable and its licence, with paths relative to PKG so
+# a tester can verify an unpacked package without the original build tree.
+(
+  cd "$PKG"
+  sha256sum SeriousSam LICENSE-SeriousEngine.txt > SHA256SUMS
+  sha256sum -c SHA256SUMS
+)
 
 echo "Serious Sam TFE first-light package: $PKG"
