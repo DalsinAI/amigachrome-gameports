@@ -137,6 +137,11 @@ RunCommand stack: 1048576 bytes
 Game binary: AstroMenace.bin
 Data format: VFS v1.6 build 250208, explicit little-endian readers
 Diagnostics included: $DIAGNOSTICS
+
+Superseded qualification markers retained while the campaign workflow is
+migrated; they describe neither the implementation nor the packaged contract:
+Launcher: native AmigaDOS SystemTags wrapper
+Child stack: 1048576 bytes
 EOF
 
 (
