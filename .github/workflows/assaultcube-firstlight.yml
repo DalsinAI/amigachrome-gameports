@@ -1,0 +1,268 @@
+name: AssaultCube AC090 First Light
+
+on:
+  push:
+    branches:
+      - runtime/assaultcube-firstlight-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: assaultcube-ac090-firstlight
+  cancel-in-progress: true
+
+jobs:
+  firstlight:
+    name: Build and run AssaultCube on a disposable Instance-32 clone
+    runs-on: self-hosted
+    timeout-minutes: 75
+
+    steps:
+      - name: Checkout first-light branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Preflight daletop and clean stale labs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = daletop
+          APP="$HOME/AmigaChrome"
+          LIVE="$HOME/AmigaChromeInstances/Instance-32"
+          test -x "$APP/scripts/lab_instance.py"
+          test -x "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-g++"
+          test -d "$LIVE/devices/harddisks/DH0"
+          test -d "$LIVE/devices/harddisks/DH1"
+          "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-g++" --version | head -1
+          "$APP/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
+
+          LAB_ROOT="$HOME/AmigaChrome-dev/assaultcube-firstlight-labs"
+          mkdir -p "$LAB_ROOT"
+          for lab in "$LAB_ROOT"/Instance-AssaultCube-*; do
+            test -d "$lab" || continue
+            python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
+            rm -rf "$lab"
+          done
+
+      - name: Prepare exact pinned AssaultCube source
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/assaultcube-firstlight"
+          rm -rf "$ROOT" build/game-ports/sources/assaultcube
+          mkdir -p "$ROOT/evidence"
+
+          python3 scripts/game_port_prepare.py prepare \
+            --root "$PWD" --game assaultcube --allow-network
+          python3 scripts/game_port_prepare.py verify \
+            --root "$PWD" --game assaultcube
+
+          ACROOT="$PWD/build/game-ports/sources/assaultcube"
+          test "$(git -C "$ACROOT" rev-parse HEAD)" = \
+            13f0d8eea4822dee5c976661218d022be74342e3
+          git -C "$ACROOT" rev-parse HEAD | tee "$ROOT/evidence/upstream-head.txt"
+
+      - name: Build native server and OpenGPU client
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/assaultcube-firstlight"
+          ACROOT="$PWD/build/game-ports/sources/assaultcube"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16"
+
+          STOVE="$STOVE" sh ports/assaultcube/build-amiga-server.sh \
+            2>&1 | tee "$ROOT/evidence/server-build.log"
+
+          if git -C "$ACROOT" apply --check \
+            "$PWD/ports/assaultcube/patches/0002-opengpu-sdk-client-first-light.patch" \
+            >/dev/null 2>&1; then
+            git -C "$ACROOT" apply \
+              "$PWD/ports/assaultcube/patches/0002-opengpu-sdk-client-first-light.patch"
+          fi
+
+          STOVE="$STOVE" sh ports/assaultcube/build-amiga-client.sh \
+            2>&1 | tee "$ROOT/evidence/client-build.log"
+
+          CLIENT="$ACROOT/source/src/ac_client"
+          SERVER="$ACROOT/source/src/ac_server"
+          test -x "$CLIENT"
+          test -x "$SERVER"
+          file "$CLIENT" "$SERVER" | tee "$ROOT/evidence/binary-types.txt"
+          sha256sum "$CLIENT" "$SERVER" | tee "$ROOT/evidence/binary-sha256.txt"
+
+      - name: Assemble private first-light payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/assaultcube-firstlight"
+          ACROOT="$PWD/build/game-ports/sources/assaultcube"
+          PKG="$ROOT/package/AssaultCube"
+          rm -rf "$ROOT/package"
+          mkdir -p "$PKG/profile/config" "$PKG/profile/screenshots"
+
+          cp -p "$ACROOT/source/src/ac_client" "$PKG/ac_client"
+          cp -p "$ACROOT/source/src/ac_server" "$PKG/ac_server"
+          chmod 755 "$PKG/ac_client" "$PKG/ac_server"
+          for item in config packages bot mods; do
+            test -e "$ACROOT/$item" || continue
+            cp -a "$ACROOT/$item" "$PKG/$item"
+          done
+
+          cat > "$PKG/profile/config/init.cfg" <<'CFG'
+          fullscreen 0
+          fullscreendesktop 0
+          scr_w 640
+          scr_h 480
+          depthbits 24
+          stencilbits 8
+          fsaa 0
+          vsync 0
+          audio 0
+          lang en
+          CFG
+
+          cat > "$PKG/profile/config/autoexec.cfg" <<'CFG'
+          showmenuonstartup 0
+          sleep 4000 [addbot 50]
+          sleep 20000 [quit]
+          CFG
+
+          cat > "$PKG/TEST-BUILD.txt" <<EOF
+          AssaultCube AC090 GCC16 OpenGPU first-light build
+          Upstream: 13f0d8eea4822dee5c976661218d022be74342e3
+          Game data is copied privately from the pinned upstream checkout for this
+          disposable qualification run only. It is not uploaded as an artifact.
+          Audio is intentionally disabled by the current first-light stub.
+          EOF
+
+          test -f "$PKG/packages/maps/official/ac_shine.cgz"
+          test -f "$PKG/packages/misc/notexture.jpg"
+          du -sh "$PKG" | tee "$ROOT/evidence/private-payload-size.txt"
+          find "$PKG" -type f | wc -l | tee "$ROOT/evidence/private-payload-file-count.txt"
+
+      - name: Run menu, textured map, bot and clean-exit journey
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_TOOL="$APP/scripts/lab_instance.py"
+          ROOT="$PWD/build/assaultcube-firstlight"
+          PKG="$ROOT/package/AssaultCube"
+          EVIDENCE="$ROOT/evidence/runtime"
+          LAB_ROOT="$HOME/AmigaChrome-dev/assaultcube-firstlight-labs"
+          LAB="$LAB_ROOT/Instance-AssaultCube-${GITHUB_RUN_ID}"
+          TARGET="$LAB/devices/harddisks/DH1/AssaultCube-FLIGHT"
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          rm -rf "$LAB"
+
+          python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
+
+          cleanup() {
+            python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
+            rm -rf "$LAB"
+          }
+          trap cleanup EXIT
+
+          mkdir -p "$TARGET"
+          cp -a "$PKG/." "$TARGET/"
+          chmod 755 "$TARGET/ac_client" "$TARGET/ac_server"
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AssaultCube-FirstLight"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          mkdir -p "$(dirname "$TEST_SCRIPT")"
+          cat > "$TEST_SCRIPT" <<'AMIGA'
+          FailAt 21
+          Wait 5
+          CD DH1:AssaultCube-FLIGHT
+          Echo "ACFIRST: starting OpenGPU client" >AssaultCube-run.log
+          ac_client --home=PROGDIR:profile --init --loadmap=ac_shine -t0 -w640 -h480 -v0 >>AssaultCube-run.log
+          Echo "ACFIRST: client returned RC $RC" >>AssaultCube-run.log
+          AMIGA
+          touch "$USER_STARTUP"
+          printf '\nRun >NIL: <NIL: Execute S:AssaultCube-FirstLight\n' >> "$USER_STARTUP"
+
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
+            --purpose "AssaultCube OpenGPU first light ${GITHUB_RUN_ID}"
+
+          mainloop=0
+          clean_exit=0
+          for attempt in $(seq 1 48); do
+            if test -f "$TARGET/profile/clientlog.txt" && \
+               grep -Fq 'init: mainloop' "$TARGET/profile/clientlog.txt"; then
+              mainloop=1
+            fi
+
+            if test "$attempt" -eq 4 || test "$attempt" -eq 8 || \
+               test "$attempt" -eq 12 || test "$attempt" -eq 20; then
+              cp "$LAB/state/current-screen.jpg" \
+                "$EVIDENCE/screen-$((attempt * 5))s.jpg" 2>/dev/null || true
+            fi
+
+            if test -f "$TARGET/AssaultCube-run.log" && \
+               grep -Fq 'ACFIRST: client returned RC 0' "$TARGET/AssaultCube-run.log"; then
+              clean_exit=1
+              cp "$LAB/state/current-screen.jpg" \
+                "$EVIDENCE/screen-after-return.jpg" 2>/dev/null || true
+              break
+            fi
+            sleep 5
+          done
+
+          cp "$TARGET/AssaultCube-run.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/profile/clientlog.txt" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/state/current-screen.jpg" "$EVIDENCE/screen-final.jpg" 2>/dev/null || true
+          python3 "$LAB_TOOL" status "$LAB" > "$EVIDENCE/lab-status.txt" 2>&1 || true
+
+          python3 - "$EVIDENCE" <<'PY'
+          from pathlib import Path
+          import json
+          import sys
+          try:
+              from PIL import Image, ImageStat
+          except Exception as exc:
+              print(f"Pillow unavailable: {exc}")
+              raise SystemExit(0)
+
+          root = Path(sys.argv[1])
+          report = {}
+          for image_path in sorted(root.glob("screen-*.jpg")):
+              with Image.open(image_path).convert("RGB") as image:
+                  stat = ImageStat.Stat(image)
+                  extrema = image.getextrema()
+                  report[image_path.name] = {
+                      "size": list(image.size),
+                      "mean": [round(v, 2) for v in stat.mean],
+                      "stddev": [round(v, 2) for v in stat.stddev],
+                      "extrema": [list(v) for v in extrema],
+                  }
+          (root / "screen-analysis.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+
+          cleanup
+          trap - EXIT
+
+          echo "mainloop=$mainloop" | tee "$EVIDENCE/result.txt"
+          echo "clean_exit=$clean_exit" | tee -a "$EVIDENCE/result.txt"
+          test -s "$EVIDENCE/clientlog.txt"
+          grep -F 'init: gl' "$EVIDENCE/clientlog.txt"
+          grep -F 'init: models' "$EVIDENCE/clientlog.txt"
+          grep -F 'init: localconnect' "$EVIDENCE/clientlog.txt"
+          grep -F 'init: mainloop' "$EVIDENCE/clientlog.txt"
+          test "$mainloop" -eq 1
+          test "$clean_exit" -eq 1
+
+      - name: Upload first-light evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AssaultCube-FirstLight-${{ github.run_id }}
+          path: build/assaultcube-firstlight/evidence/
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 0
