@@ -2,12 +2,18 @@
 """Instrument prepared C-Dogs SDL sources with guest-owned stage markers."""
 
 from pathlib import Path
+import subprocess
 import sys
 
 if len(sys.argv) != 2:
     raise SystemExit("usage: patch_runtime_diagnostics.py CDOGS_SOURCE_ROOT")
 
 root = Path(sys.argv[1]).resolve()
+subprocess.run(
+    [sys.executable, str(Path(__file__).with_name("patch_amiga_paths.py")), str(root)],
+    check=True,
+)
+
 source = root / "src" / "cdogs.c"
 if not source.is_file():
     raise RuntimeError(f"C-Dogs entry source missing: {source}")
