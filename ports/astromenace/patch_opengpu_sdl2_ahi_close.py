@@ -30,9 +30,9 @@ new_wait = '''    if (hidden->inflight) {
             if (SDL_AtomicGet(&_this->shutdown)) {
                 struct IORequest *newer = (struct IORequest *)hidden->sent;
 
-                /* ahir_Link makes the newer write depend on the older one.
-                   Abort both before waiting for either reply; abort-and-wait
-                   one at a time can leave the linked request stranded. */
+                /* A blocking WaitIO on either half of an ahir_Link pair can
+                   strand the other half. Abort both before waiting for either
+                   reply; abort-and-wait one at a time is not safe here. */
                 if (newer && newer != older && !CheckIO(newer)) {
                     AbortIO(newer);
                 }
@@ -74,7 +74,7 @@ new_deinit = '''    if (hidden->device_open) {
         struct IORequest *active[2] = { NULL, NULL };
         int count = 0;
 
-        /* First abort every outstanding request.  AHI requests are linked;
+        /* First abort every outstanding request. AHI requests are linked;
            waiting for the older request before aborting the newer one can
            deadlock the audio thread during SDL_CloseAudioDevice(). */
         for (i = 0; i < 2; i++) {
