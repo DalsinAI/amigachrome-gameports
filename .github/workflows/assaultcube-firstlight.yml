@@ -41,7 +41,7 @@ jobs:
           mkdir -p "$LAB_ROOT"
           for lab in "$LAB_ROOT"/Instance-AssaultCube-*; do
             test -d "$lab" || continue
-            python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
+            timeout 20s python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
             rm -rf "$lab"
           done
 
@@ -63,7 +63,7 @@ jobs:
             13f0d8eea4822dee5c976661218d022be74342e3
           git -C "$ACROOT" rev-parse HEAD | tee "$ROOT/evidence/upstream-head.txt"
 
-      - name: Build native server and OpenGPU client
+      - name: Build native server and instrumented OpenGPU client
         shell: bash
         run: |
           set -euo pipefail
@@ -80,6 +80,7 @@ jobs:
             git -C "$ACROOT" apply \
               "$PWD/ports/assaultcube/patches/0002-opengpu-sdk-client-first-light.patch"
           fi
+          python3 ports/assaultcube/patch_runtime_diagnostics.py "$ACROOT"
 
           STOVE="$STOVE" sh ports/assaultcube/build-amiga-client.sh \
             2>&1 | tee "$ROOT/evidence/client-build.log"
@@ -88,6 +89,9 @@ jobs:
           SERVER="$ACROOT/source/src/ac_server"
           test -x "$CLIENT"
           test -x "$SERVER"
+          strings "$CLIENT" | grep -F 'stage-ac-00-pre-main'
+          strings "$CLIENT" | grep -F 'stage-ac-10-first-frame-presented'
+          strings "$CLIENT" | grep -F 'stage-ac-83-quit-before-exit'
           file "$CLIENT" "$SERVER" | tee "$ROOT/evidence/binary-types.txt"
           sha256sum "$CLIENT" "$SERVER" | tee "$ROOT/evidence/binary-sha256.txt"
 
@@ -134,6 +138,7 @@ jobs:
           Game data is copied privately from the pinned upstream checkout for this
           disposable qualification run only. It is not uploaded as an artifact.
           Audio is intentionally disabled by the current first-light stub.
+          Persistent stage-ac-* files identify the exact last completed guest stage.
           EOF
 
           test -f "$PKG/packages/maps/official/ac_shine.cgz"
@@ -141,7 +146,7 @@ jobs:
           du -sh "$PKG" | tee "$ROOT/evidence/private-payload-size.txt"
           find "$PKG" -type f | wc -l | tee "$ROOT/evidence/private-payload-file-count.txt"
 
-      - name: Run menu, textured map, bot and clean-exit journey
+      - name: Run isolated menu, textured map, bot and clean-exit journey
         shell: bash
         run: |
           set -euo pipefail
@@ -159,18 +164,48 @@ jobs:
           python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
 
           cleanup() {
-            python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
+            timeout 20s python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
             rm -rf "$LAB"
           }
           trap cleanup EXIT
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AssaultCube-FirstLight"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          mkdir -p "$(dirname "$TEST_SCRIPT")"
+          touch "$USER_STARTUP"
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.before"
+
+          # Instance-32 is a real working desktop and may contain old test launchers.
+          # Keep its ordinary startup content, but remove only known transient test
+          # invocations from this disposable clone before adding the one current job.
+          python3 - "$USER_STARTUP" <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          path = Path(sys.argv[1])
+          text = path.read_text(encoding="latin-1") if path.exists() else ""
+          names = re.compile(
+              r"AstroMenace|AssaultCube|CDogs|ChocolateDoom|SDL2[ -]?Demos|"
+              r"OpenFire|OpenTunnel|OpenTriangles|OpenEffects|OpenRay|"
+              r"OpenHypno|OpenIntro|OpenFloor|OpenSprites|OpenTarget|"
+              r"OpenParticles|OpenBoids|OpenScope",
+              re.IGNORECASE,
+          )
+          kept = [line for line in text.splitlines() if not names.search(line)]
+          path.write_text("\n".join(kept).rstrip() + "\n", encoding="latin-1")
+          PY
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.filtered"
+
+          find "$LAB/devices/harddisks/DH0/S" -maxdepth 1 -type f \
+            \( -iname 'AstroMenace*' -o -iname 'AssaultCube*' \
+               -o -iname 'CDogs*' -o -iname 'ChocolateDoom*' \) \
+            -delete
 
           mkdir -p "$TARGET"
           cp -a "$PKG/." "$TARGET/"
           chmod 755 "$TARGET/ac_client" "$TARGET/ac_server"
 
-          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AssaultCube-FirstLight"
-          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
-          mkdir -p "$(dirname "$TEST_SCRIPT")"
           cat > "$TEST_SCRIPT" <<'AMIGA'
           FailAt 21
           Wait 5
@@ -179,22 +214,31 @@ jobs:
           ac_client --home=PROGDIR:profile --init --loadmap=ac_shine -t0 -w640 -h480 -v0 >>AssaultCube-run.log
           Echo "ACFIRST: client returned RC $RC" >>AssaultCube-run.log
           AMIGA
-          touch "$USER_STARTUP"
           printf '\nRun >NIL: <NIL: Execute S:AssaultCube-FirstLight\n' >> "$USER_STARTUP"
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.final"
 
           python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
             --purpose "AssaultCube OpenGPU first light ${GITHUB_RUN_ID}"
 
+          pre_main=0
+          entered_main=0
+          sdl_ready=0
+          gl_ready=0
           mainloop=0
+          first_frame=0
           clean_exit=0
-          for attempt in $(seq 1 48); do
-            if test -f "$TARGET/profile/clientlog.txt" && \
-               grep -Fq 'init: mainloop' "$TARGET/profile/clientlog.txt"; then
-              mainloop=1
-            fi
+          fatal=0
+          for attempt in $(seq 1 36); do
+            test -f "$TARGET/stage-ac-00-pre-main" && pre_main=1
+            test -f "$TARGET/stage-ac-01-enter-main" && entered_main=1
+            test -f "$TARGET/stage-ac-03-sdl-ready" && sdl_ready=1
+            test -f "$TARGET/stage-ac-05-gl-ready" && gl_ready=1
+            test -f "$TARGET/stage-ac-09-mainloop-enter" && mainloop=1
+            test -f "$TARGET/stage-ac-10-first-frame-presented" && first_frame=1
+            test -f "$TARGET/stage-ac-99-fatal" && fatal=1
 
-            if test "$attempt" -eq 4 || test "$attempt" -eq 8 || \
-               test "$attempt" -eq 12 || test "$attempt" -eq 20; then
+            if test "$attempt" -eq 2 || test "$attempt" -eq 4 || \
+               test "$attempt" -eq 8 || test "$attempt" -eq 12; then
               cp "$LAB/state/current-screen.jpg" \
                 "$EVIDENCE/screen-$((attempt * 5))s.jpg" 2>/dev/null || true
             fi
@@ -206,6 +250,10 @@ jobs:
                 "$EVIDENCE/screen-after-return.jpg" 2>/dev/null || true
               break
             fi
+            if test "$fatal" -eq 1; then
+              echo "Guest reached AssaultCube fatal path after $((attempt * 5)) seconds."
+              break
+            fi
             sleep 5
           done
 
@@ -213,7 +261,22 @@ jobs:
           cp "$TARGET/profile/clientlog.txt" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/state/current-screen.jpg" "$EVIDENCE/screen-final.jpg" 2>/dev/null || true
-          python3 "$LAB_TOOL" status "$LAB" > "$EVIDENCE/lab-status.txt" 2>&1 || true
+          cp "$TARGET"/stage-ac-* "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/config/instance.json" "$EVIDENCE/instance.json" 2>/dev/null || true
+          cp "$LAB/config/local.json" "$EVIDENCE/local.json" 2>/dev/null || true
+
+          {
+            echo "pre_main=$pre_main"
+            echo "entered_main=$entered_main"
+            echo "sdl_ready=$sdl_ready"
+            echo "gl_ready=$gl_ready"
+            echo "mainloop=$mainloop"
+            echo "first_frame=$first_frame"
+            echo "fatal=$fatal"
+            echo "clean_exit=$clean_exit"
+            echo "stages:"
+            find "$TARGET" -maxdepth 1 -type f -name 'stage-ac-*' -printf '%f\n' | sort
+          } | tee "$EVIDENCE/result.txt"
 
           python3 - "$EVIDENCE" <<'PY'
           from pathlib import Path
@@ -230,12 +293,11 @@ jobs:
           for image_path in sorted(root.glob("screen-*.jpg")):
               with Image.open(image_path).convert("RGB") as image:
                   stat = ImageStat.Stat(image)
-                  extrema = image.getextrema()
                   report[image_path.name] = {
                       "size": list(image.size),
                       "mean": [round(v, 2) for v in stat.mean],
                       "stddev": [round(v, 2) for v in stat.stddev],
-                      "extrema": [list(v) for v in extrema],
+                      "extrema": [list(v) for v in image.getextrema()],
                   }
           (root / "screen-analysis.json").write_text(
               json.dumps(report, indent=2, sort_keys=True) + "\n",
@@ -247,14 +309,13 @@ jobs:
           cleanup
           trap - EXIT
 
-          echo "mainloop=$mainloop" | tee "$EVIDENCE/result.txt"
-          echo "clean_exit=$clean_exit" | tee -a "$EVIDENCE/result.txt"
-          test -s "$EVIDENCE/clientlog.txt"
-          grep -F 'init: gl' "$EVIDENCE/clientlog.txt"
-          grep -F 'init: models' "$EVIDENCE/clientlog.txt"
-          grep -F 'init: localconnect' "$EVIDENCE/clientlog.txt"
-          grep -F 'init: mainloop' "$EVIDENCE/clientlog.txt"
+          test "$pre_main" -eq 1
+          test "$entered_main" -eq 1
+          test "$sdl_ready" -eq 1
+          test "$gl_ready" -eq 1
           test "$mainloop" -eq 1
+          test "$first_frame" -eq 1
+          test "$fatal" -eq 0
           test "$clean_exit" -eq 1
 
       - name: Upload first-light evidence only
