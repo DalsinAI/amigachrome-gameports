@@ -19,15 +19,20 @@
 
 int main(void)
 {
+    BPTR input = Input();
+    BPTR output = Output();
+    BPTR error_output = ErrorOutput();
     LONG result;
 
     result = SystemTags((CONST_STRPTR)"PROGDIR:AstroMenace.bin",
                         NP_StackSize, ASTROMENACE_STACK_BYTES,
+                        SYS_Input, input,
+                        SYS_Output, output,
+                        SYS_Error, error_output,
                         SYS_Asynch, FALSE,
                         TAG_DONE);
 
     if (result == -1) {
-        BPTR error_output = ErrorOutput();
         if (error_output) {
             FPrintf(error_output,
                     (CONST_STRPTR)"AstroMenace: could not start "
