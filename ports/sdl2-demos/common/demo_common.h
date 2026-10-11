@@ -17,11 +17,59 @@ typedef struct DemoApp {
     int logical_h;
     Uint32 title_epoch;
     Uint32 title_frames;
+    Uint32 renderer_flags;
+    char renderer_label[96];
 } DemoApp;
 
 static Uint32 demo_argb(Uint8 r, Uint8 g, Uint8 b)
 {
     return 0xff000000u | ((Uint32)r << 16) | ((Uint32)g << 8) | (Uint32)b;
+}
+
+static void demo_capture_renderer(DemoApp *app)
+{
+    SDL_RendererInfo info;
+    const char *name = "unknown";
+    const char *kind = "UNCLASSIFIED";
+    char title[192];
+
+    SDL_zero(info);
+    if (SDL_GetRendererInfo(app->renderer, &info) == 0) {
+        if (info.name && *info.name) {
+            name = info.name;
+        }
+        app->renderer_flags = info.flags;
+        if (info.flags & SDL_RENDERER_ACCELERATED) {
+            kind = "ACCELERATED";
+        } else if (info.flags & SDL_RENDERER_SOFTWARE) {
+            kind = "SOFTWARE/CPU";
+        }
+
+        snprintf(app->renderer_label, sizeof(app->renderer_label),
+                 "%s [%s%s%s]",
+                 name,
+                 kind,
+                 (info.flags & SDL_RENDERER_PRESENTVSYNC) ? "+VSYNC" : "",
+                 (info.flags & SDL_RENDERER_TARGETTEXTURE) ? "+TARGET" : "");
+
+        fprintf(stdout,
+                "%s: SDL renderer=%s kind=%s flags=0x%08lx texture-formats=%u\n",
+                app->name,
+                name,
+                kind,
+                (unsigned long)info.flags,
+                (unsigned)info.num_texture_formats);
+        fflush(stdout);
+    } else {
+        snprintf(app->renderer_label, sizeof(app->renderer_label),
+                 "unknown [SDL_GetRendererInfo failed]");
+        fprintf(stderr, "%s: SDL_GetRendererInfo failed: %s\n",
+                app->name, SDL_GetError());
+    }
+
+    snprintf(title, sizeof(title), "%s | %s",
+             app->name, app->renderer_label);
+    SDL_SetWindowTitle(app->window, title);
 }
 
 static int demo_init(DemoApp *app, const char *name, int logical_w, int logical_h, int scale)
@@ -55,6 +103,9 @@ static int demo_init(DemoApp *app, const char *name, int logical_w, int logical_
                                        SDL_RENDERER_ACCELERATED |
                                        SDL_RENDERER_PRESENTVSYNC);
     if (!app->renderer) {
+        fprintf(stderr,
+                "%s: accelerated renderer unavailable (%s); trying SDL software fallback\n",
+                name, SDL_GetError());
         app->renderer = SDL_CreateRenderer(app->window, -1, 0);
     }
     if (!app->renderer) {
@@ -69,6 +120,7 @@ static int demo_init(DemoApp *app, const char *name, int logical_w, int logical_
         fprintf(stderr, "%s: logical size failed: %s\n", name, SDL_GetError());
     }
 
+    demo_capture_renderer(app);
     app->title_epoch = SDL_GetTicks();
     app->title_frames = 0;
     return 1;
@@ -106,7 +158,7 @@ static void demo_title_tick(DemoApp *app, const char *mode)
 {
     Uint32 now;
     Uint32 elapsed;
-    char title[192];
+    char title[256];
 
     ++app->title_frames;
     now = SDL_GetTicks();
@@ -116,12 +168,15 @@ static void demo_title_tick(DemoApp *app, const char *mode)
     }
 
     if (mode && *mode) {
-        snprintf(title, sizeof(title), "%s - %s - %.1f fps",
-                 app->name, mode,
+        snprintf(title, sizeof(title), "%s | %s | %s | %.1f fps",
+                 app->name,
+                 app->renderer_label,
+                 mode,
                  (double)app->title_frames * 1000.0 / (double)elapsed);
     } else {
-        snprintf(title, sizeof(title), "%s - %.1f fps",
+        snprintf(title, sizeof(title), "%s | %s | %.1f fps",
                  app->name,
+                 app->renderer_label,
                  (double)app->title_frames * 1000.0 / (double)elapsed);
     }
     SDL_SetWindowTitle(app->window, title);
