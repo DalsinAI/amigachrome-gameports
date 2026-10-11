@@ -48,6 +48,8 @@ implementation.write_text(
 #include <exec/tasks.h>
 #include <exec/memory.h>
 #include <proto/exec.h>
+#include <proto/dos.h>
+#include <dos/dos.h>
 
 /* Static by design: nothing between the two StackSwap calls may depend on
  * the old stack frame.  AstroMenace enters this helper once at startup. */
@@ -60,6 +62,10 @@ static char **AMStackArgv;
 /* Keep the body's argument push/pop wholly on the replacement stack. */
 static void __attribute__((noinline)) AMCallBody(void)
 {
+    BPTR out = Output();
+    if (out) {
+        FPuts(out, (CONST_STRPTR)"AMSTACK: private 1 MiB stack active\n");
+    }
     AMStackResult = AMStackBody(AMStackArgc, AMStackArgv);
 }
 
@@ -116,7 +122,7 @@ if include not in text:
         raise RuntimeError("AstroMenace SDL include marker missing for stack helper")
     text = text.replace(anchor, anchor + include, 1)
 
-body_signature = "static int AstroMenaceBody(int argc, char *argv[])\n{"
+body_signature = "int AstroMenaceBody(int argc, char *argv[])\n{"
 if body_signature not in text:
     main_signature = "int main(int argc, char *argv[])\n{"
     if main_signature not in text:
