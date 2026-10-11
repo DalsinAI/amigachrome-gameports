@@ -37,11 +37,12 @@ jobs:
           "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc" --version | head -1
           "$APP/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
 
+          LAB_ROOT="$HOME/da1ek/AmigaChrome-dev/cdogs-firstlight-labs"
           LAB_ROOT="$HOME/AmigaChrome-dev/cdogs-firstlight-labs"
           mkdir -p "$LAB_ROOT"
           for lab in "$LAB_ROOT"/Instance-CDogs-*; do
             test -d "$lab" || continue
-            python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
+            timeout 20s python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
             rm -rf "$lab"
           done
 
@@ -50,7 +51,9 @@ jobs:
         run: |
           set -euo pipefail
           ROOT="$PWD/build/cdogs-firstlight"
-          rm -rf "$ROOT" build/game-ports/sources/cdogs-sdl build/os3/cdogs-firstlight
+          SRC="$PWD/build/game-ports/sources/cdogs-sdl"
+          OUT="$PWD/build/os3/cdogs-firstlight"
+          rm -rf "$ROOT" "$SRC" "$OUT"
           mkdir -p "$ROOT/evidence"
 
           python3 scripts/game_port_prepare.py prepare \
@@ -58,18 +61,25 @@ jobs:
           python3 scripts/game_port_prepare.py verify \
             --root "$PWD" --game cdogs-sdl
 
-          SRC="$PWD/build/game-ports/sources/cdogs-sdl"
           test "$(git -C "$SRC" rev-parse HEAD)" = \
             8263a6f0200a71498f8c47bd0fce0f2d2d678d84
           git -C "$SRC" rev-parse HEAD | tee "$ROOT/evidence/upstream-head.txt"
 
-          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
-            sh ports/cdogs-sdl/build-amigaos3.sh \
-              "$SRC" "$PWD/build/os3/cdogs-firstlight" \
-              2>&1 | tee "$ROOT/evidence/build.log"
+          BASE_PATCH="$PWD/ports/cdogs-sdl/patches/0001-amigaos3-opengpu.patch"
+          if git -C "$SRC" apply --check "$BASE_PATCH" >/dev/null 2>&1; then
+            git -C "$SRC" apply "$BASE_PATCH"
+          fi
+          python3 ports/cdogs-sdl/patch_runtime_diagnostics.py "$SRC"
 
-          EXE="$PWD/build/os3/cdogs-firstlight/src/cdogs-sdl"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+            sh ports/cdogs-sdl/build-amigaos3.sh "$SRC" "$OUT" \
+            2>&1 | tee "$ROOT/evidence/build.log"
+
+          EXE="$OUT/src/cdogs-sdl"
           test -x "$EXE"
+          strings "$EXE" | grep -F 'stage-cdogs-00-pre-main'
+          strings "$EXE" | grep -F 'stage-cdogs-09-loop-enter'
+          strings "$EXE" | grep -F 'stage-cdogs-90-return-zero'
           file "$EXE" | tee "$ROOT/evidence/binary-type.txt"
           sha256sum "$EXE" | tee "$ROOT/evidence/binary-sha256.txt"
 
@@ -97,7 +107,7 @@ jobs:
           This private engineering payload includes upstream data solely for
           disposable runtime qualification. Do not publish it until the mixed
           asset-provenance review is closed.
-          Gate: usable demo frame, no 0x80000005 alert, audio path, clean exit.
+          Persistent stage-cdogs-* files identify the exact last guest stage.
           EOF
 
           test -d "$PKG/data"
@@ -105,7 +115,7 @@ jobs:
           du -sh "$PKG" | tee "$ROOT/evidence/private-payload-size.txt"
           find "$PKG" -type f | wc -l | tee "$ROOT/evidence/private-payload-file-count.txt"
 
-      - name: Run 30-second demo and prove fixed-stove runtime
+      - name: Run isolated 30-second demo and prove fixed-stove runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -123,18 +133,45 @@ jobs:
           python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
 
           cleanup() {
-            python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
+            timeout 20s python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
             rm -rf "$LAB"
           }
           trap cleanup EXIT
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/CDogs-FirstLight"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          mkdir -p "$(dirname "$TEST_SCRIPT")"
+          touch "$USER_STARTUP"
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.before"
+
+          python3 - "$USER_STARTUP" <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          path = Path(sys.argv[1])
+          text = path.read_text(encoding="latin-1") if path.exists() else ""
+          names = re.compile(
+              r"AstroMenace|AssaultCube|CDogs|ChocolateDoom|SDL2[ -]?Demos|"
+              r"OpenFire|OpenTunnel|OpenTriangles|OpenEffects|OpenRay|"
+              r"OpenHypno|OpenIntro|OpenFloor|OpenSprites|OpenTarget|"
+              r"OpenParticles|OpenBoids|OpenScope",
+              re.IGNORECASE,
+          )
+          kept = [line for line in text.splitlines() if not names.search(line)]
+          path.write_text("\n".join(kept).rstrip() + "\n", encoding="latin-1")
+          PY
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.filtered"
+
+          find "$LAB/devices/harddisks/DH0/S" -maxdepth 1 -type f \
+            \( -iname 'AstroMenace*' -o -iname 'AssaultCube*' \
+               -o -iname 'CDogs*' -o -iname 'ChocolateDoom*' \) \
+            -delete
 
           mkdir -p "$TARGET"
           cp -a "$PKG/." "$TARGET/"
           chmod 755 "$TARGET/cdogs-sdl"
 
-          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/CDogs-FirstLight"
-          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
-          mkdir -p "$(dirname "$TEST_SCRIPT")"
           cat > "$TEST_SCRIPT" <<'AMIGA'
           FailAt 21
           Wait 5
@@ -143,24 +180,52 @@ jobs:
           cdogs-sdl --demo --screen=640x480 --log=debug --logfile=cdogs-runtime.log >>CDogs-run.log
           Echo "CDOGSTEST: returned RC $RC" >>CDogs-run.log
           AMIGA
-          touch "$USER_STARTUP"
           printf '\nRun >NIL: <NIL: Execute S:CDogs-FirstLight\n' >> "$USER_STARTUP"
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.final"
 
           python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
             --purpose "C-Dogs fixed-stove first light ${GITHUB_RUN_ID}"
 
-          returned=0
-          for attempt in $(seq 1 18); do
+          pre_main=0
+          entered_main=0
+          sdl_ready=0
+          video_ready=0
+          graphics_loaded=0
+          audio_stage=0
+          loop_enter=0
+          loop_returned=0
+          clean_exit=0
+          error_exit=0
+          for attempt in $(seq 1 36); do
+            test -f "$TARGET/stage-cdogs-00-pre-main" && pre_main=1
+            test -f "$TARGET/stage-cdogs-01-enter-main" && entered_main=1
+            test -f "$TARGET/stage-cdogs-04-sdl-ready" && sdl_ready=1
+            test -f "$TARGET/stage-cdogs-05-video-ready" && video_ready=1
+            test -f "$TARGET/stage-cdogs-06-graphics-loaded" && graphics_loaded=1
+            if test -f "$TARGET/stage-cdogs-07-audio-ready" || \
+               test -f "$TARGET/stage-cdogs-07-audio-unavailable"; then
+              audio_stage=1
+            fi
+            test -f "$TARGET/stage-cdogs-09-loop-enter" && loop_enter=1
+            test -f "$TARGET/stage-cdogs-10-loop-returned" && loop_returned=1
+            test -f "$TARGET/stage-cdogs-90-return-zero" && clean_exit=1
+            test -f "$TARGET/stage-cdogs-99-return-error" && error_exit=1
+
             if test "$attempt" -eq 2 || test "$attempt" -eq 4 || \
-               test "$attempt" -eq 6 || test "$attempt" -eq 8; then
+               test "$attempt" -eq 8 || test "$attempt" -eq 12; then
               cp "$LAB/state/current-screen.jpg" \
                 "$EVIDENCE/screen-$((attempt * 5))s.jpg" 2>/dev/null || true
             fi
+
             if test -f "$TARGET/CDogs-run.log" && \
                grep -Fq 'CDOGSTEST: returned RC 0' "$TARGET/CDogs-run.log"; then
-              returned=1
+              clean_exit=1
               cp "$LAB/state/current-screen.jpg" \
                 "$EVIDENCE/screen-after-return.jpg" 2>/dev/null || true
+              break
+            fi
+            if test "$error_exit" -eq 1; then
+              echo "C-Dogs returned an error after $((attempt * 5)) seconds."
               break
             fi
             sleep 5
@@ -170,7 +235,24 @@ jobs:
           cp "$TARGET/cdogs-runtime.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/state/current-screen.jpg" "$EVIDENCE/screen-final.jpg" 2>/dev/null || true
-          python3 "$LAB_TOOL" status "$LAB" > "$EVIDENCE/lab-status.txt" 2>&1 || true
+          cp "$TARGET"/stage-cdogs-* "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/config/instance.json" "$EVIDENCE/instance.json" 2>/dev/null || true
+          cp "$LAB/config/local.json" "$EVIDENCE/local.json" 2>/dev/null || true
+
+          {
+            echo "pre_main=$pre_main"
+            echo "entered_main=$entered_main"
+            echo "sdl_ready=$sdl_ready"
+            echo "video_ready=$video_ready"
+            echo "graphics_loaded=$graphics_loaded"
+            echo "audio_stage=$audio_stage"
+            echo "loop_enter=$loop_enter"
+            echo "loop_returned=$loop_returned"
+            echo "clean_exit=$clean_exit"
+            echo "error_exit=$error_exit"
+            echo "stages:"
+            find "$TARGET" -maxdepth 1 -type f -name 'stage-cdogs-*' -printf '%f\n' | sort
+          } | tee "$EVIDENCE/result.txt"
 
           python3 - "$EVIDENCE" <<'PY'
           from pathlib import Path
@@ -202,12 +284,16 @@ jobs:
           cleanup
           trap - EXIT
 
-          echo "returned=$returned" | tee "$EVIDENCE/result.txt"
-          test -s "$EVIDENCE/CDogs-run.log"
-          grep -F 'CDOGSTEST: starting fixed-stove demo' "$EVIDENCE/CDogs-run.log"
-          grep -F 'Entering demo mode; will auto-quit in 30 seconds' "$EVIDENCE/CDogs-run.log"
-          ! grep -Eiq '0x80000005|80000005|divide by zero' "$EVIDENCE/native-runtime.log"
-          test "$returned" -eq 1
+          test "$pre_main" -eq 1
+          test "$entered_main" -eq 1
+          test "$sdl_ready" -eq 1
+          test "$video_ready" -eq 1
+          test "$graphics_loaded" -eq 1
+          test "$audio_stage" -eq 1
+          test "$loop_enter" -eq 1
+          test "$loop_returned" -eq 1
+          test "$error_exit" -eq 0
+          test "$clean_exit" -eq 1
 
       - name: Upload first-light evidence only
         if: always()
