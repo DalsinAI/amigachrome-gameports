@@ -1,0 +1,317 @@
+name: AstroMenace Instance-32 Real-World Deploy
+
+on:
+  push:
+    branches:
+      - deploy/astromenace-instance32-20261012
+    paths:
+      - ports/astromenace/**
+      - .github/workflows/astromenace-instance32-realworld.yml
+  workflow_dispatch:
+
+concurrency:
+  group: astromenace-instance32-realworld
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build, back up, deploy and open on Instance-32
+    runs-on: self-hosted
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout AstroMenace port work
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Checkout corrected OpenGPU SDL implementation
+        uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/openamigartg
+          ref: implement/opengpu-sdl-keyboard-fix
+          path: build/openamigartg-text-input
+          clean: true
+          fetch-depth: 1
+
+      - name: Checkout AmigaChrome GlowIcon writer
+        uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/amigachrome-guest
+          ref: main
+          path: build/amigachrome-guest
+          clean: true
+          fetch-depth: 1
+
+      - name: Build corrected SDL2 module
+        shell: bash
+        run: |
+          set -euxo pipefail
+          ORTG="$GITHUB_WORKSPACE/build/openamigartg-text-input"
+          OUT="$GITHUB_WORKSPACE/build/sdl2-instance32"
+          mkdir -p "$OUT"
+          (cd "$ORTG" && library/modules/sdl2/build.sh "$OUT" module stub static)
+          test -s "$OUT/SDL2.module"
+          file "$OUT/SDL2.module"
+          sha256sum "$OUT/SDL2.module" | tee "$OUT/SHA256SUMS"
+
+      - name: Prepare and build clean AstroMenace 0012-RW1
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game astromenace
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_DIAGNOSTICS=0 \
+          ASTROMENACE_RELEASE_ID=0012-RW1 \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
+            build/game-ports/sources/astromenace \
+            build/os3/astromenace-instance32
+          PKG="$GITHUB_WORKSPACE/build/os3/astromenace-instance32/package/AstroMenace"
+          test -s "$PKG/AstroMenace"
+          test -s "$PKG/gamedata.vfs"
+          test ! -e "$PKG/gamedata"
+
+      - name: Build and verify AstroMenace Workbench GlowIcon
+        shell: bash
+        run: |
+          set -euxo pipefail
+          PYTHON=python3
+          if ! "$PYTHON" -c 'import PIL' >/dev/null 2>&1; then
+            python3 -m venv build/icon-venv
+            build/icon-venv/bin/pip install Pillow
+            PYTHON=build/icon-venv/bin/python
+          fi
+          PKG="$GITHUB_WORKSPACE/build/os3/astromenace-instance32/package/AstroMenace"
+          "$PYTHON" ports/astromenace/make_workbench_icon.py \
+            "$GITHUB_WORKSPACE/build/amigachrome-guest/tools/icons/amigaicon.py" \
+            "$PKG/AstroMenace.info" \
+            "$GITHUB_WORKSPACE/build/os3/astromenace-instance32/AstroMenace-icon-preview.png"
+          test -s "$PKG/AstroMenace.info"
+          (
+            cd "$PKG"
+            sha256sum AstroMenace gamedata.vfs AstroMenace.info > SHA256SUMS
+          )
+          file "$PKG/AstroMenace.info"
+          stat -c '%n %s bytes' "$PKG/AstroMenace.info"
+
+      - name: Package the icon-bearing release
+        shell: bash
+        run: |
+          set -euxo pipefail
+          OUT="$GITHUB_WORKSPACE/build/os3/astromenace-instance32"
+          rm -f "$OUT/AstroMenace-AC090-GCC16-0012-RW1.zip"
+          (
+            cd "$OUT/package"
+            zip -qr "$OUT/AstroMenace-AC090-GCC16-0012-RW1.zip" AstroMenace
+          )
+          sha256sum "$OUT/AstroMenace-AC090-GCC16-0012-RW1.zip" \
+            > "$OUT/SHA256SUMS-RW1"
+
+      - name: Resolve, stop and snapshot Instance-32
+        id: prepare_instance
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-instance32/realworld-evidence"
+          mkdir -p "$EVIDENCE"
+          python3 - "$APP" "$EVIDENCE" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          app = Path(sys.argv[1])
+          evidence = Path(sys.argv[2])
+          sys.path.insert(0, str(app / "scripts"))
+          import ac
+
+          cradle = ac.Cradle(ac.DEFAULT_CRADLE)
+          info = ac.match_instance(list(cradle.get("/api/instances").get("instances") or []), "32")
+          install = Path(str(info.get("install") or "")).resolve()
+          if install.name != "Instance-32" or not install.is_dir():
+              raise SystemExit(f"refusing unexpected Instance-32 path: {install}")
+          (evidence / "instance-before.json").write_text(
+              json.dumps(info, indent=2, sort_keys=True, default=str) + "\n",
+              encoding="utf-8",
+          )
+          (evidence / "instance-path.txt").write_text(str(install) + "\n", encoding="utf-8")
+          (evidence / "was-running.txt").write_text(
+              ("1" if info.get("running") else "0") + "\n", encoding="ascii"
+          )
+          print(str(install))
+          PY
+          INSTANCE=$(cat "$EVIDENCE/instance-path.txt")
+          WAS_RUNNING=$(cat "$EVIDENCE/was-running.txt")
+          printf 'INSTANCE_PATH=%s\n' "$INSTANCE" >> "$GITHUB_ENV"
+          printf 'WAS_RUNNING=%s\n' "$WAS_RUNNING" >> "$GITHUB_ENV"
+          python3 "$APP/scripts/ac.py" stop 32 --json | tee "$EVIDENCE/stop.json"
+          python3 "$APP/scripts/ac.py" snap 32 take --json | tee "$EVIDENCE/snapshot.json"
+
+      - name: Install Cradle MCP agent while Instance-32 is stopped
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-instance32/realworld-evidence"
+          python3 - "$APP" "$EVIDENCE" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          app = Path(sys.argv[1])
+          evidence = Path(sys.argv[2])
+          sys.path.insert(0, str(app / "scripts"))
+          from cradle_mcp_amiga import AmigaTools
+
+          tools = AmigaTools()
+          tools.Error = RuntimeError
+          result = tools.install_agent("32")
+          (evidence / "install-agent.json").write_text(
+              json.dumps(result, indent=2, sort_keys=True, default=str) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(result, indent=2, default=str))
+          PY
+
+      - name: Back up and deploy corrected SDL plus AstroMenace
+        shell: bash
+        run: |
+          set -euxo pipefail
+          INSTANCE="$INSTANCE_PATH"
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-instance32/realworld-evidence"
+          SDL_OUT="$GITHUB_WORKSPACE/build/sdl2-instance32"
+          PKG="$GITHUB_WORKSPACE/build/os3/astromenace-instance32/package/AstroMenace"
+          BACKUP="$INSTANCE/archive/astromenace-rw1-${GITHUB_RUN_ID}"
+          TARGET="$INSTANCE/devices/harddisks/DH1/AstroMenace-0012-RW1"
+          mkdir -p "$BACKUP"
+
+          MODULE_TARGET=$(find "$INSTANCE/devices/harddisks/DH0" -type f \
+            -iname SDL2.module -path '*/OpenGPU/*' -print -quit || true)
+          if [ -z "$MODULE_TARGET" ]; then
+            MODULE_TARGET="$INSTANCE/devices/harddisks/DH0/Libs/OpenGPU/SDL2.module"
+          fi
+          mkdir -p "$(dirname "$MODULE_TARGET")"
+          if [ -f "$MODULE_TARGET" ]; then
+            cp -a "$MODULE_TARGET" "$BACKUP/SDL2.module.before"
+          fi
+          cp "$SDL_OUT/SDL2.module" "$MODULE_TARGET.new"
+          mv "$MODULE_TARGET.new" "$MODULE_TARGET"
+
+          if [ -e "$TARGET" ]; then
+            mv "$TARGET" "$BACKUP/AstroMenace-0012-RW1.before"
+          fi
+          mkdir -p "$TARGET"
+          cp -a "$PKG/." "$TARGET/"
+
+          printf '%s\n' "$BACKUP" > "$EVIDENCE/backup-path.txt"
+          printf '%s\n' "$MODULE_TARGET" > "$EVIDENCE/module-target.txt"
+          printf '%s\n' "$TARGET" > "$EVIDENCE/game-target.txt"
+          printf 'BACKUP_PATH=%s\n' "$BACKUP" >> "$GITHUB_ENV"
+          printf 'MODULE_TARGET=%s\n' "$MODULE_TARGET" >> "$GITHUB_ENV"
+          printf 'GAME_TARGET=%s\n' "$TARGET" >> "$GITHUB_ENV"
+
+          sha256sum "$MODULE_TARGET" "$TARGET/AstroMenace" \
+            "$TARGET/gamedata.vfs" "$TARGET/AstroMenace.info" \
+            | tee "$EVIDENCE/deployed-sha256.txt"
+          find "$TARGET" -maxdepth 2 -type f -printf '%P %s bytes\n' | sort \
+            > "$EVIDENCE/deployed-files.txt"
+          test -s "$TARGET/AstroMenace.info"
+
+      - name: Start Instance-32 and prove Cradle MCP access
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-instance32/realworld-evidence"
+          python3 "$APP/scripts/ac.py" start 32 --wait --timeout 120 --json \
+            | tee "$EVIDENCE/start.json"
+          python3 - "$APP" "$EVIDENCE" <<'PY'
+          import base64
+          import json
+          import sys
+          import time
+          from pathlib import Path
+
+          app = Path(sys.argv[1])
+          evidence = Path(sys.argv[2])
+          sys.path.insert(0, str(app / "scripts"))
+          from cradle_mcp_amiga import AmigaTools
+
+          tools = AmigaTools()
+          tools.Error = RuntimeError
+          target = "32"
+
+          ready = tools.amiga_run(target, "Version\nAvail", timeout=30)
+          (evidence / "mcp-ready.json").write_text(
+              json.dumps(ready, indent=2, sort_keys=True, default=str) + "\n",
+              encoding="utf-8",
+          )
+          if not ready.get("finished"):
+              raise SystemExit("Instance-32 agent did not finish its readiness check")
+
+          launch = "\n".join([
+              "FailAt 21",
+              "Stack 1000000",
+              "CD DH1:AstroMenace-0012-RW1",
+              "Run >NIL: <NIL: AstroMenace >AstroMenace-realworld.log",
+              "Wait 12",
+              "List AstroMenace AstroMenace.info gamedata.vfs LFORMAT=\"%N %L bytes\"",
+          ])
+          result = tools.amiga_run(target, launch, timeout=35)
+          (evidence / "mcp-launch.json").write_text(
+              json.dumps(result, indent=2, sort_keys=True, default=str) + "\n",
+              encoding="utf-8",
+          )
+          time.sleep(8)
+          shot = tools.instance_screenshot(target, "rtg", 50)
+          content = shot.get("_content", [{}])[0]
+          data = content.get("data")
+          if data:
+              (evidence / "instance32-astromenace.png").write_bytes(base64.b64decode(data))
+          meta = {k: v for k, v in shot.items() if k != "_content"}
+          (evidence / "screenshot.json").write_text(
+              json.dumps(meta, indent=2, sort_keys=True, default=str) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(result, indent=2, default=str))
+          print(json.dumps(meta, indent=2, default=str))
+          PY
+
+          if [ -f "$GAME_TARGET/AstroMenace-realworld.log" ]; then
+            cp "$GAME_TARGET/AstroMenace-realworld.log" "$EVIDENCE/"
+          fi
+          test -s "$EVIDENCE/instance32-astromenace.png"
+
+      - name: Roll back the SDL module if deployment fails
+        if: failure() && env.INSTANCE_PATH != ''
+        shell: bash
+        run: |
+          set +e
+          APP="$HOME/AmigaChrome"
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-instance32/realworld-evidence"
+          python3 "$APP/scripts/ac.py" stop 32 --json > "$EVIDENCE/rollback-stop.json" 2>&1
+          if [ -n "${BACKUP_PATH:-}" ] && [ -f "$BACKUP_PATH/SDL2.module.before" ] && [ -n "${MODULE_TARGET:-}" ]; then
+            cp "$BACKUP_PATH/SDL2.module.before" "$MODULE_TARGET.rollback"
+            mv "$MODULE_TARGET.rollback" "$MODULE_TARGET"
+            echo restored > "$EVIDENCE/rollback-module.txt"
+          fi
+          if [ "${WAS_RUNNING:-0}" = "1" ]; then
+            python3 "$APP/scripts/ac.py" start 32 --wait --timeout 120 --json \
+              > "$EVIDENCE/rollback-start.json" 2>&1
+          fi
+
+      - name: Upload release and real-world evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-Instance32-RW1-${{ github.run_id }}
+          path: |
+            build/os3/astromenace-instance32/AstroMenace-AC090-GCC16-0012-RW1.zip
+            build/os3/astromenace-instance32/SHA256SUMS-RW1
+            build/os3/astromenace-instance32/AstroMenace-icon-preview.png
+            build/os3/astromenace-instance32/realworld-evidence/
+          if-no-files-found: warn
+          retention-days: 30
