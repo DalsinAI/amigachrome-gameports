@@ -1,0 +1,171 @@
+name: AstroMenace MixClose Probe V2
+
+on:
+  push:
+    branches:
+      - debug/astromenace-mixclose-probe-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: astromenace-mixclose-probe-v2
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    name: Locate exact AstroMenace audio-close block
+    runs-on: self-hosted
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Build instrumented SDL2 and SDL2_mixer modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/mixclose-v2"
+          OGPU="$ROOT/openamigartg"
+          OUT="$ROOT/out"
+          WORK="$OUT/sdl2-work"
+          EVIDENCE="$ROOT/evidence"
+          rm -rf "$ROOT"
+          mkdir -p "$EVIDENCE"
+          git clone --quiet --depth 1 https://github.com/DalsinAI/openamigartg.git "$OGPU"
+          git -C "$OGPU" rev-parse HEAD | tee "$EVIDENCE/openamigartg-head.txt"
+          python3 ports/astromenace/patch_opengpu_sdl2_ahi_close.py "$OGPU"
+
+          set +e
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16/prefix" \
+          SDK_HEADERS="$HOME/AmigaChrome/stoves/os32/prefix/m68k-amigaos/include" \
+          "$OGPU/library/modules/sdl2/build.sh" "$OUT" module satellites \
+            >"$EVIDENCE/baseline-build.log" 2>&1
+          baseline_rc=$?
+          set -e
+          echo "baseline_rc=$baseline_rc" | tee "$EVIDENCE/baseline-result.txt"
+
+          AHI="$WORK/SDL2-2.32.10/src/audio/amigaos3/SDL_os3audio.c"
+          CORE="$WORK/SDL2-2.32.10/src/audio/SDL_audio.c"
+          test -f "$AHI" && test -f "$CORE"
+          grep -q 'SDL_rwops.h' "$AHI" || sed -i '/#include "SDL_timer.h"/a #include "SDL_rwops.h"' "$AHI"
+          grep -q 'SDL_rwops.h' "$CORE" || sed -i '/#include "SDL_audio_c.h"/a #include "SDL_rwops.h"' "$CORE"
+          python3 ports/astromenace/patch_mixclose_probe_modules.py "$OUT" \
+            | tee "$EVIDENCE/instrument.txt"
+
+          find "$WORK" -type f \( -name mixer.o -o -name SDL_audio.o -o -name SDL_os3audio.o \) -delete
+          make -f "$OGPU/library/modules/sdl2/Makefile" -j4 \
+            SDL="$WORK/SDL2-2.32.10" OUT="$OUT" WORK="$WORK" module \
+            >"$EVIDENCE/module-rebuild.log" 2>&1
+          make -f "$OGPU/library/modules/sdl2/satellites/Makefile" -j4 \
+            OUT="$OUT" WORK="$WORK" "$OUT/SDL2_mixer.module" \
+            >"$EVIDENCE/mixer-rebuild.log" 2>&1
+          test -s "$OUT/SDL2.module"
+          test -s "$OUT/SDL2_mixer.module"
+          strings "$OUT/SDL2.module" | grep -F 'stage-sdlaudio-05-before-wait-thread'
+          strings "$OUT/SDL2.module" | grep -F 'stage-ahi-deinit-00-enter'
+          strings "$OUT/SDL2_mixer.module" | grep -F 'stage-mixclose-14-before-sdl-close-device'
+          sha256sum "$OUT/SDL2.module" "$OUT/SDL2_mixer.module" \
+            | tee "$EVIDENCE/modules-sha256.txt"
+
+      - name: Build AstroMenace diagnostic launcher package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/mixclose-v2"
+          rm -rf build/game-ports/sources/astromenace "$ROOT/source" "$ROOT/diagnostic"
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game astromenace
+          cp -a build/game-ports/sources/astromenace "$ROOT/source"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 ASTROMENACE_DIAGNOSTICS=1 ASTROMENACE_RELEASE_ID=0011 \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
+            "$ROOT/source" "$ROOT/diagnostic" \
+            >"$ROOT/evidence/astromenace-build.log" 2>&1
+          PKG="$ROOT/diagnostic/package/AstroMenace"
+          test -x "$PKG/AstroMenace"
+          test -x "$PKG/AstroMenace.bin"
+          test -s "$PKG/gamedata.vfs"
+          sha256sum "$PKG/AstroMenace" "$PKG/AstroMenace.bin" "$PKG/gamedata.vfs" \
+            | tee "$ROOT/evidence/astromenace-sha256.txt"
+
+      - name: Run player journey and capture internal close markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_TOOL="$APP/scripts/lab_instance.py"
+          ROOT="$PWD/build/mixclose-v2"
+          OUT="$ROOT/out"
+          PKG="$ROOT/diagnostic/package/AstroMenace"
+          EVIDENCE="$ROOT/evidence/runtime"
+          LAB_ROOT="$HOME/AmigaChrome-dev/astromenace-mixclose-probe-labs"
+          LAB="$LAB_ROOT/Instance-Astro-MixCloseV2-${GITHUB_RUN_ID}"
+          TARGET="$LAB/devices/harddisks/DH1/AstroMenace-MIXPROBE"
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          rm -rf "$LAB"
+          python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
+          cleanup(){ python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true; rm -rf "$LAB"; }
+          trap cleanup EXIT
+
+          mapfile -t sdlmods < <(find "$LAB/devices/harddisks" -type f -iname 'SDL2.module' -print | sort)
+          mapfile -t mixmods < <(find "$LAB/devices/harddisks" -type f -iname 'SDL2_mixer.module' -print | sort)
+          test "${#sdlmods[@]}" -ge 1 && test "${#mixmods[@]}" -ge 1
+          printf '%s\n' "${sdlmods[@]}" > "$EVIDENCE/sdl-module-locations.txt"
+          printf '%s\n' "${mixmods[@]}" > "$EVIDENCE/mixer-module-locations.txt"
+          for f in "${sdlmods[@]}"; do cp -p "$OUT/SDL2.module" "$f.incoming"; mv -f "$f.incoming" "$f"; done
+          for f in "${mixmods[@]}"; do cp -p "$OUT/SDL2_mixer.module" "$f.incoming"; mv -f "$f.incoming" "$f"; done
+
+          rm -rf "$TARGET" && mkdir -p "$TARGET"
+          cp -a "$PKG/." "$TARGET/"
+          chmod 755 "$TARGET/AstroMenace" "$TARGET/AstroMenace.bin"
+          : > "$TARGET/AUTOTEST_FIRST_MISSION"
+          cat > "$LAB/devices/harddisks/DH0/S/AstroMenace-MixCloseV2" <<'AMIGA'
+          FailAt 21
+          Wait 5
+          CD DH1:AstroMenace-MIXPROBE
+          Echo "ASTROPROBE: starting" >AstroMenace-run.log
+          AstroMenace >>AstroMenace-run.log
+          Echo "ASTROPROBE: launcher returned RC $RC" >>AstroMenace-run.log
+          AMIGA
+          touch "$LAB/devices/harddisks/DH0/S/User-Startup"
+          printf '\nRun >NIL: <NIL: Execute S:AstroMenace-MixCloseV2\n' >> "$LAB/devices/harddisks/DH0/S/User-Startup"
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
+            --purpose "AstroMenace internal audio-close probe ${GITHUB_RUN_ID}"
+
+          reached=0
+          for attempt in $(seq 1 42); do
+            test ! -f "$TARGET/stage-audio-before-mix-close" || reached=1
+            test ! -f "$TARGET/stage-shutdown-complete" || break
+            sleep 5
+          done
+          test "$reached" -eq 1
+          cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
+          find "$TARGET" -maxdepth 1 -type f \( -name 'stage-*' -o -name 'AstroMenace-*.bmp' \) \
+            -exec cp -p {} "$EVIDENCE/" \;
+          {
+            echo '=== Mix_CloseAudio ==='
+            find "$TARGET" -maxdepth 1 -type f -name 'stage-mixclose-*' -printf '%f\n' | sort
+            echo '=== SDL close_audio_device ==='
+            find "$TARGET" -maxdepth 1 -type f -name 'stage-sdlaudio-*' -printf '%f\n' | sort
+            echo '=== AHI ==='
+            find "$TARGET" -maxdepth 1 -type f -name 'stage-ahi-*' -printf '%f\n' | sort
+            echo '=== Application ==='
+            find "$TARGET" -maxdepth 1 -type f -name 'stage-audio-*' -printf '%f\n' | sort
+          } | tee "$EVIDENCE/probe-summary.txt"
+          cleanup
+          trap - EXIT
+          cat "$EVIDENCE/probe-summary.txt"
+
+      - name: Upload probe evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-MixClose-V2-${{ github.run_id }}
+          path: build/mixclose-v2/evidence/
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 0
