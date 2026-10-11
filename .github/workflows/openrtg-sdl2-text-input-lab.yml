@@ -1,0 +1,72 @@
+name: OpenRTG SDL2 Text Input Lab
+
+on:
+  push:
+    branches:
+      - lab/openrtg-sdl2-text-input-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: openrtg-sdl2-text-input-lab
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Cross-build SDL2 text input
+    runs-on: self-hosted
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout lab harness
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Checkout OpenRTG implementation
+        uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/openamigartg
+          ref: implement/opengpu-sdl-keyboard-fix
+          path: openamigartg
+          clean: true
+          fetch-depth: 1
+
+      - name: Build SDL2 module static library and diagnostic
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cd openamigartg
+          OUT="$PWD/build/sdl2-text-input"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16/prefix"
+          test -x "$STOVE/bin/m68k-amigaos-gcc"
+          "$STOVE/bin/m68k-amigaos-gcc" --version | head -1
+          rm -rf "$OUT"
+          library/modules/sdl2/build.sh "$OUT" module stub static
+          mkdir -p "$OUT/tests/sdl2"
+          "$STOVE/bin/m68k-amigaos-gcc" -O2 -m68040 -m68881 \
+            -fno-delete-null-pointer-checks -noixemul \
+            -I"$OUT/include/SDL2" -o "$OUT/tests/sdl2/textinput.m" \
+            tests/sdl2/textinput.c -L"$OUT" -lSDL2 -lm -lamiga
+          "$STOVE/bin/m68k-amigaos-gcc" -O2 -m68040 -m68881 \
+            -fno-delete-null-pointer-checks -noixemul \
+            -I"$OUT/include/SDL2" -o "$OUT/tests/sdl2/textinput" \
+            tests/sdl2/textinput.c -L"$OUT" -lSDL2_static -lm -lamiga
+          file "$OUT/SDL2.module" "$OUT/tests/sdl2/textinput.m" "$OUT/tests/sdl2/textinput"
+          sha256sum "$OUT/SDL2.module" "$OUT/tests/sdl2/textinput.m" \
+            "$OUT/tests/sdl2/textinput" | tee "$OUT/SHA256SUMS-text-input"
+
+      - name: Upload build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenRTG-SDL2-TextInput-Lab-${{ github.run_id }}
+          path: |
+            openamigartg/build/sdl2-text-input/SDL2.module
+            openamigartg/build/sdl2-text-input/libSDL2.a
+            openamigartg/build/sdl2-text-input/libSDL2_static.a
+            openamigartg/build/sdl2-text-input/tests/sdl2/textinput
+            openamigartg/build/sdl2-text-input/tests/sdl2/textinput.m
+            openamigartg/build/sdl2-text-input/SHA256SUMS-text-input
+          if-no-files-found: warn
+          retention-days: 30
