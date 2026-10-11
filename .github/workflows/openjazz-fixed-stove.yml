@@ -1,0 +1,115 @@
+name: OpenJazz Fixed-Stove Engine Build
+
+on:
+  push:
+    branches:
+      - build/openjazz-fixed-stove-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: openjazz-fixed-stove-engine
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build OpenJazz for AC090 with GCC16
+    runs-on: self-hosted
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout OpenJazz build branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Preflight daletop and fixed stove
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = daletop
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16"
+          test -x "$STOVE/prefix/bin/m68k-amigaos-g++"
+          test -x "$STOVE/prefix/bin/sdl2-config"
+          "$STOVE/prefix/bin/m68k-amigaos-g++" --version | head -1
+          "$STOVE/prefix/bin/sdl2-config" --version
+
+      - name: Prepare and verify exact pinned source
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/openjazz-fixed-stove"
+          SRC="$PWD/build/game-ports/sources/openjazz"
+          OUT="$PWD/build/os3/openjazz-fixed-stove"
+          rm -rf "$ROOT" "$SRC" "$OUT"
+          mkdir -p "$ROOT/evidence"
+
+          python3 scripts/game_port_prepare.py prepare \
+            --root "$PWD" --game openjazz --allow-network \
+            | tee "$ROOT/evidence/source-prepare.json"
+          python3 scripts/game_port_prepare.py verify \
+            --root "$PWD" --game openjazz \
+            | tee "$ROOT/evidence/source-verify.json"
+
+          test "$(git -C "$SRC" rev-parse HEAD)" = \
+            a1626f4edd4a7af72c54103021790c56d8ecfced
+          git -C "$SRC" rev-parse HEAD | tee "$ROOT/evidence/upstream-head.txt"
+
+      - name: Build fixed-stove OpenJazz engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/openjazz-fixed-stove"
+          SRC="$PWD/build/game-ports/sources/openjazz"
+          OUT="$PWD/build/os3/openjazz-fixed-stove"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16"
+
+          STOVE="$STOVE" sh ports/openjazz/build-amigaos3.sh "$SRC" "$OUT" \
+            2>&1 | tee "$ROOT/evidence/build.log"
+
+          EXE="$OUT/OpenJazz"
+          test -x "$EXE"
+          file "$EXE" | tee "$ROOT/evidence/binary-type.txt"
+          file "$EXE" | grep -q 'AmigaOS loadseg'
+          sha256sum "$EXE" | tee "$ROOT/evidence/binary-sha256.txt"
+          stat -c '%n %s bytes' "$EXE" | tee "$ROOT/evidence/binary-size.txt"
+
+          PKG="$ROOT/package/OpenJazz"
+          mkdir -p "$PKG"
+          cp -p "$EXE" "$PKG/OpenJazz"
+          chmod 755 "$PKG/OpenJazz"
+          cat > "$PKG/README-AmigaChrome.txt" <<EOF
+          OpenJazz engine for AmigaChrome AC090
+          Target: AmigaOS 3.x, 68040 + FPU
+          Compiler: GCC 16.2.0b fixed stove
+          Upstream commit: a1626f4edd4a7af72c54103021790c56d8ecfced
+
+          Original or shareware Jazz Jackrabbit data is not bundled. Place an
+          authorised data set beside the executable for runtime testing.
+          EOF
+          sha256sum "$PKG/OpenJazz" > "$PKG/SHA256SUMS"
+
+      - name: Audit engine-only package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/openjazz-fixed-stove"
+          PKG="$ROOT/package/OpenJazz"
+          test -x "$PKG/OpenJazz"
+          test "$(find "$PKG" -type f | wc -l)" -eq 3
+          ! find "$PKG" -type f \
+            \( -iname '*.000' -o -iname '*.pak' -o -iname '*.j2l' \
+               -o -iname '*.mod' -o -iname '*.wav' \) -print | grep -q .
+          sha256sum -c "$PKG/SHA256SUMS"
+          du -sh "$PKG" | tee "$ROOT/evidence/package-size.txt"
+
+      - name: Upload fixed-stove engine and provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenJazz-AC090-GCC16-${{ github.run_id }}
+          path: |
+            build/openjazz-fixed-stove/package/OpenJazz/
+            build/openjazz-fixed-stove/evidence/
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 6
