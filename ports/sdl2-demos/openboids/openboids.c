@@ -247,9 +247,9 @@ int main(int argc, char **argv)
                 blue = (Uint8)(128.0f + 127.0f * sinf(phase + 4.188f));
             }
 
-            SDL_zeroa(v[0].tex_coord);
-            SDL_zeroa(v[1].tex_coord);
-            SDL_zeroa(v[2].tex_coord);
+            v[0].tex_coord.x = 0.0f; v[0].tex_coord.y = 0.0f;
+            v[1].tex_coord.x = 0.0f; v[1].tex_coord.y = 0.0f;
+            v[2].tex_coord.x = 0.0f; v[2].tex_coord.y = 0.0f;
             v[0].position.x = b->x + dx * 7.0f;
             v[0].position.y = b->y + dy * 7.0f;
             v[1].position.x = b->x - dx * 4.5f + sx * 3.8f;
