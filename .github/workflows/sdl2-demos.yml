@@ -34,15 +34,15 @@ jobs:
           "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc" --version | head -1
           "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
 
-      - name: Build phase one and deploy each completed demo
+      - name: Build phase one then phase two and deploy each completed demo
         shell: bash
         run: bash ports/sdl2-demos/build.sh
 
-      - name: Upload phase-one binaries and build logs
+      - name: Upload all binaries and build logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: OpenUp-SDL2-Demos-Phase1-${{ github.run_id }}
+          name: OpenUp-SDL2-Demos-${{ github.run_id }}
           path: build/sdl2-demos
           if-no-files-found: warn
           retention-days: 90
