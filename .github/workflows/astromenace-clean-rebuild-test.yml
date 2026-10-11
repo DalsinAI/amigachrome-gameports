@@ -1,11 +1,42 @@
 name: AstroMenace Clean Rebuild and Test
 
 on:
+  push:
+    branches:
+      - fix/astromenace-clean-rebuild-20261011
   workflow_dispatch:
 
+concurrency:
+  group: astromenace-clean-rebuild-instance32
+  cancel-in-progress: true
+
 jobs:
-  paused:
-    name: Launcher correction is being prepared
+  rebuild-test-deploy:
+    name: Rebuild, qualify and replace Instance-32 AstroMenace
     runs-on: self-hosted
+    timeout-minutes: 40
+
     steps:
-      - run: echo "AstroMenace cleanup workflow temporarily paused"
+      - name: Checkout clean-rebuild branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Run guarded clean rebuild, qualification and deployment
+        shell: bash
+        run: |
+          chmod +x scripts/run_astromenace_clean_rebuild_test.sh
+          bash scripts/run_astromenace_clean_rebuild_test.sh
+
+      - name: Upload rebuilt package and qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-AC090-GCC16-0011-${{ github.run_id }}
+          path: |
+            build/os3/astromenace-clean-rebuild/AstroMenace-AC090-GCC16-0011.zip
+            build/os3/astromenace-clean-rebuild/AstroMenace-AC090-GCC16-0011.zip.sha256
+            build/os3/astromenace-clean-rebuild/evidence/
+          if-no-files-found: warn
+          retention-days: 90
