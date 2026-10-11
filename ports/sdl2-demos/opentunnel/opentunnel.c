@@ -38,7 +38,7 @@ static SDL_Texture *make_ball(SDL_Renderer *renderer)
                 float v = asinf(dy) * 2.5f;
                 int check = (((int)floorf(u + 8.0f)) ^ ((int)floorf(v + 8.0f))) & 1;
                 float light = 0.38f + 0.62f * (0.25f * dx - 0.35f * dy + 0.90f * z);
-                int base_r = check ? 238 : 238;
+                int base_r = 238;
                 int base_g = check ? 238 : 28;
                 int base_b = check ? 238 : 28;
                 int r = (int)(base_r * light);
@@ -118,6 +118,7 @@ int main(int argc, char **argv)
     while (running) {
         char mode[96];
         int i;
+        int phase;
 
         while (SDL_PollEvent(&event)) {
             if (demo_common_event(&app, &event, &running)) {
@@ -145,12 +146,13 @@ int main(int argc, char **argv)
         if (!paused) {
             frame += (Uint32)(speed >= 0 ? speed : -speed);
         }
+        phase = speed < 0 ? -(int)frame : (int)frame;
 
         for (i = 0; i < TUNNEL_W * TUNNEL_H; ++i) {
             int px = i % TUNNEL_W;
             int py = i / TUNNEL_W;
-            int u = (int)distance[i] + (int)(frame * (speed >= 0 ? 2u : (Uint32)-2));
-            int v = (int)angle[i] + (int)(frame * (speed >= 0 ? 1u : (Uint32)-1));
+            int u = (int)distance[i] + phase * 2;
+            int v = (int)angle[i] + phase;
             int pattern = (((u >> 4) ^ (v >> 4)) & 1);
             int rings = ((u >> 3) + (v >> 5)) & 15;
             int dither = bayer4[(py & 3) * 4 + (px & 3)];
@@ -183,14 +185,14 @@ int main(int argc, char **argv)
         SDL_RenderClear(app.renderer);
         SDL_RenderCopy(app.renderer, tunnel, NULL, NULL);
         {
-            float t = (float)frame * 0.035f;
+            float t = (float)phase * 0.035f;
             SDL_Rect dst;
             dst.w = BALL_SIZE;
             dst.h = BALL_SIZE;
             dst.x = TUNNEL_W / 2 - BALL_SIZE / 2 + (int)(sinf(t * 0.7f) * 24.0f);
             dst.y = TUNNEL_H / 2 - BALL_SIZE / 2 + (int)(cosf(t * 0.9f) * 18.0f);
             SDL_RenderCopyEx(app.renderer, ball, NULL, &dst,
-                             (double)frame * 1.7, NULL, SDL_FLIP_NONE);
+                             (double)phase * 1.7, NULL, SDL_FLIP_NONE);
         }
         SDL_RenderPresent(app.renderer);
 
