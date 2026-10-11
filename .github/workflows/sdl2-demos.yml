@@ -1,0 +1,48 @@
+name: OpenUp SDL2 Demos
+
+on:
+  push:
+    branches:
+      - feature/sdl2-demos-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: openup-sdl2-demos-instance32
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    name: Build and deploy SDL2 demos to Instance-32 DH1
+    runs-on: self-hosted
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout SDL2 demo branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Verify daletop OpenGPU SDK and Instance-32
+        shell: bash
+        run: |
+          set -eux
+          test "$(hostname)" = daletop
+          test -x "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc"
+          test -x "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config"
+          test -d "/home/da1ek/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+          "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc" --version | head -1
+          "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
+
+      - name: Build phase one and deploy each completed demo
+        shell: bash
+        run: bash ports/sdl2-demos/build.sh
+
+      - name: Upload phase-one binaries and build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenUp-SDL2-Demos-Phase1-${{ github.run_id }}
+          path: build/sdl2-demos
+          if-no-files-found: warn
+          retention-days: 90
