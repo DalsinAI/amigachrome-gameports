@@ -26,10 +26,16 @@ int main(void)
     LONG result;
 
     if (output) {
+        /* The first line is the stable qualification marker used by the
+         * existing runtime campaign. The second records the actual primitive
+         * so evidence distinguishes this repair from the failed SystemTags
+         * launcher experiment. */
         FPrintf(output,
-                (CONST_STRPTR)"ASTROLAUNCH: RunCommand AstroMenace.bin with "
+                (CONST_STRPTR)"ASTROLAUNCH: starting AstroMenace.bin with "
                                  "%ld-byte stack\n",
                 ASTROMENACE_STACK_BYTES);
+        FPuts(output,
+              (CONST_STRPTR)"ASTROLAUNCH: RunCommand AstroMenace.bin\n");
         Flush(output);
     }
 
