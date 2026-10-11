@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
+PREFIX=${PREFIX:-"$HOME/AmigaChrome/stoves/os32-gcc16/prefix"}
+CC=${CC:-"$PREFIX/bin/m68k-amigaos-gcc"}
+STRIP=${STRIP:-"$PREFIX/bin/m68k-amigaos-strip"}
+SDL2_CONFIG=${SDL2_CONFIG:-"$PREFIX/bin/sdl2-config"}
+OUT=${OUT:-"$ROOT/build/sdl2-demos"}
+DEST_ROOT=${DEST_ROOT:-"~/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/SDL2 Demos"}
+
+[ -x "$CC" ] || { echo "missing compiler: $CC" >&2; exit 2; }
+[ -x "$SDL2_CONFIG" ] || { echo "missing OpenGPU SDL2 SDK: $SDL2_CONFIG" >&2; exit 2; }
+[ -d "$(dirname "$DEST_ROOT")" ] || { echo "Instance-32 DH1 is missing" >&2; exit 2; }
+
+mkdir -p "$OUT/bin" "$OUT/logs" "$DEST_ROOT"
+
+SDL_CFLAGS=$($SDL2_CONFIG --cflags)
+SDL_LIBS=$($SDL2_CONFIG --libs)
+COMMON_FLAGS="-std=gnu11 -O2 -fomit-frame-pointer -fno-delete-null-pointer-checks -Wall -Wextra -Wno-unused-function"
+
+printf '%s\n' "Compiler: $($CC --version | head -1)" | tee "$OUT/BUILD-INFO.txt"
+printf '%s\n' "SDL2: $($SDL2_CONFIG --version)" | tee -a "$OUT/BUILD-INFO.txt"
+printf '%s\n' "CFLAGS: $SDL_CFLAGS $COMMON_FLAGS" | tee -a "$OUT/BUILD-INFO.txt"
+printf '%s\n' "LIBS: $SDL_LIBS -lm" | tee -a "$OUT/BUILD-INFO.txt"
+
+write_readme() {
+    local name=$1
+    local text=$2
+    cat > "$OUT/bin/$name.readme" <<EOF
+$name for OpenUp / AmigaChrome
+
+$text
+
+Common controls:
+  F or F11  Toggle fullscreen
+  Esc       Quit cleanly
+
+Target: AmigaOS 3.2.x, 68040 + FPU
+Graphics: OpenGPU SDL2 renderer
+Built: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+EOF
+}
+
+deploy_one() {
+    local name=$1
+    local src=$2
+    local help=$3
+    local binary="$OUT/bin/$name"
+    local incoming="$DEST_ROOT/.$name.incoming-${GITHUB_RUN_ID:-$$}"
+    local readme_incoming="$DEST_ROOT/.$name.readme.incoming-${GITHUB_RUN_ID:-$$}"
+
+    echo "=== Building $name ==="
+    # shellcheck disable=SC2086
+    "$CC" $SDL_CFLAGS $COMMON_FLAGS -I"$HERE/common" "$src" -o "$binary" $SDL_LIBS -lm \
+        2>&1 | tee "$OUT/logs/$name.log"
+    [ -s "$binary" ] || { echo "$name build produced no binary" >&2; exit 3; }
+    if [ -x "$STRIP" ]; then
+        "$STRIP" "$binary"
+    fi
+    write_readme "$name" "$help"
+    sha256sum "$binary" "$OUT/bin/$name.readme" > "$OUT/bin/$name.SHA256SUMS"
+
+    cp -p "$binary" "$incoming"
+    cp -p "$OUT/bin/$name.readme" "$readme_incoming"
+    mv -f "$incoming" "$DEST_ROOT/$name"
+    mv -f "$readme_incoming" "$DEST_ROOT/$name.readme"
+    cp -p "$OUT/bin/$name.SHA256SUMS" "$DEST_ROOT/$name.SHA256SUMS"
+
+    test -s "$DEST_ROOT/$name"
+    echo "$name READY on DH1:SDL2 Demos/$name"
+    stat -c '%n %s bytes mode=%a' "$DEST_ROOT/$name"
+}
+
+deploy_one OpenFire "$HERE/openfire/openfire.c" \
+    "Doom-style procedural fire. C changes palette, Up/Down change heat, Space pauses."
+
+deploy_one OpenTunnel "$HERE/opentunnel/opentunnel.c" \
+    "Polar tunnel with OCS-style dithering and a moving Boing Ball. Arrows change direction/speed; Space pauses."
+
+deploy_one OpenTriangles "$HERE/opentriangles/opentriangles.c" \
+    "Accelerated SDL_RenderGeometry showcase. T toggles texture, B cycles blend mode, Space pauses; drag with the left mouse button to spin."
+
+deploy_one OpenEffects "$HERE/openeffects/openeffects.c" \
+    "Plasma, metaballs, rotozoom and deformation. Space/Right advances, Left goes back, P pauses."
+
+deploy_one OpenRay "$HERE/openray/openray.c" \
+    "Interactive raycaster. WASD or arrows move, Shift runs, left-mouse drag turns, M toggles the map."
+
+cat > "$DEST_ROOT/README.txt" <<'EOF'
+OpenUp SDL2 Demos
+=================
+
+Run from Shell:
+
+  CD "DH1:SDL2 Demos"
+  OpenFire
+  OpenTunnel
+  OpenTriangles
+  OpenEffects
+  OpenRay
+
+Every demo opens in a resizable OpenBench window. F/F11 toggles fullscreen and
+Esc exits. Each executable has a matching .readme and SHA256SUMS file.
+EOF
+
+cp -p "$OUT/BUILD-INFO.txt" "$DEST_ROOT/BUILD-INFO.txt"
+(
+    cd "$OUT/bin"
+    sha256sum OpenFire OpenTunnel OpenTriangles OpenEffects OpenRay > PHASE1-SHA256SUMS
+)
+cp -p "$OUT/bin/PHASE1-SHA256SUMS" "$DEST_ROOT/PHASE1-SHA256SUMS"
+
+echo "=== Phase one deployed ==="
+find "$DEST_ROOT" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort
