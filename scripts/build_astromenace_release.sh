@@ -3,8 +3,8 @@ set -eu
 
 ROOT=${1:-"$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"}
 SRC=${2:-"$ROOT/build/game-ports/sources/astromenace"}
-OUT=${3:-"$ROOT/build/releases/astromenace-ac090-0010"}
-RELEASE_ID=${ASTROMENACE_RELEASE_ID:-0010}
+OUT=${3:-"$ROOT/build/releases/astromenace-ac090-0011"}
+RELEASE_ID=${ASTROMENACE_RELEASE_ID:-0011}
 STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
 
 rm -rf "$OUT"
@@ -18,12 +18,14 @@ JOBS=${JOBS:-4} \
 sh "$ROOT/ports/astromenace/build-amigaos3-runtime-fixed.sh" "$SRC" "$BUILD"
 
 PKG="$BUILD/package/AstroMenace"
-BIN="$PKG/AstroMenace"
+LAUNCHER="$PKG/AstroMenace"
+BIN="$PKG/AstroMenace.bin"
 VFS="$PKG/gamedata.vfs"
 ARCHIVE_NAME="AstroMenace-AC090-GCC16-$RELEASE_ID.zip"
 ARCHIVE="$OUT/$ARCHIVE_NAME"
 
-[ -s "$BIN" ] || { echo "missing release binary: $BIN" >&2; exit 10; }
+[ -s "$LAUNCHER" ] || { echo "missing release launcher: $LAUNCHER" >&2; exit 9; }
+[ -s "$BIN" ] || { echo "missing release game binary: $BIN" >&2; exit 10; }
 [ -s "$VFS" ] || { echo "missing release VFS: $VFS" >&2; exit 11; }
 [ ! -e "$PKG/gamedata" ] || { echo "release still carries duplicate raw gamedata" >&2; exit 12; }
 [ -s "$PKG/LICENSE.md" ] || { echo "missing upstream licence" >&2; exit 13; }
@@ -32,7 +34,8 @@ ARCHIVE="$OUT/$ARCHIVE_NAME"
 [ -s "$PKG/BUILD-INFO.txt" ] || { echo "missing build provenance" >&2; exit 16; }
 [ -s "$PKG/SHA256SUMS" ] || { echo "missing in-package checksums" >&2; exit 17; }
 
-file "$BIN"
+file "$LAUNCHER" "$BIN"
+strings "$LAUNCHER" | grep -F 'PROGDIR:AstroMenace.bin'
 
 # Release packages must not contain the sentinel, guest stage-file names or the
 # phase-by-phase asset trace used by the disposable qualification instance.
@@ -81,17 +84,18 @@ PY
     sha256sum "$ARCHIVE_NAME" > SHA256SUMS
 )
 
-python3 - "$BIN" "$VFS" "$ARCHIVE" "$OUT/RELEASE-MANIFEST.json" "$RELEASE_ID" <<'PY'
+python3 - "$LAUNCHER" "$BIN" "$VFS" "$ARCHIVE" "$OUT/RELEASE-MANIFEST.json" "$RELEASE_ID" <<'PY'
 from pathlib import Path
 import hashlib
 import json
 import sys
 
-binary = Path(sys.argv[1])
-vfs = Path(sys.argv[2])
-archive = Path(sys.argv[3])
-destination = Path(sys.argv[4])
-release_id = sys.argv[5]
+launcher = Path(sys.argv[1])
+binary = Path(sys.argv[2])
+vfs = Path(sys.argv[3])
+archive = Path(sys.argv[4])
+destination = Path(sys.argv[5])
+release_id = sys.argv[6]
 
 def record(path: Path) -> dict[str, object]:
     data = path.read_bytes()
@@ -103,11 +107,12 @@ def record(path: Path) -> dict[str, object]:
 
 manifest = {
     'schema': 'amigachrome-astromenace-release',
-    'version': 1,
+    'version': 2,
     'release': f'AC090-GCC16-{release_id}',
     'upstreamCommit': 'bbdb3ac5af2774c92b85c4d9b2a238f606911e66',
     'target': 'AmigaOS 3.x / AC090 / 68040 + FPU',
-    'files': [record(binary), record(vfs), record(archive)],
+    'launcherStackBytes': 1048576,
+    'files': [record(launcher), record(binary), record(vfs), record(archive)],
 }
 destination.write_text(
     json.dumps(manifest, indent=2, sort_keys=True) + '\n',
