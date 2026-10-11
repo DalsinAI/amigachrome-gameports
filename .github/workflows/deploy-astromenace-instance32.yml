@@ -1,0 +1,99 @@
+name: Deploy AstroMenace to Instance 32 DH1
+
+on:
+  push:
+    branches:
+      - ops/deploy-astromenace-instance32-20261011
+    paths:
+      - .github/workflows/deploy-astromenace-instance32.yml
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: deploy-astromenace-instance32
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Install AstroMenace 0010 on DH1
+    runs-on: self-hosted
+    timeout-minutes: 10
+
+    steps:
+      - name: Download qualified production artifact
+        uses: actions/download-artifact@v4
+        with:
+          repository: DalsinAI/amigachrome-gameports
+          run-id: 38091891867
+          github-token: ${{ github.token }}
+          name: AstroMenace-AC090-GCC16-0010
+          path: ${{ runner.temp }}/astromenace-0010-artifact
+
+      - name: Verify and install on Instance-32 DH1
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ARTIFACT_DIR="$RUNNER_TEMP/astromenace-0010-artifact"
+          EXPECTED_ZIP_SHA="bd8fed6f9a01b10b8fdb828538701d34600167938331d917186373b61e086379"
+          DEST_ROOT="/home/da1ek/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+          DEST="$DEST_ROOT/AstroMenace"
+          ZIP_DEST="$DEST_ROOT/AstroMenace-AC090-GCC16-0010.zip"
+
+          PACKAGE=$(find "$ARTIFACT_DIR" -maxdepth 3 -type f \
+            -name 'AstroMenace-AC090-GCC16-0010.zip' -print -quit)
+          test -n "$PACKAGE"
+          test -s "$PACKAGE"
+          test -d "$DEST_ROOT"
+
+          printf '%s  %s\n' "$EXPECTED_ZIP_SHA" "$PACKAGE" | sha256sum -c -
+
+          STAGE_DIR=$(mktemp -d "$RUNNER_TEMP/astromenace-install.XXXXXX")
+          INCOMING="$DEST_ROOT/.AstroMenace-0010.incoming-${GITHUB_RUN_ID}"
+          ZIP_INCOMING="$DEST_ROOT/.AstroMenace-AC090-GCC16-0010.zip.incoming-${GITHUB_RUN_ID}"
+
+          cleanup() {
+            rm -rf "$STAGE_DIR" "$INCOMING" "$ZIP_INCOMING"
+          }
+          trap cleanup EXIT
+
+          unzip -q "$PACKAGE" -d "$STAGE_DIR"
+          test -s "$STAGE_DIR/AstroMenace/AstroMenace"
+          test -s "$STAGE_DIR/AstroMenace/gamedata.vfs"
+          test -s "$STAGE_DIR/AstroMenace/BUILD-INFO.txt"
+
+          (
+            cd "$STAGE_DIR/AstroMenace"
+            sha256sum -c SHA256SUMS
+          )
+
+          rm -rf "$INCOMING"
+          cp -a "$STAGE_DIR/AstroMenace" "$INCOMING"
+          cp -p "$PACKAGE" "$ZIP_INCOMING"
+
+          if test -e "$DEST"; then
+            BACKUP="$DEST_ROOT/AstroMenace.before-0010-$(date -u +%Y%m%dT%H%M%SZ)"
+            mv "$DEST" "$BACKUP"
+            printf 'Existing AstroMenace preserved at: %s\n' "$BACKUP"
+          fi
+
+          mv "$INCOMING" "$DEST"
+          mv -f "$ZIP_INCOMING" "$ZIP_DEST"
+
+          (
+            cd "$DEST"
+            sha256sum -c SHA256SUMS
+          )
+          printf '%s  %s\n' "$EXPECTED_ZIP_SHA" "$ZIP_DEST" | sha256sum -c -
+
+          echo '--- Installed package ---'
+          cat "$DEST/BUILD-INFO.txt"
+          echo '--- DH1 paths ---'
+          stat -c '%n %s bytes mode=%a' "$ZIP_DEST" "$DEST/AstroMenace" "$DEST/gamedata.vfs"
+          echo '--- Installed files ---'
+          find "$DEST" -maxdepth 2 -type f -printf '%P %s bytes\n' | sort
+
+          trap - EXIT
+          cleanup
