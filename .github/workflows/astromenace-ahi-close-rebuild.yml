@@ -1,0 +1,479 @@
+name: AstroMenace AHI Close Fix and Clean Rebuild
+
+on:
+  push:
+    branches:
+      - fix/astromenace-ahi-close-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: astromenace-ahi-close-instance32
+  cancel-in-progress: true
+
+jobs:
+  fix-qualify-deploy:
+    name: Fix SDL2 AHI close, qualify AstroMenace and deploy 0011
+    runs-on: self-hosted
+    timeout-minutes: 55
+
+    steps:
+      - name: Checkout AstroMenace recovery branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Preflight daletop and clear stale AstroMenace labs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = daletop
+          APP="$HOME/AmigaChrome"
+          LIVE="$HOME/AmigaChromeInstances/Instance-32"
+          test -x "$APP/scripts/lab_instance.py"
+          test -x "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc"
+          test -d "$LIVE/devices/harddisks/DH0"
+          test -d "$LIVE/devices/harddisks/DH1"
+          "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc" --version | head -1
+          "$APP/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
+
+          for root in \
+            "$HOME/AmigaChrome-dev/astromenace-ahi-close-labs" \
+            "$HOME/AmigaChrome-dev/astromenace-launcher-labs" \
+            "$HOME/AmigaChrome-dev/astromenace-runtime-labs"; do
+            test -d "$root" || continue
+            for lab in "$root"/Instance-Astro-*; do
+              test -d "$lab" || continue
+              python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
+              rm -rf "$lab"
+            done
+          done
+
+      - name: Build SDL2.module with interruptible AHI shutdown
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/astromenace-ahi-close"
+          OGPU="$ROOT/openamigartg"
+          OUT="$ROOT/opengpu-build"
+          EVIDENCE="$ROOT/evidence"
+          mkdir -p "$ROOT" "$EVIDENCE"
+          rm -rf "$OGPU" "$OUT"
+          git clone --quiet --depth 1 https://github.com/DalsinAI/openamigartg.git "$OGPU"
+          git -C "$OGPU" rev-parse HEAD | tee "$EVIDENCE/openamigartg-head.txt"
+          python3 ports/astromenace/patch_opengpu_sdl2_ahi_close.py "$OGPU"
+          grep -n -A18 -B4 'A blocking WaitIO' \
+            "$OGPU/library/modules/sdl2/src/audio/amigaos3/SDL_os3audio.c" \
+            | tee "$EVIDENCE/ahi-close-patch.txt"
+
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16/prefix" \
+          SDK_HEADERS="$HOME/AmigaChrome/stoves/os32/prefix/m68k-amigaos/include" \
+          "$OGPU/library/modules/sdl2/build.sh" "$OUT" module
+
+          test -s "$OUT/SDL2.module"
+          file "$OUT/SDL2.module" | tee "$EVIDENCE/SDL2-module-file.txt"
+          sha256sum "$OUT/SDL2.module" | tee "$EVIDENCE/SDL2-module-sha256.txt"
+
+      - name: Prepare pristine diagnostic and production source trees
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/astromenace-ahi-close"
+          rm -rf build/game-ports/sources/astromenace \
+                 "$ROOT/source-diagnostic" "$ROOT/source-production"
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game astromenace
+          cp -a build/game-ports/sources/astromenace "$ROOT/source-diagnostic"
+          cp -a build/game-ports/sources/astromenace "$ROOT/source-production"
+          git -C "$ROOT/source-diagnostic" rev-parse HEAD \
+            | tee "$ROOT/evidence/astromenace-upstream-head.txt"
+
+      - name: Build launcher-based diagnostic package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/astromenace-ahi-close"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_RELEASE_ID=0011 \
+          ASTROMENACE_DIAGNOSTICS=1 \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
+            "$ROOT/source-diagnostic" "$ROOT/diagnostic"
+
+          PKG="$ROOT/diagnostic/package/AstroMenace"
+          test -x "$PKG/AstroMenace"
+          test -x "$PKG/AstroMenace.bin"
+          test -s "$PKG/gamedata.vfs"
+          strings "$PKG/AstroMenace" | grep -F '1048576-byte stack'
+          strings "$PKG/AstroMenace.bin" | grep -F 'stage-audio-after-mix-close'
+          strings "$PKG/AstroMenace.bin" | grep -F 'stage-shutdown-complete'
+          (
+            cd "$PKG"
+            sha256sum -c SHA256SUMS
+          )
+          sha256sum "$PKG/AstroMenace" "$PKG/AstroMenace.bin" "$PKG/gamedata.vfs" \
+            | tee "$ROOT/evidence/diagnostic-sha256.txt"
+
+      - name: Qualify full player journey with patched SDL2.module
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_TOOL="$APP/scripts/lab_instance.py"
+          ROOT="$PWD/build/astromenace-ahi-close"
+          LAB_ROOT="$HOME/AmigaChrome-dev/astromenace-ahi-close-labs"
+          LAB="$LAB_ROOT/Instance-Astro-AHI-Diag-${GITHUB_RUN_ID}"
+          PKG="$ROOT/diagnostic/package/AstroMenace"
+          MODULE="$ROOT/opengpu-build/SDL2.module"
+          EVIDENCE="$ROOT/evidence/diagnostic"
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          rm -rf "$LAB"
+          python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
+
+          cleanup() {
+            python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
+            rm -rf "$LAB"
+          }
+          trap cleanup EXIT
+
+          mapfile -t modules < <(find "$LAB/devices/harddisks" -type f -iname 'SDL2.module' -print | sort)
+          printf '%s\n' "${modules[@]}" | tee "$EVIDENCE/module-locations.txt"
+          test "${#modules[@]}" -ge 1
+          for installed in "${modules[@]}"; do
+            cp -p "$installed" "$EVIDENCE/$(basename "$(dirname "$installed")")-SDL2.module.before" || true
+            incoming="$installed.incoming-${GITHUB_RUN_ID}"
+            cp -p "$MODULE" "$incoming"
+            mv -f "$incoming" "$installed"
+            cmp "$MODULE" "$installed"
+          done
+
+          TARGET="$LAB/devices/harddisks/DH1/AstroMenace-AHI-DIAG"
+          rm -rf "$TARGET"
+          mkdir -p "$TARGET"
+          cp -a "$PKG/." "$TARGET/"
+          chmod 755 "$TARGET/AstroMenace" "$TARGET/AstroMenace.bin"
+          : > "$TARGET/AUTOTEST_FIRST_MISSION"
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AstroMenace-AHI-Diag"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          mkdir -p "$(dirname "$TEST_SCRIPT")"
+          cat > "$TEST_SCRIPT" <<'AMIGA'
+          FailAt 21
+          Wait 5
+          CD DH1:AstroMenace-AHI-DIAG
+          Echo "ASTROTEST: starting AHI-close build without Stack command" >AstroMenace-run.log
+          AstroMenace >>AstroMenace-run.log
+          Echo "ASTROTEST: launcher returned RC $RC" >>AstroMenace-run.log
+          AMIGA
+          touch "$USER_STARTUP"
+          printf '\nRun >NIL: <NIL: Execute S:AstroMenace-AHI-Diag\n' >> "$USER_STARTUP"
+
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
+            --purpose "AstroMenace patched AHI close journey ${GITHUB_RUN_ID}"
+
+          clean_exit=0
+          for attempt in $(seq 1 72); do
+            if test -f "$TARGET/stage-shutdown-complete" && \
+               test -f "$TARGET/AstroMenace-run.log" && \
+               grep -Fq 'ASTROTEST: launcher returned RC 0' "$TARGET/AstroMenace-run.log"; then
+              clean_exit=1
+              echo "Full diagnostic journey completed after $((attempt * 5)) seconds."
+              sleep 2
+              break
+            fi
+            if test -f "$TARGET/AstroMenace-run.log" && \
+               grep -Fq 'ASTROTEST: launcher returned RC' "$TARGET/AstroMenace-run.log" && \
+               ! grep -Fq 'ASTROTEST: launcher returned RC 0' "$TARGET/AstroMenace-run.log"; then
+              echo 'Diagnostic returned non-zero.'
+              break
+            fi
+            sleep 5
+          done
+
+          cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-first-frame.bmp" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-workshop.bmp" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-first-mission.bmp" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET"/stage-* "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
+          python3 "$LAB_TOOL" status "$LAB" > "$EVIDENCE/lab-status.txt" 2>&1 || true
+
+          cleanup
+          trap - EXIT
+
+          test "$clean_exit" -eq 1
+          test -s "$EVIDENCE/AstroMenace-run.log"
+          cat "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'ASTROTEST: starting AHI-close build without Stack command' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'ASTROLAUNCH: starting AstroMenace.bin with 1048576-byte stack' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'AMDBG: entered main' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'AMDBG: window and GL context ready' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'ASTROTEST: launcher returned RC 0' "$EVIDENCE/AstroMenace-run.log"
+          for stage in \
+            stage-first-frame-presented \
+            stage-workshop-frame-presented \
+            stage-first-game-frame-presented \
+            stage-audio-channel-active \
+            stage-keydown-received \
+            stage-keyup-received \
+            stage-audio-before-mix-close \
+            stage-audio-after-mix-close \
+            stage-audio-after-mix-quit \
+            stage-audio-after-sdl-audio-quit \
+            stage-audio-shutdown \
+            stage-shutdown-complete; do
+            test -f "$EVIDENCE/$stage"
+          done
+          for frame in AstroMenace-first-frame.bmp AstroMenace-workshop.bmp AstroMenace-first-mission.bmp; do
+            test -s "$EVIDENCE/$frame"
+            python3 scripts/validate_bmp_frame.py "$EVIDENCE/$frame" \
+              | tee "$EVIDENCE/$frame.validation.json"
+          done
+          sha256sum "$EVIDENCE"/*.bmp | tee "$EVIDENCE/frame-sha256.txt"
+
+      - name: Build clean production launcher package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/astromenace-ahi-close"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_RELEASE_ID=0011 \
+          ASTROMENACE_DIAGNOSTICS=0 \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
+            "$ROOT/source-production" "$ROOT/production"
+
+          PKG="$ROOT/production/package/AstroMenace"
+          test -x "$PKG/AstroMenace"
+          test -x "$PKG/AstroMenace.bin"
+          test -s "$PKG/gamedata.vfs"
+          test ! -e "$PKG/gamedata"
+          if strings "$PKG/AstroMenace.bin" | grep -E 'AUTOTEST_FIRST_MISSION|PROGDIR:stage-|AMAudioProbeStage'; then
+            echo 'Diagnostic probe leaked into production binary.' >&2
+            exit 30
+          fi
+          (
+            cd "$PKG"
+            sha256sum -c SHA256SUMS
+          )
+          sha256sum "$PKG/AstroMenace" "$PKG/AstroMenace.bin" "$PKG/gamedata.vfs" \
+            | tee "$ROOT/evidence/production-sha256.txt"
+
+          python3 - "$PKG" "$ROOT/AstroMenace-AC090-GCC16-0011.zip" <<'PY'
+          from pathlib import Path
+          import sys, zipfile
+          package = Path(sys.argv[1])
+          archive = Path(sys.argv[2])
+          if archive.exists(): archive.unlink()
+          with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+              for p in sorted(package.rglob('*')):
+                  if p.is_file():
+                      z.write(p, Path('AstroMenace') / p.relative_to(package))
+          print(archive)
+          PY
+          sha256sum "$ROOT/AstroMenace-AC090-GCC16-0011.zip" \
+            | tee "$ROOT/AstroMenace-AC090-GCC16-0011.zip.sha256"
+
+      - name: Clean live DH1 and atomically install fixed module and AstroMenace 0011
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          LIVE="$HOME/AmigaChromeInstances/Instance-32"
+          DH1="$LIVE/devices/harddisks/DH1"
+          ROOT="$PWD/build/astromenace-ahi-close"
+          PKG="$ROOT/production/package/AstroMenace"
+          MODULE="$ROOT/opengpu-build/SDL2.module"
+          EVIDENCE="$ROOT/evidence"
+          BACKUP="$HOME/AmigaChrome-dev/astromenace-recovery-quarantine/${GITHUB_RUN_ID}"
+          mkdir -p "$BACKUP"
+
+          mapfile -t modules < <(find "$LIVE/devices/harddisks" -type f -iname 'SDL2.module' -print | sort)
+          printf '%s\n' "${modules[@]}" | tee "$EVIDENCE/live-module-locations.txt"
+          test "${#modules[@]}" -ge 1
+          n=0
+          for installed in "${modules[@]}"; do
+            n=$((n + 1))
+            cp -p "$installed" "$BACKUP/SDL2.module.before.$n"
+            incoming="$installed.incoming-${GITHUB_RUN_ID}"
+            cp -p "$MODULE" "$incoming"
+            mv -f "$incoming" "$installed"
+            cmp "$MODULE" "$installed"
+          done
+
+          python3 - "$DH1" "$EVIDENCE/dh1-removed.txt" <<'PY'
+          from pathlib import Path
+          import shutil, sys
+          root = Path(sys.argv[1])
+          removed = []
+
+          def remove(path):
+              removed.append(str(path.relative_to(root)))
+              if path.is_dir() and not path.is_symlink():
+                  shutil.rmtree(path)
+              else:
+                  path.unlink()
+
+          for child in list(root.iterdir()):
+              key = ''.join(c for c in child.name.lower() if c.isalnum())
+              if key.startswith('astromenace'):
+                  remove(child)
+          games = root / 'Games'
+          if games.is_dir():
+              for child in list(games.iterdir()):
+                  key = ''.join(c for c in child.name.lower() if c.isalnum())
+                  if key.startswith('astromenace'):
+                      remove(child)
+          out = Path(sys.argv[2])
+          out.write_text('\n'.join(removed or ['(nothing removed)']) + '\n', encoding='utf-8')
+          print(out.read_text(), end='')
+          PY
+
+          INCOMING="$DH1/.AstroMenace.incoming-${GITHUB_RUN_ID}"
+          DEST="$DH1/AstroMenace"
+          rm -rf "$INCOMING" "$DEST"
+          mkdir -p "$INCOMING"
+          cp -a "$PKG/." "$INCOMING/"
+          chmod 755 "$INCOMING/AstroMenace" "$INCOMING/AstroMenace.bin"
+          cat > "$INCOMING/DEPLOYMENT.txt" <<EOF
+          AstroMenace AC090 GCC16 0011
+          Launcher: dedicated 1 MiB AmigaDOS child process
+          SDL2.module: interruptible AHI shutdown build
+          Qualification workflow: ${GITHUB_RUN_ID}
+          Source commit: ${GITHUB_SHA}
+          Installed: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+          Full diagnostic journey: PASS
+          EOF
+          mv "$INCOMING" "$DEST"
+          sync
+
+          (
+            cd "$DEST"
+            sha256sum -c SHA256SUMS
+          )
+          cmp "$PKG/AstroMenace" "$DEST/AstroMenace"
+          cmp "$PKG/AstroMenace.bin" "$DEST/AstroMenace.bin"
+          cmp "$PKG/gamedata.vfs" "$DEST/gamedata.vfs"
+          sha256sum "$DEST/AstroMenace" "$DEST/AstroMenace.bin" "$DEST/gamedata.vfs" \
+            | tee "$EVIDENCE/live-installed-sha256.txt"
+
+      - name: Smoke-test exact live-disk production installation in a fresh disposable lab
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_TOOL="$APP/scripts/lab_instance.py"
+          ROOT="$PWD/build/astromenace-ahi-close"
+          MODULE="$ROOT/opengpu-build/SDL2.module"
+          LAB_ROOT="$HOME/AmigaChrome-dev/astromenace-ahi-close-labs"
+          LAB="$LAB_ROOT/Instance-Astro-AHI-Prod-${GITHUB_RUN_ID}"
+          EVIDENCE="$ROOT/evidence/production"
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          rm -rf "$LAB"
+          python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
+
+          cleanup() {
+            python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
+            rm -rf "$LAB"
+          }
+          trap cleanup EXIT
+
+          mapfile -t modules < <(find "$LAB/devices/harddisks" -type f -iname 'SDL2.module' -print | sort)
+          test "${#modules[@]}" -ge 1
+          for installed in "${modules[@]}"; do cmp "$MODULE" "$installed"; done
+
+          TARGET="$LAB/devices/harddisks/DH1/AstroMenace"
+          test -x "$TARGET/AstroMenace"
+          test -x "$TARGET/AstroMenace.bin"
+          rm -f "$TARGET/AstroMenace-production-smoke.log"
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AstroMenace-Production-Smoke"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          cat > "$TEST_SCRIPT" <<'AMIGA'
+          FailAt 21
+          Wait 5
+          CD DH1:AstroMenace
+          Echo "ASTROSMOKE: starting exact live-disk package" >AstroMenace-production-smoke.log
+          AstroMenace >>AstroMenace-production-smoke.log
+          Echo "ASTROSMOKE: launcher returned RC $RC" >>AstroMenace-production-smoke.log
+          AMIGA
+          touch "$USER_STARTUP"
+          printf '\nRun >NIL: <NIL: Execute S:AstroMenace-Production-Smoke\n' >> "$USER_STARTUP"
+          rm -f "$LAB/state/current-screen.jpg"
+
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
+            --purpose "AstroMenace exact production smoke ${GITHUB_RUN_ID}"
+
+          started=0
+          for attempt in $(seq 1 24); do
+            if test -f "$TARGET/AstroMenace-production-smoke.log" && \
+               grep -Fq 'ASTROSMOKE: starting exact live-disk package' "$TARGET/AstroMenace-production-smoke.log"; then
+              started=1
+            fi
+            if test -f "$TARGET/AstroMenace-production-smoke.log" && \
+               grep -Fq 'ASTROSMOKE: launcher returned RC' "$TARGET/AstroMenace-production-smoke.log"; then
+              echo 'Production package returned during the 120-second smoke window.' >&2
+              cat "$TARGET/AstroMenace-production-smoke.log" >&2
+              exit 40
+            fi
+            sleep 5
+          done
+          test "$started" -eq 1
+
+          cp "$TARGET/AstroMenace-production-smoke.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
+          python3 "$LAB_TOOL" status "$LAB" > "$EVIDENCE/lab-status.txt" 2>&1 || true
+          sha256sum "$TARGET/AstroMenace" "$TARGET/AstroMenace.bin" "$TARGET/gamedata.vfs" \
+            > "$EVIDENCE/live-copy-sha256.txt"
+
+          cleanup
+          trap - EXIT
+
+          test -s "$EVIDENCE/AstroMenace-production-smoke.log"
+          grep -F 'ASTROSMOKE: starting exact live-disk package' "$EVIDENCE/AstroMenace-production-smoke.log"
+          ! grep -Fq 'ASTROSMOKE: launcher returned RC' "$EVIDENCE/AstroMenace-production-smoke.log"
+          if test -s "$EVIDENCE/current-screen.jpg"; then
+            file "$EVIDENCE/current-screen.jpg"
+            stat -c '%n %s bytes' "$EVIDENCE/current-screen.jpg"
+          fi
+
+      - name: Final live DH1 audit and remove superseded quarantine
+        shell: bash
+        run: |
+          set -euo pipefail
+          LIVE="$HOME/AmigaChromeInstances/Instance-32"
+          DH1="$LIVE/devices/harddisks/DH1"
+          ROOT="$PWD/build/astromenace-ahi-close"
+          EVIDENCE="$ROOT/evidence"
+          printf 'Final AstroMenace inventory on Instance-32 DH1\n' > "$EVIDENCE/dh1-final.txt"
+          find "$DH1" -maxdepth 3 -iname '*astromenace*' \
+            -printf '%y %P %s bytes\n' | sort >> "$EVIDENCE/dh1-final.txt"
+          cat "$EVIDENCE/dh1-final.txt"
+
+          test -d "$DH1/AstroMenace"
+          test -x "$DH1/AstroMenace/AstroMenace"
+          test -x "$DH1/AstroMenace/AstroMenace.bin"
+          test -s "$DH1/AstroMenace/gamedata.vfs"
+          test -z "$(find "$DH1" -mindepth 1 -maxdepth 1 \
+            -iname 'AstroMenace*' ! -name 'AstroMenace' -print -quit)"
+          test ! -e "$DH1/Games/AstroMenace"
+          test ! -e "$DH1/Games/AstroMenace.info"
+
+          find "$HOME/AmigaChrome-dev/astromenace-recovery-quarantine" \
+            -mindepth 1 -maxdepth 1 -type d ! -name "${GITHUB_RUN_ID}" \
+            -exec rm -rf {} + 2>/dev/null || true
+
+      - name: Upload package, fixed module and complete qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-AHI-Close-0011-${{ github.run_id }}
+          path: |
+            build/astromenace-ahi-close/AstroMenace-AC090-GCC16-0011.zip
+            build/astromenace-ahi-close/AstroMenace-AC090-GCC16-0011.zip.sha256
+            build/astromenace-ahi-close/opengpu-build/SDL2.module
+            build/astromenace-ahi-close/evidence/
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 0
