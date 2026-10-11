@@ -9,6 +9,7 @@ P="$STOVE/prefix"
 CXX="$P/bin/m68k-amigaos-g++"
 [ -x "$P/bin/sdl2-config" ] || { echo "OpenGPU SDK missing from stove" >&2; exit 2; }
 [ -f "$ZLIB_ROOT/lib/libz.a" ] || { echo "Amiga zlib missing" >&2; exit 3; }
+python3 "$HERE/patch_mainloop_diagnostics.py" "$SRC"
 cd "$SRC/src"
 SDK_CFLAGS="$(SDL2_RUNTIME=-mcrt=nix20 "$P/bin/sdl2-config" --cflags)"
 SDK_LIBS="$(SDL2_RUNTIME=-mcrt=nix20 "$P/bin/sdl2-config" --libs)"
