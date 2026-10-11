@@ -4,7 +4,8 @@
 The host's persisted screen can stay dark while the RTG application is active,
 and stdout/clientlog output can be lost when the guest resets.  These tiny files
 therefore record progress from the guest filesystem itself, including pre-main,
-SDL/OpenGL setup, map connection, first presented frame and shutdown.
+SDL/OpenGL setup, individual model loads, map connection, first presentation
+and shutdown.
 """
 
 from pathlib import Path
@@ -192,4 +193,167 @@ replace_once(
 )
 
 source.write_text(text, encoding="utf-8")
+
+# Model loading is currently the first unqualified region.  Trace both the
+# preload loop and the loader's format probes without depending on buffered
+# client logging.
+model_source = root / "source" / "src" / "rendermodel.cpp"
+if not model_source.is_file():
+    raise RuntimeError(f"AssaultCube rendermodel.cpp missing: {model_source}")
+model_text = model_source.read_text(encoding="utf-8")
+
+
+def replace_model_once(old: str, new: str, label: str) -> None:
+    global model_text
+    if new in model_text:
+        return
+    count = model_text.count(old)
+    if count != 1:
+        raise RuntimeError(f"{label}: expected one anchor, found {count}")
+    model_text = model_text.replace(old, new, 1)
+
+
+model_helper = r'''#include "cube.h"
+#include <stdio.h>
+
+#ifdef __amigaos__
+static void ACModelTrace(const char *name, int index, const char *phase)
+{
+    FILE *current = fopen("PROGDIR:stage-ac-model-current.txt", "wb");
+    if(current)
+    {
+        fprintf(current, "%d\t%s\t%s\n", index, name ? name : "<null>", phase);
+        fflush(current);
+        fclose(current);
+    }
+
+    char path[128];
+    snprintf(path, sizeof(path), "PROGDIR:stage-ac-model-%02d-%s", index, phase);
+    FILE *stage = fopen(path, "wb");
+    if(stage)
+    {
+        fputs("ready\n", stage);
+        fflush(stage);
+        fclose(stage);
+    }
+}
+
+static void ACLoadTrace(const char *name, const char *phase)
+{
+    FILE *current = fopen("PROGDIR:stage-ac-loadmodel-current.txt", "wb");
+    if(current)
+    {
+        fprintf(current, "%s\t%s\n", name ? name : "<null>", phase);
+        fflush(current);
+        fclose(current);
+    }
+}
+#else
+#define ACModelTrace(name, index, phase) ((void)0)
+#define ACLoadTrace(name, phase) ((void)0)
+#endif
+'''
+replace_model_once('#include "cube.h"\n', model_helper, "model helper")
+
+replace_model_once(
+    '    if(mdlnotfound.access(name)) return NULL;   // already tried to find that earlier -> not available\n',
+    '    ACLoadTrace(name, "resolved-name");\n'
+    '    if(mdlnotfound.access(name)) return NULL;   // already tried to find that earlier -> not available\n',
+    "resolved model name",
+)
+
+replace_model_once(
+    '        m = new md2(name);                      // try md2\n'
+    '        loadingmodel = m;\n'
+    '        loopi(MMA_NUM) DELSTRING(loadingattributes.n[i]);\n'
+    '        if(!m->load())                          // md2 didn\'t load\n',
+    '        ACLoadTrace(name, "before-md2-new");\n'
+    '        m = new md2(name);                      // try md2\n'
+    '        loadingmodel = m;\n'
+    '        loopi(MMA_NUM) DELSTRING(loadingattributes.n[i]);\n'
+    '        ACLoadTrace(name, "before-md2-load");\n'
+    '        if(!m->load())                          // md2 didn\'t load\n',
+    "MD2 probe",
+)
+
+replace_model_once(
+    '        {\n'
+    '            delete m;\n'
+    '            m = new md3(name);                  // try md3\n'
+    '            loadingmodel = m;\n'
+    '            if(!m->load())                      // md3 didn\'t load -> we don\'t have that model\n',
+    '        {\n'
+    '            ACLoadTrace(name, "md2-load-failed");\n'
+    '            delete m;\n'
+    '            ACLoadTrace(name, "before-md3-new");\n'
+    '            m = new md3(name);                  // try md3\n'
+    '            loadingmodel = m;\n'
+    '            ACLoadTrace(name, "before-md3-load");\n'
+    '            if(!m->load())                      // md3 didn\'t load -> we don\'t have that model\n',
+    "MD3 probe",
+)
+
+replace_model_once(
+    '            {\n'
+    '                delete m;\n'
+    '                m = loadingmodel = NULL;\n',
+    '            {\n'
+    '                ACLoadTrace(name, "md3-load-failed");\n'
+    '                delete m;\n'
+    '                m = loadingmodel = NULL;\n',
+    "MD3 failure",
+)
+
+replace_model_once(
+    '        popscontext();\n'
+    '        if(loadingmodel && m)\n',
+    '        ACLoadTrace(name, m ? "format-load-complete" : "format-load-missing");\n'
+    '        popscontext();\n'
+    '        if(loadingmodel && m)\n',
+    "format load completion",
+)
+
+old_preload = r'''void preload_entmodels()
+{
+    extern const char *entmdlnames[];
+    for(int i = 0; entmdlnames[i][0]; i++)
+    {
+        model *mdl = loadmodel(entmdlnames[i]);
+        if(dynshadow && mdl) mdl->genshadows(8.0f, 2.0f);
+    }
+    static const char *bouncemdlnames[] = { "misc/gib01", "misc/gib02", "misc/gib03", "weapons/grenade/static" };
+    loopi(sizeof(bouncemdlnames)/sizeof(bouncemdlnames[0]))
+    {
+        model *mdl = loadmodel(bouncemdlnames[i]);
+        if(dynshadow && mdl) mdl->genshadows(8.0f, 2.0f);
+    }
+}
+'''
+new_preload = r'''void preload_entmodels()
+{
+    extern const char *entmdlnames[];
+    for(int i = 0; entmdlnames[i][0]; i++)
+    {
+        ACModelTrace(entmdlnames[i], i, "before");
+        model *mdl = loadmodel(entmdlnames[i]);
+        ACModelTrace(entmdlnames[i], i, "loaded");
+        if(dynshadow && mdl) mdl->genshadows(8.0f, 2.0f);
+        ACModelTrace(entmdlnames[i], i, "shadowed");
+    }
+    static const char *bouncemdlnames[] = { "misc/gib01", "misc/gib02", "misc/gib03", "weapons/grenade/static" };
+    loopi(sizeof(bouncemdlnames)/sizeof(bouncemdlnames[0]))
+    {
+        const int stageindex = i + 20;
+        ACModelTrace(bouncemdlnames[i], stageindex, "before");
+        model *mdl = loadmodel(bouncemdlnames[i]);
+        ACModelTrace(bouncemdlnames[i], stageindex, "loaded");
+        if(dynshadow && mdl) mdl->genshadows(8.0f, 2.0f);
+        ACModelTrace(bouncemdlnames[i], stageindex, "shadowed");
+    }
+}
+'''
+replace_model_once(old_preload, new_preload, "entity model preload")
+
+model_source.write_text(model_text, encoding="utf-8")
 print(f"patched AssaultCube runtime stage markers: {source}")
+print(f"patched AssaultCube model-load stage markers: {model_source}")
