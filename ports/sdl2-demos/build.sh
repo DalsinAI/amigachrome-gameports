@@ -26,6 +26,7 @@ printf '%s\n' "SDL2: $($SDL2_CONFIG --version)" | tee -a "$OUT/BUILD-INFO.txt"
 printf '%s\n' "CFLAGS: $SDL_CFLAGS $COMMON_FLAGS" | tee -a "$OUT/BUILD-INFO.txt"
 printf '%s\n' "LIBS: $SDL_LIBS -lm" | tee -a "$OUT/BUILD-INFO.txt"
 printf '%s\n' "Target: Instance-32 DH1:SDL2 Demos" | tee -a "$OUT/BUILD-INFO.txt"
+printf '%s\n' "Runtime renderer proof: every window title shows SDL renderer name and flags" | tee -a "$OUT/BUILD-INFO.txt"
 
 write_readme() {
     local name=$1
@@ -39,8 +40,13 @@ Common controls:
   F or F11  Toggle fullscreen
   Esc       Quit cleanly
 
+Renderer proof:
+  The window title always shows the renderer selected by SDL.
+  opengpu [ACCELERATED...] means the OpenGPU renderer is active.
+  software [SOFTWARE/CPU...] means SDL fell back to CPU rendering.
+
 Target: AmigaOS 3.2.x, 68040 + FPU
-Graphics: OpenGPU SDL2 renderer
+Graphics: OpenGPU-capable SDL2 renderer selected at runtime
 Built: $(date -u +%Y-%m-%dT%H:%M:%SZ)
 EOF
 }
@@ -116,10 +122,34 @@ deploy_one OpenFloor "$HERE/openfloor/openfloor.c" \
 (
     cd "$OUT/bin"
     sha256sum OpenHypno OpenIntro OpenFloor > PHASE2-SHA256SUMS
-    sha256sum OpenFire OpenTunnel OpenTriangles OpenEffects OpenRay \
-              OpenHypno OpenIntro OpenFloor > ALL-SHA256SUMS
 )
 cp -p "$OUT/bin/PHASE2-SHA256SUMS" "$DEST_ROOT/PHASE2-SHA256SUMS"
+echo "=== Phase two deployed; continuing directly into phase three ==="
+
+echo "######## PHASE THREE ########"
+deploy_one OpenSprites "$HERE/opensprites/opensprites.c" \
+    "Hundreds of alpha/colour-modulated rotating texture copies. Arrows change count, B cycles blend mode, C toggles colour cycling, Space pauses."
+
+deploy_one OpenTarget "$HERE/opentarget/opentarget.c" \
+    "Render-to-texture and target composition with rotation, flips and blend modes. B changes blend, T toggles trails, R resets, Space pauses."
+
+deploy_one OpenParticles "$HERE/openparticles/openparticles.c" \
+    "Large additive or alpha particle fountain. Arrows change count, B changes blend, G toggles gravity, Space pauses."
+
+deploy_one OpenBoids "$HERE/openboids/openboids.c" \
+    "Flocking simulation rendered in one SDL_RenderGeometry batch. Mouse attracts/repels, arrows change count, W changes edges, C colour, R reset."
+
+deploy_one OpenScope "$HERE/openscope/openscope.c" \
+    "Generated SDL audio through the Amiga audio backend with an oscilloscope and level display. Arrows change pitch, W waveform, M mute, Space pauses."
+
+(
+    cd "$OUT/bin"
+    sha256sum OpenSprites OpenTarget OpenParticles OpenBoids OpenScope > PHASE3-SHA256SUMS
+    sha256sum OpenFire OpenTunnel OpenTriangles OpenEffects OpenRay \
+              OpenHypno OpenIntro OpenFloor \
+              OpenSprites OpenTarget OpenParticles OpenBoids OpenScope > ALL-SHA256SUMS
+)
+cp -p "$OUT/bin/PHASE3-SHA256SUMS" "$DEST_ROOT/PHASE3-SHA256SUMS"
 cp -p "$OUT/bin/ALL-SHA256SUMS" "$DEST_ROOT/ALL-SHA256SUMS"
 
 cat > "$DEST_ROOT/README.txt" <<'EOF'
@@ -142,8 +172,19 @@ Phase two:
   OpenIntro
   OpenFloor
 
+Phase three:
+  OpenSprites
+  OpenTarget
+  OpenParticles
+  OpenBoids
+  OpenScope
+
 Every demo opens in a resizable OpenBench window. F/F11 toggles fullscreen and
 Esc exits. Each executable has a matching .readme and SHA256SUMS file.
+
+The window title proves which SDL renderer is actually active:
+  opengpu [ACCELERATED...]  OpenGPU renderer selected
+  software [SOFTWARE/CPU...] SDL CPU fallback selected
 EOF
 
 cp -p "$OUT/BUILD-INFO.txt" "$DEST_ROOT/BUILD-INFO.txt"
