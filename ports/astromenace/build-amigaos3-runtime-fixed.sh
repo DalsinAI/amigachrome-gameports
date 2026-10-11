@@ -6,7 +6,7 @@ ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
 SRC=${1:-"$ROOT/build/game-ports/sources/astromenace"}
 OUT=${2:-"$ROOT/build/os3/astromenace-runtime-fixed"}
 DIAGNOSTICS=${ASTROMENACE_DIAGNOSTICS:-0}
-RELEASE_ID=${ASTROMENACE_RELEASE_ID:-0010}
+RELEASE_ID=${ASTROMENACE_RELEASE_ID:-0011}
 
 # Apply the production AmigaChrome integration first because the target-random
 # patch adds its post-SDL reseed immediately after the SDL startup marker.
@@ -43,6 +43,10 @@ python3 "$HERE/patch_vw3d_little_endian.py" "$SRC"
 python3 "$HERE/patch_vw2d_little_endian.py" "$SRC"
 python3 "$HERE/patch_tga_little_endian.py" "$SRC"
 
+# The qualification launch used `Stack 1000000`; an ordinary Shell launch did
+# not. Give the executable its own stack so both paths are genuinely the same.
+python3 "$HERE/patch_amiga_stack.py" "$SRC"
+
 # Keep the regular builder as the compiler/library/package authority, but tell
 # it not to overwrite the richer source tree prepared above.
 ASTROMENACE_SOURCE_PREPATCHED=1 \
@@ -60,6 +64,7 @@ python3 "$HERE/build_gamedata_vfs.py" "$SRC" "$VFS"
 # duplicates roughly 116 MB in the installed game, so the release package keeps
 # only the canonical VFS plus the upstream licence material.
 rm -rf "$PKG/gamedata"
+chmod 755 "$BIN"
 
 cat > "$PKG/README-AmigaChrome.txt" <<EOF
 AstroMenace for AmigaChrome
@@ -71,9 +76,16 @@ Graphics: OpenGPU SDL2 + VirGL/OpenGL
 Audio: OpenGPU SDL2_mixer -> OpenAudio/AHI
 Input: keyboard, mouse and optional SDL joystick/gamepad
 
-Keep AstroMenace and gamedata.vfs together in this directory, then launch
-AstroMenace. The verified VFS is supplied ready to use; the duplicate unpacked
-gamedata tree is intentionally omitted from this package.
+Keep AstroMenace and gamedata.vfs together in this directory. From an Amiga
+Shell, run:
+
+  CD DH1:AstroMenace
+  AstroMenace
+
+No preceding Stack command is required. Release $RELEASE_ID gives the game a
+private 1 MiB stack when the launching Shell or Workbench provides less. The
+verified VFS is supplied ready to use; the duplicate unpacked gamedata tree is
+intentionally omitted from this package.
 
 Upstream source:
 https://github.com/viewizard/astromenace
@@ -81,6 +93,7 @@ Pinned commit:
 bbdb3ac5af2774c92b85c4d9b2a238f606911e66
 
 AmigaChrome qualification:
+- direct launch from a default small-stack Amiga Shell;
 - VFS open and language/config load;
 - SDL2, OpenAudio and VirGL context creation;
 - complete model and texture load;
@@ -88,7 +101,8 @@ AmigaChrome qualification:
 - normal mission selection and shipyard workshop transition;
 - captured configured-ship workshop frame;
 - normal workshop fade into mission one;
-- captured first playable 3D mission frame.
+- captured first playable 3D mission frame;
+- keyboard events, audio playback and clean return code 0.
 
 Licensing:
 See LICENSE.md and licenses/. Upstream licenses the game and redistributable
@@ -100,6 +114,7 @@ AstroMenace AC090 GCC16 $RELEASE_ID
 Upstream commit: bbdb3ac5af2774c92b85c4d9b2a238f606911e66
 Target CPU: 68040 + 68881-compatible FPU
 Data format: VFS v1.6 build 250208, explicit little-endian readers
+Startup stack: private 1 MiB StackSwap helper when caller stack is smaller
 Diagnostics included: $DIAGNOSTICS
 EOF
 
