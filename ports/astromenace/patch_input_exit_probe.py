@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Add qualification-only keyboard and clean-exit milestones.
+"""Add qualification-only keyboard, shutdown and clean-exit milestones.
 
 After the first playable mission frame is presented, the diagnostic target
 queues an SDL key-down/key-up pair. The ordinary AstroMenace event loop must
-observe both events before the probe requests Loop() to end. Normal resource
-cleanup then runs and the guest launcher must receive return code zero.
+observe both events before the probe requests Loop() to end. Every subsequent
+cleanup operation is bracketed with stage files so a shutdown stall is located
+precisely rather than being mistaken for a launch or rendering failure.
 """
 
 from pathlib import Path
@@ -196,16 +197,167 @@ static void AMInputExitStage(const char *Name)
         raise RuntimeError("AstroMenace main-loop return marker missing")
     main_text = main_text.replace(loop_anchor, loop_insert, 1)
 
-    shutdown_anchor = '''    JoystickClose();
+    cleanup_anchor = '''    CursorRelease();
+    DestroyInfoObject();
+    WorkshopDestroyData();
+
+    ReleaseAllObject3D();
+    vw_ReleaseAllModel3D();
+    vw_ReleaseAllParticleSystems2D();
+    vw_ReleaseAllParticleSystems();
+    vw_ReleaseAllLights();
+
+    vw_ReleaseAllFontChars();
+    vw_ReleaseAllTextures();
+    ShadowMap_Release();
+
+    // gl stuff -> gl context -> window
+    vw_ReleaseOpenGLStuff();
+    vw_DeleteOpenGLContext();
+    vw_DestroyWindow();
+
+    // important, save config before game's window recreate
+    SaveXMLConfigFile();
+'''
+    cleanup_insert = '''#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-before-cursor-release");
+#endif
+    CursorRelease();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-cursor-release");
+    AMInputExitStage("PROGDIR:stage-before-info-destroy");
+#endif
+    DestroyInfoObject();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-info-destroy");
+    AMInputExitStage("PROGDIR:stage-before-workshop-destroy");
+#endif
+    WorkshopDestroyData();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-workshop-destroy");
+    AMInputExitStage("PROGDIR:stage-before-object-release");
+#endif
+
+    ReleaseAllObject3D();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-object-release");
+    AMInputExitStage("PROGDIR:stage-before-model-release");
+#endif
+    vw_ReleaseAllModel3D();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-model-release");
+    AMInputExitStage("PROGDIR:stage-before-particles2d-release");
+#endif
+    vw_ReleaseAllParticleSystems2D();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-particles2d-release");
+    AMInputExitStage("PROGDIR:stage-before-particles-release");
+#endif
+    vw_ReleaseAllParticleSystems();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-particles-release");
+    AMInputExitStage("PROGDIR:stage-before-lights-release");
+#endif
+    vw_ReleaseAllLights();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-lights-release");
+    AMInputExitStage("PROGDIR:stage-before-fontchars-release");
+#endif
+
+    vw_ReleaseAllFontChars();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-fontchars-release");
+    AMInputExitStage("PROGDIR:stage-before-textures-release");
+#endif
+    vw_ReleaseAllTextures();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-textures-release");
+    AMInputExitStage("PROGDIR:stage-before-shadowmap-release");
+#endif
+    ShadowMap_Release();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-shadowmap-release");
+    AMInputExitStage("PROGDIR:stage-before-glstuff-release");
+#endif
+
+    // gl stuff -> gl context -> window
+    vw_ReleaseOpenGLStuff();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-glstuff-release");
+    AMInputExitStage("PROGDIR:stage-before-glcontext-delete");
+#endif
+    vw_DeleteOpenGLContext();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-glcontext-delete");
+    AMInputExitStage("PROGDIR:stage-before-window-destroy");
+#endif
+    vw_DestroyWindow();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-window-destroy");
+    AMInputExitStage("PROGDIR:stage-before-config-save");
+#endif
+
+    // important, save config before game's window recreate
+    SaveXMLConfigFile();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-config-save");
+#endif
+'''
+    position = main_text.rfind(cleanup_anchor)
+    if position < 0:
+        raise RuntimeError("AstroMenace principal cleanup block marker missing")
+    main_text = (
+        main_text[:position]
+        + cleanup_insert
+        + main_text[position + len(cleanup_anchor):]
+    )
+
+    shutdown_anchor = '''    vw_ShutdownFont();
+    vw_ReleaseText();
+    vw_ShutdownAudio();
+    vw_ShutdownVFS();
+    JoystickClose();
     vw_ReleaseAllTimeThread();
     SDL_Quit();
     return 0;
 }
 '''
-    shutdown_insert = '''    JoystickClose();
+    shutdown_insert = '''#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-before-font-shutdown");
+#endif
+    vw_ShutdownFont();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-font-shutdown");
+    AMInputExitStage("PROGDIR:stage-before-text-release");
+#endif
+    vw_ReleaseText();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-text-release");
+    AMInputExitStage("PROGDIR:stage-before-audio-shutdown");
+#endif
+    vw_ShutdownAudio();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-audio-shutdown");
+    AMInputExitStage("PROGDIR:stage-before-vfs-shutdown");
+#endif
+    vw_ShutdownVFS();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-vfs-shutdown");
+    AMInputExitStage("PROGDIR:stage-before-joystick-close");
+#endif
+    JoystickClose();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-joystick-close");
+    AMInputExitStage("PROGDIR:stage-before-time-release");
+#endif
     vw_ReleaseAllTimeThread();
+#ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-time-release");
+    AMInputExitStage("PROGDIR:stage-before-sdl-quit");
+#endif
     SDL_Quit();
 #ifdef AMIGACHROME
+    AMInputExitStage("PROGDIR:stage-after-sdl-quit");
     AMInputExitStage("PROGDIR:stage-shutdown-complete");
 #endif
     return 0;
@@ -221,4 +373,4 @@ static void AMInputExitStage(const char *Name)
     )
     main_cpp.write_text(main_text, encoding="utf-8")
 
-print("patched AstroMenace keyboard event and clean-exit qualification")
+print("patched AstroMenace keyboard, shutdown trace and clean-exit qualification")
