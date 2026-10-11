@@ -1,0 +1,82 @@
+name: OpenTensor First Light Build
+
+on:
+  push:
+    branches:
+      - build/opentensor-first-light-20261012
+    paths:
+      - .github/workflows/opentensor-first-light.yml
+  workflow_dispatch:
+
+concurrency:
+  group: opentensor-first-light-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Cross-build OpenTensor Mesa AHI OpenRTG demo
+    runs-on: self-hosted
+    timeout-minutes: 45
+    steps:
+      - name: Checkout build harness
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Checkout OpenTensor source
+        uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/openamigartg
+          ref: demo/opentensor-first-light-20261012
+          path: build/openamigartg
+          clean: true
+          fetch-depth: 1
+
+      - name: Inspect the AmigaOS SDK
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16"
+          "$STOVE/prefix/bin/m68k-amigaos-gcc" --version | head -1
+          test -f "$STOVE/prefix/m68k-amigaos/include/GL/gl.h"
+          test -f "$STOVE/prefix/m68k-amigaos/include/devices/ahi.h" || \
+            test -f "$HOME/AmigaChrome/stoves/os32/prefix/m68k-amigaos/include/devices/ahi.h"
+          find "$STOVE/prefix" -type f -name libGL.a -print
+
+      - name: Build OpenTensor First Light
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          OLD_STOVE="$HOME/AmigaChrome/stoves/os32" \
+            sh build/openamigartg/demos/opentensor/build.sh \
+              "$GITHUB_WORKSPACE/build/opentensor"
+
+      - name: Verify the Amiga package
+        shell: bash
+        run: |
+          set -euxo pipefail
+          OUT="$GITHUB_WORKSPACE/build/opentensor"
+          BIN="$OUT/package/OpenTensor/OpenTensor"
+          test -s "$BIN"
+          file "$BIN"
+          strings "$BIN" | grep -F 'OpenTensor: First Light'
+          strings "$BIN" | grep -F 'MESA / AHI / OPENRTG'
+          strings "$BIN" | grep -F 'OpenTensor: renderer'
+          sha256sum -c "$OUT/SHA256SUMS"
+          unzip -l "$OUT/OpenTensor-First-Light-0.1.0.zip"
+          cat "$OUT/package/OpenTensor/BUILD-INFO.txt"
+
+      - name: Upload OpenTensor package
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenTensor-First-Light-0.1.0
+          path: |
+            build/opentensor/OpenTensor-First-Light-0.1.0.zip
+            build/opentensor/SHA256SUMS
+            build/opentensor/package/OpenTensor/BUILD-INFO.txt
+            build/opentensor/package/OpenTensor/README.txt
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
