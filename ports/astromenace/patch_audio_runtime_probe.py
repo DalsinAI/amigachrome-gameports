@@ -3,9 +3,9 @@
 
 The runtime gate already proves SDL audio opens. These markers go further:
 they require an Ogg asset to decode into a Mix_Chunk, a mixer channel to start
-and report active, and the audio subsystem to close during a clean game exit.
-The patch itself is applied only when ASTROMENACE_DIAGNOSTICS=1, so marker
-writes do not need to depend on a second runtime sentinel lookup.
+and report active, and every shutdown substep to complete. The patch itself is
+applied only when ASTROMENACE_DIAGNOSTICS=1, so marker writes do not need to
+depend on a second runtime sentinel lookup.
 """
 
 from pathlib import Path
@@ -147,11 +147,66 @@ if update_anchor not in text:
     raise RuntimeError("AstroMenace music update marker missing")
 text = text.replace(update_anchor, update_insert, 1)
 
-shutdown_anchor = '''    SDL_QuitSubSystem(SDL_INIT_AUDIO);
+shutdown_anchor = '''void vw_ShutdownAudio()
+{
+    if (!AudioReady)
+        return;
+    vw_ReleaseAllSounds();
+    vw_ReleaseAllMusic();
+    for (auto &p : SoundBuffers)
+        if (p.second.chunk) Mix_FreeChunk(p.second.chunk);
+    SoundBuffers.clear();
+    Mix_CloseAudio();
+    Mix_Quit();
+    SDL_QuitSubSystem(SDL_INIT_AUDIO);
     AudioReady = false;
 }
 '''
-shutdown_insert = '''    SDL_QuitSubSystem(SDL_INIT_AUDIO);
+shutdown_insert = '''void vw_ShutdownAudio()
+{
+    if (!AudioReady) {
+#ifdef AMIGACHROME
+        AMAudioProbeStage("PROGDIR:stage-audio-shutdown-not-ready");
+#endif
+        return;
+    }
+#ifdef AMIGACHROME
+    AMAudioProbeStage("PROGDIR:stage-audio-before-release-sounds");
+#endif
+    vw_ReleaseAllSounds();
+#ifdef AMIGACHROME
+    AMAudioProbeStage("PROGDIR:stage-audio-after-release-sounds");
+    AMAudioProbeStage("PROGDIR:stage-audio-before-release-music");
+#endif
+    vw_ReleaseAllMusic();
+#ifdef AMIGACHROME
+    AMAudioProbeStage("PROGDIR:stage-audio-after-release-music");
+    AMAudioProbeStage("PROGDIR:stage-audio-before-buffer-free");
+#endif
+    for (auto &p : SoundBuffers)
+        if (p.second.chunk) Mix_FreeChunk(p.second.chunk);
+#ifdef AMIGACHROME
+    AMAudioProbeStage("PROGDIR:stage-audio-after-buffer-free");
+#endif
+    SoundBuffers.clear();
+#ifdef AMIGACHROME
+    AMAudioProbeStage("PROGDIR:stage-audio-after-buffer-clear");
+    AMAudioProbeStage("PROGDIR:stage-audio-before-mix-close");
+#endif
+    Mix_CloseAudio();
+#ifdef AMIGACHROME
+    AMAudioProbeStage("PROGDIR:stage-audio-after-mix-close");
+    AMAudioProbeStage("PROGDIR:stage-audio-before-mix-quit");
+#endif
+    Mix_Quit();
+#ifdef AMIGACHROME
+    AMAudioProbeStage("PROGDIR:stage-audio-after-mix-quit");
+    AMAudioProbeStage("PROGDIR:stage-audio-before-sdl-audio-quit");
+#endif
+    SDL_QuitSubSystem(SDL_INIT_AUDIO);
+#ifdef AMIGACHROME
+    AMAudioProbeStage("PROGDIR:stage-audio-after-sdl-audio-quit");
+#endif
     AudioReady = false;
 #ifdef AMIGACHROME
     AMAudioProbeStage("PROGDIR:stage-audio-shutdown");
@@ -159,8 +214,8 @@ shutdown_insert = '''    SDL_QuitSubSystem(SDL_INIT_AUDIO);
 }
 '''
 if shutdown_anchor not in text:
-    raise RuntimeError("AstroMenace audio-shutdown marker missing")
+    raise RuntimeError("AstroMenace audio-shutdown function marker missing")
 text = text.replace(shutdown_anchor, shutdown_insert, 1)
 
 audio_cpp.write_text(text, encoding="utf-8")
-print("patched AstroMenace audio runtime qualification milestones")
+print("patched AstroMenace audio runtime and shutdown qualification milestones")
