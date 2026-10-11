@@ -1,0 +1,132 @@
+name: Deploy AstroMenace test build to Instance-32
+
+on:
+  push:
+    branches:
+      - deploy/astromenace-instance32-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-astromenace-instance32
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and copy AstroMenace to Instance-32 DH1
+    runs-on: self-hosted
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout deployment branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Preflight daletop and Instance-32
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = daletop
+          APP="$HOME/AmigaChrome"
+          LIVE="$HOME/AmigaChromeInstances/Instance-32"
+          test -x "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-g++"
+          test -d "$LIVE/devices/harddisks/DH1"
+          "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-g++" --version | head -1
+
+      - name: Prepare pristine AstroMenace source
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/astromenace-instance32-deploy"
+          rm -rf "$ROOT" build/game-ports/sources/astromenace
+          mkdir -p "$ROOT"
+          python3 scripts/game_port_prepare.py prepare \
+            --root "$PWD" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify \
+            --root "$PWD" --game astromenace
+          cp -a build/game-ports/sources/astromenace "$ROOT/source"
+          git -C "$ROOT/source" rev-parse HEAD | tee "$ROOT/upstream-head.txt"
+
+      - name: Build diagnostic test package 0011
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/astromenace-instance32-deploy"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_RELEASE_ID=0011 \
+          ASTROMENACE_DIAGNOSTICS=1 \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
+            "$ROOT/source" "$ROOT/build"
+
+          PKG="$ROOT/build/package/AstroMenace"
+          test -x "$PKG/AstroMenace"
+          test -x "$PKG/AstroMenace.bin"
+          test -s "$PKG/gamedata.vfs"
+          test "$(stat -c %s "$PKG/gamedata.vfs")" -eq 116020504
+          (
+            cd "$PKG"
+            sha256sum -c SHA256SUMS
+          )
+          file "$PKG/AstroMenace" "$PKG/AstroMenace.bin"
+          sha256sum "$PKG/AstroMenace" "$PKG/AstroMenace.bin" \
+            "$PKG/gamedata.vfs" | tee "$ROOT/package-sha256.txt"
+
+      - name: Clean old AstroMenace files and install on live DH1
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/astromenace-instance32-deploy"
+          PKG="$ROOT/build/package/AstroMenace"
+          DH1="$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+          STAGE="$DH1/.AstroMenace.incoming-${GITHUB_RUN_ID}"
+
+          rm -rf "$STAGE"
+          for old in \
+            "$DH1"/AstroMenace* \
+            "$DH1"/Games/AstroMenace*; do
+            test -e "$old" || continue
+            echo "Removing stale AstroMenace item: $old"
+            rm -rf "$old"
+          done
+
+          mkdir -p "$STAGE"
+          cp -a "$PKG/." "$STAGE/"
+          chmod 755 "$STAGE/AstroMenace" "$STAGE/AstroMenace.bin"
+          rm -f "$STAGE/AUTOTEST_FIRST_MISSION"
+
+          cat > "$STAGE/TEST-BUILD.txt" <<EOF
+          AstroMenace AC090 GCC16 0011 diagnostic test build
+          Installed on Instance-32 DH1 by GitHub Actions run ${GITHUB_RUN_ID}
+          Repository commit: ${GITHUB_SHA}
+          This build is for live testing and retains diagnostic markers.
+          The latest automated clean-exit qualification did not pass, so the
+          game may still hang while closing its SDL/AHI audio device.
+          EOF
+
+          mv "$STAGE" "$DH1/AstroMenace"
+          sync
+
+          test -x "$DH1/AstroMenace/AstroMenace"
+          test -x "$DH1/AstroMenace/AstroMenace.bin"
+          test -s "$DH1/AstroMenace/gamedata.vfs"
+          cmp "$PKG/AstroMenace" "$DH1/AstroMenace/AstroMenace"
+          cmp "$PKG/AstroMenace.bin" "$DH1/AstroMenace/AstroMenace.bin"
+          cmp "$PKG/gamedata.vfs" "$DH1/AstroMenace/gamedata.vfs"
+          sha256sum "$DH1/AstroMenace/AstroMenace" \
+            "$DH1/AstroMenace/AstroMenace.bin" \
+            "$DH1/AstroMenace/gamedata.vfs"
+          printf '\nInstalled files:\n'
+          find "$DH1/AstroMenace" -maxdepth 1 -type f -printf '%f\t%s bytes\n' | sort
+
+      - name: Publish deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-Instance32-Deploy-${{ github.run_id }}
+          path: |
+            build/astromenace-instance32-deploy/upstream-head.txt
+            build/astromenace-instance32-deploy/package-sha256.txt
+          if-no-files-found: warn
+          retention-days: 30
