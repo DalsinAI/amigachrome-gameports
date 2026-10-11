@@ -1,0 +1,381 @@
+name: AstroMenace Instance-32 Clean Rebuild
+
+on:
+  push:
+    branches:
+      - fix/astromenace-instance32-rebuild-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: astromenace-instance32-clean-rebuild
+  cancel-in-progress: true
+
+jobs:
+  rebuild-test-deploy:
+    name: Clean DH1, qualify AstroMenace and deploy 0011
+    runs-on: self-hosted
+    timeout-minutes: 50
+
+    steps:
+      - name: Checkout corrected AstroMenace branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Verify daletop and inventory old DH1 material
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = daletop
+          APP="$HOME/AmigaChrome"
+          DH1="$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+          EVIDENCE="$PWD/build/astromenace-recovery/evidence"
+          QUARANTINE="$HOME/AmigaChrome-dev/astromenace-recovery-quarantine/${GITHUB_RUN_ID}"
+
+          test -d "$APP"
+          test -d "$DH1"
+          test -x "$APP/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc"
+          mkdir -p "$EVIDENCE" "$QUARANTINE"
+
+          printf 'Instance-32 DH1 AstroMenace inventory before cleanup\n' > "$EVIDENCE/dh1-before.txt"
+          find "$DH1" -maxdepth 2 -iname '*astromenace*' \
+            -printf '%y %p %s bytes\n' | sort >> "$EVIDENCE/dh1-before.txt" || true
+          cat "$EVIDENCE/dh1-before.txt"
+
+          # Remove only AstroMenace material from the root of DH1. Move it out
+          # of the guest volume first so a failed rebuild remains recoverable.
+          while IFS= read -r -d '' old; do
+            base=$(basename "$old")
+            echo "Quarantining $old"
+            rm -rf "$QUARANTINE/$base"
+            mv "$old" "$QUARANTINE/$base"
+          done < <(find "$DH1" -mindepth 1 -maxdepth 1 \
+            \( -iname 'AstroMenace*' -o -iname '.AstroMenace*' \) -print0)
+
+          printf '%s\n' "$QUARANTINE" > "$EVIDENCE/quarantine-path.txt"
+          printf 'Instance-32 DH1 AstroMenace inventory after cleanup\n' > "$EVIDENCE/dh1-after-clean.txt"
+          find "$DH1" -maxdepth 2 -iname '*astromenace*' \
+            -printf '%y %p %s bytes\n' | sort >> "$EVIDENCE/dh1-after-clean.txt" || true
+          cat "$EVIDENCE/dh1-after-clean.txt"
+          test -z "$(find "$DH1" -mindepth 1 -maxdepth 1 \
+            \( -iname 'AstroMenace*' -o -iname '.AstroMenace*' \) -print -quit)"
+
+      - name: Prepare two pristine pinned source trees
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD"
+          WORK="$ROOT/build/astromenace-recovery"
+          python3 scripts/game_port_prepare.py prepare --root "$ROOT" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$ROOT" --game astromenace
+
+          rm -rf "$WORK/source-diagnostic" "$WORK/source-release"
+          mkdir -p "$WORK"
+          cp -a build/game-ports/sources/astromenace "$WORK/source-diagnostic"
+          cp -a build/game-ports/sources/astromenace "$WORK/source-release"
+          git -C "$WORK/source-diagnostic" rev-parse HEAD | tee "$WORK/evidence/upstream-diagnostic-head.txt"
+          git -C "$WORK/source-release" rev-parse HEAD | tee "$WORK/evidence/upstream-release-head.txt"
+
+      - name: Build corrected diagnostic package
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK="$PWD/build/astromenace-recovery"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_DIAGNOSTICS=1 \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
+            "$WORK/source-diagnostic" \
+            "$WORK/diagnostic"
+
+          BIN="$WORK/diagnostic/package/AstroMenace/AstroMenace"
+          VFS="$WORK/diagnostic/package/AstroMenace/gamedata.vfs"
+          test -s "$BIN"
+          test -s "$VFS"
+          strings "$BIN" | grep -F 'stage-first-frame-presented'
+          strings "$BIN" | grep -F 'stage-first-game-frame-presented'
+          strings "$BIN" | grep -F 'stage-shutdown-complete'
+          sha256sum "$BIN" "$VFS" | tee "$WORK/evidence/diagnostic-sha256.txt"
+
+      - name: Full AC090 player-journey qualification in disposable lab
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          WORK="$PWD/build/astromenace-recovery"
+          LAB_ROOT="$HOME/AmigaChrome-dev/astromenace-runtime-labs"
+          LAB="$LAB_ROOT/Instance-Astro-Rebuild-${GITHUB_RUN_ID}"
+          LAB_TOOL="$APP/scripts/lab_instance.py"
+          EVIDENCE="$WORK/evidence/diagnostic-runtime"
+          TARGET="$LAB/devices/harddisks/DH1/AstroMenace-DIAG"
+
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          rm -rf "$LAB"
+          python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
+
+          cleanup_lab() {
+            python3 "$LAB_TOOL" stop "$LAB" || true
+          }
+          trap cleanup_lab EXIT
+
+          rm -rf "$TARGET"
+          mkdir -p "$TARGET"
+          cp -a "$WORK/diagnostic/package/AstroMenace/." "$TARGET/"
+          : > "$TARGET/AUTOTEST_FIRST_MISSION"
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AstroMenace-AutoTest"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          mkdir -p "$(dirname "$TEST_SCRIPT")"
+          cat > "$TEST_SCRIPT" <<'AMIGA'
+          FailAt 21
+          Wait 5
+          Stack 1000000
+          CD DH1:AstroMenace-DIAG
+          Echo "ASTROTEST: starting" >AstroMenace-run.log
+          AstroMenace >>AstroMenace-run.log
+          Echo "ASTROTEST: returned RC $RC" >>AstroMenace-run.log
+          AMIGA
+          touch "$USER_STARTUP"
+          printf '\nRun >NIL: <NIL: Execute S:AstroMenace-AutoTest\n' >> "$USER_STARTUP"
+
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
+            --purpose "AstroMenace clean-rebuild qualification ${GITHUB_RUN_ID}"
+          printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
+
+          reached=0
+          clean_exit=0
+          for attempt in $(seq 1 72); do
+            test ! -f "$TARGET/stage-first-game-frame-presented" || reached=1
+            if test -f "$TARGET/stage-shutdown-complete" && \
+               test -f "$TARGET/AstroMenace-run.log" && \
+               grep -Fq 'ASTROTEST: returned RC 0' "$TARGET/AstroMenace-run.log"; then
+              clean_exit=1
+              echo "Diagnostic completed after $((attempt * 5)) seconds"
+              sleep 2
+              break
+            fi
+            if test -f "$TARGET/AstroMenace-run.log" && \
+               grep -Fq 'ASTROTEST: returned RC' "$TARGET/AstroMenace-run.log" && \
+               ! grep -Fq 'ASTROTEST: returned RC 0' "$TARGET/AstroMenace-run.log"; then
+              echo "Diagnostic returned non-zero"
+              break
+            fi
+            sleep 5
+          done
+
+          cp "$TARGET/AstroMenace-run.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-first-frame.bmp" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-workshop.bmp" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET/AstroMenace-first-mission.bmp" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
+          cp "$TARGET"/stage-* "$EVIDENCE/" 2>/dev/null || true
+
+          cleanup_lab
+          trap - EXIT
+
+          test "$reached" -eq 1
+          test "$clean_exit" -eq 1
+          test -s "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'ASTROTEST: returned RC 0' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'AMDBG: after VFS open' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'AMDBG: window and GL context ready' "$EVIDENCE/AstroMenace-run.log"
+          grep -F 'Audio      : AmigaChrome OpenGPU SDL2_mixer' "$EVIDENCE/AstroMenace-run.log"
+          for marker in \
+            stage-after-asset-load \
+            stage-main-menu-ready \
+            stage-first-frame-presented \
+            stage-workshop-frame-presented \
+            stage-first-game-frame-presented \
+            stage-audio-channel-active \
+            stage-keydown-received \
+            stage-keyup-received \
+            stage-shutdown-complete; do
+            test -f "$EVIDENCE/$marker"
+          done
+          for frame in AstroMenace-first-frame.bmp AstroMenace-workshop.bmp AstroMenace-first-mission.bmp; do
+            test -s "$EVIDENCE/$frame"
+            python3 scripts/validate_bmp_frame.py "$EVIDENCE/$frame" \
+              | tee "$EVIDENCE/$frame.validation.json"
+          done
+          sha256sum \
+            "$EVIDENCE/AstroMenace-first-frame.bmp" \
+            "$EVIDENCE/AstroMenace-workshop.bmp" \
+            "$EVIDENCE/AstroMenace-first-mission.bmp" \
+            | tee "$EVIDENCE/frame-sha256.txt"
+
+      - name: Build clean production release 0011
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK="$PWD/build/astromenace-recovery"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_RELEASE_ID=0011 \
+          sh scripts/build_astromenace_release.sh \
+            "$PWD" \
+            "$WORK/source-release" \
+            "$WORK/release-0011"
+
+          PKG="$WORK/release-0011/build/package/AstroMenace"
+          test -s "$PKG/AstroMenace"
+          test -s "$PKG/gamedata.vfs"
+          test ! -e "$PKG/gamedata"
+          if strings "$PKG/AstroMenace" | grep -E 'AUTOTEST_FIRST_MISSION|PROGDIR:stage-|AMLOAD:'; then
+            echo 'Diagnostic material leaked into production binary' >&2
+            exit 30
+          fi
+          sha256sum "$PKG/AstroMenace" "$PKG/gamedata.vfs" \
+            | tee "$WORK/evidence/production-sha256.txt"
+
+      - name: Atomically install the verified production package on Instance-32 DH1
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK="$PWD/build/astromenace-recovery"
+          DH1="$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+          PKG="$WORK/release-0011/build/package/AstroMenace"
+          DEST="$DH1/AstroMenace"
+          INCOMING="$DH1/.AstroMenace.incoming-${GITHUB_RUN_ID}"
+          EVIDENCE="$WORK/evidence"
+
+          rm -rf "$INCOMING" "$DEST"
+          mkdir -p "$INCOMING"
+          cp -a "$PKG/." "$INCOMING/"
+
+          test -s "$INCOMING/AstroMenace"
+          test -s "$INCOMING/gamedata.vfs"
+          test "$(sha256sum "$INCOMING/AstroMenace" | awk '{print $1}')" = \
+               "$(sha256sum "$PKG/AstroMenace" | awk '{print $1}')"
+          test "$(sha256sum "$INCOMING/gamedata.vfs" | awk '{print $1}')" = \
+               "$(sha256sum "$PKG/gamedata.vfs" | awk '{print $1}')"
+
+          cat > "$INCOMING/DEPLOYMENT.txt" <<EOF
+          AstroMenace AC090 GCC16 0011
+          Clean rebuild and deployment run: ${GITHUB_RUN_ID}
+          Branch: ${GITHUB_REF_NAME}
+          Commit: ${GITHUB_SHA}
+          Diagnostic player-journey gate: PASS
+          Installed: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+          EOF
+
+          mv "$INCOMING" "$DEST"
+          chmod 755 "$DEST/AstroMenace"
+          sync
+
+          printf 'Installed package\n' > "$EVIDENCE/dh1-installed.txt"
+          find "$DEST" -maxdepth 2 -type f -printf '%P %s bytes\n' \
+            | sort >> "$EVIDENCE/dh1-installed.txt"
+          sha256sum "$DEST/AstroMenace" "$DEST/gamedata.vfs" \
+            | tee "$EVIDENCE/dh1-installed-sha256.txt"
+          cat "$EVIDENCE/dh1-installed.txt"
+
+      - name: Smoke-test the exact installed production package in a disposable copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$HOME/AmigaChrome"
+          WORK="$PWD/build/astromenace-recovery"
+          LAB_ROOT="$HOME/AmigaChrome-dev/astromenace-runtime-labs"
+          LAB="$LAB_ROOT/Instance-Astro-Production-${GITHUB_RUN_ID}"
+          LAB_TOOL="$APP/scripts/lab_instance.py"
+          EVIDENCE="$WORK/evidence/production-smoke"
+          TARGET="$LAB/devices/harddisks/DH1/AstroMenace"
+
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          rm -rf "$LAB"
+          python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
+
+          cleanup_lab() {
+            python3 "$LAB_TOOL" stop "$LAB" || true
+          }
+          trap cleanup_lab EXIT
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/AstroMenace-Production-Smoke"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          cat > "$TEST_SCRIPT" <<'AMIGA'
+          FailAt 21
+          Wait 5
+          Stack 1000000
+          CD DH1:AstroMenace
+          Echo "ASTROSMOKE: starting" >AstroMenace-production-smoke.log
+          AstroMenace >>AstroMenace-production-smoke.log
+          Echo "ASTROSMOKE: returned RC $RC" >>AstroMenace-production-smoke.log
+          AMIGA
+          touch "$USER_STARTUP"
+          printf '\nRun >NIL: <NIL: Execute S:AstroMenace-Production-Smoke\n' >> "$USER_STARTUP"
+          rm -f "$LAB/state/current-screen.jpg"
+
+          python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
+            --purpose "AstroMenace installed-production smoke ${GITHUB_RUN_ID}"
+
+          started=0
+          for attempt in $(seq 1 24); do
+            if test -f "$TARGET/AstroMenace-production-smoke.log" && \
+               grep -Fq 'ASTROSMOKE: starting' "$TARGET/AstroMenace-production-smoke.log"; then
+              started=1
+            fi
+            if test -f "$TARGET/AstroMenace-production-smoke.log" && \
+               grep -Fq 'ASTROSMOKE: returned RC' "$TARGET/AstroMenace-production-smoke.log"; then
+              echo 'Production executable returned during the 120-second smoke window' >&2
+              cat "$TARGET/AstroMenace-production-smoke.log" >&2
+              exit 40
+            fi
+            sleep 5
+          done
+
+          test "$started" -eq 1
+          cp "$TARGET/AstroMenace-production-smoke.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
+          cp "$LAB/state/current-screen.jpg" "$EVIDENCE/" 2>/dev/null || true
+          python3 "$LAB_TOOL" status "$LAB" > "$EVIDENCE/lab-status.txt" 2>&1 || true
+          sha256sum "$TARGET/AstroMenace" "$TARGET/gamedata.vfs" \
+            > "$EVIDENCE/installed-copy-sha256.txt"
+
+          cleanup_lab
+          trap - EXIT
+
+          test -s "$EVIDENCE/AstroMenace-production-smoke.log"
+          grep -F 'ASTROSMOKE: starting' "$EVIDENCE/AstroMenace-production-smoke.log"
+          ! grep -Fq 'ASTROSMOKE: returned RC' "$EVIDENCE/AstroMenace-production-smoke.log"
+          if test -s "$EVIDENCE/current-screen.jpg"; then
+            file "$EVIDENCE/current-screen.jpg"
+            stat -c '%n %s bytes' "$EVIDENCE/current-screen.jpg"
+          fi
+
+      - name: Finalise cleanup evidence
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK="$PWD/build/astromenace-recovery"
+          EVIDENCE="$WORK/evidence"
+          QUARANTINE=$(cat "$EVIDENCE/quarantine-path.txt")
+          DH1="$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+
+          rm -rf "$QUARANTINE"
+          printf 'Final Instance-32 DH1 AstroMenace inventory\n' \
+            > "$EVIDENCE/dh1-final.txt"
+          find "$DH1" -maxdepth 2 -iname '*astromenace*' \
+            -printf '%y %p %s bytes\n' | sort >> "$EVIDENCE/dh1-final.txt"
+          cat "$EVIDENCE/dh1-final.txt"
+          test -d "$DH1/AstroMenace"
+          test -x "$DH1/AstroMenace/AstroMenace"
+          test -s "$DH1/AstroMenace/gamedata.vfs"
+          test -z "$(find "$DH1" -mindepth 1 -maxdepth 1 \
+            -iname 'AstroMenace*' ! -name 'AstroMenace' -print -quit)"
+
+      - name: Upload release and complete qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-Instance32-Rebuild-${{ github.run_id }}
+          path: |
+            build/astromenace-recovery/release-0011/AstroMenace-AC090-GCC16-0011.zip
+            build/astromenace-recovery/release-0011/SHA256SUMS
+            build/astromenace-recovery/release-0011/RELEASE-MANIFEST.json
+            build/astromenace-recovery/evidence/
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 0
