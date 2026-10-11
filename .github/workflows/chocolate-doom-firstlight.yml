@@ -42,7 +42,7 @@ jobs:
           mkdir -p "$LAB_ROOT"
           for lab in "$LAB_ROOT"/Instance-ChocolateDoom-*; do
             test -d "$lab" || continue
-            python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
+            timeout 20s python3 "$APP/scripts/lab_instance.py" stop "$lab" >/dev/null 2>&1 || true
             rm -rf "$lab"
           done
 
@@ -105,13 +105,14 @@ jobs:
           Content: Freedoom 0.13.0, verified SHA-256
           Gate A: OpenGPU-forced no-audio timedemo and clean exit.
           Gate B: OpenGPU-forced SDL_mixer/AHI timedemo and clean exit.
+          Persistent stage-doom-* files distinguish launch, return and shutdown.
           EOF
           test -s "$PKG/freedoom1.wad"
           du -sh "$PKG" | tee "$ROOT/evidence/private-payload-size.txt"
           sha256sum "$PKG/chocolate-doom" "$PKG/freedoom1.wad" \
             | tee "$ROOT/evidence/payload-sha256.txt"
 
-      - name: Run graphics and audio timedemo journeys
+      - name: Run isolated graphics and audio timedemo journeys
         shell: bash
         run: |
           set -euo pipefail
@@ -128,62 +129,125 @@ jobs:
           python3 "$LAB_TOOL" copy Instance-32 "$LAB" --who ChatGPT
 
           cleanup() {
-            python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
+            timeout 20s python3 "$LAB_TOOL" stop "$LAB" >/dev/null 2>&1 || true
             rm -rf "$LAB"
           }
           trap cleanup EXIT
+
+          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/ChocolateDoom-FirstLight"
+          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
+          mkdir -p "$(dirname "$TEST_SCRIPT")"
+          touch "$USER_STARTUP"
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.before"
+
+          python3 - "$USER_STARTUP" <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          path = Path(sys.argv[1])
+          text = path.read_text(encoding="latin-1") if path.exists() else ""
+          names = re.compile(
+              r"AstroMenace|AssaultCube|CDogs|ChocolateDoom|SDL2[ -]?Demos|"
+              r"OpenFire|OpenTunnel|OpenTriangles|OpenEffects|OpenRay|"
+              r"OpenHypno|OpenIntro|OpenFloor|OpenSprites|OpenTarget|"
+              r"OpenParticles|OpenBoids|OpenScope",
+              re.IGNORECASE,
+          )
+          kept = [line for line in text.splitlines() if not names.search(line)]
+          path.write_text("\n".join(kept).rstrip() + "\n", encoding="latin-1")
+          PY
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.filtered"
+
+          find "$LAB/devices/harddisks/DH0/S" -maxdepth 1 -type f \
+            \( -iname 'AstroMenace*' -o -iname 'AssaultCube*' \
+               -o -iname 'CDogs*' -o -iname 'ChocolateDoom*' \) \
+            -delete
 
           mkdir -p "$TARGET"
           cp -a "$PKG/." "$TARGET/"
           chmod 755 "$TARGET/chocolate-doom"
 
-          TEST_SCRIPT="$LAB/devices/harddisks/DH0/S/ChocolateDoom-FirstLight"
-          USER_STARTUP="$LAB/devices/harddisks/DH0/S/User-Startup"
-          mkdir -p "$(dirname "$TEST_SCRIPT")"
           cat > "$TEST_SCRIPT" <<'AMIGA'
           FailAt 21
           Wait 5
           CD DH1:ChocolateDoom-FLIGHT
           SetEnv SDL_RENDER_DRIVER opengpu
           SetEnv SDL_OPENGPU_STATS 1
+          Echo "ready" >stage-doom-01-graphics-start
           Echo "DOOMTEST: graphics timedemo starting" >ChocolateDoom-run.log
           chocolate-doom -iwad freedoom1.wad -timedemo demo1 -window -width 640 -height 480 -nosound -nomusic >>ChocolateDoom-run.log
           Echo "DOOMTEST: graphics returned RC $RC" >>ChocolateDoom-run.log
+          Echo "ready" >stage-doom-02-graphics-returned
+          Echo "ready" >stage-doom-03-audio-start
           Echo "DOOMTEST: audio timedemo starting" >>ChocolateDoom-run.log
           chocolate-doom -iwad freedoom1.wad -timedemo demo1 -window -width 640 -height 480 -nomusic >>ChocolateDoom-run.log
           Echo "DOOMTEST: audio returned RC $RC" >>ChocolateDoom-run.log
+          Echo "ready" >stage-doom-04-audio-returned
           UnsetEnv SDL_OPENGPU_STATS
           UnsetEnv SDL_RENDER_DRIVER
+          Echo "ready" >stage-doom-05-script-complete
           AMIGA
-          touch "$USER_STARTUP"
           printf '\nRun >NIL: <NIL: Execute S:ChocolateDoom-FirstLight\n' >> "$USER_STARTUP"
+          cp -p "$USER_STARTUP" "$EVIDENCE/User-Startup.final"
 
           python3 "$LAB_TOOL" start "$LAB" --who ChatGPT \
             --purpose "Chocolate Doom OpenGPU/Freedoom first light ${GITHUB_RUN_ID}"
 
-          complete=0
-          for attempt in $(seq 1 36); do
-            if test "$attempt" -le 12; then
-              cp "$LAB/state/current-screen.jpg" \
-                "$EVIDENCE/screen-${attempt}s.jpg" 2>/dev/null || true
+          graphics_started=0
+          graphics_returned=0
+          audio_started=0
+          audio_returned=0
+          script_complete=0
+          graphics_rc0=0
+          audio_rc0=0
+          for attempt in $(seq 1 60); do
+            test -f "$TARGET/stage-doom-01-graphics-start" && graphics_started=1
+            test -f "$TARGET/stage-doom-02-graphics-returned" && graphics_returned=1
+            test -f "$TARGET/stage-doom-03-audio-start" && audio_started=1
+            test -f "$TARGET/stage-doom-04-audio-returned" && audio_returned=1
+            test -f "$TARGET/stage-doom-05-script-complete" && script_complete=1
+            if test -f "$TARGET/ChocolateDoom-run.log"; then
+              grep -Fq 'DOOMTEST: graphics returned RC 0' "$TARGET/ChocolateDoom-run.log" && graphics_rc0=1
+              grep -Fq 'DOOMTEST: audio returned RC 0' "$TARGET/ChocolateDoom-run.log" && audio_rc0=1
             fi
-            if test -f "$TARGET/ChocolateDoom-run.log" && \
-               grep -Fq 'DOOMTEST: audio returned RC 0' "$TARGET/ChocolateDoom-run.log"; then
-              complete=1
+
+            if test "$attempt" -eq 2 || test "$attempt" -eq 4 || \
+               test "$attempt" -eq 8 || test "$attempt" -eq 12 || \
+               test "$attempt" -eq 20; then
+              cp "$LAB/state/current-screen.jpg" \
+                "$EVIDENCE/screen-$((attempt * 3))s.jpg" 2>/dev/null || true
+            fi
+
+            if test "$script_complete" -eq 1; then
               cp "$LAB/state/current-screen.jpg" \
                 "$EVIDENCE/screen-after-return.jpg" 2>/dev/null || true
               break
             fi
-            sleep 1
+            sleep 3
           done
 
           cp "$TARGET/ChocolateDoom-run.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/logs/native-runtime.log" "$EVIDENCE/" 2>/dev/null || true
           cp "$LAB/state/current-screen.jpg" "$EVIDENCE/screen-final.jpg" 2>/dev/null || true
+          cp "$TARGET"/stage-doom-* "$EVIDENCE/" 2>/dev/null || true
           find "$TARGET" -maxdepth 1 -type f \
             \( -iname '*.cfg' -o -iname '*.log' \) \
             -exec cp -p {} "$EVIDENCE/" \; 2>/dev/null || true
-          python3 "$LAB_TOOL" status "$LAB" > "$EVIDENCE/lab-status.txt" 2>&1 || true
+          cp "$LAB/config/instance.json" "$EVIDENCE/instance.json" 2>/dev/null || true
+          cp "$LAB/config/local.json" "$EVIDENCE/local.json" 2>/dev/null || true
+
+          {
+            echo "graphics_started=$graphics_started"
+            echo "graphics_returned=$graphics_returned"
+            echo "audio_started=$audio_started"
+            echo "audio_returned=$audio_returned"
+            echo "script_complete=$script_complete"
+            echo "graphics_rc0=$graphics_rc0"
+            echo "audio_rc0=$audio_rc0"
+            echo "stages:"
+            find "$TARGET" -maxdepth 1 -type f -name 'stage-doom-*' -printf '%f\n' | sort
+          } | tee "$EVIDENCE/result.txt"
 
           python3 - "$EVIDENCE" <<'PY'
           from pathlib import Path
@@ -215,13 +279,15 @@ jobs:
           cleanup
           trap - EXIT
 
-          echo "complete=$complete" | tee "$EVIDENCE/result.txt"
-          test -s "$EVIDENCE/ChocolateDoom-run.log"
-          grep -F 'DOOMTEST: graphics returned RC 0' "$EVIDENCE/ChocolateDoom-run.log"
-          grep -F 'DOOMTEST: audio returned RC 0' "$EVIDENCE/ChocolateDoom-run.log"
+          test "$graphics_started" -eq 1
+          test "$graphics_returned" -eq 1
+          test "$audio_started" -eq 1
+          test "$audio_returned" -eq 1
+          test "$script_complete" -eq 1
+          test "$graphics_rc0" -eq 1
+          test "$audio_rc0" -eq 1
           ! grep -Eiq 'program failed|software failure|0x8000000|divide by zero' \
             "$EVIDENCE/native-runtime.log"
-          test "$complete" -eq 1
 
       - name: Upload first-light evidence only
         if: always()
