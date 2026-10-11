@@ -1,0 +1,140 @@
+name: UQM Fixed-Stove Engine Build
+
+on:
+  push:
+    branches:
+      - build/uqm-fixed-stove-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: uqm-fixed-stove-engine
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build UQM 0.8.0 engine for AC090 with GCC16
+    runs-on: self-hosted
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout UQM build branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Preflight daletop toolchain and compatibility root
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(hostname)" = daletop
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16"
+          DEPS="$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"
+          test -x "$STOVE/prefix/bin/m68k-amigaos-gcc"
+          test -x "$STOVE/prefix/bin/m68k-amigaos-g++"
+          test -x "$STOVE/prefix/bin/sdl2-config"
+          test -f "$DEPS/lib/libpng.a"
+          test -f "$DEPS/lib/libz.a"
+          "$STOVE/prefix/bin/m68k-amigaos-gcc" --version | head -1
+          "$STOVE/prefix/bin/sdl2-config" --version
+
+      - name: Prepare and verify exact UQM 0.8.0 source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/uqm-fixed-stove"
+          rm -rf "$ROOT" build/game-ports/sources/uqm build/os3/uqm-fixed-stove
+          mkdir -p "$ROOT/evidence"
+
+          python3 scripts/game_port_prepare.py prepare \
+            --root "$PWD" --game uqm --allow-network \
+            | tee "$ROOT/evidence/source-prepare.json"
+          python3 scripts/game_port_prepare.py verify \
+            --root "$PWD" --game uqm \
+            | tee "$ROOT/evidence/source-verify.json"
+
+          SRC="$PWD/build/game-ports/sources/uqm/uqm-0.8.0"
+          test -d "$SRC"
+          test -f "$SRC/sc2/build.sh" -o -f "$SRC/build.sh"
+          printf '%s\n' \
+            'uqm-0.8.0-src.tgz' \
+            '24f2f7db9cf7faf53b95f9e2580e6f596205a98ed0c335cfe834c64785ad4f5a' \
+            | tee "$ROOT/evidence/source-pin.txt"
+
+      - name: Build fixed-stove AmigaOS engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/uqm-fixed-stove"
+          SRC="$PWD/build/game-ports/sources/uqm/uqm-0.8.0"
+          OUT="$PWD/build/os3/uqm-fixed-stove"
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16"
+          DEPS="$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"
+
+          STOVE="$STOVE" UQM_DEPS="$DEPS" \
+            sh ports/uqm/build-amigaos3.sh "$SRC" "$OUT" \
+            2>&1 | tee "$ROOT/evidence/build.log"
+
+          mapfile -t candidates < <(
+            find "$OUT" -type f -name uqm -perm -111 -print | sort
+          )
+          printf '%s\n' "${candidates[@]}" | tee "$ROOT/evidence/executable-candidates.txt"
+          test "${#candidates[@]}" -ge 1
+
+          EXE="${candidates[0]}"
+          for candidate in "${candidates[@]}"; do
+            if file "$candidate" | grep -q 'AmigaOS loadseg'; then
+              EXE="$candidate"
+              break
+            fi
+          done
+          test -x "$EXE"
+          file "$EXE" | tee "$ROOT/evidence/binary-type.txt"
+          file "$EXE" | grep -q 'AmigaOS loadseg'
+          sha256sum "$EXE" | tee "$ROOT/evidence/binary-sha256.txt"
+          "$STOVE/prefix/bin/m68k-amigaos-size" "$EXE" \
+            | tee "$ROOT/evidence/binary-size.txt"
+
+          PKG="$ROOT/package/UQM"
+          mkdir -p "$PKG"
+          cp -p "$EXE" "$PKG/uqm"
+          chmod 755 "$PKG/uqm"
+          cat > "$PKG/README-AmigaChrome.txt" <<EOF
+          The Ur-Quan Masters 0.8.0 engine
+          Target: AmigaChrome AC090, AmigaOS 3.x, 68040 + FPU
+          Compiler: GCC 16.2.0b fixed stove
+          Source archive SHA-256:
+          24f2f7db9cf7faf53b95f9e2580e6f596205a98ed0c335cfe834c64785ad4f5a
+
+          This package contains the engine only. UQM content remains a separate
+          licensed input and is deliberately not bundled here.
+          EOF
+          cp -p "$ROOT/evidence/binary-sha256.txt" "$PKG/SHA256SUMS"
+          test "$(find "$PKG" -type f | wc -l)" -eq 3
+          du -sh "$PKG" | tee "$ROOT/evidence/package-size.txt"
+
+      - name: Audit engine-only package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/uqm-fixed-stove"
+          PKG="$ROOT/package/UQM"
+          test -x "$PKG/uqm"
+          test ! -e "$PKG/content"
+          test ! -e "$PKG/packages"
+          test ! -e "$PKG/addons"
+          ! find "$PKG" -type f \
+            \( -iname '*.zip' -o -iname '*.uqm' -o -iname '*.ogg' \
+               -o -iname '*.mod' -o -iname '*.wav' \) -print | grep -q .
+          sha256sum "$PKG/uqm" | tee "$ROOT/evidence/package-binary-sha256.txt"
+
+      - name: Upload fixed-stove engine and provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: UQM-0.8.0-AC090-GCC16-${{ github.run_id }}
+          path: |
+            build/uqm-fixed-stove/package/UQM/
+            build/uqm-fixed-stove/evidence/
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 6
