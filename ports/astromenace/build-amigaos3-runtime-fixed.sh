@@ -6,7 +6,7 @@ ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
 SRC=${1:-"$ROOT/build/game-ports/sources/astromenace"}
 OUT=${2:-"$ROOT/build/os3/astromenace-runtime-fixed"}
 DIAGNOSTICS=${ASTROMENACE_DIAGNOSTICS:-0}
-RELEASE_ID=${ASTROMENACE_RELEASE_ID:-0010}
+RELEASE_ID=${ASTROMENACE_RELEASE_ID:-0012}
 
 # Apply the production AmigaChrome integration first because the target-random
 # patch adds its post-SDL reseed immediately after the SDL startup marker.
@@ -16,12 +16,14 @@ python3 "$HERE/patch_amiga_random.py" "$SRC"
 
 # Runtime probes are deliberately absent from release packages. CI enables
 # them explicitly to leave stage files, capture menu/workshop/mission frames,
-# prove mixer playback and exercise the SDL keyboard path plus clean shutdown.
+# prove mixer playback, exercise the SDL keyboard path and qualify real
+# SDL_TEXTINPUT on the normal profile naming screen before clean shutdown.
 if [ "$DIAGNOSTICS" = "1" ]; then
     python3 "$HERE/patch_first_frame_probe.py" "$SRC"
     python3 "$HERE/patch_player_journey_probe.py" "$SRC"
     python3 "$HERE/patch_audio_runtime_probe.py" "$SRC"
     python3 "$HERE/patch_input_exit_probe.py" "$SRC"
+    python3 "$HERE/patch_profile_text_input_probe.py" "$SRC"
 else
     python3 "$HERE/patch_release_cleanup.py" "$SRC"
 fi
@@ -85,6 +87,7 @@ AmigaChrome qualification:
 - SDL2, OpenAudio and VirGL context creation;
 - complete model and texture load;
 - fully rendered main menu;
+- real SDL_TEXTINPUT profile naming and saved-profile reload;
 - normal mission selection and shipyard workshop transition;
 - captured configured-ship workshop frame;
 - normal workshop fade into mission one;
@@ -101,6 +104,7 @@ Upstream commit: bbdb3ac5af2774c92b85c4d9b2a238f606911e66
 Target CPU: 68040 + 68881-compatible FPU
 Data format: VFS v1.6 build 250208, explicit little-endian readers
 Diagnostics included: $DIAGNOSTICS
+SDL text-input profile probe: $DIAGNOSTICS
 EOF
 
 (
