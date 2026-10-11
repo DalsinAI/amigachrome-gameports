@@ -14,6 +14,7 @@ DEST_ROOT=${DEST_ROOT:-"/home/da1ek/AmigaChromeInstances/Instance-32/devices/har
 [ -x "$SDL2_CONFIG" ] || { echo "missing OpenGPU SDL2 SDK: $SDL2_CONFIG" >&2; exit 2; }
 [ -d "$(dirname "$DEST_ROOT")" ] || { echo "Instance-32 DH1 is missing" >&2; exit 2; }
 
+rm -rf "$OUT"
 mkdir -p "$OUT/bin" "$OUT/logs" "$DEST_ROOT"
 
 SDL_CFLAGS=$($SDL2_CONFIG --cflags)
@@ -24,6 +25,7 @@ printf '%s\n' "Compiler: $($CC --version | head -1)" | tee "$OUT/BUILD-INFO.txt"
 printf '%s\n' "SDL2: $($SDL2_CONFIG --version)" | tee -a "$OUT/BUILD-INFO.txt"
 printf '%s\n' "CFLAGS: $SDL_CFLAGS $COMMON_FLAGS" | tee -a "$OUT/BUILD-INFO.txt"
 printf '%s\n' "LIBS: $SDL_LIBS -lm" | tee -a "$OUT/BUILD-INFO.txt"
+printf '%s\n' "Target: Instance-32 DH1:SDL2 Demos" | tee -a "$OUT/BUILD-INFO.txt"
 
 write_readme() {
     local name=$1
@@ -50,6 +52,7 @@ deploy_one() {
     local binary="$OUT/bin/$name"
     local incoming="$DEST_ROOT/.$name.incoming-${GITHUB_RUN_ID:-$$}"
     local readme_incoming="$DEST_ROOT/.$name.readme.incoming-${GITHUB_RUN_ID:-$$}"
+    local sums_incoming="$DEST_ROOT/.$name.SHA256SUMS.incoming-${GITHUB_RUN_ID:-$$}"
 
     echo "=== Building $name ==="
     # shellcheck disable=SC2086
@@ -60,19 +63,24 @@ deploy_one() {
         "$STRIP" "$binary"
     fi
     write_readme "$name" "$help"
-    sha256sum "$binary" "$OUT/bin/$name.readme" > "$OUT/bin/$name.SHA256SUMS"
+    (
+        cd "$OUT/bin"
+        sha256sum "$name" "$name.readme" > "$name.SHA256SUMS"
+    )
 
     cp -p "$binary" "$incoming"
     cp -p "$OUT/bin/$name.readme" "$readme_incoming"
+    cp -p "$OUT/bin/$name.SHA256SUMS" "$sums_incoming"
     mv -f "$incoming" "$DEST_ROOT/$name"
     mv -f "$readme_incoming" "$DEST_ROOT/$name.readme"
-    cp -p "$OUT/bin/$name.SHA256SUMS" "$DEST_ROOT/$name.SHA256SUMS"
+    mv -f "$sums_incoming" "$DEST_ROOT/$name.SHA256SUMS"
 
     test -s "$DEST_ROOT/$name"
     echo "$name READY on DH1:SDL2 Demos/$name"
     stat -c '%n %s bytes mode=%a' "$DEST_ROOT/$name"
 }
 
+echo "######## PHASE ONE ########"
 deploy_one OpenFire "$HERE/openfire/openfire.c" \
     "Doom-style procedural fire. C changes palette, Up/Down change heat, Space pauses."
 
@@ -88,6 +96,32 @@ deploy_one OpenEffects "$HERE/openeffects/openeffects.c" \
 deploy_one OpenRay "$HERE/openray/openray.c" \
     "Interactive raycaster. WASD or arrows move, Shift runs, left-mouse drag turns, M toggles the map."
 
+(
+    cd "$OUT/bin"
+    sha256sum OpenFire OpenTunnel OpenTriangles OpenEffects OpenRay > PHASE1-SHA256SUMS
+)
+cp -p "$OUT/bin/PHASE1-SHA256SUMS" "$DEST_ROOT/PHASE1-SHA256SUMS"
+echo "=== Phase one deployed; continuing directly into phase two ==="
+
+echo "######## PHASE TWO ########"
+deploy_one OpenHypno "$HERE/openhypno/openhypno.c" \
+    "Line tunnel, parallax star trails, moving perspective floor and a rotating wireframe cube. Arrows reverse direction; Space pauses."
+
+deploy_one OpenIntro "$HERE/openintro/openintro.c" \
+    "Classic intro scene with star trails, Doom fire, a copper-colour sine scroller and CRT scanlines. Space pauses."
+
+deploy_one OpenFloor "$HERE/openfloor/openfloor.c" \
+    "Infinite perspective grid, moving copper bars and a shaded bouncing Boing Ball. Arrows change speed, C changes palette, Space pauses."
+
+(
+    cd "$OUT/bin"
+    sha256sum OpenHypno OpenIntro OpenFloor > PHASE2-SHA256SUMS
+    sha256sum OpenFire OpenTunnel OpenTriangles OpenEffects OpenRay \
+              OpenHypno OpenIntro OpenFloor > ALL-SHA256SUMS
+)
+cp -p "$OUT/bin/PHASE2-SHA256SUMS" "$DEST_ROOT/PHASE2-SHA256SUMS"
+cp -p "$OUT/bin/ALL-SHA256SUMS" "$DEST_ROOT/ALL-SHA256SUMS"
+
 cat > "$DEST_ROOT/README.txt" <<'EOF'
 OpenUp SDL2 Demos
 =================
@@ -95,22 +129,24 @@ OpenUp SDL2 Demos
 Run from Shell:
 
   CD "DH1:SDL2 Demos"
+
+Phase one:
   OpenFire
   OpenTunnel
   OpenTriangles
   OpenEffects
   OpenRay
 
+Phase two:
+  OpenHypno
+  OpenIntro
+  OpenFloor
+
 Every demo opens in a resizable OpenBench window. F/F11 toggles fullscreen and
 Esc exits. Each executable has a matching .readme and SHA256SUMS file.
 EOF
 
 cp -p "$OUT/BUILD-INFO.txt" "$DEST_ROOT/BUILD-INFO.txt"
-(
-    cd "$OUT/bin"
-    sha256sum OpenFire OpenTunnel OpenTriangles OpenEffects OpenRay > PHASE1-SHA256SUMS
-)
-cp -p "$OUT/bin/PHASE1-SHA256SUMS" "$DEST_ROOT/PHASE1-SHA256SUMS"
 
-echo "=== Phase one deployed ==="
+echo "=== All SDL2 demos deployed ==="
 find "$DEST_ROOT" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort
