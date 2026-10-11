@@ -1,0 +1,388 @@
+name: AstroMenace SDL Text Input Lab
+
+on:
+  push:
+    branches:
+      - fix/astromenace-sdl-text-input-20261011
+  workflow_dispatch:
+
+concurrency:
+  group: astromenace-sdl-text-input-lab
+  cancel-in-progress: true
+
+jobs:
+  qualify:
+    name: Rebuild and qualify profile naming
+    runs-on: self-hosted
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout AstroMenace port work
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Checkout OpenGPU SDL text-input implementation
+        uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/openamigartg
+          ref: implement/opengpu-sdl-keyboard-fix
+          path: build/openamigartg-text-input
+          clean: true
+          fetch-depth: 1
+
+      - name: Build corrected SDL2 module and diagnostics
+        shell: bash
+        run: |
+          set -euxo pipefail
+          ORTG="$GITHUB_WORKSPACE/build/openamigartg-text-input"
+          OUT="$GITHUB_WORKSPACE/build/sdl2-text-input"
+          mkdir -p "$OUT"
+          (cd "$ORTG" && library/modules/sdl2/build.sh "$OUT" module stub static)
+          CC="$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc"
+          "$CC" -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -noixemul \
+            -I"$OUT/include/SDL2" -o "$OUT/textinput.m" \
+            "$ORTG/tests/sdl2/textinput.c" -L"$OUT" -lSDL2 -lm -lamiga
+          "$CC" -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -noixemul \
+            -I"$OUT/include/SDL2" -o "$OUT/textinput" \
+            "$ORTG/tests/sdl2/textinput.c" -L"$OUT" -lSDL2_static -lm -lamiga
+          file "$OUT/SDL2.module" "$OUT/textinput.m" "$OUT/textinput"
+          sha256sum "$OUT/SDL2.module" "$OUT/textinput.m" "$OUT/textinput" \
+            | tee "$OUT/SHA256SUMS"
+
+      - name: Prepare pinned AstroMenace source
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 scripts/game_port_prepare.py prepare --root "$PWD" --game astromenace --allow-network
+          python3 scripts/game_port_prepare.py verify --root "$PWD" --game astromenace
+          cp -a build/game-ports/sources/astromenace \
+            build/game-ports/sources/astromenace-profile-diag
+
+      - name: Rebuild AstroMenace diagnostic 0012
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_DIAGNOSTICS=1 \
+          ASTROMENACE_RELEASE_ID=0012-TEXTINPUT-DIAG \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
+            build/game-ports/sources/astromenace-profile-diag \
+            build/os3/astromenace-text-input-diag
+          PKG=build/os3/astromenace-text-input-diag/package/AstroMenace
+          test -s "$PKG/AstroMenace"
+          test -s "$PKG/gamedata.vfs"
+          strings "$PKG/AstroMenace" | grep -F 'stage-profile-created'
+          strings "$PKG/AstroMenace" | grep -F 'stage-profile-reloaded'
+          sha256sum "$PKG/AstroMenace" "$PKG/gamedata.vfs" \
+            | tee build/os3/astromenace-text-input-diag/DIAGNOSTIC-SHA256SUMS
+
+      - name: Create stopped Instance-32 lab and install agent
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME="astro-text-${GITHUB_RUN_ID}"
+          LAB="$LAB_ROOT/$LAB_NAME"
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-text-input-diag/evidence"
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          python3 "$APP/scripts/lab_instance.py" copy Instance-32 "$LAB" --who ChatGPT
+          printf '%s\n' "$LAB_NAME" > "$EVIDENCE/LAB_NAME.txt"
+          printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" <<'PY'
+          import json, os, sys
+          app, name = sys.argv[1:]
+          sys.path.insert(0, app + "/scripts")
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools()
+          tools.Error = RuntimeError
+          print(json.dumps(tools.install_agent("lab:" + name), indent=2))
+          PY
+
+      - name: Stage corrected runtime, diagnostics and AstroMenace
+        shell: bash
+        run: |
+          set -euxo pipefail
+          LAB_NAME=$(cat build/os3/astromenace-text-input-diag/evidence/LAB_NAME.txt)
+          LAB="$HOME/AmigaChrome-dev/labs/$LAB_NAME"
+          SDL_OUT="$GITHUB_WORKSPACE/build/sdl2-text-input"
+          PKG="$GITHUB_WORKSPACE/build/os3/astromenace-text-input-diag/package/AstroMenace"
+          BACKUP="$LAB/archive/sdl-text-input-${GITHUB_RUN_ID}"
+          mkdir -p "$BACKUP"
+          MODULE_TARGET=$(find "$LAB/devices/harddisks/DH0" -type f -iname SDL2.module -path '*/OpenGPU/*' -print -quit || true)
+          if [ -z "$MODULE_TARGET" ]; then
+            MODULE_TARGET="$LAB/devices/harddisks/DH0/Libs/OpenGPU/SDL2.module"
+          fi
+          mkdir -p "$(dirname "$MODULE_TARGET")"
+          if [ -f "$MODULE_TARGET" ]; then
+            cp -a "$MODULE_TARGET" "$BACKUP/SDL2.module.before"
+          fi
+          cp "$SDL_OUT/SDL2.module" "$MODULE_TARGET.new"
+          mv "$MODULE_TARGET.new" "$MODULE_TARGET"
+          sha256sum "$MODULE_TARGET" > "$BACKUP/SDL2.module.installed.sha256"
+
+          TESTDIR="$LAB/devices/harddisks/DH1/SDLTextCheck"
+          ASTRODIR="$LAB/devices/harddisks/DH1/AstroMenace-Text-DIAG"
+          mkdir -p "$TESTDIR" "$ASTRODIR"
+          cp "$SDL_OUT/textinput.m" "$TESTDIR/"
+          cp "$SDL_OUT/textinput" "$TESTDIR/"
+          cp "$SDL_OUT/SHA256SUMS" "$TESTDIR/"
+          cp -a "$PKG/." "$ASTRODIR/"
+          : > "$ASTRODIR/AUTOTEST_PROFILE_INPUT"
+          find "$ASTRODIR" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort \
+            > build/os3/astromenace-text-input-diag/evidence/staged-files.txt
+          sha256sum "$ASTRODIR/AstroMenace" "$ASTRODIR/gamedata.vfs" "$MODULE_TARGET" \
+            > build/os3/astromenace-text-input-diag/evidence/staged-sha256.txt
+
+      - name: Start lab and wait for the Amiga agent
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME=$(cat build/os3/astromenace-text-input-diag/evidence/LAB_NAME.txt)
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" <<'PY'
+          import json, os, sys, time
+          app, name = sys.argv[1:]
+          sys.path.insert(0, app + "/scripts")
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          print(json.dumps(tools.lab("start", name, who="ChatGPT",
+                                     purpose="AstroMenace SDL text-input qualification"), indent=2))
+          for attempt in range(36):
+              try:
+                  r = tools.amiga_run("lab:" + name, "Version\nAvail", timeout=8)
+                  print(json.dumps(r, indent=2))
+                  if r.get("finished") and "Kickstart" in r.get("output", ""):
+                      break
+              except Exception as exc:
+                  print("agent wait", attempt, repr(exc))
+              time.sleep(5)
+          else:
+              raise SystemExit("Amiga agent did not become ready")
+          PY
+
+      - name: Qualify shared and static SDLTextCheck
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME=$(cat build/os3/astromenace-text-input-diag/evidence/LAB_NAME.txt)
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-text-input-diag/evidence"
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" "$EVIDENCE" <<'PY'
+          import base64, json, os, sys, time
+          from pathlib import Path
+          app, name, evidence = sys.argv[1:]
+          evidence = Path(evidence)
+          sys.path.insert(0, app + "/scripts")
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          target = "lab:" + name
+
+          def shot(filename):
+              result = tools.instance_screenshot(target, "rtg", 50)
+              content = result["_content"][0]
+              (evidence / filename).write_bytes(base64.b64decode(content["data"]))
+              print(json.dumps({k:v for k,v in result.items() if k != "_content"}, indent=2))
+
+          def run_test(binary, logname, typed):
+              script = "\n".join([
+                  "FailAt 21", "Stack 200000", "CD DH1:SDLTextCheck",
+                  f"Run >NIL: <NIL: {binary} >{logname}", "Wait 2"
+              ])
+              print(json.dumps(tools.amiga_run(target, script, timeout=20), indent=2))
+              time.sleep(5)
+              tools.amiga_input(target, "type", text=typed)
+              tools.amiga_input(target, "key", keys="backspace")
+              tools.amiga_input(target, "key", keys="return")
+              if binary == "textinput.m":
+                  tools.amiga_input(target, "key", keys="f2")
+                  tools.amiga_input(target, "type", text="x")
+                  tools.amiga_input(target, "key", keys="f2")
+                  tools.amiga_input(target, "type", text="y")
+              shot(logname + ".png")
+              tools.amiga_input(target, "key", keys="escape")
+              time.sleep(4)
+
+          run_test("textinput.m", "shared.log", "aA1!")
+          run_test("textinput", "static.log", "zZ")
+          PY
+
+          LAB="$LAB_ROOT/$LAB_NAME"
+          TESTDIR="$LAB/devices/harddisks/DH1/SDLTextCheck"
+          cp "$TESTDIR/shared.log" "$EVIDENCE/"
+          cp "$TESTDIR/static.log" "$EVIDENCE/"
+          cat "$EVIDENCE/shared.log"
+          cat "$EVIDENCE/static.log"
+          grep -F 'TEXTINPUT' "$EVIDENCE/shared.log" | grep -F 'bytes=61'
+          grep -F 'TEXTINPUT' "$EVIDENCE/shared.log" | grep -F 'bytes=41'
+          grep -F 'TEXTINPUT' "$EVIDENCE/shared.log" | grep -F 'bytes=31'
+          grep -F 'TEXTINPUT' "$EVIDENCE/shared.log" | grep -F 'bytes=21'
+          grep -F 'TEXTSTATE disabled' "$EVIDENCE/shared.log"
+          grep -F 'TEXTSTATE enabled' "$EVIDENCE/shared.log"
+          grep -F 'TEXTINPUT' "$EVIDENCE/shared.log" | grep -F 'bytes=79'
+          if grep -F 'TEXTINPUT' "$EVIDENCE/shared.log" | grep -Fq 'bytes=78'; then
+            echo 'x produced text while SDL text input was disabled' >&2
+            exit 1
+          fi
+          grep -F 'TEXTINPUT' "$EVIDENCE/static.log" | grep -F 'bytes=7A'
+          grep -F 'TEXTINPUT' "$EVIDENCE/static.log" | grep -F 'bytes=5A'
+          grep -F 'SDLTextCheck done:' "$EVIDENCE/shared.log"
+          grep -F 'SDLTextCheck done:' "$EVIDENCE/static.log"
+
+      - name: Qualify AstroMenace profile naming and persistence
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME=$(cat build/os3/astromenace-text-input-diag/evidence/LAB_NAME.txt)
+          LAB="$LAB_ROOT/$LAB_NAME"
+          ASTRO="$LAB/devices/harddisks/DH1/AstroMenace-Text-DIAG"
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-text-input-diag/evidence"
+
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" "$ASTRO" "$EVIDENCE" <<'PY'
+          import base64, json, os, sys, time
+          from pathlib import Path
+          app, name, astro_s, evidence_s = sys.argv[1:]
+          astro = Path(astro_s); evidence = Path(evidence_s)
+          sys.path.insert(0, app + "/scripts")
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          target = "lab:" + name
+
+          def shot(filename):
+              result = tools.instance_screenshot(target, "rtg", 50)
+              (evidence / filename).write_bytes(base64.b64decode(result["_content"][0]["data"]))
+
+          launch = "\n".join([
+              "FailAt 21", "Stack 1000000", "CD DH1:AstroMenace-Text-DIAG",
+              "AstroMenace >AstroMenace-profile-run.log",
+              "Echo ASTROPROFILE: returned RC $RC >>AstroMenace-profile-run.log"
+          ])
+          print(json.dumps(tools.amiga_run(target, launch, timeout=0), indent=2))
+          for _ in range(90):
+              if (astro / "stage-profile-input-ready").exists():
+                  break
+              time.sleep(2)
+          else:
+              shot("astromenace-profile-not-ready.png")
+              raise SystemExit("AstroMenace never reached the profile text field")
+          shot("astromenace-profile-ready.png")
+          tools.amiga_input(target, "type", text="DALEX")
+          tools.amiga_input(target, "key", keys="backspace")
+          shot("astromenace-profile-DAL E.png".replace(" ", ""))
+          tools.amiga_input(target, "key", keys="return")
+          for _ in range(90):
+              if ((astro / "stage-profile-saved").exists() and
+                  (astro / "stage-shutdown-complete").exists()):
+                  break
+              time.sleep(2)
+          else:
+              shot("astromenace-profile-save-timeout.png")
+              raise SystemExit("AstroMenace did not save and shut down")
+          shot("astromenace-after-profile-save.png")
+
+          # Preserve first-run evidence without deleting it, then request a
+          # second normal load of the saved pilot.
+          archive = astro / "profile-first-run"
+          archive.mkdir(exist_ok=True)
+          for p in list(astro.iterdir()):
+              if p.name.startswith("stage-") or p.name in ("profile-text.txt", "profile-created.txt", "AstroMenace-profile-run.log"):
+                  p.rename(archive / p.name)
+          (astro / "AUTOTEST_PROFILE_INPUT").rename(archive / "AUTOTEST_PROFILE_INPUT.used")
+          (astro / "AUTOTEST_PROFILE_VERIFY").write_text("verify\n", encoding="ascii")
+
+          verify = "\n".join([
+              "FailAt 21", "Stack 1000000", "CD DH1:AstroMenace-Text-DIAG",
+              "AstroMenace >AstroMenace-profile-verify.log",
+              "Echo ASTROVERIFY: returned RC $RC >>AstroMenace-profile-verify.log"
+          ])
+          print(json.dumps(tools.amiga_run(target, verify, timeout=0), indent=2))
+          for _ in range(90):
+              if ((astro / "stage-profile-reloaded").exists() and
+                  (astro / "stage-shutdown-complete").exists()):
+                  break
+              if (astro / "stage-profile-reload-failed").exists():
+                  raise SystemExit("saved profile did not reload as DALE")
+              time.sleep(2)
+          else:
+              shot("astromenace-profile-reload-timeout.png")
+              raise SystemExit("AstroMenace did not prove saved-profile reload")
+          shot("astromenace-profile-reloaded.png")
+          PY
+
+          cp -a "$ASTRO/profile-first-run" "$EVIDENCE/"
+          cp "$ASTRO/AstroMenace-profile-verify.log" "$EVIDENCE/"
+          cp "$ASTRO/stage-profile-reloaded" "$EVIDENCE/"
+          cp "$ASTRO/stage-shutdown-complete" "$EVIDENCE/stage-shutdown-complete-second-run"
+          cat "$EVIDENCE/profile-first-run/AstroMenace-profile-run.log"
+          cat "$EVIDENCE/AstroMenace-profile-verify.log"
+          test "$(tr -d '\r\n' < "$EVIDENCE/profile-first-run/profile-created.txt")" = DALE
+          test -f "$EVIDENCE/profile-first-run/stage-profile-text-received"
+          test -f "$EVIDENCE/profile-first-run/stage-profile-created"
+          test -f "$EVIDENCE/profile-first-run/stage-profile-saved"
+          test -f "$EVIDENCE/profile-first-run/stage-shutdown-complete"
+          test -f "$EVIDENCE/stage-profile-reloaded"
+          grep -F 'ASTROPROFILE: returned RC 0' "$EVIDENCE/profile-first-run/AstroMenace-profile-run.log"
+          grep -F 'ASTROVERIFY: returned RC 0' "$EVIDENCE/AstroMenace-profile-verify.log"
+
+      - name: Stop and archive the successful lab
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          EVIDENCE="$GITHUB_WORKSPACE/build/os3/astromenace-text-input-diag/evidence"
+          LAB_NAME=$(cat "$EVIDENCE/LAB_NAME.txt" 2>/dev/null)
+          if [ -n "$LAB_NAME" ]; then
+            AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" <<'PY'
+          import json, sys
+          app, name = sys.argv[1:]
+          sys.path.insert(0, app + "/scripts")
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          try:
+              print(json.dumps(tools.lab("archive", name), indent=2))
+          except Exception as exc:
+              print("lab archive:", repr(exc))
+          PY
+          fi
+
+      - name: Build clean AstroMenace 0012 release after qualification
+        if: success()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          JOBS=4 \
+          ASTROMENACE_DIAGNOSTICS=0 \
+          ASTROMENACE_RELEASE_ID=0012 \
+          sh ports/astromenace/build-amigaos3-runtime-fixed.sh \
+            build/game-ports/sources/astromenace \
+            build/os3/astromenace-0012
+          cd build/os3/astromenace-0012/package
+          zip -qr ../AstroMenace-AC090-GCC16-0012.zip AstroMenace
+          cd ..
+          sha256sum AstroMenace-AC090-GCC16-0012.zip \
+            package/AstroMenace/AstroMenace package/AstroMenace/gamedata.vfs \
+            > SHA256SUMS-0012
+
+      - name: Upload build and qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AstroMenace-SDL-TextInput-${{ github.run_id }}
+          path: |
+            build/sdl2-text-input/SHA256SUMS
+            build/os3/astromenace-text-input-diag/DIAGNOSTIC-SHA256SUMS
+            build/os3/astromenace-text-input-diag/evidence/
+            build/os3/astromenace-0012/AstroMenace-AC090-GCC16-0012.zip
+            build/os3/astromenace-0012/SHA256SUMS-0012
+          if-no-files-found: warn
+          retention-days: 30
