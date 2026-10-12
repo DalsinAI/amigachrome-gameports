@@ -1,0 +1,8 @@
+#include <proto/exec.h>
+#include "openformula.c.part4.00"
+#include "openformula.c.part4.01"
+#include "openformula.c.part4.02"
+#include "openformula.c.part4.03"
+#include "openformula.c.part4.04"
+#include "openformula.c.part4.05"
+#include "openformula.c.part4.06"
