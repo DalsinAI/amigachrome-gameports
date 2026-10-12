@@ -13,13 +13,14 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: DalsinAI/amigachrome
-          ref: main
-          path: build/amigachrome
-          clean: true
-          fetch-depth: 1
+      - name: Fetch merged Cradle MCP 0.2 with the runner account
+        shell: bash
+        run: |
+          set -euxo pipefail
+          SRC="$GITHUB_WORKSPACE/build/amigachrome-${GITHUB_RUN_ID}"
+          env -u GH_TOKEN -u GITHUB_TOKEN gh repo clone DalsinAI/amigachrome "$SRC" -- --depth 1 --branch main
+          test -s "$SRC/scripts/cradle_mcp_amiga.py"
+          printf 'AMIGACHROME_SOURCE=%s\n' "$SRC" >> "$GITHUB_ENV"
 
       - name: Verify the deployed drawer through Cradle MCP 0.2
         shell: bash
@@ -27,9 +28,9 @@ jobs:
           set -euxo pipefail
           test -s "$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/OpenTensor/OpenTensor"
           python3 - <<'PY'
-          import json, sys
+          import json, os, sys
           from pathlib import Path
-          scripts = Path("build/amigachrome/scripts").resolve()
+          scripts = Path(os.environ["AMIGACHROME_SOURCE"]) / "scripts"
           sys.path.insert(0, str(scripts))
           from cradle_mcp_amiga import AmigaTools
           tools = AmigaTools(); tools.Error = RuntimeError
