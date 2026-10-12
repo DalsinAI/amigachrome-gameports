@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-12",
+  "policy": "A game with a plausible official or developer-associated public download, but without an unambiguous zero-cost statement on the page, is classified as FREE PENDING VERIFICATION rather than excluded. Verification is performed by inspecting supplied README/license files, installer text, title screens, in-game notices and publisher/developer attribution. Paid or access-controlled downloads are not bypassed.",
+  "evidence_terms": {
+    "supports_free": [
+      "freeware",
+      "free download",
+      "freely distributable",
+      "public domain",
+      "shareware",
+      "donationware",
+      "name your own price",
+      "demo",
+      "beta",
+      "prototype",
+      "non-commercial"
+    ],
+    "requires_review": [
+      "copyright",
+      "all rights reserved",
+      "registered version",
+      "commercial",
+      "not for redistribution",
+      "requires original game data"
+    ]
+  },
+  "entries": [
+    "Deimos Storm AGA",
+    "P.O.W AGA",
+    "Treasure of Usas",
+    "Oracle / Oracle Reforged",
+    "Vector Dreams",
+    "Shinobi Remake",
+    "Raiden AGA",
+    "Galaga 500",
+    "Arkamiga",
+    "Final Fight Enhanced",
+    "Kick Off 2 Graphics Restyle"
+  ]
+}
