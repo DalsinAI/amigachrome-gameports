@@ -1,0 +1,203 @@
+name: Reclassify Free Pending Games on Instance-32
+
+on:
+  push:
+    branches:
+      - deploy/free-amiga-games-instance32-20261012
+    paths:
+      - research/free-amiga-games-pending-review.json
+      - scripts/reclassify_free_pending.py
+      - .github/workflows/reclassify-free-pending-instance32.yml
+  workflow_dispatch:
+
+concurrency:
+  group: reclassify-free-pending-instance32
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: self-hosted
+    timeout-minutes: 45
+    steps:
+      - name: Checkout policy tools
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Prepare policy environment
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 -m venv build/free-pending-venv
+          build/free-pending-venv/bin/pip install --quiet requests beautifulsoup4 lhafile py7zr
+          python3 -m py_compile scripts/reclassify_free_pending.py scripts/collect_free_amiga_games.py
+
+      - name: Fetch current Cradle MCP tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          SRC="$GITHUB_WORKSPACE/build/amigachrome-tools-${GITHUB_RUN_ID}"
+          env -u GH_TOKEN -u GITHUB_TOKEN gh repo clone DalsinAI/amigachrome "$SRC" -- --depth 1 --branch main
+          test -s "$SRC/scripts/cradle_mcp.py"
+          printf 'AMIGACHROME_SOURCE=%s\n' "$SRC" >> "$GITHUB_ENV"
+
+      - name: Preserve Instance-32 state and stop it
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p build/free-pending-evidence
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          source = Path(os.environ['AMIGACHROME_SOURCE'])
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac, cradle_mcp
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          info = tools._match('32')
+          running = bool(info.get('running'))
+          Path('build/free-pending-evidence/was-running.txt').write_text(('1' if running else '0') + '\n')
+          Path('build/free-pending-evidence/instance-before.json').write_text(json.dumps(info, indent=2, default=str) + '\n')
+          if running:
+              result = tools.stop_instance('32')
+              Path('build/free-pending-evidence/stop.json').write_text(json.dumps(result, indent=2, default=str) + '\n')
+              print(json.dumps(result, indent=2, default=str))
+          else:
+              print(json.dumps({'alreadyStopped': True, 'instance': ac.instance_label(info)}, indent=2))
+          PY
+
+      - name: Back up and apply the policy
+        shell: bash
+        run: |
+          set -euxo pipefail
+          INSTANCE="$HOME/AmigaChromeInstances/Instance-32"
+          ROOT="$INSTANCE/devices/harddisks/DH1/New Amiga Games"
+          BACKUP="$INSTANCE/archive/free-pending-policy-${GITHUB_RUN_ID}"
+          test -s "$ROOT/CATALOGUE.json"
+          mkdir -p "$BACKUP"
+          cp -a "$ROOT/CATALOGUE.json" "$ROOT/CATALOGUE.txt" "$ROOT/SUMMARY.txt" "$ROOT/README.txt" "$BACKUP/"
+          cp -a "$ROOT/99 Unresolved" "$BACKUP/99 Unresolved.before" || true
+          printf '%s\n' "$BACKUP" > build/free-pending-evidence/backup-path.txt
+
+          build/free-pending-venv/bin/python scripts/reclassify_free_pending.py \
+            --root "$ROOT" \
+            --policy research/free-amiga-games-pending-review.json \
+            --collector scripts/collect_free_amiga_games.py \
+            --backup "$BACKUP/changed-items" \
+            | tee build/free-pending-evidence/reclassify.log
+
+          build/free-pending-venv/bin/python - "$ROOT" <<'PY'
+          import json, sys
+          from pathlib import Path
+          root = Path(sys.argv[1])
+          data = json.loads((root / 'CATALOGUE.json').read_text(encoding='utf-8'))
+          assert len(data['entries']) == 116
+          assert data['counts'].get('downloaded') == 93, data['counts']
+          assert data['counts'].get('pending_free') == 11, data['counts']
+          assert data['counts'].get('unresolved', 0) == 0, data['counts']
+          pending = root / '04 Free Pending Verification'
+          assert pending.is_dir()
+          assert sum(1 for path in pending.iterdir() if path.is_dir()) == 11
+          for drawer in pending.iterdir():
+              if drawer.is_dir():
+                  assert (drawer / 'STATUS.txt').is_file(), drawer
+                  assert (drawer / 'REVIEW.txt').is_file(), drawer
+          print(json.dumps({'counts': data['counts'], 'pending_drawers': 11}, indent=2))
+          PY
+
+          sha256sum "$ROOT/CATALOGUE.json" "$ROOT/CATALOGUE.txt" \
+            "$ROOT/SUMMARY.txt" "$ROOT/PENDING-VERIFICATION.txt" \
+            > build/free-pending-evidence/catalogue-sha256.txt
+
+      - name: Verify through AmigaDOS
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import json, os, sys, time
+          from pathlib import Path
+          source = Path(os.environ['AMIGACHROME_SOURCE'])
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac, cradle_mcp
+          evidence = Path('build/free-pending-evidence')
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          was_running = evidence.joinpath('was-running.txt').read_text().strip() == '1'
+          started_here = False
+          try:
+              if not tools._match('32').get('running'):
+                  result = tools.start_instance('32')
+                  evidence.joinpath('verify-start.json').write_text(json.dumps(result, indent=2, default=str) + '\n')
+                  started_here = True
+              for _ in range(75):
+                  try:
+                      ready = tools.amiga_run('32', 'Version\nAvail', timeout=10)
+                      if ready.get('finished') and 'Kickstart' in ready.get('output', ''):
+                          break
+                  except Exception:
+                      pass
+                  time.sleep(2)
+              else:
+                  raise SystemExit('Instance-32 did not become ready')
+
+              command = '\n'.join([
+                  'Type "DH1:New Amiga Games/SUMMARY.txt"',
+                  'List "DH1:New Amiga Games/#?" LFORMAT="%N"',
+                  'List "DH1:New Amiga Games/04 Free Pending Verification/#?" DIRS LFORMAT="%N"',
+                  'Type "DH1:New Amiga Games/04 Free Pending Verification/Deimos Storm AGA/STATUS.txt"',
+              ])
+              result = tools.amiga_run('32', command, timeout=45)
+              output = result.get('output', '')
+              if not result.get('finished'):
+                  raise SystemExit('AmigaDOS policy verification did not finish')
+              for expected in (
+                  'Downloaded packages: 93',
+                  'Free pending verification: 11',
+                  '04 Free Pending Verification',
+                  'Deimos Storm AGA',
+                  'Status: FREE PENDING VERIFICATION',
+              ):
+                  if expected not in output:
+                      raise SystemExit(f'missing policy evidence: {expected}\n{output}')
+              evidence.joinpath('amiga-verification.json').write_text(json.dumps(result, indent=2, default=str) + '\n')
+              print(json.dumps(result, indent=2, default=str))
+          finally:
+              if started_here and not was_running and tools._match('32').get('running'):
+                  stopped = tools.stop_instance('32')
+                  evidence.joinpath('verify-stop.json').write_text(json.dumps(stopped, indent=2, default=str) + '\n')
+                  print(json.dumps(stopped, indent=2, default=str))
+          PY
+
+      - name: Restore original running state
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          state = Path('build/free-pending-evidence/was-running.txt')
+          source = Path(os.environ.get('AMIGACHROME_SOURCE', ''))
+          if not state.is_file() or not source.is_dir():
+              raise SystemExit(0)
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac, cradle_mcp
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          wanted = state.read_text().strip() == '1'
+          current = bool(tools._match('32').get('running'))
+          if wanted and not current:
+              print(json.dumps(tools.start_instance('32'), indent=2, default=str))
+          elif not wanted and current:
+              print(json.dumps(tools.stop_instance('32'), indent=2, default=str))
+          else:
+              print(json.dumps({'statePreserved': True, 'running': current}, indent=2))
+          PY
+
+      - name: Upload policy evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Free-Pending-Policy-Instance32-${{ github.run_id }}
+          path: build/free-pending-evidence/
+          if-no-files-found: warn
+          retention-days: 60
+          compression-level: 6
