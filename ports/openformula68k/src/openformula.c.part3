@@ -1,0 +1,280 @@
+static void draw_road(void)
+{
+    int n;
+    int clip_y = GAME_H;
+    for (n = 1; n <= DRAW_DISTANCE; ++n) {
+        ProjectedSegment *p = &projected[n];
+        int segment = p->segment;
+        int alt = ((segment / 3) & 1);
+        int near_y, far_y;
+        int near_w, far_w;
+        int rumble_near, rumble_far;
+        UBYTE grass = alt ? COL_GRASS0 : COL_GRASS1;
+        UBYTE road = alt ? COL_ROAD0 : COL_ROAD1;
+        UBYTE rumble = ((segment / 2) & 1) ? COL_RUMBLE_RED : COL_RUMBLE_WHITE;
+
+        if (!p->visible || p->y2 >= clip_y)
+            continue;
+        near_y = clamp_int(p->y1, HORIZON, clip_y);
+        far_y = clamp_int(p->y2, HORIZON, clip_y);
+        if (near_y <= far_y)
+            continue;
+        near_w = p->w1;
+        far_w = p->w2;
+        rumble_near = clamp_int(near_w / 8, 2, 40);
+        rumble_far = clamp_int(far_w / 8, 1, 20);
+
+        fill_rect(0, far_y, GAME_W, near_y - far_y + 1, grass);
+        fill_quad(p->x2 - far_w - rumble_far, p->x2 + far_w + rumble_far, far_y,
+                  p->x1 - near_w - rumble_near, p->x1 + near_w + rumble_near, near_y,
+                  rumble);
+        fill_quad(p->x2 - far_w, p->x2 + far_w, far_y,
+                  p->x1 - near_w, p->x1 + near_w, near_y, road);
+
+        if ((segment & 7) < 4 && near_w > 28) {
+            int lane_near = near_w / 3;
+            int lane_far = far_w / 3;
+            int marker_near = clamp_int(near_w / 80, 1, 5);
+            int marker_far = clamp_int(far_w / 80, 1, 3);
+            fill_quad(p->x2 - lane_far - marker_far, p->x2 - lane_far + marker_far, far_y,
+                      p->x1 - lane_near - marker_near, p->x1 - lane_near + marker_near, near_y,
+                      COL_LANE);
+            fill_quad(p->x2 + lane_far - marker_far, p->x2 + lane_far + marker_far, far_y,
+                      p->x1 + lane_near - marker_near, p->x1 + lane_near + marker_near, near_y,
+                      COL_LANE);
+        }
+
+        if (track[segment].flags & 1) {
+            int checker_w = clamp_int(near_w / 9, 3, 24);
+            int x;
+            for (x = p->x1 - near_w; x < p->x1 + near_w; x += checker_w)
+                fill_rect(x, near_y - 4, checker_w, 4,
+                          ((x / checker_w) & 1) ? COL_WHITE : COL_BLACK);
+        }
+        clip_y = far_y;
+    }
+}
+
+static void draw_trackside(void)
+{
+    int n;
+    for (n = DRAW_DISTANCE; n >= 4; --n) {
+        ProjectedSegment *p = &projected[n];
+        int s = p->segment;
+        int scale;
+        if (!p->visible || p->y1 < HORIZON || p->y1 >= GAME_H)
+            continue;
+        scale = clamp_int(p->w1 / 5, 2, 70);
+        if ((s % 23) == 0) {
+            draw_tree(p->x1 - p->w1 - scale, p->y1, scale);
+            draw_tree(p->x1 + p->w1 + scale, p->y1, scale * 4 / 5);
+        } else if ((s % 47) == 5 && p->w1 > 22) {
+            draw_sign(p->x1 + p->w1 + scale / 2, p->y1, scale, 1);
+        } else if ((s % 71) == 12 && p->w1 > 22) {
+            draw_sign(p->x1 - p->w1 - scale / 2, p->y1, scale, -1);
+        }
+    }
+}
+
+static int relative_distance(int other, int player)
+{
+    int distance = other - player;
+    if (distance < 0)
+        distance += track_length;
+    return distance;
+}
+
+static void draw_ai_cars(void)
+{
+    int n, i;
+    for (n = DRAW_DISTANCE - 1; n >= 1; --n) {
+        ProjectedSegment *p = &projected[n];
+        int segment_start = n * SEG_LEN;
+        for (i = 1; i < MAX_CARS; ++i) {
+            int distance = relative_distance(cars[i].position, player_position);
+            int fraction, x, y, road_w, car_w;
+            if (distance < segment_start || distance >= segment_start + SEG_LEN)
+                continue;
+            fraction = (distance - segment_start) * Q16_ONE / SEG_LEN;
+            x = lerp_int(p->x1, p->x2, fraction);
+            y = lerp_int(p->y1, p->y2, fraction);
+            road_w = lerp_int(p->w1, p->w2, fraction);
+            x += (int)(((int64_t)cars[i].lane_q16 * road_w * 3 / 4) >> 16);
+            car_w = clamp_int(road_w / 4, 5, 72);
+            if (y >= HORIZON - 2 && y < GAME_H + car_w)
+                draw_formula_car(x, y, car_w, (UBYTE)(CAR_COLOR_BASE + cars[i].color), 0);
+        }
+    }
+}
+
+static void draw_player_car(void)
+{
+    int sway = player_lane_q16 / 11000;
+    int bob = (player_speed > 5000 && (game_frame & 1)) ? 1 : 0;
+    int x = GAME_W / 2 + sway;
+    int y = GAME_H - 15 + bob;
+    draw_formula_car(x, y, 88, CAR_COLOR_BASE + PLAYER_INDEX, 1);
+    if (player_speed > 9000) {
+        hline(x - 22, x - 8, y + 2, COL_ORANGE);
+        hline(x + 8, x + 22, y + 2, COL_ORANGE);
+    }
+}
+
+/* ---- race simulation -------------------------------------------------- */
+
+static void reset_race(void)
+{
+    int i;
+    player_position = 3600;
+    player_speed = 0;
+    player_lane_q16 = 0;
+    player_lap = 0;
+    player_rank = MAX_CARS;
+    race_elapsed_ms = 0;
+    lap_start_ms = (int)acgame_platform_ticks_ms();
+    best_lap_ms = 0;
+    last_lap_ms = 0;
+    finish_place = 0;
+    countdown_frames = FRAME_HZ * 4;
+    game_state = STATE_COUNTDOWN;
+
+    for (i = 0; i < MAX_CARS; ++i) {
+        int row = i / 2;
+        cars[i].position = player_position - row * 300 - (i & 1) * 120;
+        while (cars[i].position < 0)
+            cars[i].position += track_length;
+        cars[i].speed = 0;
+        cars[i].lane_q16 = (i & 1) ? 25000 : -25000;
+        if (i == 0)
+            cars[i].lane_q16 = player_lane_q16;
+        cars[i].target_lane_q16 = cars[i].lane_q16;
+        cars[i].lap = 0;
+        cars[i].color = i % MAX_CARS;
+        cars[i].aggression = 45 + i * 4;
+    }
+    of_audio_beep(1);
+}
+
+static int car_total_distance(int index)
+{
+    if (index == PLAYER_INDEX)
+        return player_lap * track_length + player_position;
+    return cars[index].lap * track_length + cars[index].position;
+}
+
+static void update_rank(void)
+{
+    int player_total = car_total_distance(PLAYER_INDEX);
+    int rank = 1;
+    int i;
+    for (i = 1; i < MAX_CARS; ++i)
+        if (car_total_distance(i) > player_total)
+            ++rank;
+    player_rank = rank;
+}
+
+static int current_gear(void)
+{
+    if (player_speed < 1200) return 1;
+    if (player_speed < 3000) return 2;
+    if (player_speed < 5200) return 3;
+    if (player_speed < 7600) return 4;
+    if (player_speed < 9800) return 5;
+    return 6;
+}
+
+static unsigned current_rpm(void)
+{
+    int gear = current_gear();
+    int lower[6] = {0,1200,3000,5200,7600,9800};
+    int upper[6] = {1200,3000,5200,7600,9800,MAX_SPEED};
+    int local = player_speed - lower[gear - 1];
+    int span = upper[gear - 1] - lower[gear - 1];
+    return (unsigned)(4200 + (span > 0 ? local * 7600 / span : 0));
+}
+
+static void update_ai(void)
+{
+    int i;
+    for (i = 1; i < MAX_CARS; ++i) {
+        int target = 7900 + i * 250 + ((cars[i].position / 900 + i * 7) % 800);
+        int old = cars[i].position;
+        int segment = cars[i].position / SEG_LEN;
+        int curve = abs_int(track[segment].curve);
+        if (curve > 5)
+            target -= 1300;
+        else if (curve > 3)
+            target -= 650;
+        if (cars[i].speed < target)
+            cars[i].speed += 22 + cars[i].aggression / 12;
+        else if (cars[i].speed > target)
+            cars[i].speed -= 18;
+        cars[i].speed = clamp_int(cars[i].speed, 6500, 11200);
+        cars[i].position += cars[i].speed / FRAME_HZ;
+        if (cars[i].position >= track_length) {
+            cars[i].position -= track_length;
+            ++cars[i].lap;
+        }
+        if (((old / SEG_LEN) % 53) == i * 3 % 53)
+            cars[i].target_lane_q16 = ((i * 19391 + cars[i].lap * 7501) % 76000) - 38000;
+        cars[i].lane_q16 += (cars[i].target_lane_q16 - cars[i].lane_q16) / 80;
+    }
+}
+
+static void update_player(const acgame_input_state *input)
+{
+    int throttle = input->key[ACGAME_KEY_UP] || input->key[ACGAME_KEY_FIRE1];
+    int brake = input->key[ACGAME_KEY_DOWN] || input->key[ACGAME_KEY_FIRE2];
+    int steering = 0;
+    int old_position = player_position;
+    int offroad;
+    int i;
+
+    if (input->key[ACGAME_KEY_LEFT]) steering -= 1;
+    if (input->key[ACGAME_KEY_RIGHT]) steering += 1;
+
+    if (throttle)
+        player_speed += 150 + (MAX_SPEED - player_speed) / 95;
+    else
+        player_speed -= 52 + player_speed / 600;
+    if (brake)
+        player_speed -= 270;
+    player_speed = clamp_int(player_speed, 0, MAX_SPEED);
+
+    player_lane_q16 += steering * (900 + player_speed / 18);
+    player_lane_q16 -= track[player_position / SEG_LEN].curve * player_speed / 38;
+    player_lane_q16 = clamp_int(player_lane_q16, -120000, 120000);
+
+    offroad = abs_int(player_lane_q16) > 69000;
+    if (offroad && player_speed > 6200)
+        player_speed -= 160 + (player_speed - 6200) / 18;
+
+    player_position += player_speed / FRAME_HZ;
+    if (player_position >= track_length) {
+        int now = (int)acgame_platform_ticks_ms();
+        player_position -= track_length;
+        ++player_lap;
+        last_lap_ms = now - lap_start_ms;
+        lap_start_ms = now;
+        if (!best_lap_ms || last_lap_ms < best_lap_ms)
+            best_lap_ms = last_lap_ms;
+        of_audio_beep(4);
+        if (player_lap >= race_laps) {
+            update_rank();
+            finish_place = player_rank;
+            game_state = STATE_FINISHED;
+        }
+    }
+
+    for (i = 1; i < MAX_CARS; ++i) {
+        int dz = cars[i].position - player_position;
+        int lane = abs_int(cars[i].lane_q16 - player_lane_q16);
+        if (dz < -track_length / 2) dz += track_length;
+        if (dz > track_length / 2) dz -= track_length;
+        if (dz > -80 && dz < 130 && lane < 19000 && player_speed > 1200) {
+            player_speed = player_speed * 3 / 5;
+            player_lane_q16 += cars[i].lane_q16 < player_lane_q16 ? 9000 : -9000;
+            of_audio_hit();
+        }
+    }
+

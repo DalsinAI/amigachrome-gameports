@@ -1,0 +1,280 @@
+    }
+
+    track[0].flags |= 1;
+    track[1].flags |= 1;
+    track_length = TRACK_SEGMENTS * SEG_LEN;
+}
+
+/* ---- indexed drawing -------------------------------------------------- */
+
+static acgame_indexed_surface *frame_surface;
+
+static void put_pixel(int x, int y, UBYTE color)
+{
+    if ((unsigned)x < GAME_W && (unsigned)y < GAME_H)
+        frame_surface->pixels[(size_t)y * frame_surface->pitch + (unsigned)x] = color;
+}
+
+static void hline(int x0, int x1, int y, UBYTE color)
+{
+    UBYTE *dst;
+    int n;
+    if ((unsigned)y >= GAME_H)
+        return;
+    if (x0 > x1) {
+        int t = x0; x0 = x1; x1 = t;
+    }
+    if (x1 < 0 || x0 >= GAME_W)
+        return;
+    if (x0 < 0) x0 = 0;
+    if (x1 >= GAME_W) x1 = GAME_W - 1;
+    dst = frame_surface->pixels + (size_t)y * frame_surface->pitch + (unsigned)x0;
+    n = x1 - x0 + 1;
+    memset(dst, color, (size_t)n);
+}
+
+static void fill_rect(int x, int y, int w, int h, UBYTE color)
+{
+    int yy;
+    if (w <= 0 || h <= 0)
+        return;
+    for (yy = y; yy < y + h; ++yy)
+        hline(x, x + w - 1, yy, color);
+}
+
+static void fill_quad(int far_left, int far_right, int far_y,
+                      int near_left, int near_right, int near_y,
+                      UBYTE color)
+{
+    int y, dy;
+    if (near_y < far_y) {
+        int t;
+        t = near_y; near_y = far_y; far_y = t;
+        t = near_left; near_left = far_left; far_left = t;
+        t = near_right; near_right = far_right; far_right = t;
+    }
+    if (near_y < 0 || far_y >= GAME_H)
+        return;
+    dy = near_y - far_y;
+    if (dy <= 0) {
+        hline(far_left, far_right, far_y, color);
+        return;
+    }
+    if (far_y < 0) far_y = 0;
+    if (near_y >= GAME_H) near_y = GAME_H - 1;
+    for (y = far_y; y <= near_y; ++y) {
+        int t = (int)(((int64_t)(y - far_y) << 16) / dy);
+        int left = lerp_int(far_left, near_left, t);
+        int right = lerp_int(far_right, near_right, t);
+        hline(left, right, y, color);
+    }
+}
+
+static int font_index(char c)
+{
+    const char *p;
+    if (c >= 'a' && c <= 'z')
+        c = (char)(c - 'a' + 'A');
+    p = strchr(font_chars, c);
+    return p ? (int)(p - font_chars) : 0;
+}
+
+static void draw_char(int x, int y, char c, UBYTE color, int scale)
+{
+    int index = font_index(c);
+    int row, col;
+    if (scale < 1) scale = 1;
+    for (row = 0; row < 7; ++row) {
+        UBYTE bits = font_rows[index][row];
+        for (col = 0; col < 5; ++col) {
+            if (bits & (1U << (4 - col)))
+                fill_rect(x + col * scale, y + row * scale, scale, scale, color);
+        }
+    }
+}
+
+static void draw_text(int x, int y, const char *text, UBYTE color, int scale)
+{
+    while (*text) {
+        draw_char(x, y, *text++, color, scale);
+        x += 6 * scale;
+    }
+}
+
+static int text_width(const char *text, int scale)
+{
+    return (int)strlen(text) * 6 * scale - scale;
+}
+
+static void draw_text_center(int y, const char *text, UBYTE color, int scale)
+{
+    draw_text((GAME_W - text_width(text, scale)) / 2, y, text, color, scale);
+}
+
+static void set_palette(void)
+{
+    acgame_rgb8 *p = frame_surface->palette;
+    unsigned i;
+    for (i = 0; i < 256; ++i) {
+        p[i].r = 0;
+        p[i].g = 0;
+        p[i].b = 0;
+    }
+#define RGB(index, rr, gg, bb) do { p[index].r=(rr); p[index].g=(gg); p[index].b=(bb); } while (0)
+    RGB(COL_BLACK, 0, 0, 0);
+    RGB(COL_SKY0, 14, 24, 52);
+    RGB(COL_SKY1, 34, 74, 126);
+    RGB(COL_SKY2, 108, 162, 194);
+    RGB(COL_CLOUD, 204, 218, 220);
+    RGB(COL_MOUNTAIN0, 36, 50, 68);
+    RGB(COL_MOUNTAIN1, 58, 72, 86);
+    RGB(COL_GRASS0, 30, 92, 52);
+    RGB(COL_GRASS1, 38, 112, 58);
+    RGB(COL_GRASS2, 56, 128, 66);
+    RGB(COL_ROAD0, 54, 58, 64);
+    RGB(COL_ROAD1, 61, 64, 70);
+    RGB(COL_RUMBLE_RED, 190, 40, 42);
+    RGB(COL_RUMBLE_WHITE, 226, 220, 204);
+    RGB(COL_LANE, 236, 226, 170);
+    RGB(COL_SHADOW, 26, 28, 32);
+    RGB(COL_WHITE, 245, 245, 238);
+    RGB(COL_GREY, 156, 164, 170);
+    RGB(COL_DARKGREY, 70, 76, 84);
+    RGB(COL_YELLOW, 246, 204, 46);
+    RGB(COL_ORANGE, 242, 116, 32);
+    RGB(COL_RED, 220, 40, 44);
+    RGB(COL_GREEN, 72, 210, 92);
+    RGB(COL_CYAN, 66, 210, 222);
+    RGB(COL_BLUE, 58, 104, 224);
+    RGB(COL_MAGENTA, 198, 68, 198);
+    RGB(COL_PANEL, 13, 18, 25);
+    RGB(COL_PANEL2, 24, 31, 40);
+    RGB(COL_WHEEL, 8, 8, 10);
+    RGB(COL_GLASS, 88, 160, 194);
+    RGB(COL_SIGN, 220, 46, 52);
+    RGB(COL_SIGN_TEXT, 255, 242, 216);
+    for (i = 0; i < MAX_CARS; ++i) {
+        static const UBYTE car_rgb[MAX_CARS][3] = {
+            {230,42,45},{38,112,232},{244,186,30},{46,196,94},
+            {230,92,24},{168,66,206},{40,194,208},{236,236,228},
+            {110,118,128},{220,52,142},{128,214,52},{56,72,176}
+        };
+        RGB(CAR_COLOR_BASE + i, car_rgb[i][0], car_rgb[i][1], car_rgb[i][2]);
+    }
+#undef RGB
+}
+
+static void draw_sky(int camera_curve)
+{
+    int y;
+    int offset = camera_curve / 7;
+    for (y = 0; y < HORIZON; ++y) {
+        UBYTE c = y < 58 ? COL_SKY0 : (y < 120 ? COL_SKY1 : COL_SKY2);
+        hline(0, GAME_W - 1, y, c);
+    }
+
+    fill_rect(70 + offset / 8, 52, 62, 5, COL_CLOUD);
+    fill_rect(96 + offset / 8, 47, 76, 7, COL_CLOUD);
+    fill_rect(430 + offset / 10, 74, 88, 5, COL_CLOUD);
+    fill_rect(452 + offset / 10, 68, 42, 6, COL_CLOUD);
+
+    for (y = 110; y < HORIZON; ++y) {
+        int ridge = 132 + ((y * 13 + offset) & 31);
+        if (y >= ridge - 20)
+            hline(0, GAME_W - 1, y, y & 1 ? COL_MOUNTAIN0 : COL_MOUNTAIN1);
+    }
+
+    /* Stronger hand-built mountain silhouettes. */
+    fill_quad(0, 0, HORIZON, 120 + offset, 195 + offset, 118, COL_MOUNTAIN1);
+    fill_quad(120 + offset, 195 + offset, 118, 280 + offset, 360 + offset, HORIZON, COL_MOUNTAIN1);
+    fill_quad(330 + offset / 2, 370 + offset / 2, HORIZON, 445 + offset / 2, 515 + offset / 2, 126, COL_MOUNTAIN0);
+    fill_quad(445 + offset / 2, 515 + offset / 2, 126, 600 + offset / 2, 640 + offset / 2, HORIZON, COL_MOUNTAIN0);
+}
+
+static void draw_tree(int x, int y, int scale)
+{
+    int h = clamp_int(scale, 3, 70);
+    int w = h / 2;
+    fill_rect(x - 1, y - h / 3, 3, h / 3, COL_DARKGREY);
+    fill_quad(x - w / 2, x + w / 2, y - h / 2,
+              x - w, x + w, y, COL_GRASS0);
+    fill_quad(x - w / 3, x + w / 3, y - h,
+              x - w * 3 / 4, x + w * 3 / 4, y - h / 3, COL_GRASS1);
+}
+
+static void draw_sign(int x, int y, int scale, int side)
+{
+    int w = clamp_int(scale * 2, 10, 90);
+    int h = clamp_int(scale / 2, 5, 24);
+    int post = h * 2;
+    if (side < 0) x -= w;
+    fill_rect(x, y - post, 2, post, COL_DARKGREY);
+    fill_rect(x - 2, y - post - h, w, h, COL_SIGN);
+    if (w > 34)
+        draw_text(x + 2, y - post - h + 3, "OPEN", COL_SIGN_TEXT, 1);
+}
+
+static void draw_formula_car(int cx, int bottom, int width, UBYTE color, int highlight)
+{
+    int h = width * 5 / 9;
+    int body_w = width * 3 / 5;
+    int wheel_w = width / 5;
+    int wheel_h = h * 2 / 5;
+    int top = bottom - h;
+    if (width < 5)
+        return;
+
+    fill_rect(cx - width / 2, top + h / 5, width, clamp_int(h / 7, 1, 8), COL_SHADOW);
+    fill_rect(cx - width / 2, bottom - wheel_h, wheel_w, wheel_h, COL_WHEEL);
+    fill_rect(cx + width / 2 - wheel_w, bottom - wheel_h, wheel_w, wheel_h, COL_WHEEL);
+    fill_quad(cx - body_w / 4, cx + body_w / 4, top,
+              cx - body_w / 2, cx + body_w / 2, bottom, color);
+    fill_rect(cx - body_w / 2, top + h / 5, body_w, clamp_int(h / 8, 1, 6), color);
+    fill_rect(cx - width * 2 / 5, bottom - h / 8, width * 4 / 5, clamp_int(h / 8, 1, 8), color);
+    fill_rect(cx - body_w / 6, top + h / 3, body_w / 3, h / 4, COL_GLASS);
+    if (highlight)
+        fill_rect(cx - 1, top + 2, 3, h * 2 / 3, COL_WHITE);
+}
+
+/* ---- projection and road --------------------------------------------- */
+
+static void project_point(int z, int world_y, int camera_y, int camera_x,
+                          int *screen_x, int *screen_y, int *screen_w)
+{
+    int scale;
+    if (z < 1) z = 1;
+    scale = (int)(((int64_t)(GAME_H / 2) << 16) / z);
+    *screen_x = GAME_W / 2 - (int)(((int64_t)camera_x * scale) >> 16);
+    *screen_y = GAME_H / 2 - (int)(((int64_t)(world_y - camera_y) * scale) >> 16);
+    *screen_w = (int)(((int64_t)ROAD_HALF * scale) >> 16);
+}
+
+static int build_projection(void)
+{
+    int base = player_position / SEG_LEN;
+    int fraction = player_position % SEG_LEN;
+    int camera_y = track[base].y + CAMERA_HEIGHT;
+    int curve_x = 0;
+    int curve_dx = -(track[base].curve * fraction) / SEG_LEN;
+    int player_world_x = (int)(((int64_t)player_lane_q16 * ROAD_HALF) >> 16);
+    int n;
+
+    for (n = 1; n <= DRAW_DISTANCE + 1; ++n) {
+        int index = (base + n) % TRACK_SEGMENTS;
+        int next = (index + 1) % TRACK_SEGMENTS;
+        int z1 = n * SEG_LEN - fraction;
+        int z2 = (n + 1) * SEG_LEN - fraction;
+        ProjectedSegment *p = &projected[n];
+
+        project_point(z1, track[index].y, camera_y, player_world_x - curve_x,
+                      &p->x1, &p->y1, &p->w1);
+        curve_x += curve_dx;
+        curve_dx += track[index].curve;
+        project_point(z2, track[next].y, camera_y, player_world_x - curve_x,
+                      &p->x2, &p->y2, &p->w2);
+        p->segment = index;
+        p->visible = p->w1 > 0 && p->y1 > p->y2 && p->y2 < GAME_H && p->y1 >= HORIZON;
+    }
+    return base;
+}
+
