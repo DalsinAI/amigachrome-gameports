@@ -8,6 +8,7 @@ OUT=${2:-"$ROOT/build/os3/nxengine-evo"}
 STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
 P="$STOVE/prefix"
 SYS="$P/m68k-amigaos"
+DEPS=$(python3 "$ROOT/scripts/port_dependencies.py" verify --stove "$STOVE" --require zlib png jpeg)
 CC="$P/bin/m68k-amigaos-gcc"
 CXX="$P/bin/m68k-amigaos-g++"
 SDL2_CONFIG="$P/bin/sdl2-config"
@@ -40,16 +41,15 @@ find_file() {
   return 1
 }
 
-FALLBACK="$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"
 SDL_INC="$SYS/include/SDL2"
 SDL_LIB=$(find_file libSDL2.a "$SYS" "$P" || true)
 MIX_LIB=$(find_file libSDL2_mixer.a "$SYS" "$P" || true)
 IMG_LIB=$(find_file libSDL2_image.a "$SYS" "$P" || true)
-PNG_LIB=$(find_file 'libpng*.a' "$SYS" "$P" "$FALLBACK" || true)
-JPEG_LIB=$(find_file 'libjpeg*.a' "$SYS" "$P" "$FALLBACK" || true)
-ZLIB_LIB=$(find_file 'libz.a' "$SYS" "$P" "$FALLBACK" || true)
-PNG_HEADER=$(find_file png.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
-JPEG_HEADER=$(find_file jpeglib.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
+PNG_LIB="$DEPS/lib/libpng.a"
+JPEG_LIB="$DEPS/lib/libjpeg.a"
+ZLIB_LIB="$DEPS/lib/libz.a"
+PNG_HEADER="$DEPS/include"/png.h
+JPEG_HEADER="$DEPS/include"/jpeglib.h
 
 missing=0
 for pair in "SDL2:$SDL_LIB" "SDL2_mixer:$MIX_LIB" "SDL2_image:$IMG_LIB" "PNG:$PNG_LIB" "JPEG:$JPEG_LIB" "zlib:$ZLIB_LIB" "PNG headers:$PNG_HEADER" "JPEG headers:$JPEG_HEADER"; do
@@ -78,8 +78,8 @@ cmake -S "$SRC" -B "$OUT" \
   -DCMAKE_BUILD_TYPE=Release \
   -DAMIGA_STOVE="$STOVE" \
   -DPLATFORM=pc \
-  -DCMAKE_INCLUDE_PATH="$SYS/include;$SYS/include/SDL2;$FALLBACK/include" \
-  -DCMAKE_LIBRARY_PATH="$SYS/lib;$P/lib;$FALLBACK/lib" \
+  -DCMAKE_INCLUDE_PATH="$SYS/include;$SYS/include/SDL2;$DEPS/include" \
+  -DCMAKE_LIBRARY_PATH="$SYS/lib;$P/lib;$DEPS/lib" \
   -DSDL2_INCLUDE_DIR="$SDL_INC" \
   -DSDL2_LIBRARY_TEMP="$SDL_LIB" \
   -DSDL2_MIXER_INCLUDE_DIR="$SDL_INC" \

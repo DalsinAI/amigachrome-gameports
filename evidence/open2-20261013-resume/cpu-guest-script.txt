@@ -1,0 +1,11 @@
+FailAt 21
+Stack 1048576
+SetEnv SDL_OPENGPU 0
+SetEnv SDL_OPENGPU_STATS 1
+Echo "CPU_SDLPOP_BEGIN"
+GetEnv SDL_OPENGPU
+CD SYS:Open2Ports/SDLPoP
+prince megahit 1 >SYS:Open2Runner/cpu-sdlpop.out
+Echo "CPU_SDLPOP_EXIT $RC"
+UnsetEnv SDL_OPENGPU
+UnsetEnv SDL_OPENGPU_STATS

@@ -64,6 +64,30 @@ class StagingTests(unittest.TestCase):
         (self.ndk/'m68k-amigaos/ndk-include/proto/exec.h').unlink()
         with self.assertRaisesRegex(ValueError,'NDK'):self.run_stage()
         self.assertFalse(self.dest.exists())
+    def add_release_header(self, name, data):
+        replacement=self.root/'replacement.tar.xz'
+        with tarfile.open(self.archive,'r:xz') as old, tarfile.open(replacement,'w:xz') as new:
+            for member in old.getmembers():
+                new.addfile(member,old.extractfile(member) if member.isfile() else None)
+            info=tarfile.TarInfo(module.TOP+'/'+name);info.size=len(data);info.mode=0o644
+            new.addfile(info,io.BytesIO(data))
+        replacement.replace(self.archive);self.hash=module.sha256(self.archive)
+    def test_conflicting_release_ndk_header_refuses_without_installing(self):
+        self.add_release_header('m68k-amigaos/ndk-include/proto/exec.h',b'release own ndk')
+        with self.assertRaisesRegex(ValueError,'overwrite a release file'):self.run_stage()
+        self.assertFalse(self.dest.exists())
+    def test_identical_release_ndk_header_is_preserved_and_fingerprinted(self):
+        self.add_release_header('m68k-amigaos/ndk-include/proto/exec.h',b'new ndk')
+        receipt=self.run_stage()
+        self.assertIn('m68k-amigaos/ndk-include/proto/exec.h',receipt['compiler_runtime_sha256'])
+    def test_supplemental_ndk_headers_are_fingerprinted(self):
+        receipt=self.run_stage()
+        row=next(x for x in receipt['supplemental_files'] if x['destination']=='m68k-amigaos/ndk-include/proto/exec.h')
+        self.assertEqual(row['sha256'],hashlib.sha256(b'new ndk').hexdigest())
+    def test_missing_tar_safety_filter_is_explicit(self):
+        with patch.object(module,'hasattr',return_value=False,create=True):
+            with self.assertRaisesRegex(ValueError,'data_filter'):self.run_stage()
+        self.assertFalse(self.dest.exists())
     def test_missing_sdl_archive_is_not_a_usable_stove(self):
         (self.sdk/'m68k-amigaos/lib/libSDL2.a').unlink()
         with self.assertRaisesRegex(ValueError,'SDL2'):self.run_stage()

@@ -32,7 +32,7 @@ All AmigaOS port recipes use `STOVE`. The shared CMake toolchain now resolves:
 
 Contradictory non-empty `STOVE` and `AMIGA_STOVE` environment values fail configuration instead of silently mixing headers and runtimes. An explicit CMake override remains authoritative. The chosen location is printed during configure. Inspect `CMakeFiles/*/CMakeCXXCompiler.cmake` or the build log to verify the actual C/C++ executable. A `CMAKE_PREFIX_PATH` pointing to Open2 headers does **not** by itself select the Open2 compiler.
 
-Seven regression tests exercise this selection, including spaces in the path. Five additional local-fixture tests cover the staging checksum, existing-directory refusal, absent NDK/SDL input and preservation of release runtime/header files.
+Seven regression tests exercise stove selection. Staging tests additionally protect every release file (including existing NDK headers), fingerprint supplied NDK files, and reject Python versions without the tar data safety filter. Use Python 3.12 or newer as the supported baseline.
 
 ## Exact source inputs and clean builds
 
@@ -56,7 +56,35 @@ STOVE="$PWD/build/open2-stove" sh ports/assaultcube/build-amiga-server.sh
 STOVE="$PWD/build/open2-stove" sh ports/assaultcube/build-amiga-client.sh
 ```
 
-`ZLIB_ROOT` and some NXEngine codec paths may refer to separately built existing libraries. Record their hashes and source provenance rather than implying they were rebuilt with Open2.
+### Stage required codecs explicitly
+
+The five affected recipes no longer search a WebKit build tree or arbitrary
+external prefix. Before building AssaultCube, UQM, AstroMenace or NXEngine,
+provide the exact inventory pinned in `toolchain/port-dependencies.lock.json`:
+
+```sh
+python3 scripts/port_dependencies.py stage \
+  --stove "$STOVE" --source /path/to/explicit-m68k-codec-inputs
+python3 scripts/port_dependencies.py verify --stove "$STOVE"
+```
+
+The source directory must contain the locked `include/` and `lib/` files.
+No source root is guessed and no network is used. The script checks all hashes
+before staging and writes only `$STOVE/prefix/m68k-amigaos/port-deps/`.
+Build recipes recheck the manifest and every file before changing sources or
+configuring. Extra unrecorded headers, symlinks, missing files and mismatched
+bytes are rejected. Old `ZLIB_ROOT` / `UQM_DEPS` overrides outside the verified
+directory are rejected rather than silently accepted.
+
+The lock admits only zlib, PNG, JPEG and FreeType archives and matching headers;
+it cannot import the donor's standard C, pthread or C++ runtime headers/libraries.
+A relocated stove verifies without the original donor directory. The lock is a
+frozen inventory of existing inputs, **not** proof these codecs were rebuilt with
+Open2. Reproducing their original source/toolchain provenance remains a release
+qualification task; this repository does not ship the codec binaries.
+
+The newer review pass includes 113 files in this inventory. See
+[review-fix evidence](../evidence/open2-20261013-resume/README.md).
 
 ## What the compiler proofs establish
 

@@ -29,6 +29,8 @@ def sha256(path: Path) -> str:
 
 
 def stage(archive: Path, ndk_prefix: Path, sdk_prefix: Path, destination: Path) -> dict:
+    if not hasattr(tarfile, 'data_filter'):
+        raise ValueError('Python with tarfile.data_filter is required (Python 3.12+ recommended)')
     destination = destination.absolute()
     if destination.exists():
         raise ValueError('Refusing to overwrite an existing stove: ' + str(destination))
@@ -49,12 +51,16 @@ def stage(archive: Path, ndk_prefix: Path, sdk_prefix: Path, destination: Path) 
             raise ValueError('Unexpected compiler archive layout')
         prefix.rename(staging / 'prefix')
         prefix = staging / 'prefix'
-        compiler_files = [p for tree in ('bin', 'lib', 'libexec', 'm68k-amigaos/lib')
-                          for p in (prefix / tree).rglob('*') if p.is_file()]
+        # Protect every release file, including any NDK or standard headers.
+        compiler_files = [p for p in prefix.rglob('*') if p.is_file()]
         before = {str(p.relative_to(prefix)): sha256(p) for p in compiler_files}
         supplemental = []
 
         def copy(src: Path, dst: Path) -> None:
+            if dst.exists():
+                if sha256(src) != sha256(dst):
+                    raise ValueError('Supplement would overwrite a release file: ' + str(dst.relative_to(prefix)))
+                return
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, dst)
             supplemental.append({'destination': str(dst.relative_to(prefix)),
@@ -63,8 +69,11 @@ def stage(archive: Path, ndk_prefix: Path, sdk_prefix: Path, destination: Path) 
         for name in ('ndk-include', 'ndk13-include', 'ndk'):
             src = ndk_prefix / 'm68k-amigaos' / name
             if src.exists():
-                shutil.copytree(src, prefix / 'm68k-amigaos' / name,
-                                dirs_exist_ok=True, symlinks=True)
+                for header in sorted(src.rglob('*')):
+                    if header.is_file():
+                        if not header.resolve().is_relative_to(ndk_prefix.resolve()):
+                            raise ValueError('NDK symlink points outside the supplied prefix: ' + str(header))
+                        copy(header, prefix / 'm68k-amigaos' / name / header.relative_to(src))
         # Keep release-provided headers. Additional SDK/NDK device headers are
         # admitted only when absent, and every copied file is fingerprinted.
         includes = sdk_prefix / 'm68k-amigaos/include'

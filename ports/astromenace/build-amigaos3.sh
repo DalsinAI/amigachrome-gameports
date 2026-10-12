@@ -8,6 +8,7 @@ OUT=${2:-"$ROOT/build/os3/astromenace"}
 STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
 P="$STOVE/prefix"
 SYS="$P/m68k-amigaos"
+DEPS=$(python3 "$ROOT/scripts/port_dependencies.py" verify --stove "$STOVE" --require zlib png freetype)
 CC="$P/bin/m68k-amigaos-gcc"
 CXX="$P/bin/m68k-amigaos-g++"
 SDL2_CONFIG="$P/bin/sdl2-config"
@@ -28,17 +29,16 @@ find_file() {
   return 1
 }
 
-FALLBACK="$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"
 SDL_INC="$SYS/include/SDL2"
 GL_INC="$SYS/include"
 SDL_LIB=$(find_file libSDL2.a "$SYS" "$P" || true)
 MIX_LIB=$(find_file libSDL2_mixer.a "$SYS" "$P" || true)
 [ -n "$MIX_LIB" ] || MIX_LIB=$(find_file libSDL2_mixer_static.a "$SYS" "$P" || true)
 GL_LIB=$(find_file 'libGL.a' "$SYS" "$P" || true)
-FREETYPE_LIB=$(find_file 'libfreetype*.a' "$SYS" "$P" "$FALLBACK" || true)
-PNG_LIB=$(find_file 'libpng*.a' "$SYS" "$P" "$FALLBACK" || true)
-ZLIB_LIB=$(find_file 'libz.a' "$SYS" "$P" "$FALLBACK" || true)
-FT_HEADER=$(find_file ft2build.h "$SYS/include" "$P/include" "$FALLBACK/include" || true)
+FREETYPE_LIB="$DEPS/lib/libfreetype.a"
+PNG_LIB="$DEPS/lib/libpng.a"
+ZLIB_LIB="$DEPS/lib/libz.a"
+FT_HEADER="$DEPS/include/freetype2"/ft2build.h
 
 missing=0
 for pair in \
@@ -71,8 +71,8 @@ cmake -S "$SRC" -B "$OUT" \
   -DAMIGA_STOVE="$STOVE" \
   -DAMIGACHROME=ON \
   -DDONTCREATEVFS=1 \
-  -DCMAKE_INCLUDE_PATH="$SYS/include;$SYS/include/SDL2;$FALLBACK/include" \
-  -DCMAKE_LIBRARY_PATH="$SYS/lib;$P/lib;$FALLBACK/lib" \
+  -DCMAKE_INCLUDE_PATH="$SYS/include;$SYS/include/SDL2;$DEPS/include" \
+  -DCMAKE_LIBRARY_PATH="$SYS/lib;$P/lib;$DEPS/lib" \
   -DINSTALL_DESKTOP_FILES=OFF \
   -DSDL2_INCLUDE_DIR="$SDL_INC" \
   -DSDL2_LIBRARY_TEMP="$SDL_LIB" \
