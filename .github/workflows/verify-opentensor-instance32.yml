@@ -19,6 +19,7 @@ jobs:
           set -euxo pipefail
           SRC="$GITHUB_WORKSPACE/build/amigachrome-${GITHUB_RUN_ID}"
           env -u GH_TOKEN -u GITHUB_TOKEN gh repo clone DalsinAI/amigachrome "$SRC" -- --depth 1 --branch main
+          test -s "$SRC/scripts/cradle_mcp.py"
           test -s "$SRC/scripts/cradle_mcp_amiga.py"
           printf 'AMIGACHROME_SOURCE=%s\n' "$SRC" >> "$GITHUB_ENV"
 
@@ -32,8 +33,9 @@ jobs:
           from pathlib import Path
           scripts = Path(os.environ["AMIGACHROME_SOURCE"]) / "scripts"
           sys.path.insert(0, str(scripts))
-          from cradle_mcp_amiga import AmigaTools
-          tools = AmigaTools(); tools.Error = RuntimeError
+          import ac
+          import cradle_mcp
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
           listing = tools.amiga_run("32", 'List DH1:OpenTensor LFORMAT="%N %L bytes"', timeout=20)
           print(json.dumps(listing, indent=2, default=str))
           if not listing.get("finished") or "OpenTensor" not in listing.get("output", ""):
