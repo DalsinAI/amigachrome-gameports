@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-12",
+  "entries": [
+    {
+      "title": "Foxy's Run",
+      "url": "https://vairn.itch.io/foxysrun",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": "Public name-your-own-price development build; publisher download is a raw 880 KiB ADF."
+    },
+    {
+      "title": "Norrland",
+      "url": "https://8080.itch.io/norrland",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "demo",
+      "note": "The full game is paid; this is the publisher's explicitly free Amiga demo only."
+    },
+    {
+      "title": "Mundialito 2",
+      "url": "https://acneproduction.itch.io/mundialito-2",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "demo",
+      "note": "The full game is paid; this is the publisher's explicitly free ADF demo only."
+    }
+  ]
+}
