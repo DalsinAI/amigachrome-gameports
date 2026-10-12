@@ -1,0 +1,11 @@
+{
+  "base_main": "4d22f1bc2878bf9d7d17998e9cc15309d82de4da",
+  "patch_source_pr": 67,
+  "patch_commit": "787ac2f5ef78898174cf38e2b575a7c9d5504444",
+  "compiler": "16.2.0-open2",
+  "replacement": "SDL2.module only",
+  "before": "35756badc85840bd170a1f5124e1c92eef159419e130bd6f21eac673e5a9d0d3",
+  "after": "b0594314367c47574fc5c701bb373b819eed2bad82aa563122601407c0a62400",
+  "bytes": 992836,
+  "other_runtime_modules": "unchanged baseline, not rebuilt"
+}

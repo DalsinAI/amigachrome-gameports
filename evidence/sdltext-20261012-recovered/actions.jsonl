@@ -1,0 +1,76 @@
+{"utc": "2026-10-12T20:45:28.433006+00:00", "action": "mailbox", "label": "text-baseline", "script": "FailAt 21\nStack 1048576\nEcho \"TEXT_BASELINE_BEGIN\"\nSYS:Open2Runner/SDLTextCheck-shared >SYS:Open2Runner/text-baseline.out\nEcho \"TEXT_BASELINE_EXIT $RC\"\n"}
+{"utc": "2026-10-12T20:45:46.162124+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:45:46.346150+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-12T20:45:46.348793+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:45:46.634415+00:00", "action": "key", "raw": 1, "hold": 0.08}
+{"utc": "2026-10-12T20:45:48.160849+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-12T20:46:42.328871+00:00", "action": "mailbox", "label": "text-candidate", "script": "FailAt 21\nStack 1048576\nEcho \"TEXT_CANDIDATE_BEGIN\"\nSYS:Open2Runner/SDLTextCheck-shared >SYS:Open2Runner/text-candidate.out\nEcho \"TEXT_CANDIDATE_EXIT $RC\"\n"}
+{"utc": "2026-10-12T20:46:46.329104+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:46:46.514697+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-12T20:46:46.517185+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:46:46.804054+00:00", "action": "key", "raw": 1, "hold": 0.08}
+{"utc": "2026-10-12T20:47:41.199682+00:00", "action": "chord", "modifier": 99, "raw": 32}
+{"utc": "2026-10-12T20:47:41.201105+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:47:41.887664+00:00", "action": "chord", "modifier": 102, "raw": 32}
+{"utc": "2026-10-12T20:47:41.889579+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:47:42.574931+00:00", "action": "key", "raw": 65, "hold": 0.08}
+{"utc": "2026-10-12T20:47:43.160086+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-12T20:47:43.743932+00:00", "action": "key", "raw": 78, "hold": 0.08}
+{"utc": "2026-10-12T20:47:44.331022+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-12T20:47:44.915239+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-12T20:47:45.500996+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-12T20:47:46.086491+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-12T20:47:46.671401+00:00", "action": "click", "x": 1200, "y": 600, "head": 1}
+{"utc": "2026-10-12T20:47:47.556941+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:47:48.141355+00:00", "action": "click", "x": 220, "y": 210, "head": 1}
+{"utc": "2026-10-12T20:47:49.028614+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:47:49.981082+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-12T20:48:59.241147+00:00", "action": "mailbox", "label": "text-focus-launch", "script": "FailAt 21\nStack 1048576\nRun >NIL: Execute SYS:Open2Runner/text-focus-wrapper\n"}
+{"utc": "2026-10-12T20:49:02.241332+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:49:02.725555+00:00", "action": "mailbox", "label": "focus-probe", "script": "FailAt 21\nStack 1048576\nSYS:Open2Runner/FocusProbe >SYS:Open2Runner/focus-probe.out\nEcho \"FOCUS_PROBE_EXIT $RC\"\n"}
+{"utc": "2026-10-12T20:49:04.726155+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-12T20:49:12.536799+00:00", "action": "click", "x": 220, "y": 210, "head": 1}
+{"utc": "2026-10-12T20:49:14.023616+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:49:14.533226+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-12T20:49:43.937563+00:00", "action": "mailbox", "label": "text-static", "script": "FailAt 21\nStack 1048576\nEcho \"TEXT_STATIC_BEGIN\"\nSYS:Open2Runner/SDLTextCheck-static >SYS:Open2Runner/text-static.out\nEcho \"TEXT_STATIC_EXIT $RC\"\n"}
+{"utc": "2026-10-12T20:49:46.937820+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:49:47.122127+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-12T20:49:47.124241+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:49:47.410010+00:00", "action": "key", "raw": 1, "hold": 0.08}
+{"utc": "2026-10-12T20:49:47.593830+00:00", "action": "chord", "modifier": 99, "raw": 32}
+{"utc": "2026-10-12T20:49:47.595746+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:49:47.882165+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-12T20:49:48.066681+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-12T20:49:48.250779+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-12T20:49:48.434782+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-12T20:49:49.437376+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-12T20:51:50.527091+00:00", "action": "mailbox", "label": "neverball-text-first", "script": "FailAt 21\nStack 1048576\nEcho \"NEVERBALL_TEXT_BEGIN\"\nSYS:Open2Ports/NeverballText/Neverball >SYS:Open2Runner/neverball-text.out\nEcho \"NEVERBALL_TEXT_EXIT $RC\"\n"}
+{"utc": "2026-10-12T20:52:13.441538+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-12T20:52:14.966244+00:00", "action": "chord", "modifier": 96, "raw": 34}
+{"utc": "2026-10-12T20:52:14.967884+00:00", "action": "key", "raw": 34, "hold": 0.08}
+{"utc": "2026-10-12T20:52:15.256845+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-12T20:52:15.259187+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-12T20:52:15.553622+00:00", "action": "chord", "modifier": 96, "raw": 40}
+{"utc": "2026-10-12T20:52:15.555515+00:00", "action": "key", "raw": 40, "hold": 0.08}
+{"utc": "2026-10-12T20:52:15.841324+00:00", "action": "chord", "modifier": 96, "raw": 18}
+{"utc": "2026-10-12T20:52:15.842931+00:00", "action": "key", "raw": 18, "hold": 0.08}
+{"utc": "2026-10-12T20:52:16.128205+00:00", "action": "chord", "modifier": 96, "raw": 50}
+{"utc": "2026-10-12T20:52:16.130272+00:00", "action": "key", "raw": 50, "hold": 0.08}
+{"utc": "2026-10-12T20:52:17.238168+00:00", "action": "key", "raw": 65, "hold": 0.08}
+{"utc": "2026-10-12T20:52:58.691399+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-12T20:53:00.250016+00:00", "action": "click", "x": 7, "y": 8, "head": 1}
+{"utc": "2026-10-12T20:53:32.698862+00:00", "action": "mailbox", "label": "neverball-name-relaunch", "script": "FailAt 21\nStack 1048576\nEcho \"NEVERBALL_RELAUNCH_BEGIN\"\nSYS:Open2Ports/NeverballText/Neverball >SYS:Open2Runner/neverball-relaunch.out\nEcho \"NEVERBALL_RELAUNCH_EXIT $RC\"\n"}
+{"utc": "2026-10-12T20:53:38.066698+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-12T20:53:53.088339+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-12T20:53:54.644280+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-12T20:54:39.452278+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-12T20:54:45.621112+00:00", "action": "key", "raw": 78, "hold": 1.0}
+{"utc": "2026-10-12T20:54:47.654405+00:00", "action": "key", "raw": 79, "hold": 0.5}
+{"utc": "2026-10-12T20:59:15.278644+00:00", "action": "click", "x": 7, "y": 8, "head": 1}
+{"utc": "2026-10-12T21:00:22.542259+00:00", "action": "mailbox", "label": "sdlpop-continue", "script": "FailAt 21\nStack 1048576\nEcho \"SDLPOP_CONTINUE_BEGIN\"\nCD SYS:Open2Ports/SDLPoP\nprince megahit 1 >SYS:Open2Runner/sdlpop-continue.out\nEcho \"SDLPOP_CONTINUE_EXIT $RC\"\n"}
+{"utc": "2026-10-12T21:00:28.222498+00:00", "action": "key", "raw": 78, "hold": 0.65}
+{"utc": "2026-10-12T21:00:29.465038+00:00", "action": "key", "raw": 79, "hold": 0.3}
+{"utc": "2026-10-12T21:02:22.824421+00:00", "action": "key", "raw": 78, "hold": 0.7}
+{"utc": "2026-10-12T21:02:24.203073+00:00", "action": "key", "raw": 85, "hold": 0.08}
+{"utc": "2026-10-12T21:02:24.980958+00:00", "action": "key", "raw": 79, "hold": 0.45}
+{"utc": "2026-10-12T21:02:25.978900+00:00", "action": "key", "raw": 88, "hold": 0.08}

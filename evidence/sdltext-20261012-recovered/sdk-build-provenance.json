@@ -1,0 +1,52 @@
+[
+  {
+    "file": "libSDL2_net.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "2ec6d9541c711ebbe64ce21e3621c6a71d2abb8893916d5647581dcaadd63782"
+  },
+  {
+    "file": "libSDL2_image_static.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "53a42c2d4c887f12137ee5ab8630883c95f0e80b93eebf55f9da4561dcce5d1d"
+  },
+  {
+    "file": "libSDL2_ttf.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "21c3a86d2be35fc50b1aca61453539277f1fdad6d8cedd3b623e980306b1fb3f"
+  },
+  {
+    "file": "libSDL2_mixer_static.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "33a7c28c28c926969d80fc9d0238e709e2af9114d2008760a8b46854454d4402"
+  },
+  {
+    "file": "libSDL2_test.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "aa402908cfadffa8ff42d198b2df3736bc47dca3864469bd7a47f3acf6bf612f"
+  },
+  {
+    "file": "libSDL2_mixer.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "508ce9a5d92c6e0f65fb451177ede6df92ec4da6cd478eb6f46e2890c05a3d50"
+  },
+  {
+    "file": "libSDL2_static.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "b9f139fa6a95735da7ada5b17e16133866d66c896faf0df9ed207948e66962ce"
+  },
+  {
+    "file": "libSDL2_image.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "080dbe6897b9732f8a35814244476fdb006727adc1d51a275938cc8a454d6b58"
+  },
+  {
+    "file": "libSDL2.a",
+    "source": "rebuilt Open2 current main plus PR67",
+    "sha256": "3abbcfd6c1b5b8d899d2ac390399b9acc65b07af00d7b2ceeb49c9b52a03c7ff"
+  },
+  {
+    "file": "libGL.a",
+    "source": "REUSED existing GL stub; GL.module not rebuilt",
+    "sha256": "f5a4fd7591edfac13a82f48e5bf925a8b957e58a02afcd467ff74aa8cbdb9417"
+  }
+]

@@ -1,5 +1,10 @@
 # Unified Game Port Backlog
 
+**Current execution checkpoint:** see [13 October review fixes](evidence/open2-20261013-resume/README.md)
+and [recovered SDL2/Neverball evidence](evidence/sdltext-20261012-recovered/README.md).
+Keep the plain-68040 software-2D qualification lane separate from AssaultCube's
+OpenGPU-dependent client. No untested target is promoted by these updates.
+
 Snapshot date: **9 October 2026**
 
 Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**

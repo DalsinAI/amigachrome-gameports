@@ -4,7 +4,33 @@ Open-source game-port and compatibility work for **m68k AROS**, **AmigaOS 3.x** 
 
 The repository contains compiled revival ports, the Neverball/OpenGPU release lane, and the next 3D source-intake targets. Compile success is useful evidence, but it is **not** synonymous with release readiness. See [RELEASE_POLICY.md](RELEASE_POLICY.md).
 
-## Open2 follow-up - actual guest first light
+## Latest verified state - dependency isolation and recovered text input
+
+- **Fresh build work:** the affected recipes now require a locked codec inventory
+  inside the selected stove. Both AssaultCube targets were rebuilt from a new
+  exact-pinned checkout without the old WebKit include/library fallback.
+- **Recovered earlier runtime evidence:** the PR67 SDL2 candidate delivered real
+  shared/static ASCII text. Neverball accepted `DALEX`, Backspace made `DALE`,
+  and the player name persisted across exit/relaunch. This is the candidate in
+  the isolated lab, not an upstream merge or a production deployment.
+- **SDLPoP:** a new `SDL_OPENGPU=0` lab run rendered Level 1, quicksaved,
+  moved, quickloaded back to the saved position and returned exit 0. This is
+  one bounded emulated-68040/software-mode check, not a complete release.
+
+[Build/review receipts](evidence/open2-20261013-resume/README.md) and
+[recovered runtime evidence](evidence/sdltext-20261012-recovered/README.md)
+retain the source identities, hashes, raw output and remaining limitations.
+No port has been promoted to RELEASE.
+
+### Rendering qualification lanes
+
+| Lane | Ports | Required additional gate |
+|---|---|---|
+| Plain 68040 + FPU / software 2D | OpenJazz, SDLPoP, Chocolate Doom | Run on the intended SDL CPU path with `SDL_OPENGPU=0`, plus input/audio/save/exit tests. This is a requirement, not a completed pass for all three. |
+| OpenGPU-dependent 3D client | AssaultCube client; Neverball/Neverputt GL lane | Qualify the chosen supported OpenGPU backend. No plain-68040 performance claim. |
+| No rendering | AssaultCube dedicated server | Socket/listen/stop tests, with the guest library version recorded. |
+
+## Historical Open2 follow-up - actual guest first light
 
 NXEngine-evo completed its Open2 link, and Neverball/Neverputt now rebuild and
 pass the package gate. AssaultCube has two targeted fixes: one Amiga definition
@@ -42,7 +68,7 @@ The OpenGPU SDK archives remain explicitly recorded reused dependencies.
 | SDLPoP | COMPILED | PENDING | m68k / 68040 |
 | OpenJazz | COMPILED | PENDING | m68k / 68040 |
 | NXEngine-evo | COMPILED | PENDING | m68k / 68040 |
-| Neverball / Neverputt | COMPILED + PACKAGE VERIFIED | TESTING | softpipe title/menu renders; accelerated virgl black-frame issue remains |
+| Neverball / Neverputt | COMPILED + PACKAGE VERIFIED | TESTING | Neverball 3D first light and candidate name persistence observed; full gameplay/audio gates remain. Neverputt runtime pending. |
 | AssaultCube | CLIENT + SERVER COMPILED | PENDING | OpenGPU first-light client; audio still stubbed for initial bring-up |
 | Serious Sam Classic | SOURCE PINNED | NOT STARTED | TFE first |
 | Warzone 2100 | SOURCE PINNED | NOT STARTED | later large 3D/application stress target |

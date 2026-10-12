@@ -1,0 +1,2 @@
+STAGED 16.2.0-open2: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/resume-20261013/verified-stove
+Existing OpenGPU SDK imported with hashes; its archives still require qualification.

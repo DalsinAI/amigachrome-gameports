@@ -1,0 +1,1 @@
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/m68k-amigaos/port-deps

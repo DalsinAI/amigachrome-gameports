@@ -4,7 +4,11 @@ HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
 SRC=${ASSAULTCUBE_SRC:-"$ROOT/build/game-ports/sources/assaultcube/source"}
 STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
-ZLIB_ROOT=${ZLIB_ROOT:-"$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"}
+DEPS=$(python3 "$ROOT/scripts/port_dependencies.py" verify --stove "$STOVE" --require zlib)
+[ -z "${ZLIB_ROOT:-}" ] || [ "$ZLIB_ROOT" = "$DEPS" ] || {
+    echo "ZLIB_ROOT must use the verified stove dependency directory: $DEPS" >&2; exit 3;
+}
+ZLIB_ROOT="$DEPS"
 P="$STOVE/prefix"
 CXX="$P/bin/m68k-amigaos-g++"
 [ -x "$P/bin/sdl2-config" ] || { echo "OpenGPU SDK missing from stove" >&2; exit 2; }
