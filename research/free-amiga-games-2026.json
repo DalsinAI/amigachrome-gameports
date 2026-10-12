@@ -1,0 +1,1067 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-12",
+  "scope": "Classic Amiga/68k games, demos, betas and free engines covered by Amigos Retro Gaming, Amigatronics and Generation Amiga in 2026. Commercial-only downloads are excluded by the collector.",
+  "entries": [
+    {
+      "title": "Do Run Run Amiga",
+      "url": "https://amigos-retro-gaming.itch.io/do-run-run-amiga",
+      "sources": [
+        "Amigos Retro Gaming"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Lotus Turbo Challenge II DX",
+      "url": "https://amigos-retro-gaming.itch.io/lotus-turbo-challenge-ii-dx",
+      "sources": [
+        "Amigos Retro Gaming",
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Yorkshire Pub Games",
+      "url": "https://amigos-retro-gaming.itch.io/yorkshire-pub-games",
+      "sources": [
+        "Amigos Retro Gaming"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Castlevania AGA",
+      "url": "https://danteretrodev.itch.io/akumajou-dracula-aga",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Amiga Rescue",
+      "url": "https://stevehiggins.itch.io/amiga-rescue",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "The AmiGoonies",
+      "url": "https://marlox.itch.io/the-amigoonies",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Rally-X AGA",
+      "url": "https://jotd666.itch.io/rally-x",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "The Adventure of Node",
+      "url": "https://tedzogh.itch.io/adventure-of-node",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Ghosts N' Goblins AGA",
+      "url": "https://jotd666.itch.io/ghostsngoblins",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Aonic: Green Hill Zone Demo",
+      "url": "https://reassembler68k.itch.io/aonic",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Bad Dudes vs Dragonninja",
+      "url": "https://jotd666.itch.io/bad-dudes-vs-dragonninja",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Commando AGA",
+      "url": "https://jotd666.itch.io/commando",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Zippy Race: A500 Edition",
+      "url": "https://modernvintagegamer.itch.io/zippy-race",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Babylonian Twins",
+      "url": "https://bithunch.itch.io/babylonian-twins",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Deadband",
+      "url": "https://remanence.itch.io/what-is-the-deadband",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Vulgus AGA",
+      "url": "https://jotd666.itch.io/vulgus",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Tales of Itch",
+      "url": "https://kickyfunkfresh.itch.io/freestyletalesofitch",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Ramizes",
+      "url": "https://tukinem.itch.io/ramizes-amiga",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Mission Alien",
+      "url": "https://matze1887.itch.io/mission-alien",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Moon Cresta AGA",
+      "url": "https://amiten.itch.io/amiga-moon-cresta",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Gun.Smoke: A1200 Edition",
+      "url": "https://modernvintagegamer.itch.io/gunsmoke-aga",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Echodrome",
+      "url": "https://pixelplop.itch.io/echodrome-amigamejam2025",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Zepton AGA",
+      "url": "https://chiptune.itch.io/zepton",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Brutal Pico Race AGA",
+      "url": "https://yourykiki.itch.io/brutal-pico-race",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Rastan Amiga 500",
+      "url": "https://basementape.itch.io/rastan-amiga-500",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Roc'N Rope",
+      "url": "https://jotd666.itch.io/rocnrope",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Railblaze",
+      "url": "https://dion-guy.itch.io/railblaze",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Jail Break",
+      "url": "https://jotd666.itch.io/jail-break",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Double Baboon Ninja",
+      "url": "https://danlabg.itch.io/double-baboon",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Dunjons",
+      "url": "https://zooperdan.itch.io/dunjons",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Bomberplanes",
+      "url": "https://bartist.itch.io/bomberplanes",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Blue and Red: Fight the Robots!",
+      "url": "https://kaijuwasp.itch.io/blue-and-red-fight-the-robots-arcade-edition",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Xevious1200",
+      "url": "https://jotd666.itch.io/xevious1200",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Creepy Crawlers Goliath: Reloaded",
+      "url": "https://digiliciousnibbles.itch.io/creepy-crawlers-goliath-reloaded",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Wings of Fear",
+      "url": "https://roartj.itch.io/wings-of-fear",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Strike Force Omega",
+      "url": "https://reborn80.itch.io/strikeforceomega",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Project Horizon",
+      "url": "https://electricblacksheep.itch.io/projecthorizon",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Mike Mech",
+      "url": "https://lowcarb.itch.io/mike-mech-amiga",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Pjusk",
+      "url": "https://zooperdan.itch.io/pjusk",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Donkey Kong 500",
+      "url": "https://jotd666.itch.io/donkey-kong-500",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Wings of Fear II",
+      "url": "https://roartj.itch.io/wings-of-fear-ii",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "OutRun: Amiga Edition",
+      "url": "https://reassembler68k.itch.io/outrun-amiga-edition",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Double Dragon AGA",
+      "url": "https://jotd666.itch.io/double-dragon",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "US Championship V'Ball",
+      "url": "https://jotd666.itch.io/us-championship-vball",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Renegade Amiga Enhanced",
+      "url": "https://dave18.itch.io/renegade-amiga-aga",
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Gulliver",
+      "url": "https://captain-ts.itch.io/gulliver",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Axion",
+      "url": "https://virtualassets.itch.io/axion",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Cake Rush",
+      "url": "https://hambo3.itch.io/cake-rush",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Operation Steel Rain: Prologue",
+      "url": "https://2bit-combo.itch.io/operation-steel-rain",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Tank Power",
+      "url": "https://umbygames.itch.io/tank-power",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "The Gate",
+      "url": "https://allanon71.itch.io/the-gate",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Pauldron",
+      "url": "https://zener.itch.io/pauldron",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "The Osiris Infection",
+      "url": "https://hoystergames.itch.io/the-osiris-infection",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Norrland",
+      "url": "https://8080.itch.io/norrland",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Los Malditos Tournament",
+      "url": "https://morguesoft.itch.io/los-malditos-tournament",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Fernando Martin vs EPI",
+      "url": "https://djcaye.itch.io/fernando-martin-vs-epi",
+      "sources": [
+        "Amigatronics"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Hydron",
+      "url": "https://cobour.itch.io/hydron",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Kaboomania",
+      "url": "https://fancyfactory.itch.io/kaboomania",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Tango Zero",
+      "url": "https://remanence.itch.io/tango-zero",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Iron Rails",
+      "url": "https://copperbytegames.itch.io/iron-rails",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Battle of Aldebaran AGA",
+      "url": "https://fliegeralarm-games.itch.io/battle-of-aldebaran-aga",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Flieger Minigolf",
+      "url": "https://fliegeralarm-games.itch.io/flieger-minigolf-ecsocs-amiga-500",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Fliegeralarm",
+      "url": "https://fliegeralarm-games.itch.io/fliegeralarm-amiga-ocs",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Fliegeralarm's Wintergames",
+      "url": "https://fliegeralarm-games.itch.io/fliegeralarms-winter",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "General of Panzers",
+      "url": "https://fliegeralarm-games.itch.io/general-of-panzers",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "AirTiger Strike",
+      "url": "https://fliegeralarm-games.itch.io/airtiger-strike",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Celtic Survivors: Blood vs Rome",
+      "url": "https://fliegeralarm-games.itch.io/celtic-survivors",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Smokin' Colts",
+      "url": "https://fliegeralarm-games.itch.io/smokincolts",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "ChromaBlast",
+      "url": "https://guruvision.itch.io/chromablast",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Breakline Rugby 5",
+      "url": "https://youenchene.itch.io/breakline-rugby-5",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "V-Wars",
+      "url": "https://novathecoder.itch.io/v-wars",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Liberte 44",
+      "url": "https://mjnurney.itch.io/liberte-44-amiga-agartg",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Doody Calls: Turd World War",
+      "url": "https://fuzzydweeb.itch.io/doody-calls-turd-word-war-amiga-2mb-aga",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Heliobane",
+      "url": "https://coze.itch.io/heliobane-amiga",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Wing Commander: Secret Missions",
+      "url": "https://rickyderocher.itch.io/wing-commander-secret-missions-amiga",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Wonder Boy for Amiga",
+      "url": "https://shinobiz72.itch.io/wonderboy-for-amiga-megadrive",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Soul Killa",
+      "url": "https://eismanberlin.itch.io/soul-killa",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "World War III",
+      "url": "https://darkodj.itch.io/wwiii",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Bruce Lee for Amiga",
+      "url": "https://tjlazer.itch.io/bruce-lee-for-amiga",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Mundialito 2",
+      "url": "https://acneproduction.itch.io/mundialito-2",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Mundialito 3",
+      "url": "https://acneproduction.itch.io/mundialito-3",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Mort & Phil",
+      "url": "https://amiga-factory.itch.io/mortandphil",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "X-Wing Simulator",
+      "url": "https://fourseasons.itch.io/may-the-4th-be-with-your-amiga-x-wing-simulator",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Spirit of Eternal Racer",
+      "url": "https://deuteros76.itch.io/spirit-of-eternal-racer",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "Commander Keen 1 RTG port",
+      "url": "https://aminet.net/package/game/actio/ck1-amiga",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": "Shareware-era port; verify included data."
+    },
+    {
+      "title": "G-WARS",
+      "url": "https://aminet.net/package/game/shoot/G-WARS",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Hurrican MiniGL",
+      "url": "https://aminet.net/package/game/shoot/Hurrican_Minigl",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "Ken's Labyrinth",
+      "url": "https://aminet.net/package/game/shoot/Kens-Labyrinth",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "ready",
+      "note": "Verify included shareware data."
+    },
+    {
+      "title": "Spirit of Eternal Racer 0.5.1",
+      "url": "https://aminet.net/package/game/race/SoER-0.5.1",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "demo",
+      "note": ""
+    },
+    {
+      "title": "La Hora Robada",
+      "url": "https://aminet.net/package/game/text/LaHoraRobada",
+      "sources": [
+        "Amigatronics"
+      ],
+      "category": "ready",
+      "note": ""
+    },
+    {
+      "title": "OpenDUNE RTG",
+      "url": "https://aminet.net/package/game/strat/OpenDUNE_RTG",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires legally owned Dune II data."
+    },
+    {
+      "title": "AmiDuke RTG",
+      "url": "https://aminet.net/package/game/shoot/AmiDuke_RTG",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires legally owned Duke Nukem 3D data."
+    },
+    {
+      "title": "AmiQuake RTG",
+      "url": "https://aminet.net/package/game/shoot/AmiQuake_RTG",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires Quake data."
+    },
+    {
+      "title": "AmiQuake II RTG",
+      "url": "https://aminet.net/package/game/shoot/AmiQuake2_RTG",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires Quake II data."
+    },
+    {
+      "title": "Chocolate Doom",
+      "url": "https://aminet.net/package/game/shoot/Chocolate_DOOM",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires a Doom IWAD."
+    },
+    {
+      "title": "OpenLara",
+      "url": "https://aminet.net/package/game/shoot/openlara",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires Tomb Raider data."
+    },
+    {
+      "title": "The Force Engine: Dark Forces",
+      "url": "https://aminet.net/package/game/shoot/tfe_darkforces_ervras",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires Dark Forces data."
+    },
+    {
+      "title": "FreeSynd RTG",
+      "url": "https://aminet.net/package/game/strat/FreeSynd_RTG",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires Syndicate data."
+    },
+    {
+      "title": "Zod Engine",
+      "url": "https://github.com/AMIGAbench/ZodEngine",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; may require original Z data."
+    },
+    {
+      "title": "AmiSC",
+      "url": "https://github.com/angree/AmiSC",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires StarCraft data."
+    },
+    {
+      "title": "Return to Castle Wolfenstein MiniGL 68k",
+      "url": "https://github.com/Sdursun/ReturnToCastleWolfenstein_Minigl68k",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires RTCW data."
+    },
+    {
+      "title": "AmiWind / OpenMW Amiga",
+      "url": "https://github.com/FlyingFathead/amiwind",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires Morrowind data."
+    },
+    {
+      "title": "ReMoM",
+      "url": "https://github.com/angree/Amiga-68K-ReMoM",
+      "sources": [
+        "Generation Amiga"
+      ],
+      "category": "needs_data",
+      "note": "Free engine; requires Master of Magic data."
+    },
+    {
+      "title": "Gloom Reforged AGA",
+      "url": "https://github.com/Andiweli/Gloom-Reforged",
+      "sources": [
+        "Generation Amiga",
+        "Amigatronics"
+      ],
+      "category": "needs_data",
+      "note": "Free enhancements; requires legally owned Gloom data."
+    },
+    {
+      "title": "Deimos Storm AGA",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "P.O.W AGA",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Foxy's Run",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Treasure of Usas",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Oracle / Oracle Reforged",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Vector Dreams",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Shinobi Remake",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Raiden AGA",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Galaga 500",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Arkamiga",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Final Fight Enhanced",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    },
+    {
+      "title": "Kick Off 2 Graphics Restyle",
+      "url": null,
+      "sources": [
+        "2026 free-game roundup cross-check"
+      ],
+      "category": "unresolved",
+      "note": "No unambiguous official zero-cost download page verified yet; not downloaded."
+    }
+  ]
+}
