@@ -1,0 +1,236 @@
+name: Qualify OpenFormula 68K in Instance-32 Lab
+
+on:
+  push:
+    branches:
+      - game/openformula-68k-20261012
+    paths:
+      - .github/workflows/openformula68k-lab.yml
+  workflow_dispatch:
+
+concurrency:
+  group: openformula68k-instance32-lab
+  cancel-in-progress: true
+
+jobs:
+  qualify:
+    runs-on: self-hosted
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout game
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Build release
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+            sh ports/openformula68k/build.sh
+          test -s build/openformula68k/package/OpenFormula68K/OpenFormula68K
+          test -s build/openformula68k/OpenFormula68K-0.1.0.zip
+
+      - name: Create stopped Instance-32 lab and install agent
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME="openformula-${GITHUB_RUN_ID}"
+          LAB="$LAB_ROOT/$LAB_NAME"
+          EVIDENCE="$GITHUB_WORKSPACE/build/openformula68k/evidence"
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          python3 "$APP/scripts/lab_instance.py" copy Instance-32 "$LAB" --who ChatGPT
+          printf '%s\n' "$LAB_NAME" > "$EVIDENCE/LAB_NAME.txt"
+          printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" <<'PY'
+          import json, sys
+          app, name = sys.argv[1:]
+          sys.path.insert(0, app + '/scripts')
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          print(json.dumps(tools.install_agent('lab:' + name), indent=2, default=str))
+          PY
+
+      - name: Stage OpenFormula in the lab
+        shell: bash
+        run: |
+          set -euxo pipefail
+          LAB_NAME=$(cat build/openformula68k/evidence/LAB_NAME.txt)
+          LAB="$HOME/AmigaChrome-dev/labs/$LAB_NAME"
+          SOURCE="$GITHUB_WORKSPACE/build/openformula68k/package/OpenFormula68K"
+          TARGET="$LAB/devices/harddisks/DH1/OpenFormula68K"
+          rm -rf "$TARGET"
+          mkdir -p "$TARGET"
+          cp -a "$SOURCE/." "$TARGET/"
+          test -s "$TARGET/OpenFormula68K"
+          find "$TARGET" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort \
+            | tee build/openformula68k/evidence/staged-files.txt
+          sha256sum "$TARGET/OpenFormula68K" \
+            > build/openformula68k/evidence/staged-executable.sha256
+
+      - name: Start lab and wait for AmigaDOS agent
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME=$(cat build/openformula68k/evidence/LAB_NAME.txt)
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" <<'PY'
+          import json, sys, time
+          app, name = sys.argv[1:]
+          sys.path.insert(0, app + '/scripts')
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          print(json.dumps(tools.lab('start', name, who='ChatGPT',
+                                     purpose='OpenFormula 68K RTG and AHI qualification'),
+                           indent=2, default=str))
+          target = 'lab:' + name
+          for attempt in range(45):
+              try:
+                  result = tools.amiga_run(target, 'Version\nAvail', timeout=8)
+                  if result.get('finished') and 'Kickstart' in result.get('output', ''):
+                      print(json.dumps(result, indent=2, default=str))
+                      break
+              except Exception as exc:
+                  print('agent wait', attempt, repr(exc))
+              time.sleep(4)
+          else:
+              raise SystemExit('Amiga agent did not become ready')
+          PY
+
+      - name: Run RTG race without audio and capture a live frame
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME=$(cat build/openformula68k/evidence/LAB_NAME.txt)
+          LAB="$LAB_ROOT/$LAB_NAME"
+          EVIDENCE="$GITHUB_WORKSPACE/build/openformula68k/evidence"
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" "$LAB" "$EVIDENCE" <<'PY'
+          import base64, json, sys, time
+          from pathlib import Path
+          app, name, lab_s, evidence_s = sys.argv[1:]
+          lab = Path(lab_s); evidence = Path(evidence_s)
+          sys.path.insert(0, app + '/scripts')
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          target = 'lab:' + name
+          game = lab / 'devices/harddisks/DH1/OpenFormula68K'
+          log = game / 'OpenFormula-noaudio.log'
+          if log.exists():
+              log.rename(game / 'OpenFormula-noaudio.previous.log')
+          script = '\n'.join([
+              'FailAt 21',
+              'Stack 600000',
+              'CD DH1:OpenFormula68K',
+              'OpenFormula68K AUTOSTART SECONDS=12 NOAUDIO >OpenFormula-noaudio.log',
+              'Echo OPENFORMULA SHELL RC $RC >>OpenFormula-noaudio.log',
+          ])
+          print(json.dumps(tools.amiga_run(target, script, timeout=0), indent=2, default=str))
+          time.sleep(6)
+          shot = tools.instance_screenshot(target, 'rtg', 50)
+          content = shot.get('_content', [{}])[0]
+          if not content.get('data'):
+              raise SystemExit('RTG screenshot returned no image data')
+          (evidence / 'openformula-race.png').write_bytes(base64.b64decode(content['data']))
+          (evidence / 'screenshot.json').write_text(
+              json.dumps({k:v for k,v in shot.items() if k != '_content'}, indent=2, default=str) + '\n',
+              encoding='utf-8')
+          for _ in range(30):
+              if log.is_file() and 'returned RC 0' in log.read_text(encoding='latin-1', errors='replace'):
+                  break
+              time.sleep(1)
+          else:
+              raise SystemExit('OpenFormula no-audio run did not return RC 0')
+          text = log.read_text(encoding='latin-1', errors='replace')
+          if 'RTG chunky' not in text:
+              raise SystemExit('OpenFormula did not report the RTG chunky path:\n' + text)
+          (evidence / 'OpenFormula-noaudio.log').write_text(text, encoding='utf-8')
+          print(text)
+          PY
+
+      - name: Run AHI smoke test
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME=$(cat build/openformula68k/evidence/LAB_NAME.txt)
+          LAB="$LAB_ROOT/$LAB_NAME"
+          EVIDENCE="$GITHUB_WORKSPACE/build/openformula68k/evidence"
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" "$LAB" "$EVIDENCE" <<'PY'
+          import json, sys, time
+          from pathlib import Path
+          app, name, lab_s, evidence_s = sys.argv[1:]
+          lab = Path(lab_s); evidence = Path(evidence_s)
+          sys.path.insert(0, app + '/scripts')
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          target = 'lab:' + name
+          game = lab / 'devices/harddisks/DH1/OpenFormula68K'
+          log = game / 'OpenFormula-audio.log'
+          script = '\n'.join([
+              'FailAt 21',
+              'Stack 600000',
+              'CD DH1:OpenFormula68K',
+              'OpenFormula68K AUTOSTART SECONDS=6 >OpenFormula-audio.log',
+              'Echo OPENFORMULA AUDIO SHELL RC $RC >>OpenFormula-audio.log',
+          ])
+          print(json.dumps(tools.amiga_run(target, script, timeout=0), indent=2, default=str))
+          for _ in range(25):
+              if log.is_file() and 'returned RC 0' in log.read_text(encoding='latin-1', errors='replace'):
+                  break
+              time.sleep(1)
+          else:
+              raise SystemExit('OpenFormula AHI run did not return RC 0')
+          text = log.read_text(encoding='latin-1', errors='replace')
+          if 'AHI active' not in text:
+              raise SystemExit('OpenFormula did not activate AHI:\n' + text)
+          (evidence / 'OpenFormula-audio.log').write_text(text, encoding='utf-8')
+          print(text)
+          PY
+
+      - name: Stop and archive lab
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          NAME_FILE="$GITHUB_WORKSPACE/build/openformula68k/evidence/LAB_NAME.txt"
+          if [ -s "$NAME_FILE" ]; then
+            LAB_NAME=$(cat "$NAME_FILE")
+            AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" <<'PY'
+          import json, sys
+          app, name = sys.argv[1:]
+          sys.path.insert(0, app + '/scripts')
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          try:
+              print(json.dumps(tools.lab('stop', name), indent=2, default=str))
+          except Exception as exc:
+              print('lab stop:', repr(exc))
+          try:
+              print(json.dumps(tools.lab('archive', name), indent=2, default=str))
+          except Exception as exc:
+              print('lab archive:', repr(exc))
+          PY
+          fi
+
+      - name: Upload qualified release and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenFormula68K-Lab-${{ github.run_id }}
+          path: |
+            build/openformula68k/OpenFormula68K-0.1.0.zip
+            build/openformula68k/SHA256SUMS
+            build/openformula68k/evidence/
+          if-no-files-found: warn
+          retention-days: 60
+          compression-level: 6
