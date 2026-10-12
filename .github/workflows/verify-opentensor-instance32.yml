@@ -11,7 +11,7 @@ on:
 jobs:
   verify:
     runs-on: self-hosted
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Fetch merged Cradle MCP 0.2 with the runner account
         shell: bash
@@ -29,27 +29,48 @@ jobs:
           set -euxo pipefail
           test -s "$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/OpenTensor/OpenTensor"
           python3 - <<'PY'
-          import json, os, sys
+          import json, os, sys, time
           from pathlib import Path
           scripts = Path(os.environ["AMIGACHROME_SOURCE"]) / "scripts"
           sys.path.insert(0, str(scripts))
           import ac
           import cradle_mcp
           tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
-          listing = tools.amiga_run("32", 'List DH1:OpenTensor LFORMAT="%N %L bytes"', timeout=20)
-          print(json.dumps(listing, indent=2, default=str))
-          if not listing.get("finished") or "OpenTensor" not in listing.get("output", ""):
-              raise SystemExit("DH1:OpenTensor was not visible from AmigaOS")
-          smoke = tools.amiga_run(
-              "32",
-              "Stack 1000000\nCD DH1:OpenTensor\nOpenTensor START 152 SECONDS 6 NOAUDIO",
-              timeout=45,
-          )
-          print(json.dumps(smoke, indent=2, default=str))
-          if not smoke.get("finished") or "renderer virgl" not in smoke.get("output", ""):
-              raise SystemExit("OpenTensor VirGL smoke test did not pass")
-          Path("opentensor-instance32-list.json").write_text(json.dumps(listing, indent=2, default=str) + "\n")
-          Path("opentensor-instance32-smoke.json").write_text(json.dumps(smoke, indent=2, default=str) + "\n")
+          was_running = bool(tools._match("32").get("running"))
+          started_here = False
+          try:
+              if not was_running:
+                  print(json.dumps(tools.start_instance("32"), indent=2, default=str))
+                  started_here = True
+              ready = None
+              for _ in range(60):
+                  try:
+                      ready = tools.amiga_run("32", "Version\nAvail", timeout=10)
+                      if ready.get("finished") and "Kickstart" in ready.get("output", ""):
+                          break
+                  except Exception:
+                      ready = None
+                  time.sleep(2)
+              else:
+                  raise SystemExit("Instance-32 did not become ready for amiga_run")
+              listing = tools.amiga_run("32", 'List DH1:OpenTensor LFORMAT="%N %L bytes"', timeout=20)
+              print(json.dumps(listing, indent=2, default=str))
+              if not listing.get("finished") or "OpenTensor" not in listing.get("output", ""):
+                  raise SystemExit("DH1:OpenTensor was not visible from AmigaOS")
+              smoke = tools.amiga_run(
+                  "32",
+                  "Stack 1000000\nCD DH1:OpenTensor\nOpenTensor START 152 SECONDS 6 NOAUDIO",
+                  timeout=45,
+              )
+              print(json.dumps(smoke, indent=2, default=str))
+              if not smoke.get("finished") or "renderer virgl" not in smoke.get("output", ""):
+                  raise SystemExit("OpenTensor VirGL smoke test did not pass")
+              Path("opentensor-instance32-ready.json").write_text(json.dumps(ready, indent=2, default=str) + "\n")
+              Path("opentensor-instance32-list.json").write_text(json.dumps(listing, indent=2, default=str) + "\n")
+              Path("opentensor-instance32-smoke.json").write_text(json.dumps(smoke, indent=2, default=str) + "\n")
+          finally:
+              if started_here:
+                  print(json.dumps(tools.stop_instance("32"), indent=2, default=str))
           PY
 
       - uses: actions/upload-artifact@v4
@@ -57,6 +78,7 @@ jobs:
         with:
           name: OpenTensor-Instance32-Verification-${{ github.run_id }}
           path: |
+            opentensor-instance32-ready.json
             opentensor-instance32-list.json
             opentensor-instance32-smoke.json
           if-no-files-found: warn
