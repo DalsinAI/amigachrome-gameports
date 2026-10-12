@@ -8,6 +8,13 @@ This is the single discussion backlog for game ports. It deliberately puts activ
 source-pinned work, near-term candidates and stretch targets in one list so priority can be
 decided across the whole field instead of inheriting the old Tier A / B / C grouping.
 
+**Latest Open2 continuation:** [2D/3D guest first light and code fixes](evidence/open2-20261012-followup/README.md)
+now supersede the initial snapshot below. NXEngine has linked (warning hold);
+Neverball/Neverputt have rebuilt; SDLPoP and Neverball show partial runtime
+progress and guest exit 0. The next gate is the matching current SDL2 runtime
+and real name-entry/persistence test, followed by gameplay/audio and the
+AssaultCube runtime gates. No candidate is promoted to RELEASE.
+
 **12 October Open2 execution update:** the active rebuild batch is recorded in
 [Open2 evidence](evidence/open2-20261012/README.md). OpenJazz, Chocolate Doom,
 SDLPoP and AssaultCube client/server have new compile/link results. NXEngine

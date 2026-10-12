@@ -6,6 +6,23 @@ Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**
 
 **DONE means RELEASE.** A successful compile is intermediate evidence, not a release result.
 
+## Open2 follow-up - actual guest first light
+
+NXEngine-evo completed its Open2 link, and Neverball/Neverputt now rebuild and
+pass the package gate. AssaultCube has two targeted fixes: one Amiga definition
+for stream virtuals, and correct array deletion in game-mode parsing. The
+previous duplicate stream-section and mismatched-delete diagnostics are absent
+from the resulting links; other warnings and the audio stub remain.
+
+**Runtime evidence:** SDLPoP rendered its intro and a diagnostic Level 1; Neverball
+rendered its title and Level 01 3D start scene. Both returned guest exit code 0
+in a separate, muted, stopped-source lab. Sixteen host regression tests and a
+21-check stream diagnostic in the AmigaOS guest passed. No full game release.
+Native name typing in Neverball remained empty on the recorded existing SDL2
+runtime; the on-screen keyboard was a workaround, not a text-input pass.
+
+[Follow-up results, screenshots, hashes and remaining gates](evidence/open2-20261012-followup/README.md).
+
 ## 12 October 2026 - Open2 application rebuilds
 
 **Current addition to the older snapshot below:** OpenJazz, Chocolate Doom,
