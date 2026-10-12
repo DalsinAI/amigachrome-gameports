@@ -1,0 +1,40 @@
+    draw_text_center(275, "FIRE OR UP TO ACCELERATE", COL_WHITE, 1);
+    draw_text_center(299, "PRESS FIRE OR RETURN", COL_YELLOW, 2);
+    snprintf(platform, sizeof(platform), "RTG %ux%u  %s  AHI %s",
+             platform_info.screen_width, platform_info.screen_height,
+             platform_info.opengfx ? "OPEN GFX" : "CHUNKY",
+             of_audio_available() ? "ON" : "OFF");
+    draw_text_center(337, platform, COL_GREY, 1);
+}
+
+static void draw_finish(void)
+{
+    char line[64];
+    fill_rect(80, 64, GAME_W - 160, 170, COL_PANEL);
+    fill_rect(84, 68, GAME_W - 168, 162, COL_PANEL2);
+    draw_text_center(84, "CHEQUERED FLAG", COL_WHITE, 3);
+    snprintf(line, sizeof(line), "FINISHED P%d", finish_place);
+    draw_text_center(126, line, finish_place <= 3 ? COL_YELLOW : COL_CYAN, 3);
+    format_time(line, sizeof(line), race_elapsed_ms);
+    draw_text_center(166, line, COL_WHITE, 2);
+    if (best_lap_ms) {
+        char time_text[24];
+        format_time(time_text, sizeof(time_text), best_lap_ms);
+        snprintf(line, sizeof(line), "BEST LAP %s", time_text);
+        draw_text_center(197, line, COL_GREEN, 1);
+    }
+    draw_text_center(215, "PRESS FIRE", COL_GREY, 1);
+}
+
+static void render_frame(void)
+{
+    int base;
+    frame_surface = acgame_platform_begin_indexed_frame();
+    if (!frame_surface)
+        return;
+    set_palette();
+    memset(frame_surface->pixels, COL_BLACK, frame_surface->pitch * frame_surface->height);
+    base = build_projection();
+    draw_sky(track[base].curve * 20);
+    draw_road();
+    draw_trackside();

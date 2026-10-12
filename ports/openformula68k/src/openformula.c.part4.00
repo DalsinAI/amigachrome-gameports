@@ -1,0 +1,40 @@
+    if (old_position != player_position)
+        race_elapsed_ms += 1000 / FRAME_HZ;
+    update_rank();
+    of_audio_set_engine(current_rpm(), throttle ? 255U : 32U,
+                        (unsigned)player_speed, steering * 22000);
+}
+
+static void update_game(const acgame_input_state *input)
+{
+    ++game_frame;
+    if (game_state == STATE_TITLE) {
+        title_scroll += 150 / FRAME_HZ;
+        if (title_scroll >= track_length)
+            title_scroll -= track_length;
+        player_position = title_scroll;
+        player_speed = 7300;
+        player_lane_q16 = 0;
+        of_audio_set_engine(7600, 90, 7300, 0);
+        if (input->key[ACGAME_KEY_START] || input->key[ACGAME_KEY_FIRE1] || input->mouse_buttons)
+            reset_race();
+        return;
+    }
+
+    if (game_state == STATE_COUNTDOWN) {
+        int previous = countdown_frames;
+        --countdown_frames;
+        if (countdown_frames < 0) {
+            game_state = STATE_RACE;
+            lap_start_ms = (int)acgame_platform_ticks_ms();
+            of_audio_beep(4);
+        } else if (countdown_frames / FRAME_HZ != previous / FRAME_HZ) {
+            of_audio_beep(1);
+        }
+        of_audio_set_engine(4200, input->key[ACGAME_KEY_FIRE1] ? 200U : 40U, 0, 0);
+        return;
+    }
+
+    if (game_state == STATE_RACE) {
+        update_ai();
+        update_player(input);

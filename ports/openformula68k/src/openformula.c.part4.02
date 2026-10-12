@@ -1,0 +1,40 @@
+    draw_text(8, 7, line, COL_WHITE, 1);
+    snprintf(line, sizeof(line), "POS %d/%d", player_rank, MAX_CARS);
+    draw_text(96, 7, line, COL_YELLOW, 1);
+    format_time(time_text, sizeof(time_text), race_elapsed_ms);
+    draw_text(210, 7, time_text, COL_CYAN, 1);
+    snprintf(line, sizeof(line), "%3d KM/H", kmh);
+    draw_text(438, 5, line, COL_WHITE, 2);
+
+    fill_rect(8, GAME_H - 18, 128, 10, COL_PANEL);
+    fill_rect(12, GAME_H - 15, clamp_int(rpm_bar, 0, 120), 4,
+              rpm_bar > 104 ? COL_RED : (rpm_bar > 84 ? COL_ORANGE : COL_GREEN));
+    snprintf(line, sizeof(line), "GEAR %d", gear);
+    draw_text(146, GAME_H - 17, line, COL_WHITE, 1);
+    if (best_lap_ms) {
+        format_time(time_text, sizeof(time_text), best_lap_ms);
+        snprintf(line, sizeof(line), "BEST %s", time_text);
+        draw_text(GAME_W - text_width(line, 1) - 8, GAME_H - 17, line, COL_GREY, 1);
+    }
+}
+
+static void draw_countdown(void)
+{
+    char text[8];
+    int second = countdown_frames / FRAME_HZ;
+    if (second > 0)
+        snprintf(text, sizeof(text), "%d", second);
+    else
+        strcpy(text, "GO!");
+    fill_rect(GAME_W / 2 - 52, 52, 104, 70, COL_PANEL);
+    draw_text_center(66, text, second > 0 ? COL_YELLOW : COL_GREEN, 6);
+}
+
+static void draw_title(void)
+{
+    char platform[80];
+    draw_text_center(36, "OPENFORMULA 68K", COL_WHITE, 4);
+    draw_text_center(73, "GRAND PRIX", COL_YELLOW, 2);
+    fill_rect(104, 104, 432, 2, COL_RED);
+    draw_text_center(118, "BOING RING - 12 CARS - 3 LAPS", COL_CYAN, 1);
+    draw_text_center(260, "CURSORS OR PAD TO STEER", COL_WHITE, 1);

@@ -1,0 +1,39 @@
+        printf("OpenFormula68K: could not open a %s 8-bit display\n",
+               force_rtg > 0 ? "RTG" : (force_rtg < 0 ? "AGA" : "compatible"));
+        return RETURN_FAIL;
+    }
+    if (acgame_platform_get_info(&platform_info) != 0)
+        memset(&platform_info, 0, sizeof(platform_info));
+    if (!no_audio)
+        of_audio_start();
+
+    printf("OpenFormula68K: %ux%u %s, %s, AHI %s\n",
+           platform_info.screen_width, platform_info.screen_height,
+           platform_info.planar ? "planar AGA" : "RTG chunky",
+           platform_info.opengfx ? "OpenGfx accelerated" : "graphics.library",
+           of_audio_available() ? "active" : "unavailable");
+
+    if (auto_start)
+        reset_race();
+
+    start_ms = acgame_platform_ticks_ms();
+    while (running) {
+        acgame_platform_poll(&input);
+        if (input.quit_requested || input.key[ACGAME_KEY_ESCAPE])
+            running = 0;
+        if (SetSignal(0, SIGBREAKF_CTRL_C) & SIGBREAKF_CTRL_C)
+            running = 0;
+        if (demo_seconds > 0 && acgame_platform_ticks_ms() - start_ms >= (uint32_t)demo_seconds * 1000U)
+            running = 0;
+        if (!running)
+            break;
+        update_game(&input);
+        render_frame();
+    }
+
+    of_audio_stop();
+    acgame_platform_shutdown();
+    rc = RETURN_OK;
+    printf("OpenFormula68K: returned RC %d after %d frames\n", rc, game_frame);
+    return rc;
+}

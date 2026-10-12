@@ -1,0 +1,40 @@
+        return;
+    }
+
+    if (game_state == STATE_FINISHED) {
+        player_speed -= 80;
+        if (player_speed < 0) player_speed = 0;
+        player_position += player_speed / FRAME_HZ;
+        if (player_position >= track_length) player_position -= track_length;
+        update_ai();
+        of_audio_set_engine(current_rpm(), 20, (unsigned)player_speed, 0);
+        if (input->key[ACGAME_KEY_START] || input->key[ACGAME_KEY_FIRE1] || input->mouse_buttons)
+            game_state = STATE_TITLE;
+    }
+}
+
+/* ---- HUD and screens -------------------------------------------------- */
+
+static void format_time(char *buffer, size_t size, int milliseconds)
+{
+    int minutes, seconds, millis;
+    if (milliseconds < 0) milliseconds = 0;
+    minutes = milliseconds / 60000;
+    seconds = (milliseconds / 1000) % 60;
+    millis = milliseconds % 1000;
+    snprintf(buffer, size, "%d:%02d.%03d", minutes, seconds, millis);
+}
+
+static void draw_hud(void)
+{
+    char line[64];
+    char time_text[24];
+    int kmh = player_speed * 330 / MAX_SPEED;
+    int gear = current_gear();
+    int lap_display = player_lap + 1;
+    int rpm_bar = (int)(current_rpm() - 4000) * 120 / 8000;
+    if (lap_display > race_laps) lap_display = race_laps;
+
+    fill_rect(0, 0, GAME_W, 22, COL_PANEL);
+    fill_rect(0, 22, GAME_W, 2, COL_PANEL2);
+    snprintf(line, sizeof(line), "LAP %d/%d", lap_display, race_laps);
