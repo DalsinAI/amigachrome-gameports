@@ -1,0 +1,102 @@
+name: Deploy OpenTensor to Instance-32
+
+on:
+  push:
+    branches:
+      - deploy/opentensor-instance32-20261012
+    paths:
+      - .github/workflows/deploy-opentensor-instance32.yml
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-opentensor-instance32
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/openamigartg
+          ref: demo/opentensor-first-light-20261012
+          path: source
+          clean: true
+          fetch-depth: 1
+
+      - name: Build OpenTensor 0.2.0
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          OLD_STOVE="$HOME/AmigaChrome/stoves/os32" \
+            sh source/demos/opentensor/build.sh "$GITHUB_WORKSPACE/build/opentensor"
+          test -s build/opentensor/package/OpenTensor/OpenTensor
+          sha256sum -c build/opentensor/SHA256SUMS
+
+      - name: Place the drawer on Instance-32 DH1
+        shell: bash
+        run: |
+          set -euxo pipefail
+          INSTANCE="$HOME/AmigaChromeInstances/Instance-32"
+          DH1="$INSTANCE/devices/harddisks/DH1"
+          PACKAGE="$GITHUB_WORKSPACE/build/opentensor/package/OpenTensor"
+          TARGET="$DH1/OpenTensor"
+          STAGING="$DH1/OpenTensor.deploy-${GITHUB_RUN_ID}"
+          BACKUP="$INSTANCE/archive/opentensor-${GITHUB_RUN_ID}"
+          test -d "$DH1"
+          test ! -e "$STAGING"
+          mkdir -p "$BACKUP"
+          cp -a "$PACKAGE" "$STAGING"
+          cat > "$STAGING/Launch" <<'AMIGA'
+          FailAt 21
+          Stack 1000000
+          CD DH1:OpenTensor
+          OpenTensor
+          AMIGA
+          cat > "$STAGING/Launch-ActII" <<'AMIGA'
+          FailAt 21
+          Stack 1000000
+          CD DH1:OpenTensor
+          OpenTensor START 64
+          AMIGA
+          if [ -e "$TARGET" ]; then
+            mv "$TARGET" "$BACKUP/OpenTensor.before"
+          fi
+          mv "$STAGING" "$TARGET"
+          test -s "$TARGET/OpenTensor"
+          find "$TARGET" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort | tee build/opentensor/instance32-files.txt
+          sha256sum "$TARGET/OpenTensor" | tee build/opentensor/instance32-sha256.txt
+
+      - name: Verify the drawer through Cradle MCP
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import json, sys
+          from pathlib import Path
+          app = Path.home() / "AmigaChrome"
+          sys.path.insert(0, str(app / "scripts"))
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          result = tools.amiga_run("32", 'List DH1:OpenTensor LFORMAT="%N %L bytes"', timeout=20)
+          print(json.dumps(result, indent=2, default=str))
+          if not result.get("finished") or "OpenTensor" not in result.get("output", ""):
+              raise SystemExit("DH1:OpenTensor was not visible from AmigaOS")
+          Path("build/opentensor/amiga-list.json").write_text(json.dumps(result, indent=2, default=str) + "\n")
+          PY
+
+      - name: Upload deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenTensor-Instance32-${{ github.run_id }}
+          path: |
+            build/opentensor/OpenTensor-Beyond-First-Light-0.2.0.zip
+            build/opentensor/instance32-files.txt
+            build/opentensor/instance32-sha256.txt
+            build/opentensor/amiga-list.json
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 0
