@@ -1,0 +1,236 @@
+name: Discover 2026 Free Amiga Games
+
+on:
+  push:
+    branches:
+      - research/free-amiga-games-20261012
+    paths:
+      - .github/workflows/discover-free-amiga-games.yml
+  workflow_dispatch:
+
+jobs:
+  discover:
+    runs-on: self-hosted
+    timeout-minutes: 30
+    steps:
+      - name: Prepare discovery environment
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 -m venv "$RUNNER_TEMP/amiga-game-discovery"
+          "$RUNNER_TEMP/amiga-game-discovery/bin/pip" install --quiet requests beautifulsoup4 yt-dlp
+
+      - name: Discover posts and outbound game links
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p discovery
+          "$RUNNER_TEMP/amiga-game-discovery/bin/python" - <<'PY'
+          from __future__ import annotations
+
+          import html
+          import json
+          import re
+          import subprocess
+          import sys
+          import time
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          import requests
+          from bs4 import BeautifulSoup
+
+          OUT = Path("discovery")
+          START = "2026-01-01T00:00:00"
+          END = "2026-10-13T00:00:00"
+          UA = {"User-Agent": "AmigaChrome-free-game-inventory/1.0 (+research; contact via github.com/DalsinAI)"}
+          session = requests.Session()
+          session.headers.update(UA)
+
+          GAME_WORDS = re.compile(
+              r"\b(game|games|juego|juegos|videojuego|videojuegos|shoot|platform|arcade|adventure|"
+              r"aventura|remake|port|demo|beta|prototype|racing|sports|strategy|puzzle|shooter)\b",
+              re.I,
+          )
+          FREE_WORDS = re.compile(
+              r"\b(free|gratis|gratuito|download|descarga|name[- ]your[- ]own[- ]price|pay what you want|"
+              r"itch\.io|aminet|github|adf|lha|whdload)\b",
+              re.I,
+          )
+          AMIGA_WORDS = re.compile(r"\b(amiga|a500|a600|a1200|aga|ocs|ecs|cd32|68k|68000|68020|68030|68040|68060)\b", re.I)
+          DOWNLOAD_HOSTS = {
+              "itch.io", "www.itch.io", "aminet.net", "www.aminet.net", "github.com",
+              "www.github.com", "drive.google.com", "mega.nz", "www.dropbox.com",
+              "archive.org", "www.nightshift.cx", "amiga68k.de", "www.amiga68k.de",
+          }
+
+          def clean_text(value: str) -> str:
+              return " ".join(BeautifulSoup(html.unescape(value or ""), "html.parser").get_text(" ").split())
+
+          def fetch_wp(site: str, label: str):
+              records = []
+              page = 1
+              while True:
+                  url = f"{site.rstrip('/')}/wp-json/wp/v2/posts"
+                  params = {
+                      "after": START,
+                      "before": END,
+                      "per_page": 100,
+                      "page": page,
+                      "orderby": "date",
+                      "order": "desc",
+                      "_fields": "date,link,title,content,excerpt",
+                  }
+                  r = session.get(url, params=params, timeout=30)
+                  if r.status_code == 400 and page > 1:
+                      break
+                  r.raise_for_status()
+                  batch = r.json()
+                  if not batch:
+                      break
+                  for post in batch:
+                      body_html = post.get("content", {}).get("rendered", "")
+                      excerpt_html = post.get("excerpt", {}).get("rendered", "")
+                      soup = BeautifulSoup(body_html, "html.parser")
+                      links = []
+                      for a in soup.select("a[href]"):
+                          href = a.get("href", "").strip()
+                          if not href.startswith(("http://", "https://")):
+                              continue
+                          links.append({"url": href, "text": " ".join(a.get_text(" ").split())})
+                      title = clean_text(post.get("title", {}).get("rendered", ""))
+                      body = clean_text(body_html)
+                      excerpt = clean_text(excerpt_html)
+                      combined = f"{title} {body}"
+                      records.append({
+                          "source": label,
+                          "date": post.get("date", "")[:10],
+                          "title": title,
+                          "article": post.get("link"),
+                          "excerpt": excerpt,
+                          "amiga": bool(AMIGA_WORDS.search(combined)),
+                          "gameish": bool(GAME_WORDS.search(combined)),
+                          "freeish": bool(FREE_WORDS.search(combined)),
+                          "links": links,
+                          "text": body,
+                      })
+                  total_pages = int(r.headers.get("X-WP-TotalPages", page))
+                  if page >= total_pages:
+                      break
+                  page += 1
+                  time.sleep(0.2)
+              return records
+
+          sources = []
+          errors = []
+          for site, label in [
+              ("https://www.generationamiga.com", "Generation Amiga"),
+              ("https://amigatronics.com", "Amigatronics"),
+              ("https://amigatronics.wordpress.com", "Amigatronics legacy"),
+          ]:
+              try:
+                  got = fetch_wp(site, label)
+                  sources.extend(got)
+                  print(label, len(got))
+              except Exception as exc:
+                  errors.append({"source": label, "site": site, "error": repr(exc)})
+                  print(label, "ERROR", repr(exc), file=sys.stderr)
+
+          # Deduplicate Amigatronics aliases by article path/title.
+          dedup = {}
+          for row in sources:
+              key = (row["title"].casefold(), row["date"])
+              if key not in dedup or len(row["text"]) > len(dedup[key]["text"]):
+                  dedup[key] = row
+          sources = sorted(dedup.values(), key=lambda r: (r["date"], r["source"], r["title"]), reverse=True)
+
+          candidates = []
+          for row in sources:
+              if not (row["amiga"] and row["gameish"]):
+                  continue
+              outbound = []
+              for link in row["links"]:
+                  host = urlparse(link["url"]).netloc.lower()
+                  if host in DOWNLOAD_HOSTS or host.endswith(".itch.io") or "download" in link["text"].lower() or "descarg" in link["text"].lower():
+                      outbound.append(link)
+              if row["freeish"] or outbound:
+                  item = dict(row)
+                  item["downloadish_links"] = outbound
+                  candidates.append(item)
+
+          # Try to resolve the user's third source name. yt-dlp gives channel/title
+          # metadata without downloading any media.
+          ytdlp = Path(sys.prefix) / "bin" / "yt-dlp"
+          searches = []
+          for query in (
+              'ytsearch20:"Amiga Retro Gaming" new Amiga games 2026',
+              'ytsearch20:"free Amiga games" 2026',
+              'ytsearch20:"new Amiga games" 2026',
+          ):
+              try:
+                  proc = subprocess.run(
+                      [str(ytdlp), "--flat-playlist", "--dump-single-json", query],
+                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                      timeout=180, check=False,
+                  )
+                  payload = json.loads(proc.stdout) if proc.stdout.strip() else {}
+                  for entry in payload.get("entries") or []:
+                      searches.append({
+                          "query": query,
+                          "id": entry.get("id"),
+                          "title": entry.get("title"),
+                          "channel": entry.get("channel") or entry.get("uploader"),
+                          "channel_url": entry.get("channel_url") or entry.get("uploader_url"),
+                          "url": entry.get("url") or entry.get("webpage_url"),
+                      })
+              except Exception as exc:
+                  errors.append({"source": "YouTube search", "query": query, "error": repr(exc)})
+
+          (OUT / "all-posts.json").write_text(json.dumps(sources, indent=2, ensure_ascii=False), encoding="utf-8")
+          (OUT / "candidate-posts.json").write_text(json.dumps(candidates, indent=2, ensure_ascii=False), encoding="utf-8")
+          (OUT / "youtube-search.json").write_text(json.dumps(searches, indent=2, ensure_ascii=False), encoding="utf-8")
+          (OUT / "errors.json").write_text(json.dumps(errors, indent=2, ensure_ascii=False), encoding="utf-8")
+
+          lines = [
+              "# 2026 Free / Downloadable Amiga Game Coverage Discovery",
+              "",
+              f"Posts fetched: {len(sources)}",
+              f"Candidate posts: {len(candidates)}",
+              "",
+          ]
+          for row in candidates:
+              lines += [
+                  f"## {row['title']}",
+                  f"- Source: {row['source']}",
+                  f"- Date: {row['date']}",
+                  f"- Article: {row['article']}",
+              ]
+              if row["downloadish_links"]:
+                  lines.append("- Candidate links:")
+                  for link in row["downloadish_links"]:
+                      lines.append(f"  - {link['text'] or '(no label)'}: {link['url']}")
+              lines.append("")
+          (OUT / "DISCOVERY.md").write_text("\n".join(lines), encoding="utf-8")
+          PY
+
+      - name: Summarise results
+        shell: bash
+        run: |
+          set -euxo pipefail
+          wc -c discovery/*
+          sed -n '1,240p' discovery/DISCOVERY.md
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          rows = json.loads(Path('discovery/youtube-search.json').read_text())
+          for r in rows[:60]:
+              print(r)
+          PY
+
+      - name: Upload discovery inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: free-amiga-games-discovery-${{ github.run_id }}
+          path: discovery/
+          retention-days: 30
+          compression-level: 6
