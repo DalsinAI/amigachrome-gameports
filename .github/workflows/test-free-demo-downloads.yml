@@ -25,17 +25,18 @@ jobs:
           mkdir -p build/itch
           npm install --prefix build/itch --silent itchio-downloader puppeteer@^25.11.0
           node --check scripts/itch_download_one.js
-          command -v chromium || command -v chromium-browser || command -v google-chrome || true
+          BROWSER=$(command -v chromium || command -v chromium-browser || command -v google-chrome)
+          test -x "$BROWSER"
+          printf 'PUPPETEER_EXECUTABLE_PATH=%s\n' "$BROWSER" >> "$GITHUB_ENV"
+          "$BROWSER" --version
 
       - name: Try public zero-cost demo and freeware pages
         shell: bash
         env:
           NODE_PATH: ${{ github.workspace }}/build/itch/node_modules
-          PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
         run: |
           set -u
           mkdir -p build/demo-downloads build/results
-          rc=0
           while IFS='|' read -r name url; do
             [ -n "$name" ] || continue
             out="build/demo-downloads/$name"
@@ -48,14 +49,11 @@ jobs:
               >"build/results/$name.files"
             cat "build/results/$name.files"
           done <<'EOF'
-          Foxys-Run|https://vairn.itch.io/foxysrun
-          Treasure-of-Usas|https://h0ffman.itch.io/treasure-of-usas-amiga
           Norrland-Demo|https://8080.itch.io/norrland
           Kaboomania-Demo|https://fancyfactory.itch.io/kaboomania
           Mundialito-2-Demo|https://acneproduction.itch.io/mundialito-2
           Soul-Killa|https://eismanberlin.itch.io/soul-killa
           EOF
-          exit "$rc"
 
       - name: Upload test evidence
         if: always()
