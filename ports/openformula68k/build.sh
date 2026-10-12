@@ -18,7 +18,7 @@ PACKAGE="OpenFormula68K-$VERSION.zip"
 [ -x "$AR" ] || { echo "OpenFormula68K: missing archiver $AR" >&2; exit 2; }
 
 rm -rf "$OUT"
-mkdir -p "$OUT/obj" "$OUT/package/OpenFormula68K" "$OUT/sdk-compat"
+mkdir -p "$OUT/obj" "$OUT/package/OpenFormula68K" "$OUT/sdk-compat" "$OUT/work"
 
 EXTRA_INC="$OUT/sdk-compat"
 if [ ! -f "$SYS/include/devices/ahi.h" ]; then
@@ -89,7 +89,15 @@ compile "$ROOT/port-layer/acgame/src/c2p_ref.c" "$OUT/obj/c2p_ref.o"
 compile "$ROOT/port-layer/acgame/src/ham8.c" "$OUT/obj/ham8.o"
 compile "$ROOT/port-layer/acgame/src/platform_aros_aga.c" "$OUT/obj/platform_aros_aga.o"
 compile "$HERE/src/audio_ahi.c" "$OUT/obj/audio_ahi.o"
-compile "$HERE/src/openformula.c" "$OUT/obj/openformula.o"
+GAME_SOURCE="$OUT/work/openformula.c"
+cat "$HERE/src/openformula.c.part1" \
+    "$HERE/src/openformula.c.part2" \
+    "$HERE/src/openformula.c.part3" \
+    "$HERE/src/openformula.c.part4" > "$GAME_SOURCE"
+test -s "$GAME_SOURCE"
+grep -F 'OpenFormula 68K' "$GAME_SOURCE" >/dev/null
+grep -F 'returned RC' "$GAME_SOURCE" >/dev/null
+compile "$GAME_SOURCE" "$OUT/obj/openformula.o"
 
 "$AR" rcs "$OUT/obj/libacgame.a" \
     "$OUT/obj/c2p_ref.o" "$OUT/obj/ham8.o" "$OUT/obj/platform_aros_aga.o"
