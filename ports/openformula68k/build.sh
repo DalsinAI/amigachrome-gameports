@@ -27,12 +27,52 @@ if [ ! -f "$SYS/include/devices/ahi.h" ]; then
     cp "$OLD_SYS/include/devices/ahi.h" "$EXTRA_INC/devices/"
 fi
 if [ ! -f "$SYS/include/libraries/lowlevel.h" ]; then
-    [ -f "$OLD_SYS/include/libraries/lowlevel.h" ] || { echo "OpenFormula68K: lowlevel headers are missing" >&2; exit 3; }
     mkdir -p "$EXTRA_INC/libraries" "$EXTRA_INC/proto" "$EXTRA_INC/inline" "$EXTRA_INC/clib"
-    cp "$OLD_SYS/include/libraries/lowlevel.h" "$EXTRA_INC/libraries/"
-    cp "$OLD_SYS/include/proto/lowlevel.h" "$EXTRA_INC/proto/"
-    [ ! -f "$OLD_SYS/include/inline/lowlevel.h" ] || cp "$OLD_SYS/include/inline/lowlevel.h" "$EXTRA_INC/inline/"
-    [ ! -f "$OLD_SYS/include/clib/lowlevel_protos.h" ] || cp "$OLD_SYS/include/clib/lowlevel_protos.h" "$EXTRA_INC/clib/"
+    if [ -f "$OLD_SYS/include/libraries/lowlevel.h" ] && [ -f "$OLD_SYS/include/proto/lowlevel.h" ]; then
+        cp "$OLD_SYS/include/libraries/lowlevel.h" "$EXTRA_INC/libraries/"
+        cp "$OLD_SYS/include/proto/lowlevel.h" "$EXTRA_INC/proto/"
+        [ ! -f "$OLD_SYS/include/inline/lowlevel.h" ] || cp "$OLD_SYS/include/inline/lowlevel.h" "$EXTRA_INC/inline/"
+        [ ! -f "$OLD_SYS/include/clib/lowlevel_protos.h" ] || cp "$OLD_SYS/include/clib/lowlevel_protos.h" "$EXTRA_INC/clib/"
+    else
+        # The current GCC16 stove intentionally carries only the headers needed
+        # by the open stack. ACGame's lowlevel.library pad fallback is optional;
+        # OpenInput and the keyboard remain fully available. Supply a compile-
+        # time no-device shim rather than making the whole RTG game depend on an
+        # unrelated legacy SDK header.
+        cat > "$EXTRA_INC/libraries/lowlevel.h" <<'LOWLEVEL'
+#ifndef OPENFORMULA_LOWLEVEL_COMPAT_H
+#define OPENFORMULA_LOWLEVEL_COMPAT_H
+#include <exec/types.h>
+#define JP_TYPE_MASK       0xf0000000UL
+#define JP_TYPE_NOTAVAIL   0x00000000UL
+#define JP_TYPE_MOUSE      0x10000000UL
+#define JP_TYPE_JOYSTK     0x20000000UL
+#define JP_TYPE_GAMECTLR   0x30000000UL
+#define JP_TYPE_UNKNOWN    0xf0000000UL
+#define JPF_JOY_UP         0x00000001UL
+#define JPF_JOY_DOWN       0x00000002UL
+#define JPF_JOY_LEFT       0x00000004UL
+#define JPF_JOY_RIGHT      0x00000008UL
+#define JPF_BUTTON_RED     0x00000010UL
+#define JPF_BUTTON_BLUE    0x00000020UL
+#define JPF_BUTTON_GREEN   0x00000040UL
+#define JPF_BUTTON_YELLOW  0x00000080UL
+#define JPF_BUTTON_PLAY    0x00000100UL
+#define JPF_BUTTON_REVERSE 0x00000200UL
+#define JPF_BUTTON_FORWARD 0x00000400UL
+#endif
+LOWLEVEL
+        cat > "$EXTRA_INC/proto/lowlevel.h" <<'LOWLEVELPROTO'
+#ifndef OPENFORMULA_PROTO_LOWLEVEL_COMPAT_H
+#define OPENFORMULA_PROTO_LOWLEVEL_COMPAT_H
+#include <exec/types.h>
+#include <exec/libraries.h>
+#include <libraries/lowlevel.h>
+extern struct Library *LowLevelBase;
+#define ReadJoyPort(unit) ((void)(unit), (ULONG)JP_TYPE_NOTAVAIL)
+#endif
+LOWLEVELPROTO
+    fi
 fi
 
 CFLAGS="-std=gnu99 -O2 -g -m68040 -m68881 -fomit-frame-pointer -fno-delete-null-pointer-checks -noixemul -Wall -Wextra"
