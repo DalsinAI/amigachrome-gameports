@@ -1,0 +1,282 @@
+name: Repair Free Amiga Games on Instance-32
+
+on:
+  push:
+    branches:
+      - deploy/free-amiga-games-instance32-20261012
+    paths:
+      - .github/workflows/repair-free-amiga-games-instance32.yml
+  workflow_dispatch:
+
+concurrency:
+  group: repair-free-amiga-games-instance32
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: self-hosted
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repair tools
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Prepare Python and itch download tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 -m venv build/repair-venv
+          build/repair-venv/bin/pip install --quiet requests beautifulsoup4 lhafile py7zr
+          mkdir -p build/itch
+          npm install --prefix build/itch --silent itchio-downloader puppeteer@^25.11.0
+          python3 -m py_compile scripts/collect_free_amiga_games.py scripts/repair_free_amiga_games_collection.py
+          node --check scripts/itch_download_one.js
+          BROWSER=$(command -v chromium || command -v chromium-browser || command -v google-chrome)
+          test -x "$BROWSER"
+          printf 'PUPPETEER_EXECUTABLE_PATH=%s\n' "$BROWSER" >> "$GITHUB_ENV"
+          printf 'NODE_PATH=%s\n' "$GITHUB_WORKSPACE/build/itch/node_modules" >> "$GITHUB_ENV"
+
+      - name: Download the three verified public demo corrections
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p build/incremental build/incremental-logs
+
+          fetch_one() {
+            name="$1"
+            url="$2"
+            out="build/incremental/$name"
+            mkdir -p "$out"
+            node scripts/itch_download_one.js "$url" "$out" "$name" \
+              >"build/incremental-logs/$name.log" 2>&1
+            cat "build/incremental-logs/$name.log"
+          }
+
+          fetch_one Foxys-Run https://vairn.itch.io/foxysrun
+          fetch_one Norrland-Demo https://8080.itch.io/norrland
+          fetch_one Mundialito-2-Demo https://acneproduction.itch.io/mundialito-2
+
+          build/repair-venv/bin/python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('build/incremental').resolve()
+          specs = [
+              {
+                  'title': "Foxy's Run",
+                  'folder': 'Foxys-Run',
+                  'url': 'https://vairn.itch.io/foxysrun',
+                  'sources': ['2026 free-game roundup cross-check'],
+                  'category': 'demo',
+                  'extension': '.adf',
+                  'note': 'Public name-your-own-price development build; publisher download is a raw 880 KiB ADF.',
+              },
+              {
+                  'title': 'Norrland',
+                  'folder': 'Norrland-Demo',
+                  'url': 'https://8080.itch.io/norrland',
+                  'sources': ['Generation Amiga'],
+                  'category': 'demo',
+                  'extension': '.lha',
+                  'note': "The full game is paid; this is the publisher's explicitly free Amiga demo only.",
+              },
+              {
+                  'title': 'Mundialito 2',
+                  'folder': 'Mundialito-2-Demo',
+                  'url': 'https://acneproduction.itch.io/mundialito-2',
+                  'sources': ['Generation Amiga'],
+                  'category': 'demo',
+                  'extension': '.adf',
+                  'note': "The full game is paid; this is the publisher's explicitly free ADF demo only.",
+              },
+          ]
+          entries = []
+          for spec in specs:
+              folder = root / spec.pop('folder')
+              candidates = [p for p in folder.iterdir() if p.is_file() and not p.name.endswith('-metadata.json')]
+              if len(candidates) != 1:
+                  raise SystemExit(f'expected one download in {folder}, found {candidates}')
+              metadata = next(folder.glob('*-metadata.json'), None)
+              item = dict(spec)
+              item['file'] = str(candidates[0])
+              item['metadata'] = str(metadata) if metadata else None
+              item['message'] = "Downloaded from the publisher's public zero-cost page."
+              entries.append(item)
+          Path('build/incremental-deploy.json').write_text(
+              json.dumps({'schema': 1, 'entries': entries}, indent=2) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(entries, indent=2))
+          PY
+
+      - name: Fetch current Cradle MCP tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          SRC="$GITHUB_WORKSPACE/build/amigachrome-tools-${GITHUB_RUN_ID}"
+          env -u GH_TOKEN -u GITHUB_TOKEN gh repo clone DalsinAI/amigachrome "$SRC" -- --depth 1 --branch main
+          test -s "$SRC/scripts/cradle_mcp.py"
+          printf 'AMIGACHROME_SOURCE=%s\n' "$SRC" >> "$GITHUB_ENV"
+
+      - name: Preserve Instance-32 state and stop it
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p build/repair-evidence
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          source = Path(os.environ['AMIGACHROME_SOURCE'])
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac, cradle_mcp
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          info = tools._match('32')
+          was_running = bool(info.get('running'))
+          Path('build/repair-evidence/was-running.txt').write_text(('1' if was_running else '0') + '\n')
+          Path('build/repair-evidence/instance-before.json').write_text(json.dumps(info, indent=2, default=str) + '\n')
+          if was_running:
+              result = tools.stop_instance('32')
+              Path('build/repair-evidence/stop.json').write_text(json.dumps(result, indent=2, default=str) + '\n')
+              print(json.dumps(result, indent=2, default=str))
+          else:
+              print(json.dumps({'alreadyStopped': True, 'instance': ac.instance_label(info)}, indent=2))
+          PY
+
+      - name: Back up and repair the live collection
+        shell: bash
+        run: |
+          set -euxo pipefail
+          INSTANCE="$HOME/AmigaChromeInstances/Instance-32"
+          ROOT="$INSTANCE/devices/harddisks/DH1/New Amiga Games"
+          BACKUP="$INSTANCE/archive/free-amiga-games-repair-${GITHUB_RUN_ID}"
+          test -s "$ROOT/CATALOGUE.json"
+          mkdir -p "$BACKUP"
+          cp -a "$ROOT" "$BACKUP/New Amiga Games.before-repair"
+          printf '%s\n' "$BACKUP" > build/repair-evidence/backup-path.txt
+
+          if ! build/repair-venv/bin/python scripts/repair_free_amiga_games_collection.py \
+              --root "$ROOT" \
+              --backup "$BACKUP/changed-items" \
+              --collector scripts/collect_free_amiga_games.py \
+              --incremental build/incremental-deploy.json \
+              | tee build/repair-evidence/repair.log; then
+            mv "$ROOT" "$BACKUP/New Amiga Games.failed-repair"
+            mv "$BACKUP/New Amiga Games.before-repair" "$ROOT"
+            exit 1
+          fi
+
+          build/repair-venv/bin/python - "$ROOT" <<'PY'
+          import json, sys
+          from pathlib import Path
+          root = Path(sys.argv[1])
+          data = json.loads((root / 'CATALOGUE.json').read_text())
+          assert len(data['entries']) == 116, len(data['entries'])
+          assert data['counts'].get('downloaded') == 93, data['counts']
+          for title in ("Foxy's Run", 'Norrland', 'Mundialito 2'):
+              row = next(r for r in data['entries'] if r['title'] == title)
+              assert row['status'] == 'downloaded', row
+              assert (root / row['archive']).is_file(), row
+          false_zips = []
+          for path in (root / '90 Original Archives').rglob('*.zip'):
+              head = path.read_bytes()[:4]
+              if path.stat().st_size in (901120, 1802240) and not head.startswith(b'PK\x03\x04'):
+                  false_zips.append(str(path))
+          assert not false_zips, false_zips
+          print(json.dumps({'counts': data['counts'], 'entries': len(data['entries'])}, indent=2))
+          PY
+
+          find "$ROOT" -type f | wc -l | tee build/repair-evidence/file-count.txt
+          du -sh "$ROOT" | tee build/repair-evidence/size.txt
+          sha256sum "$ROOT/CATALOGUE.txt" "$ROOT/CATALOGUE.json" "$ROOT/SUMMARY.txt" \
+            > build/repair-evidence/catalogue-sha256.txt
+
+      - name: Verify the repaired collection through AmigaDOS
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import json, os, sys, time
+          from pathlib import Path
+          source = Path(os.environ['AMIGACHROME_SOURCE'])
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac, cradle_mcp
+          evidence = Path('build/repair-evidence')
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          originally_running = evidence.joinpath('was-running.txt').read_text().strip() == '1'
+          started_here = False
+          try:
+              if not tools._match('32').get('running'):
+                  result = tools.start_instance('32')
+                  evidence.joinpath('verify-start.json').write_text(json.dumps(result, indent=2, default=str) + '\n')
+                  started_here = True
+              for _ in range(75):
+                  try:
+                      ready = tools.amiga_run('32', 'Version\nAvail', timeout=10)
+                      if ready.get('finished') and 'Kickstart' in ready.get('output', ''):
+                          break
+                  except Exception:
+                      pass
+                  time.sleep(2)
+              else:
+                  raise SystemExit('Instance-32 did not become ready')
+
+              script = '\n'.join([
+                  'Type "DH1:New Amiga Games/SUMMARY.txt"',
+                  'List "DH1:New Amiga Games/02 Demos and Betas/Foxy\'s Run/#?" LFORMAT="%N %L"',
+                  'List "DH1:New Amiga Games/02 Demos and Betas/Norrland/#?" LFORMAT="%N %L"',
+                  'List "DH1:New Amiga Games/02 Demos and Betas/Mundialito 2/#?" LFORMAT="%N %L"',
+              ])
+              listing = tools.amiga_run('32', script, timeout=45)
+              output = listing.get('output', '')
+              if not listing.get('finished'):
+                  raise SystemExit('AmigaDOS repair verification did not finish')
+              for expected in ('Downloaded packages: 93', 'Foxys Run.adf', 'Norrland.lha', 'Mundialito 2.adf'):
+                  if expected not in output:
+                      raise SystemExit(f'missing repaired item {expected}\n{output}')
+              evidence.joinpath('amiga-verification.json').write_text(json.dumps(listing, indent=2, default=str) + '\n')
+              print(json.dumps(listing, indent=2, default=str))
+          finally:
+              if started_here and not originally_running and tools._match('32').get('running'):
+                  result = tools.stop_instance('32')
+                  evidence.joinpath('verify-stop.json').write_text(json.dumps(result, indent=2, default=str) + '\n')
+                  print(json.dumps(result, indent=2, default=str))
+          PY
+
+      - name: Restore original running state
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          state = Path('build/repair-evidence/was-running.txt')
+          source = Path(os.environ.get('AMIGACHROME_SOURCE', ''))
+          if not state.is_file() or not source.is_dir():
+              raise SystemExit(0)
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac, cradle_mcp
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          should_run = state.read_text().strip() == '1'
+          running = bool(tools._match('32').get('running'))
+          if should_run and not running:
+              print(json.dumps(tools.start_instance('32'), indent=2, default=str))
+          elif not should_run and running:
+              print(json.dumps(tools.stop_instance('32'), indent=2, default=str))
+          else:
+              print(json.dumps({'statePreserved': True, 'running': running}, indent=2))
+          PY
+
+      - name: Upload repair evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Free-Amiga-Games-Repair-${{ github.run_id }}
+          path: |
+            build/incremental-deploy.json
+            build/incremental-logs/
+            build/repair-evidence/
+          if-no-files-found: warn
+          retention-days: 60
+          compression-level: 6
