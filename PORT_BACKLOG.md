@@ -1,5 +1,8 @@
 # Unified Game Port Backlog
 
+
+**[Unified Port Atlas](https://github.com/DalsinAI/amigachrome/tree/main/docs/porting)** — searchable cross-programme game/application catalogue with existing Amiga-port evidence, source/rights assessment and proposed Open-family acceleration or development benefit. This does not replace the local source pins, build notes or qualification gates.
+
 Snapshot date: **9 October 2026**
 
 Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**
