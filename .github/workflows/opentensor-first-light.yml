@@ -1,4 +1,4 @@
-name: OpenTensor First Light Build
+name: OpenTensor Beyond First Light
 
 on:
   push:
@@ -9,14 +9,14 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: opentensor-first-light-build
+  group: opentensor-beyond-first-light
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Build and run OpenTensor Mesa AHI OpenRTG demo
+    name: Build and tour the Mesa AHI OpenRTG demo
     runs-on: self-hosted
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - name: Checkout build harness
         uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
             test -f "$HOME/AmigaChrome/stoves/os32/prefix/m68k-amigaos/include/devices/ahi.h"
           find "$STOVE/prefix" -type f -name libGL.a -print
 
-      - name: Build OpenTensor First Light
+      - name: Build OpenTensor Beyond First Light
         shell: bash
         run: |
           set -euxo pipefail
@@ -59,13 +59,18 @@ jobs:
           set -euxo pipefail
           OUT="$GITHUB_WORKSPACE/build/opentensor"
           BIN="$OUT/package/OpenTensor/OpenTensor"
+          ZIP="$OUT/OpenTensor-Beyond-First-Light-0.2.0.zip"
           test -s "$BIN"
           file "$BIN"
-          strings "$BIN" | grep -F 'OpenTensor: First Light'
+          strings "$BIN" | grep -F 'OpenTensor: Beyond First Light'
+          strings "$BIN" | grep -F 'THE NUMBER BECAME THE TIMECODE'
+          strings "$BIN" | grep -F 'AND IT WAS GIVEN FORM'
+          strings "$BIN" | grep -F 'THE STACK IS OPEN'
           strings "$BIN" | grep -F 'MESA / AHI / OPENRTG'
           strings "$BIN" | grep -F 'OpenTensor: renderer'
           sha256sum -c "$OUT/SHA256SUMS"
-          unzip -l "$OUT/OpenTensor-First-Light-0.1.0.zip"
+          test -s "$ZIP"
+          unzip -l "$ZIP"
           cat "$OUT/package/OpenTensor/BUILD-INFO.txt"
 
       - name: Create an Instance-32 lab and stage OpenTensor
@@ -74,7 +79,7 @@ jobs:
           set -euxo pipefail
           APP="$HOME/AmigaChrome"
           LAB_ROOT="$HOME/AmigaChrome-dev/labs"
-          LAB_NAME="opentensor-${GITHUB_RUN_ID}"
+          LAB_NAME="opentensor-beyond-${GITHUB_RUN_ID}"
           LAB="$LAB_ROOT/$LAB_NAME"
           EVIDENCE="$GITHUB_WORKSPACE/build/opentensor/runtime-evidence"
           mkdir -p "$LAB_ROOT" "$EVIDENCE"
@@ -94,18 +99,34 @@ jobs:
           TARGET="$LAB/devices/harddisks/DH1/OpenTensor"
           mkdir -p "$TARGET"
           cp -a "$GITHUB_WORKSPACE/build/opentensor/package/OpenTensor/." "$TARGET/"
-          cat > "$TARGET/Launch" <<'AMIGA'
-          FailAt 21
-          Stack 1000000
-          CD DH1:OpenTensor
-          Echo "OPENTENSOR: starting" >OpenTensor-run.log
-          OpenTensor SECONDS 18 >>OpenTensor-run.log
-          Echo "OPENTENSOR: returned RC $RC" >>OpenTensor-run.log
-          AMIGA
+          python3 - "$TARGET" <<'PY'
+          from pathlib import Path
+          import sys
+
+          target = Path(sys.argv[1])
+          scenes = [
+              ("timecode", 64, 12),
+              ("streams", 78, 12),
+              ("form", 96, 14),
+              ("breakout", 114, 14),
+              ("beyond", 130, 12),
+              ("stack", 152, 11),
+          ]
+          for name, start, seconds in scenes:
+              text = (
+                  "FailAt 21\n"
+                  "Stack 1000000\n"
+                  "CD DH1:OpenTensor\n"
+                  f'Echo "OPENTENSOR {name}: starting" >OpenTensor-{name}.log\n'
+                  f'OpenTensor START {start} SECONDS {seconds} >>OpenTensor-{name}.log\n'
+                  f'Echo "OPENTENSOR {name}: returned RC $RC" >>OpenTensor-{name}.log\n'
+              )
+              (target / ("Launch-" + name)).write_text(text, encoding="latin-1")
+          PY
           find "$TARGET" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort > "$EVIDENCE/staged-files.txt"
           sha256sum "$TARGET/OpenTensor" > "$EVIDENCE/staged-sha256.txt"
 
-      - name: Run OpenTensor through the Cradle MCP
+      - name: Tour Act II through the Cradle MCP
         shell: bash
         run: |
           set -euxo pipefail
@@ -125,12 +146,24 @@ jobs:
           evidence = Path(evidence_s)
           sys.path.insert(0, app + "/scripts")
           from cradle_mcp_amiga import AmigaTools
+
           tools = AmigaTools(); tools.Error = RuntimeError
           target = "lab:" + name
+          scenes = [
+              ("timecode", 4.0),
+              ("streams", 4.0),
+              ("form", 8.0),
+              ("breakout", 5.0),
+              ("beyond", 5.0),
+              ("stack", 4.0),
+          ]
 
-          print(json.dumps(tools.lab("start", name, who="ChatGPT",
-                                     purpose="OpenTensor Mesa AHI OpenRTG first-light run"), indent=2))
-          for attempt in range(40):
+          print(json.dumps(tools.lab(
+              "start", name, who="ChatGPT",
+              purpose="OpenTensor Beyond First Light scene tour"
+          ), indent=2))
+
+          for attempt in range(50):
               try:
                   result = tools.amiga_run(target, "Version\nAvail", timeout=8)
                   print(json.dumps(result, indent=2))
@@ -142,53 +175,69 @@ jobs:
           else:
               raise SystemExit("OpenTensor lab agent did not become ready")
 
-          result = tools.amiga_run(
-              target,
-              "Run >NIL: <NIL: Execute DH1:OpenTensor/Launch\nWait 2",
-              timeout=15,
-          )
-          print(json.dumps(result, indent=2))
-          time.sleep(6)
-
-          shot = tools.instance_screenshot(target, "rtg", 50)
-          image = shot["_content"][0]
-          running_png = evidence / "opentensor-running.png"
-          running_png.write_bytes(base64.b64decode(image["data"]))
-          print(json.dumps({k: v for k, v in shot.items() if k != "_content"}, indent=2))
-          print("running screenshot bytes", running_png.stat().st_size)
-
-          log = target_dir / "OpenTensor-run.log"
-          for attempt in range(75):
+          for scene, capture_after in scenes:
+              log = target_dir / f"OpenTensor-{scene}.log"
               if log.exists():
-                  text = log.read_text(encoding="latin-1", errors="replace")
-                  if "OPENTENSOR: returned RC" in text:
-                      break
-              time.sleep(1)
-          else:
-              raise SystemExit("OpenTensor timed run did not return")
+                  log.unlink()
+              result = tools.amiga_run(
+                  target,
+                  f"Run >NIL: <NIL: Execute DH1:OpenTensor/Launch-{scene}\nWait 1",
+                  timeout=15,
+              )
+              print(scene, json.dumps(result, indent=2))
+              time.sleep(capture_after)
 
-          (evidence / "OpenTensor-run.log").write_text(text, encoding="utf-8")
+              shot = tools.instance_screenshot(target, "rtg", 50)
+              image = shot["_content"][0]
+              png = evidence / f"opentensor-{scene}.png"
+              png.write_bytes(base64.b64decode(image["data"]))
+              print(scene, json.dumps({k: v for k, v in shot.items() if k != "_content"}, indent=2))
+              print(scene, "screenshot bytes", png.stat().st_size)
+
+              text = ""
+              for attempt in range(75):
+                  if log.exists():
+                      text = log.read_text(encoding="latin-1", errors="replace")
+                      if f"OPENTENSOR {scene}: returned RC" in text:
+                          break
+                  time.sleep(1)
+              else:
+                  raise SystemExit(f"OpenTensor {scene} run did not return")
+              (evidence / f"OpenTensor-{scene}.log").write_text(text, encoding="utf-8")
+              print(text)
+              time.sleep(1)
+
           final = tools.instance_screenshot(target, "rtg", 50)
           final_image = final["_content"][0]
-          (evidence / "opentensor-after-run.png").write_bytes(base64.b64decode(final_image["data"]))
-          print(text)
+          (evidence / "opentensor-after-tour.png").write_bytes(base64.b64decode(final_image["data"]))
           PY
 
-      - name: Verify OpenTensor first light
+      - name: Verify the Beyond First Light tour
         shell: bash
         run: |
           set -euxo pipefail
           EVIDENCE="$GITHUB_WORKSPACE/build/opentensor/runtime-evidence"
-          test -s "$EVIDENCE/opentensor-running.png"
-          test -s "$EVIDENCE/opentensor-after-run.png"
-          test "$(stat -c %s "$EVIDENCE/opentensor-running.png")" -gt 5000
-          file "$EVIDENCE/opentensor-running.png" "$EVIDENCE/opentensor-after-run.png"
-          cat "$EVIDENCE/OpenTensor-run.log"
-          grep -F 'OpenTensor: renderer ' "$EVIDENCE/OpenTensor-run.log"
-          grep -F 'driver virgl' "$EVIDENCE/OpenTensor-run.log"
-          grep -F 'AHI 44.1 kHz stereo' "$EVIDENCE/OpenTensor-run.log"
-          grep -F 'AHI underruns' "$EVIDENCE/OpenTensor-run.log"
-          grep -F 'OPENTENSOR: returned RC 0' "$EVIDENCE/OpenTensor-run.log"
+          for scene in timecode streams form breakout beyond stack; do
+            PNG="$EVIDENCE/opentensor-$scene.png"
+            LOG="$EVIDENCE/OpenTensor-$scene.log"
+            test -s "$PNG"
+            test -s "$LOG"
+            test "$(stat -c %s "$PNG")" -gt 5000
+            file "$PNG"
+            cat "$LOG"
+            grep -F 'OpenTensor: renderer ' "$LOG"
+            grep -F 'driver virgl' "$LOG"
+            grep -F 'AHI 44.1 kHz stereo' "$LOG"
+            grep -F "OPENTENSOR $scene: returned RC 0" "$LOG"
+          done
+          test -s "$EVIDENCE/opentensor-after-tour.png"
+          file "$EVIDENCE/opentensor-after-tour.png"
+          if grep -hE 'OpenTensor: .* [1-9][0-9]* AHI underruns' "$EVIDENCE"/OpenTensor-*.log; then
+            echo 'OpenTensor produced an AHI underrun during the Act II tour.' >&2
+            exit 1
+          fi
+          sha256sum "$EVIDENCE"/*.png "$EVIDENCE"/OpenTensor-*.log \
+            > "$EVIDENCE/EVIDENCE-SHA256SUMS"
 
       - name: Archive the disposable lab
         if: always()
@@ -217,9 +266,9 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: OpenTensor-First-Light-0.1.0-${{ github.run_id }}
+          name: OpenTensor-Beyond-First-Light-0.2.0-${{ github.run_id }}
           path: |
-            build/opentensor/OpenTensor-First-Light-0.1.0.zip
+            build/opentensor/OpenTensor-Beyond-First-Light-0.2.0.zip
             build/opentensor/SHA256SUMS
             build/opentensor/package/OpenTensor/BUILD-INFO.txt
             build/opentensor/package/OpenTensor/README.txt
