@@ -48,9 +48,13 @@ jobs:
           root = Path(sys.argv[1])
           data = json.loads((root / 'CATALOGUE.json').read_text(encoding='utf-8'))
           assert len(data['entries']) == 116, len(data['entries'])
-          assert data['counts'].get('downloaded') == 90, data['counts']
-          assert sum(int(row.get('bytes', 0)) for row in data['entries']) == 742765969
-          assert sum(1 for path in root.rglob('*') if path.is_file()) == 3842
+          assert data['counts'].get('downloaded') == 93, data['counts']
+          assert sum(int(row.get('bytes', 0)) for row in data['entries']) == 745175009
+          assert sum(1 for path in root.rglob('*') if path.is_file()) == 5709
+          for title in ("Foxy's Run", 'Norrland', 'Mundialito 2'):
+              row = next(item for item in data['entries'] if item['title'] == title)
+              assert row['status'] == 'downloaded', row
+              assert (root / row['archive']).is_file(), row
           print(json.dumps({'counts': data['counts'], 'entries': len(data['entries'])}, indent=2))
           PY
           du -sh "$ROOT"
@@ -97,13 +101,14 @@ jobs:
               else:
                   raise SystemExit('Instance-32 did not become ready')
 
-              # Quote the complete AmigaDOS path; quoting only the drawer
-              # component makes List interpret the target differently.
               script = '\n'.join([
                   'Type "DH1:New Amiga Games/SUMMARY.txt"',
                   'List "DH1:New Amiga Games/#?" LFORMAT="%N"',
                   'List "DH1:New Amiga Games/01 Ready to Test/#?" DIRS LFORMAT="%N"',
                   'List "DH1:New Amiga Games/02 Demos and Betas/#?" DIRS LFORMAT="%N"',
+                  'List "DH1:New Amiga Games/02 Demos and Betas/Foxy\'s Run/#?" LFORMAT="%N %L"',
+                  'List "DH1:New Amiga Games/02 Demos and Betas/Norrland/#?" LFORMAT="%N %L"',
+                  'List "DH1:New Amiga Games/02 Demos and Betas/Mundialito 2/#?" LFORMAT="%N %L"',
               ])
               listing = tools.amiga_run('32', script, timeout=45)
               output = listing.get('output', '')
@@ -111,10 +116,15 @@ jobs:
                   raise SystemExit('AmigaDOS verification did not finish')
               for expected in (
                   'Manifest entries: 116',
-                  'Downloaded packages: 90',
+                  'Downloaded packages: 93',
+                  'ADF filenames repaired: 21',
+                  'LHA files made directly testable: 1858',
                   'CATALOGUE.txt',
                   '01 Ready to Test',
                   '02 Demos and Betas',
+                  "Foxy's Run.adf 901120",
+                  'Norrland.lha 606800',
+                  'Mundialito 2.adf 901120',
               ):
                   if expected not in output:
                       raise SystemExit(f'missing expected AmigaDOS evidence: {expected}\n{output}')
