@@ -1,0 +1,53 @@
+name: Build OpenFormula 68K
+
+on:
+  push:
+    branches:
+      - game/openformula-68k-20261012
+    paths:
+      - ports/openformula68k/**
+      - port-layer/acgame/**
+      - .github/workflows/openformula68k-build.yml
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Build native AmigaOS release
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+            sh ports/openformula68k/build.sh
+
+      - name: Audit package
+        shell: bash
+        run: |
+          set -euxo pipefail
+          test -s build/openformula68k/OpenFormula68K-0.1.0.zip
+          test -s build/openformula68k/package/OpenFormula68K/OpenFormula68K
+          file build/openformula68k/package/OpenFormula68K/OpenFormula68K
+          unzip -l build/openformula68k/OpenFormula68K-0.1.0.zip
+          sha256sum -c build/openformula68k/SHA256SUMS
+          grep -F 'OpenFormula 68K' build/openformula68k/package/OpenFormula68K/README.txt
+          grep -F 'RTG' build/openformula68k/package/OpenFormula68K/BUILD-INFO.txt
+
+      - name: Upload release
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenFormula68K-${{ github.run_id }}
+          path: |
+            build/openformula68k/OpenFormula68K-0.1.0.zip
+            build/openformula68k/SHA256SUMS
+            build/openformula68k/package/OpenFormula68K/
+          if-no-files-found: error
+          retention-days: 60
+          compression-level: 6
