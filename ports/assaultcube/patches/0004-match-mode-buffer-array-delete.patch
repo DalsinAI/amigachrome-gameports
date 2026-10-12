@@ -1,0 +1,13 @@
+--- a/source/src/protocol.cpp
++++ b/source/src/protocol.cpp
+@@ -528,9 +528,9 @@
+     for(char *p = strtok_r(buf, "|", &b); p; p = strtok_r(NULL, "|", &b))
+     {
+         loopi(GMODE_NUM) if(!strcasecmp(p, modeacronymnames[i + 1])) res |= 1 << i;
+     }
+-    delete buf;
++    delete[] buf;
+     return res;
+ }
+ 
+ char *gmode_enum(int gm, char *buf) // convert mode bitmask to string with sorted list of mode acronyms

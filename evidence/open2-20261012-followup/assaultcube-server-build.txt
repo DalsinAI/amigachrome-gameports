@@ -1,0 +1,10 @@
+configure: WARNING: using cross tools not prefixed with host triplet
+make -C ../enet all
+make[1]: Entering directory '/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/enet'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/enet'
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o protocol-standalone.o protocol.cpp
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -o ac_server crypto-standalone.o log-standalone.o protocol-standalone.o serverms-standalone.o server-standalone.o stream-standalone.o tools-standalone.o wizard-standalone.o -L../enet/.libs -lenet -L/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/lib -lz -lpthread -lsocket -lamiga
+ASSAULTCUBE SERVER AMIGA PASS
+ac_server: AmigaOS loadseg()ble executable/binary
+2b1880d8893c683c5c9e2c766a7d464ce241a5d32c526ad5696dae581b681a4b  ac_server

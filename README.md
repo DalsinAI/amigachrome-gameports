@@ -4,6 +4,23 @@ Open-source game-port and compatibility work for **m68k AROS**, **AmigaOS 3.x** 
 
 The repository contains compiled revival ports, the Neverball/OpenGPU release lane, and the next 3D source-intake targets. Compile success is useful evidence, but it is **not** synonymous with release readiness. See [RELEASE_POLICY.md](RELEASE_POLICY.md).
 
+## Open2 follow-up - actual guest first light
+
+NXEngine-evo completed its Open2 link, and Neverball/Neverputt now rebuild and
+pass the package gate. AssaultCube has two targeted fixes: one Amiga definition
+for stream virtuals, and correct array deletion in game-mode parsing. The
+previous duplicate stream-section and mismatched-delete diagnostics are absent
+from the resulting links; other warnings and the audio stub remain.
+
+**Runtime evidence:** SDLPoP rendered its intro and a diagnostic Level 1; Neverball
+rendered its title and Level 01 3D start scene. Both returned guest exit code 0
+in a separate, muted, stopped-source lab. Sixteen host regression tests and a
+21-check stream diagnostic in the AmigaOS guest passed. No full game release.
+Native name typing in Neverball remained empty on the recorded existing SDL2
+runtime; the on-screen keyboard was a workaround, not a text-input pass.
+
+[Follow-up results, screenshots, hashes and remaining gates](evidence/open2-20261012-followup/README.md).
+
 ## Open2 compiler pass - 12 October 2026
 
 The port queue has resumed with **OpenAmigaGCC 16.2.0-open2**. OpenJazz,

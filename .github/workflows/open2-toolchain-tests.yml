@@ -4,12 +4,14 @@ on:
   push:
     paths:
       - 'toolchain/**'
+      - 'ports/assaultcube/**'
       - 'scripts/stage_open2_stove.py'
       - 'tests/**'
       - '.github/workflows/open2-toolchain-tests.yml'
   pull_request:
     paths:
       - 'toolchain/**'
+      - 'ports/assaultcube/**'
       - 'scripts/stage_open2_stove.py'
       - 'tests/**'
       - '.github/workflows/open2-toolchain-tests.yml'

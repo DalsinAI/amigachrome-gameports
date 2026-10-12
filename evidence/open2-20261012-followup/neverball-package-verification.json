@@ -1,0 +1,12 @@
+{
+  "bytes": 79088722,
+  "failures": [],
+  "fileCount": 27,
+  "package": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/followup-20261012/neverball/package/Neverball",
+  "packageGate": "PASS",
+  "port": "neverball",
+  "release": false,
+  "releaseReason": "Runtime qualification is a separate mandatory gate.",
+  "schema": 1,
+  "upstreamCommit": "a1ed09911dca262d80049c12a2824d683af494d6"
+}
