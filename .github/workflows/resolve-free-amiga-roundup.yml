@@ -1,0 +1,142 @@
+name: Resolve 2026 Free Amiga Roundup Links
+
+on:
+  push:
+    branches:
+      - research/free-amiga-games-20261012
+    paths:
+      - .github/workflows/resolve-free-amiga-roundup.yml
+  workflow_dispatch:
+
+jobs:
+  resolve:
+    runs-on: self-hosted
+    timeout-minutes: 40
+    steps:
+      - name: Prepare resolver
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 -m venv "$RUNNER_TEMP/amiga-roundup-resolver"
+          "$RUNNER_TEMP/amiga-roundup-resolver/bin/pip" install --quiet requests beautifulsoup4
+          mkdir -p resolved
+
+      - name: Resolve titles against itch.io, Aminet and source articles
+        shell: bash
+        run: |
+          set -euxo pipefail
+          "$RUNNER_TEMP/amiga-roundup-resolver/bin/python" - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import re
+          import time
+          from difflib import SequenceMatcher
+          from pathlib import Path
+          from urllib.parse import quote_plus, urljoin, urlparse
+
+          import requests
+          from bs4 import BeautifulSoup
+
+          OUT = Path("resolved")
+          session = requests.Session()
+          session.headers.update({"User-Agent": "Mozilla/5.0 AmigaChrome game catalogue research"})
+
+          titles = [
+              "Deimos Storm", "Castlevania AGA", "Amiga Rescue", "The AmiGoonies",
+              "Rally X AGA", "The Adventure of Node", "P.O.W", "Ghosts N Goblins AGA",
+              "Aonic", "Bad Dudes vs Dragonninja", "Commando AGA", "Zippy Race",
+              "Foxys Run", "Treasure of Usas", "Oracle Reforged", "Babylonian Twins",
+              "Deadband", "Vulgus AGA", "Vector Dreams", "Shinobi Remake",
+              "Tales of Itch", "Raiden AGA", "Ramizes", "Mission Alien",
+              "Galaga 500", "Moon Cresta AGA", "Gunsmoke 1200", "Echodrome",
+              "Zepton", "Brutal Pico Race", "Rastan Amiga 500", "Roc N Rope",
+              "Kick Off 2 Graphics Restyle", "Railblaze", "Jail Break Amiga",
+              "Double Baboon Ninja", "Dunjons", "Bomberplanes", "Arkamiga",
+              "Blue and Red Fight the Robots", "Xevious1200", "Final Fight Enhanced",
+              "Creepy Crawlers Goliath Reloaded", "Wings of Fear", "Strike Force Omega",
+              "Project Horizon", "Mike Mech", "Pjusk", "Donkey Kong 500",
+              "Wings of Fear II", "OutRun Amiga Edition", "Double Dragon AGA",
+              "US Championship VBall", "Renegade Amiga",
+          ]
+
+          def words(s: str):
+              s = re.sub(r"[^a-z0-9]+", " ", s.lower())
+              stop = {"amiga", "aga", "ocs", "ecs", "cd32", "edition", "release", "update", "demo", "remake", "enhanced"}
+              return [w for w in s.split() if w not in stop]
+
+          def score(a: str, b: str) -> float:
+              aa, bb = words(a), words(b)
+              sa, sb = set(aa), set(bb)
+              jac = len(sa & sb) / max(1, len(sa | sb))
+              seq = SequenceMatcher(None, " ".join(aa), " ".join(bb)).ratio()
+              return 0.65 * jac + 0.35 * seq
+
+          rows = []
+          for index, title in enumerate(titles, 1):
+              candidates = []
+              search_url = "https://itch.io/search?q=" + quote_plus(title)
+              try:
+                  r = session.get(search_url, timeout=30)
+                  r.raise_for_status()
+                  soup = BeautifulSoup(r.text, "html.parser")
+                  for cell in soup.select(".game_cell")[:20]:
+                      a = cell.select_one("a.title") or cell.select_one("a[href]")
+                      if not a or not a.get("href"):
+                          continue
+                      url = urljoin(search_url, a["href"])
+                      name = " ".join(a.get_text(" ").split())
+                      if urlparse(url).netloc.endswith("itch.io"):
+                          candidates.append({
+                              "kind": "itch", "title": name, "url": url,
+                              "score": round(score(title, name), 4),
+                          })
+              except Exception as exc:
+                  candidates.append({"kind": "itch-error", "error": repr(exc), "score": 0})
+
+              # GitHub repository search is public and useful for source ports.
+              try:
+                  q = quote_plus(title + " amiga")
+                  r = session.get("https://api.github.com/search/repositories?q=" + q + "&per_page=10", timeout=30)
+                  if r.ok:
+                      for item in r.json().get("items") or []:
+                          name = item.get("name") or ""
+                          candidates.append({
+                              "kind": "github", "title": name,
+                              "url": item.get("html_url"),
+                              "score": round(score(title, name), 4),
+                          })
+              except Exception as exc:
+                  candidates.append({"kind": "github-error", "error": repr(exc), "score": 0})
+
+              candidates.sort(key=lambda x: x.get("score", 0), reverse=True)
+              rows.append({"title": title, "candidates": candidates[:12]})
+              print(index, title, candidates[:3])
+              time.sleep(0.35)
+
+          (OUT / "roundup-links.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
+          md = ["# 2026 Free Amiga Roundup Link Resolution", ""]
+          for row in rows:
+              md.append("## " + row["title"])
+              for c in row["candidates"]:
+                  if c.get("url"):
+                      md.append(f"- {c['score']:.3f} [{c['kind']}] {c.get('title','')} — {c['url']}")
+                  else:
+                      md.append(f"- {c.get('kind')}: {c.get('error')}")
+              md.append("")
+          (OUT / "ROUNDUP-LINKS.md").write_text("\n".join(md), encoding="utf-8")
+          PY
+
+      - name: Show resolution
+        shell: bash
+        run: |
+          set -euxo pipefail
+          sed -n '1,720p' resolved/ROUNDUP-LINKS.md
+
+      - name: Upload resolution
+        uses: actions/upload-artifact@v4
+        with:
+          name: free-amiga-roundup-links-${{ github.run_id }}
+          path: resolved/
+          retention-days: 30
+          compression-level: 6
