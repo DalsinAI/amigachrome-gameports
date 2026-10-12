@@ -1,0 +1,35 @@
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/common.h:50,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/spdlog.h:12,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/src/ai/boss/../../graphics/../common/../Utils/Logger.h:3,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/src/ai/boss/../../graphics/../common/basics.h:17,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/src/ai/boss/../../graphics/Surface.h:5,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/src/ai/boss/../../graphics/Renderer.h:6,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/src/ai/boss/balfrog.cpp:7:
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h: In function 'const Char* fmt::v12::detail::invoke_parse(fmt::v12::parse_context<Char>&) [with T = const int&; Char = char]':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h:1701:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+ 1701 | }
+      | ^
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h: In function 'const Char* fmt::v12::detail::invoke_parse(fmt::v12::parse_context<Char>&) [with T = const char* const&; Char = char]':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h:1701:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h: In function 'const Char* fmt::v12::detail::invoke_parse(fmt::v12::parse_context<Char>&) [with T = int&; Char = char]':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h:1701:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h: In function 'const Char* fmt::v12::detail::invoke_parse(fmt::v12::parse_context<Char>&) [with T = const char*; Char = char]':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h:1701:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+[ 28%] Building CXX object CMakeFiles/nx.dir/src/ai/boss/core.cpp.obj
+In file included from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/format.h:41,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/fmt.h:23,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/common.h:50,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/spdlog.h:12,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/src/ai/boss/../../Utils/Logger.h:3,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/src/ai/boss/ballos.cpp:7:
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h: In function 'const Char* fmt::v12::detail::invoke_parse(fmt::v12::parse_context<Char>&) [with T = const int&; Char = char]':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h:1701:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+ 1701 | }
+      | ^
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h: In function 'const Char* fmt::v12::detail::invoke_parse(fmt::v12::parse_context<Char>&) [with T = const char* const&; Char = char]':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h:1701:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h: In function 'const Char* fmt::v12::detail::invoke_parse(fmt::v12::parse_context<Char>&) [with T = int&; Char = char]':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h:1701:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h: In function 'const Char* fmt::v12::detail::invoke_parse(fmt::v12::parse_context<Char>&) [with T = const char*; Char = char]':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/nxengine-evo/deps/spdlog/fmt/bundled/base.h:1701:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+[ 29%] Building CXX object CMakeFiles/nx.dir/src/ai/boss/heavypress.cpp.obj
