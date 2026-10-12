@@ -1,4 +1,4 @@
-name: Deploy OpenTensor to Instance-32
+name: Deploy OpenTensor Icons to Instance-32
 
 on:
   push:
@@ -15,9 +15,10 @@ concurrency:
 jobs:
   deploy:
     runs-on: self-hosted
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout OpenTensor
+        uses: actions/checkout@v4
         with:
           repository: DalsinAI/openamigartg
           ref: demo/opentensor-first-light-20261012
@@ -25,78 +26,199 @@ jobs:
           clean: true
           fetch-depth: 1
 
-      - name: Build OpenTensor 0.2.0
+      - name: Checkout Amiga GlowIcon writer
+        uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/amigachrome-guest
+          ref: main
+          path: guest
+          clean: true
+          fetch-depth: 1
+
+      - name: Prepare icon Python
+        shell: bash
+        run: |
+          set -euxo pipefail
+          PYTHON=python3
+          if ! "$PYTHON" -c 'import PIL' >/dev/null 2>&1; then
+            python3 -m venv build/icon-venv
+            build/icon-venv/bin/pip install Pillow
+            PYTHON=build/icon-venv/bin/python
+          fi
+          printf 'ICON_PYTHON=%s\n' "$PYTHON" >> "$GITHUB_ENV"
+
+      - name: Build OpenTensor 0.2.0 with Workbench icons
         shell: bash
         run: |
           set -euxo pipefail
           STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
           OLD_STOVE="$HOME/AmigaChrome/stoves/os32" \
+          PYTHON="$ICON_PYTHON" \
+          AMIGAICON_WRITER="$GITHUB_WORKSPACE/guest/tools/icons/amigaicon.py" \
             sh source/demos/opentensor/build.sh "$GITHUB_WORKSPACE/build/opentensor"
-          test -s build/opentensor/package/OpenTensor/OpenTensor
-          sha256sum -c build/opentensor/SHA256SUMS
 
-      - name: Place the drawer on Instance-32 DH1
+          ROOT="$GITHUB_WORKSPACE/build/opentensor/package"
+          test -s "$ROOT/OpenTensor.info"
+          test -s "$ROOT/OpenTensor/OpenTensor.info"
+          test -s "$ROOT/OpenTensor/Launch.info"
+          test -s "$ROOT/OpenTensor/Launch-ActII.info"
+          test -s "$GITHUB_WORKSPACE/build/opentensor/OpenTensor-icons-preview.png"
+          sha256sum -c build/opentensor/SHA256SUMS
+          (
+            cd "$ROOT/OpenTensor"
+            sha256sum -c SHA256SUMS
+          )
+          file "$ROOT"/*.info "$ROOT/OpenTensor"/*.info || true
+
+      - name: Place the icon-bearing drawer on Instance-32 DH1
         shell: bash
         run: |
           set -euxo pipefail
           INSTANCE="$HOME/AmigaChromeInstances/Instance-32"
           DH1="$INSTANCE/devices/harddisks/DH1"
-          PACKAGE="$GITHUB_WORKSPACE/build/opentensor/package/OpenTensor"
+          PACKAGE_ROOT="$GITHUB_WORKSPACE/build/opentensor/package"
           TARGET="$DH1/OpenTensor"
+          TARGET_ICON="$DH1/OpenTensor.info"
           STAGING="$DH1/OpenTensor.deploy-${GITHUB_RUN_ID}"
-          BACKUP="$INSTANCE/archive/opentensor-${GITHUB_RUN_ID}"
+          STAGING_ICON="$DH1/OpenTensor.info.deploy-${GITHUB_RUN_ID}"
+          BACKUP="$INSTANCE/archive/opentensor-icons-${GITHUB_RUN_ID}"
+
           test -d "$DH1"
           test ! -e "$STAGING"
+          test ! -e "$STAGING_ICON"
           mkdir -p "$BACKUP"
-          cp -a "$PACKAGE" "$STAGING"
-          cat > "$STAGING/Launch" <<'AMIGA'
-          FailAt 21
-          Stack 1000000
-          CD DH1:OpenTensor
-          OpenTensor
-          AMIGA
-          cat > "$STAGING/Launch-ActII" <<'AMIGA'
-          FailAt 21
-          Stack 1000000
-          CD DH1:OpenTensor
-          OpenTensor START 64
-          AMIGA
+          cp -a "$PACKAGE_ROOT/OpenTensor" "$STAGING"
+          cp "$PACKAGE_ROOT/OpenTensor.info" "$STAGING_ICON"
+
+          test -s "$STAGING/OpenTensor"
+          test -s "$STAGING/OpenTensor.info"
+          test -s "$STAGING/Launch.info"
+          test -s "$STAGING/Launch-ActII.info"
+          test -s "$STAGING_ICON"
+
           if [ -e "$TARGET" ]; then
             mv "$TARGET" "$BACKUP/OpenTensor.before"
           fi
+          if [ -e "$TARGET_ICON" ]; then
+            mv "$TARGET_ICON" "$BACKUP/OpenTensor.info.before"
+          fi
           mv "$STAGING" "$TARGET"
-          test -s "$TARGET/OpenTensor"
-          find "$TARGET" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort | tee build/opentensor/instance32-files.txt
-          sha256sum "$TARGET/OpenTensor" | tee build/opentensor/instance32-sha256.txt
+          mv "$STAGING_ICON" "$TARGET_ICON"
 
-      - name: Verify the drawer through Cradle MCP
+          find "$TARGET" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort \
+            | tee build/opentensor/instance32-files.txt
+          stat -c '%n %s bytes' "$TARGET_ICON" \
+            | tee build/opentensor/instance32-drawer-icon.txt
+          sha256sum \
+            "$TARGET/OpenTensor" \
+            "$TARGET/OpenTensor.info" \
+            "$TARGET/Launch.info" \
+            "$TARGET/Launch-ActII.info" \
+            "$TARGET_ICON" \
+            | tee build/opentensor/instance32-icons-sha256.txt
+          printf '%s\n' "$BACKUP" > build/opentensor/instance32-backup-path.txt
+
+      - name: Verify icons through Cradle MCP and Workbench
         shell: bash
         run: |
           set -euxo pipefail
-          python3 - <<'PY'
-          import json, sys
+          SRC="$GITHUB_WORKSPACE/build/amigachrome-${GITHUB_RUN_ID}"
+          env -u GH_TOKEN -u GITHUB_TOKEN gh repo clone DalsinAI/amigachrome "$SRC" -- --depth 1 --branch main
+          python3 - "$SRC" <<'PY'
+          import base64
+          import json
+          import sys
+          import time
           from pathlib import Path
-          app = Path.home() / "AmigaChrome"
-          sys.path.insert(0, str(app / "scripts"))
-          from cradle_mcp_amiga import AmigaTools
-          tools = AmigaTools(); tools.Error = RuntimeError
-          result = tools.amiga_run("32", 'List DH1:OpenTensor LFORMAT="%N %L bytes"', timeout=20)
-          print(json.dumps(result, indent=2, default=str))
-          if not result.get("finished") or "OpenTensor" not in result.get("output", ""):
-              raise SystemExit("DH1:OpenTensor was not visible from AmigaOS")
-          Path("build/opentensor/amiga-list.json").write_text(json.dumps(result, indent=2, default=str) + "\n")
+
+          source = Path(sys.argv[1])
+          sys.path.insert(0, str(source / "scripts"))
+          import ac
+          import cradle_mcp
+
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          was_running = bool(tools._match("32").get("running"))
+          started_here = False
+          evidence = Path("build/opentensor")
+
+          try:
+              if not was_running:
+                  print(json.dumps(tools.start_instance("32"), indent=2, default=str))
+                  started_here = True
+
+              ready = None
+              for _ in range(60):
+                  try:
+                      ready = tools.amiga_run("32", "Version\nAvail", timeout=10)
+                      if ready.get("finished") and "Kickstart" in ready.get("output", ""):
+                          break
+                  except Exception:
+                      ready = None
+                  time.sleep(2)
+              else:
+                  raise SystemExit("Instance-32 did not become ready for icon verification")
+
+              listing = tools.amiga_run(
+                  "32",
+                  'List DH1:OpenTensor.info LFORMAT="%N %L bytes"\n'
+                  'List DH1:OpenTensor/#?.info LFORMAT="%N %L bytes"',
+                  timeout=20,
+              )
+              print(json.dumps(listing, indent=2, default=str))
+              output = listing.get("output", "")
+              for expected in ("OpenTensor.info", "Launch.info", "Launch-ActII.info"):
+                  if expected not in output:
+                      raise SystemExit(f"{expected} was not visible from AmigaOS")
+
+              # Ask Workbench to open the drawer. If WBRun accepts drawers, this
+              # gives us a visual proof; the file and binary checks remain the gate.
+              try:
+                  opened = tools.amiga_run("32", "WBRun DH1:OpenTensor\nWait 3", timeout=12)
+                  print(json.dumps(opened, indent=2, default=str))
+              except Exception as exc:
+                  opened = {"warning": str(exc)}
+              time.sleep(2)
+              shot = tools.instance_screenshot("32", "rtg", 50)
+              content = shot.get("_content", [{}])[0]
+              if content.get("data"):
+                  (evidence / "instance32-opentensor-icons.png").write_bytes(
+                      base64.b64decode(content["data"])
+                  )
+
+              (evidence / "instance32-icon-list.json").write_text(
+                  json.dumps(listing, indent=2, default=str) + "\n",
+                  encoding="utf-8",
+              )
+              (evidence / "instance32-icon-wbrun.json").write_text(
+                  json.dumps(opened, indent=2, default=str) + "\n",
+                  encoding="utf-8",
+              )
+              (evidence / "instance32-icon-screenshot.json").write_text(
+                  json.dumps({k: v for k, v in shot.items() if k != "_content"},
+                             indent=2, default=str) + "\n",
+                  encoding="utf-8",
+              )
+          finally:
+              if started_here:
+                  print(json.dumps(tools.stop_instance("32"), indent=2, default=str))
           PY
 
-      - name: Upload deployment evidence
+      - name: Upload icon build and deployment evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: OpenTensor-Instance32-${{ github.run_id }}
+          name: OpenTensor-Instance32-Icons-${{ github.run_id }}
           path: |
             build/opentensor/OpenTensor-Beyond-First-Light-0.2.0.zip
+            build/opentensor/OpenTensor-icons-preview.png
             build/opentensor/instance32-files.txt
-            build/opentensor/instance32-sha256.txt
-            build/opentensor/amiga-list.json
+            build/opentensor/instance32-drawer-icon.txt
+            build/opentensor/instance32-icons-sha256.txt
+            build/opentensor/instance32-backup-path.txt
+            build/opentensor/instance32-icon-list.json
+            build/opentensor/instance32-icon-wbrun.json
+            build/opentensor/instance32-icon-screenshot.json
+            build/opentensor/instance32-opentensor-icons.png
           if-no-files-found: warn
           retention-days: 30
           compression-level: 0
