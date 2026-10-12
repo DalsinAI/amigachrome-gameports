@@ -1,0 +1,165 @@
+name: Verify Free Amiga Games on Instance-32
+
+on:
+  push:
+    branches:
+      - deploy/free-amiga-games-instance32-20261012
+    paths:
+      - .github/workflows/verify-free-amiga-games-instance32.yml
+  workflow_dispatch:
+
+concurrency:
+  group: verify-free-amiga-games-instance32
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: self-hosted
+    timeout-minutes: 45
+    steps:
+      - name: Fetch current Cradle MCP tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          SRC="$GITHUB_WORKSPACE/build/amigachrome-tools-${GITHUB_RUN_ID}"
+          env -u GH_TOKEN -u GITHUB_TOKEN gh repo clone DalsinAI/amigachrome "$SRC" -- --depth 1 --branch main
+          test -s "$SRC/scripts/cradle_mcp.py"
+          test -s "$SRC/scripts/cradle_mcp_amiga.py"
+          printf 'AMIGACHROME_SOURCE=%s\n' "$SRC" >> "$GITHUB_ENV"
+
+      - name: Verify host-side deployment
+        shell: bash
+        run: |
+          set -euxo pipefail
+          ROOT="$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/New Amiga Games"
+          test -s "$ROOT/CATALOGUE.txt"
+          test -s "$ROOT/CATALOGUE.json"
+          test -s "$ROOT/SUMMARY.txt"
+          test -d "$ROOT/01 Ready to Test"
+          test -d "$ROOT/02 Demos and Betas"
+          test -d "$ROOT/03 Needs Original Data"
+          test -d "$ROOT/90 Original Archives"
+          test -d "$ROOT/99 Unresolved"
+          python3 - "$ROOT" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          data = json.loads((root / 'CATALOGUE.json').read_text(encoding='utf-8'))
+          assert len(data['entries']) == 116, len(data['entries'])
+          assert data['counts'].get('downloaded') == 90, data['counts']
+          assert sum(int(row.get('bytes', 0)) for row in data['entries']) == 742765969
+          assert sum(1 for path in root.rglob('*') if path.is_file()) == 3842
+          print(json.dumps({'counts': data['counts'], 'entries': len(data['entries'])}, indent=2))
+          PY
+          du -sh "$ROOT"
+
+      - name: Verify from AmigaDOS and capture Workbench
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p build/free-games-verification
+          python3 - <<'PY'
+          import base64
+          import json
+          import os
+          import sys
+          import time
+          from pathlib import Path
+
+          source = Path(os.environ['AMIGACHROME_SOURCE'])
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac
+          import cradle_mcp
+
+          evidence = Path('build/free-games-verification')
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          was_running = bool(tools._match('32').get('running'))
+          started_here = False
+          try:
+              if not was_running:
+                  start = tools.start_instance('32')
+                  evidence.joinpath('start.json').write_text(
+                      json.dumps(start, indent=2, default=str) + '\n', encoding='utf-8'
+                  )
+                  started_here = True
+
+              ready = None
+              for _ in range(75):
+                  try:
+                      ready = tools.amiga_run('32', 'Version\nAvail', timeout=10)
+                      if ready.get('finished') and 'Kickstart' in ready.get('output', ''):
+                          break
+                  except Exception:
+                      ready = None
+                  time.sleep(2)
+              else:
+                  raise SystemExit('Instance-32 did not become ready')
+
+              # Quote the complete AmigaDOS path; quoting only the drawer
+              # component makes List interpret the target differently.
+              script = '\n'.join([
+                  'Type "DH1:New Amiga Games/SUMMARY.txt"',
+                  'List "DH1:New Amiga Games/#?" LFORMAT="%N"',
+                  'List "DH1:New Amiga Games/01 Ready to Test/#?" DIRS LFORMAT="%N"',
+                  'List "DH1:New Amiga Games/02 Demos and Betas/#?" DIRS LFORMAT="%N"',
+              ])
+              listing = tools.amiga_run('32', script, timeout=45)
+              output = listing.get('output', '')
+              if not listing.get('finished'):
+                  raise SystemExit('AmigaDOS verification did not finish')
+              for expected in (
+                  'Manifest entries: 116',
+                  'Downloaded packages: 90',
+                  'CATALOGUE.txt',
+                  '01 Ready to Test',
+                  '02 Demos and Betas',
+              ):
+                  if expected not in output:
+                      raise SystemExit(f'missing expected AmigaDOS evidence: {expected}\n{output}')
+
+              evidence.joinpath('ready.json').write_text(
+                  json.dumps(ready, indent=2, default=str) + '\n', encoding='utf-8'
+              )
+              evidence.joinpath('catalogue-list.json').write_text(
+                  json.dumps(listing, indent=2, default=str) + '\n', encoding='utf-8'
+              )
+
+              try:
+                  opened = tools.amiga_run('32', 'WBRun "DH1:New Amiga Games"\nWait 3', timeout=15)
+              except Exception as exc:
+                  opened = {'warning': str(exc)}
+              evidence.joinpath('wbrun.json').write_text(
+                  json.dumps(opened, indent=2, default=str) + '\n', encoding='utf-8'
+              )
+              time.sleep(3)
+              shot = tools.instance_screenshot('32', 'rtg', 50)
+              content = shot.get('_content', [{}])[0]
+              if content.get('data'):
+                  evidence.joinpath('instance32-new-amiga-games.png').write_bytes(
+                      base64.b64decode(content['data'])
+                  )
+              evidence.joinpath('screenshot.json').write_text(
+                  json.dumps({k: v for k, v in shot.items() if k != '_content'},
+                             indent=2, default=str) + '\n', encoding='utf-8'
+              )
+              print(json.dumps(listing, indent=2, default=str))
+          finally:
+              if started_here and tools._match('32').get('running'):
+                  stop = tools.stop_instance('32')
+                  evidence.joinpath('stop.json').write_text(
+                      json.dumps(stop, indent=2, default=str) + '\n', encoding='utf-8'
+                  )
+                  print(json.dumps(stop, indent=2, default=str))
+          PY
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Free-Amiga-Games-Instance32-Verification-${{ github.run_id }}
+          path: build/free-games-verification/
+          if-no-files-found: warn
+          retention-days: 60
+          compression-level: 6
