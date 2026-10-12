@@ -1,0 +1,349 @@
+name: Deploy 2026 Free Amiga Games to Instance-32
+
+on:
+  push:
+    branches:
+      - deploy/free-amiga-games-instance32-20261012
+    paths:
+      - research/free-amiga-games-2026.json
+      - scripts/collect_free_amiga_games.py
+      - scripts/itch_download_one.js
+      - .github/workflows/deploy-free-amiga-games-instance32.yml
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-free-amiga-games-instance32
+  cancel-in-progress: false
+
+jobs:
+  collect-and-deploy:
+    runs-on: self-hosted
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout collector
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Prepare download tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 -m venv build/free-games-venv
+          build/free-games-venv/bin/pip install --quiet \
+            requests beautifulsoup4 lhafile py7zr
+          mkdir -p build/itch-downloader
+          npm install --prefix build/itch-downloader --silent itchio-downloader
+          python3 -m py_compile scripts/collect_free_amiga_games.py
+          node --check scripts/itch_download_one.js
+          node --version
+          npm --version
+          df -h "$HOME"
+
+      - name: Validate the curated manifest
+        shell: bash
+        run: |
+          set -euxo pipefail
+          build/free-games-venv/bin/python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          path = Path('research/free-amiga-games-2026.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          entries = data['entries']
+          assert data['schema'] == 1
+          assert len(entries) >= 100
+          assert len({row['title'].casefold() for row in entries}) == len(entries)
+          counts = Counter(row['category'] for row in entries)
+          print(json.dumps({'entries': len(entries), 'categories': counts}, indent=2, default=dict))
+          PY
+
+      - name: Download, preserve and catalogue public free packages
+        shell: bash
+        env:
+          NODE_PATH: ${{ github.workspace }}/build/itch-downloader/node_modules
+        run: |
+          set -euxo pipefail
+          OUT="$GITHUB_WORKSPACE/build/New Amiga Games"
+          build/free-games-venv/bin/python scripts/collect_free_amiga_games.py \
+            --manifest research/free-amiga-games-2026.json \
+            --out "$OUT" \
+            --itch-helper scripts/itch_download_one.js \
+            --node "$(command -v node)" \
+            | tee build/free-amiga-games-collector.log
+
+          test -s "$OUT/CATALOGUE.txt"
+          test -s "$OUT/CATALOGUE.json"
+          test -s "$OUT/SOURCES.txt"
+          test -s "$OUT/README.txt"
+
+          build/free-games-venv/bin/python - "$OUT" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          catalogue = json.loads((root / 'CATALOGUE.json').read_text(encoding='utf-8'))
+          counts = catalogue['counts']
+          downloaded = int(counts.get('downloaded', 0))
+          if downloaded < 20:
+              raise SystemExit(f'only {downloaded} packages downloaded; refusing a suspiciously empty deployment')
+          total = sum(int(row.get('bytes', 0)) for row in catalogue['entries'])
+          summary = [
+              'New Amiga Games - Deployment Summary',
+              '=====================================',
+              '',
+              f"As of: {catalogue['as_of']}",
+              f"Manifest entries: {len(catalogue['entries'])}",
+              f"Downloaded packages: {downloaded}",
+              f"Downloaded archive bytes: {total}",
+              '',
+              'Open CATALOGUE.txt for the full game-by-game list.',
+              'No paid access or login restriction was bypassed.',
+          ]
+          (root / 'SUMMARY.txt').write_text('\n'.join(summary) + '\n', encoding='latin-1')
+          print(json.dumps({'downloaded': downloaded, 'bytes': total, 'counts': counts}, indent=2))
+          PY
+
+          BYTES=$(du -sb "$OUT" | awk '{print $1}')
+          test "$BYTES" -lt 21474836480
+          du -sh "$OUT"
+          find "$OUT" -type f | wc -l
+
+      - name: Fetch current Cradle MCP tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          SRC="$GITHUB_WORKSPACE/build/amigachrome-tools"
+          env -u GH_TOKEN -u GITHUB_TOKEN gh repo clone DalsinAI/amigachrome "$SRC" -- --depth 1 --branch main
+          test -s "$SRC/scripts/cradle_mcp.py"
+          test -s "$SRC/scripts/cradle_mcp_amiga.py"
+          printf 'AMIGACHROME_SOURCE=%s\n' "$SRC" >> "$GITHUB_ENV"
+
+      - name: Record and stop Instance-32 safely
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p build/free-games-evidence
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          source = Path(os.environ['AMIGACHROME_SOURCE'])
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac
+          import cradle_mcp
+
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          info = tools._match('32')
+          state = {
+              'label': ac.instance_label(info),
+              'install': info.get('install'),
+              'was_running': bool(info.get('running')),
+              'before': info,
+          }
+          Path('build/free-games-evidence/instance-before.json').write_text(
+              json.dumps(state, indent=2, sort_keys=True, default=str) + '\n', encoding='utf-8'
+          )
+          Path('build/free-games-evidence/was-running.txt').write_text(
+              ('1' if state['was_running'] else '0') + '\n', encoding='ascii'
+          )
+          if state['was_running']:
+              result = tools.stop_instance('32')
+              Path('build/free-games-evidence/stop.json').write_text(
+                  json.dumps(result, indent=2, default=str) + '\n', encoding='utf-8'
+              )
+              print(json.dumps(result, indent=2, default=str))
+          else:
+              print(json.dumps({'alreadyStopped': True, 'instance': state['label']}, indent=2))
+          PY
+
+      - name: Archive the prior drawer and deploy the collection
+        shell: bash
+        run: |
+          set -euxo pipefail
+          INSTANCE="$HOME/AmigaChromeInstances/Instance-32"
+          DH1="$INSTANCE/devices/harddisks/DH1"
+          SOURCE="$GITHUB_WORKSPACE/build/New Amiga Games"
+          TARGET="$DH1/New Amiga Games"
+          STAGING="$DH1/New Amiga Games.deploy-${GITHUB_RUN_ID}"
+          BACKUP="$INSTANCE/archive/free-amiga-games-${GITHUB_RUN_ID}"
+
+          test -d "$DH1"
+          test -s "$SOURCE/CATALOGUE.txt"
+          test ! -e "$STAGING"
+          mkdir -p "$BACKUP"
+          cp -a "$SOURCE" "$STAGING"
+          test -s "$STAGING/CATALOGUE.txt"
+          test -s "$STAGING/SUMMARY.txt"
+
+          OLD_MOVED=0
+          if [ -e "$TARGET" ]; then
+            mv "$TARGET" "$BACKUP/New Amiga Games.before"
+            OLD_MOVED=1
+          fi
+          if ! mv "$STAGING" "$TARGET"; then
+            if [ "$OLD_MOVED" = 1 ] && [ ! -e "$TARGET" ]; then
+              mv "$BACKUP/New Amiga Games.before" "$TARGET"
+            fi
+            exit 1
+          fi
+
+          printf '%s\n' "$BACKUP" > build/free-games-evidence/backup-path.txt
+          printf '%s\n' "$TARGET" > build/free-games-evidence/target-path.txt
+          find "$TARGET" -type f | wc -l | tee build/free-games-evidence/file-count.txt
+          du -sb "$TARGET" | tee build/free-games-evidence/deployed-bytes.txt
+          sha256sum "$TARGET/CATALOGUE.txt" "$TARGET/CATALOGUE.json" \
+            "$TARGET/SOURCES.txt" "$TARGET/SUMMARY.txt" \
+            > build/free-games-evidence/deployed-catalogue-sha256.txt
+
+      - name: Verify from AmigaOS and preserve original running state
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import base64
+          import json
+          import os
+          import sys
+          import time
+          from pathlib import Path
+
+          source = Path(os.environ['AMIGACHROME_SOURCE'])
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac
+          import cradle_mcp
+
+          evidence = Path('build/free-games-evidence')
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          was_running = evidence.joinpath('was-running.txt').read_text().strip() == '1'
+          started_here = False
+
+          try:
+              current = tools._match('32')
+              if not current.get('running'):
+                  start = tools.start_instance('32')
+                  evidence.joinpath('verify-start.json').write_text(
+                      json.dumps(start, indent=2, default=str) + '\n', encoding='utf-8'
+                  )
+                  started_here = True
+
+              ready = None
+              for _ in range(75):
+                  try:
+                      ready = tools.amiga_run('32', 'Version\nAvail', timeout=10)
+                      if ready.get('finished') and 'Kickstart' in ready.get('output', ''):
+                          break
+                  except Exception:
+                      ready = None
+                  time.sleep(2)
+              else:
+                  raise SystemExit('Instance-32 did not become ready for catalogue verification')
+
+              command = '\n'.join([
+                  'List DH1:"New Amiga Games" LFORMAT="%N %L bytes"',
+                  'List DH1:"New Amiga Games"/"01 Ready to Test" DIRS',
+                  'List DH1:"New Amiga Games"/"02 Demos and Betas" DIRS',
+                  'Type DH1:"New Amiga Games"/SUMMARY.txt',
+              ])
+              listing = tools.amiga_run('32', command, timeout=40)
+              output = listing.get('output', '')
+              if not listing.get('finished'):
+                  raise SystemExit('Instance-32 catalogue listing did not finish')
+              for expected in ('CATALOGUE.txt', '01 Ready to Test', '02 Demos and Betas', 'Downloaded packages:'):
+                  if expected not in output:
+                      raise SystemExit(f'missing expected AmigaOS catalogue evidence: {expected}')
+
+              evidence.joinpath('amiga-ready.json').write_text(
+                  json.dumps(ready, indent=2, default=str) + '\n', encoding='utf-8'
+              )
+              evidence.joinpath('amiga-catalogue-list.json').write_text(
+                  json.dumps(listing, indent=2, default=str) + '\n', encoding='utf-8'
+              )
+
+              try:
+                  opened = tools.amiga_run('32', 'WBRun DH1:"New Amiga Games"\nWait 3', timeout=12)
+              except Exception as exc:
+                  opened = {'warning': str(exc)}
+              evidence.joinpath('amiga-wbrun.json').write_text(
+                  json.dumps(opened, indent=2, default=str) + '\n', encoding='utf-8'
+              )
+              time.sleep(2)
+              shot = tools.instance_screenshot('32', 'rtg', 50)
+              content = shot.get('_content', [{}])[0]
+              if content.get('data'):
+                  evidence.joinpath('instance32-new-amiga-games.png').write_bytes(
+                      base64.b64decode(content['data'])
+                  )
+              evidence.joinpath('screenshot.json').write_text(
+                  json.dumps({k: v for k, v in shot.items() if k != '_content'},
+                             indent=2, default=str) + '\n', encoding='utf-8'
+              )
+              print(json.dumps(listing, indent=2, default=str))
+          finally:
+              if not was_running:
+                  current = tools._match('32')
+                  if current.get('running'):
+                      stopped = tools.stop_instance('32')
+                      evidence.joinpath('verify-stop.json').write_text(
+                          json.dumps(stopped, indent=2, default=str) + '\n', encoding='utf-8'
+                      )
+                      print(json.dumps(stopped, indent=2, default=str))
+          PY
+
+      - name: Restore original Instance-32 state after a failure
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          STATE=build/free-games-evidence/was-running.txt
+          [ -s "$STATE" ] || exit 0
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          state_path = Path('build/free-games-evidence/was-running.txt')
+          if not state_path.is_file():
+              raise SystemExit(0)
+          source = Path(os.environ.get('AMIGACHROME_SOURCE', ''))
+          if not source.is_dir():
+              raise SystemExit(0)
+          sys.path.insert(0, str(source / 'scripts'))
+          import ac
+          import cradle_mcp
+
+          tools = cradle_mcp.Tools(ac.Cradle(ac.DEFAULT_CRADLE), full=True)
+          should_run = state_path.read_text().strip() == '1'
+          current = bool(tools._match('32').get('running'))
+          if should_run and not current:
+              print(json.dumps(tools.start_instance('32'), indent=2, default=str))
+          elif not should_run and current:
+              print(json.dumps(tools.stop_instance('32'), indent=2, default=str))
+          else:
+              print(json.dumps({'statePreserved': True, 'running': current}, indent=2))
+          PY
+
+      - name: Upload catalogue and deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Free-Amiga-Games-Instance32-${{ github.run_id }}
+          path: |
+            research/free-amiga-games-2026.json
+            build/New Amiga Games/CATALOGUE.txt
+            build/New Amiga Games/CATALOGUE.json
+            build/New Amiga Games/SOURCES.txt
+            build/New Amiga Games/README.txt
+            build/New Amiga Games/SUMMARY.txt
+            build/free-amiga-games-collector.log
+            build/free-games-evidence/
+          if-no-files-found: warn
+          retention-days: 60
+          compression-level: 6
