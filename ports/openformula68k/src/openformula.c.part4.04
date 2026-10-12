@@ -1,0 +1,40 @@
+    draw_ai_cars();
+    draw_player_car();
+
+    if (game_state == STATE_TITLE)
+        draw_title();
+    else {
+        draw_hud();
+        if (game_state == STATE_COUNTDOWN)
+            draw_countdown();
+        else if (game_state == STATE_FINISHED)
+            draw_finish();
+    }
+
+    acgame_platform_present_indexed(frame_surface);
+}
+
+/* ---- command line and main ------------------------------------------- */
+
+static int parse_number(const char *text, int fallback)
+{
+    char *end = NULL;
+    long value;
+    if (!text || !*text)
+        return fallback;
+    value = strtol(text, &end, 10);
+    if (!end || *end)
+        return fallback;
+    return (int)value;
+}
+
+static void usage(void)
+{
+    printf("OpenFormula68K [LAPS=n] [SECONDS=n] [NOAUDIO] [AUTOSTART] [AUTO] [AGA]\n");
+    printf("  Default display is RTG 640x360 indexed chunky.\n");
+    printf("  AUTO lets ACGame pick RTG or AGA; AGA forces a planar screen.\n");
+}
+
+int main(int argc, char **argv)
+{
+    acgame_video_config video;
