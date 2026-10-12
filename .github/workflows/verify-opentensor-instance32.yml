@@ -1,0 +1,60 @@
+name: Verify OpenTensor on Instance-32
+
+on:
+  push:
+    branches:
+      - deploy/opentensor-instance32-20261012
+    paths:
+      - .github/workflows/verify-opentensor-instance32.yml
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/amigachrome
+          ref: main
+          path: build/amigachrome
+          clean: true
+          fetch-depth: 1
+
+      - name: Verify the deployed drawer through Cradle MCP 0.2
+        shell: bash
+        run: |
+          set -euxo pipefail
+          test -s "$HOME/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/OpenTensor/OpenTensor"
+          python3 - <<'PY'
+          import json, sys
+          from pathlib import Path
+          scripts = Path("build/amigachrome/scripts").resolve()
+          sys.path.insert(0, str(scripts))
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          listing = tools.amiga_run("32", 'List DH1:OpenTensor LFORMAT="%N %L bytes"', timeout=20)
+          print(json.dumps(listing, indent=2, default=str))
+          if not listing.get("finished") or "OpenTensor" not in listing.get("output", ""):
+              raise SystemExit("DH1:OpenTensor was not visible from AmigaOS")
+          smoke = tools.amiga_run(
+              "32",
+              "Stack 1000000\nCD DH1:OpenTensor\nOpenTensor START 152 SECONDS 6 NOAUDIO",
+              timeout=45,
+          )
+          print(json.dumps(smoke, indent=2, default=str))
+          if not smoke.get("finished") or "renderer virgl" not in smoke.get("output", ""):
+              raise SystemExit("OpenTensor VirGL smoke test did not pass")
+          Path("opentensor-instance32-list.json").write_text(json.dumps(listing, indent=2, default=str) + "\n")
+          Path("opentensor-instance32-smoke.json").write_text(json.dumps(smoke, indent=2, default=str) + "\n")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: OpenTensor-Instance32-Verification-${{ github.run_id }}
+          path: |
+            opentensor-instance32-list.json
+            opentensor-instance32-smoke.json
+          if-no-files-found: warn
+          retention-days: 30
