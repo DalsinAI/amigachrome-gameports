@@ -1,0 +1,263 @@
+name: OpenTensor Beyond First Light Evidence
+
+on:
+  push:
+    branches:
+      - build/opentensor-first-light-20261012
+    paths:
+      - .github/workflows/opentensor-beyond-evidence.yml
+  workflow_dispatch:
+
+concurrency:
+  group: opentensor-beyond-evidence
+  cancel-in-progress: true
+
+jobs:
+  evidence:
+    name: Build and capture all Act II scenes
+    runs-on: self-hosted
+    timeout-minutes: 120
+    steps:
+      - name: Checkout harness
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Checkout OpenTensor source
+        uses: actions/checkout@v4
+        with:
+          repository: DalsinAI/openamigartg
+          ref: demo/opentensor-first-light-20261012
+          path: build/openamigartg
+          clean: true
+          fetch-depth: 1
+
+      - name: Build Beyond First Light 0.2.0
+        shell: bash
+        run: |
+          set -euxo pipefail
+          STOVE="$HOME/AmigaChrome/stoves/os32-gcc16" \
+          OLD_STOVE="$HOME/AmigaChrome/stoves/os32" \
+            sh build/openamigartg/demos/opentensor/build.sh \
+              "$GITHUB_WORKSPACE/build/opentensor"
+          test -s build/opentensor/OpenTensor-Beyond-First-Light-0.2.0.zip
+          sha256sum -c build/opentensor/SHA256SUMS
+
+      - name: Prepare disposable Instance-32 lab
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          LAB_NAME="opentensor-evidence-${GITHUB_RUN_ID}"
+          LAB="$LAB_ROOT/$LAB_NAME"
+          EVIDENCE="$GITHUB_WORKSPACE/build/opentensor/runtime-evidence"
+          mkdir -p "$LAB_ROOT" "$EVIDENCE"
+          python3 "$APP/scripts/lab_instance.py" copy Instance-32 "$LAB" --who ChatGPT
+          printf '%s\n' "$LAB_NAME" > "$EVIDENCE/LAB_NAME.txt"
+          printf '%s\n' "$LAB" > "$EVIDENCE/LAB_PATH.txt"
+
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" <<'PY'
+          import json, sys
+          app, name = sys.argv[1:]
+          sys.path.insert(0, app + "/scripts")
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          print(json.dumps(tools.install_agent("lab:" + name), indent=2))
+          PY
+
+          TARGET="$LAB/devices/harddisks/DH1/OpenTensor"
+          mkdir -p "$TARGET"
+          cp -a "$GITHUB_WORKSPACE/build/opentensor/package/OpenTensor/." "$TARGET/"
+          python3 - "$TARGET" <<'PY'
+          from pathlib import Path
+          import sys
+
+          target = Path(sys.argv[1])
+          scenes = [
+              ("timecode", 64, 14),
+              ("streams", 78, 14),
+              ("form", 96, 16),
+              ("breakout", 114, 16),
+              ("beyond", 130, 14),
+              ("stack", 152, 12),
+          ]
+          for name, start, seconds in scenes:
+              (target / ("Launch-" + name)).write_text(
+                  "FailAt 21\n"
+                  "Stack 1000000\n"
+                  "CD DH1:OpenTensor\n"
+                  f'Echo "OPENTENSOR {name}: starting" >OpenTensor-{name}.log\n'
+                  f'OpenTensor START {start} SECONDS {seconds} >>OpenTensor-{name}.log\n'
+                  f'Echo "OPENTENSOR {name}: returned RC $RC" >>OpenTensor-{name}.log\n',
+                  encoding="latin-1",
+              )
+          PY
+
+      - name: Capture Act II after each RTG screen is ready
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          EVIDENCE="$GITHUB_WORKSPACE/build/opentensor/runtime-evidence"
+          LAB_NAME=$(cat "$EVIDENCE/LAB_NAME.txt")
+          LAB="$LAB_ROOT/$LAB_NAME"
+          TARGET_DIR="$LAB/devices/harddisks/DH1/OpenTensor"
+
+          AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" "$TARGET_DIR" "$EVIDENCE" <<'PY'
+          import base64, json, sys, time
+          from pathlib import Path
+
+          app, name, target_dir_s, evidence_s = sys.argv[1:]
+          target_dir = Path(target_dir_s)
+          evidence = Path(evidence_s)
+          sys.path.insert(0, app + "/scripts")
+          from cradle_mcp_amiga import AmigaTools
+
+          tools = AmigaTools(); tools.Error = RuntimeError
+          target = "lab:" + name
+          scenes = [
+              ("timecode", 4.0),
+              ("streams", 4.0),
+              ("form", 8.0),
+              ("breakout", 5.0),
+              ("beyond", 5.0),
+              ("stack", 4.0),
+          ]
+
+          print(json.dumps(tools.lab(
+              "start", name, who="ChatGPT",
+              purpose="OpenTensor stable Act II evidence"
+          ), indent=2))
+          for attempt in range(50):
+              try:
+                  r = tools.amiga_run(target, "Version\nAvail", timeout=8)
+                  print(json.dumps(r, indent=2))
+                  if r.get("finished") and "Kickstart" in r.get("output", ""):
+                      break
+              except Exception as exc:
+                  print("agent wait", attempt, repr(exc))
+              time.sleep(3)
+          else:
+              raise SystemExit("OpenTensor lab agent did not become ready")
+
+          for scene, after_ready in scenes:
+              log = target_dir / f"OpenTensor-{scene}.log"
+              if log.exists():
+                  log.unlink()
+              r = tools.amiga_run(
+                  target,
+                  f"Run >NIL: <NIL: Execute DH1:OpenTensor/Launch-{scene}\nWait 1",
+                  timeout=15,
+              )
+              print(scene, json.dumps(r, indent=2))
+
+              # The first Mesa run has a cold-start interval where the RTG head
+              # can still be the old 320x240 black screen. Begin scene timing
+              # only after the 960x540 custom screen is visibly publishing.
+              ready = None
+              for attempt in range(30):
+                  shot = tools.instance_screenshot(target, "rtg", 50)
+                  image = shot["_content"][0]
+                  raw = base64.b64decode(image["data"])
+                  print(scene, "ready probe", attempt,
+                        shot.get("width"), shot.get("height"), len(raw))
+                  if shot.get("width", 0) >= 480 and shot.get("height", 0) >= 270 and len(raw) > 1000:
+                      ready = shot
+                      break
+                  time.sleep(0.75)
+              if ready is None:
+                  raise SystemExit(f"OpenTensor {scene} RTG screen did not become ready")
+
+              time.sleep(after_ready)
+              candidates = []
+              for frame in range(3):
+                  shot = tools.instance_screenshot(target, "rtg", 50)
+                  image = shot["_content"][0]
+                  raw = base64.b64decode(image["data"])
+                  candidates.append((len(raw), raw, shot))
+                  time.sleep(0.6)
+              size, raw, shot = max(candidates, key=lambda item: item[0])
+              png = evidence / f"opentensor-{scene}.png"
+              png.write_bytes(raw)
+              print(scene, "selected screenshot", shot.get("width"), shot.get("height"), size)
+
+              text = ""
+              for attempt in range(90):
+                  if log.exists():
+                      text = log.read_text(encoding="latin-1", errors="replace")
+                      if f"OPENTENSOR {scene}: returned RC" in text:
+                          break
+                  time.sleep(1)
+              else:
+                  raise SystemExit(f"OpenTensor {scene} run did not return")
+              (evidence / f"OpenTensor-{scene}.log").write_text(text, encoding="utf-8")
+              print(text)
+              time.sleep(1)
+
+          final = tools.instance_screenshot(target, "rtg", 50)
+          raw = base64.b64decode(final["_content"][0]["data"])
+          (evidence / "opentensor-after-tour.png").write_bytes(raw)
+          PY
+
+      - name: Verify the captured production
+        shell: bash
+        run: |
+          set -euxo pipefail
+          EVIDENCE="$GITHUB_WORKSPACE/build/opentensor/runtime-evidence"
+          for scene in timecode streams form breakout beyond stack; do
+            PNG="$EVIDENCE/opentensor-$scene.png"
+            LOG="$EVIDENCE/OpenTensor-$scene.log"
+            test -s "$PNG"
+            test -s "$LOG"
+            test "$(stat -c %s "$PNG")" -gt 1000
+            file "$PNG"
+            grep -F 'driver virgl' "$LOG"
+            grep -F 'AHI 44.1 kHz stereo' "$LOG"
+            grep -F '0 AHI underruns' "$LOG"
+            grep -F "OPENTENSOR $scene: returned RC 0" "$LOG"
+          done
+          test -s "$EVIDENCE/opentensor-after-tour.png"
+          file "$EVIDENCE/opentensor-after-tour.png"
+          sha256sum "$EVIDENCE"/*.png "$EVIDENCE"/OpenTensor-*.log \
+            > "$EVIDENCE/EVIDENCE-SHA256SUMS"
+
+      - name: Archive disposable lab
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          APP="$HOME/AmigaChrome"
+          LAB_ROOT="$HOME/AmigaChrome-dev/labs"
+          EVIDENCE="$GITHUB_WORKSPACE/build/opentensor/runtime-evidence"
+          LAB_NAME=$(cat "$EVIDENCE/LAB_NAME.txt" 2>/dev/null)
+          if [ -n "$LAB_NAME" ]; then
+            AMIGACHROME_LABS="$LAB_ROOT" python3 - "$APP" "$LAB_NAME" <<'PY'
+          import json, sys
+          app, name = sys.argv[1:]
+          sys.path.insert(0, app + "/scripts")
+          from cradle_mcp_amiga import AmigaTools
+          tools = AmigaTools(); tools.Error = RuntimeError
+          try:
+              print(json.dumps(tools.lab("archive", name), indent=2))
+          except Exception as exc:
+              print("lab archive:", repr(exc))
+          PY
+          fi
+
+      - name: Upload demo and scene evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenTensor-Beyond-First-Light-0.2.0-evidence-${{ github.run_id }}
+          path: |
+            build/opentensor/OpenTensor-Beyond-First-Light-0.2.0.zip
+            build/opentensor/SHA256SUMS
+            build/opentensor/package/OpenTensor/BUILD-INFO.txt
+            build/opentensor/package/OpenTensor/README.txt
+            build/opentensor/runtime-evidence/
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 0
