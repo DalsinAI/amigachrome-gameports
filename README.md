@@ -4,6 +4,18 @@ Open-source game-port and compatibility work for **m68k AROS**, **AmigaOS 3.x** 
 
 The repository contains compiled revival ports, the Neverball/OpenGPU release lane, and the next 3D source-intake targets. Compile success is useful evidence, but it is **not** synonymous with release readiness. See [RELEASE_POLICY.md](RELEASE_POLICY.md).
 
+## Open2 compiler pass - 12 October 2026
+
+The port queue has resumed with **OpenAmigaGCC 16.2.0-open2**. OpenJazz,
+Chocolate Doom, SDLPoP and both AssaultCube executables have new compile/link
+artifacts. NXEngine-evo's longer rebuild was still running at the evidence
+snapshot. No new game runtime or release pass is claimed.
+
+See [retained results and risks](evidence/open2-20261012/README.md) and
+[Open2 build instructions](docs/OPEN2_BUILDING.md). The shared CMake toolchain
+now honours `STOVE`, preventing an accidental fallback to an older compiler.
+The OpenGPU SDK archives remain explicitly recorded reused dependencies.
+
 ## Current port state
 
 | Port | Build state | Runtime state | Target / notes |

@@ -8,6 +8,12 @@ This is the single discussion backlog for game ports. It deliberately puts activ
 source-pinned work, near-term candidates and stretch targets in one list so priority can be
 decided across the whole field instead of inheriting the old Tier A / B / C grouping.
 
+**12 October Open2 execution update:** the active rebuild batch is recorded in
+[Open2 evidence](evidence/open2-20261012/README.md). OpenJazz, Chocolate Doom,
+SDLPoP and AssaultCube client/server have new compile/link results. NXEngine
+was still compiling at snapshot. No new source-only candidate is promoted to
+playable or RELEASE by this pass; the historical table below remains context.
+
 **Priority is intentionally TBD for every entry.** The next prioritisation pass should rank
 the whole list together using: **P0 = finish now, P1 = next wave, P2 = planned, P3 = stretch, PARK = research / low-return for now**.
 

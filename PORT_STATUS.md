@@ -6,7 +6,22 @@ Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**
 
 **DONE means RELEASE.** A successful compile is intermediate evidence, not a release result.
 
-## Compiler qualification hold
+## 12 October 2026 - Open2 application rebuilds
+
+**Current addition to the older snapshot below:** OpenJazz, Chocolate Doom,
+SDLPoP and AssaultCube client/server compile and final-link with the published
+16.2.0-open2 toolchain. Every artifact is still runtime-unqualified in this pass.
+NXEngine-evo was compiling at snapshot; no final result is claimed.
+
+[Raw build logs, hashes and limitations](evidence/open2-20261012/README.md)
+record the exact release archive, local source pins and 2,012 verified compiler
+and runtime files. Existing OpenGPU/codec archives were reused, not rebuilt.
+AssaultCube's linker warnings and audio stub are explicit outstanding work.
+These results supersede the old compiler hold only for the *new application
+artifacts*, not old binaries or unqualified dependency stacks.
+
+## Historical compiler qualification hold (9 October)
+
 
 The currently installed GCC 16.2.0b stove has reproduced compiler defects on the
 AC090/68040 target. All binaries produced with that stove are therefore

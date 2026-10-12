@@ -1,0 +1,3 @@
+
+# Preserve runner logs byte-for-byte; SHA-256 receipts depend on exact output.
+evidence/open2-20261012/*.txt -whitespace
