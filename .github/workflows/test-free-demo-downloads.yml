@@ -1,0 +1,70 @@
+name: Test Public Amiga Demo Downloads
+
+on:
+  push:
+    branches:
+      - deploy/free-amiga-games-instance32-20261012
+    paths:
+      - .github/workflows/test-free-demo-downloads.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: self-hosted
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Install itch downloader and browser fallback
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p build/itch
+          npm install --prefix build/itch --silent itchio-downloader puppeteer@^25.11.0
+          node --check scripts/itch_download_one.js
+          command -v chromium || command -v chromium-browser || command -v google-chrome || true
+
+      - name: Try public zero-cost demo and freeware pages
+        shell: bash
+        env:
+          NODE_PATH: ${{ github.workspace }}/build/itch/node_modules
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
+        run: |
+          set -u
+          mkdir -p build/demo-downloads build/results
+          rc=0
+          while IFS='|' read -r name url; do
+            [ -n "$name" ] || continue
+            out="build/demo-downloads/$name"
+            mkdir -p "$out"
+            echo "=== $name ==="
+            node scripts/itch_download_one.js "$url" "$out" "$name" \
+              >"build/results/$name.log" 2>&1 || true
+            cat "build/results/$name.log"
+            find "$out" -maxdepth 2 -type f -printf '%P %s bytes\n' | sort \
+              >"build/results/$name.files"
+            cat "build/results/$name.files"
+          done <<'EOF'
+          Foxys-Run|https://vairn.itch.io/foxysrun
+          Treasure-of-Usas|https://h0ffman.itch.io/treasure-of-usas-amiga
+          Norrland-Demo|https://8080.itch.io/norrland
+          Kaboomania-Demo|https://fancyfactory.itch.io/kaboomania
+          Mundialito-2-Demo|https://acneproduction.itch.io/mundialito-2
+          Soul-Killa|https://eismanberlin.itch.io/soul-killa
+          EOF
+          exit "$rc"
+
+      - name: Upload test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-amiga-demo-download-tests-${{ github.run_id }}
+          path: |
+            build/results/
+            build/demo-downloads/
+          if-no-files-found: warn
+          retention-days: 14
+          compression-level: 0
