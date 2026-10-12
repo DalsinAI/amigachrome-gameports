@@ -1,4 +1,3 @@
-#include <proto/exec.h>
 /* final section contains the returned RC diagnostic used by the build gate */
 #include "openformula.c.part4.00"
 #include "openformula.c.part4.01"
