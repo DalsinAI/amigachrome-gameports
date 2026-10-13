@@ -122,6 +122,16 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | Speed Dreams | STRETCH | OpenGPU | TBD | Large racing/physics/3D target. |
 | 0 A.D. | STRETCH | OpenGPU | TBD | Very large RTS/engine/dependency stress target. |
 
+## Post-merge checks - 13 October 2026
+
+The port/SDL changes are merged and rebuilt. A new Amiga-only OpenJazz
+configuration-directory check fixes the demonstrated false "not writable"
+result. Chocolate Doom reached software-rendered gameplay, saved/loaded a
+slot and exited 0 with sound explicitly disabled. Final OpenJazz startup/focus
+repetition and Doom audio remain open, not release passes.
+
+[Exact results, hashes, limits and next checks](evidence/postmerge-20261013/README.md).
+
 ## Priority discussion fields
 
 When we rank this backlog, useful dimensions are:

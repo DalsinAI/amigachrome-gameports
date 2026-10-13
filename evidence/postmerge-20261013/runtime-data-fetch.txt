@@ -1,0 +1,24 @@
+{
+  "cache": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/test-data-cache",
+  "createdAt": "2026-10-13T00:18:36Z",
+  "networkAllowed": true,
+  "results": [
+    {
+      "dataset": "freedoom-0.13.0",
+      "expectedSha256": "3f9b264f3e3ce503b4fb7f6bdcb1f419d93c7b546f4df3e874dd878db9688f59",
+      "path": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/test-data-cache/freedoom-0.13.0.zip",
+      "sha256": "3f9b264f3e3ce503b4fb7f6bdcb1f419d93c7b546f4df3e874dd878db9688f59",
+      "source": "https://github.com/freedoom/freedoom/releases/download/v0.13.0/freedoom-0.13.0.zip",
+      "state": "downloaded"
+    },
+    {
+      "dataset": "jazz-shareware-1.1",
+      "expectedSha256": null,
+      "path": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/test-data-cache/jazz-shareware-1.1.zip",
+      "sha256": "ed025415c0bc5ebc3a41e7a070551bdfdfb0b65b5314241152d8bd31f87c22da",
+      "source": "https://www.dosgamesarchive.com/file.php?id=2031",
+      "state": "downloaded"
+    }
+  ],
+  "schema": 1
+}

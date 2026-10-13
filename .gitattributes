@@ -15,3 +15,7 @@ evidence/open2-20261013-resume/*.txt -whitespace
 # Hash receipts describe exact bytes, on Windows checkouts as well as Linux.
 evidence/** -text
 toolchain/port-dependencies.lock.json -text
+
+ports/openjazz/patches/0002-amiga-directory-write-check.patch -whitespace
+
+evidence/postmerge-20261013/*.txt -whitespace
