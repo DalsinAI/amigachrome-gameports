@@ -1,0 +1,17 @@
+test_existing_stove_cannot_be_overwritten (test_open2_staging.StagingTests.test_existing_stove_cannot_be_overwritten) ... ok
+test_missing_ndk_is_explicit_and_non_destructive (test_open2_staging.StagingTests.test_missing_ndk_is_explicit_and_non_destructive) ... ok
+test_missing_sdl_archive_is_not_a_usable_stove (test_open2_staging.StagingTests.test_missing_sdl_archive_is_not_a_usable_stove) ... ok
+test_sdk_overlay_never_replaces_compiler_runtime_or_headers (test_open2_staging.StagingTests.test_sdk_overlay_never_replaces_compiler_runtime_or_headers) ... ok
+test_wrong_checksum_refuses_before_populating_stove (test_open2_staging.StagingTests.test_wrong_checksum_refuses_before_populating_stove) ... ok
+test_amiga_environment_alone_is_supported (test_toolchain_selection.StoveSelectionTests.test_amiga_environment_alone_is_supported) ... ok
+test_conflicting_environment_names_fail_closed (test_toolchain_selection.StoveSelectionTests.test_conflicting_environment_names_fail_closed) ... ok
+test_empty_amiga_environment_does_not_mask_stove (test_toolchain_selection.StoveSelectionTests.test_empty_amiga_environment_does_not_mask_stove) ... ok
+test_explicit_cache_overrides_both_environment_names (test_toolchain_selection.StoveSelectionTests.test_explicit_cache_overrides_both_environment_names) ... ok
+test_legacy_default_is_unchanged (test_toolchain_selection.StoveSelectionTests.test_legacy_default_is_unchanged) ... ok
+test_space_in_stove_path (test_toolchain_selection.StoveSelectionTests.test_space_in_stove_path) ... ok
+test_stove_selects_compiler_and_headers_consistently (test_toolchain_selection.StoveSelectionTests.test_stove_selects_compiler_and_headers_consistently) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.179s
+
+OK

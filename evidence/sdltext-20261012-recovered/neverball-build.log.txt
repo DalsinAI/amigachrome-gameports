@@ -1,0 +1,864 @@
+make: Entering directory '$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/neverball'
+Will make a "devel" build of Neverball 1.6.0.
+make: sdl2-config: No such file or directory
+make: curl-config: No such file or directory
+make: sdl2-config: No such file or directory
+make: curl-config: No such file or directory
+rm -f neverball neverputt mapc tests/test
+find ball share putt tests \( -name '*.o' -o -name '*.d' \) -delete
+rm -f neverball.ico.o neverputt.ico.o
+make: Leaving directory '$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/neverball'
+make: Entering directory '$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/neverball'
+Will make a "release" build of Neverball 1.6.0.
+make: sdl2-config: No such file or directory
+make: sdl2-config: No such file or directory
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/lang.d -MT "share/lang.o" share/lang.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/st_common.d -MT "share/st_common.o" share/st_common.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/vec3.d -MT "share/vec3.o" share/vec3.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/base_image.d -MT "share/base_image.o" share/base_image.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/vec3.o -c share/vec3.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/lang.o -c share/lang.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/base_image.o -c share/base_image.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/st_common.o -c share/st_common.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/image.d -MT "share/image.o" share/image.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/solid_base.d -MT "share/solid_base.o" share/solid_base.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/solid_base.o -c share/solid_base.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/image.o -c share/image.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/solid_vary.d -MT "share/solid_vary.o" share/solid_vary.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/solid_vary.o -c share/solid_vary.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/solid_draw.d -MT "share/solid_draw.o" share/solid_draw.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/solid_draw.o -c share/solid_draw.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/solid_all.d -MT "share/solid_all.o" share/solid_all.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/solid_all.o -c share/solid_all.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/mtrl.d -MT "share/mtrl.o" share/mtrl.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/mtrl.o -c share/mtrl.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/part.d -MT "share/part.o" share/part.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/part.o -c share/part.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/geom.d -MT "share/geom.o" share/geom.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/ball.d -MT "share/ball.o" share/ball.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/geom.o -c share/geom.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/ease.d -MT "share/ease.o" share/ease.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/transition.d -MT "share/transition.o" share/transition.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/ball.o -c share/ball.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/ease.o -c share/ease.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/transition.o -c share/transition.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/gui.d -MT "share/gui.o" share/gui.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/gui.o -c share/gui.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/font.d -MT "share/font.o" share/font.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/theme.d -MT "share/theme.o" share/theme.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/font.o -c share/font.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/theme.o -c share/theme.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/base_config.d -MT "share/base_config.o" share/base_config.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/base_config.o -c share/base_config.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/config.d -MT "share/config.o" share/config.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/config.o -c share/config.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/video.d -MT "share/video.o" share/video.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/video.o -c share/video.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/glext.d -MT "share/glext.o" share/glext.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/glext.o -c share/glext.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/binary.d -MT "share/binary.o" share/binary.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/binary.o -c share/binary.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/state.d -MT "share/state.o" share/state.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/audio.d -MT "share/audio.o" share/audio.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/text.d -MT "share/text.o" share/text.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/audio.o -c share/audio.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/text.o -c share/text.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/state.o -c share/state.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/common.d -MT "share/common.o" share/common.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/list.d -MT "share/list.o" share/list.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/common.o -c share/common.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/list.o -c share/list.c
+In file included from share/common.c:24:
+share/common.c: In function 'strip_spaces':
+share/common.c:110:36: warning: array subscript has type 'char' [-Wchar-subscripts]
+  110 |         while (p >= str && isspace(*p))
+      |                                    ^~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/queue.d -MT "share/queue.o" share/queue.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/queue.o -c share/queue.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/cmd.d -MT "share/cmd.o" share/cmd.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/cmd.o -c share/cmd.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/array.d -MT "share/array.o" share/array.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/array.o -c share/array.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/dir.d -MT "share/dir.o" share/dir.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/dir.o -c share/dir.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/fbo.d -MT "share/fbo.o" share/fbo.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/glsl.d -MT "share/glsl.o" share/glsl.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/fbo.o -c share/fbo.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/fs_common.d -MT "share/fs_common.o" share/fs_common.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/glsl.o -c share/glsl.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/fs_common.o -c share/fs_common.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/log.d -MT "share/log.o" share/log.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/log.o -c share/log.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/joy.d -MT "share/joy.o" share/joy.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/package.d -MT "share/package.o" share/package.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/st_package.d -MT "share/st_package.o" share/st_package.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/joy.o -c share/joy.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/mapclib.d -MT "share/mapclib.o" share/mapclib.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/package.o -c share/package.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/st_package.o -c share/st_package.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/mapclib.o -c share/mapclib.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/hud.d -MT "ball/hud.o" ball/hud.c
+share/mapclib.c: In function 'incl':
+share/mapclib.c:516:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  516 |     return (fp->lc < MAXL) ? fp->lc++ : overflow(ctx, "lump");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:516:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incm':
+share/mapclib.c:474:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  474 |     return (fp->mc < MAXM) ? fp->mc++ : overflow(ctx, "mtrl");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:474:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'inci':
+share/mapclib.c:588:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  588 |     return (fp->ic < MAXI) ? fp->ic++ : overflow(ctx, "indx");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:588:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incs':
+share/mapclib.c:492:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  492 |     return (fp->sc < MAXS) ? fp->sc++ : overflow(ctx, "side");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:492:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'inch':
+share/mapclib.c:540:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  540 |     return (fp->hc < MAXH) ? fp->hc++ : overflow(ctx, "item");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:540:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incx':
+share/mapclib.c:558:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  558 |     return (fp->xc < MAXX) ? fp->xc++ : overflow(ctx, "swch");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:558:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incr':
+share/mapclib.c:564:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  564 |     return (fp->rc < MAXR) ? fp->rc++ : overflow(ctx, "bill");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:564:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incp':
+share/mapclib.c:528:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  528 |     return (fp->pc < MAXP) ? fp->pc++ : overflow(ctx, "path");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:528:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incu':
+share/mapclib.c:570:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  570 |     return (fp->uc < MAXU) ? fp->uc++ : overflow(ctx, "ball");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:570:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incw':
+share/mapclib.c:576:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  576 |     return (fp->wc < MAXW) ? fp->wc++ : overflow(ctx, "view");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:576:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incz':
+share/mapclib.c:546:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  546 |     return (fp->zc < MAXZ) ? fp->zc++ : overflow(ctx, "goal");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:546:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incj':
+share/mapclib.c:552:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  552 |     return (fp->jc < MAXJ) ? fp->jc++ : overflow(ctx, "jump");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:552:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incb':
+share/mapclib.c:534:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  534 |     return (fp->bc < MAXB) ? fp->bc++ : overflow(ctx, "body");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:534:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incg':
+share/mapclib.c:510:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  510 |     return (fp->gc < MAXG) ? fp->gc++ : overflow(ctx, "geom");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:510:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'inco':
+share/mapclib.c:504:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  504 |     return (fp->oc < MAXO) ? fp->oc++ : overflow(ctx, "offs");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:504:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'inct':
+share/mapclib.c:498:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  498 |     return (fp->tc < MAXT) ? fp->tc++ : overflow(ctx, "texc");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:498:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incv':
+share/mapclib.c:480:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  480 |     return (fp->vc < MAXV) ? fp->vc++ : overflow(ctx, "vert");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:480:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incd':
+share/mapclib.c:582:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  582 |     return (fp->dc < MAXD) ? fp->dc++ : overflow(ctx, "dict");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:582:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'vert_side_add':
+share/mapclib.c:1970:5: warning: 'overflow' reading 53 bytes from a region of size 13 [-Wstringop-overread]
+ 1970 |     overflow(ctx, "vertex plane");
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:1970:5: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'ince':
+share/mapclib.c:486:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  486 |     return (fp->ec < MAXE) ? fp->ec++ : overflow(ctx, "edge");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:486:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'incn':
+share/mapclib.c:522:41: warning: 'overflow' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  522 |     return (fp->nc < MAXN) ? fp->nc++ : overflow(ctx, "node");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:522:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'make_targ':
+share/mapclib.c:1845:9: warning: 'overflow' reading 53 bytes from a region of size 7 [-Wstringop-overread]
+ 1845 |         overflow(ctx, "target");
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:1845:9: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/hud.o -c ball/hud.c
+share/mapclib.c: In function 'clip_vert':
+share/mapclib.c:2076:21: warning: 'overflow' reading 53 bytes from a region of size 13 [-Wstringop-overread]
+ 2076 |                     overflow(ctx, "vertex plane");
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:2076:21: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'load_packages_from_file',
+    inlined from 'available_packages_done' at share/package.c:646:30:
+share/package.c:450:21: warning: 'strncpy' output may be truncated copying between 0 and 63 bytes from a string of length 63 [-Wstringop-truncation]
+  450 |                     strncpy(pkg->type, pkg->id, MIN(sizeof (pkg->type) - 1, prefix_len));
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c: In function 'smth_file':
+share/mapclib.c:2691:13: warning: 'overflow' reading 53 bytes from a region of size 19 [-Wstringop-overread]
+ 2691 |             overflow(ctx, "canonical vertices");
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:2691:13: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/game_common.d -MT "ball/game_common.o" ball/game_common.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/game_common.o -c ball/game_common.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/game_client.d -MT "ball/game_client.o" ball/game_client.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/game_server.d -MT "ball/game_server.o" ball/game_server.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/game_client.o -c ball/game_client.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/game_server.o -c ball/game_server.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/game_proxy.d -MT "ball/game_proxy.o" ball/game_proxy.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/game_proxy.o -c ball/game_proxy.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/game_draw.d -MT "ball/game_draw.o" ball/game_draw.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/game_draw.o -c ball/game_draw.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/score.d -MT "ball/score.o" ball/score.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/score.o -c ball/score.c
+In function 'incu',
+    inlined from 'make_ball' at share/mapclib.c:1853:17:
+share/mapclib.c:570:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  570 |     return (fp->uc < MAXU) ? fp->uc++ : overflow(ctx, "ball");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:570:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'make_ball':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+share/mapclib.c: In function 'clip_vert':
+share/mapclib.c:2076:21: warning: 'overflow.isra' reading 53 bytes from a region of size 13 [-Wstringop-overread]
+ 2076 |                     overflow(ctx, "vertex plane");
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:2076:21: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incv',
+    inlined from 'clip_vert' at share/mapclib.c:2084:18:
+share/mapclib.c:480:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  480 |     return (fp->vc < MAXV) ? fp->vc++ : overflow(ctx, "vert");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:480:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'clip_vert':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'inci',
+    inlined from 'clip_vert' at share/mapclib.c:2087:20:
+share/mapclib.c:588:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  588 |     return (fp->ic < MAXI) ? fp->ic++ : overflow(ctx, "indx");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:588:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'clip_vert':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incm',
+    inlined from 'read_mtrl' at share/mapclib.c:799:19:
+share/mapclib.c:474:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  474 |     return (fp->mc < MAXM) ? fp->mc++ : overflow(ctx, "mtrl");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:474:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_mtrl':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/level.d -MT "ball/level.o" ball/level.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/level.o -c ball/level.c
+In function 'incn',
+    inlined from 'node_node.constprop' at share/mapclib.c:2986:16:
+share/mapclib.c:522:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  522 |     return (fp->nc < MAXN) ? fp->nc++ : overflow(ctx, "node");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:522:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'node_node.constprop':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incp',
+    inlined from 'make_parented_path' at share/mapclib.c:3409:14,
+    inlined from 'turn_entity' at share/mapclib.c:3499:9:
+share/mapclib.c:528:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  528 |     return (fp->pc < MAXP) ? fp->pc++ : overflow(ctx, "path");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:528:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'turn_entity':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/progress.d -MT "ball/progress.o" ball/progress.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/set.d -MT "ball/set.o" ball/set.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/progress.o -c ball/progress.c
+In function 'inct',
+    inlined from 'clip_geom' at share/mapclib.c:2153:20:
+share/mapclib.c:498:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  498 |     return (fp->tc < MAXT) ? fp->tc++ : overflow(ctx, "texc");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:498:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'clip_geom':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incg',
+    inlined from 'clip_geom' at share/mapclib.c:2202:24:
+share/mapclib.c:510:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  510 |     return (fp->gc < MAXG) ? fp->gc++ : overflow(ctx, "geom");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:510:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'clip_geom':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'inco',
+    inlined from 'clip_geom' at share/mapclib.c:2206:48:
+share/mapclib.c:504:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  504 |     return (fp->oc < MAXO) ? fp->oc++ : overflow(ctx, "offs");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:504:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'clip_geom':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'inci',
+    inlined from 'clip_geom' at share/mapclib.c:2226:9:
+share/mapclib.c:588:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  588 |     return (fp->ic < MAXI) ? fp->ic++ : overflow(ctx, "indx");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:588:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'clip_geom':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incg',
+    inlined from 'read_f' at share/mapclib.c:1031:34,
+    inlined from 'read_obj' at share/mapclib.c:1091:21:
+share/mapclib.c:510:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  510 |     return (fp->gc < MAXG) ? fp->gc++ : overflow(ctx, "geom");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:510:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_obj':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'inco',
+    inlined from 'read_f' at share/mapclib.c:1033:44,
+    inlined from 'read_obj' at share/mapclib.c:1091:21:
+share/mapclib.c:504:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  504 |     return (fp->oc < MAXO) ? fp->oc++ : overflow(ctx, "offs");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:504:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_obj':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'inct',
+    inlined from 'read_vt' at share/mapclib.c:994:34,
+    inlined from 'read_obj' at share/mapclib.c:1094:51:
+share/mapclib.c:498:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  498 |     return (fp->tc < MAXT) ? fp->tc++ : overflow(ctx, "texc");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:498:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_obj':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incs',
+    inlined from 'read_vn' at share/mapclib.c:1002:34,
+    inlined from 'read_obj' at share/mapclib.c:1095:51:
+share/mapclib.c:492:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  492 |     return (fp->sc < MAXS) ? fp->sc++ : overflow(ctx, "side");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:492:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_obj':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incv',
+    inlined from 'read_v' at share/mapclib.c:1010:34,
+    inlined from 'read_obj' at share/mapclib.c:1096:51:
+share/mapclib.c:480:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  480 |     return (fp->vc < MAXV) ? fp->vc++ : overflow(ctx, "vert");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:480:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_obj':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/set.o -c ball/set.c
+In function 'incj',
+    inlined from 'make_jump' at share/mapclib.c:1696:17:
+share/mapclib.c:552:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  552 |     return (fp->jc < MAXJ) ? fp->jc++ : overflow(ctx, "jump");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:552:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'make_jump':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incx',
+    inlined from 'make_swch' at share/mapclib.c:1754:17:
+share/mapclib.c:558:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  558 |     return (fp->xc < MAXX) ? fp->xc++ : overflow(ctx, "swch");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:558:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'make_swch':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incz',
+    inlined from 'make_goal' at share/mapclib.c:1610:17:
+share/mapclib.c:546:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  546 |     return (fp->zc < MAXZ) ? fp->zc++ : overflow(ctx, "goal");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:546:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'make_goal':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/demo.d -MT "ball/demo.o" ball/demo.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/demo_dir.d -MT "ball/demo_dir.o" ball/demo_dir.c
+In function 'inch',
+    inlined from 'make_item' at share/mapclib.c:1484:17:
+share/mapclib.c:540:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  540 |     return (fp->hc < MAXH) ? fp->hc++ : overflow(ctx, "item");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:540:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'make_item':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/demo.o -c ball/demo.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/demo_dir.o -c ball/demo_dir.c
+In function 'incb',
+    inlined from 'make_body' at share/mapclib.c:1423:25:
+share/mapclib.c:534:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  534 |     return (fp->bc < MAXB) ? fp->bc++ : overflow(ctx, "body");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:534:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'make_body':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incd',
+    inlined from 'make_dict' at share/mapclib.c:1397:40,
+    inlined from 'make_body' at share/mapclib.c:1458:13:
+share/mapclib.c:582:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  582 |     return (fp->dc < MAXD) ? fp->dc++ : overflow(ctx, "dict");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:582:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'make_body':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'inci',
+    inlined from 'make_body' at share/mapclib.c:1467:16:
+share/mapclib.c:588:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  588 |     return (fp->ic < MAXI) ? fp->ic++ : overflow(ctx, "indx");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:588:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'make_body':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/util.d -MT "ball/util.o" ball/util.c
+In function 'make_ref',
+    inlined from 'make_bill' at share/mapclib.c:1595:13,
+    inlined from 'read_ent' at share/mapclib.c:1913:52:
+share/mapclib.c:661:9: warning: 'strncpy' output may be truncated copying 255 bytes from a string of length 4095 [-Wstringop-truncation]
+  661 |         strncpy(ref->name, name, MAXSTR - 1);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'make_ref',
+    inlined from 'make_bill' at share/mapclib.c:1592:13,
+    inlined from 'read_ent' at share/mapclib.c:1913:52:
+share/mapclib.c:661:9: warning: 'strncpy' output may be truncated copying 255 bytes from a string of length 4095 [-Wstringop-truncation]
+  661 |         strncpy(ref->name, name, MAXSTR - 1);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'make_sym',
+    inlined from 'make_path' at share/mapclib.c:1328:13,
+    inlined from 'read_ent' at share/mapclib.c:1914:52:
+share/mapclib.c:647:9: warning: 'strncpy' output may be truncated copying 255 bytes from a string of length 4095 [-Wstringop-truncation]
+  647 |         strncpy(sym->name, name, MAXSTR - 1);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'make_ref',
+    inlined from 'make_path' at share/mapclib.c:1331:13,
+    inlined from 'read_ent' at share/mapclib.c:1914:52:
+share/mapclib.c:661:9: warning: 'strncpy' output may be truncated copying 255 bytes from a string of length 4095 [-Wstringop-truncation]
+  661 |         strncpy(ref->name, name, MAXSTR - 1);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'make_ref',
+    inlined from 'make_path' at share/mapclib.c:1335:13,
+    inlined from 'read_ent' at share/mapclib.c:1914:52:
+share/mapclib.c:661:9: warning: 'strncpy' output may be truncated copying 255 bytes from a string of length 4095 [-Wstringop-truncation]
+  661 |         strncpy(ref->name, name, MAXSTR - 1);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'make_ref',
+    inlined from 'make_path' at share/mapclib.c:1341:13,
+    inlined from 'read_ent' at share/mapclib.c:1914:52:
+share/mapclib.c:661:9: warning: 'strncpy' output may be truncated copying 255 bytes from a string of length 4095 [-Wstringop-truncation]
+  661 |         strncpy(ref->name, name, MAXSTR - 1);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'make_ref',
+    inlined from 'make_view' at share/mapclib.c:1676:13,
+    inlined from 'read_ent' at share/mapclib.c:1918:52:
+share/mapclib.c:661:9: warning: 'strncpy' output may be truncated copying 255 bytes from a string of length 4095 [-Wstringop-truncation]
+  661 |         strncpy(ref->name, name, MAXSTR - 1);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'make_sym',
+    inlined from 'make_targ' at share/mapclib.c:1830:13,
+    inlined from 'read_ent' at share/mapclib.c:1925:52:
+share/mapclib.c:647:9: warning: 'strncpy' output may be truncated copying 255 bytes from a string of length 4095 [-Wstringop-truncation]
+  647 |         strncpy(sym->name, name, MAXSTR - 1);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'incl',
+    inlined from 'read_lump' at share/mapclib.c:1255:34,
+    inlined from 'read_ent' at share/mapclib.c:1902:25:
+share/mapclib.c:516:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  516 |     return (fp->lc < MAXL) ? fp->lc++ : overflow(ctx, "lump");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:516:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_ent':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'inci',
+    inlined from 'read_lump' at share/mapclib.c:1271:13,
+    inlined from 'read_ent' at share/mapclib.c:1902:25:
+share/mapclib.c:588:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  588 |     return (fp->ic < MAXI) ? fp->ic++ : overflow(ctx, "indx");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:588:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_ent':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incs',
+    inlined from 'read_lump' at share/mapclib.c:1272:13,
+    inlined from 'read_ent' at share/mapclib.c:1902:25:
+share/mapclib.c:492:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  492 |     return (fp->sc < MAXS) ? fp->sc++ : overflow(ctx, "side");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:492:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_ent':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incr',
+    inlined from 'make_bill' at share/mapclib.c:1544:17,
+    inlined from 'read_ent' at share/mapclib.c:1913:52:
+share/mapclib.c:564:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  564 |     return (fp->rc < MAXR) ? fp->rc++ : overflow(ctx, "bill");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:564:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_ent':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incp',
+    inlined from 'make_path' at share/mapclib.c:1311:17,
+    inlined from 'read_ent' at share/mapclib.c:1914:52:
+share/mapclib.c:528:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  528 |     return (fp->pc < MAXP) ? fp->pc++ : overflow(ctx, "path");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:528:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_ent':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incw',
+    inlined from 'make_view' at share/mapclib.c:1662:17,
+    inlined from 'read_ent' at share/mapclib.c:1918:52:
+share/mapclib.c:576:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  576 |     return (fp->wc < MAXW) ? fp->wc++ : overflow(ctx, "view");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:576:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_ent':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'make_targ',
+    inlined from 'read_ent' at share/mapclib.c:1925:52:
+share/mapclib.c:1845:9: warning: 'overflow.isra' reading 53 bytes from a region of size 7 [-Wstringop-overread]
+ 1845 |         overflow(ctx, "target");
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:1845:9: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'read_ent':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/util.o -c ball/util.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_conf.d -MT "ball/st_conf.o" ball/st_conf.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_conf.o -c ball/st_conf.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_demo.d -MT "ball/st_demo.o" ball/st_demo.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_demo.o -c ball/st_demo.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_save.d -MT "ball/st_save.o" ball/st_save.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_save.o -c ball/st_save.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_goal.d -MT "ball/st_goal.o" ball/st_goal.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_goal.o -c ball/st_goal.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_fail.d -MT "ball/st_fail.o" ball/st_fail.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_done.d -MT "ball/st_done.o" ball/st_done.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_fail.o -c ball/st_fail.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_done.o -c ball/st_done.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_level.d -MT "ball/st_level.o" ball/st_level.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_level.o -c ball/st_level.c
+In function 'inci',
+    inlined from 'clip_edge' at share/mapclib.c:2122:17,
+    inlined from 'clip_lump' at share/mapclib.c:2256:13,
+    inlined from 'clip_file' at share/mapclib.c:2278:9,
+    inlined from 'mapc_compile_internal' at share/mapclib.c:3605:9,
+    inlined from 'mapc_compile' at share/mapclib.c:3625:9:
+share/mapclib.c:588:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  588 |     return (fp->ic < MAXI) ? fp->ic++ : overflow(ctx, "indx");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:588:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'mapc_compile':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'ince',
+    inlined from 'clip_edge' at share/mapclib.c:2123:17,
+    inlined from 'clip_lump' at share/mapclib.c:2256:13,
+    inlined from 'clip_file' at share/mapclib.c:2278:9,
+    inlined from 'mapc_compile_internal' at share/mapclib.c:3605:9,
+    inlined from 'mapc_compile' at share/mapclib.c:3625:9:
+share/mapclib.c:486:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  486 |     return (fp->ec < MAXE) ? fp->ec++ : overflow(ctx, "edge");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:486:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'mapc_compile':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'smth_file',
+    inlined from 'mapc_compile_internal' at share/mapclib.c:3608:9,
+    inlined from 'mapc_compile' at share/mapclib.c:3625:9:
+share/mapclib.c:2691:13: warning: 'overflow.isra' reading 53 bytes from a region of size 19 [-Wstringop-overread]
+ 2691 |             overflow(ctx, "canonical vertices");
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:2691:13: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'mapc_compile':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+In function 'incs',
+    inlined from 'smth_file' at share/mapclib.c:2794:30,
+    inlined from 'mapc_compile_internal' at share/mapclib.c:3608:9,
+    inlined from 'mapc_compile' at share/mapclib.c:3625:9:
+share/mapclib.c:492:41: warning: 'overflow.isra' reading 53 bytes from a region of size 5 [-Wstringop-overread]
+  492 |     return (fp->sc < MAXS) ? fp->sc++ : overflow(ctx, "side");
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+share/mapclib.c:492:41: note: referencing argument 2 of type 'const char[53]'
+share/mapclib.c: In function 'mapc_compile':
+share/mapclib.c:462:12: note: in a call to function 'overflow.isra'
+  462 | static int overflow(struct mapc_context *ctx, const char s[64u - sizeof (" overflow\n")])
+      |            ^~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_over.d -MT "ball/st_over.o" ball/st_over.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_play.d -MT "ball/st_play.o" ball/st_play.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_over.o -c ball/st_over.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_play.o -c ball/st_play.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_set.d -MT "ball/st_set.o" ball/st_set.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_start.d -MT "ball/st_start.o" ball/st_start.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_set.o -c ball/st_set.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_start.o -c ball/st_start.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_title.d -MT "ball/st_title.o" ball/st_title.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_title.o -c ball/st_title.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_help.d -MT "ball/st_help.o" ball/st_help.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_name.d -MT "ball/st_name.o" ball/st_name.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_help.o -c ball/st_help.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_shared.d -MT "ball/st_shared.o" ball/st_shared.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_name.o -c ball/st_name.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_pause.d -MT "ball/st_pause.o" ball/st_pause.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_shared.o -c ball/st_shared.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_pause.o -c ball/st_pause.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_ball.d -MT "ball/st_ball.o" ball/st_ball.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/st_game_link.d -MT "ball/st_game_link.o" ball/st_game_link.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF ball/main.d -MT "ball/main.o" ball/main.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_ball.o -c ball/st_ball.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/st_game_link.o -c ball/st_game_link.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/solid_sim_sol.d -MT "share/solid_sim_sol.o" share/solid_sim_sol.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o ball/main.o -c ball/main.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/solid_sim_sol.o -c share/solid_sim_sol.c
+ball/main.c: In function 'opt_init':
+ball/main.c:163:21: warning: 'strncpy' output truncated before terminating nul copying 4 bytes from a string of the same length [-Wstringop-truncation]
+  163 |                     strncpy(ext, ".sol", 4);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/fs_stdio.d -MT "share/fs_stdio.o" share/fs_stdio.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/fs_stdio.o -c share/fs_stdio.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/zip.d -MT "share/zip.o" share/zip.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/zip.o -c share/zip.c
+In file included from share/solid_sim_sol.c:17:
+share/solid_sim_sol.c: In function 'sol_step':
+share/vec3.h:70:21: warning: 'P[0]' may be used uninitialized [-Wmaybe-uninitialized]
+   70 |     (u)[0] = (v)[0] - (w)[0]; \
+      |              ~~~~~~~^~~~~~~~
+share/solid_sim_sol.c:759:13: note: in expansion of macro 'v_sub'
+  759 |             v_sub(r, P, up->p);
+      |             ^~~~~
+share/solid_sim_sol.c:743:11: note: 'P[0]' was declared here
+  743 |     float P[3], V[3], v[3], r[3], a[3], d, nt, b = 0.0f, tt = dt;
+      |           ^
+share/vec3.h:71:21: warning: 'P[1]' may be used uninitialized [-Wmaybe-uninitialized]
+   71 |     (u)[1] = (v)[1] - (w)[1]; \
+      |              ~~~~~~~^~~~~~~~
+share/solid_sim_sol.c:759:13: note: in expansion of macro 'v_sub'
+  759 |             v_sub(r, P, up->p);
+      |             ^~~~~
+share/solid_sim_sol.c:743:11: note: 'P[1]' was declared here
+  743 |     float P[3], V[3], v[3], r[3], a[3], d, nt, b = 0.0f, tt = dt;
+      |           ^
+share/vec3.h:72:21: warning: 'P[2]' may be used uninitialized [-Wmaybe-uninitialized]
+   72 |     (u)[2] = (v)[2] - (w)[2]; \
+      |              ~~~~~~~^~~~~~~~
+share/solid_sim_sol.c:759:13: note: in expansion of macro 'v_sub'
+  759 |             v_sub(r, P, up->p);
+      |             ^~~~~
+share/solid_sim_sol.c:743:11: note: 'P[2]' was declared here
+  743 |     float P[3], V[3], v[3], r[3], a[3], d, nt, b = 0.0f, tt = dt;
+      |           ^
+share/vec3.h:70:21: warning: 'V[0]' may be used uninitialized [-Wmaybe-uninitialized]
+   70 |     (u)[0] = (v)[0] - (w)[0]; \
+      |              ~~~~~~~^~~~~~~~
+share/solid_sim_sol.c:767:21: note: in expansion of macro 'v_sub'
+  767 |                     v_sub(v, V, up->v);
+      |                     ^~~~~
+share/solid_sim_sol.c:743:17: note: 'V[0]' was declared here
+  743 |     float P[3], V[3], v[3], r[3], a[3], d, nt, b = 0.0f, tt = dt;
+      |                 ^
+share/vec3.h:71:21: warning: 'V[1]' may be used uninitialized [-Wmaybe-uninitialized]
+   71 |     (u)[1] = (v)[1] - (w)[1]; \
+      |              ~~~~~~~^~~~~~~~
+share/solid_sim_sol.c:767:21: note: in expansion of macro 'v_sub'
+  767 |                     v_sub(v, V, up->v);
+      |                     ^~~~~
+share/solid_sim_sol.c:743:17: note: 'V[1]' was declared here
+  743 |     float P[3], V[3], v[3], r[3], a[3], d, nt, b = 0.0f, tt = dt;
+      |                 ^
+share/vec3.h:72:21: warning: 'V[2]' may be used uninitialized [-Wmaybe-uninitialized]
+   72 |     (u)[2] = (v)[2] - (w)[2]; \
+      |              ~~~~~~~^~~~~~~~
+share/solid_sim_sol.c:767:21: note: in expansion of macro 'v_sub'
+  767 |                     v_sub(v, V, up->v);
+      |                     ^~~~~
+share/solid_sim_sol.c:743:17: note: 'V[2]' was declared here
+  743 |     float P[3], V[3], v[3], r[3], a[3], d, nt, b = 0.0f, tt = dt;
+      |                 ^
+In file included from share/zip.c:3:
+share/miniz.c:3089:9: note: '#pragma message: Using fopen, ftello, fseeko, stat() etc. path for file I/O - this path may not support large files.'
+ 3089 | #pragma message("Using fopen, ftello, fseeko, stat() etc. path for file I/O - this path may not support large files.")
+      |         ^~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/tilt_null.d -MT "share/tilt_null.o" share/tilt_null.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/tilt_null.o -c share/tilt_null.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/hmd_null.d -MT "share/hmd_null.o" share/hmd_null.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF share/fetch_null.d -MT "share/fetch_null.o" share/fetch_null.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/hmd_null.o -c share/hmd_null.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o share/fetch_null.o -c share/fetch_null.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF putt/hud.d -MT "putt/hud.o" putt/hud.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF putt/game.d -MT "putt/game.o" putt/game.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF putt/hole.d -MT "putt/hole.o" putt/hole.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o putt/hud.o -c putt/hud.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o putt/game.o -c putt/game.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o putt/hole.o -c putt/hole.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF putt/course.d -MT "putt/course.o" putt/course.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o putt/course.o -c putt/course.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF putt/st_all.d -MT "putt/st_all.o" putt/st_all.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF putt/st_conf.d -MT "putt/st_conf.o" putt/st_conf.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o putt/st_all.o -c putt/st_all.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -MM -MP -MF putt/main.d -MT "putt/main.o" putt/main.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o putt/st_conf.o -c putt/st_conf.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -I$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/include/SDL2 -noixemul -m68040 -m68881 -fno-tree-loop-distribute-patterns   -Ishare -DCONFIG_USER=\"PROGDIR:User\" -DCONFIG_DATA=\"PROGDIR:data\" -DCONFIG_LOCALE=\"PROGDIR:locale\" -DENABLE_NLS=0 -DENABLE_FETCH=0 -DNDEBUG -o putt/main.o -c putt/main.c
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -o neverball share/lang.o share/st_common.o share/vec3.o share/base_image.o share/image.o share/solid_base.o share/solid_vary.o share/solid_draw.o share/solid_all.o share/mtrl.o share/part.o share/geom.o share/ball.o share/ease.o share/transition.o share/gui.o share/font.o share/theme.o share/base_config.o share/config.o share/video.o share/glext.o share/binary.o share/state.o share/audio.o share/text.o share/common.o share/list.o share/queue.o share/cmd.o share/array.o share/dir.o share/fbo.o share/glsl.o share/fs_common.o share/log.o share/joy.o share/package.o share/st_package.o share/mapclib.o ball/hud.o ball/game_common.o ball/game_client.o ball/game_server.o ball/game_proxy.o ball/game_draw.o ball/score.o ball/level.o ball/progress.o ball/set.o ball/demo.o ball/demo_dir.o ball/util.o ball/st_conf.o ball/st_demo.o ball/st_save.o ball/st_goal.o ball/st_fail.o ball/st_done.o ball/st_level.o ball/st_over.o ball/st_play.o ball/st_set.o ball/st_start.o ball/st_title.o ball/st_help.o ball/st_name.o ball/st_shared.o ball/st_pause.o ball/st_ball.o ball/st_game_link.o ball/main.o share/solid_sim_sol.o share/fs_stdio.o share/zip.o share/tilt_null.o share/hmd_null.o share/fetch_null.o     -L$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/lib -lSDL2_image -lSDL2_mixer -lSDL2_ttf   -noixemul -m68040 -m68881 -L$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/lib -lSDL2 -lGL -lm     -lm
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc -Wall -Wshadow -std=c99 -pedantic -O2 -m68040 -m68881 -fno-delete-null-pointer-checks -o neverputt share/lang.o share/st_common.o share/vec3.o share/base_image.o share/image.o share/solid_base.o share/solid_vary.o share/solid_draw.o share/solid_all.o share/mtrl.o share/part.o share/geom.o share/ball.o share/base_config.o share/config.o share/video.o share/glext.o share/binary.o share/audio.o share/state.o share/ease.o share/transition.o share/gui.o share/font.o share/theme.o share/text.o share/common.o share/list.o share/fs_common.o share/dir.o share/fbo.o share/glsl.o share/array.o share/log.o share/joy.o putt/hud.o putt/game.o putt/hole.o putt/course.o putt/st_all.o putt/st_conf.o putt/main.o share/solid_sim_sol.o share/fs_stdio.o share/zip.o share/hmd_null.o     -L$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/lib -lSDL2_image -lSDL2_mixer -lSDL2_ttf   -noixemul -m68040 -m68881 -L$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/sdk/lib -lSDL2 -lGL -lm     -lm
+make: Leaving directory '$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/neverball'
+Neverball release tree: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/neverball/package/Neverball

@@ -1,0 +1,9 @@
+OPEN2_GUEST_BOOT_BEGIN
+Kickstart 47.115, Workbench 47.5
+opengpu.library 0.9
+openinput.library 1.2
+Type  Available    In-Use   Maximum   Largest
+chip    8370216     14296   8384512   8370184
+fast  529716008   7154904 536870912 529694264
+total 538086224   7169200 545255424 529694264
+OPEN2_GUEST_BOOT_END

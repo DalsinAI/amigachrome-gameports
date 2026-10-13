@@ -1,0 +1,4 @@
+-fbaserel32: right (links with no 'out of range' lines)
+-resident32: right (links with no 'out of range' lines)
+-fbaserel: right (links with no 'out of range' lines)
+base-relative libstdc++/libsupc++: right (14 archives, no LDFCM sections)

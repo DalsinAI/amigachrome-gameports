@@ -1,0 +1,6 @@
+{
+  "stopped": true,
+  "left": [],
+  "portsReleased": "~/AmigaChrome-dev/.lab-ports/archive/8904-8907-released-20261012T213911Z"
+}
+

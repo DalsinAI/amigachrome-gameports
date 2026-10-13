@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Ctrl+A is key events only",
+    "text_events": [],
+    "output": "KEYDOWN  scancode=224 name=\"Left Ctrl\" key=1073742048 keyname=\"Left Ctrl\" mods=0x0040 repeat=0\nKEYDOWN  scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0040 repeat=0\nKEYUP    scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0040 repeat=0\nKEYUP    scancode=224 name=\"Left Ctrl\" key=1073742048 keyname=\"Left Ctrl\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "Left-Amiga+A is key events only",
+    "text_events": [],
+    "output": "KEYDOWN  scancode=226 name=\"Left Alt\" key=1073742050 keyname=\"Left Alt\" mods=0x0100 repeat=0\nKEYDOWN  scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0100 repeat=0\nKEYUP    scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0100 repeat=0\nKEYUP    scancode=226 name=\"Left Alt\" key=1073742050 keyname=\"Left Alt\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "Backspace is key events only",
+    "text_events": [],
+    "output": "KEYDOWN  scancode=42 name=\"Backspace\" key=8 keyname=\"Backspace\" mods=0x0000 repeat=0\nKEYUP    scancode=42 name=\"Backspace\" key=8 keyname=\"Backspace\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "Return is key events only",
+    "text_events": [],
+    "output": "KEYDOWN  scancode=40 name=\"Return\" key=13 keyname=\"Return\" mods=0x0000 repeat=0\nKEYUP    scancode=40 name=\"Return\" key=13 keyname=\"Return\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "Right arrow is key events only",
+    "text_events": [],
+    "output": "KEYDOWN  scancode=79 name=\"Right\" key=1073741903 keyname=\"Right\" mods=0x0000 repeat=0\nKEYUP    scancode=79 name=\"Right\" key=1073741903 keyname=\"Right\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "Stop text input with F2",
+    "text_events": [],
+    "output": "KEYDOWN  scancode=59 name=\"F2\" key=1073741883 keyname=\"F2\" mods=0x0000 repeat=0\nTEXTSTATE disabled\nKEYUP    scancode=59 name=\"F2\" key=1073741883 keyname=\"F2\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "No text while disabled",
+    "text_events": [],
+    "output": "KEYDOWN  scancode=29 name=\"Z\" key=122 keyname=\"Z\" mods=0x0000 repeat=0\nKEYUP    scancode=29 name=\"Z\" key=122 keyname=\"Z\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "Restart text input with F2",
+    "text_events": [],
+    "output": "KEYDOWN  scancode=59 name=\"F2\" key=1073741883 keyname=\"F2\" mods=0x0000 repeat=0\nTEXTSTATE enabled\nKEYUP    scancode=59 name=\"F2\" key=1073741883 keyname=\"F2\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "Text resumes after enabling",
+    "text_events": [
+      "TEXTINPUT window=1 bytes=7A text=\"z\""
+    ],
+    "output": "KEYDOWN  scancode=29 name=\"Z\" key=122 keyname=\"Z\" mods=0x0000 repeat=0\nTEXTINPUT window=1 bytes=7A text=\"z\"\nKEYUP    scancode=29 name=\"Z\" key=122 keyname=\"Z\" mods=0x0000 repeat=0\n",
+    "pass": true
+  },
+  {
+    "name": "Lose focus to desktop",
+    "text_events": [],
+    "output": "",
+    "pass": true
+  },
+  {
+    "name": "No text while unfocused",
+    "text_events": [
+      "TEXTINPUT window=1 bytes=61 text=\"a\""
+    ],
+    "output": "KEYDOWN  scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0000 repeat=0\nTEXTINPUT window=1 bytes=61 text=\"a\"\nKEYUP    scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0000 repeat=0\n",
+    "pass": false
+  },
+  {
+    "name": "Regain diagnostic focus",
+    "text_events": [],
+    "output": "",
+    "pass": true
+  },
+  {
+    "name": "Text after focus restored",
+    "text_events": [
+      "TEXTINPUT window=1 bytes=61 text=\"a\""
+    ],
+    "output": "KEYDOWN  scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0000 repeat=0\nTEXTINPUT window=1 bytes=61 text=\"a\"\nKEYUP    scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0000 repeat=0\n",
+    "pass": true
+  }
+]

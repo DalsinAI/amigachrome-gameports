@@ -1,12 +1,70 @@
 # Port Status
 
-Snapshot date: **9 October 2026**
+Latest review update: **13 October 2026 (local time)**. Earlier dated snapshots below are preserved as history.
 
 Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**
 
 **DONE means RELEASE.** A successful compile is intermediate evidence, not a release result.
 
-## Compiler qualification hold
+## Latest verified state - dependency isolation and recovered text input
+
+- **Fresh build work:** the affected recipes now require a locked codec inventory
+  inside the selected stove. Both AssaultCube targets were rebuilt from a new
+  exact-pinned checkout without the old WebKit include/library fallback.
+- **Recovered earlier runtime evidence:** the PR67 SDL2 candidate delivered real
+  shared/static ASCII text. Neverball accepted `DALEX`, Backspace made `DALE`,
+  and the player name persisted across exit/relaunch. This is the candidate in
+  the isolated lab, not an upstream merge or a production deployment.
+- **SDLPoP:** a new `SDL_OPENGPU=0` lab run rendered Level 1, quicksaved,
+  moved, quickloaded back to the saved position and returned exit 0. This is
+  one bounded emulated-68040/software-mode check, not a complete release.
+
+[Build/review receipts](evidence/open2-20261013-resume/README.md) and
+[recovered runtime evidence](evidence/sdltext-20261012-recovered/README.md)
+retain the source identities, hashes, raw output and remaining limitations.
+No port has been promoted to RELEASE.
+
+### Rendering qualification lanes
+
+| Lane | Ports | Required additional gate |
+|---|---|---|
+| Plain 68040 + FPU / software 2D | OpenJazz, SDLPoP, Chocolate Doom | Run on the intended SDL CPU path with `SDL_OPENGPU=0`, plus input/audio/save/exit tests. This is a requirement, not a completed pass for all three. |
+| OpenGPU-dependent 3D client | AssaultCube client; Neverball/Neverputt GL lane | Qualify the chosen supported OpenGPU backend. No plain-68040 performance claim. |
+| No rendering | AssaultCube dedicated server | Socket/listen/stop tests, with the guest library version recorded. |
+
+## Historical Open2 follow-up - actual guest first light
+
+NXEngine-evo completed its Open2 link, and Neverball/Neverputt now rebuild and
+pass the package gate. AssaultCube has two targeted fixes: one Amiga definition
+for stream virtuals, and correct array deletion in game-mode parsing. The
+previous duplicate stream-section and mismatched-delete diagnostics are absent
+from the resulting links; other warnings and the audio stub remain.
+
+**Runtime evidence:** SDLPoP rendered its intro and a diagnostic Level 1; Neverball
+rendered its title and Level 01 3D start scene. Both returned guest exit code 0
+in a separate, muted, stopped-source lab. Sixteen host regression tests and a
+21-check stream diagnostic in the AmigaOS guest passed. No full game release.
+Native name typing in Neverball remained empty on the recorded existing SDL2
+runtime; the on-screen keyboard was a workaround, not a text-input pass.
+
+[Follow-up results, screenshots, hashes and remaining gates](evidence/open2-20261012-followup/README.md).
+
+## 12 October 2026 - Open2 application rebuilds
+
+**Current addition to the older snapshot below:** OpenJazz, Chocolate Doom,
+SDLPoP and AssaultCube client/server compile and final-link with the published
+16.2.0-open2 toolchain. Every artifact is still runtime-unqualified in this pass.
+NXEngine-evo was compiling at snapshot; no final result is claimed.
+
+[Raw build logs, hashes and limitations](evidence/open2-20261012/README.md)
+record the exact release archive, local source pins and 2,012 verified compiler
+and runtime files. Existing OpenGPU/codec archives were reused, not rebuilt.
+AssaultCube's linker warnings and audio stub are explicit outstanding work.
+These results supersede the old compiler hold only for the *new application
+artifacts*, not old binaries or unqualified dependency stacks.
+
+## Historical compiler qualification hold (9 October)
+
 
 The currently installed GCC 16.2.0b stove has reproduced compiler defects on the
 AC090/68040 target. All binaries produced with that stove are therefore
@@ -19,7 +77,7 @@ stove before it can be promoted to RELEASE.
 Source patches, package layouts, provenance work and runtime findings remain
 valid engineering work unless a fixed-stove A/B test shows otherwise.
 
-## Current revival lane
+## Historical 9 October revival snapshot
 
 | Port | Build / package | Runtime | Current evidence / next gate |
 |---|---|---|---|

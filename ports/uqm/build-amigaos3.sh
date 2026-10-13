@@ -6,7 +6,10 @@ SRC=${1:-"$ROOT/build/game-ports/sources/uqm/uqm-0.8.0"}
 BUILD=${2:-"$ROOT/build/os3/uqm"}
 STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
 SDK="$STOVE/prefix/m68k-amigaos"
-DEPS=${UQM_DEPS:-"$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"}
+DEPS=$(python3 "$ROOT/scripts/port_dependencies.py" verify --stove "$STOVE" --require zlib png)
+[ -z "${UQM_DEPS:-}" ] || [ "$UQM_DEPS" = "$DEPS" ] || {
+    echo "UQM_DEPS must use the verified stove dependency directory: $DEPS" >&2; exit 3;
+}
 P="$STOVE/prefix"
 
 rm -rf "$BUILD"
