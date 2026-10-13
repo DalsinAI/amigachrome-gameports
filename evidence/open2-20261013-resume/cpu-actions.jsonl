@@ -1,0 +1,6 @@
+{"utc": "2026-10-12T23:30:48.753819+00:00", "action": "mailbox", "label": "cpu-sdlpop", "script": "FailAt 21\nStack 1048576\nSetEnv SDL_OPENGPU 0\nSetEnv SDL_OPENGPU_STATS 1\nEcho \"CPU_SDLPOP_BEGIN\"\nGetEnv SDL_OPENGPU\nCD SYS:Open2Ports/SDLPoP\nprince megahit 1 >SYS:Open2Runner/cpu-sdlpop.out\nEcho \"CPU_SDLPOP_EXIT $RC\"\nUnsetEnv SDL_OPENGPU\nUnsetEnv SDL_OPENGPU_STATS\n"}
+{"utc": "2026-10-12T23:32:02.300699+00:00", "action": "key", "raw": 85, "hold": 0.08}
+{"utc": "2026-10-12T23:32:04.800320+00:00", "action": "key", "raw": 78, "hold": 0.65}
+{"utc": "2026-10-12T23:32:06.564133+00:00", "action": "key", "raw": 88, "hold": 0.08}
+{"utc": "2026-10-12T23:33:30.930072+00:00", "action": "chord", "modifier": 99, "raw": 16}
+{"utc": "2026-10-12T23:33:30.931504+00:00", "action": "key", "raw": 16, "hold": 0.08}

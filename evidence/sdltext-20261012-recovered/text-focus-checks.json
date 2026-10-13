@@ -1,0 +1,7 @@
+{
+  "focus_lost_observed": true,
+  "unfocused_text_events": [],
+  "unfocused_output": "",
+  "refocus_output": "KEYDOWN  scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0000 repeat=0\nTEXTINPUT window=1 bytes=61 text=\"a\"\nKEYUP    scancode=4 name=\"A\" key=97 keyname=\"A\" mods=0x0000 repeat=0\n",
+  "refocus_observed": true
+}

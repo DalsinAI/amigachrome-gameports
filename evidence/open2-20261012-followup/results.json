@@ -1,0 +1,171 @@
+{
+  "date_utc": "2026-10-12T19:58:18.607610+00:00",
+  "base_commit": "b8aa17a1818d37a70930dacb71c27abf56e3c421",
+  "compiler_release": "16.2.0-open2",
+  "dependencies_rebuilt": false,
+  "new_game_releases": 0,
+  "artifacts": {
+    "nxengine-evo": {
+      "build": "COMPILE_LINK_PASS",
+      "exit_code": 0,
+      "artifact": "build/os3/nxengine-evo/nxengine-evo",
+      "sha256": "9e32a6f98172d2b3bd7c765e738e343bc3649faf53f589ae218b033afb1eb18e",
+      "bytes": 29649500,
+      "hunk_magic": "000003f3",
+      "build_log_sha256": "d701d3d922eecf270bf8048216b3673bd5e5cc9000d9f2c736c43722287f5478",
+      "duplicate_section_warnings": 4410,
+      "array_delete_warnings": 0,
+      "runtime": "NOT_TESTED"
+    },
+    "assaultcube-server": {
+      "build": "COMPILE_LINK_PASS",
+      "exit_code": 0,
+      "artifact": "build/game-ports/sources/assaultcube/source/src/ac_server",
+      "sha256": "2b1880d8893c683c5c9e2c766a7d464ce241a5d32c526ad5696dae581b681a4b",
+      "bytes": 765160,
+      "hunk_magic": "000003f3",
+      "build_log_sha256": "91689d9ef0373b2423ef1e2dc848ac521f038a39257016eeb23e25a735f08218",
+      "duplicate_section_warnings": 0,
+      "array_delete_warnings": 0,
+      "runtime": "NOT_TESTED"
+    },
+    "assaultcube-client": {
+      "build": "COMPILE_LINK_PASS",
+      "exit_code": 0,
+      "artifact": "build/game-ports/sources/assaultcube/source/src/ac_client",
+      "sha256": "40b25ec3e16c912f5da702cafa768e9cc0a708a54831de2976d87a0c909dffa9",
+      "bytes": 2607676,
+      "hunk_magic": "000003f3",
+      "build_log_sha256": "2cec6df2a3965061cfdb0538bdf1b6d3b0151f3b765ac3ed5e85581459d9533f",
+      "duplicate_section_warnings": 0,
+      "array_delete_warnings": 0,
+      "runtime": "NOT_TESTED"
+    },
+    "neverball": {
+      "build": "COMPILE_LINK_PASS",
+      "exit_code": 0,
+      "artifact": "build/followup-20261012/neverball/bin/Neverball",
+      "sha256": "d4870d5860ab1a9d6baa392bf309a84c3294403186220a32eea3f4afcfb960a6",
+      "bytes": 2218436,
+      "hunk_magic": "000003f3",
+      "build_log_sha256": "c4c43d581f381fc38e0a2a4026bf6f9da565f79a3e3e2a0a5ca7e342ac8d976c",
+      "duplicate_section_warnings": 0,
+      "array_delete_warnings": 0,
+      "runtime": "PARTIAL_FIRST_LIGHT"
+    },
+    "neverputt": {
+      "build": "COMPILE_LINK_PASS",
+      "exit_code": 0,
+      "artifact": "build/followup-20261012/neverball/bin/Neverputt",
+      "sha256": "1eda2ca693de6841ad57010b1ca258cf41c038529b4a733ac2f895d6185c4ad1",
+      "bytes": 2071932,
+      "hunk_magic": "000003f3",
+      "build_log_sha256": "c4c43d581f381fc38e0a2a4026bf6f9da565f79a3e3e2a0a5ca7e342ac8d976c",
+      "duplicate_section_warnings": 0,
+      "array_delete_warnings": 0,
+      "runtime": "NOT_TESTED"
+    }
+  },
+  "target_diagnostic": {
+    "program": "StreamContract",
+    "sha256": "634f5eefbda006741c66a73ced0b6a8663589ddbd4d72e2388761f61cfa87d01",
+    "guest_checks": 21,
+    "guest_exit_code": 0,
+    "raw_output": "stream-contract-guest.txt"
+  },
+  "python_tests": 16,
+  "runtime": {
+    "sdlpop": {
+      "splash_and_intro": "OBSERVED",
+      "level_one": "OBSERVED_USING_UPSTREAM_megahit_1_DIAGNOSTIC",
+      "menu_toggle": "OBSERVED",
+      "movement": "NOT_VERIFIED_TEST_INPUT_ARRIVED_WHILE_PAUSED",
+      "clean_exit": "GUEST_EXIT_0_TWICE",
+      "audio": "NOT_VERIFIED_MUTED_LAB",
+      "save_reload": "NOT_TESTED",
+      "controller_fullscreen": "NOT_TESTED"
+    },
+    "neverball": {
+      "title": "OBSERVED",
+      "player_name_raw_keyboard": "FIELD_REMAINED_EMPTY",
+      "onscreen_name": "OBSERVED_DAe_NOT_DALE",
+      "level_set_selector": "OBSERVED",
+      "release": false,
+      "level_one_scene": "OBSERVED_LEVEL01_INSTRUCTION_SCREEN_3D_BOARD_BALL_AND_COINS",
+      "interactive_ball_control": "NOT_TESTED",
+      "clean_exit": "OBSERVED_GUEST_EXIT_0_VIA_NATIVE_WINDOW_CLOSE",
+      "audio": "NOT_VERIFIED_MUTED_LAB",
+      "save_reload": "NOT_TESTED",
+      "renderer_evidence": "native telemetry records virgl submits and presents with zero reported errors; not a performance benchmark"
+    }
+  },
+  "observer_limitations": [
+    "First frame reader attempt mishandled unchanged AGA frame payload; corrected to full timed ACF4 frame; unlit RTG frames not used as evidence.",
+    "An initial record-kind mistake sent mouse buttons instead of keys; released and corrected using runtime source definition. All reported keyboard effects use native record kind 1.",
+    "SDLPoP before/after right-arrow screenshots show paused menu, so movement has NOT been qualified.",
+    "Neverball on-screen name shows DAe, not the intended DALE; records do not claim exact typed-name correctness."
+  ],
+  "raw_native_log_sha256": "855c5d8eb4701ed04c295581edd04e881e9e902e37478d7ef0402c54dd9d8511",
+  "finished_utc": "2026-10-12T20:00:56Z",
+  "screenshots": [
+    {
+      "file": "neverball-after-name-window.png",
+      "sha256": "2bd5cdf499e7a362db3d18074184e59c57ec8e340019ac7924f370633959346a"
+    },
+    {
+      "file": "neverball-close-check-head1.png",
+      "sha256": "5382fd8a909b218285b8e65c94ac9c30a0d6193513c81b831272b6ec2a036218"
+    },
+    {
+      "file": "neverball-easy-levels-window.png",
+      "sha256": "38c0de657d32151afc67a4c23d9ef9ab9347f2b615c0f8e5f071a870ebd05fb2"
+    },
+    {
+      "file": "neverball-first-window.png",
+      "sha256": "78cffe02715d6549d3409e30a4cd7915f31509421bef6554fd87e5c4eb2403e6"
+    },
+    {
+      "file": "neverball-level-activate-window.png",
+      "sha256": "b011af09775bb823c3971ba6d3b6a8ef4a0503a1790340a2d9d80417881e441a"
+    },
+    {
+      "file": "neverball-level-start-window.png",
+      "sha256": "9687318d1a68373684c4c5efd0c4d9aaeddba98c421341c7515354b6406bf9ca"
+    },
+    {
+      "file": "neverball-onscreen-name-window.png",
+      "sha256": "24e2dc9f464330c92c8ed9a569be434a0bbcce3f16791d114265f7e9edfc27ba"
+    },
+    {
+      "file": "neverball-typed-name-window.png",
+      "sha256": "461d3f11e975398549a57e92638124d2279a40a535a5fa4fb45edb428aa468c1"
+    },
+    {
+      "file": "sdlpop-before-move-window.png",
+      "sha256": "97f93c1c77311163a3c51bf2d1eb9330c7d9c0ea825a95518ed8d0a0320aab11"
+    },
+    {
+      "file": "sdlpop-keyboard-continue-window.png",
+      "sha256": "85342cbbb4881e4bcf79936a4e2b7cd77f698a94d2728707b2999e816bb87246"
+    },
+    {
+      "file": "sdlpop-level-exit-head1.png",
+      "sha256": "070afaa247347d048f80ad12c4f0f05be1e2d3cb32316254e8d1c6a1fa95c21c"
+    },
+    {
+      "file": "sdlpop-level-one-window.png",
+      "sha256": "d2ef7a73b9875ceed68a1c35ad63be6951d2fe732f9c567363190e304d1e7f71"
+    },
+    {
+      "file": "sdlpop-settings-menu-window.png",
+      "sha256": "be8fdc8f280e56e5335d1528b9d1344462960b291e9bfb94a17da7973962c441"
+    }
+  ],
+  "lab_stopped": true,
+  "lab_ports_released": [
+    8904,
+    8905,
+    8906,
+    8907
+  ]
+}

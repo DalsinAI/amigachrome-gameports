@@ -1,0 +1,7 @@
+-fbaserel32: WRONG (did not link)
+  build/open2-proof-source/openamigagcc-16.2.0-open2-src/openamigagcc/tests/baserel/eh-check.sh: line 14: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++/bin/m68k-amigaos-g++: Not a directory
+-resident32: WRONG (did not link)
+  build/open2-proof-source/openamigagcc-16.2.0-open2-src/openamigagcc/tests/baserel/eh-check.sh: line 14: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++/bin/m68k-amigaos-g++: Not a directory
+-fbaserel: WRONG (did not link)
+  build/open2-proof-source/openamigagcc-16.2.0-open2-src/openamigagcc/tests/baserel/eh-check.sh: line 14: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++/bin/m68k-amigaos-g++: Not a directory
+no base-relative libstdc++.a or libsupc++.a found under /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++

@@ -1,0 +1,34 @@
+{
+  "kind": "new bounded CPU-only rendering smoke",
+  "cutoff_utc": "2026-10-12T23:45:09.509199+00:00",
+  "mode": "SDL_OPENGPU=0",
+  "muted": true,
+  "app_build": {
+    "buildId": "0.30.0-20261012T232345Z-b5552b76",
+    "builtAt": "2026-10-12T23:23:45Z",
+    "release": "0.30-dev",
+    "releaseName": "0.30 Development",
+    "sourceBranch": "HEAD",
+    "sourceCommit": "b5552b7661b7e55f2bc054d8f6ed638ac7af890e",
+    "sourceDigest": "08f17dda58fb7fb57f270c0545a27cc468ef5036f6e015cff4daab542cfc16c4",
+    "version": "0.30.0"
+  },
+  "files": [
+    {
+      "path": "Libs/opengpu.library",
+      "sha256": "dc5d08444d37ecf7a179b1f790a3849b778048e1c7192644c30216b752b56e07"
+    },
+    {
+      "path": "Libs/OpenGPU/SDL2.module",
+      "sha256": "b0594314367c47574fc5c701bb373b819eed2bad82aa563122601407c0a62400"
+    },
+    {
+      "path": "Libs/bsdsocket.library",
+      "sha256": "8ded9b2b6f81cc0b0bc5a38005b3cc286c2460c9496e5354c90c9f2cd82e8ec4"
+    },
+    {
+      "path": "Open2Ports/SDLPoP/prince",
+      "sha256": "dbba5fe804951eb5620bc4a77e16d0ac9b0e9f1ffe6fb8127d95915f151626c8"
+    }
+  ]
+}

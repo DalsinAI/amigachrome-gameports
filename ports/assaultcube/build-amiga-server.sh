@@ -4,7 +4,11 @@ HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
 SRC=${ASSAULTCUBE_SRC:-"$ROOT/build/game-ports/sources/assaultcube/source"}
 STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
-ZLIB_ROOT=${ZLIB_ROOT:-"$HOME/AmigaChrome-dev/webkit-os32-040/m68k-amigaos"}
+DEPS=$(python3 "$ROOT/scripts/port_dependencies.py" verify --stove "$STOVE" --require zlib)
+[ -z "${ZLIB_ROOT:-}" ] || [ "$ZLIB_ROOT" = "$DEPS" ] || {
+    echo "ZLIB_ROOT must use the verified stove dependency directory: $DEPS" >&2; exit 3;
+}
+ZLIB_ROOT="$DEPS"
 P="$STOVE/prefix"
 CC="$P/bin/m68k-amigaos-gcc"
 CXX="$P/bin/m68k-amigaos-g++"
@@ -19,6 +23,19 @@ NM="$P/bin/m68k-amigaos-nm"
 if ! grep -q '__amigaos__' "$SRC/src/stream.cpp"; then
     (cd "$(dirname "$SRC")" && git apply "$HERE/patches/0001-amigaos-server-bootstrap.patch")
 fi
+
+# Exactly one emitted definition for small stream virtuals on Amiga/HUNK.
+for STREAM_PATCH in "$HERE/patches/0003-amiga-stream-single-definition.patch" \
+                    "$HERE/patches/0004-match-mode-buffer-array-delete.patch"; do
+if git -C "$(dirname "$SRC")" apply --check "$STREAM_PATCH" >/dev/null 2>&1; then
+    git -C "$(dirname "$SRC")" apply "$STREAM_PATCH"
+elif git -C "$(dirname "$SRC")" apply --reverse --check "$STREAM_PATCH" >/dev/null 2>&1; then
+    :
+else
+    echo "AssaultCube stream patch does not match this source tree" >&2
+    exit 4
+fi
+done
 
 cd "$SRC/enet"
 make distclean >/dev/null 2>&1 || true

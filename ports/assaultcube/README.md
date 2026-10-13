@@ -37,3 +37,19 @@ Current proof: `ac_server` is an AmigaOS loadseg executable (about 742 KiB). Thi
 ## OpenGPU SDK client first light
 
 The native client now cross-builds against the packaged OpenGPU SDK in the gcc16 stove rather than loose SDL/GL artefacts. `sdl2-config` supplies SDL 2.32.10, libGL, the 68040/FPU ABI flags and the GCC 16 loop-miscompile workaround. The Amiga client requests a 1 MiB stack as required by the OpenGPU GL runtime. Graphics, input, networking, maps, bots and game logic link successfully. Audio is deliberately stubbed for the first runtime proof and will move to OpenAudio after graphics/input first light.
+
+## Open2 stream and allocation follow-up, 12 October 2026
+
+Patch 0003 makes `getchar`, `putchar` and `putstring` out-of-line on AmigaOS
+only. The HUNK linker was comparing different optimised inline copies; the
+patch supplies one definition without changing the stream contract or global
+optimisation flags. Non-Amiga definitions remain inline. Patch 0004 pairs
+`newstring` (array allocation) with `delete[]` in `gmode_parse`.
+
+Both client and server rebuilt with Open2. The targeted duplicate-section and
+array-deletion warnings are absent; this does not claim every warning is gone.
+A diagnostic using the exact new method bodies passed 21 checks in an isolated
+AmigaOS guest, in addition to host regression tests. Actual AssaultCube
+client/server runtime and audio integration remain unqualified.
+
+[Raw evidence and hashes](../../evidence/open2-20261012-followup/README.md).

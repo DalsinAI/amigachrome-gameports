@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "checked_utc": "2026-10-12T23:31:39.399239+00:00",
+  "compiler": "OpenAmigaGCC 16.2.0-open2",
+  "codec_status": "locked_reused_inputs_not_rebuilt",
+  "dependency_files": 113,
+  "builds": {
+    "assaultcube-server": {
+      "exit": 0,
+      "bytes": 765160,
+      "sha256": "2b1880d8893c683c5c9e2c766a7d464ce241a5d32c526ad5696dae581b681a4b",
+      "log_sha256": "e054074dbda02970f682ee04c02de3008de5486895683ef300d94e7b1202e2f1",
+      "source_pin": "13f0d8eea4822dee5c976661218d022be74342e3",
+      "old_workstation_path_mentions": 0,
+      "duplicate_section_warnings": 0,
+      "allocation_mismatch_warnings": 0,
+      "other_warning_lines": 13,
+      "runtime": "not_run",
+      "audio": "not_applicable"
+    },
+    "assaultcube-client": {
+      "exit": 0,
+      "bytes": 2607676,
+      "sha256": "40b25ec3e16c912f5da702cafa768e9cc0a708a54831de2976d87a0c909dffa9",
+      "log_sha256": "4b2e2ea364116d9d3a742de97c542c6bf394a44ea3454067174af6701af05dae",
+      "source_pin": "13f0d8eea4822dee5c976661218d022be74342e3",
+      "old_workstation_path_mentions": 0,
+      "duplicate_section_warnings": 0,
+      "allocation_mismatch_warnings": 0,
+      "other_warning_lines": 16,
+      "runtime": "not_run",
+      "audio": "client_stub_remains"
+    }
+  },
+  "stager_protected_release_files": 2350,
+  "fingerprinted_ndk_files": 1374,
+  "dependency_lock_sha256": "90f9a9ff48ffefd61ef894bcfe575491aac579d741c1c75446b75b4e39a39bd4",
+  "full_game_release": false,
+  "new_runtime": {
+    "port": "SDLPoP",
+    "SDL_OPENGPU": "0 confirmed by guest GetEnv output",
+    "target": "AC090 emulated 68040 + FPU, existing RTG desktop, not physical A1200 hardware",
+    "entry": "megahit 1 diagnostic level",
+    "rendering": "level observed",
+    "movement": "character moved after right key",
+    "quicksave": "UI and 3467-byte file",
+    "quickload": "character returned to saved position after moving, observed after eight seconds",
+    "exit_code": 0,
+    "audio": "not_verified_muted",
+    "full_gameplay": "not_verified",
+    "clean_install": "not_fresh_install",
+    "lab_stopped": true,
+    "images": [
+      {
+        "path": "cpu-sdlpop-ready-window.png",
+        "sha256": "fe44fa968785adf9f03dbd178109adcb9495c1d58dd8b22bda748d0c2a10686d",
+        "original_frame_sha256": "4fb1de6c20b9db1e4ab95a8ff53c3013d3a3cabf09394351b0452b8239e754a4",
+        "crop": [
+          0,
+          35,
+          650,
+          465
+        ]
+      },
+      {
+        "path": "cpu-sdlpop-before-save-window.png",
+        "sha256": "4cdbd994a2d38cedac28337b8467037e40375cb8f5f6bb5a9698eff4e6ea1964",
+        "original_frame_sha256": "a105e95c13084d3b1d1a69bad436ebda63aa544524904b6557855b5072c5b32c",
+        "crop": [
+          0,
+          35,
+          650,
+          465
+        ]
+      },
+      {
+        "path": "cpu-sdlpop-quicksave-window.png",
+        "sha256": "54381ff093d9af543652c7f045755e83600257977a3c78b386c00872d4f500c1",
+        "original_frame_sha256": "88a7f95105653b51485817e0897324e7f2553b1e7bdf68de3273646da92c7249",
+        "crop": [
+          0,
+          35,
+          650,
+          465
+        ]
+      },
+      {
+        "path": "cpu-sdlpop-after-right-window.png",
+        "sha256": "451e4074be900cfeeea6f9c5988e41536ae1caad2c717d54a2c1ffcebadb103b",
+        "original_frame_sha256": "0d4d7d288b04f8351f5e6125567e05b43830aecb6b7a59c4f0c892f87c12d38e",
+        "crop": [
+          0,
+          35,
+          650,
+          465
+        ]
+      },
+      {
+        "path": "cpu-sdlpop-after-quickload-window.png",
+        "sha256": "078f80e92b7e18664d3d222f94d59d5b43eb18208a642def1778a1a4dc14c27c",
+        "original_frame_sha256": "91240612ee19f17455c39f8a097d8aba249d54d825faeae6bc8e043ad74c4b9d",
+        "crop": [
+          0,
+          35,
+          650,
+          465
+        ]
+      },
+      {
+        "path": "cpu-sdlpop-clean-exit-window.png",
+        "sha256": "21615d73292594e44f4bfc7e02720eb117ab4789e4e6a1aadd251f271309b352",
+        "original_frame_sha256": "91d7bdc2d56d00d096d98759c2821c3e7f42a4e8a8617d3f913b44b1bd48abde",
+        "crop": [
+          0,
+          35,
+          650,
+          465
+        ]
+      }
+    ]
+  }
+}
