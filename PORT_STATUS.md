@@ -6,6 +6,16 @@ Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**
 
 **DONE means RELEASE.** A successful compile is intermediate evidence, not a release result.
 
+## Post-merge checks - 13 October 2026
+
+The port/SDL changes are merged and rebuilt. A new Amiga-only OpenJazz
+configuration-directory check fixes the demonstrated false "not writable"
+result. Chocolate Doom reached software-rendered gameplay, saved/loaded a
+slot and exited 0 with sound explicitly disabled. Final OpenJazz startup/focus
+repetition and Doom audio remain open, not release passes.
+
+[Exact results, hashes, limits and next checks](evidence/postmerge-20261013/README.md).
+
 ## Latest verified state - dependency isolation and recovered text input
 
 - **Fresh build work:** the affected recipes now require a locked codec inventory

@@ -4,6 +4,16 @@ Open-source game-port and compatibility work for **m68k AROS**, **AmigaOS 3.x** 
 
 The repository contains compiled revival ports, the Neverball/OpenGPU release lane, and the next 3D source-intake targets. Compile success is useful evidence, but it is **not** synonymous with release readiness. See [RELEASE_POLICY.md](RELEASE_POLICY.md).
 
+## Post-merge checks - 13 October 2026
+
+The port/SDL changes are merged and rebuilt. A new Amiga-only OpenJazz
+configuration-directory check fixes the demonstrated false "not writable"
+result. Chocolate Doom reached software-rendered gameplay, saved/loaded a
+slot and exited 0 with sound explicitly disabled. Final OpenJazz startup/focus
+repetition and Doom audio remain open, not release passes.
+
+[Exact results, hashes, limits and next checks](evidence/postmerge-20261013/README.md).
+
 ## Latest verified state - dependency isolation and recovered text input
 
 - **Fresh build work:** the affected recipes now require a locked codec inventory

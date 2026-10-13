@@ -1,0 +1,163 @@
+-- Amiga toolchain stove: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove
+-- Amiga toolchain stove: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove
+-- The CXX compiler identification is GNU 16.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/bin/m68k-amigaos-g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- The C compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/bin/m68k-amigaos-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- 
+-- OpenJazz
+-- ========
+-- Version: 20260301
+-- Build type: Release
+-- Git status: object hash is 1626f4, with uncommitted changes
+-- Target system: Generic
+-- Platform abstraction: SDL2
+-- Network: Disabled
+-- Scaling: Disabled
+-- Music: Enabled, eXtended Masi Player (internal)
+-- Portable Engine: Enabled (Default)
+-- Manual page: Unavailable
+-- Source Documentation: Not available
+-- Compiler launcher: Disabled
+-- Building with address sanitizer: Disabled
+-- Source code formatter: Not available
+-- Static analysis tool: Not available
+-- 
+-- In case something goes wrong, report bugs to https://github.com/AlisterT/openjazz/issues
+-- 
+-- Configuring done (0.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz
+[  1%] Building C object ext/CMakeFiles/stb.dir/stb/stb_rect_pack.c.obj
+[  2%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/control.c.obj
+[  3%] Linking C static library libstb.a
+[  3%] Built target stb
+[  4%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/dataio.c.obj
+[  5%] Building C object ext/CMakeFiles/argparse.dir/argparse/argparse.c.obj
+[  7%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/effects.c.obj
+[  8%] Linking C static library libargparse.a
+[  8%] Built target argparse
+[  9%] Building C object ext/CMakeFiles/miniz.dir/miniz/miniz.c.obj
+[ 10%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/filetype.c.obj
+[ 11%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/filter.c.obj
+[ 12%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/flow.c.obj
+[ 14%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/format.c.obj
+[ 15%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/hio.c.obj
+[ 16%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/lfo.c.obj
+[ 17%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/load.c.obj
+[ 18%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/load_helpers.c.obj
+[ 20%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/memio.c.obj
+[ 21%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/misc.c.obj
+[ 22%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/mix_all.c.obj
+[ 23%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/mixer.c.obj
+[ 24%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/period.c.obj
+[ 25%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/player.c.obj
+[ 27%] Linking C static library libminiz.a
+[ 27%] Built target miniz
+[ 28%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/read_event.c.obj
+[ 29%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/rng.c.obj
+[ 30%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/scan.c.obj
+[ 31%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/smix.c.obj
+[ 32%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/virtual.c.obj
+[ 34%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/win32.c.obj
+[ 35%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/loaders/common.c.obj
+[ 36%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/loaders/iff.c.obj
+[ 37%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/loaders/masi_load.c.obj
+[ 38%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/loaders/sample.c.obj
+[ 40%] Linking C static library libxmp.a
+[ 40%] Built target xmp
+[ 41%] Building CXX object CMakeFiles/OpenJazz.dir/src/game/clientgame.cpp.obj
+[ 42%] Building CXX object CMakeFiles/OpenJazz.dir/src/game/game.cpp.obj
+[ 43%] Building CXX object CMakeFiles/OpenJazz.dir/src/game/gamemode.cpp.obj
+[ 44%] Building CXX object CMakeFiles/OpenJazz.dir/src/game/localgame.cpp.obj
+[ 45%] Building CXX object CMakeFiles/OpenJazz.dir/src/game/servergame.cpp.obj
+[ 47%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/controls.cpp.obj
+[ 48%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/file.cpp.obj
+[ 49%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/gfx/anim.cpp.obj
+[ 50%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/gfx/font.cpp.obj
+[ 51%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/gfx/paletteeffects.cpp.obj
+[ 52%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/gfx/sprite.cpp.obj
+[ 54%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/gfx/video.cpp.obj
+[ 55%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/log.cpp.obj
+[ 56%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/network.cpp.obj
+[ 57%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/sound.cpp.obj
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::join(char*)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:180:26: warning: unused parameter 'address' [-Wunused-parameter]
+  180 | int Network::join (char *address) {
+      |                    ~~~~~~^~~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::accept(int)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:294:26: warning: unused parameter 'sock' [-Wunused-parameter]
+  294 | int Network::accept (int sock) {
+      |                      ~~~~^~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'void Network::close(int)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:331:26: warning: unused parameter 'sock' [-Wunused-parameter]
+  331 | void Network::close (int sock) {
+      |                      ~~~~^~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::send(int, unsigned char*)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:354:24: warning: unused parameter 'sock' [-Wunused-parameter]
+  354 | int Network::send (int sock, unsigned char *buffer) {
+      |                    ~~~~^~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:354:45: warning: unused parameter 'buffer' [-Wunused-parameter]
+  354 | int Network::send (int sock, unsigned char *buffer) {
+      |                              ~~~~~~~~~~~~~~~^~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::recv(int, unsigned char*, int)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:24: warning: unused parameter 'sock' [-Wunused-parameter]
+  376 | int Network::recv (int sock, unsigned char *buffer, int length) {
+      |                    ~~~~^~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:45: warning: unused parameter 'buffer' [-Wunused-parameter]
+  376 | int Network::recv (int sock, unsigned char *buffer, int length) {
+      |                              ~~~~~~~~~~~~~~~^~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:57: warning: unused parameter 'length' [-Wunused-parameter]
+  376 | int Network::recv (int sock, unsigned char *buffer, int length) {
+      |                                                     ~~~~^~~~~~
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'bool Network::isConnected(int)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:396:32: warning: unused parameter 'sock' [-Wunused-parameter]
+  396 | bool Network::isConnected (int sock) {
+      |                            ~~~~^~~~
+[ 58%] Building CXX object CMakeFiles/OpenJazz.dir/src/level/level.cpp.obj
+[ 60%] Building CXX object CMakeFiles/OpenJazz.dir/src/level/movable.cpp.obj
+[ 61%] Building CXX object CMakeFiles/OpenJazz.dir/src/main.cpp.obj
+[ 62%] Building CXX object CMakeFiles/OpenJazz.dir/src/debug.cpp.obj
+[ 63%] Building CXX object CMakeFiles/OpenJazz.dir/src/menu/debugmenu.cpp.obj
+[ 64%] Building CXX object CMakeFiles/OpenJazz.dir/src/menu/filemenu.cpp.obj
+[ 65%] Building CXX object CMakeFiles/OpenJazz.dir/src/menu/gamemenu.cpp.obj
+[ 67%] Building CXX object CMakeFiles/OpenJazz.dir/src/menu/mainmenu.cpp.obj
+[ 68%] Building CXX object CMakeFiles/OpenJazz.dir/src/menu/menu.cpp.obj
+[ 69%] Building CXX object CMakeFiles/OpenJazz.dir/src/menu/plasma.cpp.obj
+[ 70%] Building CXX object CMakeFiles/OpenJazz.dir/src/menu/setupmenu.cpp.obj
+[ 71%] Building CXX object CMakeFiles/OpenJazz.dir/src/platforms/platform_interface.cpp.obj
+[ 72%] Building CXX object CMakeFiles/OpenJazz.dir/src/player/player.cpp.obj
+[ 74%] Building CXX object CMakeFiles/OpenJazz.dir/src/setup.cpp.obj
+[ 75%] Building CXX object CMakeFiles/OpenJazz.dir/src/util.cpp.obj
+[ 76%] Building CXX object CMakeFiles/OpenJazz.dir/src/version.cpp.obj
+[ 77%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/jj1episodeutils.cpp.obj
+[ 78%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/bonuslevel/jj1bonuslevel.cpp.obj
+[ 80%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/bonuslevel/jj1bonuslevelplayer.cpp.obj
+[ 81%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/jj1bird.cpp.obj
+[ 82%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/jj1levelplayer.cpp.obj
+[ 83%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/jj1levelplayerframe.cpp.obj
+[ 84%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/event/jj1bridge.cpp.obj
+[ 85%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/event/jj1event.cpp.obj
+[ 87%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/event/jj1guardians.cpp.obj
+[ 88%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/event/jj1standardevent.cpp.obj
+[ 89%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/jj1bullet.cpp.obj
+[ 90%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/jj1demolevel.cpp.obj
+[ 91%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/jj1level.cpp.obj
+[ 92%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/jj1levelframe.cpp.obj
+[ 94%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/level/jj1levelload.cpp.obj
+[ 95%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/planet/jj1planet.cpp.obj
+[ 96%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/save/jj1save.cpp.obj
+[ 97%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/scene/jj1scene.cpp.obj
+[ 98%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/scene/jj1sceneload.cpp.obj
+[100%] Linking CXX executable OpenJazz
+[100%] Built target OpenJazz
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz/OpenJazz: AmigaOS loadseg()ble executable/binary
+4363021f0961e5874b9703cddb5dd45e9a463ced18a68d3114378daf5ed50da1  $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz/OpenJazz

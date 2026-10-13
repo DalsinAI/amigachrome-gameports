@@ -1,0 +1,3 @@
+01:36:55 INFO  This is OpenJazz 20260301 (git@1626f4-dirty), built on 2026-10-13.
+01:36:55 WARN  Could not open file: openjazz.cfg
+01:36:55 INFO  Configuration file not found. Using defaults.

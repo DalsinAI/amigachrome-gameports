@@ -1,0 +1,22 @@
+{
+  "source": "905d9f938bfa0ac793e8698aea5822ba3b79e684",
+  "installed_utc": "2026-10-13T00:41:56.112086+00:00",
+  "files": [
+    {
+      "path": "Libs/OpenGPU/SDL2.module",
+      "sha256": "c0d98934d07cfb545ac29192d372ac9729ca40e9e923e3e403fa425ff0e491b9",
+      "bytes": 992820
+    },
+    {
+      "path": "Libs/OpenGPU/SDL2_image.module",
+      "sha256": "142968c3b2da463e32e8517ec7880814e017c017ee094da2824a8abaf1c211ba",
+      "bytes": 210180
+    },
+    {
+      "path": "Libs/OpenGPU/SDL2_mixer.module",
+      "sha256": "1b47f2ec820e6734367842d223e1ad43299681f07b7e3984525b70b0db3aca0c",
+      "bytes": 918264
+    }
+  ],
+  "audio_enabled_doom_first_attempt": "Did not reach game frame during bounded observation; stopped owned lab without a normal game exit. Retest graphics separately with -nosound."
+}
