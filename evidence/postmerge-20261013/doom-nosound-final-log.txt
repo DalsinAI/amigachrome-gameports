@@ -1,0 +1,31 @@
+                         Chocolate Doom 3.1.1
+Z_Init: Init zone memory allocation daemon. 
+zone memory: 0x42a97a4c, 1000000 allocated for zone
+Using ENVARC:/chocolate-doom/ for configuration and saves
+V_Init: allocate screens.
+M_LoadDefaults: Load system defaults.
+saving config in ENVARC:/chocolate-doom/default.cfg
+W_Init: Init WADfiles.
+ adding data/freedoom-0.13.0/freedoom1.wad
+Save directory changed to saves/.
+===========================================================================
+                           Freedoom: Phase 1
+===========================================================================
+ Chocolate Doom is free software, covered by the GNU General Public
+ License.  There is NO warranty; not even for MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE. You are welcome to change and distribute
+ copies under certain conditions. See the source for more information.
+===========================================================================
+I_Init: Setting up machine state.
+NET_Init: Init network subsystem.
+M_Init: Init miscellaneous info.
+R_Init: Init DOOM refresh daemon - .......................................
+P_Init: Init Playloop state.
+S_Init: Setting up sound.
+D_CheckNetGame: Checking network game status.
+startskill 0  deathmatch: 0  startmap: 1  startepisode: 1
+player 1 of 1 (1 nodes)
+Emulating the behavior of the 'Ultimate Doom' executable.
+HU_Init: Setting up heads up display.
+ST_Init: Init status bar.
+CreateUpscaledTexture: Limited texture size to 0x0 (max 16000000 pixels, max texture size 0x0)

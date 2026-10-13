@@ -1,0 +1,37 @@
+[
+  {
+    "file": "SDL2.module",
+    "premerge_sha256": "5be275cf95809038a865837a3905d11d38b7016c27ae81bd58e88507b9b9b077",
+    "merged_main_sha256": "c0d98934d07cfb545ac29192d372ac9729ca40e9e923e3e403fa425ff0e491b9",
+    "same_bytes": false,
+    "size": 992820
+  },
+  {
+    "file": "SDL2_image.module",
+    "premerge_sha256": "869a8dae00e4d5d406c4f78301b499e29affd4023fc4944fd2db3792f4d44065",
+    "merged_main_sha256": "142968c3b2da463e32e8517ec7880814e017c017ee094da2824a8abaf1c211ba",
+    "same_bytes": false,
+    "size": 210180
+  },
+  {
+    "file": "SDL2_mixer.module",
+    "premerge_sha256": "1b47f2ec820e6734367842d223e1ad43299681f07b7e3984525b70b0db3aca0c",
+    "merged_main_sha256": "1b47f2ec820e6734367842d223e1ad43299681f07b7e3984525b70b0db3aca0c",
+    "same_bytes": true,
+    "size": 918264
+  },
+  {
+    "file": "libSDL2.a",
+    "premerge_sha256": "4ce9d618b8c8d46234a74b22f1e5552aa164c8d0d20a4ef0bd60716f8d5aa995",
+    "merged_main_sha256": "3ef00df63df2bd47d63d59fba81c3097a9ff8bb4cf3986799bd136b9db5c152d",
+    "same_bytes": false,
+    "size": 116504
+  },
+  {
+    "file": "libSDL2_static.a",
+    "premerge_sha256": "0582e3b8de3410c0c16fc46cac010ef85ddccd061dd3d9dc0b92627d568b11f8",
+    "merged_main_sha256": "ba014369c31f5f277041cfff076a3c663e5ad93a960cb766b284a34bb36cda53",
+    "same_bytes": false,
+    "size": 1019648
+  }
+]
