@@ -1,0 +1,282 @@
+CMake Deprecation Warning at CMakeLists.txt:3 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+
+-- Amiga toolchain stove: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove
+-- Amiga toolchain stove: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove
+-- The C compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/bin/m68k-amigaos-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found SDL2: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/m68k-amigaos/include/SDL2 (found suitable version "2.32.10", minimum required is "2.0.14")
+-- Found SDL2_mixer: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/m68k-amigaos/include/SDL2 (found suitable version "2.8.2", minimum required is "2.0.2")
+-- Could NOT find SampleRate (missing: SAMPLERATE_INCLUDE_DIR SAMPLERATE_LIBRARY) 
+-- Could NOT find ZLIB (missing: ZLIB_LIBRARY ZLIB_INCLUDE_DIR) 
+-- Could NOT find PNG (missing: PNG_LIBRARY PNG_PNG_INCLUDE_DIR) 
+-- Could NOT find FluidSynth (missing: FluidSynth_LIBRARIES FluidSynth_INCLUDE_DIRS) (Required is at least version "2.2.0")
+-- Looking for strcasecmp
+-- Looking for strcasecmp - found
+-- Looking for strncasecmp
+-- Looking for strncasecmp - found
+-- Looking for dirent.h
+-- Looking for dirent.h - found
+-- Configuring done (1.1s)
+-- Generating done (0.2s)
+-- Build files have been written to: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/chocolate-doom
+[  0%] Building C object src/doom/CMakeFiles/doom.dir/am_map.c.obj
+[  0%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_conditional.c.obj
+[  0%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_checkbox.c.obj
+[  0%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_desktop.c.obj
+[  0%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_dropdown.c.obj
+[  3%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_fileselect.c.obj
+In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/textscreen/txt_fileselect.c:18:
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/textscreen/txt_fileselect.c: In function 'ExpandExtension':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/textscreen/txt_fileselect.c:602:25: warning: array subscript has type 'char' [-Wchar-subscripts]
+  602 |         if (isalpha(orig[i]))
+      |                     ~~~~^~~
+[  3%] Building C object src/doom/CMakeFiles/doom.dir/deh_ammo.c.obj
+[  3%] Building C object src/doom/CMakeFiles/doom.dir/deh_bexstr.c.obj
+[  3%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_gui.c.obj
+[  7%] Building C object src/doom/CMakeFiles/doom.dir/deh_cheat.c.obj
+[  7%] Building C object src/doom/CMakeFiles/doom.dir/deh_doom.c.obj
+[  7%] Building C object src/doom/CMakeFiles/doom.dir/deh_frame.c.obj
+[  7%] Building C object src/doom/CMakeFiles/doom.dir/deh_misc.c.obj
+[  7%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_inputbox.c.obj
+[  7%] Building C object src/doom/CMakeFiles/doom.dir/deh_ptr.c.obj
+[  7%] Building C object src/doom/CMakeFiles/doom.dir/deh_sound.c.obj
+[  7%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_io.c.obj
+[ 10%] Building C object src/doom/CMakeFiles/doom.dir/deh_thing.c.obj
+[ 10%] Building C object src/doom/CMakeFiles/doom.dir/deh_weapon.c.obj
+[ 10%] Building C object src/doom/CMakeFiles/doom.dir/d_items.c.obj
+[ 10%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_button.c.obj
+[ 10%] Building C object src/doom/CMakeFiles/doom.dir/d_main.c.obj
+[ 10%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_label.c.obj
+In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/doom/d_main.c:23:
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/doom/d_main.c: In function 'GetGameName':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/doom/d_main.c:718:67: warning: array subscript has type 'char' [-Wchar-subscripts]
+  718 |             while (deh_gamename[0] != '\0' && isspace(deh_gamename[0]))
+      |                                                       ~~~~~~~~~~~~^~~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/doom/d_main.c:723:67: warning: array subscript has type 'char' [-Wchar-subscripts]
+  723 |             while (deh_gamename[0] != '\0' && isspace(deh_gamename[strlen(deh_gamename)-1]))
+      |                                                       ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+[ 14%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_radiobutton.c.obj
+[ 14%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_scrollpane.c.obj
+[ 14%] Building C object src/doom/CMakeFiles/doom.dir/d_net.c.obj
+[ 14%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_separator.c.obj
+[ 17%] Building C object src/doom/CMakeFiles/doom.dir/doomdef.c.obj
+[ 17%] Building C object src/doom/CMakeFiles/doom.dir/doomstat.c.obj
+[ 17%] Building C object src/doom/CMakeFiles/doom.dir/dstrings.c.obj
+[ 17%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_spinctrl.c.obj
+[ 17%] Building C object src/doom/CMakeFiles/doom.dir/f_finale.c.obj
+[ 17%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_sdl.c.obj
+[ 17%] Building C object src/doom/CMakeFiles/doom.dir/f_wipe.c.obj
+[ 17%] Building C object src/doom/CMakeFiles/doom.dir/g_game.c.obj
+[ 17%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_strut.c.obj
+[ 21%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_table.c.obj
+[ 25%] Building C object src/doom/CMakeFiles/doom.dir/hu_lib.c.obj
+[ 25%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_utf8.c.obj
+[ 25%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_widget.c.obj
+[ 25%] Building C object src/doom/CMakeFiles/doom.dir/hu_stuff.c.obj
+[ 25%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_window.c.obj
+[ 25%] Building C object src/doom/CMakeFiles/doom.dir/info.c.obj
+[ 25%] Building C object textscreen/CMakeFiles/textscreen.dir/txt_window_action.c.obj
+[ 25%] Building C object src/doom/CMakeFiles/doom.dir/m_menu.c.obj
+[ 28%] Linking C static library libtextscreen.a
+[ 28%] Built target textscreen
+[ 32%] Building C object opl/CMakeFiles/opl.dir/opl.c.obj
+[ 32%] Building C object opl/CMakeFiles/opl.dir/opl_linux.c.obj
+[ 32%] Building C object opl/CMakeFiles/opl.dir/opl_obsd.c.obj
+[ 32%] Building C object opl/CMakeFiles/opl.dir/opl_queue.c.obj
+[ 32%] Building C object opl/CMakeFiles/opl.dir/opl_sdl.c.obj
+[ 32%] Building C object src/doom/CMakeFiles/doom.dir/m_random.c.obj
+[ 32%] Building C object src/doom/CMakeFiles/doom.dir/p_ceilng.c.obj
+[ 32%] Building C object opl/CMakeFiles/opl.dir/opl_timer.c.obj
+[ 35%] Building C object src/doom/CMakeFiles/doom.dir/p_doors.c.obj
+[ 39%] Building C object opl/CMakeFiles/opl.dir/opl_win32.c.obj
+[ 39%] Building C object opl/CMakeFiles/opl.dir/ioperm_sys.c.obj
+[ 39%] Building C object opl/CMakeFiles/opl.dir/opl3.c.obj
+[ 39%] Building C object src/doom/CMakeFiles/doom.dir/p_enemy.c.obj
+[ 39%] Building C object src/doom/CMakeFiles/doom.dir/p_floor.c.obj
+[ 39%] Building C object src/doom/CMakeFiles/doom.dir/p_inter.c.obj
+[ 39%] Linking C static library libopl.a
+[ 39%] Built target opl
+[ 39%] Building C object pcsound/CMakeFiles/pcsound.dir/pcsound.c.obj
+[ 39%] Building C object src/doom/CMakeFiles/doom.dir/p_lights.c.obj
+[ 39%] Building C object pcsound/CMakeFiles/pcsound.dir/pcsound_bsd.c.obj
+[ 42%] Building C object pcsound/CMakeFiles/pcsound.dir/pcsound_sdl.c.obj
+[ 42%] Building C object src/doom/CMakeFiles/doom.dir/p_map.c.obj
+[ 42%] Building C object pcsound/CMakeFiles/pcsound.dir/pcsound_linux.c.obj
+[ 42%] Building C object pcsound/CMakeFiles/pcsound.dir/pcsound_win32.c.obj
+[ 42%] Linking C static library libpcsound.a
+[ 42%] Built target pcsound
+[ 46%] Building C object src/doom/CMakeFiles/doom.dir/p_maputl.c.obj
+[ 46%] Building C object src/doom/CMakeFiles/doom.dir/p_mobj.c.obj
+[ 46%] Building C object src/doom/CMakeFiles/doom.dir/p_plats.c.obj
+[ 46%] Building C object src/doom/CMakeFiles/doom.dir/p_pspr.c.obj
+[ 46%] Building C object src/doom/CMakeFiles/doom.dir/p_saveg.c.obj
+[ 46%] Building C object src/doom/CMakeFiles/doom.dir/p_setup.c.obj
+[ 50%] Building C object src/doom/CMakeFiles/doom.dir/p_sight.c.obj
+[ 50%] Building C object src/doom/CMakeFiles/doom.dir/p_spec.c.obj
+[ 50%] Building C object src/doom/CMakeFiles/doom.dir/p_switch.c.obj
+[ 50%] Building C object src/doom/CMakeFiles/doom.dir/p_telept.c.obj
+[ 50%] Building C object src/doom/CMakeFiles/doom.dir/p_tick.c.obj
+[ 50%] Building C object src/doom/CMakeFiles/doom.dir/p_user.c.obj
+[ 53%] Building C object src/doom/CMakeFiles/doom.dir/r_bsp.c.obj
+[ 53%] Building C object src/doom/CMakeFiles/doom.dir/r_data.c.obj
+[ 53%] Building C object src/doom/CMakeFiles/doom.dir/r_draw.c.obj
+[ 53%] Building C object src/doom/CMakeFiles/doom.dir/r_main.c.obj
+[ 53%] Building C object src/doom/CMakeFiles/doom.dir/r_plane.c.obj
+[ 53%] Building C object src/doom/CMakeFiles/doom.dir/r_segs.c.obj
+[ 57%] Building C object src/doom/CMakeFiles/doom.dir/r_sky.c.obj
+[ 57%] Building C object src/doom/CMakeFiles/doom.dir/r_things.c.obj
+[ 57%] Building C object src/doom/CMakeFiles/doom.dir/s_sound.c.obj
+[ 57%] Building C object src/doom/CMakeFiles/doom.dir/sounds.c.obj
+[ 57%] Building C object src/doom/CMakeFiles/doom.dir/statdump.c.obj
+[ 57%] Building C object src/doom/CMakeFiles/doom.dir/st_lib.c.obj
+[ 60%] Building C object src/doom/CMakeFiles/doom.dir/st_stuff.c.obj
+[ 60%] Building C object src/doom/CMakeFiles/doom.dir/wi_stuff.c.obj
+[ 60%] Linking C static library libdoom.a
+[ 60%] Built target doom
+[ 60%] Building C object src/CMakeFiles/chocolate-doom.dir/i_main.c.obj
+[ 60%] Building C object src/CMakeFiles/chocolate-doom.dir/i_system.c.obj
+[ 60%] Building C object src/CMakeFiles/chocolate-doom.dir/m_argv.c.obj
+In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/m_argv.c:19:
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/m_argv.c: In function 'LoadResponseFile':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/m_argv.c:154:41: warning: array subscript has type 'char' [-Wchar-subscripts]
+  154 |         while(k < size && isspace(infile[k]))
+      |                                   ~~~~~~^~~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/m_argv.c:208:46: warning: array subscript has type 'char' [-Wchar-subscripts]
+  208 |             while(k < size && !isspace(infile[k]))
+      |                                        ~~~~~~^~~
+[ 60%] Building C object src/CMakeFiles/chocolate-doom.dir/m_misc.c.obj
+[ 60%] Building C object src/CMakeFiles/chocolate-doom.dir/aes_prng.c.obj
+[ 64%] Building C object src/CMakeFiles/chocolate-doom.dir/d_event.c.obj
+[ 64%] Building C object src/CMakeFiles/chocolate-doom.dir/d_iwad.c.obj
+[ 64%] Building C object src/CMakeFiles/chocolate-doom.dir/d_loop.c.obj
+[ 64%] Building C object src/CMakeFiles/chocolate-doom.dir/d_mode.c.obj
+[ 64%] Building C object src/CMakeFiles/chocolate-doom.dir/deh_str.c.obj
+[ 64%] Building C object src/CMakeFiles/chocolate-doom.dir/gusconf.c.obj
+[ 67%] Building C object src/CMakeFiles/chocolate-doom.dir/i_cdmus.c.obj
+In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/gusconf.c:27:
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/gusconf.c: In function 'SplitLine':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/gusconf.c:82:44: warning: array subscript has type 'char' [-Wchar-subscripts]
+   82 |             } while (*p != '\0' && isspace(*p));
+      |                                            ^~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/gusconf.c:102:50: warning: array subscript has type 'char' [-Wchar-subscripts]
+  102 |     while (p > fields[num_fields - 1] && isspace(*(p - 1)))
+      |                                                  ^~~~~~~~
+[ 67%] Building C object src/CMakeFiles/chocolate-doom.dir/i_endoom.c.obj
+[ 67%] Building C object src/CMakeFiles/chocolate-doom.dir/i_flmusic.c.obj
+[ 67%] Building C object src/CMakeFiles/chocolate-doom.dir/i_glob.c.obj
+[ 67%] Building C object src/CMakeFiles/chocolate-doom.dir/i_input.c.obj
+[ 67%] Building C object src/CMakeFiles/chocolate-doom.dir/i_joystick.c.obj
+[ 71%] Building C object src/CMakeFiles/chocolate-doom.dir/i_musicpack.c.obj
+In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c:23:
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c: In function 'ReadHashPrefix':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c:793:43: warning: array subscript has type 'char' [-Wchar-subscripts]
+  793 |     for (p = line; *p != '\0' && !isspace(*p) && *p != '='; ++p)
+      |                                           ^~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c:795:23: warning: array subscript has type 'char' [-Wchar-subscripts]
+  795 |         if (!isxdigit(*p))
+      |                       ^~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c: In function 'ParseSubstituteLine':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c:835:36: warning: array subscript has type 'char' [-Wchar-subscripts]
+  835 |         while (p > line && isspace(*(p - 1)))
+      |                                    ^~~~~~~~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c:843:42: warning: array subscript has type 'char' [-Wchar-subscripts]
+  843 |     for (p = line; *p != '\0' && isspace(*p); ++p);
+      |                                          ^~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c:861:34: warning: array subscript has type 'char' [-Wchar-subscripts]
+  861 |     for (; *p != '\0' && isspace(*p); ++p);
+      |                                  ^~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c:871:34: warning: array subscript has type 'char' [-Wchar-subscripts]
+  871 |     for (; *p != '\0' && isspace(*p); ++p);
+      |                                  ^~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/i_musicpack.c:876:38: warning: array subscript has type 'char' [-Wchar-subscripts]
+  876 |     while (strlen(p) > 0 && isspace(p[strlen(p) - 1]))
+      |                                     ~^~~~~~~~~~~~~~~
+[ 71%] Building C object src/CMakeFiles/chocolate-doom.dir/i_oplmusic.c.obj
+[ 71%] Building C object src/CMakeFiles/chocolate-doom.dir/i_pcsound.c.obj
+[ 71%] Building C object src/CMakeFiles/chocolate-doom.dir/i_sdlmusic.c.obj
+[ 71%] Building C object src/CMakeFiles/chocolate-doom.dir/i_sdlsound.c.obj
+[ 71%] Building C object src/CMakeFiles/chocolate-doom.dir/i_sound.c.obj
+[ 75%] Building C object src/CMakeFiles/chocolate-doom.dir/i_timer.c.obj
+[ 75%] Building C object src/CMakeFiles/chocolate-doom.dir/i_video.c.obj
+[ 75%] Building C object src/CMakeFiles/chocolate-doom.dir/i_videohr.c.obj
+[ 75%] Building C object src/CMakeFiles/chocolate-doom.dir/i_winmusic.c.obj
+[ 75%] Building C object src/CMakeFiles/chocolate-doom.dir/midifallback.c.obj
+[ 75%] Building C object src/CMakeFiles/chocolate-doom.dir/midifile.c.obj
+[ 78%] Building C object src/CMakeFiles/chocolate-doom.dir/mus2mid.c.obj
+[ 78%] Building C object src/CMakeFiles/chocolate-doom.dir/m_bbox.c.obj
+[ 78%] Building C object src/CMakeFiles/chocolate-doom.dir/m_cheat.c.obj
+[ 78%] Building C object src/CMakeFiles/chocolate-doom.dir/m_config.c.obj
+[ 78%] Building C object src/CMakeFiles/chocolate-doom.dir/m_controls.c.obj
+In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/m_config.c:24:
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/m_config.c: In function 'LoadDefaultCollection':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/m_config.c:2362:55: warning: array subscript has type 'char' [-Wchar-subscripts]
+ 2362 |         while (strlen(strparm) > 0 && !isprint(strparm[strlen(strparm)-1]))
+      |                                                ~~~~~~~^~~~~~~~~~~~~~~~~~~
+[ 78%] Building C object src/CMakeFiles/chocolate-doom.dir/m_fixed.c.obj
+[ 82%] Building C object src/CMakeFiles/chocolate-doom.dir/net_client.c.obj
+[ 82%] Building C object src/CMakeFiles/chocolate-doom.dir/net_common.c.obj
+[ 82%] Building C object src/CMakeFiles/chocolate-doom.dir/net_dedicated.c.obj
+[ 82%] Building C object src/CMakeFiles/chocolate-doom.dir/net_gui.c.obj
+[ 82%] Building C object src/CMakeFiles/chocolate-doom.dir/net_io.c.obj
+[ 82%] Building C object src/CMakeFiles/chocolate-doom.dir/net_loop.c.obj
+[ 85%] Building C object src/CMakeFiles/chocolate-doom.dir/net_packet.c.obj
+In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/net_packet.c:18:
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/net_packet.c: In function 'NET_ReadSafeString':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/net_packet.c:226:21: warning: array subscript has type 'char' [-Wchar-subscripts]
+  226 |         if (isprint(*r) || *r == '\n')
+      |                     ^~
+[ 85%] Building C object src/CMakeFiles/chocolate-doom.dir/net_petname.c.obj
+[ 85%] Building C object src/CMakeFiles/chocolate-doom.dir/net_query.c.obj
+[ 85%] Building C object src/CMakeFiles/chocolate-doom.dir/net_sdl.c.obj
+[ 85%] Building C object src/CMakeFiles/chocolate-doom.dir/net_server.c.obj
+[ 89%] Building C object src/CMakeFiles/chocolate-doom.dir/net_structrw.c.obj
+[ 89%] Building C object src/CMakeFiles/chocolate-doom.dir/p_rejectpad.c.obj
+[ 89%] Building C object src/CMakeFiles/chocolate-doom.dir/sha1.c.obj
+[ 89%] Building C object src/CMakeFiles/chocolate-doom.dir/memio.c.obj
+[ 89%] Building C object src/CMakeFiles/chocolate-doom.dir/tables.c.obj
+[ 89%] Building C object src/CMakeFiles/chocolate-doom.dir/v_diskicon.c.obj
+[ 92%] Building C object src/CMakeFiles/chocolate-doom.dir/v_video.c.obj
+[ 92%] Building C object src/CMakeFiles/chocolate-doom.dir/w_checksum.c.obj
+[ 92%] Building C object src/CMakeFiles/chocolate-doom.dir/w_main.c.obj
+[ 92%] Building C object src/CMakeFiles/chocolate-doom.dir/w_wad.c.obj
+[ 92%] Building C object src/CMakeFiles/chocolate-doom.dir/w_file.c.obj
+[ 92%] Building C object src/CMakeFiles/chocolate-doom.dir/w_file_stdc.c.obj
+[ 96%] Building C object src/CMakeFiles/chocolate-doom.dir/w_file_posix.c.obj
+[ 96%] Building C object src/CMakeFiles/chocolate-doom.dir/w_file_win32.c.obj
+[ 96%] Building C object src/CMakeFiles/chocolate-doom.dir/w_merge.c.obj
+[ 96%] Building C object src/CMakeFiles/chocolate-doom.dir/z_zone.c.obj
+[ 96%] Building C object src/CMakeFiles/chocolate-doom.dir/deh_io.c.obj
+[ 96%] Building C object src/CMakeFiles/chocolate-doom.dir/deh_main.c.obj
+[100%] Building C object src/CMakeFiles/chocolate-doom.dir/deh_mapping.c.obj
+In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/deh_main.c:21:
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/deh_main.c: In function 'IsWhitespace':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/deh_main.c:136:22: warning: array subscript has type 'char' [-Wchar-subscripts]
+  136 |         if (!isspace(*s))
+      |                      ^~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/deh_main.c: In function 'CleanString':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/deh_main.c:151:26: warning: array subscript has type 'char' [-Wchar-subscripts]
+  151 |     while (*s && isspace(*s))
+      |                          ^~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/deh_main.c:158:37: warning: array subscript has type 'char' [-Wchar-subscripts]
+  158 |     while (strlen(s) > 0 && isspace(*strending))
+      |                                     ^~~~~~~~~~
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/deh_main.c: In function 'DEH_ParseContext':
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/chocolate-doom/src/deh_main.c:313:47: warning: array subscript has type 'char' [-Wchar-subscripts]
+  313 |         while (line[0] != '\0' && isspace(line[0]))
+      |                                           ~~~~^~~
+[100%] Building C object src/CMakeFiles/chocolate-doom.dir/deh_text.c.obj
+[100%] Linking C executable chocolate-doom
+[100%] Built target chocolate-doom
+/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/chocolate-doom/src/chocolate-doom: AmigaOS loadseg()ble executable/binary
+529a6200d3ad2c8fe32a66e343efa8698502cf83bef5d3fc07bf633d399cb817  /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/chocolate-doom/src/chocolate-doom

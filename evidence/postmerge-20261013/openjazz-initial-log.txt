@@ -1,0 +1,6 @@
+01:29:10 INFO  This is OpenJazz 20260301 (git@1626f4-dirty), built on 2026-10-13.
+01:29:10 WARN  Path 'System:Open2Ports/OpenJazz/' is not writeable, disabling!
+01:29:10 WARN  Could not open file: openjazz.cfg
+01:29:10 INFO  Configuration file not found. Using defaults.
+01:34:42 WARN  Could not open file: openjazz.cfg
+01:34:42 ERROR Could not write configuration file: File could not be opened.

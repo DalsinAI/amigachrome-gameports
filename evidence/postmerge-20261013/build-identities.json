@@ -1,0 +1,13 @@
+{
+  "merged_gameports": "883efd5bc85797bf347afba9450e68290414148d",
+  "merged_opengpu": "905d9f938bfa0ac793e8698aea5822ba3b79e684",
+  "compiler": "16.2.0-open2",
+  "openjazz_unfixed_sha256": "e08942426c2b1253b3d73700e73c0031bd3b6bc6b6aab3dd174fd26b08b569f7",
+  "openjazz_fixed_sha256": "4363021f0961e5874b9703cddb5dd45e9a463ced18a68d3114378daf5ed50da1",
+  "chocolate_doom_sha256": "529a6200d3ad2c8fe32a66e343efa8698502cf83bef5d3fc07bf633d399cb817",
+  "runtime_sdl_module_sha256": "5be275cf95809038a865837a3905d11d38b7016c27ae81bd58e88507b9b9b077",
+  "new_merged_sdl_module_sha256": "c0d98934d07cfb545ac29192d372ac9729ca40e9e923e3e403fa425ff0e491b9",
+  "runtime_used_integration_build": true,
+  "audio": "not_qualified_muted",
+  "release": false
+}

@@ -1,0 +1,5 @@
+{
+  "stage": "OpenJazz after Doom quit on merged SDL",
+  "result": "Window appeared blank; no normal exit recorded during bounded observation. Owned lab stopped for a fresh-start comparison.",
+  "runtime_sdl": "c0d98934d07cfb545ac29192d372ac9729ca40e9e923e3e403fa425ff0e491b9"
+}
