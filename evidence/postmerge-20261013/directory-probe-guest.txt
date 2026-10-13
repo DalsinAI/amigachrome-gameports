@@ -1,0 +1,11 @@
+ACCESS System:Open2Ports/OpenJazz/ rc=-1 errno=26
+STAT System:Open2Ports/OpenJazz/ rc=0 errno=0 mode=40700
+ACCESS System:Open2Ports/OpenJazz rc=-1 errno=26
+STAT System:Open2Ports/OpenJazz rc=0 errno=0 mode=40700
+ACCESS PROGDIR: rc=-1 errno=26
+STAT PROGDIR: rc=0 errno=0 mode=40700
+ACCESS ENVARC: rc=-1 errno=26
+STAT ENVARC: rc=0 errno=0 mode=40777
+CREATE_EXCLUSIVE rc=3 errno=0
+DELETE rc=0
+DIRECTORY_PROBE_EXIT 0

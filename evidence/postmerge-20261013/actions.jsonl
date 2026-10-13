@@ -1,0 +1,175 @@
+{"utc": "2026-10-13T00:22:14.714353+00:00", "action": "mailbox", "label": "keymap-probe", "script": "FailAt 21\nStack 1048576\nEcho \"KEYMAP_BEGIN\"\nSYS:Open2Runner/KeymapProbe\nEcho \"KEYMAP_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:22:51.125210+00:00", "action": "mailbox", "label": "text-shared", "script": "FailAt 21\nStack 1048576\nEcho \"TEXT_shared_BEGIN\"\nSYS:Open2Runner/SDLTextCheck >SYS:Open2Runner/merge-text-shared.out\nEcho \"TEXT_shared_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:22:53.125419+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:22:53.309646+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-13T00:22:53.310916+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:22:53.595933+00:00", "action": "key", "raw": 1, "hold": 0.08}
+{"utc": "2026-10-13T00:22:53.781681+00:00", "action": "key", "raw": 40, "hold": 0.08}
+{"utc": "2026-10-13T00:22:54.168899+00:00", "action": "key", "raw": 35, "hold": 0.08}
+{"utc": "2026-10-13T00:22:54.564923+00:00", "action": "key", "raw": 18, "hold": 0.08}
+{"utc": "2026-10-13T00:22:54.950833+00:00", "action": "key", "raw": 39, "hold": 0.08}
+{"utc": "2026-10-13T00:22:55.338777+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:22:55.724663+00:00", "action": "chord", "modifier": 99, "raw": 32}
+{"utc": "2026-10-13T00:22:55.726471+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:22:56.011392+00:00", "action": "chord", "modifier": 102, "raw": 32}
+{"utc": "2026-10-13T00:22:56.013057+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:22:56.297784+00:00", "action": "chord", "modifier": 103, "raw": 32}
+{"utc": "2026-10-13T00:22:56.299954+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:22:56.585167+00:00", "action": "key", "raw": 65, "hold": 0.08}
+{"utc": "2026-10-13T00:22:56.768738+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:22:56.952283+00:00", "action": "key", "raw": 78, "hold": 0.08}
+{"utc": "2026-10-13T00:22:57.136206+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:22:57.319664+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-13T00:22:57.503594+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:22:57.687457+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-13T00:22:58.507051+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-13T00:22:59.692414+00:00", "action": "mailbox", "label": "text-static", "script": "FailAt 21\nStack 1048576\nEcho \"TEXT_static_BEGIN\"\nSYS:Open2Runner/SDLTextCheckStatic >SYS:Open2Runner/merge-text-static.out\nEcho \"TEXT_static_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:23:01.692581+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:23:01.876839+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-13T00:23:01.878643+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:23:02.164982+00:00", "action": "key", "raw": 1, "hold": 0.08}
+{"utc": "2026-10-13T00:23:02.350371+00:00", "action": "key", "raw": 40, "hold": 0.08}
+{"utc": "2026-10-13T00:23:02.739155+00:00", "action": "key", "raw": 35, "hold": 0.08}
+{"utc": "2026-10-13T00:23:03.124016+00:00", "action": "key", "raw": 18, "hold": 0.08}
+{"utc": "2026-10-13T00:23:03.509834+00:00", "action": "key", "raw": 39, "hold": 0.08}
+{"utc": "2026-10-13T00:23:03.897350+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:23:04.283234+00:00", "action": "chord", "modifier": 99, "raw": 32}
+{"utc": "2026-10-13T00:23:04.286691+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:23:04.573236+00:00", "action": "chord", "modifier": 102, "raw": 32}
+{"utc": "2026-10-13T00:23:04.575163+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:23:04.860016+00:00", "action": "chord", "modifier": 103, "raw": 32}
+{"utc": "2026-10-13T00:23:04.861639+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:23:05.146195+00:00", "action": "key", "raw": 65, "hold": 0.08}
+{"utc": "2026-10-13T00:23:05.330008+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:23:05.513800+00:00", "action": "key", "raw": 78, "hold": 0.08}
+{"utc": "2026-10-13T00:23:05.698775+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:23:05.882760+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-13T00:23:06.067086+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:23:06.251084+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-13T00:23:07.055795+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-13T00:23:48.118254+00:00", "action": "mailbox", "label": "focus-held-modifier", "script": "FailAt 21\nStack 1048576\nRun >SYS:Open2Runner/merge-focus-probe.out SYS:Open2Runner/FocusProbe\nSYS:Open2Runner/SDLTextCheck >SYS:Open2Runner/merge-focus.out\nEcho \"MERGE_FOCUS_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:23:50.118439+00:00", "action": "hold_modifier_until_focus_lost", "raw": 96}
+{"utc": "2026-10-13T00:23:57.363618+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:24:05.055495+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:24:05.771714+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-13T00:24:27.078248+00:00", "action": "mailbox", "label": "astro-profile", "script": "FailAt 21\nStack 1048576\nUnsetEnv SDL_OPENGPU\nEcho \"ASTRO_PROFILE_BEGIN\"\nCD DH1:AstroMenace\nAstroMenace >SYS:Open2Runner/merge-astro.out\nEcho \"ASTRO_PROFILE_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:25:46.580589+00:00", "action": "click", "x": 320, "y": 123, "head": 1}
+{"utc": "2026-10-13T00:26:09.596160+00:00", "action": "click", "x": 115, "y": 397, "head": 1}
+{"utc": "2026-10-13T00:26:10.088457+00:00", "action": "click", "x": 472, "y": 397, "head": 1}
+{"utc": "2026-10-13T00:26:31.373232+00:00", "action": "chord", "modifier": 96, "raw": 34}
+{"utc": "2026-10-13T00:26:31.374457+00:00", "action": "key", "raw": 34, "hold": 0.08}
+{"utc": "2026-10-13T00:26:31.659996+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-13T00:26:31.662075+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:26:31.947270+00:00", "action": "chord", "modifier": 96, "raw": 40}
+{"utc": "2026-10-13T00:26:31.949204+00:00", "action": "key", "raw": 40, "hold": 0.08}
+{"utc": "2026-10-13T00:26:32.235266+00:00", "action": "chord", "modifier": 96, "raw": 18}
+{"utc": "2026-10-13T00:26:32.236802+00:00", "action": "key", "raw": 18, "hold": 0.08}
+{"utc": "2026-10-13T00:26:32.521688+00:00", "action": "chord", "modifier": 96, "raw": 50}
+{"utc": "2026-10-13T00:26:32.523666+00:00", "action": "key", "raw": 50, "hold": 0.08}
+{"utc": "2026-10-13T00:26:33.285516+00:00", "action": "key", "raw": 65, "hold": 0.08}
+{"utc": "2026-10-13T00:26:33.929787+00:00", "action": "click", "x": 511, "y": 150, "head": 1}
+{"utc": "2026-10-13T00:26:53.688267+00:00", "action": "click", "x": 219, "y": 436, "head": 1}
+{"utc": "2026-10-13T00:26:54.774016+00:00", "action": "click", "x": 321, "y": 436, "head": 1}
+{"utc": "2026-10-13T00:27:16.596922+00:00", "action": "click", "x": 258, "y": 290, "head": 1}
+{"utc": "2026-10-13T00:27:20.085401+00:00", "action": "mailbox", "label": "astro-relaunch", "script": "FailAt 21\nStack 1048576\nEcho \"ASTRO_RELAUNCH_BEGIN\"\nCD DH1:AstroMenace\nAstroMenace >SYS:Open2Runner/merge-astro-relaunch.out\nEcho \"ASTRO_RELAUNCH_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:28:31.042889+00:00", "action": "click", "x": 320, "y": 123, "head": 1}
+{"utc": "2026-10-13T00:29:17.801415+00:00", "action": "click", "x": 220, "y": 436, "head": 1}
+{"utc": "2026-10-13T00:29:18.686941+00:00", "action": "click", "x": 320, "y": 436, "head": 1}
+{"utc": "2026-10-13T00:29:19.575360+00:00", "action": "click", "x": 258, "y": 290, "head": 1}
+{"utc": "2026-10-13T00:29:23.062807+00:00", "action": "mailbox", "label": "openjazz-main", "script": "FailAt 21\nStack 1048576\nSetEnv SDL_OPENGPU 0\nEcho \"OPENJAZZ_BEGIN\"\nGetEnv SDL_OPENGPU\nCD SYS:Open2Ports/OpenJazz\nOpenJazz >SYS:Open2Runner/merge-openjazz.out\nEcho \"OPENJAZZ_EXIT $RC\"\nUnsetEnv SDL_OPENGPU\n"}
+{"utc": "2026-10-13T00:30:36.396276+00:00", "action": "key", "raw": 64, "hold": 0.08}
+{"utc": "2026-10-13T00:30:37.620430+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:33:41.737451+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:33:55.838203+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-13T00:33:56.422420+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:34:55.476019+00:00", "action": "click", "x": 168, "y": 150, "head": 1}
+{"utc": "2026-10-13T00:35:24.531961+00:00", "action": "mailbox", "label": "directory-probe", "script": "FailAt 21\nStack 1048576\nSYS:Open2Runner/DirectoryProbe\nEcho \"DIRECTORY_PROBE_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:35:24.833552+00:00", "action": "mailbox", "label": "openjazz-level", "script": "FailAt 21\nStack 1048576\nSetEnv SDL_OPENGPU 0\nEcho \"OPENJAZZ_LEVEL_BEGIN\"\nGetEnv SDL_OPENGPU\nCD SYS:Open2Ports/OpenJazz\nOpenJazz --window --world 0 --level 0 >SYS:Open2Runner/merge-openjazz-level.out\nEcho \"OPENJAZZ_LEVEL_EXIT $RC\"\nUnsetEnv SDL_OPENGPU\n"}
+{"utc": "2026-10-13T00:36:32.828788+00:00", "action": "key", "raw": 76, "hold": 0.08}
+{"utc": "2026-10-13T00:36:33.019900+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:36:37.466171+00:00", "action": "key", "raw": 78, "hold": 0.5}
+{"utc": "2026-10-13T00:37:04.420754+00:00", "action": "key", "raw": 78, "hold": 0.4}
+{"utc": "2026-10-13T00:37:05.544903+00:00", "action": "click", "x": 168, "y": 150, "head": 1}
+{"utc": "2026-10-13T00:37:08.053251+00:00", "action": "mailbox", "label": "openjazz-fixed", "script": "FailAt 21\nStack 1048576\nSetEnv SDL_OPENGPU 0\nEcho \"OPENJAZZ_FIXED_BEGIN\"\nGetEnv SDL_OPENGPU\nCD SYS:Open2Ports/OpenJazz\nOpenJazz --window --world 0 --level 0 >SYS:Open2Runner/openjazz-fixed.out\nEcho \"OPENJAZZ_FIXED_EXIT $RC\"\nUnsetEnv SDL_OPENGPU\n"}
+{"utc": "2026-10-13T00:37:10.053440+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:37:38.467224+00:00", "action": "key", "raw": 78, "hold": 0.3}
+{"utc": "2026-10-13T00:37:39.490186+00:00", "action": "click", "x": 168, "y": 150, "head": 1}
+{"utc": "2026-10-13T00:37:41.976904+00:00", "action": "mailbox", "label": "openjazz-fixed-relaunch", "script": "FailAt 21\nStack 1048576\nSetEnv SDL_OPENGPU 0\nEcho \"OPENJAZZ_CONFIG_RELAUNCH_BEGIN\"\nCD SYS:Open2Ports/OpenJazz\nOpenJazz --window --world 0 --level 0 >SYS:Open2Runner/openjazz-fixed-relaunch.out\nEcho \"OPENJAZZ_CONFIG_RELAUNCH_EXIT $RC\"\nUnsetEnv SDL_OPENGPU\n"}
+{"utc": "2026-10-13T00:37:43.977111+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:38:02.959972+00:00", "action": "key", "raw": 76, "hold": 0.08}
+{"utc": "2026-10-13T00:38:03.344570+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:38:32.428075+00:00", "action": "key", "raw": 78, "hold": 0.4}
+{"utc": "2026-10-13T00:38:33.755943+00:00", "action": "click", "x": 168, "y": 150, "head": 1}
+{"utc": "2026-10-13T00:38:36.243525+00:00", "action": "mailbox", "label": "doom-first-level", "script": "FailAt 21\nStack 1048576\nSetEnv SDL_OPENGPU 0\nEcho \"DOOM_BEGIN\"\nGetEnv SDL_OPENGPU\nCD SYS:Open2Ports/ChocolateDoom\nchocolate-doom -iwad data/freedoom-0.13.0/freedoom1.wad -window -width 640 -height 400 -warp 1 1 -skill 1 -savedir saves >SYS:Open2Runner/merge-doom.out\nEcho \"DOOM_EXIT $RC\"\nUnsetEnv SDL_OPENGPU\n"}
+{"utc": "2026-10-13T00:42:28.253437+00:00", "action": "mailbox", "label": "final-main-text-shared", "script": "FailAt 21\nStack 1048576\nEcho \"TEXT_shared_BEGIN\"\nSYS:Open2Runner/SDLTextCheck >SYS:Open2Runner/merge-final-main-text-shared.out\nEcho \"TEXT_shared_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:42:30.253687+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:30.437428+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-13T00:42:30.439187+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:30.724590+00:00", "action": "key", "raw": 1, "hold": 0.08}
+{"utc": "2026-10-13T00:42:30.910986+00:00", "action": "key", "raw": 40, "hold": 0.08}
+{"utc": "2026-10-13T00:42:31.301069+00:00", "action": "key", "raw": 35, "hold": 0.08}
+{"utc": "2026-10-13T00:42:31.686272+00:00", "action": "key", "raw": 18, "hold": 0.08}
+{"utc": "2026-10-13T00:42:32.072127+00:00", "action": "key", "raw": 39, "hold": 0.08}
+{"utc": "2026-10-13T00:42:32.458285+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:32.842446+00:00", "action": "chord", "modifier": 99, "raw": 32}
+{"utc": "2026-10-13T00:42:32.844222+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:33.130959+00:00", "action": "chord", "modifier": 102, "raw": 32}
+{"utc": "2026-10-13T00:42:33.156651+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:33.446680+00:00", "action": "chord", "modifier": 103, "raw": 32}
+{"utc": "2026-10-13T00:42:33.449066+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:33.735360+00:00", "action": "key", "raw": 65, "hold": 0.08}
+{"utc": "2026-10-13T00:42:33.918671+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:42:34.102897+00:00", "action": "key", "raw": 78, "hold": 0.08}
+{"utc": "2026-10-13T00:42:34.286313+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:42:34.470483+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-13T00:42:34.655805+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:42:34.839508+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-13T00:42:35.696804+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-13T00:42:36.881834+00:00", "action": "mailbox", "label": "final-main-text-static", "script": "FailAt 21\nStack 1048576\nEcho \"TEXT_static_BEGIN\"\nSYS:Open2Runner/SDLTextCheckStatic >SYS:Open2Runner/merge-final-main-text-static.out\nEcho \"TEXT_static_EXIT $RC\"\n"}
+{"utc": "2026-10-13T00:42:38.882680+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:39.073977+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-13T00:42:39.076787+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:39.365520+00:00", "action": "key", "raw": 1, "hold": 0.08}
+{"utc": "2026-10-13T00:42:39.551333+00:00", "action": "key", "raw": 40, "hold": 0.08}
+{"utc": "2026-10-13T00:42:39.937909+00:00", "action": "key", "raw": 35, "hold": 0.08}
+{"utc": "2026-10-13T00:42:40.322401+00:00", "action": "key", "raw": 18, "hold": 0.08}
+{"utc": "2026-10-13T00:42:40.708269+00:00", "action": "key", "raw": 39, "hold": 0.08}
+{"utc": "2026-10-13T00:42:41.096423+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:41.483273+00:00", "action": "chord", "modifier": 99, "raw": 32}
+{"utc": "2026-10-13T00:42:41.484979+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:41.772663+00:00", "action": "chord", "modifier": 102, "raw": 32}
+{"utc": "2026-10-13T00:42:41.774256+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:42.058695+00:00", "action": "chord", "modifier": 103, "raw": 32}
+{"utc": "2026-10-13T00:42:42.060390+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:42:42.345986+00:00", "action": "key", "raw": 65, "hold": 0.08}
+{"utc": "2026-10-13T00:42:42.532267+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:42:42.717433+00:00", "action": "key", "raw": 78, "hold": 0.08}
+{"utc": "2026-10-13T00:42:42.901210+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:42:43.084529+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-13T00:42:43.271926+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:42:43.480022+00:00", "action": "key", "raw": 49, "hold": 0.08}
+{"utc": "2026-10-13T00:42:44.248937+00:00", "action": "key", "raw": 69, "hold": 0.08}
+{"utc": "2026-10-13T00:43:06.248996+00:00", "action": "mailbox", "label": "doom-nosound", "script": "FailAt 21\nStack 1048576\nSetEnv SDL_OPENGPU 0\nEcho \"DOOM_NOSOUND_BEGIN\"\nGetEnv SDL_OPENGPU\nCD SYS:Open2Ports/ChocolateDoom\nchocolate-doom -iwad data/freedoom-0.13.0/freedoom1.wad -window -width 640 -height 400 -warp 1 1 -skill 1 -savedir saves -nosound >SYS:Open2Runner/doom-nosound.out\nEcho \"DOOM_NOSOUND_EXIT $RC\"\nUnsetEnv SDL_OPENGPU\n"}
+{"utc": "2026-10-13T00:43:39.561593+00:00", "action": "key", "raw": 76, "hold": 0.45}
+{"utc": "2026-10-13T00:43:40.945547+00:00", "action": "key", "raw": 81, "hold": 0.08}
+{"utc": "2026-10-13T00:44:11.315202+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:44:11.524085+00:00", "action": "chord", "modifier": 96, "raw": 34}
+{"utc": "2026-10-13T00:44:11.529511+00:00", "action": "key", "raw": 34, "hold": 0.08}
+{"utc": "2026-10-13T00:44:11.830013+00:00", "action": "chord", "modifier": 96, "raw": 32}
+{"utc": "2026-10-13T00:44:11.837019+00:00", "action": "key", "raw": 32, "hold": 0.08}
+{"utc": "2026-10-13T00:44:12.183356+00:00", "action": "chord", "modifier": 96, "raw": 40}
+{"utc": "2026-10-13T00:44:12.186878+00:00", "action": "key", "raw": 40, "hold": 0.08}
+{"utc": "2026-10-13T00:44:12.526439+00:00", "action": "chord", "modifier": 96, "raw": 18}
+{"utc": "2026-10-13T00:44:12.543009+00:00", "action": "key", "raw": 18, "hold": 0.08}
+{"utc": "2026-10-13T00:44:13.926730+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:44:15.894066+00:00", "action": "key", "raw": 78, "hold": 0.4}
+{"utc": "2026-10-13T00:44:16.950765+00:00", "action": "key", "raw": 82, "hold": 0.08}
+{"utc": "2026-10-13T00:44:44.119238+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:44:47.212552+00:00", "action": "key", "raw": 89, "hold": 0.08}
+{"utc": "2026-10-13T00:44:48.859402+00:00", "action": "key", "raw": 21, "hold": 0.08}
+{"utc": "2026-10-13T00:46:28.357228+00:00", "action": "key", "raw": 64, "hold": 0.08}
+{"utc": "2026-10-13T00:47:14.535939+00:00", "action": "mailbox", "label": "openjazz-final-main", "script": "FailAt 21\nStack 1048576\nSetEnv SDL_OPENGPU 0\nEcho \"OPENJAZZ_FINAL_BEGIN\"\nGetEnv SDL_OPENGPU\nCD SYS:Open2Ports/OpenJazz\nOpenJazz --window --world 0 --level 0 >SYS:Open2Runner/openjazz-final.out\nEcho \"OPENJAZZ_FINAL_EXIT $RC\"\nUnsetEnv SDL_OPENGPU\n"}
+{"utc": "2026-10-13T00:47:20.538550+00:00", "action": "key", "raw": 76, "hold": 0.08}
+{"utc": "2026-10-13T00:47:20.737319+00:00", "action": "key", "raw": 68, "hold": 0.08}
+{"utc": "2026-10-13T00:47:33.331096+00:00", "action": "key", "raw": 78, "hold": 0.4}
+{"utc": "2026-10-13T00:47:37.510972+00:00", "action": "click", "x": 168, "y": 150, "head": 1}

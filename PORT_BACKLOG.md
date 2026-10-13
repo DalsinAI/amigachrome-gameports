@@ -1,5 +1,9 @@
 # Unified Game Port Backlog
 
+**Current execution checkpoint:** see [13 October review fixes](evidence/open2-20261013-resume/README.md)
+and [recovered SDL2/Neverball evidence](evidence/sdltext-20261012-recovered/README.md).
+Keep the plain-68040 software-2D qualification lane separate from AssaultCube's
+OpenGPU-dependent client. No untested target is promoted by these updates.
 
 **[Unified Port Atlas](https://github.com/DalsinAI/amigachrome/tree/main/docs/porting)** — searchable cross-programme game/application catalogue with existing Amiga-port evidence, source/rights assessment and proposed Open-family acceleration or development benefit. This does not replace the local source pins, build notes or qualification gates.
 
@@ -10,6 +14,19 @@ Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**
 This is the single discussion backlog for game ports. It deliberately puts active ports,
 source-pinned work, near-term candidates and stretch targets in one list so priority can be
 decided across the whole field instead of inheriting the old Tier A / B / C grouping.
+
+**Latest Open2 continuation:** [2D/3D guest first light and code fixes](evidence/open2-20261012-followup/README.md)
+now supersede the initial snapshot below. NXEngine has linked (warning hold);
+Neverball/Neverputt have rebuilt; SDLPoP and Neverball show partial runtime
+progress and guest exit 0. The next gate is the matching current SDL2 runtime
+and real name-entry/persistence test, followed by gameplay/audio and the
+AssaultCube runtime gates. No candidate is promoted to RELEASE.
+
+**12 October Open2 execution update:** the active rebuild batch is recorded in
+[Open2 evidence](evidence/open2-20261012/README.md). OpenJazz, Chocolate Doom,
+SDLPoP and AssaultCube client/server have new compile/link results. NXEngine
+was still compiling at snapshot. No new source-only candidate is promoted to
+playable or RELEASE by this pass; the historical table below remains context.
 
 **Priority is intentionally TBD for every entry.** The next prioritisation pass should rank
 the whole list together using: **P0 = finish now, P1 = next wave, P2 = planned, P3 = stretch, PARK = research / low-return for now**.
@@ -106,6 +123,16 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | Rigs of Rods | STRETCH | OpenGPU | TBD | Very large simulation/physics/renderer target. |
 | Speed Dreams | STRETCH | OpenGPU | TBD | Large racing/physics/3D target. |
 | 0 A.D. | STRETCH | OpenGPU | TBD | Very large RTS/engine/dependency stress target. |
+
+## Post-merge checks - 13 October 2026
+
+The port/SDL changes are merged and rebuilt. A new Amiga-only OpenJazz
+configuration-directory check fixes the demonstrated false "not writable"
+result. Chocolate Doom reached software-rendered gameplay, saved/loaded a
+slot and exited 0 with sound explicitly disabled. Final OpenJazz startup/focus
+repetition and Doom audio remain open, not release passes.
+
+[Exact results, hashes, limits and next checks](evidence/postmerge-20261013/README.md).
 
 ## Priority discussion fields
 

@@ -1,0 +1,18 @@
+{
+  "Libs/opengpu.library": {
+    "bytes": 106300,
+    "sha256": "dc5d08444d37ecf7a179b1f790a3849b778048e1c7192644c30216b752b56e07"
+  },
+  "Libs/OpenGPU/SDL2.module": {
+    "bytes": 992020,
+    "sha256": "35756badc85840bd170a1f5124e1c92eef159419e130bd6f21eac673e5a9d0d3"
+  },
+  "Libs/OpenGPU/GL.module": {
+    "bytes": 19530364,
+    "sha256": "9e28be394eafcb14cffcfe4bf8c7f917713b5ca37eb343aa2882be1de31db07d"
+  },
+  "Open2Ports/Neverball/User/neverballrc": {
+    "bytes": 3115,
+    "sha256": "b996c223cf6616c2708dae1f927ce69baf8b3860efdbc432817c85bce2861c5b"
+  }
+}

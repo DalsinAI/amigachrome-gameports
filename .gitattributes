@@ -1,0 +1,21 @@
+
+# Preserve runner logs byte-for-byte; SHA-256 receipts depend on exact output.
+evidence/open2-20261012/*.txt -whitespace
+evidence/open2-20261012-followup/*.txt -whitespace
+# Unified diff files require a leading space on empty context lines.
+ports/assaultcube/patches/0003-amiga-stream-single-definition.patch -whitespace
+ports/assaultcube/patches/0004-match-mode-buffer-array-delete.patch -whitespace
+
+# Recovered test output is retained byte-for-byte.
+evidence/sdltext-20261012-recovered/*.txt -whitespace
+evidence/sdltext-20261012-recovered/*.diff -whitespace
+evidence/sdltext-20261012-recovered/*.patch -whitespace
+evidence/open2-20261013-resume/*.txt -whitespace
+
+# Hash receipts describe exact bytes, on Windows checkouts as well as Linux.
+evidence/** -text
+toolchain/port-dependencies.lock.json -text
+
+ports/openjazz/patches/0002-amiga-directory-write-check.patch -whitespace
+
+evidence/postmerge-20261013/*.txt -whitespace

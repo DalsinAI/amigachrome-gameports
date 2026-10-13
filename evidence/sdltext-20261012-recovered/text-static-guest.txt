@@ -1,0 +1,31 @@
+SDLTextCheck ready. Escape quits; F1 clears; F2 toggles text input.
+Expected printable press: one KEYDOWN, one TEXTINPUT, one KEYUP.
+FOCUS gained
+KEYDOWN  scancode=4 name="A" key=97 keyname="A" mods=0x0000 repeat=0
+TEXTINPUT window=1 bytes=61 text="a"
+KEYUP    scancode=4 name="A" key=97 keyname="A" mods=0x0000 repeat=0
+KEYDOWN  scancode=225 name="Left Shift" key=1073742049 keyname="Left Shift" mods=0x0001 repeat=0
+KEYDOWN  scancode=4 name="A" key=97 keyname="A" mods=0x0001 repeat=0
+TEXTINPUT window=1 bytes=41 text="A"
+KEYUP    scancode=4 name="A" key=97 keyname="A" mods=0x0001 repeat=0
+KEYUP    scancode=225 name="Left Shift" key=1073742049 keyname="Left Shift" mods=0x0000 repeat=0
+KEYDOWN  scancode=30 name="1" key=49 keyname="1" mods=0x0000 repeat=0
+TEXTINPUT window=1 bytes=31 text="1"
+KEYUP    scancode=30 name="1" key=49 keyname="1" mods=0x0000 repeat=0
+KEYDOWN  scancode=224 name="Left Ctrl" key=1073742048 keyname="Left Ctrl" mods=0x0040 repeat=0
+KEYDOWN  scancode=4 name="A" key=97 keyname="A" mods=0x0040 repeat=0
+KEYUP    scancode=4 name="A" key=97 keyname="A" mods=0x0040 repeat=0
+KEYUP    scancode=224 name="Left Ctrl" key=1073742048 keyname="Left Ctrl" mods=0x0000 repeat=0
+KEYDOWN  scancode=59 name="F2" key=1073741883 keyname="F2" mods=0x0000 repeat=0
+TEXTSTATE disabled
+KEYUP    scancode=59 name="F2" key=1073741883 keyname="F2" mods=0x0000 repeat=0
+KEYDOWN  scancode=29 name="Z" key=122 keyname="Z" mods=0x0000 repeat=0
+KEYUP    scancode=29 name="Z" key=122 keyname="Z" mods=0x0000 repeat=0
+KEYDOWN  scancode=59 name="F2" key=1073741883 keyname="F2" mods=0x0000 repeat=0
+TEXTSTATE enabled
+KEYUP    scancode=59 name="F2" key=1073741883 keyname="F2" mods=0x0000 repeat=0
+KEYDOWN  scancode=29 name="Z" key=122 keyname="Z" mods=0x0000 repeat=0
+TEXTINPUT window=1 bytes=7A text="z"
+KEYUP    scancode=29 name="Z" key=122 keyname="Z" mods=0x0000 repeat=0
+KEYDOWN  scancode=41 name="Escape" key=27 keyname="Escape" mods=0x0000 repeat=0
+SDLTextCheck done: keydown=11 keyup=10 text=4

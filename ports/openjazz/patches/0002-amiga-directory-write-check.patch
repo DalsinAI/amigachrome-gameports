@@ -1,0 +1,43 @@
+diff --git a/src/io/file.cpp b/src/io/file.cpp
+--- a/src/io/file.cpp
++++ b/src/io/file.cpp
+@@ -33,6 +33,9 @@
+ #include "SDL_wrapper.h"
+ #include <string.h>
+ #include <unistd.h>
++#ifdef __amigaos__
++#include <sys/stat.h>
++#endif
+ #include <miniz.h>
+ 
+ #if !(defined(_WIN32) || defined(WII) || defined(PSP))
+@@ -730,6 +733,20 @@
+ 	delete paths;
+ };
+ 
++/* A directory may be writable while in use as CurrentDir/PROGDIR. libnix
++ * access(W_OK) attempts an exclusive DOS lock and mistakes that normal use
++ * for write protection. Check the directory protection bits on Amiga; the
++ * actual file-open still reports read-only media and other write failures. */
++static bool writable_config_directory(const char *path) {
++#ifdef __amigaos__
++    struct stat info;
++    return stat(path, &info) == 0 && S_ISDIR(info.st_mode) &&
++           (info.st_mode & S_IWUSR) != 0;
++#else
++    return access(path, W_OK) == 0;
++#endif
++}
++
+ bool PathMgr::add(char* newPath, int newPathType) {
+ 
+ 	// Check for CWD
+@@ -765,7 +782,7 @@
+ 
+ 	// config and temp dir need to be writeable
+ 	if ((newPathType & (PATH_TYPE_CONFIG|PATH_TYPE_TEMP)) > 0) {
+-		if (access(newPath, W_OK) != 0) {
++		if (!writable_config_directory(newPath)) {
+ 			LOG_WARN("Path '%s' is not writeable, disabling!", newPath);
+ 
+ 			newPathType &= ~PATH_TYPE_CONFIG;
