@@ -29,6 +29,7 @@ class StagingTests(unittest.TestCase):
             ('m68k-amigaos/lib/libc.a',b'wrong old libc'),
             ('m68k-amigaos/lib/libpthread.a',b'wrong old pthread')):
             p=self.sdk/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
+        (self.sdk/'bin/sdl2-config').chmod(0o755)
         self.archive=self.root/'open2.tar.xz'
         with tarfile.open(self.archive,'w:xz') as tf:
             for name,data,mode in (
@@ -52,6 +53,10 @@ class StagingTests(unittest.TestCase):
         self.assertEqual(receipt['runtime_state'],'not_tested')
         self.assertIn('not rebuilt',receipt['sdk_status'])
         self.assertTrue((self.dest/'provenance.json').exists())
+    def test_non_executable_sdl_config_is_refused_before_publishing(self):
+        (self.sdk/'bin/sdl2-config').chmod(0o644)
+        with self.assertRaisesRegex(ValueError,'executable sdl2-config'):self.run_stage()
+        self.assertFalse(self.dest.exists())
     def test_wrong_checksum_refuses_before_populating_stove(self):
         with self.assertRaisesRegex(ValueError,'SHA-256'):
             module.stage(self.archive,self.ndk,self.sdk,self.dest)

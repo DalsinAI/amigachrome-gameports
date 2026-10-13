@@ -11,3 +11,7 @@ evidence/sdltext-20261012-recovered/*.txt -whitespace
 evidence/sdltext-20261012-recovered/*.diff -whitespace
 evidence/sdltext-20261012-recovered/*.patch -whitespace
 evidence/open2-20261013-resume/*.txt -whitespace
+
+# Hash receipts describe exact bytes, on Windows checkouts as well as Linux.
+evidence/** -text
+toolchain/port-dependencies.lock.json -text
