@@ -3,13 +3,29 @@
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR m68k)
 
-if(NOT DEFINED AMIGA_STOVE)
-  if(DEFINED ENV{AMIGA_STOVE})
+# All build-amigaos3.sh entry points accept STOVE. Honour that same variable
+# here: otherwise headers can come from Open2 while CMake silently uses the
+# older compiler in HOME. Explicit -DAMIGA_STOVE still takes precedence.
+if(NOT DEFINED AMIGA_STOVE OR AMIGA_STOVE STREQUAL "")
+  if(DEFINED ENV{AMIGA_STOVE} AND NOT "$ENV{AMIGA_STOVE}" STREQUAL ""
+      AND DEFINED ENV{STOVE} AND NOT "$ENV{STOVE}" STREQUAL ""
+      AND NOT "$ENV{AMIGA_STOVE}" STREQUAL "$ENV{STOVE}")
+    message(FATAL_ERROR
+      "Conflicting STOVE and AMIGA_STOVE environments; use one stove so headers, compiler and runtime match")
+  endif()
+  if(DEFINED ENV{AMIGA_STOVE} AND NOT "$ENV{AMIGA_STOVE}" STREQUAL "")
     set(AMIGA_STOVE "$ENV{AMIGA_STOVE}")
+  elseif(DEFINED ENV{STOVE} AND NOT "$ENV{STOVE}" STREQUAL "")
+    set(AMIGA_STOVE "$ENV{STOVE}")
   else()
     set(AMIGA_STOVE "$ENV{HOME}/AmigaChrome/stoves/os32-gcc16")
   endif()
 endif()
+
+# Keep an explicitly selected stove through CMake's nested probe projects.
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+  AMIGA_STOVE AMIGA_CPU_FLAGS AMIGA_RUNTIME AMIGA_THREAD_FLAGS)
+message(STATUS "Amiga toolchain stove: ${AMIGA_STOVE}")
 
 set(AMIGA_PREFIX "${AMIGA_STOVE}/prefix")
 set(AMIGA_SYSROOT "${AMIGA_PREFIX}/m68k-amigaos")

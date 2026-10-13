@@ -1,0 +1,57 @@
+--- a/source/src/tools.h
++++ b/source/src/tools.h
+@@ -868,10 +868,22 @@
+     virtual void fflush() {}
+     virtual int read(void *buf, int len) { return 0; }
+     virtual int write(const void *buf, int len) { return 0; }
++#ifdef __amigaos__
++    virtual int getchar();
++#else
+     virtual int getchar() { uchar c; return read(&c, 1) == 1 ? c : -1; }
++#endif
++#ifdef __amigaos__
++    virtual bool putchar(int n);
++#else
+     virtual bool putchar(int n) { uchar c = n; return write(&c, 1) == 1; }
++#endif
+     virtual bool getline(char *str, int len);
++#ifdef __amigaos__
++    virtual bool putstring(const char *str);
++#else
+     virtual bool putstring(const char *str) { int len = (int)strlen(str); return write(str, len) == len; }
++#endif
+     virtual bool putline(const char *str) { return putstring(str) && putchar('\n'); }
+     virtual int printf(const char *fmt, ...) PRINTFARGS(2, 3) { return -1; }
+     virtual uint getcrc() { return 0; }
+--- a/source/src/stream.cpp
++++ b/source/src/stream.cpp
+@@ -1,4 +1,29 @@
+ #include "cube.h"
++
++#ifdef __amigaos__
++// AC_AMIGA_STREAM_SINGLE_DEFINITION_BEGIN
++// HUNK link-once checking rejects differently optimised copies of these
++// header-defined virtual methods. Keep one definition without changing the
++// read/write contract, optimisation flags or non-Amiga builds.
++int stream::getchar()
++{
++    uchar c;
++    return read(&c, 1) == 1 ? c : -1;
++}
++
++bool stream::putchar(int n)
++{
++    uchar c = n;
++    return write(&c, 1) == 1;
++}
++
++bool stream::putstring(const char *str)
++{
++    int len = (int)strlen(str);
++    return write(str, len) == len;
++}
++// AC_AMIGA_STREAM_SINGLE_DEFINITION_END
++#endif
+ 
+ ///////////////////////// file system ///////////////////////
+ 

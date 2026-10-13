@@ -1,0 +1,30 @@
+{
+  "rebuilt": [
+    {
+      "file": "SDL2.module",
+      "sha256": "b0594314367c47574fc5c701bb373b819eed2bad82aa563122601407c0a62400",
+      "previous_sha256": "b0594314367c47574fc5c701bb373b819eed2bad82aa563122601407c0a62400",
+      "bytes": 992836
+    },
+    {
+      "file": "SDL2_image.module",
+      "sha256": "56d9fd71684761db66b093b288a8dbc8338c8d75621c37fd313f554a6df3301b",
+      "previous_sha256": "1a9790f9e31a06ef728d0f64292e209e84fbf4619521393311238c45ea8a9e2b",
+      "bytes": 210184
+    },
+    {
+      "file": "SDL2_mixer.module",
+      "sha256": "1b47f2ec820e6734367842d223e1ad43299681f07b7e3984525b70b0db3aca0c",
+      "previous_sha256": "1b4a76721d0490b8fafcc18fe97a5a09837e6d07ababc674613761ee01e90331",
+      "bytes": 918264
+    }
+  ],
+  "reused": [
+    "opengpu.library",
+    "GL.module",
+    "OpenInput",
+    "host runtime"
+  ],
+  "game_sha256": "ccff279192d9a63d762b56c98c8ba819dce5f6e152df392266a24d0f261721aa",
+  "new_user_directory": true
+}

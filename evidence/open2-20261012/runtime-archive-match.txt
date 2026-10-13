@@ -1,0 +1,1 @@
+PASS: 2012 compiler/runtime files in the build stove match the archive-backed staging receipt.

@@ -1,0 +1,19 @@
+{
+  "full_release": false,
+  "merged_gameports": "883efd5bc85797bf347afba9450e68290414148d",
+  "merged_sdl": "905d9f938bfa0ac793e8698aea5822ba3b79e684",
+  "compiler": "16.2.0-open2",
+  "openjazz_directory_fix": {
+    "before": "access W_OK rejects writable in-use directory, actual create succeeds",
+    "after": "configuration written and read on relaunch; bounded level/control and exit-0 evidence from integration-runtime run",
+    "main_runtime_repeat": "initial blank, later difficulty screen; complete gameplay/normal exit not established in final repeat; private lab stopped"
+  },
+  "doom": {
+    "audio_enabled_attempt": "did not reach video during observed sound precache run; stopped private lab, no normal exit",
+    "nosound_attempt": "rendered Freedoom E1M1, moved, saved slot DALE, turned, loaded and restored view, exited 0 after end-screen dismissal key",
+    "save_bytes": 61342,
+    "audio_pass": false
+  },
+  "main_sdl_tests": "shared and static UTF-8/modifier/StartStop assertions pass on exact final-main binaries",
+  "owned_lab_stopped": true
+}

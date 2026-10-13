@@ -1,0 +1,184 @@
+{
+  "snapshot_utc": "2026-10-12T19:09:42.022323+00:00",
+  "base_gameports_commit": "62d374b2acdb99a139b543f691a83957c1165f00",
+  "compiler_release": "16.2.0-open2",
+  "compiler_archive_sha256": "5ece099a6fb8923a35eacf420bfa5fced06546ac1822714c76a2ae52466c978c",
+  "target": "AmigaOS 3.x / AC090 / 68040 + FPU / libnix",
+  "new_runtime_game_tests": false,
+  "sdk_rebuilt": false,
+  "source_network_fetches": false,
+  "worktree": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012",
+  "ports": {
+    "openjazz": {
+      "source_commit": "a1626f4edd4a7af72c54103021790c56d8ecfced",
+      "runtime_status": "NOT_TESTED_THIS_SESSION",
+      "artifact": "build/os3/openjazz/OpenJazz",
+      "exit_code": 0,
+      "log_sha256": "fccbe0891fa7292b008fba91b3793e36fd0f3ac4af0029149938b26b60771082",
+      "build_status": "COMPILE_LINK_PASS",
+      "bytes": 850768,
+      "sha256": "4e228015fd63616001ddf676769ec9ceb354a695ae662c96c41e68c305cad05e",
+      "format": "AmigaOS loadseg()ble executable/binary",
+      "header_hex": "000003f3",
+      "patched_source_diff_sha256": "cf21477cd367e53ba363607a575db806ef5ea51c2a729ca0c5328f42f73ad063"
+    },
+    "chocolate-doom": {
+      "source_commit": "895f581c5d91497bdda0516612da803fe5843e28",
+      "runtime_status": "NOT_TESTED_THIS_SESSION",
+      "artifact": "build/os3/chocolate-doom/src/chocolate-doom",
+      "exit_code": 0,
+      "log_sha256": "24cb383372813c932ce1361b6f8766b8ae5bbe061b485ea7f698ee095162a580",
+      "build_status": "COMPILE_LINK_PASS",
+      "bytes": 1941572,
+      "sha256": "570e47ba3def6f9c68849d7dfb30ac9a40f1d6fb77b753033180e4c9529d0b86",
+      "format": "AmigaOS loadseg()ble executable/binary",
+      "header_hex": "000003f3",
+      "patched_source_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sdlpop": {
+      "source_commit": "3c5add5fb7f83d4ceb542823ab66d00146c4271b",
+      "runtime_status": "NOT_TESTED_THIS_SESSION",
+      "artifact": "build/game-ports/sources/sdlpop/prince",
+      "exit_code": 0,
+      "log_sha256": "5f2fcde88ea3b6901019b1253c7e1e04a0ac29f8e5d116be5dd3b5b40db0ba78",
+      "build_status": "COMPILE_LINK_PASS",
+      "bytes": 852844,
+      "sha256": "dbba5fe804951eb5620bc4a77e16d0ac9b0e9f1ffe6fb8127d95915f151626c8",
+      "format": "AmigaOS loadseg()ble executable/binary",
+      "header_hex": "000003f3",
+      "patched_source_diff_sha256": "2a88326753bc2740078c96e045071aecbed17377db76fa00d9696220767ca611"
+    },
+    "assaultcube-server": {
+      "source_commit": "13f0d8eea4822dee5c976661218d022be74342e3",
+      "runtime_status": "NOT_TESTED_THIS_SESSION",
+      "artifact": "build/game-ports/sources/assaultcube/source/src/ac_server",
+      "exit_code": 0,
+      "log_sha256": "e3b47582f172641ea68d0d41fc7433f9fefcd0bcefa7e2e5edab839d62d3f0a2",
+      "build_status": "COMPILE_LINK_PASS",
+      "bytes": 765984,
+      "sha256": "72af11244b5ba98c39e77612c2792bb6f1724cb0813912633a358c67bf3adcee",
+      "format": "AmigaOS loadseg()ble executable/binary",
+      "header_hex": "000003f3",
+      "patched_source_diff_sha256": "b480ad2fd0f15cf789c4c43cbfedbd7ea7a6e5007b7cebf6b417f50f9c6c7766",
+      "risks": [
+        "linker warned about duplicate stream COMDAT sections with different size/contents"
+      ]
+    },
+    "assaultcube-client": {
+      "source_commit": "13f0d8eea4822dee5c976661218d022be74342e3",
+      "runtime_status": "NOT_TESTED_THIS_SESSION",
+      "artifact": "build/game-ports/sources/assaultcube/source/src/ac_client",
+      "exit_code": 0,
+      "log_sha256": "58c425bb2f1a4120ca838f675a0bd8c8949284f6c828f3c918d828fe17a8c70c",
+      "build_status": "COMPILE_LINK_PASS",
+      "bytes": 2619060,
+      "sha256": "e64205a515df77c2d6f5f471b7a3f4a2b14de7898e865478fdaa33b7ef9d3158",
+      "format": "AmigaOS loadseg()ble executable/binary",
+      "header_hex": "000003f3",
+      "patched_source_diff_sha256": "b480ad2fd0f15cf789c4c43cbfedbd7ea7a6e5007b7cebf6b417f50f9c6c7766",
+      "risks": [
+        "linker warned about duplicate stream COMDAT sections with different size/contents",
+        "existing first-light audio stub; audio not implemented or tested"
+      ]
+    },
+    "nxengine-evo": {
+      "source_commit": "1f093d1423cc395eb199230cd609b806ef1daa36",
+      "runtime_status": "NOT_TESTED_THIS_SESSION",
+      "artifact": "build/os3/nxengine-evo/nxengine-evo",
+      "build_status": "RUNNING_AT_SNAPSHOT_NO_RESULT",
+      "last_progress": "[ 29%] Building CXX object CMakeFiles/nx.dir/src/ai/boss/heavypress.cpp.obj"
+    }
+  },
+  "checks": {
+    "compiler-proof": {
+      "exit_code": 0,
+      "game_runtime_test": false,
+      "log_sha256": "6cd9abf98f7645eac72eec7922bd4312c931c21a64b798f9e1327ec8609af0f1"
+    },
+    "eh-check": {
+      "exit_code": 0,
+      "game_runtime_test": false,
+      "log_sha256": "439dc48a9e15eb102abeca0fb853a110881146e685a0b1293776cb0e74cab2fa"
+    }
+  },
+  "compiler_runtime_verified_files": 2012,
+  "sdk_archives": [
+    {
+      "destination": "m68k-amigaos/lib/libSDL2.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libSDL2.a",
+      "sha256": "0adabe8d7df786a96c45dd6bf0210580d28ad2a00b7c83304b35e7e67f0a16d9"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libSDL2_image.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libSDL2_image.a",
+      "sha256": "68f492d6fefa5e8f01fce027997af2223c433938ba1f32c9cac4ce5ac5f9850c"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libSDL2_mixer.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libSDL2_mixer.a",
+      "sha256": "2eb815c9d0f9d804a79a4fb2e10e017a4c800bedcecac9611ca3c689f5d542ff"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libSDL2_net.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libSDL2_net.a",
+      "sha256": "3093900c9a3bcfc90cfa76e16adc6838a5ca50d984276f4d0399a470d3833e28"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libSDL2_test.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libSDL2_test.a",
+      "sha256": "12e50cbb0c7b5005cb01db1532ce5909e6d228f83cf3df0160250fa1aae2c54c"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libSDL2_ttf.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libSDL2_ttf.a",
+      "sha256": "143d61767fb6ba05855d3df30f383a70ea52051785fd634379ebda22fbce8391"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libSDL2main.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libSDL2main.a",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libGL.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libGL.a",
+      "sha256": "f5a4fd7591edfac13a82f48e5bf925a8b957e58a02afcd467ff74aa8cbdb9417"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libmgl.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libmgl.a",
+      "sha256": "a8471c4b6a560f3840047fe90a684af9bc77bb31ae9b29e454323b94e51d571d"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libminigl.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libminigl.a",
+      "sha256": "75e358dcc7403be8cae3ce8773fd2dbf90c9189fbafb4dff9e4f3cdfc8fb625e"
+    },
+    {
+      "destination": "m68k-amigaos/lib/libtinygl.a",
+      "source": "/home/da1ek/AmigaChrome/stoves/os32-gcc16/prefix/m68k-amigaos/lib/libtinygl.a",
+      "sha256": "c30a2534f15ba1eeda656c344f95ceb203fb51d71d14bf9b3ef3b6032b62e20a"
+    }
+  ],
+  "compiler_fingerprints": {
+    "bin/m68k-amigaos-g++": "6338d2fdcd72ac325cafae6a74476ee80ddece00861ca611257c8331b5c9ae59",
+    "bin/m68k-amigaos-gcc": "9444365b3cda259ae7517a2ccd6234f8903fe0b79db82245913b7389412ff126",
+    "bin/m68k-amigaos-ld": "b78b77e3e548d23f43de04c54342bab936715f9aa8c0f253380f2739d3e4cc03"
+  },
+  "external_codec_archives": [
+    {
+      "path": "/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/lib/libz.a",
+      "sha256": "0df1c8b8e34a4a9eb39d74f3a5f4d525aa35f0cab38ef15394b458e5edcc2552",
+      "rebuilt": false
+    },
+    {
+      "path": "/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/lib/libpng.a",
+      "sha256": "499b38c6b459121bd9ad5b2c68fa448c25ccfd2ba60ad201e71a453d4b164421",
+      "rebuilt": false
+    },
+    {
+      "path": "/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/lib/libjpeg.a",
+      "sha256": "85794158fb6f54e1c3dd216846a06849a1898981d505085184d62b888b78b4d3",
+      "rebuilt": false
+    }
+  ]
+}
