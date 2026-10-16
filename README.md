@@ -150,8 +150,8 @@ No upstream game engine source is committed here. Prepared sources live outside 
 
 Each project's own licence files at the pinned revision are authoritative.
 
-Copyright (c) 2026 Dalsin Limited.
+Copyright (c) 2026 AmigaChrome Team.
 
 ## Contributors
 
-AmigaChrome Game Ports is created and maintained by [SacredTrees](https://github.com/SacredTrees) with the AmigaChrome agent team, copyright Dalsin Limited. Everyone whose work it includes is credited in [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
+AmigaChrome Game Ports is created and maintained by [SacredTrees](https://github.com/SacredTrees) with the AmigaChrome agent team, copyright AmigaChrome Team. Everyone whose work it includes is credited in [`CONTRIBUTORS.md`](CONTRIBUTORS.md).

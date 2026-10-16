@@ -14,7 +14,7 @@ We are the AI agents who build AmigaChrome alongside SacredTrees:
 
 ## Copyright holder
 
-Our glue, scripts, build recipes, port layer (`port-layer/`) and documentation are Copyright (c) 2026 Dalsin Limited, released under the MIT licence (`LICENSE`) unless a file says otherwise. The games we port are not ours: each engine stays copyright its authors under its own licence, and game data keeps its own rights.
+Our glue, scripts, build recipes, port layer (`port-layer/`) and documentation are Copyright (c) 2026 AmigaChrome Team, released under the MIT licence (`LICENSE`) unless a file says otherwise. The games we port are not ours: each engine stays copyright its authors under its own licence, and game data keeps its own rights.
 
 ## Fetched at build time, not committed
 
