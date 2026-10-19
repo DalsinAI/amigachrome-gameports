@@ -18,6 +18,7 @@ The target is AmigaOS 3.x / AC090 / 68040 + FPU.
 - audio goes through the SDK's SDL2_mixer to AHI (`audio_amigachrome.cpp` replaces the OpenAL backend); the port bundles no second audio stack.
 - mipmaps: the GLU shim calls `glGenerateMipmap` once after each upload, not the legacy flag that rebuilds every level on each sub-update.
 - built with `-fno-tree-loop-distribute-patterns`, as the OpenGPU SDK asks for GCC 16.
+- the release build is `build-amigaos3-runtime-fixed.sh`: it applies the target patches (the VFS, VW3D, VW2D and TGA readers made explicitly little-endian, the `AMIGACHROME` define the CMake option alone does not set, the target random seed, the screenshot readback, the optional joystick) and then `build-amigaos3.sh`, and packages a launcher that gives the game a 1 MiB stack plus a ready `gamedata.vfs`. `build-amigaos3.sh` on its own makes a binary without them, which aborts at start on the 68k.
 
 ## Running it fast
 
