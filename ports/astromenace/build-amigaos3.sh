@@ -65,9 +65,12 @@ mkdir -p "$OUT"
 
 SDL_LIBS=$(SDL2_RUNTIME=-noixemul "$SDL2_CONFIG" --libs --gl)
 # GCC 16 turns array shift-up loops into a broken memmove (the OpenGPU SDK's
-# note): keep the pattern loops as written.
-PORT_CXXFLAGS="-O2 -fno-tree-loop-distribute-patterns"
+# note): keep the pattern loops as written. Given through CFLAGS/CXXFLAGS,
+# which CMake adds to the toolchain's own flags (-noixemul -m68040 -m68881
+# -pthread); -DCMAKE_CXX_FLAGS would replace them.
+PORT_FLAGS="-fno-tree-loop-distribute-patterns"
 
+CFLAGS="${CFLAGS:-} $PORT_FLAGS" CXXFLAGS="${CXXFLAGS:-} $PORT_FLAGS" \
 cmake -S "$SRC" -B "$OUT" \
   -DCMAKE_TOOLCHAIN_FILE="$ROOT/toolchain/amigaos3-opengpu.cmake" \
   -DCMAKE_BUILD_TYPE=Release \
@@ -87,8 +90,6 @@ cmake -S "$SRC" -B "$OUT" \
   -DFREETYPE_LIBRARY_RELEASE="$FREETYPE_LIB" \
   -DAMIGACHROME_PNG_LIBRARY="$PNG_LIB" \
   -DAMIGACHROME_ZLIB_LIBRARY="$ZLIB_LIB" \
-  -DCMAKE_C_FLAGS="$PORT_CXXFLAGS" \
-  -DCMAKE_CXX_FLAGS="$PORT_CXXFLAGS" \
   -DCMAKE_EXE_LINKER_FLAGS="$SDL_LIBS"
 
 cmake --build "$OUT" --target astromenace -j${JOBS:-4}
