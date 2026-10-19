@@ -63,7 +63,10 @@ python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
 rm -rf "$OUT"
 mkdir -p "$OUT"
 
-SDL_LIBS=$(SDL2_RUNTIME=-noixemul "$SDL2_CONFIG" --libs)
+SDL_LIBS=$(SDL2_RUNTIME=-noixemul "$SDL2_CONFIG" --libs --gl)
+# GCC 16 turns array shift-up loops into a broken memmove (the OpenGPU SDK's
+# note): keep the pattern loops as written.
+PORT_CXXFLAGS="-O2 -fno-tree-loop-distribute-patterns"
 
 cmake -S "$SRC" -B "$OUT" \
   -DCMAKE_TOOLCHAIN_FILE="$ROOT/toolchain/amigaos3-opengpu.cmake" \
@@ -84,6 +87,8 @@ cmake -S "$SRC" -B "$OUT" \
   -DFREETYPE_LIBRARY_RELEASE="$FREETYPE_LIB" \
   -DAMIGACHROME_PNG_LIBRARY="$PNG_LIB" \
   -DAMIGACHROME_ZLIB_LIBRARY="$ZLIB_LIB" \
+  -DCMAKE_C_FLAGS="$PORT_CXXFLAGS" \
+  -DCMAKE_CXX_FLAGS="$PORT_CXXFLAGS" \
   -DCMAKE_EXE_LINKER_FLAGS="$SDL_LIBS"
 
 cmake --build "$OUT" --target astromenace -j${JOBS:-4}
@@ -107,8 +112,12 @@ AstroMenace for AmigaChrome
 ===========================
 
 Target: AmigaOS 3.x / AC090 / 68040 + FPU
-Graphics: OpenGPU SDL2 + GL
-Audio: OpenGPU SDL2_mixer -> OpenAudio/AHI
+Graphics: OpenGPU SDL2 + GL (GL.module: virgl on the host GPU where there is one)
+Audio: OpenGPU SDL2_mixer -> AHI
+
+For speed: a truecolour RTG screen with openrtg.library 0.15 or later, so a
+frame goes straight to the screen (GetEnv GLAPresent says direct). The pilot
+name needs SDL2.module 3 with the text-input fix (openamigartg #67).
 
 Launch AstroMenace from this directory.
 

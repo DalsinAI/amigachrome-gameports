@@ -1,6 +1,11 @@
 #include "GL/glu.h"
 
+#include <SDL2/SDL.h>
 #include <math.h>
+
+#ifndef APIENTRY
+#define APIENTRY
+#endif
 
 #ifndef GL_GENERATE_MIPMAP
 #define GL_GENERATE_MIPMAP 0x8191
@@ -57,11 +62,18 @@ extern "C" GLint gluBuild2DMipmaps(GLenum target, GLint internalFormat,
                                      const void *data)
 {
     /*
-     * OpenGPU's compatibility GL supports the legacy automatic mipmap flag.
-     * This gives AstroMenace the only GLU mipmap behaviour it needs without
-     * importing an unrelated GLU implementation.
+     * glGenerateMipmap once, after the upload: OpenGPU's GL (Mesa, GL 3.3 or
+     * 4.3 on virgl) has it, and the levels are built where the texture lives
+     * (the host GPU under virgl). The legacy GL_GENERATE_MIPMAP flag stays on
+     * the texture and rebuilds every level on each later glTexSubImage2D;
+     * it is only the fallback for a GL without glGenerateMipmap.
      */
-    glTexParameteri(target, GL_GENERATE_MIPMAP, GL_TRUE);
+    typedef void (APIENTRY *generate_fn)(GLenum);
+    static generate_fn generate = (generate_fn)SDL_GL_GetProcAddress("glGenerateMipmap");
+    if (!generate)
+        glTexParameteri(target, GL_GENERATE_MIPMAP, GL_TRUE);
     glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, data);
+    if (generate)
+        generate(target);
     return 0;
 }
