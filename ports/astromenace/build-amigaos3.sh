@@ -58,7 +58,13 @@ done
 
 FT_INC=$(dirname "$FT_HEADER")
 
-python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
+# build-amigaos3-runtime-fixed.sh (the release build) prepares a richer
+# source tree first and sets ASTROMENACE_SOURCE_PREPATCHED=1: patching again
+# here would overwrite it just before compiling.
+if [ "${ASTROMENACE_SOURCE_PREPATCHED:-0}" != "1" ]; then
+  python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
+  python3 "$HERE/patch_amiga_random.py" "$SRC"
+fi
 
 rm -rf "$OUT"
 mkdir -p "$OUT"

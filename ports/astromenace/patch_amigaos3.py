@@ -86,10 +86,119 @@ elif "amiga_advance_x" not in font_text:
     raise RuntimeError("AstroMenace font metrics portability marker missing")
 font_cpp.write_text(font_text, encoding="utf-8")
 
+# Add raw AmigaDOS startup markers. These intentionally avoid iostream/SDL
+# so a failure in the C++ or OpenGPU startup path is still visible.
+main_cpp = source / "src" / "main.cpp"
+main_text = main_cpp.read_text(encoding="utf-8")
+
+include_anchor = '#include "SDL2/SDL.h"\n'
+diag_include = '''#include "SDL2/SDL.h"
+#ifdef AMIGACHROME
+#include <proto/dos.h>
+#include <dos/dos.h>
+static void AMDiag(const char *s)
+{
+    BPTR out = Output();
+    if (out) {
+        FPuts(out, (CONST_STRPTR)"AMDBG: ");
+        FPuts(out, (CONST_STRPTR)s);
+        FPuts(out, (CONST_STRPTR)"\\n");
+    }
+}
+#else
+static void AMDiag(const char *) {}
+#endif
+'''
+if "AMDBG:" not in main_text:
+    if include_anchor not in main_text:
+        raise RuntimeError("AstroMenace SDL include marker missing")
+    main_text = main_text.replace(include_anchor, diag_include, 1)
+
+# First-light Amiga startup: initialise SDL in explicit stages and leave
+# joystick disabled until video/VFS/GL are proven. This avoids hiding an
+# early task/device failure behind SDL_Init(SDL_INIT_EVERYTHING-ish).
+old_sdl_init = """    Uint32 SDL_Init_Flags = SDL_INIT_TIMER |
+                            SDL_INIT_EVENTS |
+                            SDL_INIT_JOYSTICK |
+                            SDL_INIT_VIDEO;
+
+    if (SDL_Init(SDL_Init_Flags) != 0) {
+        std::cerr << __func__ << "(): " << "Couldn't init SDL: " << SDL_GetError() << "\\n";
+        return 1;
+    }
+"""
+new_sdl_init = """    AMDiag("before SDL base init");
+    if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
+        std::cerr << __func__ << "(): Couldn't init SDL base: " << SDL_GetError() << "\\n";
+        return 1;
+    }
+    AMDiag("after SDL base init");
+
+    AMDiag("before SDL video init");
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
+        std::cerr << __func__ << "(): Couldn't init SDL video: " << SDL_GetError() << "\\n";
+        SDL_Quit();
+        return 1;
+    }
+    AMDiag("after SDL video init");
+"""
+if "before SDL base init" not in main_text:
+    if old_sdl_init not in main_text:
+        raise RuntimeError("AstroMenace SDL init block marker missing")
+    main_text = main_text.replace(old_sdl_init, new_sdl_init, 1)
+
+# Do not touch joystick APIs in the first-light diagnostic build. SDL joystick
+# is reintroduced after the title/menu path is stable.
+old_joystick = """    // should be called after vw_InitTimeThread(0)
+    JoystickInit(vw_GetTimeThread(0));
+"""
+new_joystick = """    // Amiga first-light: joystick intentionally deferred until runtime is stable.
+#ifdef AMIGACHROME
+    AMDiag("joystick deferred");
+#else
+    JoystickInit(vw_GetTimeThread(0));
+#endif
+"""
+if "joystick deferred" not in main_text:
+    if old_joystick not in main_text:
+        raise RuntimeError("AstroMenace joystick init marker missing")
+    main_text = main_text.replace(old_joystick, new_joystick, 1)
+
+replacements = [
+    ('int main(int argc, char *argv[])\n{',
+     'int main(int argc, char *argv[])\n{\n    AMDiag("entered main");'),
+    ('    LogGameAndLibsVersion();',
+     '    AMDiag("before SDL version query");\n    LogGameAndLibsVersion();\n    AMDiag("after SDL version query");'),
+    ('    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {',
+     '    AMDiag("before VFS open");\n    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {'),
+    ('    if (vw_InitText("lang/text.csv",',
+     '    AMDiag("after VFS open");\n    AMDiag("before text init");\n    if (vw_InitText("lang/text.csv",'),
+    ('    bool FirstStart = LoadXMLConfigFile(NeedResetConfig);',
+     '    AMDiag("before config load");\n    bool FirstStart = LoadXMLConfigFile(NeedResetConfig);\n    AMDiag("after config load");'),
+    ('    if (!VideoConfig(FirstStart)) {',
+     '    AMDiag("before video config");\n    if (!VideoConfig(FirstStart)) {'),
+    ('    InitFont(GetFontMetadata(GameConfig().FontNumber).FontFileName);',
+     '    AMDiag("after video config");\n    AMDiag("before font init");\n    InitFont(GetFontMetadata(GameConfig().FontNumber).FontFileName);\n    AMDiag("after font init");'),
+    ('    if (!vw_InitAudio()) {',
+     '    AMDiag("before audio init");\n    if (!vw_InitAudio()) {'),
+    ('RecreateWindow:\n\n    if (!vw_CreateWindow',
+     'RecreateWindow:\n\n    AMDiag("before window create");\n    if (!vw_CreateWindow'),
+    ('    vw_InitOpenGLStuff(GameConfig().Width, GameConfig().Height, &ChangeGameConfig().MSAA, &ChangeGameConfig().CSAA);',
+     '    AMDiag("window and GL context ready");\n    AMDiag("before OpenGL state init");\n    vw_InitOpenGLStuff(GameConfig().Width, GameConfig().Height, &ChangeGameConfig().MSAA, &ChangeGameConfig().CSAA);\n    AMDiag("after OpenGL state init");'),
+    ('    LoadAllGameAssets();',
+     '    AMDiag("before asset load");\n    LoadAllGameAssets();\n    AMDiag("after asset load");'),
+    ('    InitMenu(eMenuStatus::MAIN_MENU);',
+     '    InitMenu(eMenuStatus::MAIN_MENU);\n    AMDiag("main menu ready");'),
+]
+for old, new in replacements:
+    if old in main_text and new not in main_text:
+        main_text = main_text.replace(old, new, 1)
+
+main_cpp.write_text(main_text, encoding="utf-8")
+
 # AmigaChrome one-click packaging: if gamedata.vfs is absent but the
 # redistributable upstream gamedata/ tree is present beside the executable,
 # build the VFS automatically on first launch and then continue normally.
-main_cpp = source / "src" / "main.cpp"
 main_text = main_cpp.read_text(encoding="utf-8")
 old_vfs = """    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {
         std::cerr << __func__ << "(): " << "gamedata.vfs file not found or corrupted.\\n";
@@ -99,9 +208,11 @@ old_vfs = """    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) 
 """
 new_vfs = """    if (vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) != 0) {
 #ifdef AMIGACHROME
+        AMDiag("VFS missing - starting first-launch pack");
         std::cerr << __func__ << "(): creating gamedata.vfs from bundled gamedata/ on first launch.\\n";
         if (ConvertFS2VFS(GetDataPath() + "gamedata/", GetDataPath() + "gamedata.vfs") == 0
             && vw_OpenVFS(GetDataPath() + "gamedata.vfs", GAME_VFS_BUILD) == 0) {
+            AMDiag("VFS pack complete");
             std::cerr << __func__ << "(): gamedata.vfs created successfully.\\n";
         } else {
             std::cerr << __func__ << "(): bundled gamedata could not be packed/opened.\\n";
