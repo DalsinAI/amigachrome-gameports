@@ -58,13 +58,25 @@ done
 
 FT_INC=$(dirname "$FT_HEADER")
 
-python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
+# build-amigaos3-runtime-fixed.sh (the release build) prepares a richer
+# source tree first and sets ASTROMENACE_SOURCE_PREPATCHED=1: patching again
+# here would overwrite it just before compiling.
+if [ "${ASTROMENACE_SOURCE_PREPATCHED:-0}" != "1" ]; then
+  python3 "$HERE/patch_amigaos3.py" "$SRC" "$HERE/audio_amigachrome.cpp"
+  python3 "$HERE/patch_amiga_random.py" "$SRC"
+fi
 
 rm -rf "$OUT"
 mkdir -p "$OUT"
 
-SDL_LIBS=$(SDL2_RUNTIME=-noixemul "$SDL2_CONFIG" --libs)
+SDL_LIBS=$(SDL2_RUNTIME=-noixemul "$SDL2_CONFIG" --libs --gl)
+# GCC 16 turns array shift-up loops into a broken memmove (the OpenGPU SDK's
+# note): keep the pattern loops as written. Given through CFLAGS/CXXFLAGS,
+# which CMake adds to the toolchain's own flags (-noixemul -m68040 -m68881
+# -pthread); -DCMAKE_CXX_FLAGS would replace them.
+PORT_FLAGS="-fno-tree-loop-distribute-patterns"
 
+CFLAGS="${CFLAGS:-} $PORT_FLAGS" CXXFLAGS="${CXXFLAGS:-} $PORT_FLAGS" \
 cmake -S "$SRC" -B "$OUT" \
   -DCMAKE_TOOLCHAIN_FILE="$ROOT/toolchain/amigaos3-opengpu.cmake" \
   -DCMAKE_BUILD_TYPE=Release \
@@ -107,8 +119,12 @@ AstroMenace for AmigaChrome
 ===========================
 
 Target: AmigaOS 3.x / AC090 / 68040 + FPU
-Graphics: OpenGPU SDL2 + GL
-Audio: OpenGPU SDL2_mixer -> OpenAudio/AHI
+Graphics: OpenGPU SDL2 + GL (GL.module: virgl on the host GPU where there is one)
+Audio: OpenGPU SDL2_mixer -> AHI
+
+For speed: a truecolour RTG screen with openrtg.library 0.15 or later, so a
+frame goes straight to the screen (GetEnv GLAPresent says direct). The pilot
+name needs SDL2.module 3 with the text-input fix (openamigartg #67).
 
 Launch AstroMenace from this directory.
 
