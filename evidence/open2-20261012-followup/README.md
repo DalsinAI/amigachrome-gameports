@@ -84,6 +84,6 @@ No guest-memory dumps or speculative GUI assertions are used as test proof.
 
 Then exercise SDLPoP movement while definitely unpaused, audio/save/reload/controller behaviour; Neverball ball control and audio; and the rebuilt AssaultCube client/server with authorised game data. NXEngine's duplicate-section warning volume needs its own compiler/linker assessment before release. Other ports' original game data remains external.
 
-**Local workspace:** `/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/followup-20261012/`.
+**Local workspace:** `$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/followup-20261012/`.
 
 **Summary:** additional builds, two narrow code fixes, actual 2D/3D first light, a real target diagnostic pass and clean guest exits. No full game release or unmeasured performance claim.

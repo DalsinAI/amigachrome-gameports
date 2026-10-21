@@ -60,7 +60,7 @@ The C++23 `std::vector`/NDK smoke program also linked to an Amiga HUNK executabl
 
 Workspace on daletop:
 
-`/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012`
+`$WORKSPACE/AmigaChrome-Ports-Open2-20261012`
 
 - `build/open2-stove/`: compiler/SDK environment used for these builds.
 - `build/open2-stove-checked/provenance.json`: repeatable staging reference and compiler/runtime fingerprints.

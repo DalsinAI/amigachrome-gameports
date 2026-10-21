@@ -1,2 +1,2 @@
-STAGED 16.2.0-open2: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove-checked
+STAGED 16.2.0-open2: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove-checked
 Existing OpenGPU SDK imported with hashes; its archives still require qualification.

@@ -9,7 +9,7 @@ End-of-hour task scheduled to inspect this journal, stop only owned lab, and rep
 
 Current-main evaluation: 4d22f1bc2878bf9d7d17998e9cc15309d82de4da plus PR67 text-input patch and diagnostic only.
 
-Owned new lab: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/lab (copy of stopped own qualification lab). Baseline untouched.
+Owned new lab: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/autonomous-20261012-2039/lab (copy of stopped own qualification lab). Baseline untouched.
 
 20:46Z: baseline SDLTextCheck delivered physical key events but zero TEXTINPUT; exit 0. Rebuilt SDL2.module/stub/static and shared/static diagnostics with Open2, source main4d22f1 plus PR67 patch. Swapped SDL2.module only in stopped NEW lab, preserving old modules.
 

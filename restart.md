@@ -8,7 +8,7 @@ Open-source games ported to 68k AROS and AmigaOS on AmigaChrome: UQM, Chocolate 
 
 ## Where it stands
 
-Quiet. The README lists each port's upstream licence (#1) and CONTRIBUTORS.md is in (#2). Game porting is parked on @SacredTrees's word; Thufir's sprint notes are in /mnt/project-files/games/thufir-game-ports.md.
+Quiet. The README lists each port's upstream licence (#1) and CONTRIBUTORS.md is in (#2). Game porting is parked on @SacredTrees's word; Thufir's sprint notes are in the Team's game notes (thufir-game-ports.md).
 
 ## Merged lately
 

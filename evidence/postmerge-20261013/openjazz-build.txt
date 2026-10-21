@@ -1,15 +1,15 @@
--- Amiga toolchain stove: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove
--- Amiga toolchain stove: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove
+-- Amiga toolchain stove: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove
+-- Amiga toolchain stove: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove
 -- The CXX compiler identification is GNU 16.2.0
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/bin/m68k-amigaos-g++ - skipped
+-- Check for working CXX compiler: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/bin/m68k-amigaos-g++ - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
 -- The C compiler identification is GNU 16.2.0
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
--- Check for working C compiler: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/bin/m68k-amigaos-gcc - skipped
+-- Check for working C compiler: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/stove/prefix/bin/m68k-amigaos-gcc - skipped
 -- Detecting C compile features
 -- Detecting C compile features - done
 -- 
@@ -35,7 +35,7 @@
 -- 
 -- Configuring done (0.7s)
 -- Generating done (0.0s)
--- Build files have been written to: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz
+-- Build files have been written to: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz
 [  1%] Building C object ext/xmp/CMakeFiles/xmp.dir/src/control.c.obj
 [  2%] Building C object ext/CMakeFiles/argparse.dir/argparse/argparse.c.obj
 [  3%] Linking C static library libargparse.a
@@ -89,37 +89,37 @@
 [ 55%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/log.cpp.obj
 [ 56%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/network.cpp.obj
 [ 57%] Building CXX object CMakeFiles/OpenJazz.dir/src/io/sound.cpp.obj
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::join(char*)':
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:180:26: warning: unused parameter 'address' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::join(char*)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:180:26: warning: unused parameter 'address' [-Wunused-parameter]
   180 | int Network::join (char *address) {
       |                    ~~~~~~^~~~~~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::accept(int)':
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:294:26: warning: unused parameter 'sock' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::accept(int)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:294:26: warning: unused parameter 'sock' [-Wunused-parameter]
   294 | int Network::accept (int sock) {
       |                      ~~~~^~~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'void Network::close(int)':
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:331:26: warning: unused parameter 'sock' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'void Network::close(int)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:331:26: warning: unused parameter 'sock' [-Wunused-parameter]
   331 | void Network::close (int sock) {
       |                      ~~~~^~~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::send(int, unsigned char*)':
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:354:24: warning: unused parameter 'sock' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::send(int, unsigned char*)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:354:24: warning: unused parameter 'sock' [-Wunused-parameter]
   354 | int Network::send (int sock, unsigned char *buffer) {
       |                    ~~~~^~~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:354:45: warning: unused parameter 'buffer' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:354:45: warning: unused parameter 'buffer' [-Wunused-parameter]
   354 | int Network::send (int sock, unsigned char *buffer) {
       |                              ~~~~~~~~~~~~~~~^~~~~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::recv(int, unsigned char*, int)':
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:24: warning: unused parameter 'sock' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'int Network::recv(int, unsigned char*, int)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:24: warning: unused parameter 'sock' [-Wunused-parameter]
   376 | int Network::recv (int sock, unsigned char *buffer, int length) {
       |                    ~~~~^~~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:45: warning: unused parameter 'buffer' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:45: warning: unused parameter 'buffer' [-Wunused-parameter]
   376 | int Network::recv (int sock, unsigned char *buffer, int length) {
       |                              ~~~~~~~~~~~~~~~^~~~~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:57: warning: unused parameter 'length' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:376:57: warning: unused parameter 'length' [-Wunused-parameter]
   376 | int Network::recv (int sock, unsigned char *buffer, int length) {
       |                                                     ~~~~^~~~~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'bool Network::isConnected(int)':
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:396:32: warning: unused parameter 'sock' [-Wunused-parameter]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp: In member function 'bool Network::isConnected(int)':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/game-ports/sources/openjazz/src/io/network.cpp:396:32: warning: unused parameter 'sock' [-Wunused-parameter]
   396 | bool Network::isConnected (int sock) {
       |                            ~~~~^~~~
 [ 58%] Building CXX object CMakeFiles/OpenJazz.dir/src/level/level.cpp.obj
@@ -159,5 +159,5 @@
 [ 98%] Building CXX object CMakeFiles/OpenJazz.dir/src/jj1/scene/jj1sceneload.cpp.obj
 [100%] Linking CXX executable OpenJazz
 [100%] Built target OpenJazz
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz/OpenJazz: AmigaOS loadseg()ble executable/binary
-e08942426c2b1253b3d73700e73c0031bd3b6bc6b6aab3dd174fd26b08b569f7  /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz/OpenJazz
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz/OpenJazz: AmigaOS loadseg()ble executable/binary
+e08942426c2b1253b3d73700e73c0031bd3b6bc6b6aab3dd174fd26b08b569f7  $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/merge-20261013/gameports-main/build/os3/openjazz/OpenJazz

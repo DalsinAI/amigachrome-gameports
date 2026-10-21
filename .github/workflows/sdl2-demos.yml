@@ -30,7 +30,7 @@ jobs:
           test "$(hostname)" = daletop
           test -x "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc"
           test -x "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config"
-          test -d "/home/da1ek/AmigaChromeInstances/Instance-32/devices/harddisks/DH1"
+          test -d "${AC_INSTANCE:-$HOME/AmigaChromeInstances/Instance-32}/devices/harddisks/DH1"
           "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/m68k-amigaos-gcc" --version | head -1
           "$HOME/AmigaChrome/stoves/os32-gcc16/prefix/bin/sdl2-config" --version
 

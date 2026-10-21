@@ -1,59 +1,59 @@
 {
-  "lab": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification",
-  "source": "/home/da1ek/AmigaChrome-dev/labs/t2-backlog",
+  "lab": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification",
+  "source": "~/AmigaChrome-dev/labs/t2-backlog",
   "source_stopped_at_copy": true,
   "artifacts": {
     "OpenJazz": {
-      "binary": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/os3/openjazz/OpenJazz",
+      "binary": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/os3/openjazz/OpenJazz",
       "sha256": "4e228015fd63616001ddf676769ec9ceb354a695ae662c96c41e68c305cad05e"
     },
     "ChocolateDoom": {
-      "binary": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/os3/chocolate-doom/src/chocolate-doom",
+      "binary": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/os3/chocolate-doom/src/chocolate-doom",
       "sha256": "570e47ba3def6f9c68849d7dfb30ac9a40f1d6fb77b753033180e4c9529d0b86"
     },
     "NXEngine": {
-      "binary": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/os3/nxengine-evo/nxengine-evo",
+      "binary": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/os3/nxengine-evo/nxengine-evo",
       "sha256": "9e32a6f98172d2b3bd7c765e738e343bc3649faf53f589ae218b033afb1eb18e"
     },
     "SDLPoP": {
-      "binary": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/prince",
+      "binary": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/prince",
       "sha256": "dbba5fe804951eb5620bc4a77e16d0ac9b0e9f1ffe6fb8127d95915f151626c8",
       "data": "from exact upstream pinned source, local test copy only"
     }
   },
   "runtime_components": [
     {
-      "path": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/opengpu.library",
+      "path": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/opengpu.library",
       "sha256": "dc5d08444d37ecf7a179b1f790a3849b778048e1c7192644c30216b752b56e07",
       "bytes": 106300
     },
     {
-      "path": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/openinput.library",
+      "path": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/openinput.library",
       "sha256": "e1bc57b4cd7d35cbd906e4f4edd3dbc3ccaacd489b576767d24517cfd45e6804",
       "bytes": 27368
     },
     {
-      "path": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/OpenGPU/GL.module",
+      "path": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/OpenGPU/GL.module",
       "sha256": "9e28be394eafcb14cffcfe4bf8c7f917713b5ca37eb343aa2882be1de31db07d",
       "bytes": 19530364
     },
     {
-      "path": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/OpenGPU/SDL2.module",
+      "path": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/OpenGPU/SDL2.module",
       "sha256": "35756badc85840bd170a1f5124e1c92eef159419e130bd6f21eac673e5a9d0d3",
       "bytes": 992020
     },
     {
-      "path": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/OpenGPU/SDL2_image.module",
+      "path": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/OpenGPU/SDL2_image.module",
       "sha256": "1a9790f9e31a06ef728d0f64292e209e84fbf4619521393311238c45ea8a9e2b",
       "bytes": 210144
     },
     {
-      "path": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/OpenGPU/SDL2_mixer.module",
+      "path": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/labs/open2-qualification/devices/harddisks/DH0/Libs/OpenGPU/SDL2_mixer.module",
       "sha256": "1b4a76721d0490b8fafcc18fe97a5a09837e6d07ababc674613761ee01e90331",
       "bytes": 918224
     },
     {
-      "path": "/home/da1ek/AmigaChrome/host/native/a1200native",
+      "path": "~/AmigaChrome/host/native/a1200native",
       "sha256": "d254fc82223c95141e53dc17845fc5a9581306db62ec6d2832eee6362428994a",
       "bytes": 14610744
     }

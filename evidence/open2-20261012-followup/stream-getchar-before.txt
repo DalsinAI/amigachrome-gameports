@@ -1,5 +1,5 @@
 
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/src/server.o:     file format amiga
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/src/server.o:     file format amiga
 
 
 Disassembly of section .text._ZN6stream7getcharEv:
@@ -27,7 +27,7 @@ Disassembly of section .text._ZN6stream7getcharEv:
   34:	588f           	addql #4,sp
   36:	4e75           	rts
 
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/src/stream.o:     file format amiga
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/src/stream.o:     file format amiga
 
 
 Disassembly of section .text._ZN6stream7getcharEv:
@@ -52,7 +52,7 @@ Disassembly of section .text._ZN6stream7getcharEv:
   2c:	588f           	addql #4,sp
   2e:	4e75           	rts
 
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/src/zip.o:     file format amiga
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/src/zip.o:     file format amiga
 
 
 Disassembly of section .text._ZN6stream7getcharEv:

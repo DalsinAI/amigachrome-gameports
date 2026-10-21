@@ -7,32 +7,32 @@ CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
   to work with policies introduced by <max> or earlier.
 
 
--- Amiga toolchain stove: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove
--- Amiga toolchain stove: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove
+-- Amiga toolchain stove: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove
+-- Amiga toolchain stove: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove
 -- The C compiler identification is GNU 16.2.0
 -- The CXX compiler identification is GNU 16.2.0
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
--- Check for working C compiler: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc - skipped
+-- Check for working C compiler: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-gcc - skipped
 -- Detecting C compile features
 -- Detecting C compile features - done
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ - skipped
+-- Check for working CXX compiler: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
 -- Configuring done (0.6s)
 -- Generating done (0.0s)
--- Build files have been written to: /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/os3/sdlpop
+-- Build files have been written to: $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/os3/sdlpop
 [  4%] Building C object CMakeFiles/prince.dir/data.c.obj
 [  9%] Building C object CMakeFiles/prince.dir/main.c.obj
 [ 13%] Building C object CMakeFiles/prince.dir/seg000.c.obj
 [ 18%] Building C object CMakeFiles/prince.dir/seg001.c.obj
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/seg000.c: In function 'get_writable_file_path':
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/seg000.c:2485:23: warning: the comparison will always evaluate as 'true' for the address of 'save_path' will never be NULL [-Waddress]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/seg000.c: In function 'get_writable_file_path':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/seg000.c:2485:23: warning: the comparison will always evaluate as 'true' for the address of 'save_path' will never be NULL [-Waddress]
  2485 |         if (save_path != NULL && save_path[0] != '\0') {
       |                       ^~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/seg000.c:2476:14: note: 'save_path' declared here
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/seg000.c:2476:14: note: 'save_path' declared here
  2476 |         char save_path[POP_MAX_PATH];
       |              ^~~~~~~~~
 [ 22%] Building C object CMakeFiles/prince.dir/seg002.c.obj
@@ -45,17 +45,17 @@ CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
 [ 54%] Building C object CMakeFiles/prince.dir/seg009.c.obj
 [ 59%] Building C object CMakeFiles/prince.dir/seqtbl.c.obj
 [ 63%] Building C object CMakeFiles/prince.dir/options.c.obj
-In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/m68k-amigaos/include/SDL2/SDL_stdinc.h:76,
-                 from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/m68k-amigaos/include/SDL2/SDL_main.h:25,
-                 from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/m68k-amigaos/include/SDL2/SDL.h:31,
-                 from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/types.h:28,
-                 from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/common.h:66,
-                 from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/options.c:21:
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/options.c: In function 'ini_load':
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/options.c:67:79: warning: array subscript has type 'char' [-Wchar-subscripts]
+In file included from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/m68k-amigaos/include/SDL2/SDL_stdinc.h:76,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/m68k-amigaos/include/SDL2/SDL_main.h:25,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/m68k-amigaos/include/SDL2/SDL.h:31,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/types.h:28,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/common.h:66,
+                 from $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/options.c:21:
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/options.c: In function 'ini_load':
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/options.c:67:79: warning: array subscript has type 'char' [-Wchar-subscripts]
    67 |                         for (s = name + strlen(name) - 1; s > name && isspace(*s); s--)
       |                                                                               ^~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/options.c:69:82: warning: array subscript has type 'char' [-Wchar-subscripts]
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/src/options.c:69:82: warning: array subscript has type 'char' [-Wchar-subscripts]
    69 |                         for (s = value + strlen(value) - 1; s > value && isspace(*s); s--)
       |                                                                                  ^~
 [ 68%] Building C object CMakeFiles/prince.dir/midi.c.obj
@@ -65,7 +65,7 @@ In file included from /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-2026
 [ 86%] Building C object CMakeFiles/prince.dir/screenshot.c.obj
 [ 90%] Building C object CMakeFiles/prince.dir/menu.c.obj
 [ 95%] Building C object CMakeFiles/prince.dir/stb_vorbis.c.obj
-[100%] Linking C executable /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/prince
+[100%] Linking C executable $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/prince
 [100%] Built target prince
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/prince: AmigaOS loadseg()ble executable/binary
-dbba5fe804951eb5620bc4a77e16d0ac9b0e9f1ffe6fb8127d95915f151626c8  /run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/prince
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/prince: AmigaOS loadseg()ble executable/binary
+dbba5fe804951eb5620bc4a77e16d0ac9b0e9f1ffe6fb8127d95915f151626c8  $WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/sdlpop/prince

@@ -1,10 +1,10 @@
 configure: WARNING: using cross tools not prefixed with host triplet
 make -C ../enet all
-make[1]: Entering directory '/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/enet'
+make[1]: Entering directory '$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/enet'
 make[1]: Nothing to be done for 'all'.
-make[1]: Leaving directory '/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/enet'
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o crypto-standalone.o crypto.cpp
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o log-standalone.o log.cpp
+make[1]: Leaving directory '$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/game-ports/sources/assaultcube/source/enet'
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o crypto-standalone.o crypto.cpp
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o log-standalone.o log.cpp
 In file included from cube.h:5,
                  from log.cpp:3:
 tools.h: In instantiation of 'void ringbuf<T, SIZE>::clear() [with T = logline_s*; int SIZE = 1024]':
@@ -27,7 +27,7 @@ log.cpp:98:33:   required from here
 tools.h:683:18: warning: using value of assignment with 'volatile'-qualified left operand is deprecated [-Wvolatile]
   683 |         in = out = 0;
       |              ~~~~^~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o protocol-standalone.o protocol.cpp
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o protocol-standalone.o protocol.cpp
 protocol.cpp: In function 'int gmode_parse(const char*)':
 protocol.cpp:532:12: warning: 'void operator delete(void*, std::size_t)' called on pointer returned from a mismatched allocation function [-Wmismatched-new-delete]
   532 |     delete buf;
@@ -40,8 +40,8 @@ In function 'char* newstring(size_t)',
 tools.h:801:70: note: returned from 'void* operator new [](std::size_t)'
   801 | inline char *newstring(size_t l)                { return new char[l+1]; }
       |                                                                      ^
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o serverms-standalone.o serverms.cpp
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o server-standalone.o server.cpp
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o serverms-standalone.o serverms.cpp
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o server-standalone.o server.cpp
 In file included from server.cpp:15:
 serverfiles.h: In member function 'virtual bool servermaprot::load()':
 serverfiles.h:893:17: warning: variable 'line' set but not used [-Wunused-but-set-variable=]
@@ -108,10 +108,10 @@ server.cpp:3048:29:   required from here
 tools.h:683:18: warning: using value of assignment with 'volatile'-qualified left operand is deprecated [-Wvolatile]
   683 |         in = out = 0;
       |              ~~~~^~~
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o stream-standalone.o stream.cpp
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o tools-standalone.o tools.cpp
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o wizard-standalone.o wizard.cpp
-/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -o ac_server crypto-standalone.o log-standalone.o protocol-standalone.o serverms-standalone.o server-standalone.o stream-standalone.o tools-standalone.o wizard-standalone.o -L../enet/.libs -lenet -L/home/da1ek/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/lib -lz -lpthread -lsocket -lamiga
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o stream-standalone.o stream.cpp
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o tools-standalone.o tools.cpp
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -DSTANDALONE -I. -Ibot -I../enet/include -c -o wizard-standalone.o wizard.cpp
+$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/open2-stove/prefix/bin/m68k-amigaos-g++ -m68040 -m68881 -mcrt=nix20 -O2 -fomit-frame-pointer -Wall -fsigned-char -I~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/include -Wall -fsigned-char -ffast-math -Wno-format-zero-length -Wno-stringop-truncation -o ac_server crypto-standalone.o log-standalone.o protocol-standalone.o serverms-standalone.o server-standalone.o stream-standalone.o tools-standalone.o wizard-standalone.o -L../enet/.libs -lenet -L~/AmigaChrome-dev/webkit-os32-040/m68k-amigaos/lib -lz -lpthread -lsocket -lamiga
 ASSAULTCUBE SERVER AMIGA PASS
 ac_server: AmigaOS loadseg()ble executable/binary
 5b9017ce53e24b1842188f02d5bca339492546b599cfa03e24ec823896815c4c  ac_server

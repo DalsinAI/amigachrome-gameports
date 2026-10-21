@@ -2,7 +2,7 @@
   "bytes": 79088722,
   "failures": [],
   "fileCount": 27,
-  "package": "/run/media/da1ek/WorkingSpace/AmigaChrome-Ports-Open2-20261012/build/followup-20261012/neverball/package/Neverball",
+  "package": "$WORKSPACE/AmigaChrome-Ports-Open2-20261012/build/followup-20261012/neverball/package/Neverball",
   "packageGate": "PASS",
   "port": "neverball",
   "release": false,

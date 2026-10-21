@@ -1,5 +1,5 @@
 {
   "stopped": true,
   "left": [],
-  "portsReleased": "/home/da1ek/AmigaChrome-dev/.lab-ports/archive/8904-8907-released-20261012T200058Z"
+  "portsReleased": "~/AmigaChrome-dev/.lab-ports/archive/8904-8907-released-20261012T200058Z"
 }
