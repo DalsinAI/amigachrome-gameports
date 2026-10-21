@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Add qualification-only keyboard, shutdown and clean-exit milestones.
 
-After the first playable mission frame is presented, the diagnostic target
-queues an SDL key-down/key-up pair. The ordinary AstroMenace event loop must
+After the first playable mission frame is presented, and only when
+PROGDIR:AUTOTEST_FIRST_MISSION is present, the diagnostic target queues an
+SDL key-down/key-up pair. The ordinary AstroMenace event loop must
 observe both events before the probe requests Loop() to end. Every subsequent
 cleanup operation is bracketed with stage files so a shutdown stall is located
 precisely rather than being mistaken for a launch or rendering failure.
@@ -84,7 +85,10 @@ void Loop_Proc()
         AMFirstFrameStage("PROGDIR:stage-first-game-frame-presented");
         MissionFramePresented = true;
     }
-    if (MissionFramePresented && !KeyboardProbeQueued) {
+    // Only a qualification run (PROGDIR:AUTOTEST_FIRST_MISSION present)
+    // presses F11 and ends the game; a player keeps playing.
+    if (MissionFramePresented && !KeyboardProbeQueued &&
+        AMFirstMissionRequested()) {
         SDL_Event KeyDown{};
         KeyDown.type = SDL_KEYDOWN;
         KeyDown.key.type = SDL_KEYDOWN;
