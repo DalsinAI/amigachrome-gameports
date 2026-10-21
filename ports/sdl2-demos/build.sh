@@ -8,7 +8,8 @@ CC=${CC:-"$PREFIX/bin/m68k-amigaos-gcc"}
 STRIP=${STRIP:-"$PREFIX/bin/m68k-amigaos-strip"}
 SDL2_CONFIG=${SDL2_CONFIG:-"$PREFIX/bin/sdl2-config"}
 OUT=${OUT:-"$ROOT/build/sdl2-demos"}
-DEST_ROOT=${DEST_ROOT:-"~/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/SDL2 Demos"}
+AC_INSTANCE=${AC_INSTANCE:-"$HOME/AmigaChromeInstances/Instance-32"}
+DEST_ROOT=${DEST_ROOT:-"$AC_INSTANCE/devices/harddisks/DH1/SDL2 Demos"}
 
 [ -x "$CC" ] || { echo "missing compiler: $CC" >&2; exit 2; }
 [ -x "$SDL2_CONFIG" ] || { echo "missing OpenGPU SDL2 SDK: $SDL2_CONFIG" >&2; exit 2; }

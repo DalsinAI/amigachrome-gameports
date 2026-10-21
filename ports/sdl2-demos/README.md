@@ -72,7 +72,7 @@ its phase.
 Default destination:
 
 ```text
-~/AmigaChromeInstances/Instance-32/devices/harddisks/DH1/SDL2 Demos
+$AC_INSTANCE/devices/harddisks/DH1/SDL2 Demos   (AC_INSTANCE defaults to ~/AmigaChromeInstances/Instance-32)
 ```
 
 Amiga-side launch:
