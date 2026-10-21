@@ -7,6 +7,7 @@ source = Path(sys.argv[1]).resolve()
 adapter = Path(sys.argv[2]).resolve()
 port_dir = Path(__file__).resolve().parent
 glu_source = port_dir / "glu_amigachrome.cpp"
+malloc_source = port_dir / "malloc_amigachrome.cpp"
 glu_header = port_dir / "GL" / "glu.h"
 
 cmake = source / "CMakeLists.txt"
@@ -39,10 +40,13 @@ IF(AMIGACHROME)
     list(FILTER astromenace_SRCS EXCLUDE REGEX "src/core/audio/(audio|buffer|music|openal|sound)\\.cpp$")
     list(APPEND astromenace_SRCS
         "src/core/audio/audio_amigachrome.cpp"
-        "src/core/graphics/glu_amigachrome.cpp")
+        "src/core/graphics/glu_amigachrome.cpp"
+        "src/core/malloc_amigachrome.cpp")
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_SOURCE_DIR}/amigachrome-include")
 ENDIF()
 '''
+if "audio_amigachrome.cpp" in text and "malloc_amigachrome.cpp" not in text:
+    text = text.replace('"src/core/graphics/glu_amigachrome.cpp")', '"src/core/graphics/glu_amigachrome.cpp"\n        "src/core/malloc_amigachrome.cpp")', 1)
 if "audio_amigachrome.cpp" not in text:
     if glob_marker not in text:
         raise RuntimeError("AstroMenace source-glob marker missing")
@@ -237,6 +241,9 @@ shutil.copy2(adapter, dst)
 
 glu_dst = source / "src" / "core" / "graphics" / "glu_amigachrome.cpp"
 shutil.copy2(glu_source, glu_dst)
+# The game's own allocator: size classes, not libnix's walk through exec's
+# Allocate and Deallocate on every new and delete (malloc_amigachrome.cpp).
+shutil.copy2(malloc_source, source / "src" / "core" / "malloc_amigachrome.cpp")
 glu_inc = source / "amigachrome-include" / "GL"
 glu_inc.mkdir(parents=True, exist_ok=True)
 shutil.copy2(glu_header, glu_inc / "glu.h")
