@@ -24,7 +24,7 @@
       "sha256": "2b1880d8893c683c5c9e2c766a7d464ce241a5d32c526ad5696dae581b681a4b",
       "bytes": 765160,
       "hunk_magic": "000003f3",
-      "build_log_sha256": "91689d9ef0373b2423ef1e2dc848ac521f038a39257016eeb23e25a735f08218",
+      "build_log_sha256": "85725427af8727a7f62d333b7ed0068a21eaa51592caf0a315ebaf860c820175",
       "duplicate_section_warnings": 0,
       "array_delete_warnings": 0,
       "runtime": "NOT_TESTED"
@@ -36,7 +36,7 @@
       "sha256": "40b25ec3e16c912f5da702cafa768e9cc0a708a54831de2976d87a0c909dffa9",
       "bytes": 2607676,
       "hunk_magic": "000003f3",
-      "build_log_sha256": "2cec6df2a3965061cfdb0538bdf1b6d3b0151f3b765ac3ed5e85581459d9533f",
+      "build_log_sha256": "428a3791eefebab8ac31f65d2c4da05db04cedcf0a430b9c139927a1a6d538fe",
       "duplicate_section_warnings": 0,
       "array_delete_warnings": 0,
       "runtime": "NOT_TESTED"
@@ -48,7 +48,7 @@
       "sha256": "d4870d5860ab1a9d6baa392bf309a84c3294403186220a32eea3f4afcfb960a6",
       "bytes": 2218436,
       "hunk_magic": "000003f3",
-      "build_log_sha256": "c4c43d581f381fc38e0a2a4026bf6f9da565f79a3e3e2a0a5ca7e342ac8d976c",
+      "build_log_sha256": "e8d3605dabbcdf7d38b0647af1e2dacfb08c77b79d3d096d36d30bfd570ea6e2",
       "duplicate_section_warnings": 0,
       "array_delete_warnings": 0,
       "runtime": "PARTIAL_FIRST_LIGHT"
@@ -60,7 +60,7 @@
       "sha256": "1eda2ca693de6841ad57010b1ca258cf41c038529b4a733ac2f895d6185c4ad1",
       "bytes": 2071932,
       "hunk_magic": "000003f3",
-      "build_log_sha256": "c4c43d581f381fc38e0a2a4026bf6f9da565f79a3e3e2a0a5ca7e342ac8d976c",
+      "build_log_sha256": "e8d3605dabbcdf7d38b0647af1e2dacfb08c77b79d3d096d36d30bfd570ea6e2",
       "duplicate_section_warnings": 0,
       "array_delete_warnings": 0,
       "runtime": "NOT_TESTED"
