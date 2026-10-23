@@ -116,3 +116,8 @@ The AC090 probe compared all 2,651 non-empty animation/body/object resources
 against the pinned original loader byte for byte. A three-tick headless scene
 smoke run also completed. These are bounded engineering results; display,
 input, AHI/music, persistence and full gameplay qualification remain open.
+
+A subsequent longer display attempt did not yield a captured game scene or its
+final state dump before the bounded lab stop. The screenshots showed the idle
+display and then Workbench. See `evidence/visual-attempt.json`: display remains
+an explicit blocker, despite the successful three-tick return/state checks.

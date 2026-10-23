@@ -1,0 +1,7 @@
+{
+  "attempt": "SDL display, no audio, fixed dt 16, tick budget 2000",
+  "result": "No final state dump observed before bounded lab stop; a game scene was not captured. RTG screenshots showed the idle display and then Workbench after input. This is not a visual first-light pass.",
+  "audio": "disabled",
+  "prior_bounded_checks": "Separate three-tick display/headless runs returned 0; those do not establish interactive display correctness.",
+  "followup": "Qualify presentation with the SDL3 renderer/platform work; retain the recorded old SDK input identity."
+}
