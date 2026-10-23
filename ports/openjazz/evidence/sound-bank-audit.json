@@ -1,0 +1,43 @@
+{
+  "file": "SOUNDS.000",
+  "bytes": 130603,
+  "directory_offset": 130203,
+  "clips": 22,
+  "all_sample_ranges_in_bounds": true,
+  "missing_named_references": [
+    "BEGIN2",
+    "BOMB",
+    "DIE5",
+    "EXPLO5",
+    "HARP",
+    "JUMP3",
+    "LOOGIE",
+    "MISSILE",
+    "SHOT1"
+  ],
+  "interpretation": "Read-only directory/range audit; missing named references are not supplied by this bank; no audio playback qualification",
+  "sample_names": [
+    "INVULN11",
+    "MACHGUN1",
+    "BOOM",
+    "OW",
+    "YUM1",
+    "FIRE1",
+    "UPLOOP11",
+    "1UP",
+    "PHOTON",
+    "WAIT_12",
+    "ORB10S",
+    "JUMPA11",
+    "GODLIKE",
+    "YEAHOO",
+    "BIRDY1",
+    "FLAMER",
+    "ELECTR11",
+    "SPRING1",
+    "ROCKET2",
+    "STOP1",
+    "BLOCK3",
+    "BLOCK1"
+  ]
+}

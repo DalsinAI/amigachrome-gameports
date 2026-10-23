@@ -1,0 +1,67 @@
+[
+  {
+    "asset": "LEVEL0.012",
+    "warnings": [
+      "Cannot find sound DIE5!",
+      "Cannot find sound SHOT1!"
+    ]
+  },
+  {
+    "asset": "LEVEL0.016",
+    "warnings": [
+      "Cannot find sound LOOGIE!"
+    ]
+  },
+  {
+    "asset": "LEVEL0.017",
+    "warnings": [
+      "Cannot find sound BEGIN2!"
+    ]
+  },
+  {
+    "asset": "LEVEL0.020",
+    "warnings": [
+      "Cannot find sound BEGIN2!"
+    ]
+  },
+  {
+    "asset": "LEVEL0.022",
+    "warnings": [
+      "Cannot find sound BEGIN2!"
+    ]
+  },
+  {
+    "asset": "LEVEL0.023",
+    "warnings": [
+      "Cannot find sound BEGIN2!"
+    ]
+  },
+  {
+    "asset": "LEVEL1.012",
+    "warnings": [
+      "Cannot find sound SHOT1!"
+    ]
+  },
+  {
+    "asset": "LEVEL1.016",
+    "warnings": [
+      "Cannot find sound LOOGIE!"
+    ]
+  },
+  {
+    "asset": "LEVEL1.017",
+    "warnings": [
+      "Cannot find sound BEGIN2!"
+    ]
+  },
+  {
+    "asset": "LEVEL3.020",
+    "warnings": [
+      "Cannot find sound HARP!",
+      "Cannot find sound JUMP3!",
+      "Cannot find sound EXPLO5!",
+      "Cannot find sound MISSILE!",
+      "Cannot find sound BOMB!"
+    ]
+  }
+]

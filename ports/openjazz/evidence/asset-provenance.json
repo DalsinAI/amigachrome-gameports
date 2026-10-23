@@ -1,0 +1,37 @@
+{
+  "upstream_commit": "a1626f4edd4a7af72c54103021790c56d8ecfced",
+  "source_preparation": "git archive of exact pin; existing directory and ctime patches applied; external dirty cache was not used as working source",
+  "dataset": "Original Jazz Jackrabbit RGJAZZ_2.iso",
+  "iso_sha256": "e64f3a37717ddb24384ec5ee6521833eafc06feedbe480ebaf135304ea71fbd7",
+  "torrent_pieces_checked": 106,
+  "bad_pieces": 0,
+  "extracted_files_verified": 345,
+  "compiler_release": "16.2.0-open3",
+  "compiler_archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+  "sdk_inputs": {
+    "lib/libSDL2.a": "0adabe8d7df786a96c45dd6bf0210580d28ad2a00b7c83304b35e7e67f0a16d9",
+    "lib/libGL.a": "f5a4fd7591edfac13a82f48e5bf925a8b957e58a02afcd467ff74aa8cbdb9417",
+    "include/SDL2/SDL.h": "952e89e1dc4e0dd1a7bea6a153df632b8cdb6e433a9b3b0702c5ffe15b9b9360",
+    "lab/SDL2.module": "06966096667c5c4636fd09467c8e7bdf27b141a56bb9463d72e4c1e091e2e0ab",
+    "lab/ACRTG.gpu": "5410827f67e7a0987af9d388206916b28acefd76e222b675cfb74252730abbe7"
+  },
+  "probe_sha256": {
+    "asset-host": "beea7f391fc6c358074500c9c1b36bed9b164bb293af3e49a6b0ba3a58160a4a",
+    "asset-amiga": "80c7c8917a15dfdca9e25b22116094212b5f3a0da1118ffbeaedda67b5c9ee95"
+  },
+  "lab": "Isolated team1-ac090; 68040+FPU, 8MiB Chip/512MiB Fast, copied Kickstart 3.2.3 47.115; muted; Instance-32 unchanged",
+  "runtime": "Deployed host runtime 9fbc38c2 (20261023T202943Z); existing lab SDL2 module; no SDL3 dependency",
+  "scope": "Constructor/decode checks and loaded collision-map comparisons, not game execution or hostile-input validation",
+  "release_qualified": false,
+  "lab_extracted_files_verified": 345,
+  "canonical_lab_data_inventory_sha256": "b854732a49575bc1c9194c4a75ea6ed827b7c639ef51d09091da0300b5006658",
+  "prepared_loader_sha256": {
+    "src/main.cpp": "b6d9cca9bf215773ae41c0280eee7247be3f3772c97e3ce1b67a4dc19a158918",
+    "src/io/file.cpp": "6986b5d48f83a3a5e9e50b95e79840951a509bc0955e0f59f44bae456cb4d456",
+    "src/io/gfx/font.cpp": "e203fef11e6cc83a4d803c18d719ae5fcf6277eeb1d29e3e3fc99590d13431b1",
+    "src/io/sound.cpp": "98fec67485299b7a8bf3a69bd95dc7df4530099abc953960e40eb1ed148d1809",
+    "src/jj1/level/jj1levelload.cpp": "f3de703e69eefe9867d8b50e330afa0020eefbc57847c7cc438ea7c2e79e27ae",
+    "src/jj1/scene/jj1sceneload.cpp": "d0424b554645e5e00961dbe7bd0acf73aa3eca16862451fc9f63984b168fd964"
+  },
+  "validation_probe_source_sha256": "7927047b647e03b6890cc892240074247c442bb3e3ee21d9954249c80a1967c7"
+}
