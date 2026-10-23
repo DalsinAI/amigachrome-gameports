@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-23",
+  "data_archive_sha256": "5ed55123eca9c699ba04ba56aae0471d557e495bdb085f6ab26402bd9fba1894",
+  "archive_crc": "pass",
+  "observed_hqr_entries": {
+    "ANIM.HQR": 743,
+    "BODY.HQR": 129,
+    "LBA_BKG.HQR": 1243
+  },
+  "music_wav_files": 9,
+  "demo_build": {
+    "schema": 1,
+    "port": "lba2-classic-community",
+    "source": {
+      "kind": "git",
+      "url": "https://github.com/LBALab/lba2-classic-community.git",
+      "commit": "2fa1c7a66de2ce8707d85cb9a304dbd6f96c8ab8",
+      "submodules": false
+    },
+    "compiler_archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+    "compiler_release": "16.2.0-open3",
+    "patches": {
+      "0001-openamiga-module-client.patch": "ee7fe54b9702fa6a7ded3d434c7168321862dcaa2df7c9b957b8daee731a6b44",
+      "0002-optional-ipo.patch": "17a880d0504e80b57d79f14092a8eb04f715bb9cdba7f2d8c183a96e184c91f9",
+      "0003-open2-math-source.patch": "784a0b56e21b83c1c789d511ac4c99df7af5a3941786fc17480c2e14dcad3d8e"
+    },
+    "dependencies": {},
+    "configure": [
+      "cmake",
+      "-S",
+      "/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-demo-open3/source",
+      "-B",
+      "/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-demo-open3/cmake",
+      "-DCMAKE_TOOLCHAIN_FILE=/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/toolchain/amigaos3-opengpu.cmake",
+      "-DAMIGA_STOVE=/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/team1-open3",
+      "-DSDL3_DIR=/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-demo-open3/sdl3-config",
+      "-DCMAKE_PROJECT_INCLUDE=/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-demo-open3/sdl3-config/repro.cmake",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
+      "-DFETCHCONTENT_UPDATES_DISCONNECTED=ON",
+      "-DPLATFORM_BACKEND=sdl3",
+      "-DSOUND_BACKEND=sdl",
+      "-DMVIDEO_BACKEND=smacker",
+      "-DENABLE_ASM=OFF",
+      "-DLBA2_OPENAMIGA_SDL3=ON",
+      "-DLBA2_LINK_STATIC=OFF",
+      "-DLBA2_BUILD_SAVE_TOOLS=OFF",
+      "-DLBA2_BUILD_TESTS=OFF",
+      "-DLBA2_CONTROL_SERVER=OFF",
+      "-DLBA2_NATIVE_ARCH=OFF",
+      "-DLBA2_ENABLE_IPO=OFF",
+      "-DLBA2_OPENAMIGA_MATH_SOURCE=/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/ports/lba2-classic-community/compat/lrintl.c",
+      "-DLBA2_BUILD_DEMO=ON"
+    ],
+    "codec_lock_sha256": null,
+    "build": [
+      "cmake",
+      "--build",
+      "/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-demo-open3/cmake",
+      "--target",
+      "lba2cc",
+      "-j",
+      "2"
+    ],
+    "state": "compiled",
+    "runtime": "not tested",
+    "source_date_epoch": "1792752925",
+    "binary_sha256": "fc86703b9c10b4a1a72e9409a40beebc4aa4e7247716607799ebea306a0f7dfa",
+    "binary_file": "/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-demo-open3/cmake/SOURCES/lba2cc: AmigaOS loadseg()ble executable/binary"
+  },
+  "host_check": "Package recognized, zero missing required assets, three shipped saves copied into isolated --user-dir. Automated three-tick/state-dump run did not complete within its 30-second timeout. No gameplay pass.",
+  "amiga_runtime": "not run",
+  "rights": "original assets remain local; no bundling permission established"
+}

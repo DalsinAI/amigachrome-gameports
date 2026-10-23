@@ -99,6 +99,10 @@ Keep classic retail data owner-supplied. Engine code is GPL-2.0-only; retain
 upstream and bundled third-party licences/notices when packaging. No assets,
 NDK headers or binaries are committed here.
 
+The [original playable demo](DEMO.md) has been located and inspected. Use
+`build-demo-amigaos3.sh` with its separate demo manifest; its data cannot be
+used with the retail executable above.
+
 Follow [asset preprocessing](../../docs/ASSET_PREPROCESSING.md) and
 [release policy](../../RELEASE_POLICY.md). Still required: endian and FPU
 gameplay comparisons, usable title/game frames, controls/text/gamepad, AHI
