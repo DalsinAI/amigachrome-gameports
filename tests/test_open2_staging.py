@@ -97,5 +97,11 @@ class StagingTests(unittest.TestCase):
         (self.sdk/'m68k-amigaos/lib/libSDL2.a').unlink()
         with self.assertRaisesRegex(ValueError,'SDL2'):self.run_stage()
         self.assertFalse(self.dest.exists())
+    def test_selected_open3_release_records_its_identity(self):
+        with patch.dict(module.RELEASES, {'16.2.0-open3': (self.hash, module.TOP)}):
+            receipt = module.stage(self.archive, self.ndk, self.sdk, self.dest,
+                                   release='16.2.0-open3')
+        self.assertEqual(receipt['release'], '16.2.0-open3')
+        self.assertEqual(receipt['archive_sha256'], self.hash)
 
 if __name__=='__main__':unittest.main()

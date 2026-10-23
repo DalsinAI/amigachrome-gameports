@@ -18,7 +18,7 @@ class InputTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
 
     def test_wrong_stove_release(self):
-        (self.root / "provenance.json").write_text(json.dumps({"release": "16.2.0-open3"}))
+        (self.root / "provenance.json").write_text(json.dumps({"release": "16.2.0-open1"}))
         with self.assertRaises(ValueError):
             PORT.verify_stove(self.root)
 
@@ -32,7 +32,7 @@ class InputTests(unittest.TestCase):
             path.write_text(content)
             hashes[name] = PORT.digest(path)
         (self.root / "provenance.json").write_text(json.dumps({
-            "release": "16.2.0-open2", "archive_sha256": PORT.OPEN2,
+            "release": "16.2.0-open3", "archive_sha256": PORT.OPEN3,
             "compiler_runtime_sha256": hashes}))
         PORT.verify_stove(self.root)
         (self.root / "prefix/bin/m68k-amigaos-g++").write_text("replacement")
