@@ -1,0 +1,91 @@
+diff --git a/src/OpenLoco/CMakeLists.txt b/src/OpenLoco/CMakeLists.txt
+index 892ba01..369505c 100644
+--- a/src/OpenLoco/CMakeLists.txt
++++ b/src/OpenLoco/CMakeLists.txt
+@@ -789,3 +789,8 @@ loco_add_library(OpenLoco STATIC
+ )
+ 
+ target_include_directories(OpenLoco PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/OpenLoco")
++
++if(OPENLOCO_AMIGA_SOCKET_DIR)
++    configure_file("${OPENLOCO_AMIGA_SOCKET_DIR}/AmigaSocket.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/Network/AmigaSocket.h" COPYONLY)
++    target_sources(OpenLoco PRIVATE "${OPENLOCO_AMIGA_SOCKET_DIR}/AmigaSocket.cpp")
++endif()
+diff --git a/src/OpenLoco/src/Network/Socket.cpp b/src/OpenLoco/src/Network/Socket.cpp
+index 019b5f7..4ddc6ac 100644
+--- a/src/OpenLoco/src/Network/Socket.cpp
++++ b/src/OpenLoco/src/Network/Socket.cpp
+@@ -60,6 +60,9 @@
+ 
+ #include "Network/Socket.h"
+ #include <OpenLoco/Diagnostics/Logging.h>
++#ifdef __amigaos__
++#include "Network/AmigaSocket.h"
++#endif
+ 
+ using namespace OpenLoco::Diagnostics;
+ 
+@@ -291,6 +294,9 @@ namespace OpenLoco::Network
+ #ifdef _WIN32
+             u_long nonBlocking = on;
+             return ioctlsocket(socket, FIONBIO, &nonBlocking) == 0;
++#elif defined(__amigaos__)
++            long nonBlocking = on ? 1 : 0;
++            return IoctlSocket(socket, FIONBIO, &nonBlocking) == 0;
+ #else
+             int32_t flags = fcntl(socket, F_GETFL, 0);
+             return fcntl(socket, F_SETFL, on ? (flags | O_NONBLOCK) : (flags & ~O_NONBLOCK)) == 0;
+@@ -310,7 +316,11 @@ namespace OpenLoco::Network
+                 case Protocol::ipv4:
+                     return AF_INET;
+                 case Protocol::ipv6:
++#ifdef __amigaos__
++                    throw Exception::InvalidArgument("IPv6 is disabled in this Amiga port; use IPv4");
++#else
+                     return AF_INET6;
++#endif
+                 case Protocol::any:
+                     return AF_UNSPEC;
+                 default:
+@@ -330,10 +340,12 @@ namespace OpenLoco::Network
+                 {
+                     return;
+                 }
++#ifndef __amigaos__
+                 if (tryResolveAddress(Protocol::ipv6, address, port, ss, ss_len, error))
+                 {
+                     return;
+                 }
++#endif
+             }
+             else
+             {
+@@ -554,7 +566,11 @@ namespace OpenLoco::Network
+             auto family = protocolToFamily(protocol);
+             if (protocol == Protocol::any)
+             {
++#ifdef __amigaos__
++                family = AF_INET; // Classic SDK has no dual-stack socket option.
++#else
+                 family = AF_INET6;
++#endif
+             }
+ 
+             auto sock = socket(family, SOCK_DGRAM, IPPROTO_UDP);
+@@ -569,6 +585,7 @@ namespace OpenLoco::Network
+             //     Console::logVerbose("setsockopt(socket, SO_BROADCAST) failed: %d", LAST_SOCKET_ERROR());
+             // }
+ 
++#if defined(IPPROTO_IPV6) && defined(IPV6_V6ONLY)
+             if (protocol == Protocol::any)
+             {
+                 // Turn off IPV6_V6ONLY so we can accept both v4 and v6 connections
+@@ -587,6 +604,8 @@ namespace OpenLoco::Network
+                 }
+             }
+ 
++#endif
++
+             if (!setOption(sock, SOL_SOCKET, SO_REUSEADDR, true))
+             {
+                 Logging::warn("setsockopt(socket, SO_REUSEADDR) failed: {}", LAST_SOCKET_ERROR());

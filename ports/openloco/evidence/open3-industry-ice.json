@@ -1,0 +1,19 @@
+{
+  "compiler_release": "16.2.0-open3",
+  "compiler_archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+  "translation_unit": "src/OpenLoco/src/Ui/Windows/IndustryList.cpp",
+  "function": "NewIndustries::onScrollMouseOver",
+  "failure": "unrecognizable SI ge insn; internal compiler error in extract_insn, recog.cc:2892, RTL CSE",
+  "attempts": {
+    "O3": "ICE",
+    "O2": "ICE",
+    "O1": "ICE",
+    "O3-no-rerun-cse": "ICE",
+    "O0": "compiled"
+  },
+  "workaround": "Explicit OPENLOCO_GCC16_UI_WORKAROUND applies -O0 to src/Ui translation units; files outside src/Ui retain release optimisation. UI behaviour/performance remains unqualified.",
+  "additional_affected_translation_units": [
+    "src/OpenLoco/src/Ui/Windows/TerraForm.cpp",
+    "src/OpenLoco/src/Ui/Windows/TownList.cpp"
+  ]
+}

@@ -1,7 +1,7 @@
 # OpenLoco
 
 Target: AmigaOS 3.x / 68040 + FPU / AC090, GCC 16.2.0-open3 and OpenAmiga SDL3.
-Status: initial port recipe and targeted probes; full-game configure BLOCKED.
+Status: two clean open3 builds produce identical HUNK binaries with audio disabled. Native audio-disabled, filesystem-space and IPv4 probes pass on AC090. Game startup stops on packed little-endian assets; gameplay/release qualification remains open.
 
 The exact upstream source is `OpenLoco/OpenLoco`
 `6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e` (version 26.09).
@@ -41,8 +41,12 @@ qualification dependency. The game links the platform SDL3 client.
 - Read/write Sawyer container length and checksum fields explicitly as
   little-endian bytes. Payload conversion is a separate outstanding task.
 
-The open3 full-game configure passed source/codec checks and stopped at the
-required `openal` dependency. No full-game executable or compile pass is claimed.
+The initial full-game configure stopped at OpenAL. The current engineering
+recipe explicitly disables audio, supplies native Amiga platform/socket bindings
+and builds successfully. Two clean builds produce SHA-256
+`96da9f61b1c2845c268f20930fe2901503fa73803abc46d399fbe4dc701e5f72`. [Engineering notes](ENGINEERING.md) describe the
+AC090 probe results, the scoped open3 compiler workaround and remaining gates.
+Current full-application evidence is recorded separately from those API probes.
 
 Targeted tests build the real patched Sawyer loader and MemoryStream with
 synthetic data. The host probe passed exact length/checksum bytes, payload
@@ -72,7 +76,7 @@ mixing, voices, pitch and pan; ACAHI Host mix can offload the mixing. The common
 layer needs resource arbitration, context/source lifetime, playback semantics,
 spatialization and truthful capabilities. OpenLoco can keep its OpenAL calls.
 A game-specific SDL3 audio replacement is not selected. The shared adapter is
-not implemented here, so the missing `openal` dependency remains explicit.
+not implemented here, and the engineering recipe explicitly disables it until that shared backend is ready.
 
 Use a locally generated versioned native asset cache where beneficial, per
 [the preprocessing standard](../../docs/ASSET_PREPROCESSING.md). The full
@@ -80,8 +84,9 @@ schema audit and converter are not implemented. Object records, CSS/WAV
 metadata, PCM and packed S5/save structures cannot be converted by blindly
 swapping a container's words. Preserve original data and compatible saves.
 
-Also outstanding: native Amiga paths/user directories, time and single-instance
-handling, filesystem/packed-data audit, complete C++20 application build and
+Implemented but still requiring full-application qualification: native Amiga
+paths/user directories, time and single-instance handling. Still outstanding:
+filesystem/packed-data audit, complete C++20 application qualification and
 linker-warning investigation, OpenGPU presentation and INDEX8 qualification,
 input, persistence, clean exit and measured memory/CPU costs.
 
@@ -91,3 +96,11 @@ upstream by SHA-256 `9e6596aaa52b2296cfc779bbe3aab01d0fb37ef61fcb23cd0e5ff4d2b9e
 it is not fetched or bundled here and still needs a separate packaging/rights
 review. No assets, SDK headers or binaries are committed. All
 [release gates](../../RELEASE_POLICY.md) remain open.
+
+The final binary was launched from RAM: on AC090. Native DOS paths correctly
+created program-relative User/save, landscape and objects folders. Version/help
+print the pinned version and return 1, matching the upstream dispatcher. A full
+startup reaches the retail assets but cannot interpret packed little-endian G1
+metadata (4122 elements becomes 437256192); CSS loading also reports an invalid
+vector size. No menu/gameplay pass is claimed. See
+[evidence](evidence/noaudio-native-results.json).

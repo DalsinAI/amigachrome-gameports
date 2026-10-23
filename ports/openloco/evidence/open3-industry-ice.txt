@@ -1,0 +1,12 @@
+$PORTS/build/openloco-open3-noaudio-f/source/src/OpenLoco/src/Ui/Windows/IndustryList.cpp: In function 'void OpenLoco::Ui::Windows::IndustryList::NewIndustries::onScrollMouseOver(OpenLoco::Ui::Window&, int16_t, int16_t, uint8_t)':
+$PORTS/build/openloco-open3-noaudio-f/source/src/OpenLoco/src/Ui/Windows/IndustryList.cpp:874:9: error: unrecognizable insn:
+  874 |         }
+      |         ^
+(insn 264 259 265 4 (set (reg:SI 121)
+        (ge:SI (reg:SI 82 [ _32 ])
+            (const_int 0 [0]))) -1
+     (expr_list:REG_DEAD (reg:SI 82 [ _32 ])
+        (nil)))
+during RTL pass: cse2
+$PORTS/build/openloco-open3-noaudio-f/source/src/OpenLoco/src/Ui/Windows/IndustryList.cpp:874:9: internal compiler error: in extract_insn, at recog.cc:2892
+[ 87%] Building CXX object src/OpenLoco/CMakeFiles/OpenLoco.dir/src/Ui/Windows/MusicJukebox.cpp.obj

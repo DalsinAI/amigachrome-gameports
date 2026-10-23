@@ -1,0 +1,26 @@
+[INF] OpenLoco, 26.09 (6d7f5b1 on amiga-sdl3)
+[INF] AmigaOS 3.x (m68k)
+[INF] Using Locomotion install path: DH1:Games/OpenLoco/Locomotion
+[INF] Using save path: User/save/
+[INF] Using landscape path: User/landscape/
+usage: openloco [options] [path]
+                host [options] <path>
+                join [options] <address>
+                uncompress [options] <path>
+                simulate [options] <path> <ticks> [path]
+                compare [options] <path1> <path2>
+
+options:
+--bind                     Address to bind to when hosting a server
+--port               -p     Port number for the server
+                     -o     Output path
+--help               -h     Print help
+--version                   Print version
+--intro                     Run the game intro
+--log_levels                Comma separated list of log levels, applying a minus prefix
+                            removes the level from a group such as 'all', valid levels:
+                            - info, warning, error, verbose, all
+                              Example: --log_levels "all, -verbose", logs all but verbose levels
+                              Default: "info, warning, error"
+--all                -a     For compare, print out all divergences
+--locomotion_path           Overrides the path to Locomotion install.

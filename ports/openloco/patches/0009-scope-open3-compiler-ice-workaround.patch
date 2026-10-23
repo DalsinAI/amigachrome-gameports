@@ -1,0 +1,12 @@
+--- a/src/OpenLoco/CMakeLists.txt
++++ b/src/OpenLoco/CMakeLists.txt
+@@ -794,3 +794,9 @@
+     configure_file("${OPENLOCO_AMIGA_SOCKET_DIR}/AmigaSocket.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/Network/AmigaSocket.h" COPYONLY)
+     target_sources(OpenLoco PRIVATE "${OPENLOCO_AMIGA_SOCKET_DIR}/AmigaSocket.cpp")
+ endif()
++
++option(OPENLOCO_GCC16_UI_WORKAROUND "Avoid open3 compiler ICEs in UI handlers" OFF)
++if(OPENLOCO_GCC16_UI_WORKAROUND)
++    file(GLOB_RECURSE amiga_ui_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/Ui/*.cpp")
++    set_property(SOURCE ${amiga_ui_sources} APPEND PROPERTY COMPILE_OPTIONS "-O0")
++endif()

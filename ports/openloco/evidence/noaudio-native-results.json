@@ -1,0 +1,57 @@
+{
+  "source": {
+    "kind": "git",
+    "url": "https://github.com/OpenLoco/OpenLoco.git",
+    "commit": "6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e",
+    "submodules": false
+  },
+  "compiler_archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+  "compiler_release": "16.2.0-open3",
+  "patches": {
+    "0001-amiga-platform-identity.patch": "97dee6010e3ddaad36b3542c7f2c77fbcdba3621ddfabc3eef3344dd024cc5d4",
+    "0002-optional-sequential-viewport.patch": "7ef4888c2c296a3edd0a997a82e7a88d9fc3927a463222588be1560004762c57",
+    "0003-optional-runtime-assets.patch": "c0788394b67f6c7e3aec6cdbda1aa4d4e2e69c5baa85b7640b05caa56e5ab478",
+    "0004-little-endian-sawyer-container.patch": "3ba4fe502fc52c04842b295928c6d94517edf69122c385c6d0dba356a7c28410",
+    "0005-optional-audio-disabled-engineering-build.patch": "11030657b64d15b5d0ce95212f17cb36e45e397ffd8cd679587e1eb9a0c8a36f",
+    "0006-amiga-stdio-and-optional-ipo.patch": "0db5d935d886e33dcd1c11aee40d1b1d7a7f4a62b9b598fb772c44a1888a4581",
+    "0007-amiga-native-platform.patch": "e318b8b2f250791b043298cba4f9b63ce514823cdf24238c5c086f5f442e875f",
+    "0008-native-bsdsocket-client.patch": "d4f6f98d1f9ba24efc18b088e7d6d97cc12c58b578d751ea21ec66c84623f7e8",
+    "0009-scope-open3-compiler-ice-workaround.patch": "19c5b4cdcbbb001aab20e9726808f63fb60121a99b60ecdb7fb9273259c93d4e",
+    "0010-identify-pinned-export-and-mapped-source-paths.patch": "157c5440c375720f91d8787a0efc1f8a190dde077d3c1e5bc21f7527a36a34e1",
+    "0011-native-filesystem-space-and-atomic-runtime.patch": "253e6ead00f9daab9cc3af2ce95316bca6167d904c34a0436f01c463171d31d4"
+  },
+  "dependencies": {
+    "yaml-cpp": {
+      "kind": "git",
+      "url": "https://github.com/jbeder/yaml-cpp.git",
+      "commit": "56e3bb550c91fd7005566f19c079cb7a503223cf",
+      "submodules": false
+    },
+    "fmt": {
+      "kind": "git",
+      "url": "https://github.com/fmtlib/fmt.git",
+      "commit": "123913715afeb8a437e6388b4473fcc4753e1c9a",
+      "submodules": false
+    },
+    "sfl": {
+      "kind": "git",
+      "url": "https://github.com/slavenf/sfl-library.git",
+      "commit": "01700eebb57fbfb21ba963b10ceb47723813064b",
+      "submodules": false
+    }
+  },
+  "state": "compiled",
+  "binary_sha256": "96da9f61b1c2845c268f20930fe2901503fa73803abc46d399fbe4dc701e5f72",
+  "source_date_epoch": "1792015446",
+  "schema": 1,
+  "reproducibility": "Two clean builds k and l produce byte-identical HUNK executables",
+  "audio": "Explicit temporary disabled backend; no audio qualification",
+  "network": "IPv4 only; native bsdsocket.library 4.2 loopback, resolver, nonblocking receive and IPv6 rejection passed at release optimization on AC090",
+  "tests": 43,
+  "cli": "Final binary run from RAM: reports correct upstream version; version/help return 1 as in upstream dispatcher; absolute program-relative user paths created",
+  "gameplay": "Blocked: packed little-endian G1/CSS structures; no menu or gameplay qualification",
+  "compiler_workaround": "src/Ui translation units O0 for open3 RTL CSE ICE; other sources use release optimization",
+  "linker": "Duplicate COMDAT/libstdc++ section warnings remain; not suppressed",
+  "lab": "Isolated AC090 68040+FPU, Kickstart 3.2.3 47.115, runtime 9fbc38c2; muted",
+  "release_qualified": false
+}

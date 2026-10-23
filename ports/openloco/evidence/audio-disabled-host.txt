@@ -1,0 +1,2 @@
+OpenLoco: AUDIO DISABLED (engineering build)
+PASS: audio-disabled backend reports no device, buffers or voices
