@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f38d3f2..c1adb63 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -118,14 +118,17 @@ if (${OPENLOCO_BUILD_TESTS})
+     enable_testing()
+ endif()
+ 
++option(OPENLOCO_COPY_ASSETS "Prepare and copy runtime assets" ON)
++if(OPENLOCO_COPY_ASSETS)
+ FetchContent_Declare(openloco_objects
+             URL      https://github.com/OpenLoco/OpenGraphics/releases/download/v0.1.12/objects.zip
+             URL_HASH SHA256=9e6596aaa52b2296cfc779bbe3aab01d0fb37ef61fcb23cd0e5ff4d2b9e846ca)
+ FetchContent_MakeAvailable(openloco_objects)
++endif()
+ 
+ add_subdirectory(src)
+ 
+-if (NOT APPLE)
++if (NOT APPLE AND OPENLOCO_COPY_ASSETS)
+     if (${CMAKE_VERSION} VERSION_GREATER 3.26)
+         # Uses the copy_directory_if_different to avoid copying objects/language every time (3.26 feature)
+         add_custom_target(OpenLocoAssets ALL

@@ -1,0 +1,9 @@
+[2026-10-23 17:46:44] [INF] OpenLoco, 26.09 (6d7f5b1 on amiga-sdl3)
+[2026-10-23 17:46:44] [INF] AmigaOS 3.x (m68k)
+[2026-10-23 17:46:44] [INF] Using Locomotion install path: DH1:Games/OpenLoco/Locomotion
+[2026-10-23 17:46:44] [INF] Using save path: Work:Games/OpenLoco/User/save/
+[2026-10-23 17:46:44] [INF] Using landscape path: Work:Games/OpenLoco/User/landscape/
+[2026-10-23 17:46:44] [ERR] loadSoundsFromCSS(DH1:Games/OpenLoco/Locomotion/Data/CSS1.DAT) failed: cannot create std::vector larger than max_size()
+[2026-10-23 17:46:44] [WRN] G1 element count doesn't match expected value:
+Expected 4122; Got 437256192
+[2026-10-23 17:46:44] [ERR] Exception: cannot create std::vector larger than max_size()

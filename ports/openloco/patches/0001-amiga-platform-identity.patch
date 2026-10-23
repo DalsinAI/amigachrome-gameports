@@ -1,0 +1,22 @@
+diff --git a/src/Version/include/OpenLoco/Version.hpp b/src/Version/include/OpenLoco/Version.hpp
+index ffe092d..c3b07cf 100644
+--- a/src/Version/include/OpenLoco/Version.hpp
++++ b/src/Version/include/OpenLoco/Version.hpp
+@@ -10,6 +10,8 @@
+     #define OPENLOCO_ARCHITECTURE "x86-64"
+ #elif defined(__i386__) || defined(_M_IX86)
+     #define OPENLOCO_ARCHITECTURE "x86"
++#elif defined(__m68k__)
++    #define OPENLOCO_ARCHITECTURE "m68k"
+ #elif defined(__riscv)
+     #if __riscv_xlen == 64
+         #define OPENLOCO_ARCHITECTURE "RISC-V64"
+@@ -32,6 +34,8 @@
+ 
+ #ifdef _WIN32
+     #define OPENLOCO_PLATFORM "Windows"
++#elif defined(__amigaos__)
++    #define OPENLOCO_PLATFORM "AmigaOS 3.x"
+ #elif defined(__linux__) && !defined(__ANDROID__)
+     #define OPENLOCO_PLATFORM "Linux"
+ #elif (defined(__APPLE__) && defined(__MACH__))

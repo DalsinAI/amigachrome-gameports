@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f38d3f2..aa11085 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,6 +59,8 @@ endif ()
+ project(${PROJECT} LANGUAGES CXX VERSION 26.09)
+ 
+ # Enable IPO for all Release targets by default
++option(OPENLOCO_ENABLE_IPO "Enable link time optimisation" ON)
++if(OPENLOCO_ENABLE_IPO)
+ include(CheckIPOSupported)
+ check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
+ 
+@@ -70,6 +72,8 @@ else()
+     message(WARNING "IPO/LTO not supported: ${ipo_error}")
+ endif()
+ 
++endif()
++
+ # libstdc++ doesn't have standalone <execution> support so if using libstdc++ we need to
+ # link against TBB
+ include(CheckCXXSymbolExists)
+diff --git a/src/Core/src/FileStream.cpp b/src/Core/src/FileStream.cpp
+index d80c1a6..8deec62 100644
+--- a/src/Core/src/FileStream.cpp
++++ b/src/Core/src/FileStream.cpp
+@@ -3,6 +3,7 @@
+ #include <Stream.hpp>
+ #include <algorithm>
+ #include <cstdio>
++#include <climits>
+ #include <filesystem>
+ 
+ namespace OpenLoco
+@@ -26,6 +27,10 @@ namespace OpenLoco
+     {
+ #ifdef _MSC_VER
+         return _ftelli64_nolock(fs);
++#elif defined(__amigaos__)
++        const long pos = std::ftell(fs);
++        if (pos < 0) throw Exception::RuntimeError("File position failed");
++        return static_cast<size_t>(pos);
+ #else
+         return ftello(fs);
+ #endif
+@@ -35,6 +40,9 @@ namespace OpenLoco
+     {
+ #ifdef _MSC_VER
+         _fseeki64_nolock(fs, offset, origin);
++#elif defined(__amigaos__)
++        if (offset > LONG_MAX || std::fseek(fs, static_cast<long>(offset), origin) != 0)
++            throw Exception::RuntimeError("File offset exceeds Amiga stdio range or seek failed");
+ #else
+         fseeko(fs, offset, origin);
+ #endif

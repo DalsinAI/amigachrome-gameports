@@ -1,0 +1,1 @@
+PASS: two streams mix with independent gains, pitch setting, mono/stereo conversion, unbind and clean close (dummy output)

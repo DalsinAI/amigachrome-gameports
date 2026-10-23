@@ -1,0 +1,14 @@
+diff --git a/src/App/CMakeLists.txt b/src/App/CMakeLists.txt
+index 6541b21..7e166d3 100644
+--- a/src/App/CMakeLists.txt
++++ b/src/App/CMakeLists.txt
+@@ -94,3 +94,9 @@ else()
+         PROPERTY MACOSX_PACKAGE_LOCATION "Resources/objects"
+     )
+ endif ()
++
++if(OPENLOCO_AMIGA_RUNTIME_COMPAT_SOURCE)
++    target_sources(App PRIVATE "${OPENLOCO_AMIGA_RUNTIME_COMPAT_SOURCE}")
++    # yaml-cpp is the consumer; keep libatomic after its static archive.
++    target_link_libraries(yaml-cpp PUBLIC atomic)
++endif()

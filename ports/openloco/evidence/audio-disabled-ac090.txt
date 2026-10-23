@@ -1,0 +1,1 @@
+PASS: audio-disabled backend reports no device, buffers or voices

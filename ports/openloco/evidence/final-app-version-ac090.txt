@@ -1,0 +1,9 @@
+[INF] OpenLoco, 26.09 (6d7f5b1 on amiga-sdl3)
+[INF] AmigaOS 3.x (m68k)
+[INF] Using Locomotion install path: DH1:Games/OpenLoco/Locomotion
+[INF] Creating directory: Work:Games/OpenLoco/User/save/
+[INF] Using save path: Work:Games/OpenLoco/User/save/
+[INF] Creating directory: Work:Games/OpenLoco/User/landscape/
+[INF] Using landscape path: Work:Games/OpenLoco/User/landscape/
+[INF] Creating directory: Work:Games/OpenLoco/User/objects
+OpenLoco, 26.09 (6d7f5b1 on amiga-sdl3)

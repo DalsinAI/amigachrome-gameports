@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f38d3f2..8d38e56 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,8 +72,13 @@ endif()
+ 
+ # libstdc++ doesn't have standalone <execution> support so if using libstdc++ we need to
+ # link against TBB
++option(OPENLOCO_PARALLEL_RENDERING "Use standard parallel viewport rendering and TBB on libstdc++" ON)
+ include(CheckCXXSymbolExists)
+-check_cxx_symbol_exists(__GLIBCXX__  version HAS_LIBSTDCPP)
++if(OPENLOCO_PARALLEL_RENDERING)
++    check_cxx_symbol_exists(__GLIBCXX__ version HAS_LIBSTDCPP)
++else()
++    set(HAS_LIBSTDCPP FALSE)
++endif()
+ if (HAS_LIBSTDCPP)
+     message(STATUS "libstdc++ detected will require linking with TBB")
+ endif()
+diff --git a/cmake/OpenLocoCommon.cmake b/cmake/OpenLocoCommon.cmake
+index c52943a..fdba53b 100644
+--- a/cmake/OpenLocoCommon.cmake
++++ b/cmake/OpenLocoCommon.cmake
+@@ -81,7 +81,8 @@ target_link_options(OpenLocoCommonInterface INTERFACE
+ )
+ 
+ target_compile_features(OpenLocoCommonInterface INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+-target_compile_definitions(OpenLocoCommonInterface INTERFACE 
++target_compile_definitions(OpenLocoCommonInterface INTERFACE
++    OPENLOCO_PARALLEL_RENDERING=$<BOOL:${OPENLOCO_PARALLEL_RENDERING}> 
+     $<$<CONFIG:Debug>:DEBUG=1>
+     $<$<NOT:$<CONFIG:Debug>>:DEBUG=0>
+ )
+diff --git a/src/OpenLoco/src/Viewport.cpp b/src/OpenLoco/src/Viewport.cpp
+index 6bfa899..e9c0a5d 100644
+--- a/src/OpenLoco/src/Viewport.cpp
++++ b/src/OpenLoco/src/Viewport.cpp
+@@ -23,7 +23,9 @@
+ #include "World/StationManager.h"
+ #include "World/TownManager.h"
+ 
++#if OPENLOCO_PARALLEL_RENDERING
+ #include <execution>
++#endif
+ 
+ using namespace OpenLoco::World;
+ 
+@@ -184,7 +186,11 @@ namespace OpenLoco::Ui
+             columns.push_back(columnRt);
+         }
+ 
+-        std::for_each(std::execution::par, columns.begin(), columns.end(), [&](const auto& columnRt) {
++        std::for_each(
++#if OPENLOCO_PARALLEL_RENDERING
++            std::execution::par,
++#endif
++            columns.begin(), columns.end(), [&](const auto& columnRt) {
+             // TODO: This bypasses the interface currently, needs refactoring to create a new drawing context per thread.
+             Gfx::SoftwareDrawingContext columnDrawingCtx;
+             columnDrawingCtx.pushRenderTarget(columnRt);

@@ -1,0 +1,43 @@
+diff --git a/src/Audio/CMakeLists.txt b/src/Audio/CMakeLists.txt
+index a414781..499f254 100644
+--- a/src/Audio/CMakeLists.txt
++++ b/src/Audio/CMakeLists.txt
+@@ -6,8 +6,16 @@ set(public_files
+     "${CMAKE_CURRENT_SOURCE_DIR}/include/OpenLoco/Audio/AudioHandle.h"
+ )
+ 
++if(OPENLOCO_DISABLE_AUDIO)
++    message(WARNING "Audio disabled: this build cannot qualify sound")
++    configure_file("${OPENLOCO_DISABLED_AUDIO_SOURCE}" "${CMAKE_CURRENT_SOURCE_DIR}/src/AudioEngine.Disabled.cpp" COPYONLY)
++    set(audio_engine "${CMAKE_CURRENT_SOURCE_DIR}/src/AudioEngine.Disabled.cpp")
++else()
++    set(audio_engine "${CMAKE_CURRENT_SOURCE_DIR}/src/AudioEngine.cpp")
++endif()
++
+ set(private_files
+-    "${CMAKE_CURRENT_SOURCE_DIR}/src/AudioEngine.cpp"
++    "${audio_engine}"
+ )
+ 
+ set(public_link_libraries
+diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
+index ba6c587..e0ce883 100644
+--- a/thirdparty/CMakeLists.txt
++++ b/thirdparty/CMakeLists.txt
+@@ -36,6 +36,8 @@ find_package(SDL3 REQUIRED CONFIG)
+ 
+ find_package(PNG REQUIRED)
+ find_package(ZLIB REQUIRED) # Dependency of PNG not really required but vcpkg not mapping static png dependencies
++option(OPENLOCO_DISABLE_AUDIO "Engineering build without audio (not audio-qualified)" OFF)
++if (NOT OPENLOCO_DISABLE_AUDIO)
+ if (NOT APPLE AND NOT MSVC)
+     find_package(OpenAL CONFIG)
+     if (OpenAL_FOUND)
+@@ -47,6 +49,7 @@ else()
+     find_package(OpenAL CONFIG REQUIRED)
+     set(OPENAL_LIBRARIES OpenAL::OpenAL)
+ endif()
++endif()
+ 
+ # breakpad is also required
+ if (MSVC)

@@ -1,0 +1,24 @@
+diff --git a/src/Platform/CMakeLists.txt b/src/Platform/CMakeLists.txt
+index 8f3a08c..24eff51 100644
+--- a/src/Platform/CMakeLists.txt
++++ b/src/Platform/CMakeLists.txt
+@@ -44,3 +44,9 @@ if (MSVC)
+         PRIVATE
+             USE_BREAKPAD)
+ endif()
++
++if(OPENLOCO_AMIGA_PLATFORM_SOURCE)
++    configure_file("${OPENLOCO_AMIGA_PLATFORM_SOURCE}" "${CMAKE_CURRENT_SOURCE_DIR}/src/Platform.Amiga.cpp" COPYONLY)
++    target_sources(Platform PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/Platform.Amiga.cpp")
++    target_link_libraries(Platform PUBLIC SDL3::SDL3)
++endif()
+diff --git a/src/Platform/src/Platform.Posix.cpp b/src/Platform/src/Platform.Posix.cpp
+index 2aa08d7..4aea5c2 100644
+--- a/src/Platform/src/Platform.Posix.cpp
++++ b/src/Platform/src/Platform.Posix.cpp
+@@ -1,4 +1,4 @@
+-#if !defined(_WIN32) && !(defined(__APPLE__) && defined(__MACH__))
++#if !defined(__amigaos__) && !defined(_WIN32) && !(defined(__APPLE__) && defined(__MACH__))
+ 
+ #include "Platform.h"
+ #include <OpenLoco/Core/Exception.hpp>

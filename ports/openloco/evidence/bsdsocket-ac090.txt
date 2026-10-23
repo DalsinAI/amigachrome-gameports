@@ -1,0 +1,1 @@
+PASS: native bsdsocket IPv4 UDP loopback, resolver, nonblocking receive and explicit IPv6 rejection
