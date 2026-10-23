@@ -1,7 +1,7 @@
 # Little Big Adventure 2 Classic Community
 
 Target: AmigaOS 3.x / 68040 + FPU / AC090, OpenAmigaGCC 16.2.0-open3.
-Status: COMPILED engineering executable; runtime and release unqualified.
+Status: reproducible executable with bounded AC090 smoke tests; full runtime and release qualification remain open.
 
 Source: `LBALab/lba2-classic-community`
 `2fa1c7a66de2ce8707d85cb9a304dbd6f96c8ab8`. The separate `source.json`
@@ -9,7 +9,7 @@ catalog keeps this SDL3 lane out of existing SDL2 port builds.
 
 Two clean builds in different output directories produced identical HUNK
 executables, SHA-256
-`1e2ecc894b7e7edb2b5a792440890f4575b41672ffcc872877050825b832ef13`.
+`4078ef897573f10201ce9d1c822ac25e35c361191fe3d6d78a8ea38a17440b73`.
 This is reproducible compile/link evidence, not gameplay qualification.
 
 ## Build
