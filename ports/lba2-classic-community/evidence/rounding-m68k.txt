@@ -1,0 +1,1 @@
+80060 exact rounding comparisons passed on m68k

@@ -1,0 +1,376 @@
+{
+  "schema": 1,
+  "title": "LBA2 / Twinsen\u2019s Odyssey playable demo",
+  "original_readme_date": "1997-06-02",
+  "source_page": "https://www.dosgamesarchive.com/file/twinsens-odyssey/lba2demo",
+  "download_url": "https://image.dosgamesarchive.com/games/lba2demo.zip",
+  "filename": "lba2demo.zip",
+  "bytes": 14794949,
+  "sha256": "5ed55123eca9c699ba04ba56aae0471d557e495bdb085f6ab26402bd9fba1894",
+  "data_subdirectory": "LBA2",
+  "required_demo_marker": "RESS.HQR",
+  "build_option": "LBA2_BUILD_DEMO=ON",
+  "distribution_policy": "Local testing only in this work. No demo assets or original binaries committed or bundled; no redistribution permission inferred from public download.",
+  "readme_copyright": "Copyright 1996-97 Adeline Software International. All Rights Reserved.",
+  "checks": {
+    "zip_crc": "pass",
+    "ress_hqr": true,
+    "citadel": true,
+    "demo_saves": true,
+    "retail_marker_absent": true
+  },
+  "files": {
+    "SETUP.BMP": {
+      "bytes": 197686,
+      "sha256": "805c8d56706a97379624bcf9b5850973558e54135e358c4c9ff85f7c447d304c"
+    },
+    "INSTALL.EXE": {
+      "bytes": 31744,
+      "sha256": "45df953dfa221f2724c8a7c5b53501153029f3ed41e965f3e3a4c3881b60b1da"
+    },
+    "SETUP.EXE": {
+      "bytes": 33280,
+      "sha256": "d02bebdc3fc06263ae184f5235fe228968f50d18187c835359cb94e8f7235347"
+    },
+    "README.TXT": {
+      "bytes": 7432,
+      "sha256": "fc1e0fc508ccfbf85cef9ad79e125493f81eb8ed0353034eaec42d31e527f3fa"
+    },
+    "LBA2/ADELINE.LOG": {
+      "bytes": 15,
+      "sha256": "17a63f99418d2d0345928c2f61ac3355c2c84878f9aa000b8c80bd9400684906"
+    },
+    "LBA2/ANIM.HQR": {
+      "bytes": 360086,
+      "sha256": "63a0160706fa52f09c71327023cb5570bb701bbc57e691e03c1770798e49269f"
+    },
+    "LBA2/BODY.HQR": {
+      "bytes": 622940,
+      "sha256": "6bba51e260d74a8685ccf151afeb6debc57106532ed829972feb5d26d5522e9e"
+    },
+    "LBA2/CITADEL.ILE": {
+      "bytes": 197173,
+      "sha256": "941d2f290cf8ecabb5e73fba4b37f5a3574ab4ba274e61fa4efb7fef889c1ea0"
+    },
+    "LBA2/CITADEL.OBL": {
+      "bytes": 114236,
+      "sha256": "b48ab9844c2987e1678fda9bebaf8f607520ed2e09b4321c89cad2c26529a43e"
+    },
+    "LBA2/DEMO.BAT": {
+      "bytes": 19,
+      "sha256": "10256868c22d984a0be914caec1d4f1659a83bca65c86c157f7da8a962ec00ab"
+    },
+    "LBA2/DOS4GW.EXE": {
+      "bytes": 265420,
+      "sha256": "dd9f4f342533f99570475b62e53231a468de2e3d83e4fc31e80c27d3a7d6b49c"
+    },
+    "LBA2/HOLOMAP.HQR": {
+      "bytes": 581982,
+      "sha256": "015b04562fb202bef93bb2c92d363f2e607243690749889d8ba36820895b3c10"
+    },
+    "LBA2/INSTALL.EXE": {
+      "bytes": 282681,
+      "sha256": "78dfb1b7b3203b9ff4efaecf9c1fccb558505e5b209f4711ebae76608c31b0b7"
+    },
+    "LBA2/INSTALL.INI": {
+      "bytes": 11643,
+      "sha256": "a1798a7229f747b4e3ecc28f9a5d52675ef0942483776ad6473a22c31a309e79"
+    },
+    "LBA2/INSTALL.SCR": {
+      "bytes": 302,
+      "sha256": "4310dd146feb59d9566819b624da6a87cf0fe02ce85a3c4310cba5882ca3bc6d"
+    },
+    "LBA2/LBA2.CFG": {
+      "bytes": 626,
+      "sha256": "7b69c49eb4ffd2bea5c798f447aaa3fd4078a77742813f1d2a1d9573003fea53"
+    },
+    "LBA2/LBA2.DOS": {
+      "bytes": 928799,
+      "sha256": "23c716319ed2719d673736256f327bcb876b845d7ee2b976d1688c9dc21765ef"
+    },
+    "LBA2/LBA_BKG.HQR": {
+      "bytes": 546257,
+      "sha256": "d4d01e5f2103bc414029f921b8f70abab192530f9aa8c8456ea1ce6713eb89ca"
+    },
+    "LBA2/MSS32.DLL": {
+      "bytes": 145408,
+      "sha256": "58892507d12077fd1ca4c690a3d0d972b88384ea5f9efad5666b1e88218d7e28"
+    },
+    "LBA2/OBJFIX.HQR": {
+      "bytes": 168768,
+      "sha256": "c5c655783eed4f7d4f67daee890ce05c629ef98003bb5f6ebd157bb4f2aa2839"
+    },
+    "LBA2/RESS.HQR": {
+      "bytes": 289888,
+      "sha256": "2e6b66fa7604bce4298a42d376c42ef858f39f0d4fcfcb748a39f6fe40e81ee2"
+    },
+    "LBA2/SAMPLES.HQR": {
+      "bytes": 3038595,
+      "sha256": "107eddde9b4a06462eca58497b11a6a819dacf6bf85e20139f2900bf29953f3d"
+    },
+    "LBA2/SCENE.HQR": {
+      "bytes": 49017,
+      "sha256": "fd2ab367f39c9f3bdfbedc95b31868c8d299cb55bc0f51251f29fdfdaff50ce5"
+    },
+    "LBA2/SCREEN.HQR": {
+      "bytes": 319423,
+      "sha256": "ee722ec2ea1bc47b3ee0c0d6f9f0397c4ca6bf17b85064ce196f836390689cb4"
+    },
+    "LBA2/SCRSHOT.HQR": {
+      "bytes": 1177005,
+      "sha256": "03dec3daf25e0655402c3a2f93a67c8f5e7e926818a24e78d27306ff0ced2672"
+    },
+    "LBA2/SETSOUND.BAT": {
+      "bytes": 92,
+      "sha256": "6a17b8a36364d30fe0ff52f7de1426493930fecbb714373c2cde7eb9911e2366"
+    },
+    "LBA2/SETUP.BMP": {
+      "bytes": 197686,
+      "sha256": "805c8d56706a97379624bcf9b5850973558e54135e358c4c9ff85f7c447d304c"
+    },
+    "LBA2/SETUP.EXE": {
+      "bytes": 44928,
+      "sha256": "8b40dd7bb91ca280e90f9097697b0f93c4c1b732caeec9bb10e7d3a888a3d876"
+    },
+    "LBA2/SETUP.INI": {
+      "bytes": 8610,
+      "sha256": "1103cca4f133c07dade272a688792ff35144fd42a305e862784fc4c5ea92225a"
+    },
+    "LBA2/SETUP.INS": {
+      "bytes": 2763,
+      "sha256": "d376601f890f455bc3de4b94b139620cbe4651822dc452d8455ac31449cd22ec"
+    },
+    "LBA2/SETUP.MID": {
+      "bytes": 55891,
+      "sha256": "cb685c75b44528cec4e4fde604e2bd295e780f6576d33006beaa31deb854cf20"
+    },
+    "LBA2/SMACKW32.DLL": {
+      "bytes": 71680,
+      "sha256": "fed1acc3aa2e8bd118f1c5260606ef986d68f1aad234ce59feb3aed6fe8a1538"
+    },
+    "LBA2/SPRIRAW.HQR": {
+      "bytes": 73793,
+      "sha256": "75f51386e7c904f34121bdd1a4beac58d6030132e076e85a53a283b15d837fff"
+    },
+    "LBA2/SPRITES.HQR": {
+      "bytes": 112202,
+      "sha256": "feb8c7398a8da88fca2a25b747a80e41040f15b7d29580cb9b4fa0d1e485971c"
+    },
+    "LBA2/SUPPORT.DLL": {
+      "bytes": 48128,
+      "sha256": "d2bf45d612b8cdef9c575c03767a3635c1e77a5cad5d307ef15e92cce26bd896"
+    },
+    "LBA2/TEXT.HQR": {
+      "bytes": 231241,
+      "sha256": "0fa85d5201785262a5f1f07dcbfe34dbd3eed343ccde07849d982f75530b0ad7"
+    },
+    "LBA2/TWINSEN.EXE": {
+      "bytes": 597504,
+      "sha256": "08346fd8e6318b096ba2ce737033766ac8d67180bc5c94179c21f3f8fa9ceb8f"
+    },
+    "LBA2/UNINST.DLL": {
+      "bytes": 28160,
+      "sha256": "d0bd31126d6f22d2d25300c95aaf5ec69aca25fe74809391dc1dca5e8ed22bb1"
+    },
+    "LBA2/_INST32I.EX_": {
+      "bytes": 320276,
+      "sha256": "0a2323c7b352340a7ebabe6eda40f35e425aead308d9b5cbabc9cb0966b9a85c"
+    },
+    "LBA2/_ISDEL.EXE": {
+      "bytes": 8192,
+      "sha256": "b526045cdf964674851fe70b54c1b486a78647be1aecb66bccc61d0a56eba183"
+    },
+    "LBA2/_SETUP.DLL": {
+      "bytes": 6128,
+      "sha256": "4a727815c5e1a2089782775e3c4e3ae54c5723c2a449326509ec839cfc2b7367"
+    },
+    "LBA2/_SETUP.LIB": {
+      "bytes": 188575,
+      "sha256": "cb812ea29e3cfa11cb32ed66a241ca1aef3554d9de7e6eb69e7cc270bce7b2f8"
+    },
+    "LBA2/DRIVERS/ADRV688.DIG": {
+      "bytes": 11278,
+      "sha256": "294a7de77d88a7f38f58b32fc7166ced87a4c44e6c9be760f78b1724744d7161"
+    },
+    "LBA2/DRIVERS/AUDIODRV.DIG": {
+      "bytes": 11372,
+      "sha256": "26cb72a971883c7dfddfd74c4a5c85f0a5d4e55a34ab8aa9b2893df9abfa6ca3"
+    },
+    "LBA2/DRIVERS/DOS4GW.EXE": {
+      "bytes": 265396,
+      "sha256": "b8265123ac8a189637448618409ef3ecd2e9f3e1a47062c685a02240f688dec1"
+    },
+    "LBA2/DRIVERS/IWAV.DIG": {
+      "bytes": 2585,
+      "sha256": "428f537c47b82c09ae17d6de0c02dbb913aaee0c12c5c17b62b2ffc991b92524"
+    },
+    "LBA2/DRIVERS/JAMMER.DIG": {
+      "bytes": 3219,
+      "sha256": "cca38c28eabe00b88e4bddd627fa68a68b2559029098b777129ca00201831a9c"
+    },
+    "LBA2/DRIVERS/MSSDRVR.LST": {
+      "bytes": 18082,
+      "sha256": "38bad4b909707fe82b21ce55992d95f7a403c68d12b7093fd5c12b8b1a6e642d"
+    },
+    "LBA2/DRIVERS/NVDIG.DIG": {
+      "bytes": 1877,
+      "sha256": "0a83f41fe6d3f6131181690c80fe4855f2d197224475227ff3a4a89481b0e233"
+    },
+    "LBA2/DRIVERS/PROAUDIO.DIG": {
+      "bytes": 2214,
+      "sha256": "af6ab6b0493bbccf16c5a69198b2491ea0916225658ee64768d042bcf7fba719"
+    },
+    "LBA2/DRIVERS/RAP10.DIG": {
+      "bytes": 2936,
+      "sha256": "4a51435622e94d3a7e00836470994aea73de0ab4838f3cc69a21f6ddc6985cab"
+    },
+    "LBA2/DRIVERS/SAMPLE.AD": {
+      "bytes": 3622,
+      "sha256": "5044c392ad31b42a8218614c53172dd48ac01855aa5c683ae9d31466f33b50b1"
+    },
+    "LBA2/DRIVERS/SAMPLE.OPL": {
+      "bytes": 3622,
+      "sha256": "5044c392ad31b42a8218614c53172dd48ac01855aa5c683ae9d31466f33b50b1"
+    },
+    "LBA2/DRIVERS/SB16.DIG": {
+      "bytes": 2923,
+      "sha256": "92218d5f08875c124fb1cf904dfdaa850711d4e51e46245e0a8846f04658658f"
+    },
+    "LBA2/DRIVERS/SBLASTER.DIG": {
+      "bytes": 3212,
+      "sha256": "3f0470965f973f86a4d74a1d359b532fd1e9dbc3a8e5418a1f603ab823daded2"
+    },
+    "LBA2/DRIVERS/SBPRO.DIG": {
+      "bytes": 2871,
+      "sha256": "9f83ab7bbebc7c80823812c322454c9bdc99e050d6fcf026135ee8e39fc9ba78"
+    },
+    "LBA2/DRIVERS/SETSOUND.EXE": {
+      "bytes": 182399,
+      "sha256": "d3955eb1f0ae4fea379794fff54c3c3af701b1449f2a1c928d72261410bc70d2"
+    },
+    "LBA2/DRIVERS/SNDSCAPE.DIG": {
+      "bytes": 4171,
+      "sha256": "a1459763f2fdcb1ada4f9fc6d28c9ea33077c00dad91b5809ee899f5a1b6c05c"
+    },
+    "LBA2/DRIVERS/SNDSYS.DIG": {
+      "bytes": 3419,
+      "sha256": "88985bc0aa9bade4fc26151fb92bdf1193180e14cb06f6108a2e336f467e35d0"
+    },
+    "LBA2/DRIVERS/TEST.WAV": {
+      "bytes": 24940,
+      "sha256": "9e08f6feb4429cd609120478b41ed2273568b3a478701a0038abb25bcd2fb93f"
+    },
+    "LBA2/DRIVERS/ULTRA.DIG": {
+      "bytes": 9478,
+      "sha256": "4e63a94e272f37907910cc2a73120d2d21f3651a66bd06fcac7e80c93af55478"
+    },
+    "LBA2/ENGLISH/ENGLISH.INS": {
+      "bytes": 63602,
+      "sha256": "3f88321282eb28416d809d527c403e079a89ce3af5ee9f756b08a37ba0815451"
+    },
+    "LBA2/ENGLISH/SETUP.PKG": {
+      "bytes": 748,
+      "sha256": "97f7cdddd703f4bd88e3e5f826886b3923494a1166591d5b8ebb64b3d06327e2"
+    },
+    "LBA2/ENGLISH/_SETUP.LIB": {
+      "bytes": 188575,
+      "sha256": "cb812ea29e3cfa11cb32ed66a241ca1aef3554d9de7e6eb69e7cc270bce7b2f8"
+    },
+    "LBA2/FRENCH/FRENCH.INS": {
+      "bytes": 63602,
+      "sha256": "98a4fdf3512e77a9fc01d97bdc9315dffa9d6090c63c5c072de64289d58c4e22"
+    },
+    "LBA2/FRENCH/SETUP.PKG": {
+      "bytes": 748,
+      "sha256": "97f7cdddd703f4bd88e3e5f826886b3923494a1166591d5b8ebb64b3d06327e2"
+    },
+    "LBA2/FRENCH/_SETUP.LIB": {
+      "bytes": 193298,
+      "sha256": "4e606f0e29120d0c03e17fc834ad16a3de1f044a4055b6eb2d418db970a9e186"
+    },
+    "LBA2/GERMAN/GERMAN.INS": {
+      "bytes": 63602,
+      "sha256": "26eac43857d82846f626c346a0ce51911a13f81999c2bcec6eaef1e5eefd8084"
+    },
+    "LBA2/GERMAN/SETUP.PKG": {
+      "bytes": 748,
+      "sha256": "97f7cdddd703f4bd88e3e5f826886b3923494a1166591d5b8ebb64b3d06327e2"
+    },
+    "LBA2/GERMAN/_SETUP.LIB": {
+      "bytes": 193611,
+      "sha256": "986fd0d00165d244a74d46cd398a6262175aaf7a2d0c645ebabbe5df40d44f77"
+    },
+    "LBA2/ITALIAN/ITALIAN.INS": {
+      "bytes": 63602,
+      "sha256": "99392f66b782113279b0539f2f2dfbea6a44b3c586085dc90bceeda1d7e9478f"
+    },
+    "LBA2/ITALIAN/SETUP.PKG": {
+      "bytes": 748,
+      "sha256": "97f7cdddd703f4bd88e3e5f826886b3923494a1166591d5b8ebb64b3d06327e2"
+    },
+    "LBA2/ITALIAN/_SETUP.LIB": {
+      "bytes": 192250,
+      "sha256": "baf36548e7ebe2e140198a2a9cce811c160dd8c9c19a0a68d923170b6978890b"
+    },
+    "LBA2/MUSIC/JADPCM05.WAV": {
+      "bytes": 672828,
+      "sha256": "d89236d23f428d07b2b65ed772b1970ba606398a80a3d2254f8c278426408b9a"
+    },
+    "LBA2/MUSIC/JADPCM06.WAV": {
+      "bytes": 319548,
+      "sha256": "f2166b2b97d4cd0957b7882c3214d5b66639a36e7968fb629a4c980803b437e7"
+    },
+    "LBA2/MUSIC/JADPCM07.WAV": {
+      "bytes": 966716,
+      "sha256": "d0bbdfc62d2c29c8528ea3053c571dc5b3fad22048599709d82d3deb2fb90734"
+    },
+    "LBA2/MUSIC/JADPCM09.WAV": {
+      "bytes": 456764,
+      "sha256": "f0d3d7b9f636515abb84d8ef89d4df17bea272b68a9471cfd9a55cb944537c79"
+    },
+    "LBA2/MUSIC/JADPCM12.WAV": {
+      "bytes": 1303324,
+      "sha256": "a1d3b09ed15a44200ef53259cd5f96983372a9578809569831154836870e9931"
+    },
+    "LBA2/MUSIC/JADPCM15.WAV": {
+      "bytes": 547900,
+      "sha256": "6c093294a91c3a8d9bbf92ce8d20977ae984ce6ce59bed54123587bfacf7f131"
+    },
+    "LBA2/MUSIC/JADPCM16.WAV": {
+      "bytes": 840764,
+      "sha256": "f23df90284d2cf16d2c1a985febec5a697e2d5109b6edecd9e51bbae09b4c72d"
+    },
+    "LBA2/MUSIC/JADPCM17.WAV": {
+      "bytes": 359484,
+      "sha256": "e3508d88ef498a80eb88c14e8ae098c8196d4fb1b497eb82033130d9d737f330"
+    },
+    "LBA2/MUSIC/LOGADPCM.WAV": {
+      "bytes": 201788,
+      "sha256": "20e655b320f0b79989124e679f36cc7848d0db96013b02781980666db24f59bc"
+    },
+    "LBA2/SAVE/DEMO0.LBA": {
+      "bytes": 12979,
+      "sha256": "1ebf29b606efa37df136e72d0e3c7c4c444df6e450502335e4ca89d7345d80e9"
+    },
+    "LBA2/SAVE/DEMO1.LBA": {
+      "bytes": 10969,
+      "sha256": "a5ef10679a639c9b550c0758635b1d7164a3fd8d18af3fb55351861c8db45d2b"
+    },
+    "LBA2/SAVE/DEMO2.LBA": {
+      "bytes": 7711,
+      "sha256": "045dd0f7064a0e329982a826be52577a0b78737a651e5f7438954c2c70ff99a8"
+    },
+    "LBA2/SPANISH/SETUP.PKG": {
+      "bytes": 748,
+      "sha256": "97f7cdddd703f4bd88e3e5f826886b3923494a1166591d5b8ebb64b3d06327e2"
+    },
+    "LBA2/SPANISH/SPANISH.INS": {
+      "bytes": 63602,
+      "sha256": "4cb82ed6bc6183312615a415aec249160b511eee589a42ad326e4f59a88871a7"
+    },
+    "LBA2/SPANISH/_SETUP.LIB": {
+      "bytes": 193027,
+      "sha256": "37443f5b2e8436bec80078d85c2d4a888a47bd0781f676fdf372fc28727ab7d3"
+    }
+  }
+}

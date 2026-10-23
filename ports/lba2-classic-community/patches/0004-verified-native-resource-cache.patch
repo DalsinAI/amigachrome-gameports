@@ -1,0 +1,51 @@
+diff --git a/LIB386/SYSTEM/CMakeLists.txt b/LIB386/SYSTEM/CMakeLists.txt
+index c873d98..be82d77 100644
+--- a/LIB386/SYSTEM/CMakeLists.txt
++++ b/LIB386/SYSTEM/CMakeLists.txt
+@@ -14,3 +14,9 @@ target_link_libraries(sys PUBLIC svg lba2_platform)
+ # foreach (FILE_ASM IN LISTS SOURCES_FILES_ASM)
+ #     set_source_files_properties(${FILE_ASM} PROPERTIES LANGUAGE ASM_MASM)
+ # endforeach ()
++
++if(LBA2_NATIVE_CACHE_SOURCE)
++    target_sources(sys PRIVATE "${LBA2_NATIVE_CACHE_SOURCE}")
++else()
++    message(FATAL_ERROR "Supply native cache source with this port patch")
++endif()
+diff --git a/LIB386/SYSTEM/HQRRESS.CPP b/LIB386/SYSTEM/HQRRESS.CPP
+index 373a88f..aa7f017 100644
+--- a/LIB386/SYSTEM/HQRRESS.CPP
++++ b/LIB386/SYSTEM/HQRRESS.CPP
+@@ -9,6 +9,8 @@
+ 
+ #include <string.h>
+ 
++extern "C" int LbaNativeCacheLoad(const char *, S32, void *, U32);
++
+ //──────────────────────────────────────────────────────────────────────────
+ typedef struct {
+     S32 Index;
+@@ -234,13 +236,16 @@ void *HQR_Get(T_HQR_HEADER *header, S32 index, S32 *outSize) {
+         ptrbloc[header->NbIndex].Ptr = ptr;
+         ptrbloc[header->NbIndex].Size = size;
+ 
+-        // load it
+-        if (!HQF_LoadClose(ptr)) {
+-            goto error;
+-        }
+-
+-        if (header->Fixup) {
+-            header->Fixup(ptr, size);
++        // A verified native cache already has the registered bank fixup applied.
++        if (header->Fixup && LbaNativeCacheLoad(header->Name, index, ptr, size)) {
++            HQF_Close();
++        } else {
++            if (!HQF_LoadClose(ptr)) {
++                goto error;
++            }
++            if (header->Fixup) {
++                header->Fixup(ptr, size);
++            }
+         }
+ 
+         header->NbIndex++;

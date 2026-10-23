@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "ports": {
+    "lba2-classic-community": {
+      "order": 18,
+      "title": "Little Big Adventure 2 Classic Community",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/LBALab/lba2-classic-community.git",
+        "commit": "2fa1c7a66de2ce8707d85cb9a304dbd6f96c8ab8",
+        "submodules": false
+      },
+      "contentPolicy": "GPL-2.0-only engine and bundled third-party notices. Classic retail data stays user-supplied; no game assets are fetched or packaged.",
+      "target": "lba2cc",
+      "binary": "SOURCES/lba2cc",
+      "cmake": [
+        "-DPLATFORM_BACKEND=sdl3",
+        "-DSOUND_BACKEND=sdl",
+        "-DMVIDEO_BACKEND=smacker",
+        "-DENABLE_ASM=OFF",
+        "-DLBA2_OPENAMIGA_SDL3=ON",
+        "-DLBA2_LINK_STATIC=OFF",
+        "-DLBA2_BUILD_SAVE_TOOLS=OFF",
+        "-DLBA2_BUILD_TESTS=OFF",
+        "-DLBA2_CONTROL_SERVER=OFF",
+        "-DLBA2_NATIVE_ARCH=OFF",
+        "-DLBA2_ENABLE_IPO=OFF",
+        "-DLBA2_OPENAMIGA_MATH_SOURCE=@PORT_DIR@/compat/lrintl.c",
+        "-DLBA2_NATIVE_CACHE_SOURCE=@PORT_DIR@/compat/native_cache.cpp",
+        "-DAMIGA_CPU_FLAGS=-m68040 -m68881 -fno-delete-null-pointer-checks"
+      ]
+    }
+  },
+  "compilerRelease": "16.2.0-open3"
+}

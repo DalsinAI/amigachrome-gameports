@@ -1,0 +1,27 @@
+[ERROR] Null platform has no physical display
+LBA2 Twinsen's Odyssey Demo 0.13.3-dev · Linux x86_64 · 12 cores · 30 GB RAM
+Built Oct 23 2026 20:05:20 from commit 2fa1c7a66de2
+Assets: /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/demo-data/lba2/extracted/LBA2/  (--game-dir)
+Saves:  /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/demo-data/lba2/host-profile/save/
+Recs:   /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/demo-data/lba2/host-profile/recordings/
+Config: /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/demo-data/lba2/host-profile/lba2.cfg
+Log:    /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/demo-data/lba2/host-profile/adeline.log
+Writes: --user-dir
+
+[INFO] Events     ok
+[INFO] Joystick   not detected
+[ERROR] Null platform has no physical display
+[INFO] Audio      disabled (--no-audio)
+[INFO] Config     own (none yet) + game data
+[ERROR] Null platform has no interactive input or synchronized display
+[ERROR] Null platform has no physical display
+[INFO] Display    640x480 (default) headless (no window)
+[WARN] optional asset missing: VIDEO.HQR in video/ (no cutscenes)
+[WARN] optional asset missing: vox/ (no voices)
+[INFO] Assets     2 missing (0 required)
+[INFO] Saves      3 shipped with the game data, copied in
+[INFO] Language   English
+[INFO] Release    default (0), data is the 1997 demo
+
+======== Ready in 0.01s ========
+[WARN] no video.hqr: the demo runs without cutscenes

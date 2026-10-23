@@ -1,0 +1,12 @@
+[ 97%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/ASSET_PREFLIGHT.CPP.obj
+[ 97%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/COMPRESS.CPP.obj
+[ 97%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/FIRE.CPP.obj
+[ 98%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/FLOW_A.CPP.obj
+[ 98%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/FUNC.CPP.obj
+[ 98%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/GRILLE_A.CPP.obj
+[ 99%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/PLASMA.CPP.obj
+[ 99%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/embedded_lba2_cfg_data.cpp.obj
+[ 99%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/VIDEO_SOURCE.CPP.obj
+[100%] Building C object SOURCES/CMakeFiles/lba2cc.dir/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/ports/lba2-classic-community/compat/lrintl.c.obj
+[100%] Linking CXX executable lba2cc
+[100%] Built target lba2cc
