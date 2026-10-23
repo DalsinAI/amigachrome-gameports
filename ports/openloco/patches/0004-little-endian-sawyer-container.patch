@@ -1,0 +1,72 @@
+diff --git a/src/OpenLoco/src/S5/SawyerStream.cpp b/src/OpenLoco/src/S5/SawyerStream.cpp
+index 40ea038..682ca7a 100644
+--- a/src/OpenLoco/src/S5/SawyerStream.cpp
++++ b/src/OpenLoco/src/S5/SawyerStream.cpp
+@@ -14,6 +14,20 @@ constexpr const char* exceptionWriteError = "Failed to write data to stream";
+ constexpr const char* exceptionInvalidRLE = "Invalid RLE run";
+ constexpr const char* exceptionUnknownEncoding = "Unknown encoding";
+ 
++// Sawyer container metadata stays little-endian on disk, including checksums.
++static uint32_t readLE32(const uint8_t* bytes)
++{
++    return uint32_t(bytes[0]) | (uint32_t(bytes[1]) << 8)
++        | (uint32_t(bytes[2]) << 16) | (uint32_t(bytes[3]) << 24);
++}
++
++static void writeLE32(uint8_t* bytes, uint32_t value)
++{
++    for (unsigned i = 0; i < 4; ++i)
++        bytes[i] = static_cast<uint8_t>(value >> (8 * i));
++}
++
++
+ SawyerStreamReader::SawyerStreamReader(Stream& stream)
+     : _stream(stream)
+ {
+@@ -24,8 +38,9 @@ std::span<const std::byte> SawyerStreamReader::readChunk()
+     SawyerEncoding encoding;
+     read(&encoding, sizeof(encoding));
+ 
+-    uint32_t length;
+-    read(&length, sizeof(length));
++    uint8_t lengthBytes[4];
++    read(lengthBytes, sizeof(lengthBytes));
++    const uint32_t length = readLE32(lengthBytes);
+ 
+     _decodeBuffer.resize(length);
+     read(_decodeBuffer.data(), length);
+@@ -60,9 +75,10 @@ bool SawyerStreamReader::validateChecksum()
+     if (fileLength >= 4)
+     {
+         // Read checksum
+-        uint32_t checksum;
++        uint8_t checksumBytes[4];
+         _stream.setPosition(fileLength - 4);
+-        _stream.read(&checksum, sizeof(checksum));
++        _stream.read(checksumBytes, sizeof(checksumBytes));
++        const uint32_t checksum = readLE32(checksumBytes);
+ 
+         // Calculate checksum
+         uint32_t actualChecksum = 0;
+@@ -209,7 +225,9 @@ void SawyerStreamWriter::writeChunk(SawyerEncoding chunkType, const void* data,
+ {
+     auto encodedData = encode(chunkType, std::span(static_cast<const std::byte*>(data), dataLen));
+     write(&chunkType, sizeof(chunkType));
+-    write(static_cast<uint32_t>(encodedData.size()));
++    uint8_t lengthBytes[4];
++    writeLE32(lengthBytes, static_cast<uint32_t>(encodedData.size()));
++    write(lengthBytes, sizeof(lengthBytes));
+     write(encodedData.data(), encodedData.size());
+ }
+ 
+@@ -225,7 +243,9 @@ void SawyerStreamWriter::write(const void* data, size_t dataLen)
+ 
+ void SawyerStreamWriter::writeChecksum()
+ {
+-    writeStream(&_checksum, sizeof(_checksum));
++    uint8_t checksumBytes[4];
++    writeLE32(checksumBytes, _checksum);
++    writeStream(checksumBytes, sizeof(checksumBytes));
+ }
+ 
+ void SawyerStreamWriter::writeStream(const void* data, size_t dataLen)

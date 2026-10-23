@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "ports": {
+    "openloco": {
+      "order": 19,
+      "title": "OpenLoco",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/OpenLoco/OpenLoco.git",
+        "commit": "6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e",
+        "submodules": false
+      },
+      "contentPolicy": "MIT engine; preserve dependency notices. User supplies lawful Locomotion data. No retail data or OpenGraphics package is fetched or bundled by this engineering recipe.",
+      "lockedCodecs": [
+        "zlib",
+        "png"
+      ],
+      "target": "App",
+      "binary": "src/App/OpenLoco",
+      "cmake": [
+        "-DOPENLOCO_USE_VCPKG=OFF",
+        "-DOPENLOCO_USE_CCACHE=OFF",
+        "-DOPENLOCO_BUILD_TESTS=OFF",
+        "-DOPENLOCO_COPY_ASSETS=OFF",
+        "-DOPENLOCO_PARALLEL_RENDERING=OFF"
+      ]
+    }
+  },
+  "buildDependencies": {
+    "yaml-cpp": {
+      "kind": "git",
+      "url": "https://github.com/jbeder/yaml-cpp.git",
+      "commit": "56e3bb550c91fd7005566f19c079cb7a503223cf",
+      "submodules": false
+    },
+    "fmt": {
+      "kind": "git",
+      "url": "https://github.com/fmtlib/fmt.git",
+      "commit": "123913715afeb8a437e6388b4473fcc4753e1c9a",
+      "submodules": false
+    },
+    "sfl": {
+      "kind": "git",
+      "url": "https://github.com/slavenf/sfl-library.git",
+      "commit": "01700eebb57fbfb21ba963b10ceb47723813064b",
+      "submodules": false
+    }
+  },
+  "compilerRelease": "16.2.0-open3"
+}
