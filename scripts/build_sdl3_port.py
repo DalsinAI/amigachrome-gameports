@@ -13,6 +13,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 OPEN2 = "5ece099a6fb8923a35eacf420bfa5fced06546ac1822714c76a2ae52466c978c"
+OPEN3 = "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21"
 
 
 def digest(path):
@@ -31,17 +32,18 @@ def verify_source(path, pin):
         raise ValueError(f"source must be pristine: {path}")
 
 
-def verify_stove(stove):
+def verify_stove(stove, release="16.2.0-open3"):
     receipt = json.loads((stove / "provenance.json").read_text())
-    if receipt["release"] != "16.2.0-open2" or receipt["archive_sha256"] != OPEN2:
-        raise ValueError("Use scripts/stage_open2_stove.py to stage the approved open2 archive")
+    expected = {"16.2.0-open2": OPEN2, "16.2.0-open3": OPEN3}[release]
+    if receipt["release"] != release or receipt["archive_sha256"] != expected:
+        raise ValueError(f"Use scripts/stage_open2_stove.py --release {release} to stage the approved archive")
     files = receipt["compiler_runtime_sha256"]
     if "bin/m68k-amigaos-g++" not in files or len(files) < 100:
-        raise ValueError("Incomplete open2 compiler/runtime receipt")
+        raise ValueError("Incomplete compiler/runtime receipt")
     for name, expected in files.items():
         path = (stove / "prefix" / name).resolve()
         if not path.is_relative_to((stove / "prefix").resolve()) or digest(path) != expected:
-            raise ValueError(f"open2 compiler/runtime changed: {name}")
+            raise ValueError(f"compiler/runtime changed: {name}")
     return receipt
 
 
@@ -68,7 +70,7 @@ def main():
         raise ValueError("jobs must be positive")
     if os.environ.get("AMIGA_STOVE") and Path(os.environ["AMIGA_STOVE"]).resolve() != stove:
         raise ValueError("AMIGA_STOVE conflicts with --stove")
-    receipt = verify_stove(stove)
+    receipt = verify_stove(stove, spec.get("compilerRelease", "16.2.0-open3"))
     verify_source(source, port["source"]["commit"])
     for name in ("libSDL3.a", "SDL3.module", "include/SDL3/SDL.h"):
         if not (sdk / name).is_file():
@@ -109,9 +111,14 @@ def main():
         f' IMPORTED_LOCATION "{sdk}/libSDL3.a"\n'
         f' INTERFACE_INCLUDE_DIRECTORIES "{sdk}/include"\n'
         ' INTERFACE_LINK_LIBRARIES "m;amiga")\n')
+    # Keep __FILE__ diagnostics independent of the checkout and build paths.
+    (config / "repro.cmake").write_text(
+        f'add_compile_options("-ffile-prefix-map={ROOT}=/gameports"\n'
+        f' "-ffile-prefix-map={out}=/port-build")\n')
     command = ["cmake", "-S", str(work), "-B", str(out / "cmake"),
                f"-DCMAKE_TOOLCHAIN_FILE={ROOT}/toolchain/amigaos3-opengpu.cmake",
                f"-DAMIGA_STOVE={stove}", f"-DSDL3_DIR={config}",
+               f"-DCMAKE_PROJECT_INCLUDE={config}/repro.cmake",
                "-DCMAKE_BUILD_TYPE=Release", "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
                "-DFETCHCONTENT_UPDATES_DISCONNECTED=ON"] + [
                    x.replace("@PORT_DIR@", str(manifest.parent)) for x in port["cmake"]]
@@ -121,6 +128,7 @@ def main():
                     f"-DPNG_LIBRARY={codecs}/lib/libpng.a"]
     evidence = {"schema": 1, "port": game, "source": port["source"],
                 "compiler_archive_sha256": receipt["archive_sha256"],
+                "compiler_release": receipt["release"],
                 "sdk_input_sha256": sdk_hashes,
                 "patches": {p.name: digest(p) for p in patches},
                 "recipe_files": {str(p.relative_to(manifest.parent)): digest(p)
