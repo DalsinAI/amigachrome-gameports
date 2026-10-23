@@ -1,0 +1,36 @@
+{
+  "schema": "lba2-native-cache",
+  "version": 1,
+  "byte_order": "big",
+  "banks": {
+    "ANIM.HQR": {
+      "source_sha256": "63a0160706fa52f09c71327023cb5570bb701bbc57e691e03c1770798e49269f",
+      "source_bytes": 360086,
+      "cache_sha256": "11b53920ec2de04e79c328bc4d33464627de3f065c36b246e30526c42b623547",
+      "cache_bytes": 1201472,
+      "entries": 742
+    },
+    "BODY.HQR": {
+      "source_sha256": "6bba51e260d74a8685ccf151afeb6debc57106532ed829972feb5d26d5522e9e",
+      "source_bytes": 622940,
+      "cache_sha256": "41b4ea65f4b28250fae6825a6de684785b721b02695bfc459798d7aa4445877b",
+      "cache_bytes": 912176,
+      "entries": 128
+    },
+    "OBJFIX.HQR": {
+      "source_sha256": "c5c655783eed4f7d4f67daee890ce05c629ef98003bb5f6ebd157bb4f2aa2839",
+      "source_bytes": 168768,
+      "cache_sha256": "a9b58eee1ebc14c5ad394dbbbaff5200db4c043a775108867118481a81e95cdd",
+      "cache_bytes": 248816,
+      "entries": 76
+    }
+  },
+  "qualification": "not runtime-qualified",
+  "converter_source_sha256": "561c1563fbcd6f51c72d6bf84ca393fce185fe9a98e21a3593d7ce0ab4c5fc48",
+  "upstream_commit": "2fa1c7a66de2ce8707d85cb9a304dbd6f96c8ab8",
+  "ac090_nonempty_resource_comparisons": 940,
+  "mismatches": 0,
+  "probe_exit": 0,
+  "gameplay_qualified": false,
+  "timing": "12945 original / 8625 cached clock() ticks, CLOCKS_PER_SEC=1000; includes first source verification; single sample, not wall time or game performance"
+}

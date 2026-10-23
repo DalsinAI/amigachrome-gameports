@@ -83,3 +83,8 @@ original decompressor plus native endian fixup. It must report no cache misses
 and no mismatches. Its timing is a resource-loading microbenchmark; it does not
 measure full startup or frame rate. See `evidence/native-cache-results.json`
 for the recorded result and the remaining gameplay/release gates.
+
+The original demo banks were also converted and compared on AC090: all 940
+non-empty resources match the original decoder/fixup path exactly, with exit 0.
+This adds asset-schema coverage; demo gameplay remains unqualified. See
+[evidence](evidence/demo-native-cache-results.json).
