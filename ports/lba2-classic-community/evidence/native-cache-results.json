@@ -107,7 +107,7 @@
     "cache_ticks": 12663,
     "clocks_per_second": 1000,
     "includes_first_source_crc": true,
-    "interpretation": "Single AC090 sample; about 34% lower resource loading time. Not a startup, frame-rate or general performance qualification."
+    "interpretation": "Single AC090 sample: about 34% fewer clock() ticks. Not an independent wall-time, startup, frame-rate or general performance qualification."
   },
   "remaining": [
     "interactive display/input verification",
