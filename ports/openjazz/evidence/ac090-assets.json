@@ -1,0 +1,795 @@
+{
+  "schema": 1,
+  "results": [
+    {
+      "index": 0,
+      "kind": "menu",
+      "name": "MENU.000",
+      "stdout": "PASS menu MENU.000\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 1,
+      "kind": "scene",
+      "name": "BONUS.0SC",
+      "stdout": "PASS scene BONUS.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 2,
+      "kind": "scene",
+      "name": "CHEAT.0SC",
+      "stdout": "PASS scene CHEAT.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 3,
+      "kind": "scene",
+      "name": "CONTINUE.0SC",
+      "stdout": "PASS scene CONTINUE.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 4,
+      "kind": "scene",
+      "name": "END.0SC",
+      "stdout": "PASS scene END.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 5,
+      "kind": "scene",
+      "name": "ENDE1.0SC",
+      "stdout": "PASS scene ENDE1.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 6,
+      "kind": "scene",
+      "name": "ENDE2.0SC",
+      "stdout": "PASS scene ENDE2.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 7,
+      "kind": "scene",
+      "name": "ENDE3.0SC",
+      "stdout": "PASS scene ENDE3.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 8,
+      "kind": "scene",
+      "name": "ENDE4.0SC",
+      "stdout": "PASS scene ENDE4.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 9,
+      "kind": "scene",
+      "name": "ENDE5.0SC",
+      "stdout": "PASS scene ENDE5.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 10,
+      "kind": "scene",
+      "name": "ENDE6.0SC",
+      "stdout": "PASS scene ENDE6.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 11,
+      "kind": "scene",
+      "name": "ENDE7.0SC",
+      "stdout": "PASS scene ENDE7.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 12,
+      "kind": "scene",
+      "name": "ENDE8.0SC",
+      "stdout": "PASS scene ENDE8.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 13,
+      "kind": "scene",
+      "name": "ENDE9.0SC",
+      "stdout": "PASS scene ENDE9.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 14,
+      "kind": "scene",
+      "name": "ENDEX.0SC",
+      "stdout": "PASS scene ENDEX.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 15,
+      "kind": "scene",
+      "name": "ENDLEVEL.0SC",
+      "stdout": "PASS scene ENDLEVEL.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 16,
+      "kind": "scene",
+      "name": "INSTRUCT.0SC",
+      "stdout": "PASS scene INSTRUCT.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 17,
+      "kind": "scene",
+      "name": "ORDER.0SC",
+      "stdout": "PASS scene ORDER.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 18,
+      "kind": "scene",
+      "name": "STARTUP.0SC",
+      "stdout": "PASS scene STARTUP.0SC\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 19,
+      "kind": "level",
+      "name": "LEVEL0.000",
+      "stdout": "STATE LEVEL0.000 world=0 collision=0d33c824\nPASS level LEVEL0.000\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 20,
+      "kind": "level",
+      "name": "LEVEL0.001",
+      "stdout": "STATE LEVEL0.001 world=1 collision=772aefc5\nPASS level LEVEL0.001\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 21,
+      "kind": "level",
+      "name": "LEVEL0.002",
+      "stdout": "STATE LEVEL0.002 world=2 collision=fef6eb3a\nPASS level LEVEL0.002\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 22,
+      "kind": "level",
+      "name": "LEVEL0.003",
+      "stdout": "STATE LEVEL0.003 world=3 collision=12257c32\nPASS level LEVEL0.003\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 23,
+      "kind": "level",
+      "name": "LEVEL0.004",
+      "stdout": "STATE LEVEL0.004 world=4 collision=03060c37\nPASS level LEVEL0.004\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 24,
+      "kind": "level",
+      "name": "LEVEL0.005",
+      "stdout": "STATE LEVEL0.005 world=5 collision=6eba9ac2\nPASS level LEVEL0.005\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 25,
+      "kind": "level",
+      "name": "LEVEL0.006",
+      "stdout": "STATE LEVEL0.006 world=6 collision=560928eb\nPASS level LEVEL0.006\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 26,
+      "kind": "level",
+      "name": "LEVEL0.007",
+      "stdout": "STATE LEVEL0.007 world=7 collision=937e51c3\nPASS level LEVEL0.007\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 27,
+      "kind": "level",
+      "name": "LEVEL0.008",
+      "stdout": "STATE LEVEL0.008 world=8 collision=11bf8225\nPASS level LEVEL0.008\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 28,
+      "kind": "level",
+      "name": "LEVEL0.009",
+      "stdout": "STATE LEVEL0.009 world=9 collision=ef853abf\nPASS level LEVEL0.009\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 29,
+      "kind": "level",
+      "name": "LEVEL0.010",
+      "stdout": "STATE LEVEL0.010 world=10 collision=7deef203\nPASS level LEVEL0.010\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 30,
+      "kind": "level",
+      "name": "LEVEL0.011",
+      "stdout": "STATE LEVEL0.011 world=11 collision=4059dd4c\nPASS level LEVEL0.011\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 31,
+      "kind": "level",
+      "name": "LEVEL0.012",
+      "stdout": "23:54:30 WARN  Cannot find sound DIE5!\n23:54:30 WARN  Cannot find sound SHOT1!\nSTATE LEVEL0.012 world=12 collision=40d8478a\nPASS level LEVEL0.012\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 32,
+      "kind": "level",
+      "name": "LEVEL0.013",
+      "stdout": "STATE LEVEL0.013 world=13 collision=a4e2b721\nPASS level LEVEL0.013\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 33,
+      "kind": "level",
+      "name": "LEVEL0.014",
+      "stdout": "STATE LEVEL0.014 world=14 collision=1adf212d\nPASS level LEVEL0.014\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 34,
+      "kind": "level",
+      "name": "LEVEL0.015",
+      "stdout": "STATE LEVEL0.015 world=15 collision=d18f6fe0\nPASS level LEVEL0.015\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 35,
+      "kind": "level",
+      "name": "LEVEL0.016",
+      "stdout": "23:54:46 WARN  Cannot find sound LOOGIE!\nSTATE LEVEL0.016 world=16 collision=de179a38\nPASS level LEVEL0.016\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 36,
+      "kind": "level",
+      "name": "LEVEL0.017",
+      "stdout": "23:54:50 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL0.017 world=17 collision=99cc65b4\nPASS level LEVEL0.017\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 37,
+      "kind": "level",
+      "name": "LEVEL0.018",
+      "stdout": "STATE LEVEL0.018 world=18 collision=2aef26dc\nPASS level LEVEL0.018\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 38,
+      "kind": "level",
+      "name": "LEVEL0.019",
+      "stdout": "STATE LEVEL0.019 world=19 collision=2cc0b87b\nPASS level LEVEL0.019\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 39,
+      "kind": "level",
+      "name": "LEVEL0.020",
+      "stdout": "23:55:02 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL0.020 world=20 collision=9d2a6139\nPASS level LEVEL0.020\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 40,
+      "kind": "level",
+      "name": "LEVEL0.021",
+      "stdout": "STATE LEVEL0.021 world=21 collision=ab5251ab\nPASS level LEVEL0.021\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 41,
+      "kind": "level",
+      "name": "LEVEL0.022",
+      "stdout": "23:55:10 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL0.022 world=22 collision=52ab36dd\nPASS level LEVEL0.022\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 42,
+      "kind": "level",
+      "name": "LEVEL0.023",
+      "stdout": "23:55:15 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL0.023 world=23 collision=d6584c05\nPASS level LEVEL0.023\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 43,
+      "kind": "level",
+      "name": "LEVEL0.030",
+      "stdout": "STATE LEVEL0.030 world=30 collision=d1d683dd\nPASS level LEVEL0.030\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 44,
+      "kind": "level",
+      "name": "LEVEL0.031",
+      "stdout": "STATE LEVEL0.031 world=31 collision=75284165\nPASS level LEVEL0.031\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 45,
+      "kind": "level",
+      "name": "LEVEL0.032",
+      "stdout": "STATE LEVEL0.032 world=32 collision=4eec640e\nPASS level LEVEL0.032\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 46,
+      "kind": "level",
+      "name": "LEVEL0.033",
+      "stdout": "STATE LEVEL0.033 world=33 collision=84b910fa\nPASS level LEVEL0.033\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 47,
+      "kind": "level",
+      "name": "LEVEL0.034",
+      "stdout": "STATE LEVEL0.034 world=34 collision=62456409\nPASS level LEVEL0.034\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 48,
+      "kind": "level",
+      "name": "LEVEL0.035",
+      "stdout": "STATE LEVEL0.035 world=35 collision=58ba8a2b\nPASS level LEVEL0.035\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 49,
+      "kind": "level",
+      "name": "LEVEL0.036",
+      "stdout": "STATE LEVEL0.036 world=36 collision=47e2be6d\nPASS level LEVEL0.036\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 50,
+      "kind": "level",
+      "name": "LEVEL0.037",
+      "stdout": "STATE LEVEL0.037 world=37 collision=bb768ae9\nPASS level LEVEL0.037\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 51,
+      "kind": "level",
+      "name": "LEVEL0.038",
+      "stdout": "STATE LEVEL0.038 world=38 collision=6c976e48\nPASS level LEVEL0.038\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 52,
+      "kind": "level",
+      "name": "LEVEL0.039",
+      "stdout": "STATE LEVEL0.039 world=39 collision=256964ba\nPASS level LEVEL0.039\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 53,
+      "kind": "level",
+      "name": "LEVEL0.040",
+      "stdout": "STATE LEVEL0.040 world=40 collision=9ba1e9ff\nPASS level LEVEL0.040\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 54,
+      "kind": "level",
+      "name": "LEVEL0.041",
+      "stdout": "STATE LEVEL0.041 world=41 collision=a1656990\nPASS level LEVEL0.041\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 55,
+      "kind": "level",
+      "name": "LEVEL0.050",
+      "stdout": "STATE LEVEL0.050 world=50 collision=b446b4d3\nPASS level LEVEL0.050\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 56,
+      "kind": "level",
+      "name": "LEVEL0.051",
+      "stdout": "STATE LEVEL0.051 world=51 collision=bf6cfa67\nPASS level LEVEL0.051\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 57,
+      "kind": "level",
+      "name": "LEVEL0.052",
+      "stdout": "STATE LEVEL0.052 world=52 collision=debf0def\nPASS level LEVEL0.052\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 58,
+      "kind": "level",
+      "name": "LEVEL1.000",
+      "stdout": "STATE LEVEL1.000 world=0 collision=7022625f\nPASS level LEVEL1.000\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 59,
+      "kind": "level",
+      "name": "LEVEL1.001",
+      "stdout": "STATE LEVEL1.001 world=1 collision=be9ba9e9\nPASS level LEVEL1.001\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 60,
+      "kind": "level",
+      "name": "LEVEL1.002",
+      "stdout": "STATE LEVEL1.002 world=2 collision=75a3735b\nPASS level LEVEL1.002\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 61,
+      "kind": "level",
+      "name": "LEVEL1.003",
+      "stdout": "STATE LEVEL1.003 world=3 collision=412e5272\nPASS level LEVEL1.003\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 62,
+      "kind": "level",
+      "name": "LEVEL1.004",
+      "stdout": "STATE LEVEL1.004 world=4 collision=e57d9dba\nPASS level LEVEL1.004\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 63,
+      "kind": "level",
+      "name": "LEVEL1.005",
+      "stdout": "STATE LEVEL1.005 world=5 collision=5b2ac8d5\nPASS level LEVEL1.005\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 64,
+      "kind": "level",
+      "name": "LEVEL1.006",
+      "stdout": "STATE LEVEL1.006 world=6 collision=db340cd4\nPASS level LEVEL1.006\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 65,
+      "kind": "level",
+      "name": "LEVEL1.007",
+      "stdout": "STATE LEVEL1.007 world=7 collision=319d27d8\nPASS level LEVEL1.007\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 66,
+      "kind": "level",
+      "name": "LEVEL1.008",
+      "stdout": "STATE LEVEL1.008 world=8 collision=0a7583da\nPASS level LEVEL1.008\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 67,
+      "kind": "level",
+      "name": "LEVEL1.009",
+      "stdout": "STATE LEVEL1.009 world=9 collision=96f756f1\nPASS level LEVEL1.009\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 68,
+      "kind": "level",
+      "name": "LEVEL1.010",
+      "stdout": "STATE LEVEL1.010 world=10 collision=7e7750ba\nPASS level LEVEL1.010\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 69,
+      "kind": "level",
+      "name": "LEVEL1.011",
+      "stdout": "STATE LEVEL1.011 world=11 collision=07a041d5\nPASS level LEVEL1.011\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 70,
+      "kind": "level",
+      "name": "LEVEL1.012",
+      "stdout": "23:57:09 WARN  Cannot find sound SHOT1!\nSTATE LEVEL1.012 world=12 collision=5e3bb566\nPASS level LEVEL1.012\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 71,
+      "kind": "level",
+      "name": "LEVEL1.013",
+      "stdout": "STATE LEVEL1.013 world=13 collision=0a52acf0\nPASS level LEVEL1.013\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 72,
+      "kind": "level",
+      "name": "LEVEL1.014",
+      "stdout": "STATE LEVEL1.014 world=14 collision=6d2f764e\nPASS level LEVEL1.014\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 73,
+      "kind": "level",
+      "name": "LEVEL1.015",
+      "stdout": "STATE LEVEL1.015 world=15 collision=f469afe8\nPASS level LEVEL1.015\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 74,
+      "kind": "level",
+      "name": "LEVEL1.016",
+      "stdout": "23:57:25 WARN  Cannot find sound LOOGIE!\nSTATE LEVEL1.016 world=16 collision=73ac6b37\nPASS level LEVEL1.016\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 75,
+      "kind": "level",
+      "name": "LEVEL1.017",
+      "stdout": "23:57:29 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL1.017 world=17 collision=5ea39af4\nPASS level LEVEL1.017\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 76,
+      "kind": "level",
+      "name": "LEVEL1.030",
+      "stdout": "STATE LEVEL1.030 world=30 collision=00d681ac\nPASS level LEVEL1.030\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 77,
+      "kind": "level",
+      "name": "LEVEL1.031",
+      "stdout": "STATE LEVEL1.031 world=31 collision=a1640e51\nPASS level LEVEL1.031\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 78,
+      "kind": "level",
+      "name": "LEVEL1.032",
+      "stdout": "STATE LEVEL1.032 world=32 collision=08b616df\nPASS level LEVEL1.032\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 79,
+      "kind": "level",
+      "name": "LEVEL1.033",
+      "stdout": "STATE LEVEL1.033 world=33 collision=ce6a8a25\nPASS level LEVEL1.033\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 80,
+      "kind": "level",
+      "name": "LEVEL1.034",
+      "stdout": "STATE LEVEL1.034 world=34 collision=935c79da\nPASS level LEVEL1.034\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 81,
+      "kind": "level",
+      "name": "LEVEL1.035",
+      "stdout": "STATE LEVEL1.035 world=35 collision=ea889fd1\nPASS level LEVEL1.035\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 82,
+      "kind": "level",
+      "name": "LEVEL1.036",
+      "stdout": "STATE LEVEL1.036 world=36 collision=b7ac8c28\nPASS level LEVEL1.036\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 83,
+      "kind": "level",
+      "name": "LEVEL1.037",
+      "stdout": "STATE LEVEL1.037 world=37 collision=25421cc9\nPASS level LEVEL1.037\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 84,
+      "kind": "level",
+      "name": "LEVEL1.038",
+      "stdout": "STATE LEVEL1.038 world=38 collision=8b153ec5\nPASS level LEVEL1.038\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 85,
+      "kind": "level",
+      "name": "LEVEL1.050",
+      "stdout": "STATE LEVEL1.050 world=50 collision=b237f8dd\nPASS level LEVEL1.050\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 86,
+      "kind": "level",
+      "name": "LEVEL2.000",
+      "stdout": "STATE LEVEL2.000 world=0 collision=f944c8b0\nPASS level LEVEL2.000\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 87,
+      "kind": "level",
+      "name": "LEVEL2.002",
+      "stdout": "STATE LEVEL2.002 world=2 collision=709fb705\nPASS level LEVEL2.002\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 88,
+      "kind": "level",
+      "name": "LEVEL2.004",
+      "stdout": "STATE LEVEL2.004 world=4 collision=1b7ec455\nPASS level LEVEL2.004\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 89,
+      "kind": "level",
+      "name": "LEVEL2.007",
+      "stdout": "STATE LEVEL2.007 world=7 collision=7bec6f6f\nPASS level LEVEL2.007\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 90,
+      "kind": "level",
+      "name": "LEVEL2.010",
+      "stdout": "STATE LEVEL2.010 world=10 collision=b75535b6\nPASS level LEVEL2.010\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 91,
+      "kind": "level",
+      "name": "LEVEL2.012",
+      "stdout": "STATE LEVEL2.012 world=12 collision=07669fc4\nPASS level LEVEL2.012\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 92,
+      "kind": "level",
+      "name": "LEVEL2.017",
+      "stdout": "STATE LEVEL2.017 world=17 collision=10fb87b5\nPASS level LEVEL2.017\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 93,
+      "kind": "level",
+      "name": "LEVEL2.031",
+      "stdout": "STATE LEVEL2.031 world=31 collision=bc7a317d\nPASS level LEVEL2.031\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 94,
+      "kind": "level",
+      "name": "LEVEL2.034",
+      "stdout": "STATE LEVEL2.034 world=34 collision=1bd4889c\nPASS level LEVEL2.034\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 95,
+      "kind": "level",
+      "name": "LEVEL2.037",
+      "stdout": "STATE LEVEL2.037 world=37 collision=307a1ba8\nPASS level LEVEL2.037\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 96,
+      "kind": "level",
+      "name": "LEVEL3.020",
+      "stdout": "23:58:48 WARN  Cannot find sound HARP!\n23:58:48 WARN  Cannot find sound JUMP3!\n23:58:48 WARN  Cannot find sound EXPLO5!\n23:58:48 WARN  Cannot find sound MISSILE!\n23:58:48 WARN  Cannot find sound BOMB!\nSTATE LEVEL3.020 world=20 collision=6c388461\nPASS level LEVEL3.020\n",
+      "passed": true,
+      "host_state_equal": true
+    },
+    {
+      "index": 97,
+      "kind": "level",
+      "name": "LEVEL7.030",
+      "stdout": "STATE LEVEL7.030 world=0 collision=0d33c824\nPASS level LEVEL7.030\n",
+      "passed": true,
+      "host_state_equal": true
+    }
+  ],
+  "missing_required_data_rejected": true,
+  "all_case_exit_codes_zero": true,
+  "level_collision_comparisons": 79,
+  "collision_mismatches": 0,
+  "gameplay_qualified": false,
+  "release_qualified": false
+}

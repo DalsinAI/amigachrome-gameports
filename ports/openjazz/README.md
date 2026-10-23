@@ -15,8 +15,9 @@ Clean provisional SHA-256:
 
 `c6f48d76e5c42fc264e134cef0d41d2b6769fc2dbb0448429bff1aad311a934e`
 
-The only source portability patch currently required adds the standard C++
-`<ctime>` declaration needed by the pinned source.
+The source portability patches add the standard C++ `<ctime>` declaration
+and handle writable Amiga configuration directories without an exclusive-lock
+check that can reject a valid current directory.
 
 ## Platform route
 
@@ -38,3 +39,14 @@ keyboard/controller → audio → save/config → clean exit, followed by the
 fixed-stove clean-instance repeat.
 
 **DONE means RELEASE.**
+
+## Registered-data asset validation
+
+The original Jazz Jackrabbit RGJAZZ_2 disc has been verified and extracted.
+A separate open3/SDL2 test executable exercises the real engine loaders; it
+is not a new production gameplay binary. See the
+[validation workflow](validation/README.md) and [recorded provenance](evidence/asset-provenance.json).
+Both host and AC090 pass the menu, 18 cutscenes and 79 levels; all 79
+collision-map digests match. Missing-data rejection also passes. There are 15
+non-fatal missing named sound references across 10 levels. The production port
+remains provisional, with its existing release gates open.

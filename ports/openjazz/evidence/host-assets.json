@@ -1,0 +1,801 @@
+{
+  "schema": 1,
+  "upstream_commit": "a1626f4edd4a7af72c54103021790c56d8ecfced",
+  "probe_sha256": "beea7f391fc6c358074500c9c1b36bed9b164bb293af3e49a6b0ba3a58160a4a",
+  "method": "Real startup, menu/scene/level constructors and level collision digest; no gameplay loop",
+  "audio": "Muted output, dummy host device; sample decoding may occur, playback not qualified",
+  "results": [
+    {
+      "kind": "menu",
+      "name": "MENU.000",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS menu MENU.000\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "BONUS.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene BONUS.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "CHEAT.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene CHEAT.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "CONTINUE.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene CONTINUE.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "END.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene END.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE1.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE1.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE2.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE2.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE3.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE3.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE4.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE4.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE5.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE5.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE6.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE6.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE7.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE7.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE8.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE8.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDE9.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDE9.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDEX.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDEX.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ENDLEVEL.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ENDLEVEL.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "INSTRUCT.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene INSTRUCT.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "ORDER.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene ORDER.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "scene",
+      "name": "STARTUP.0SC",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nPASS scene STARTUP.0SC\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.000",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.000 world=0 collision=0d33c824\nPASS level LEVEL0.000\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.001",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.001 world=1 collision=772aefc5\nPASS level LEVEL0.001\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.002",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.002 world=2 collision=fef6eb3a\nPASS level LEVEL0.002\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.003",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.003 world=3 collision=12257c32\nPASS level LEVEL0.003\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.004",
+      "exit": 0,
+      "stdout": "23:52:04 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.004 world=4 collision=03060c37\nPASS level LEVEL0.004\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.005",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.005 world=5 collision=6eba9ac2\nPASS level LEVEL0.005\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.006",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.006 world=6 collision=560928eb\nPASS level LEVEL0.006\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.007",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.007 world=7 collision=937e51c3\nPASS level LEVEL0.007\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.008",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.008 world=8 collision=11bf8225\nPASS level LEVEL0.008\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.009",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.009 world=9 collision=ef853abf\nPASS level LEVEL0.009\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.010",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.010 world=10 collision=7deef203\nPASS level LEVEL0.010\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.011",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.011 world=11 collision=4059dd4c\nPASS level LEVEL0.011\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.012",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\n23:52:05 WARN  Cannot find sound DIE5!\n23:52:05 WARN  Cannot find sound SHOT1!\nSTATE LEVEL0.012 world=12 collision=40d8478a\nPASS level LEVEL0.012\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.013",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.013 world=13 collision=a4e2b721\nPASS level LEVEL0.013\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.014",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.014 world=14 collision=1adf212d\nPASS level LEVEL0.014\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.015",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.015 world=15 collision=d18f6fe0\nPASS level LEVEL0.015\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.016",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\n23:52:05 WARN  Cannot find sound LOOGIE!\nSTATE LEVEL0.016 world=16 collision=de179a38\nPASS level LEVEL0.016\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.017",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\n23:52:05 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL0.017 world=17 collision=99cc65b4\nPASS level LEVEL0.017\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.018",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.018 world=18 collision=2aef26dc\nPASS level LEVEL0.018\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.019",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.019 world=19 collision=2cc0b87b\nPASS level LEVEL0.019\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.020",
+      "exit": 0,
+      "stdout": "23:52:05 WARN  Could not open file: openjazz.cfg\n23:52:05 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL0.020 world=20 collision=9d2a6139\nPASS level LEVEL0.020\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.021",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.021 world=21 collision=ab5251ab\nPASS level LEVEL0.021\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.022",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\n23:52:06 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL0.022 world=22 collision=52ab36dd\nPASS level LEVEL0.022\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.023",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\n23:52:06 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL0.023 world=23 collision=d6584c05\nPASS level LEVEL0.023\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.030",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.030 world=30 collision=d1d683dd\nPASS level LEVEL0.030\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.031",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.031 world=31 collision=75284165\nPASS level LEVEL0.031\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.032",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.032 world=32 collision=4eec640e\nPASS level LEVEL0.032\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.033",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.033 world=33 collision=84b910fa\nPASS level LEVEL0.033\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.034",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.034 world=34 collision=62456409\nPASS level LEVEL0.034\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.035",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.035 world=35 collision=58ba8a2b\nPASS level LEVEL0.035\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.036",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.036 world=36 collision=47e2be6d\nPASS level LEVEL0.036\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.037",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.037 world=37 collision=bb768ae9\nPASS level LEVEL0.037\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.038",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.038 world=38 collision=6c976e48\nPASS level LEVEL0.038\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.039",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.039 world=39 collision=256964ba\nPASS level LEVEL0.039\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.040",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.040 world=40 collision=9ba1e9ff\nPASS level LEVEL0.040\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.041",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.041 world=41 collision=a1656990\nPASS level LEVEL0.041\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.050",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.050 world=50 collision=b446b4d3\nPASS level LEVEL0.050\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.051",
+      "exit": 0,
+      "stdout": "23:52:06 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.051 world=51 collision=bf6cfa67\nPASS level LEVEL0.051\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL0.052",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL0.052 world=52 collision=debf0def\nPASS level LEVEL0.052\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.000",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.000 world=0 collision=7022625f\nPASS level LEVEL1.000\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.001",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.001 world=1 collision=be9ba9e9\nPASS level LEVEL1.001\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.002",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.002 world=2 collision=75a3735b\nPASS level LEVEL1.002\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.003",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.003 world=3 collision=412e5272\nPASS level LEVEL1.003\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.004",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.004 world=4 collision=e57d9dba\nPASS level LEVEL1.004\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.005",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.005 world=5 collision=5b2ac8d5\nPASS level LEVEL1.005\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.006",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.006 world=6 collision=db340cd4\nPASS level LEVEL1.006\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.007",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.007 world=7 collision=319d27d8\nPASS level LEVEL1.007\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.008",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.008 world=8 collision=0a7583da\nPASS level LEVEL1.008\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.009",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.009 world=9 collision=96f756f1\nPASS level LEVEL1.009\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.010",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.010 world=10 collision=7e7750ba\nPASS level LEVEL1.010\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.011",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.011 world=11 collision=07a041d5\nPASS level LEVEL1.011\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.012",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\n23:52:07 WARN  Cannot find sound SHOT1!\nSTATE LEVEL1.012 world=12 collision=5e3bb566\nPASS level LEVEL1.012\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.013",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.013 world=13 collision=0a52acf0\nPASS level LEVEL1.013\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.014",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.014 world=14 collision=6d2f764e\nPASS level LEVEL1.014\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.015",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.015 world=15 collision=f469afe8\nPASS level LEVEL1.015\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.016",
+      "exit": 0,
+      "stdout": "23:52:07 WARN  Could not open file: openjazz.cfg\n23:52:08 WARN  Cannot find sound LOOGIE!\nSTATE LEVEL1.016 world=16 collision=73ac6b37\nPASS level LEVEL1.016\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.017",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\n23:52:08 WARN  Cannot find sound BEGIN2!\nSTATE LEVEL1.017 world=17 collision=5ea39af4\nPASS level LEVEL1.017\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.030",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.030 world=30 collision=00d681ac\nPASS level LEVEL1.030\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.031",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.031 world=31 collision=a1640e51\nPASS level LEVEL1.031\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.032",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.032 world=32 collision=08b616df\nPASS level LEVEL1.032\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.033",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.033 world=33 collision=ce6a8a25\nPASS level LEVEL1.033\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.034",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.034 world=34 collision=935c79da\nPASS level LEVEL1.034\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.035",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.035 world=35 collision=ea889fd1\nPASS level LEVEL1.035\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.036",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.036 world=36 collision=b7ac8c28\nPASS level LEVEL1.036\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.037",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.037 world=37 collision=25421cc9\nPASS level LEVEL1.037\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.038",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.038 world=38 collision=8b153ec5\nPASS level LEVEL1.038\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL1.050",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL1.050 world=50 collision=b237f8dd\nPASS level LEVEL1.050\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.000",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.000 world=0 collision=f944c8b0\nPASS level LEVEL2.000\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.002",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.002 world=2 collision=709fb705\nPASS level LEVEL2.002\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.004",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.004 world=4 collision=1b7ec455\nPASS level LEVEL2.004\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.007",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.007 world=7 collision=7bec6f6f\nPASS level LEVEL2.007\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.010",
+      "exit": 0,
+      "stdout": "23:52:08 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.010 world=10 collision=b75535b6\nPASS level LEVEL2.010\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.012",
+      "exit": 0,
+      "stdout": "23:52:09 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.012 world=12 collision=07669fc4\nPASS level LEVEL2.012\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.017",
+      "exit": 0,
+      "stdout": "23:52:09 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.017 world=17 collision=10fb87b5\nPASS level LEVEL2.017\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.031",
+      "exit": 0,
+      "stdout": "23:52:09 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.031 world=31 collision=bc7a317d\nPASS level LEVEL2.031\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.034",
+      "exit": 0,
+      "stdout": "23:52:09 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.034 world=34 collision=1bd4889c\nPASS level LEVEL2.034\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL2.037",
+      "exit": 0,
+      "stdout": "23:52:09 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL2.037 world=37 collision=307a1ba8\nPASS level LEVEL2.037\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL3.020",
+      "exit": 0,
+      "stdout": "23:52:09 WARN  Could not open file: openjazz.cfg\n23:52:09 WARN  Cannot find sound HARP!\n23:52:09 WARN  Cannot find sound JUMP3!\n23:52:09 WARN  Cannot find sound EXPLO5!\n23:52:09 WARN  Cannot find sound MISSILE!\n23:52:09 WARN  Cannot find sound BOMB!\nSTATE LEVEL3.020 world=20 collision=6c388461\nPASS level LEVEL3.020\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "kind": "level",
+      "name": "LEVEL7.030",
+      "exit": 0,
+      "stdout": "23:52:09 WARN  Could not open file: openjazz.cfg\nSTATE LEVEL7.030 world=0 collision=0d33c824\nPASS level LEVEL7.030\n",
+      "stderr": "",
+      "passed": true
+    }
+  ],
+  "missing_required_data": {
+    "exit": 4,
+    "passed": true,
+    "stdout": "23:52:09 WARN  Could not open file: openjazz.cfg\n23:52:09 WARN  Could not open file: SOUNDS.000\n23:52:09 WARN  Could not open file: PANEL.000\n23:52:09 FATAL Unable to find game data files. When launching OpenJazz, \n               pass the location of the original game data, eg:\n                 OpenJazz ~/jazz1\n",
+    "stderr": "FAIL menu MENU.000 engine_error=-17\n"
+  },
+  "gameplay_qualified": false,
+  "release_qualified": false
+}
