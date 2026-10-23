@@ -1,0 +1,5 @@
+cache=(unset) big_endian=1
+PASS ANIM.HQR 2083 entries
+PASS BODY.HQR 469 entries
+PASS OBJFIX.HQR 105 entries
+PASS 2651 resources; original_ticks=19145 cache_ticks=12663 clocks_per_sec=1000 (includes first source verification)

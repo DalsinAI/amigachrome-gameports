@@ -1,0 +1,2 @@
+cache=(unset) big_endian=1
+cache miss ANIM.HQR 0

@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "upstream": {
+    "kind": "git",
+    "url": "https://github.com/LBALab/lba2-classic-community.git",
+    "commit": "2fa1c7a66de2ce8707d85cb9a304dbd6f96c8ab8",
+    "submodules": false
+  },
+  "compiler_release": "16.2.0-open3",
+  "compiler_archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+  "binary_sha256": "4078ef897573f10201ce9d1c822ac25e35c361191fe3d6d78a8ea38a17440b73",
+  "reproducibility": "Two clean output directories c and d produce identical HUNK executables",
+  "sdk_baseline": "openamigartg 0c98fe780e6531946be44bebbb3a9db0c7bb7ab2; SDL3 3.4.14 with SDL3_68k c82dea042718200eea401e7ed62d88b997bc9fd9",
+  "sdk_inputs": {
+    "SDL3.module": "9a837d53dcaa14b859a0dfd45ea276fb18db66390dbfc41ab19f47d62c8fc1db",
+    "libSDL3.a": "b26dbf3630a364d4beaddd2d87d8ee3319cf7d7ea531f2f062fb1f3e0e4f931e"
+  },
+  "patches": {
+    "0001-openamiga-module-client.patch": "ee7fe54b9702fa6a7ded3d434c7168321862dcaa2df7c9b957b8daee731a6b44",
+    "0002-optional-ipo.patch": "17a880d0504e80b57d79f14092a8eb04f715bb9cdba7f2d8c183a96e184c91f9",
+    "0003-open2-math-source.patch": "784a0b56e21b83c1c789d511ac4c99df7af5a3941786fc17480c2e14dcad3d8e",
+    "0004-verified-native-resource-cache.patch": "b842839610844576f661486c0b6691a80b7d1fd8bdd4666fcaaddac440c13dd9"
+  },
+  "cache": {
+    "schema": "lba2-native-cache",
+    "version": 1,
+    "byte_order": "big",
+    "banks": {
+      "ANIM.HQR": {
+        "source_sha256": "8ca1872f72b15edb838e4c04f643e4097c0235171c8604b1993762ce2b9a2fbf",
+        "source_bytes": 1197090,
+        "cache_sha256": "3f7ca335cfc03d2b3ea7868dd6ba377975c923700f6ec0eb3b30e6e44ad2df6d",
+        "cache_bytes": 4017212,
+        "entries": 2083
+      },
+      "BODY.HQR": {
+        "source_sha256": "73efe61b51506e2b64ab88cf9c4846549056bb6435e40e5876587907afad2b77",
+        "source_bytes": 2197406,
+        "cache_sha256": "8f3c7b426f35134218946836a45fd0ac694bcd3099723c1884bb82949cb394ef",
+        "cache_bytes": 3210988,
+        "entries": 469
+      },
+      "OBJFIX.HQR": {
+        "source_sha256": "c864abf0acc785bf414b8d76d77a475223aece56f32c0f3db50c2f01c14cd9a0",
+        "source_bytes": 185036,
+        "cache_sha256": "0c84396dd7ddb765e67956a841dc06f6dcdd2ee8182e9cfc1e8dc0c723cb45db",
+        "cache_bytes": 270968,
+        "entries": 105
+      }
+    },
+    "qualification": "not runtime-qualified",
+    "converter_source_sha256": "561c1563fbcd6f51c72d6bf84ca393fce185fe9a98e21a3593d7ce0ab4c5fc48",
+    "upstream_commit": "2fa1c7a66de2ce8707d85cb9a304dbd6f96c8ab8"
+  },
+  "disc": {
+    "bin_sha256": "554110ba7b99b9d2dfdaaac53a96bbc1052f1f8dcfee9d6472d5da45022e2a58",
+    "cue_sha256": "1fca9c248a7ec449cf4b25b0b3be2d2306e57801dbc497b6196b4de7aa28ee90",
+    "files_extracted": 630,
+    "audio_tracks_exported": 1,
+    "wav_listening": "not qualified"
+  },
+  "lab": {
+    "name": "team1-ac090",
+    "source": "copy of stopped gcc16-a lab",
+    "cpu": "AC090 68040 + FPU",
+    "chip_mib": 8,
+    "fast_z3_mib": 512,
+    "rom": "Kickstart 3.2.3 47.115 (not the new OpenKick ROM)",
+    "runtime_startup": "tuned build zen (x86-64-v3, Zen; 20261023T202943Z)",
+    "runtime_deployment_commit": "9fbc38c2b698c6bb3d033de156b89cfa75b2bc04",
+    "muted": true
+  },
+  "checks": {
+    "repository_tests": 51,
+    "architecture": "10 rules / 636 files clean",
+    "cache_entries": 2657,
+    "nonempty_resource_byte_comparisons": 2651,
+    "cache_misses": 0,
+    "mismatches": 0,
+    "production_cache_probe_exit": 0,
+    "headless_tick": 3,
+    "headless_exit": 0,
+    "graphics_tick": 3,
+    "graphics_exit": 0,
+    "graphics_visual_inspection": "not captured; state dump and normal return only",
+    "host_reference_equal_fields": [
+      "scene",
+      "hero",
+      "camera",
+      "inventory",
+      "actors",
+      "tick"
+    ],
+    "corrupt_cache_probe_exit": 6,
+    "corrupt_cache_fallback_exit": 0,
+    "corrupt_cache_fallback_equal_fields": [
+      "scene",
+      "hero",
+      "camera",
+      "inventory",
+      "actors",
+      "tick"
+    ]
+  },
+  "resource_microbenchmark": {
+    "original_ticks": 19145,
+    "cache_ticks": 12663,
+    "clocks_per_second": 1000,
+    "includes_first_source_crc": true,
+    "interpretation": "Single AC090 sample; about 34% lower resource loading time. Not a startup, frame-rate or general performance qualification."
+  },
+  "remaining": [
+    "interactive display/input verification",
+    "AHI sound/music",
+    "video",
+    "save/config persistence",
+    "cold/warm startup and peak memory benchmarks",
+    "clean-target gameplay/endian/FPU comparisons",
+    "SDL3 OpenGPU renderer integration/INDEX8 qualification",
+    "full release policy gates"
+  ],
+  "release_qualified": false
+}

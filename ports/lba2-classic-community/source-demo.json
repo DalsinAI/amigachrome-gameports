@@ -26,7 +26,9 @@
         "-DLBA2_NATIVE_ARCH=OFF",
         "-DLBA2_ENABLE_IPO=OFF",
         "-DLBA2_OPENAMIGA_MATH_SOURCE=@PORT_DIR@/compat/lrintl.c",
-        "-DLBA2_BUILD_DEMO=ON"
+        "-DLBA2_BUILD_DEMO=ON",
+        "-DLBA2_NATIVE_CACHE_SOURCE=@PORT_DIR@/compat/native_cache.cpp",
+        "-DAMIGA_CPU_FLAGS=-m68040 -m68881 -fno-delete-null-pointer-checks"
       ]
     }
   },

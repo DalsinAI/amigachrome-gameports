@@ -108,3 +108,11 @@ Follow [asset preprocessing](../../docs/ASSET_PREPROCESSING.md) and
 gameplay comparisons, usable title/game frames, controls/text/gamepad, AHI
 sound and music, Smacker video, persistence, focus/fullscreen, memory/performance
 and clean shutdown on clean 68040/AC090 targets. No FIRST LIGHT or RELEASE claim.
+
+## Native CD intake and cache
+
+The [CD importer and native resource converter](NATIVE_CACHE.md) are implemented.
+The AC090 probe compared all 2,651 non-empty animation/body/object resources
+against the pinned original loader byte for byte. A three-tick headless scene
+smoke run also completed. These are bounded engineering results; display,
+input, AHI/music, persistence and full gameplay qualification remain open.
