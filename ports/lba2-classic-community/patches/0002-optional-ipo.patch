@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8249c5a..63cc334 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -129,7 +129,8 @@ if(LBA2_RELEASE_SYMBOLS AND NOT MSVC)
+     add_link_options(-g)
+ endif()
+ 
+-if(CMAKE_BUILD_TYPE STREQUAL "Release")
++option(LBA2_ENABLE_IPO "Enable release interprocedural optimization" ON)
++if(LBA2_ENABLE_IPO AND CMAKE_BUILD_TYPE STREQUAL "Release")
+     include(CheckIPOSupported)
+     check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
+     if(ipo_supported)

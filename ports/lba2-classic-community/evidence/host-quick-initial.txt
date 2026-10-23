@@ -1,0 +1,270 @@
+Test project /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests
+      Start  1: test_res_discovery
+ 1/97 Test  #1: test_res_discovery .........................***Failed    0.04 sec
+[ERROR] mkdir: Read-only file system
+[ERROR] mkdir: Read-only file system
+[WARN] RES_DISCOVERY: no game data in the folder this was run from. Using a neighbouring install: /tmp/lba2sibdir_CJzE92/RetailGame/
+[WARN] Name the one you want with --game-dir if that is not it.
+[WARN] RES_DISCOVERY: no game data in the folder this was run from. Using a neighbouring install: /tmp/lba2sibcc_DsUySJ/OddName/CommonClassic/
+[WARN] Name the one you want with --game-dir if that is not it.
+[INFO] Bundle: $APPIMAGE is set but this executable is not the one inside it; ignoring it
+[ERROR] No valid game data directory (need LBA2.HQR). Tried 18 path(s).
+[ERROR]   - /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests/tests/discovery/
+[ERROR]   - /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests/tests/discovery/Common/
+[ERROR]   - /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests/tests/discovery/data/
+[ERROR]   - /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests/tests/discovery/game/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/cwd/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/cwd/Common/
+[ERROR]   - /sdcard/lba2cc/
+[ERROR]   - /storage/emulated/0/lba2cc/
+[ERROR]   - /sdcard/
+[ERROR]   - /storage/emulated/0/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/
+[ERROR]   - /tmp/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/cwd/data/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/cwd/../LBA2/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/cwd/../game/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/cwd/CommonClassic/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/cwd/common/
+[ERROR]   - /tmp/lba2disc_aiforeignc_X8hraN/cwd/Classic/
+[ERROR] Hints: set LBA2_GAME_DIR to your install folder, or pass --game-dir <path>.
+[ERROR] The path is the folder holding the HQR files, often Common/.
+[ERROR] This is a source port: it needs the retail game files, which it does not ship. See README.txt.
+[WARN] Bundle: the folder holding '/ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd/lba2cc.AppImage' is too long to hold (>= 256); not probing it for game data
+[ERROR] No valid game data directory (need LBA2.HQR). Tried 18 path(s).
+[ERROR]   - /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests/tests/discovery/
+[ERROR]   - /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests/tests/discovery/Common/
+[ERROR]   - /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests/tests/discovery/data/
+[ERROR]   - /home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-host-tests/tests/discovery/game/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/cwd/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/cwd/Common/
+[ERROR]   - /sdcard/lba2cc/
+[ERROR]   - /storage/emulated/0/lba2cc/
+[ERROR]   - /sdcard/
+[ERROR]   - /storage/emulated/0/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/
+[ERROR]   - /tmp/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/cwd/data/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/cwd/../LBA2/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/cwd/../game/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/cwd/CommonClassic/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/cwd/common/
+[ERROR]   - /tmp/lba2disc_aioverlong_9h5M3j/cwd/Classic/
+[ERROR] Hints: set LBA2_GAME_DIR to your install folder, or pass --game-dir <path>.
+[ERROR] The path is the folder holding the HQR files, often Common/.
+[ERROR] This is a source port: it needs the retail game files, which it does not ship. See README.txt.
+[ERROR] RES_DISCOVERY: LBA2_GAME_DIR '/nonexistent/lba2disc_stale' does not hold the game data: no LBA2.HQR in it, nor in a Common/ inside it.
+[ERROR] Point it at the folder with the HQR files, or unset it. Refusing to boot a different install instead.
+[ERROR] User directory path too long (>= 256): 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+[ERROR] mkdir: Read-only file system
+[ERROR] mkdir: File exists
+[ERROR] mkdir: File exists
+[ERROR] mkdir: File exists
+[WARN] User dir   some files could not be copied out of /tmp/lba2disc_udpc1_8TKQWq/
+
+      Start  2: test_res_picker
+ 2/97 Test  #2: test_res_picker ............................   Passed    0.00 sec
+      Start  3: test_console_state
+ 3/97 Test  #3: test_console_state .........................   Passed    0.00 sec
+      Start  4: test_console_commands
+ 4/97 Test  #4: test_console_commands ......................   Passed    0.01 sec
+      Start  5: test_console_give
+ 5/97 Test  #5: test_console_give ..........................   Passed    0.00 sec
+      Start  6: test_console_render
+ 6/97 Test  #6: test_console_render ........................   Passed    0.01 sec
+      Start  7: test_console_complete
+ 7/97 Test  #7: test_console_complete ......................   Passed    0.00 sec
+      Start  8: test_console_input
+ 8/97 Test  #8: test_console_input .........................   Passed    0.00 sec
+      Start  9: test_control_proto
+ 9/97 Test  #9: test_control_proto .........................   Passed    0.00 sec
+      Start 10: test_log
+10/97 Test #10: test_log ...................................   Passed    0.01 sec
+      Start 11: test_asset_preflight
+11/97 Test #11: test_asset_preflight .......................   Passed    0.01 sec
+      Start 12: test_credits_parse
+12/97 Test #12: test_credits_parse .........................   Passed    0.00 sec
+      Start 13: test_copymask_negx
+13/97 Test #13: test_copymask_negx .........................   Passed    0.01 sec
+      Start 14: test_version_drift
+14/97 Test #14: test_version_drift .........................   Passed    0.02 sec
+      Start 15: test_vita_package_version
+15/97 Test #15: test_vita_package_version ..................   Passed    0.14 sec
+      Start 16: test_savegame_load_bounds
+16/97 Test #16: test_savegame_load_bounds ..................   Passed    0.01 sec
+      Start 17: test_save_name_validation
+17/97 Test #17: test_save_name_validation ..................   Passed    0.00 sec
+      Start 18: test_save_wire_from32
+18/97 Test #18: test_save_wire_from32 ......................   Passed    0.00 sec
+      Start 19: test_save_wire_to32
+19/97 Test #19: test_save_wire_to32 ........................   Passed    0.00 sec
+      Start 20: test_save_wire_fuzz
+20/97 Test #20: test_save_wire_fuzz ........................   Passed    0.15 sec
+      Start 21: test_deffile_latin1
+21/97 Test #21: test_deffile_latin1 ........................   Passed    0.06 sec
+      Start 22: test_deffile_batch
+22/97 Test #22: test_deffile_batch .........................   Passed    0.01 sec
+      Start 23: test_deffile_layers
+23/97 Test #23: test_deffile_layers ........................   Passed    0.01 sec
+      Start 24: test_distrib_resolve
+24/97 Test #24: test_distrib_resolve .......................   Passed    0.00 sec
+      Start 25: test_atomic_write
+25/97 Test #25: test_atomic_write ..........................   Passed    0.02 sec
+      Start 26: test_rnd_stream
+26/97 Test #26: test_rnd_stream ............................   Passed    0.03 sec
+      Start 27: test_retail_qsort
+27/97 Test #27: test_retail_qsort ..........................   Passed    0.01 sec
+      Start 28: test_demo_rng_seed
+28/97 Test #28: test_demo_rng_seed .........................   Passed    0.00 sec
+      Start 29: test_image_load
+29/97 Test #29: test_image_load ............................   Passed    0.03 sec
+      Start 30: test_save_thumbnail
+30/97 Test #30: test_save_thumbnail ........................   Passed    0.03 sec
+      Start 31: test_ambiance_balance
+31/97 Test #31: test_ambiance_balance ......................   Passed    0.00 sec
+      Start 32: test_music_pause_resume
+32/97 Test #32: test_music_pause_resume ....................   Passed    0.01 sec
+      Start 33: test_music_stream_park
+33/97 Test #33: test_music_stream_park .....................   Passed    0.00 sec
+      Start 34: test_cd_track_path
+34/97 Test #34: test_cd_track_path .........................   Passed    0.00 sec
+      Start 35: test_focus_audio
+35/97 Test #35: test_focus_audio ...........................   Passed    0.00 sec
+      Start 36: test_timer_lock_window
+36/97 Test #36: test_timer_lock_window .....................   Passed    0.00 sec
+      Start 37: test_fixed_step
+37/97 Test #37: test_fixed_step ............................   Passed    0.01 sec
+      Start 38: test_staging_buffer
+38/97 Test #38: test_staging_buffer ........................   Passed    0.01 sec
+      Start 39: test_polyfilt
+39/97 Test #39: test_polyfilt ..............................   Passed    0.18 sec
+      Start 40: test_inv64
+40/97 Test #40: test_inv64 .................................   Passed    0.01 sec
+      Start 41: test_lproj_round
+41/97 Test #41: test_lproj_round ...........................   Passed    0.08 sec
+      Start 42: test_x87round
+42/97 Test #42: test_x87round ..............................   Passed    0.03 sec
+      Start 43: test_camera_paths
+43/97 Test #43: test_camera_paths ..........................   Passed    0.07 sec
+      Start 44: test_input_device
+44/97 Test #44: test_input_device ..........................   Passed    0.01 sec
+      Start 45: test_mouse_capture
+45/97 Test #45: test_mouse_capture .........................   Passed    0.00 sec
+      Start 46: test_input_funnel
+46/97 Test #46: test_input_funnel ..........................   Passed    0.01 sec
+      Start 47: test_input_flow
+47/97 Test #47: test_input_flow ............................   Passed    0.00 sec
+      Start 48: test_input_bindings
+48/97 Test #48: test_input_bindings ........................   Passed    0.01 sec
+      Start 49: test_input_suppression
+49/97 Test #49: test_input_suppression .....................   Passed    0.01 sec
+      Start 50: test_input_reverse
+50/97 Test #50: test_input_reverse .........................   Passed    0.01 sec
+      Start 51: test_input_config
+51/97 Test #51: test_input_config ..........................   Passed    0.78 sec
+      Start 52: test_input_config_stick_layout
+52/97 Test #52: test_input_config_stick_layout .............   Passed    0.76 sec
+      Start 53: test_input_stick_layout
+53/97 Test #53: test_input_stick_layout ....................   Passed    0.01 sec
+      Start 54: test_getascii
+54/97 Test #54: test_getascii ..............................***Skipped   0.00 sec
+      Start 55: test_record_format
+55/97 Test #55: test_record_format .........................   Passed    0.01 sec
+      Start 56: test_record_binding_context
+56/97 Test #56: test_record_binding_context ................   Passed    0.01 sec
+      Start 57: test_record_binding_context_stick_layout
+57/97 Test #57: test_record_binding_context_stick_layout ...   Passed    0.01 sec
+      Start 58: test_record_ui_stream
+58/97 Test #58: test_record_ui_stream ......................   Passed    0.07 sec
+      Start 59: test_cli_args
+59/97 Test #59: test_cli_args ..............................   Passed    0.01 sec
+      Start 60: test_video_fit
+60/97 Test #60: test_video_fit .............................   Passed    0.00 sec
+      Start 61: test_video_source
+61/97 Test #61: test_video_source ..........................   Passed    0.49 sec
+      Start 62: test_video_source_unsigned_char
+62/97 Test #62: test_video_source_unsigned_char ............   Passed    0.47 sec
+      Start 63: test_menu_keynav
+63/97 Test #63: test_menu_keynav ...........................   Passed    0.00 sec
+      Start 64: test_menu_labels
+64/97 Test #64: test_menu_labels ...........................   Passed    0.00 sec
+      Start 65: test_res_menu
+65/97 Test #65: test_res_menu ..............................   Passed    0.00 sec
+      Start 66: test_string_encoding
+66/97 Test #66: test_string_encoding .......................   Passed    0.00 sec
+      Start 67: test_voc_header
+67/97 Test #67: test_voc_header ............................   Passed    0.00 sec
+      Start 68: test_iso9660
+68/97 Test #68: test_iso9660 ...............................   Passed    0.01 sec
+      Start 69: test_disc_image
+69/97 Test #69: test_disc_image ............................   Passed    0.01 sec
+      Start 70: test_cue
+70/97 Test #70: test_cue ...................................   Passed    0.01 sec
+      Start 71: test_cdtracks
+71/97 Test #71: test_cdtracks ..............................   Passed    0.01 sec
+      Start 72: test_cdda
+72/97 Test #72: test_cdda ..................................   Passed    1.12 sec
+      Start 73: test_sphere_radius
+73/97 Test #73: test_sphere_radius .........................   Passed    0.01 sec
+      Start 74: test_line_geometry
+74/97 Test #74: test_line_geometry .........................   Passed    0.00 sec
+      Start 75: test_poly_geometry
+75/97 Test #75: test_poly_geometry .........................   Passed    0.00 sec
+      Start 76: test_move_framerate
+76/97 Test #76: test_move_framerate ........................   Passed    0.01 sec
+      Start 77: test_zone_geom
+77/97 Test #77: test_zone_geom .............................   Passed    0.00 sec
+      Start 78: test_plasma_steps
+78/97 Test #78: test_plasma_steps ..........................   Passed    0.01 sec
+      Start 79: test_boot_end
+79/97 Test #79: test_boot_end ..............................   Passed    0.00 sec
+      Start 80: test_crash_core
+80/97 Test #80: test_crash_core ............................   Passed    0.00 sec
+      Start 81: test_crash_report
+81/97 Test #81: test_crash_report ..........................   Passed   10.29 sec
+      Start 82: test_followcam_math
+82/97 Test #82: test_followcam_math ........................   Passed    0.73 sec
+      Start 83: test_precision_paths
+83/97 Test #83: test_precision_paths .......................   Passed    0.00 sec
+      Start 84: test_numeric_contract
+84/97 Test #84: test_numeric_contract ......................   Passed    0.00 sec
+      Start 85: test_muldiv64
+85/97 Test #85: test_muldiv64 ..............................   Passed    1.46 sec
+      Start 86: test_le_access
+86/97 Test #86: test_le_access .............................   Passed    0.00 sec
+      Start 87: test_ui_layout
+87/97 Test #87: test_ui_layout .............................   Passed    0.00 sec
+      Start 88: test_settings_coerce
+88/97 Test #88: test_settings_coerce .......................   Passed    0.00 sec
+      Start 89: test_settings_borrow
+89/97 Test #89: test_settings_borrow .......................   Passed    0.02 sec
+      Start 90: test_retail_fix
+90/97 Test #90: test_retail_fix ............................   Passed    0.01 sec
+      Start 91: test_user_dirs
+91/97 Test #91: test_user_dirs .............................   Passed    0.00 sec
+      Start 92: test_vita_diagnostics
+92/97 Test #92: test_vita_diagnostics ......................   Passed    0.01 sec
+      Start 93: test_platform_callbacks
+93/97 Test #93: test_platform_callbacks ....................   Passed    0.00 sec
+      Start 94: test_platform_contract
+94/97 Test #94: test_platform_contract .....................   Passed    0.01 sec
+      Start 95: test_platform_vita_deadzone
+95/97 Test #95: test_platform_vita_deadzone ................   Passed    0.01 sec
+      Start 96: test_platform_null
+96/97 Test #96: test_platform_null .........................   Passed    0.01 sec
+      Start 97: test_platform_null_game
+97/97 Test #97: test_platform_null_game ....................   Passed    0.05 sec
+
+99% tests passed, 1 tests failed out of 97
+
+Label Time Summary:
+host_quick    =  17.50 sec*proc (97 tests)
+
+Total Test time (real) =  17.58 sec
+
+The following tests did not run:
+	 54 - test_getascii (Skipped)
+
+The following tests FAILED:
+	  1 - test_res_discovery (Failed)                       host_quick
+Errors while running CTest

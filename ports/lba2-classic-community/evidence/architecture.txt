@@ -1,0 +1,5 @@
+make: Entering directory '/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-arch-source'
+check-arch: 10 rules over 636 files, all clean.
+  C_EXTERN.H         252 externs (ceiling 252)
+  DEFINES.H          42 module headers (ceiling 42)
+make: Leaving directory '/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/build/lba2-arch-source'

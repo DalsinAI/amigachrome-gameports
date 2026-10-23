@@ -1,0 +1,30 @@
+[ 90%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/PLAYACF.CPP.obj
+[ 91%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/POF.CPP.obj
+[ 91%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/RAIN.CPP.obj
+[ 92%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/RECORD.CPP.obj
+[ 92%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/RECORD_FORMAT.CPP.obj
+[ 92%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/SETTINGS.CPP.obj
+[ 93%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/SAVEGAME.CPP.obj
+[ 93%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/SAVEGAME_WIRE.CPP.obj
+[ 93%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/SAVEGAME_LOAD_BOUNDS.CPP.obj
+[ 94%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/SAVENAME_VALIDATION.CPP.obj
+[ 94%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/SCAN.CPP.obj
+[ 94%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/SORT.CPP.obj
+[ 95%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/TOUCH_INPUT.CPP.obj
+[ 95%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/VALIDPOS.CPP.obj
+[ 95%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/VERSION.CPP.obj
+[ 96%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/WAGON.CPP.obj
+[ 96%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/ZV.CPP.obj
+[ 96%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/CONSOLE/CONSOLE_CMD.CPP.obj
+[ 97%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/ASSET_PREFLIGHT.CPP.obj
+[ 97%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/COMPRESS.CPP.obj
+[ 97%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/FIRE.CPP.obj
+[ 98%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/FLOW_A.CPP.obj
+[ 98%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/FUNC.CPP.obj
+[ 98%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/GRILLE_A.CPP.obj
+[ 99%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/PLASMA.CPP.obj
+[ 99%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/embedded_lba2_cfg_data.cpp.obj
+[ 99%] Building CXX object SOURCES/CMakeFiles/lba2cc.dir/VIDEO_SOURCE.CPP.obj
+[100%] Building C object SOURCES/CMakeFiles/lba2cc.dir/home/da1ek/Documents/ChatGPT/AmigaChrome/gameports/ports/lba2-classic-community/compat/lrintl.c.obj
+[100%] Linking CXX executable lba2cc
+[100%] Built target lba2cc

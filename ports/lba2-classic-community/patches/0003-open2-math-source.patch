@@ -1,0 +1,15 @@
+diff --git a/SOURCES/CMakeLists.txt b/SOURCES/CMakeLists.txt
+index 434f975..3b3683f 100644
+--- a/SOURCES/CMakeLists.txt
++++ b/SOURCES/CMakeLists.txt
+@@ -194,3 +194,10 @@ endif()
+ # Source files in folder but not used on CMakeScript:
+ # - DEC.ASM
+ # - MESSTWIN.CPP (Commented on source file "GERELIFE.CPP")
++
++if(LBA2_OPENAMIGA_SDL3)
++    if(NOT EXISTS "${LBA2_OPENAMIGA_MATH_SOURCE}")
++        message(FATAL_ERROR "Supply the checked OpenAmiga lrintl compatibility source")
++    endif()
++    target_sources(${LBA2_EXECUTABLE_NAME} PRIVATE "${LBA2_OPENAMIGA_MATH_SOURCE}")
++endif()
