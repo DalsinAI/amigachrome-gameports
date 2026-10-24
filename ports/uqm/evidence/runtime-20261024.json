@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-24",
+  "status": "TESTING; not RELEASE",
+  "compiler": {
+    "version": "16.2.0-open3",
+    "archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21"
+  },
+  "source_archive_sha256": "24f2f7db9cf7faf53b95f9e2580e6f596205a98ed0c335cfe834c64785ad4f5a",
+  "content_archive_sha256": "77d75ac25e6fb755a33c4ba3b38a7b7bc41fcbc02896891b0cc9ac9214b72eef",
+  "executable_sha256": "ce39e3a7c020194d3a6249e4f28477f2d8c64c9211f7f0f0cdf9254c421ea6fe",
+  "runtime": "zen x86-64-v3 20261024T070109Z",
+  "rom": "Kickstart 3.2.3 47.115; CRC32 b18d3b67; not intended OpenKick repeat",
+  "renderer": "SDL2 software; SDL_OPENGPU=0",
+  "audio": "--sound=nosound; lab muted; no audio pass",
+  "command": "uqm --contentdir=DH1:Games/UQM-Finish/content --configdir=DH1:Games/UQM-Finish/User --sound=nosound --logfile=uqm-packaged.log",
+  "observed": [
+    "native DH1: content/config paths accepted",
+    "official zipped .uqm content mounts",
+    "main menu visible",
+    "New Game intro visible",
+    "Sol solar-system view visible",
+    "normal quit to main menu, then process exit RC 0"
+  ],
+  "remaining": [
+    "alien conversation",
+    "detailed graphics/colour verification and PNG/XPM warnings",
+    "save/load/config persistence",
+    "input focus/window/controller qualification",
+    "audible audio",
+    "packaged-content load-time investigation",
+    "intended clean ROM/runtime repeat and release packaging"
+  ],
+  "log_sha256": "562b6667180526eb3f54340a148f5589d3afe20991ff82f40dd0c8cfe0da18d5",
+  "screenshots": {
+    "uqm-packaged-current.png": "61bbaa4aad80d0eecc1f6d6d213424b5e5169db7bdb1d35dfeac78d20b73eacf",
+    "uqm-packaged-sol.png": "ae029746a96205d4c8fb1adb17440733b34827af149db438b65258341e40be80"
+  },
+  "modules": {
+    "OpenGPU/SDL2.module": "06966096667c5c4636fd09467c8e7bdf27b141a56bb9463d72e4c1e091e2e0ab",
+    "OpenGPU/GL.module": "f9342224da20ac6a4246346ffd0afd1e2fcbc79ac73f180ec74c86b78ade7284",
+    "opengpu.library": "1334765fa629271c918aff599c41df49687020a04536f2224a11f7121e5534d8"
+  }
+}

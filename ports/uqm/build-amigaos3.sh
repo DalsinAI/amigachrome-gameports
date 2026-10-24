@@ -185,6 +185,8 @@ t = t.replace(
 p.write_text(t)
 PY_UQM_PORT
 
+python3 "$ROOT/port-layer/uqm/apply_amiga_paths.py" "$SC2"
+
 ln -sf "$P/bin/m68k-amigaos-gcc" "$BUILD/tools/gcc"
 ln -sf "$P/bin/m68k-amigaos-gcc" "$BUILD/tools/cc"
 ln -sf "$P/bin/m68k-amigaos-g++" "$BUILD/tools/g++"

@@ -39,12 +39,12 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | OpenOMF / OMFAGA | ACTIVE - build fix | ACGame / native AGA | TBD | GCC16/0008 lane exists. Canonical AGA-profile state bug fixed; latest runner exposed a local ENet compatibility-header path error before compile. Then AC090 arena first light. |
 | Neverball / Neverputt | BUILD GREEN - runtime testing | SDL / OpenGPU | TBD | GCC16/0008 build passes. Retest softpipe and accelerated virgl/OpenRTG path on AC090 and confirm black-frame issue is gone. |
 | C-Dogs SDL | BUILD GREEN - runtime testing | SDL / OpenGPU | TBD | GCC16/0008 build passes. Strong compiler A/B canary because old stove hit divide-by-zero alert 0x80000005. |
-| The Ur-Quan Masters | BUILD GREEN - runtime pending | SDL / OpenGPU | TBD | GCC16/0008 full build passes. User-supplied content required; menu, solar-system/combat, audio and clean-exit gates remain. |
+| The Ur-Quan Masters | TESTING - open3 gameplay smoke | SDL / OpenGPU | P0 | Fixed native paths and ZIP content; exact binary reached Sol and exited RC 0. Conversation, graphics warnings, persistence, audio and clean-ROM repeat remain. |
 | Chocolate Doom | BUILD GREEN - runtime pending | SDL / OpenGPU | TBD | GCC16/0008 clean build passes. Run with authorised IWAD/Freedoom and exercise input, audio, config/save and exit. |
 | OpenJazz | BUILD GREEN - runtime pending | SDL / OpenGPU | TBD | GCC16/0008 clean build passes. Original game data remains external. |
 | SDLPoP | BUILD GREEN - runtime pending | SDL / OpenGPU | TBD | GCC16/0008 clean build passes. Level-one runtime, animation, input, audio and clean exit next. |
 | AssaultCube | BUILD GREEN - runtime pending | SDL / OpenGPU / OpenInput | TBD | GCC16/0008 client and server both build. Client final-link GL issue fixed. Bot-map/textured-scene first light next; audio integration follows. |
-| NXEngine-evo | REBUILD DEFERRED | SDL / OpenGPU | TBD | Previous compile exists. Current clean fixed-stove rebuild was deferred by host/toolchain load rather than a known port defect. |
+| NXEngine-evo | TESTING - open3 gameplay smoke | SDL / OpenGPU | P0 | Fresh portable build reaches Start Point with movement/jump and fresh-process save/load; both quits RC 0. Importer fixes layout/music aliases. Sound-effect warnings, wider input/audio and clean-ROM gates remain. |
 | Serious Sam Classic | SOURCE PINNED | SDL / OpenGPU | TBD | Start with The First Encounter. Major 3D/OpenGPU target. |
 | Warzone 2100 | SOURCE PINNED | SDL / OpenGPU | TBD | Large 3D/application stress target; intended OpenUp edition candidate. |
 | Doom 3 GPL source | SOURCE PINNED | OpenGPU | TBD | Long-range idTech renderer/engine stress target; original data external. |

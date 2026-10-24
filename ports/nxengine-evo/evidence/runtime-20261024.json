@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-24",
+  "status": "TESTING; not RELEASE",
+  "compiler": {
+    "version": "16.2.0-open3",
+    "archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21"
+  },
+  "runtime": "zen x86-64-v3 20261024T070109Z",
+  "rom": "Kickstart 3.2.3 47.115; CRC32 b18d3b67; not intended OpenKick repeat",
+  "modules": {
+    "OpenGPU/SDL2.module": "06966096667c5c4636fd09467c8e7bdf27b141a56bb9463d72e4c1e091e2e0ab",
+    "OpenGPU/GL.module": "f9342224da20ac6a4246346ffd0afd1e2fcbc79ac73f180ec74c86b78ade7284",
+    "opengpu.library": "1334765fa629271c918aff599c41df49687020a04536f2224a11f7121e5534d8"
+  },
+  "source_commit": "1f093d1423cc395eb199230cd609b806ef1daa36",
+  "executable_sha256": "3b3773b7b1ec63c31e09f719695dc72b4d474a5b00a5b632c6065908c4c8f866",
+  "renderer": "SDL2 accelerated OpenGPU; SDL_OPENGPU unset; software-only request fails as engine requests accelerated renderer",
+  "audio": "lab muted; no audible audio pass",
+  "data_archive_sha256": "444c4265b5acc11495b8d5b00ef7e7843b5ee8e0f6a5d9c4201ed36adbd018f0",
+  "data_policy": "external local archive; no publisher digest; no redistribution grant inferred",
+  "data_import": {
+    "files": 661,
+    "music_aliases": 26,
+    "receipt_sha256": "10c0ae7e26062dc150eab3dd3553c8a96282018e2e597a855d7e5e9d545060e4"
+  },
+  "observed": [
+    "fresh open3 binary reaches visible title, opening dialogue and Start Point room",
+    "right-arrow movement changes player position",
+    "Z jump captured airborne",
+    "Down interacts with save disk",
+    "profile.dat and settings.dat written under ENVARC:nxengine",
+    "Quit menu returns process RC 0",
+    "fresh process reloads profile.dat and restores player beside save disk",
+    "reloaded process Quit returns RC 0",
+    "no Song::Load missing-music warnings after aliases"
+  ],
+  "remaining": [
+    "audible audio and missing pxt sound-effect audit",
+    "weapon/fire and extended gameplay",
+    "controller, focus, pointer/window/fullscreen checks",
+    "title-stage internal name logged as u (visible title correct)",
+    "intended clean ROM/runtime repeat and release packaging"
+  ],
+  "logs": {
+    "fresh-open3-startup.txt": "e791d6cfaf8790c76d7f3e3be0bac1eb52210b5a274ba1e49953f7882f1f2adb",
+    "reload-open3-startup.txt": "29d8996ccdc0531f55207260bcd588bfb110bff3584962b48174a9b20d2eb124"
+  },
+  "screenshots": {
+    "nx-fresh-room.png": "d9e3915e1f83d525354c22669c1c6fdc68dd66f299ffe968fd9e0a003cd7c31c",
+    "nx-fresh-moved.png": "893503c279ddabb6e04ac9abbbe0cdeb4bbc5e080652d956af19c3873cd001ab",
+    "nx-fresh-jump.png": "3b60e079aadab95c0388cc0616c69f1bfcc7314a06e2247b184992592ae4c975",
+    "nx-restored-position.png": "15188d84496abe640aa21f137453e2bfab265a00046869a13afbb201457bb166"
+  },
+  "saved_profile_sha256": "5b6d441a38a44736ae30999244cc360fb9bb63e9222487dae8a38e4fadeac455"
+}

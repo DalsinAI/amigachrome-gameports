@@ -78,7 +78,9 @@ cmake -S "$SRC" -B "$OUT" \
   -DCMAKE_TOOLCHAIN_FILE="$ROOT/toolchain/amigaos3-opengpu.cmake" \
   -DCMAKE_BUILD_TYPE=Release \
   -DAMIGA_STOVE="$STOVE" \
+  -DAMIGA_CPU_FLAGS="-m68040 -m68881 -fno-delete-null-pointer-checks" \
   -DPLATFORM=pc \
+  -DPORTABLE=ON \
   -DCMAKE_INCLUDE_PATH="$SYS/include;$SYS/include/SDL2;$DEPS/include" \
   -DCMAKE_LIBRARY_PATH="$SYS/lib;$P/lib;$DEPS/lib" \
   -DSDL2_INCLUDE_DIR="$SDL_INC" \
