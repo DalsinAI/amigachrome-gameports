@@ -79,6 +79,19 @@
       "availability": "demo-public-download",
       "packaging": "fetch-on-demand",
       "notes": "Two-level Prince of Persia demo reference dataset. SDLPoP source also carries its own project runtime data."
+    },
+    "tyrian-2.1": {
+      "games": [
+        "opentyrian"
+      ],
+      "filename": "tyrian21.zip",
+      "urls": [
+        "https://camanis.net/tyrian/tyrian21.zip"
+      ],
+      "sha256": "7790d09a2a3addcd33c66ef063d5900eb81cc9c342f4807eb8356364dd1d9277",
+      "availability": "upstream-linked-freeware",
+      "packaging": "fetch-on-demand",
+      "notes": "Official OpenTyrian README links this Tyrian 2.1 data. SHA-256 observed on 24 October 2026 and pinned for repeat downloads; not a publisher signature. Keep game data external; freeware does not imply unrestricted redistribution."
     }
   }
 }
