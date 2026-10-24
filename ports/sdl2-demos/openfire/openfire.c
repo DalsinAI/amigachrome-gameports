@@ -11,10 +11,13 @@
 
 static Uint32 rng_state = 0x4f50454eu;
 
+/* The generator's high 16 bits: its low bits repeat every 2, 4, 8 calls, so
+ * "& 1" for the cooling came out the same for every pixel and the fire never
+ * cooled (the whole window white and yellow, with a stripe pattern). */
 static Uint32 fast_rand(void)
 {
     rng_state = rng_state * 1664525u + 1013904223u;
-    return rng_state;
+    return rng_state >> 16;
 }
 
 static void make_palette(Uint32 palette[FIRE_LEVELS], int theme)

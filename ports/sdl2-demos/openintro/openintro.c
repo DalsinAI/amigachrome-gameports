@@ -46,10 +46,12 @@ static const Glyph glyphs[] = {
 
 static Uint32 rng_state = 0x494e5452u;
 
+/* The generator's high 16 bits: its low bits repeat every 2, 4, 8 calls,
+ * which left the fire at the bottom uncooled and striped. */
 static Uint32 quick_rand(void)
 {
     rng_state = rng_state * 1103515245u + 12345u;
-    return rng_state;
+    return rng_state >> 16;
 }
 
 static const Uint8 *glyph_for(char ch)
