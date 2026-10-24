@@ -44,6 +44,8 @@ actual dependency is Vulkan, .NET, Rust, Zig or an x86-only recompilation stack.
 | Atrinik classic client | https://github.com/atrinik/classic | P2 | C17 SDL3 client/server/editor monorepo; client is a useful networked 2D workload. | Client window -> local/test server connect -> input/render/audio. |
 | JA2 Pecel Bakwan | https://github.com/adhikasp/ja2-pecel-bakwan | P3 | SDL3 Jagged Alliance 2 reimplementation with larger modern dependency surface. | Dependency audit before any build work. |
 | ChupathingyCE / OpenCE Halo CE | https://github.com/ChupathingyCE/chupathingyce | P3 | SDL3-backed Halo CE community build. High showcase value, very large engine/runtime scope. | Architecture/dependency audit only until P1/P2 queue clears. |
+| OpenBumpy | https://github.com/wildpacman/OpenBumpy | P2 | C++20/SDL3 reconstruction of Bumpy's Arcade Fantasy; original data external. | Title -> first stage -> input/audio -> clean exit. |
+| Dinosaur SDL3 | https://github.com/Jenway/dinosaurSDL3 | P1-LAB | Small C SDL3 game with native persistence and regression tests; ideal deterministic canary. | Play loop -> high-score persistence -> clean exit. |
 
 ## SDL3 applications, emulators and platform multipliers
 
@@ -59,6 +61,7 @@ actual dependency is Vulkan, .NET, Rust, Zig or an x86-only recompilation stack.
 | Ymir | https://github.com/ymir-emu/ymir | P3/PARK | SDL3 Sega Saturn emulator, but C++20 and Saturn emulation cost make AC090 performance doubtful. | Architecture/performance review only. |
 | Atrinik editor | https://github.com/atrinik/editor | PARK | SDL3 but written in Rust; toolchain cost dominates the application. | Revisit only if Rust/m68k becomes a supported platform. |
 | CrossDesk | https://github.com/kunkundi/crossdesk | PARK | SDL3 frontend but WebRTC/media/network dependency stack is much larger than the UI. | No port work until WebRTC stack is justified independently. |
+| GSplus | https://github.com/digarok/gsplus | P2 | SDL3 Apple IIgs emulator and tools based on KEGS; GPL-3.0. Strong retro-computing fit. | Boot legal/free system media -> render/input/audio -> clean exit. |
 
 ## Research / stretch candidates
 
@@ -84,11 +87,11 @@ These use SDL3 but should not consume the current porting queue:
 
 1. Finish **LBA2** and **OpenLoco** first: they are already real SDL3/open3 ports.
 2. Intake **DevilutionX, ScummVM, xrick, Frozen Bubble, Freeserf, Street Rod 1/2**.
-3. Use **Space Invaders SDL3** and **sdl3-gl** as small deterministic regression
+3. Use **Space Invaders SDL3, Dinosaur SDL3** and **sdl3-gl** as small deterministic regression
    programs for SDL3.module/OpenGPU/OpenAudio/OpenInput.
 4. Start the platform multipliers: **DOSBox-X SDL3**, then **Retro-DOS**.
 5. Take the second wave: **Woof!, Project Picori, Principia, OpenCMR2, SuperTux,
-   Quetoo, Richman 4, Atrinik client**.
+   Quetoo, Richman 4, Atrinik client, OpenBumpy and GSplus**.
 6. Keep modern-toolchain or renderer-heavy SDL3 projects in research/PARK until
    they stop requiring a larger platform port than the application itself.
 
