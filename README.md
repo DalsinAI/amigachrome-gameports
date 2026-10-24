@@ -7,6 +7,15 @@ Open-source game-port and compatibility work for **m68k AROS**, **AmigaOS 3.x** 
 
 The repository contains compiled revival ports, the Neverball/OpenGPU release lane, and the next 3D source-intake targets. Compile success is useful evidence, but it is **not** synonymous with release readiness. See [RELEASE_POLICY.md](RELEASE_POLICY.md).
 
+## Live programme - 24 October 2026
+
+The [live execution order and SDL3 intake](PORT_BACKLOG.md#live-execution-order---24-october-2026)
+accept the reviewed games, applications and lab targets into the programme.
+Finish the existing playable/SDL3 ports first. With OpenAL nearing readiness,
+prepare its AC090 qualification and AstroMenace as the first consumer; availability
+and audio success remain explicit gates. See the [full SDL3 review](docs/SDL3_PORT_REVIEW_20261024.md).
+New intake entries still need audited source pins before becoming fetch/build targets.
+
 ## Post-merge checks - 13 October 2026
 
 The port/SDL changes are merged and rebuilt. A new Amiga-only OpenJazz

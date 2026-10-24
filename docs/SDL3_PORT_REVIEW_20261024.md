@@ -83,6 +83,22 @@ These use SDL3 but should not consume the current porting queue:
 - **OpenReliant and other SDL GPU API projects** - revisit after our SDL3 GPU API
   support is broader than the current renderer/OpenGL path.
 
+## OpenAL readiness and intake state
+
+All P1/P2 entries in this review are accepted into the live programme as INTAKE,
+including the non-game applications and SDK/lab targets. P3/PARK entries remain
+research. The live execution order is maintained in [PORT_BACKLOG.md](../PORT_BACKLOG.md).
+
+The owner reports OpenAL nearing readiness. Prepare AstroMenace's dependency
+lane now and qualify it as the first OpenAL consumer after the SDK/runtime
+passes device/context, sample, streaming, teardown and repeat gates on AC090.
+This is a conditional priority change, not an OpenAL availability or audio-pass
+claim. SDL3 audio remains its own OpenAudio/AHI qualification lane; do not add
+an OpenAL dependency to SDL3 targets unless their actual source requires it.
+Keep LBA2/OpenLoco and the active playable finish campaign ahead of broad new
+port implementation. Exact source pins, licences, dependencies and external
+data must still be reviewed before a candidate enters the fetch/build catalogue.
+
 ## Programme order
 
 1. Finish **LBA2** and **OpenLoco** first: they are already real SDL3/open3 ports.
