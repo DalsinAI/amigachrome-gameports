@@ -124,6 +124,46 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | Speed Dreams | STRETCH | OpenGPU | TBD | Large racing/physics/3D target. |
 | 0 A.D. | STRETCH | OpenGPU | TBD | Very large RTS/engine/dependency stress target. |
 
+## SDL3 programme - 24 October 2026
+
+The SDL3 lane is now explicit. See [the wider SDL3 game and application review](docs/SDL3_PORT_REVIEW_20261024.md).
+
+### P0 - finish active SDL3 ports
+
+| Port | State | Lane | Priority | Next gate |
+|---|---|---|---:|---|
+| LBA2 Classic Community | ACTIVE | SDL3 / OpenGPU / OpenAudio / OpenInput | P0 | Finish visual/runtime qualification on AC090. |
+| OpenLoco | ACTIVE | SDL3 / OpenGPU / networking | P0 | Clear S5/game-state endian barrier, then visible gameplay and audio. |
+
+### P1 - next SDL3 intake
+
+| Port / app | Lane | Priority | Why now |
+|---|---|---:|---|
+| DevilutionX | SDL3 / OpenGPU / OpenAudio | P1 | Explicit upstream SDL3 path; high game value; strong fit for AC090. |
+| ScummVM | SDL3 / OpenGPU / OpenAudio / OpenInput | P1 | Platform multiplier; one backend unlocks many engines. |
+| xrick | SDL3 / OpenAudio / OpenInput | P1 | Small C codebase, Rick Dangerous I/II, excellent 68040 fit. |
+| Frozen Bubble SDL3 | SDL3 / OpenAudio / networking | P1 | Native SDL3 2D title; good audio/input/network coverage. |
+| Freeserf | SDL3 / OpenAudio / filesystem | P1 | Settlers-class workload with strong 68k fit; original data external. |
+| Street Rod SDL3 | SDL3 / OpenAudio / OpenInput | P1 | C11, low rendering cost, highly suitable first-wave port. |
+| Street Rod 2 SDL3 | SDL3 / OpenAudio / OpenInput | P1 | Shares the same family and likely reusable port work. |
+| Space Invaders SDL3 | SDL3 / OpenAudio / OpenInput | P1-LAB | Tiny deterministic SDL3 regression/playability canary. |
+| sdl3-gl | SDL3 / OpenGPU | P1-LAB | Minimal SDL3 + OpenGL/OpenGPU regression harness. |
+| DOSBox-X SDL3 | SDL3 / OpenAudio / OpenInput | P1 | Application/game multiplier; interpreter-first reduced feature build. |
+
+### P2 - second SDL3 wave
+
+Woof!, Project Picori / TMC PC port, Principia, OpenCMR2, SuperTux, Quetoo,
+Richman 4 Remastered, Atrinik classic client, Retro-DOS, portty, BubiC-8801MA
+and simple2d are accepted P2 SDL3 candidates subject to exact source pin,
+licence, dependency and data review.
+
+### P3 / PARK - research only
+
+JA2 Pecel Bakwan, ChupathingyCE/OpenCE Halo CE, Ymir, Atrinik editor, CrossDesk,
+modern SDL GPU/Vulkan-heavy projects, Zig/.NET-dependent SDL3 projects and
+x86-only recompilation projects remain research or PARK. SDL3 alone is not
+sufficient reason to consume AC090 porting time.
+
 ## Post-merge checks - 13 October 2026
 
 The port/SDL changes are merged and rebuilt. A new Amiga-only OpenJazz
