@@ -52,3 +52,12 @@ target_compile_definitions(object-wire PRIVATE FMT_HEADER_ONLY=1)
 add_dependencies(port-probes asset-wire object-wire)
 add_test(NAME graphics-css-wire-format COMMAND asset-wire)
 add_test(NAME object-fixed-wire-format COMMAND object-wire)
+
+add_executable(s5-wire s5_wire.cpp
+    "${OPENLOCO_SOURCE}/src/OpenLoco/src/S5/SawyerStream.cpp"
+    "${OPENLOCO_SOURCE}/src/Core/src/MemoryStream.cpp")
+get_target_property(s5_probe_includes object-wire INCLUDE_DIRECTORIES)
+target_include_directories(s5-wire PRIVATE ${s5_probe_includes})
+target_compile_definitions(s5-wire PRIVATE FMT_HEADER_ONLY=1)
+add_dependencies(port-probes s5-wire)
+add_test(NAME s5-wire-boundaries COMMAND s5-wire)

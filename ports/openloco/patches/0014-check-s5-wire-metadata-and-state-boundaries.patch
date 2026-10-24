@@ -1,0 +1,254 @@
+diff --git a/src/OpenLoco/include/OpenLoco/S5/S5Wire.hpp b/src/OpenLoco/include/OpenLoco/S5/S5Wire.hpp
+new file mode 100644
+index 0000000..84a4318
+--- /dev/null
++++ b/src/OpenLoco/include/OpenLoco/S5/S5Wire.hpp
+@@ -0,0 +1,93 @@
++// Copyright (c) 2026 AmigaChrome Team. MIT licensed.
++#pragma once
++#include "S5.h"
++#include "S5Options.h"
++#include "Objects/ObjectWire.hpp"
++#include <OpenLoco/Core/DataEndian.hpp>
++#include <array>
++#include <bit>
++#include <cstring>
++
++namespace OpenLoco::S5::Wire
++{
++    constexpr uint32_t kVersion = 0x62262;
++
++    inline void requireSize(std::span<const std::byte> bytes, size_t expected)
++    {
++        if (bytes.size() != expected)
++            throw std::runtime_error("Invalid S5 chunk size");
++    }
++
++    inline void copyExact(std::span<const std::byte> bytes, void* destination, size_t expected)
++    {
++        requireSize(bytes, expected);
++        if (expected != 0)
++            std::memcpy(destination, bytes.data(), expected);
++    }
++
++    inline Header decodeHeader(std::span<const std::byte> bytes)
++    {
++        requireSize(bytes, sizeof(Header));
++        Header result{};
++        result.type = static_cast<S5Type>(std::to_integer<uint8_t>(bytes[0]));
++        result.flags = static_cast<HeaderFlags>(std::to_integer<uint8_t>(bytes[1]));
++        result.numPackedObjects = Utility::readLittleEndian<uint16_t>(bytes, 2);
++        result.version = Utility::readLittleEndian<uint32_t>(bytes, 4);
++        result.magic = Utility::readLittleEndian<uint32_t>(bytes, 8);
++        std::memcpy(result.padding, bytes.data() + 12, sizeof result.padding);
++        return result;
++    }
++
++    inline SaveDetails decodeSaveDetails(std::span<const std::byte> bytes)
++    {
++        requireSize(bytes, sizeof(SaveDetails));
++        SaveDetails result{};
++        std::memcpy(&result, bytes.data(), sizeof result);
++        result.date = Utility::readLittleEndian<uint32_t>(bytes, offsetof(SaveDetails, date));
++        result.performanceIndex = Utility::readLittleEndian<uint16_t>(bytes, offsetof(SaveDetails, performanceIndex));
++        result.challengeFlags = static_cast<CompanyFlags>(Utility::readLittleEndian<uint32_t>(bytes, offsetof(SaveDetails, challengeFlags)));
++        return result;
++    }
++
++    inline Options decodeOptions(std::span<const std::byte> bytes)
++    {
++        requireSize(bytes, sizeof(Options));
++        Options result{};
++        std::memcpy(&result, bytes.data(), sizeof result);
++        result.scenarioStartYear = Utility::readLittleEndian<uint16_t>(bytes, offsetof(Options, scenarioStartYear));
++        result.scenarioFlags = Utility::readLittleEndian<uint16_t>(bytes, offsetof(Options, scenarioFlags));
++        result.numberOfForests = Utility::readLittleEndian<uint16_t>(bytes, offsetof(Options, numberOfForests));
++        result.numberRandomTrees = Utility::readLittleEndian<uint16_t>(bytes, offsetof(Options, numberRandomTrees));
++        result.objective.companyValue = Utility::readLittleEndian<uint32_t>(bytes, offsetof(Options, objective) + offsetof(Objective, companyValue));
++        result.objective.monthlyVehicleProfit = Utility::readLittleEndian<uint32_t>(bytes, offsetof(Options, objective) + offsetof(Objective, monthlyVehicleProfit));
++        result.objective.deliveredCargoAmount = Utility::readLittleEndian<uint32_t>(bytes, offsetof(Options, objective) + offsetof(Objective, deliveredCargoAmount));
++        result.scenarioText = ObjectWire::decodeHeader(bytes.subspan(offsetof(Options, scenarioText), sizeof(ObjectHeader)));
++        result.objectiveDeliveredCargo = ObjectWire::decodeHeader(bytes.subspan(offsetof(Options, objectiveDeliveredCargo), sizeof(ObjectHeader)));
++        result.currency = ObjectWire::decodeHeader(bytes.subspan(offsetof(Options, currency), sizeof(ObjectHeader)));
++        return result;
++    }
++
++    // Metadata decoding does not make the packed simulation payload native.
++    // Do not pass it to importGameState before its complete schema is converted.
++    template<std::endian Endian = std::endian::native>
++    inline void requireGameStateSupport(const Header& header)
++    {
++        if (header.version != kVersion)
++            throw std::runtime_error("Unsupported S5 version");
++        if constexpr (Endian != std::endian::little)
++            throw std::runtime_error("S5 game-state endian conversion is not implemented");
++    }
++
++    inline size_t tileCount(std::span<const std::byte> bytes, size_t elementSize, size_t maximum)
++    {
++        if (elementSize == 0 || bytes.size() % elementSize != 0 || bytes.size() / elementSize > maximum)
++            throw std::runtime_error("Invalid S5 tile-element chunk size");
++        return bytes.size() / elementSize;
++    }
++
++    inline bool isLegacyGameState(std::span<const std::byte> bytes)
++    {
++        const auto flags = Utility::readLittleEndian<uint16_t>(bytes, 0x434);
++        return (flags & (enumValue(S5FixFlags::fixFlag0) | enumValue(S5FixFlags::fixFlag1))) == 0;
++    }
++}
+diff --git a/src/OpenLoco/src/S5/S5.cpp b/src/OpenLoco/src/S5/S5.cpp
+index 206059f..c11aaba 100644
+--- a/src/OpenLoco/src/S5/S5.cpp
++++ b/src/OpenLoco/src/S5/S5.cpp
+@@ -1,6 +1,7 @@
+ #define DO_TITLE_SEQUENCE_CHECKS
+ 
+ #include "S5/S5.h"
++#include "S5/S5Wire.hpp"
+ 
+ #include "Audio/Audio.h"
+ #include "EditorController.h"
+@@ -445,12 +446,17 @@ namespace OpenLoco::S5
+     // 0x00441C26
+     bool exportGameStateToFile(const fs::path& path, SaveFlags flags)
+     {
++        // Refuse before opening/truncating an existing save on an unsupported host.
++        if constexpr (std::endian::native != std::endian::little)
++            return false;
+         FileStream fs(path, StreamMode::write);
+         return exportGameStateToFile(fs, flags);
+     }
+ 
+     bool exportGameStateToFile(Stream& stream, SaveFlags flags)
+     {
++        if constexpr (std::endian::native != std::endian::little)
++            return false;
+         if ((flags & SaveFlags::isAutosave) == SaveFlags::none)
+         {
+             Ui::ProgressBar::begin(StringIds::please_wait);
+@@ -582,21 +588,22 @@ namespace OpenLoco::S5
+             throw Exception::RuntimeError("Invalid checksum");
+         }
+ 
++        // Validate the wire header before allocating or interpreting packed state.
++        const auto header = Wire::decodeHeader(fs.readChunk());
++        Wire::requireGameStateSupport(header);
+         auto file = std::make_unique<S5File>();
+-
+-        // Read header
+-        fs.readChunk(&file->header, sizeof(file->header));
++        file->header = header;
+ 
+         // Read saved details 0x00442087
+         if (file->header.hasFlags(HeaderFlags::hasSaveDetails))
+         {
+             file->saveDetails = std::make_unique<SaveDetails>();
+-            fs.readChunk(file->saveDetails.get(), sizeof(SaveDetails));
++            *file->saveDetails = Wire::decodeSaveDetails(fs.readChunk());
+         }
+         if (file->header.type == S5Type::scenario)
+         {
+             file->scenarioOptions = std::make_unique<S5::Options>();
+-            fs.readChunk(&*file->scenarioOptions, sizeof(S5::Options));
++            Wire::copyExact(fs.readChunk(), file->scenarioOptions.get(), sizeof(S5::Options));
+         }
+         // Read packed objects
+         if (file->header.numPackedObjects > 0)
+@@ -617,14 +624,14 @@ namespace OpenLoco::S5
+         if (file->header.type == S5Type::scenario)
+         {
+             // Load required objects
+-            fs.readChunk(file->requiredObjects, sizeof(file->requiredObjects));
++            Wire::copyExact(fs.readChunk(), file->requiredObjects, sizeof(file->requiredObjects));
+ 
+             // Load game state up to just before companies
+-            fs.readChunk(&file->gameState, sizeof(file->gameState));
++            Wire::copyExact(fs.readChunk(), &file->gameState.general, sizeof(S5::GeneralState));
+             // Load game state towns industry and stations
+-            fs.readChunk(&file->gameState.towns, sizeof(file->gameState));
++            Wire::copyExact(fs.readChunk(), file->gameState.towns, offsetof(S5::GameState, entities) - offsetof(S5::GameState, towns));
+             // Load the rest of gamestate after animations
+-            fs.readChunk(&file->gameState.animations, sizeof(file->gameState));
++            Wire::copyExact(fs.readChunk(), file->gameState.animations, sizeof(S5::GameState) - offsetof(S5::GameState, animations));
+             file->gameState.general.fixFlags |= enumValue(S5FixFlags::fixFlag1);
+             // fixState(file->gameState); this doesn't do anything as we have set fixFlag1
+ 
+@@ -632,7 +639,7 @@ namespace OpenLoco::S5
+             {
+                 // Load tile elements
+                 auto tileElements = fs.readChunk();
+-                auto numTileElements = tileElements.size() / sizeof(TileElement);
++                auto numTileElements = Wire::tileCount(tileElements, sizeof(TileElement), World::TileManager::kMaxElements);
+                 file->tileElements.resize(numTileElements);
+                 std::memcpy(file->tileElements.data(), tileElements.data(), numTileElements * sizeof(TileElement));
+             }
+@@ -640,27 +647,26 @@ namespace OpenLoco::S5
+         else
+         {
+             // Load required objects
+-            fs.readChunk(file->requiredObjects, sizeof(file->requiredObjects));
++            Wire::copyExact(fs.readChunk(), file->requiredObjects, sizeof(file->requiredObjects));
+ 
+             // Load game state
+             auto chunkData = fs.readChunk();
+-            const auto fixFlags = static_cast<S5FixFlags>(chunkData[0x434]);
+-            if (((fixFlags & S5FixFlags::fixFlag0) == S5FixFlags::none) && ((fixFlags & S5FixFlags::fixFlag1) == S5FixFlags::none))
++            if (Wire::isLegacyGameState(chunkData))
+             {
+                 auto oldGameState = std::make_unique<S5::GameStateType2>();
+-                std::memcpy(&*oldGameState, chunkData.data(), sizeof(S5::GameStateType2));
++                Wire::copyExact(chunkData, oldGameState.get(), sizeof(S5::GameStateType2));
+                 file->gameState = *importGameStateType2(*oldGameState);
+             }
+             else
+             {
+-                std::memcpy(&file->gameState, chunkData.data(), sizeof(S5::GameState));
++                Wire::copyExact(chunkData, &file->gameState, sizeof(S5::GameState));
+             }
+             // old fixState 0x00445A4A would set this after adjusting the data
+             file->gameState.general.fixFlags |= enumValue(S5FixFlags::fixFlag1);
+ 
+             // Load tile elements
+             auto tileElements = fs.readChunk();
+-            auto numTileElements = tileElements.size() / sizeof(TileElement);
++            auto numTileElements = Wire::tileCount(tileElements, sizeof(TileElement), World::TileManager::kMaxElements);
+             file->tileElements.resize(numTileElements);
+             std::memcpy(file->tileElements.data(), tileElements.data(), numTileElements * sizeof(TileElement));
+         }
+@@ -1032,7 +1038,7 @@ namespace OpenLoco::S5
+         Header s5Header{};
+ 
+         // Read header
+-        fs.readChunk(&s5Header, sizeof(s5Header));
++        s5Header = Wire::decodeHeader(fs.readChunk());
+ 
+         if (s5Header.version != kCurrentVersion)
+         {
+@@ -1048,7 +1054,7 @@ namespace OpenLoco::S5
+         {
+             // 0x0050AEA8
+             auto ret = std::make_unique<SaveDetails>();
+-            fs.readChunk(ret.get(), sizeof(*ret));
++            *ret = Wire::decodeSaveDetails(fs.readChunk());
+             return ret;
+         }
+         return nullptr;
+@@ -1067,7 +1073,7 @@ namespace OpenLoco::S5
+         Header s5Header{};
+ 
+         // Read header
+-        fs.readChunk(&s5Header, sizeof(s5Header));
++        s5Header = Wire::decodeHeader(fs.readChunk());
+ 
+         if (s5Header.version != kCurrentVersion)
+         {
+@@ -1080,7 +1086,7 @@ namespace OpenLoco::S5
+             // 0x009CCA54 _previewOptions
+ 
+             auto s5Options = std::make_unique<S5::Options>();
+-            fs.readChunk(s5Options.get(), sizeof(S5::Options));
++            *s5Options = Wire::decodeOptions(fs.readChunk());
+             return std::make_unique<Scenario::Options>(importOptions(*s5Options));
+         }
+         return nullptr;
