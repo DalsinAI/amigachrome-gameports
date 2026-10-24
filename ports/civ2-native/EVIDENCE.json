@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-24",
+  "upstream": "e3c40da88689ed79903debf4bff436bd140b79fa",
+  "compiler": "OpenAmigaGCC 16.2.0-open3",
+  "target": "68040+FPU",
+  "memoryProbe": {
+    "amigaBinarySha256": "ec6b78727bde43d3eb0cbd01fd7389c9e05268bf58504b75a3cc5b558d9ddd0e",
+    "bigEndianLinuxQemu": "PASS",
+    "amigaLabExitCode": 0,
+    "checks": ["unaligned 8/16/32/64-bit LE reads", "32/64-bit stores", "float", "strings", "memory copy", "memory growth", "bounds trap", "teardown"]
+  },
+  "gameFirstDialog": {
+    "binarySha256": "f0c843420fdd947cc6c85388c9cc9a0eb4442035ec51a7fbc3ac11073de92f4a",
+    "result": "Native launch parsed explicit options, loaded original MGE resources/fonts, ran upstream menu replay, exported a 1024x768 BMP showing the first-run diplomatic-herald preference dialog.",
+    "gameplay": "NOT QUALIFIED",
+    "cleanExit": "NOT QUALIFIED: replay logged script completion but did not return to the guest runner",
+    "input": "NOT QUALIFIED: replay mode intentionally discards physical input"
+  },
+  "recipeVerification": "Prepared source matches the first-dialog build except an added upper bound on inherited environment entries; Python syntax and diff checks passed. That guard is not a new gameplay result.",
+  "rom": "Existing 24 October 11:00 all-main baseline, pending interim ROM not deployed by this task",
+  "packaging": "Source-only prototype. No generated game C, fonts, original data, executables or raw runtime logs included."
+}
