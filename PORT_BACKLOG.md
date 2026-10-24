@@ -128,6 +128,29 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | Speed Dreams | STRETCH | OpenGPU | TBD | Large racing/physics/3D target. |
 | 0 A.D. | STRETCH | OpenGPU | TBD | Very large RTS/engine/dependency stress target. |
 
+## Older Amiga port revival - 24 October 2026
+
+Owner-selected intake: **OpenTyrian and Enigma**. Source pins, build/configure
+helpers and exact limits are in [OpenTyrian](ports/opentyrian/README.md) and
+[Enigma](ports/enigma/README.md). These SDL2 targets do not wait for OpenAL.
+Old OS4/MorphOS binaries are precedent; AC090 needs a fresh m68k source build.
+
+| Priority | Target | Current state / next gate | Data boundary |
+|---|---|---|---|
+| P1 active | OpenTyrian | open3 compile/link and muted title/attract-demo first light; native User directory and clean exit observed. Interactive gameplay, full-frame presentation, audio and intended-ROM repeat remain. | Upstream-linked Tyrian 2.1 download, digest pinned; fetched separately, no user upload needed. |
+| P1 active, blocked | Enigma | Source pinned; target SDK gate identifies missing Xerces-C and curl archives/headers. Existing OpenAmigaCurl is the curl integration route, not a new curl port. No engine build/runtime pass. | Normal levels in source; audit asset notices before bundling. No retail Oxyd upload needed. |
+| P1 next revival | FooBillard | Audit the small 3.0a baseline before considering FooBillard++; OpenGPU fixed-function compatibility first. | Review bundled assets/notices. |
+| P2 revival | LinCity-NG | Audit current source and dependency size against the older OS4 port; reach city UI and save/load. | Review included data. |
+| P2 revival | REminiscence | Pin modern source; the old MorphOS port is useful precedent. Input, palette, save/load and exit gates. | Original Flashback data external. |
+| P2 revival | Cannonball | Renderer/SDL/endian audit, then race and controls on AC090. | User-owned OutRun ROM data external. |
+| P2 integration | Descent / DXX-Rebirth | Compare current maintained Amiga builds first; avoid duplicating working D1X/D2X ports. | Original Descent data or authorised demo external. |
+| P2 existing candidate | Stratagus / Wargus | Keep the existing engine/module rows; audit Lua, networking and import workflow against the old OS4 port. | Warcraft II data external; never bundle extraction output. |
+| P2 existing candidate | Exult | Compare current maintained RTG/SDL2 port first; integration may beat re-porting. | Original Ultima VII data external. |
+
+The [revival review](docs/LEGACY_PORT_REVIVAL_20261024.md) records the existing
+Amiga-port references and the difference between an accepted candidate and a
+qualified game. No row is promoted to RELEASE by this intake.
+
 ## Live execution order - 24 October 2026
 
 OpenAL is **nearing readiness**, per the project owner's update. This changes
@@ -138,7 +161,7 @@ SDL3 candidates do not automatically depend on OpenAL.
 | Priority | Work | Next action and remaining gate |
 |---|---|---|
 | P0 | UQM, Chocolate Doom, SDLPoP, OpenJazz, Neverball/Neverputt, AssaultCube, NXEngine-evo | Finish the active playable campaign with verified GCC 16.2.0-open3 builds. Retain each title's outstanding graphics, input, audio, persistence and exit gates; existing muted runs do not pass audio. |
-| P0 SDL3 | LBA2, OpenLoco | Finish the existing SDL3 ports alongside the playable campaign. OpenLoco's endian barrier remains independent of audio. |
+| P0 SDL3 | LBA2, OpenLoco | Finish the existing SDL3 ports alongside the playable campaign. OpenLoco's merged endian conversion still needs full-app qualification; audio remains a separate gate. |
 | P0 platform gate | OpenAL qualification | When an identifiable SDK/runtime is available, record version/ABI/hashes, verify 68040/FPU and endian assumptions, then prove device/context creation, sample playback, streaming, teardown and repeat on AC090. Until then, dependency preparation only. |
 | P1 audio intake | AstroMenace | Prepare the OpenAL/ALUT/Ogg/Vorbis dependency audit now. Make this the first OpenAL consumer qualification after the platform gate; retain renderer, asset-endian, input, persistence and clean-exit gates. |
 | P1 active follow-up | OpenOMF, C-Dogs | Resume current build/runtime blockers after the P0 finish queue. |

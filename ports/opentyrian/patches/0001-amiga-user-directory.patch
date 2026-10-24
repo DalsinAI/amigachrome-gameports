@@ -1,0 +1,22 @@
+--- a/src/file.c
++++ b/src/file.c
+@@ -173,6 +173,19 @@
+ 		userDirPathLen = 0;
+ 	}
+ 
++#ifdef __amigaos__
++    /* Native Amiga paths use ':' for the volume/assign boundary. Keep the
++       portable user directory below PROGDIR rather than Unix HOME/.config. */
++    userDirPath = malloc(sizeof("PROGDIR:User"));
++    if (userDirPath == NULL) {
++        fprintf(stderr, "OpenTyrian: cannot allocate user directory path\n");
++        exit(EXIT_FAILURE);
++    }
++    strcpy(userDirPath, "PROGDIR:User");
++    userDirPathLen = strlen(userDirPath);
++    return;
++#endif
++
+ 	char *basePath = SDL_GetBasePath();
+ 	if (basePath != NULL)
+ 	{

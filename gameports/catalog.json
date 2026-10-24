@@ -243,6 +243,38 @@
         "source": "pinned upstream gamedata tree",
         "firstLaunch": "build gamedata.vfs automatically"
       }
+    },
+    "opentyrian": {
+      "order": 18,
+      "title": "OpenTyrian",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/opentyrian/opentyrian.git",
+        "commit": "ac5d0e71f4245744350c6116ce24f10624da58f8",
+        "submodules": false
+      },
+      "contentPolicy": "GPL-2.0-or-later engine; freeware Tyrian data has separate terms and is fetched locally, not committed.",
+      "runtimeData": {
+        "mode": "auto-fetch",
+        "dataset": "tyrian-2.1",
+        "manifest": "gameports/runtime-data.json"
+      }
+    },
+    "enigma": {
+      "order": 19,
+      "title": "Enigma",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/Enigma-Game/Enigma.git",
+        "commit": "6f0c51b26cc013cb6c935046d7d1e6a20bea4179",
+        "submodules": false
+      },
+      "contentPolicy": "GPL-2.0-or-later engine. Normal levels are in the source data tree; upstream sound/font/level notices require preservation and review before redistribution. No retail Oxyd data is required for the normal levels.",
+      "runtimeData": {
+        "mode": "source-tree",
+        "directory": "data",
+        "packaging": "audit-before-bundle"
+      }
     }
   }
 }
