@@ -3,8 +3,9 @@ set -eu
 HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
 SRC=${ASSAULTCUBE_SRC:-"$ROOT/build/game-ports/sources/assaultcube/source"}
-STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
+: "${STOVE:?set STOVE to an isolated 16.2.0-open3 stove root}"
 DEPS=$(python3 "$ROOT/scripts/port_dependencies.py" verify --stove "$STOVE" --require zlib)
+python3 "$ROOT/scripts/verify_gameport_stove.py" --stove "$STOVE" >/dev/null
 [ -z "${ZLIB_ROOT:-}" ] || [ "$ZLIB_ROOT" = "$DEPS" ] || {
     echo "ZLIB_ROOT must use the verified stove dependency directory: $DEPS" >&2; exit 3;
 }
