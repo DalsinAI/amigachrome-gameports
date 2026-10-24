@@ -5,10 +5,11 @@ HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
 SRC=${1:-"$ROOT/build/game-ports/sources/nxengine-evo"}
 OUT=${2:-"$ROOT/build/os3/nxengine-evo"}
-STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
+: "${STOVE:?set STOVE to an isolated 16.2.0-open3 stove root}"
 P="$STOVE/prefix"
 SYS="$P/m68k-amigaos"
 DEPS=$(python3 "$ROOT/scripts/port_dependencies.py" verify --stove "$STOVE" --require zlib png jpeg)
+python3 "$ROOT/scripts/verify_gameport_stove.py" --stove "$STOVE" >/dev/null
 CC="$P/bin/m68k-amigaos-gcc"
 CXX="$P/bin/m68k-amigaos-g++"
 SDL2_CONFIG="$P/bin/sdl2-config"
