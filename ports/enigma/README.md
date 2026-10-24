@@ -30,3 +30,19 @@ matching curl, TLS/socket dependencies and headers with provenance, then
 cross-link a real consumer. Xerces-C remains a separate dependency gate.
 After configuration: compile/link, level/input, persistence, audio, clean exit
 and intended-ROM repeat. No build or RELEASE claim is made while blocked.
+
+## Using the refreshed SDK
+
+Pass `--sdk-overlay /path/to/curl-sdk/sdk` to use the isolated Open SDK curl
+output alongside the selected stove. The inventory records actual input
+paths and hashes; CMake searches the explicit target overlay first, and its
+complete native headers stay ahead of older compiler NDK copies. This is
+an explicit target prefix, not permission to use host libraries.
+The new overlay removes curl's missing-input gate; Xerces-C still blocks
+configuration. Presence/hash checks alone do not prove ABI compatibility.
+
+Curl also requires the application to own/open its task's SocketBase and set
+its errno hook before curl initialization, as OpenBrowser does. The refreshed
+SDK consumer example demonstrates real initialization; merely adding a dummy
+symbol is insufficient. Enigma's native network startup and task ownership
+remain part of its eventual build/runtime integration.
