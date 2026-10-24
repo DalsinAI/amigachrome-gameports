@@ -34,6 +34,31 @@ the whole list together using: **P0 = finish now, P1 = next wave, P2 = planned, 
 Status words are descriptive, not release claims. **DONE means RELEASE** and still requires
 the normal clean-build, provenance, packaging and AC090 runtime gates.
 
+
+## SDL3 programme - 24 October 2026
+
+The wider SDL3 review is now tracked in [docs/SDL3_PORT_REVIEW_20261024.md](docs/SDL3_PORT_REVIEW_20261024.md).
+
+**P0 active:** LBA2 Classic Community and OpenLoco.
+
+**P1 intake:** DevilutionX, ScummVM, xrick, Frozen Bubble SDL3, Freeserf,
+Street Rod SDL3 and Street Rod 2 SDL3.
+
+**P1 lab/canary:** Space Invaders SDL3, Dinosaur SDL3 and sdl3-gl. These are
+small deterministic programs used to qualify SDL3.module, OpenGPU, OpenAudio
+and OpenInput without confusing platform failures with a large game engine.
+
+**P1 platform multiplier:** DOSBox-X SDL3.
+
+**P2 second wave:** Woof!, Project Picori/TMC, Principia, OpenCMR2, SuperTux,
+Quetoo, Richman 4 Remastered, Atrinik classic client, OpenBumpy, GSplus,
+Retro-DOS, portty and BubiC-8801MA.
+
+Projects whose real blocker is Vulkan/DXVK, Zig, Rust, .NET, C++23-heavy
+tooling, x86-only recompilation or very high emulation cost remain research/PARK
+even when they use SDL3.
+
+
 | Port | Current state | Likely lane | Priority | Notes / next meaningful gate |
 |---|---|---|---|---|
 | OpenOMF / OMFAGA | ACTIVE - build fix | ACGame / native AGA | TBD | GCC16/0008 lane exists. Canonical AGA-profile state bug fixed; latest runner exposed a local ENet compatibility-header path error before compile. Then AC090 arena first light. |
