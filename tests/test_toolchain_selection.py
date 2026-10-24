@@ -44,4 +44,27 @@ class StoveSelectionTests(unittest.TestCase):
     def test_space_in_stove_path(self):
         self.check(self.select(stove='/opt/Open GCC 16 open2'),'/opt/Open GCC 16 open2')
 
+    def test_explicit_overlay_is_target_only_and_kept_for_probes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            overlay, host = root / 'overlay', root / 'host'
+            (overlay / 'include').mkdir(parents=True)
+            (host / 'include').mkdir(parents=True)
+            (overlay / 'include/probe.h').write_text('target')
+            (host / 'include/host_only.h').write_text('host')
+            result = root / 'result.txt'
+            script = root / 'probe.cmake'
+            script.write_text(
+                f'set(AMIGA_STOVE "{root / "stove"}")\n'
+                f'set(AMIGA_SDK_OVERLAYS "{overlay}")\n'
+                f'include("{ROOT / "toolchain/amigaos3-opengpu.cmake"}")\n'
+                'find_path(TARGET_HEADER probe.h)\n'
+                f'find_path(HOST_HEADER host_only.h PATHS "{host / "include"}" NO_DEFAULT_PATH)\n'
+                f'file(WRITE "{result}" "${{TARGET_HEADER}}\n${{HOST_HEADER}}\n${{CMAKE_TRY_COMPILE_PLATFORM_VARIABLES}}")\n')
+            subprocess.run(['cmake', '-P', str(script)], check=True, capture_output=True, text=True)
+            lines = result.read_text().splitlines()
+            self.assertEqual(lines[0], str(overlay / 'include'))
+            self.assertEqual(lines[1], 'HOST_HEADER-NOTFOUND')
+            self.assertIn('AMIGA_SDK_OVERLAYS', lines[2].split(';'))
+
 if __name__ == '__main__': unittest.main()
