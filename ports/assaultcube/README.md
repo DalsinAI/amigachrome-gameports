@@ -79,3 +79,17 @@ The client now gives an explicit server/ENet prerequisite error when the archive
 is absent. This checks existence, not the provenance of an arbitrary preexisting
 ENet archive: start from a clean checkout and build it through the server recipe.
 The first-light audio stub remains; these changes add no audio or runtime pass.
+
+## Native first light, 24 October 2026
+
+The verified client reaches `ac_desert` on the open ROM with textured 3D,
+weapon, HUD and menu rendering. Audio is still stubbed. The first-run welcome
+wizard requests a live graphics reset; that path caused a task-guard stop
+(illegal instruction at PC 0x2a) after the map was visible. It is not qualified.
+
+The Amiga client now defaults to 640x480. A fresh profile loads the normal
+controls and skips the delayed welcome wizard, so opening the game does not
+immediately request another graphics context. Existing saved profiles and
+explicit `-w` / `-h` options still override the startup size. This avoids the
+known reset path at first launch; it does not repair context recreation.
+Mouse capture and end-to-end gameplay remain under test.

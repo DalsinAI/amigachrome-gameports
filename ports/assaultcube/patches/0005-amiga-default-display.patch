@@ -1,0 +1,29 @@
+--- a/source/src/main.cpp
++++ b/source/src/main.cpp
+@@ -99,8 +99,14 @@
+ #define SCR_MINH 200
+ #define SCR_MAXW 10000
+ #define SCR_MAXH 10000
++#ifdef __amigaos__
++// Native Amiga first-light baseline; saved settings and -w/-h still override it.
++VARF(scr_w, SCR_MINW, 640, SCR_MAXW, initwarning("screen resolution"));
++VARF(scr_h, SCR_MINH, 480, SCR_MAXH, initwarning("screen resolution"));
++#else
+ VARF(scr_w, SCR_MINW, -1, SCR_MAXW, initwarning("screen resolution")); // screen or window resolution, except for "fullscreen desktop" mode
+ VARF(scr_h, SCR_MINH, -1, SCR_MAXH, initwarning("screen resolution"));
++#endif
+ VARF(depthbits, 0, 0, 32, initwarning("depth-buffer precision"));
+ VARF(stencilbits, 0, 0, 32, initwarning("stencil-buffer precision"));
+ VARF(fsaa, -1, -1, 16, initwarning("anti-aliasing"));
+@@ -1460,6 +1466,11 @@
+     if(!execfile("config/saved.cfg"))
+     {
+         exec("config/defaults.cfg");
++#ifdef __amigaos__
++        // The first-run wizard changes graphics and calls resetgl. Live context
++        // recreation is not qualified on the native backend; start at 640x480.
++        alias("mapstartonce", "");
++#endif
+         bootstrapentropy += 5 + rnd(7);
+     }
+     autostartscripts("_aftersaved_");
