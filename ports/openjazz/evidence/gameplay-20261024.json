@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-24",
+  "status": "TESTING",
+  "upstream_commit": "a1626f4edd4a7af72c54103021790c56d8ecfced",
+  "compiler_release": "16.2.0-open3",
+  "compiler_archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+  "source_date_epoch": "1788259283",
+  "patches": {
+    "0001-amigaos3-opengpu.patch": "cf21477cd367e53ba363607a575db806ef5ea51c2a729ca0c5328f42f73ad063",
+    "0002-amiga-directory-write-check.patch": "705af803c1b1967f22923eddad0fc7d6e966be896c77720b5525c2b05201e51f"
+  },
+  "sdk_inputs": {
+    "lib/libSDL2.a": "0adabe8d7df786a96c45dd6bf0210580d28ad2a00b7c83304b35e7e67f0a16d9",
+    "lib/libGL.a": "f5a4fd7591edfac13a82f48e5bf925a8b957e58a02afcd467ff74aa8cbdb9417",
+    "include/SDL2/SDL.h": "952e89e1dc4e0dd1a7bea6a153df632b8cdb6e433a9b3b0702c5ffe15b9b9360"
+  },
+  "clean_builds": 2,
+  "identical_clean_binaries": true,
+  "candidate_sha256": "63086b8dcb3d090adab7271a10e9220201246e69db11997cbefbb127dbaf793b",
+  "initial_runtime_executable_sha256": "e43dc3c065610537d0cba2227e32fe3ccc89eb03cc6d3af366bf34b145c6ffef",
+  "lab_modules": {
+    "SDL2.module": "06966096667c5c4636fd09467c8e7bdf27b141a56bb9463d72e4c1e091e2e0ab",
+    "ACRTG.gpu": "5410827f67e7a0987af9d388206916b28acefd76e222b675cfb74252730abbe7"
+  },
+  "runtime": "9fbc38c2 (20261023T202943Z)",
+  "lab": "Isolated team1-ac090, AC090 68040+FPU, 8 MiB Chip + 512 MiB Fast, copied Kickstart 3.2.3 47.115; Instance-32 unchanged",
+  "renderer": "software; SDL_OPENGPU=0; SDL2 2.32.10",
+  "audio": "--mute; no listening or AHI qualification",
+  "dataset_provenance": "asset-provenance.json; existing 345-file verified owner-supplied registered dataset",
+  "observed_initial_run": [
+    "Normal menu",
+    "Animated attract demo, explicitly not counted as gameplay",
+    "Direct --world 0 --level 0 difficulty selector and playable Diamondus Level One without DEMO overlay",
+    "Right-arrow player movement",
+    "Camera scrolling into cave",
+    "Score increase after item collection",
+    "Escape opens in-game menu"
+  ],
+  "final_candidate_repeat": {
+    "fresh_lab_boot": true,
+    "fresh_user_directory": true,
+    "executable_sha256": "63086b8dcb3d090adab7271a10e9220201246e69db11997cbefbb127dbaf793b",
+    "observed": [
+      "Difficulty selector",
+      "Playable Diamondus Level One without DEMO overlay",
+      "Right-arrow movement and camera scrolling from surface into cave",
+      "Score increased from 0 to 240"
+    ],
+    "limits": "Muted software-renderer smoke test only; no jump, save/load, audible audio or release pass"
+  },
+  "failures": [
+    "Closing initial menu and level windows reached shutdown/config-write logs but did not return Shell exit status before isolated lab stop",
+    "Mouse attempt to select Save Game opened Load Game instead; coordinate/focus issue not yet isolated"
+  ],
+  "unqualified": [
+    "Audible audio",
+    "Save/load round trip",
+    "Config persistence on relaunch",
+    "Jump/fire and controller",
+    "Fullscreen/resizing",
+    "Complete level",
+    "Current OpenKick and current SDL2 repeat",
+    "Clean process exit",
+    "Full release"
+  ],
+  "repository_tests": 55,
+  "release_qualified": false,
+  "screenshots_committed": false,
+  "build_negative_control": "Existing output directory rejected with exit 2 before writes",
+  "local_evidence": "build/gameplay-evidence (screenshots and raw logs kept locally; original game data excluded from Git)",
+  "screenshots_sha256": {
+    "diamondus-before.png": "e3f4ef7791f33678596f02462379ede8b10ca6af5a1ac39951943f3d3a3d9c98",
+    "diamondus-moved.png": "a60a99aa695159b2c9abe0c51ed1281fd7223d2c42000a9a05b52078ca6365db",
+    "diamondus-scrolled.png": "9692db8dadac16bd0b83f200e496719accbca1c9baeb833595d6adafc0ea6130",
+    "final-level-before.png": "0d9ac3b43fe1c2fa887a24e448ac58684f088d12c8cb42403a77c85d1ba81578",
+    "final-level-scrolled.png": "406e106e1823cf80005c86c9fe5bf47dc79daf6fbbc6695ef9caa735f75ac1bc"
+  }
+}

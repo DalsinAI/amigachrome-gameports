@@ -1,10 +1,21 @@
 # Port Status
 
-Latest review update: **13 October 2026 (local time)**. Earlier dated snapshots below are preserved as history.
+Latest review update: **24 October 2026 (local time)**. Earlier dated snapshots below are preserved as history.
 
 Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**
 
 **DONE means RELEASE.** A successful compile is intermediate evidence, not a release result.
+
+## OpenJazz gameplay smoke test - 24 October 2026
+
+The normal open3/SDL2 executable reached playable Diamondus Level One in an
+isolated AC090 lab using the software renderer and muted audio. Player movement,
+camera scrolling, item collection and the in-game menu were observed. Two clean
+builds from separate exports produce identical binaries. This advances OpenJazz
+to TESTING; process exit and pointer targeting remain open failures, alongside
+audio, save/load and the other release gates. Instance-32 was untouched.
+
+[Recipe, evidence and precise limits](ports/openjazz/GAMEPLAY.md).
 
 ## Post-merge checks - 13 October 2026
 
