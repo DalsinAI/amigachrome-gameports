@@ -88,6 +88,17 @@ and compiler logs as a workflow artifact.
 
 ## Status
 
+**24 October 2026:** all thirteen demos rebuilt successfully with the verified
+GCC 16 open3 stove and its frozen SDL2 2.32.10 SDK. The rebuilt binaries,
+readmes and checksum inventories are installed on Instance-32 at
+`DH1:SDL2 Demos`. Every installed binary matches its new SHA-256 and retains
+the FPS title string. The old directory was backed up before replacement.
+See [the deployment receipt](evidence/open3-instance32-20261024.json).
+This records compilation and installation only: this pass did not launch the
+programs, replace any libraries or change autostart. Runtime and release gates
+below remain open. The selected SDL renderer label does not measure individual
+commands executed on the host GPU.
+
 The complete thirteen-binary set is expected to cross-compile with GCC 16.2.0b
 and deploy to Instance-32 DH1 through the self-hosted daletop runner. It remains
 an engineering test set until each program has been launched, interacted with,
