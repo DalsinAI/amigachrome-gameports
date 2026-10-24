@@ -1,0 +1,1515 @@
+diff --git a/src/OpenLoco/include/OpenLoco/Objects/ObjectWire.hpp b/src/OpenLoco/include/OpenLoco/Objects/ObjectWire.hpp
+new file mode 100644
+index 0000000..bc96cd3
+--- /dev/null
++++ b/src/OpenLoco/include/OpenLoco/Objects/ObjectWire.hpp
+@@ -0,0 +1,40 @@
++// Copyright (c) 2026 Dalsin Limited. MIT licensed.
++#pragma once
++#include "Object.h"
++#include <OpenLoco/Core/DataEndian.hpp>
++#include <array>
++#include <bit>
++#include <cstring>
++
++namespace OpenLoco::ObjectWire
++{
++    inline ObjectHeader decodeHeader(std::span<const std::byte> data)
++    {
++        if(data.size()<sizeof(ObjectHeader)) throw std::runtime_error("Truncated object header");
++        ObjectHeader result{};
++        result.flags=Utility::readLittleEndian<uint32_t>(data);
++        std::memcpy(result.name,data.data()+4,sizeof result.name);
++        result.checksum=Utility::readLittleEndian<uint32_t>(data,12);
++        return result;
++    }
++    inline uint32_t checksum(const ObjectHeader& header,std::span<const std::byte> data)
++    {
++        uint32_t result=0xF369A75B;
++        const auto add=[&](uint8_t value){result=std::rotl(result^value,11);};
++        add(static_cast<uint8_t>(header.flags&0xff));
++        for(char value:header.name)add(static_cast<uint8_t>(value));
++        for(std::byte value:data)add(std::to_integer<uint8_t>(value));
++        return result;
++    }
++    template<class TStream> ObjectHeader readHeader(TStream& stream)
++    {
++        std::array<std::byte,sizeof(ObjectHeader)> bytes{};
++        stream.read(bytes.data(),bytes.size());return decodeHeader(bytes);
++    }
++    inline std::array<std::byte,sizeof(ObjectHeader)> encodeHeader(const ObjectHeader& header)
++    {
++        std::array<std::byte,sizeof(ObjectHeader)> bytes{};
++        for(size_t i=0;i<4;++i){bytes[i]=std::byte((header.flags>>(i*8))&255);bytes[12+i]=std::byte((header.checksum>>(i*8))&255);}
++        std::memcpy(bytes.data()+4,header.name,sizeof header.name);return bytes;
++    }
++}
+diff --git a/src/OpenLoco/include/OpenLoco/Objects/ObjectWireFields.hpp b/src/OpenLoco/include/OpenLoco/Objects/ObjectWireFields.hpp
+new file mode 100644
+index 0000000..fb48580
+--- /dev/null
++++ b/src/OpenLoco/include/OpenLoco/Objects/ObjectWireFields.hpp
+@@ -0,0 +1,812 @@
++// Copyright (c) 2026 Dalsin Limited. MIT licensed.
++#pragma once
++// Fixed object field schema for OpenLoco 6d7f5b1; byte arrays are preserved.
++#include "Objects/AirportObject.h"
++#include "Objects/BridgeObject.h"
++#include "Objects/BuildingObject.h"
++#include "Objects/CargoObject.h"
++#include "Objects/CliffEdgeObject.h"
++#include "Objects/ClimateObject.h"
++#include "Objects/CompetitorObject.h"
++#include "Objects/CurrencyObject.h"
++#include "Objects/DockObject.h"
++#include "Objects/HillShapesObject.h"
++#include "Objects/IndustryObject.h"
++#include "Objects/InterfaceSkinObject.h"
++#include "Objects/LandObject.h"
++#include "Objects/LevelCrossingObject.h"
++#include "Objects/RegionObject.h"
++#include "Objects/RoadExtraObject.h"
++#include "Objects/RoadObject.h"
++#include "Objects/RoadStationObject.h"
++#include "Objects/ScaffoldingObject.h"
++#include "Objects/ScenarioTextObject.h"
++#include "Objects/SnowObject.h"
++#include "Objects/SoundObject.h"
++#include "Objects/SteamObject.h"
++#include "Objects/StreetLightObject.h"
++#include "Objects/TownNamesObject.h"
++#include "Objects/TrackExtraObject.h"
++#include "Objects/TrackObject.h"
++#include "Objects/TrainSignalObject.h"
++#include "Objects/TrainStationObject.h"
++#include "Objects/TreeObject.h"
++#include "Objects/TunnelObject.h"
++#include "Objects/VehicleObject.h"
++#include "Objects/WallObject.h"
++#include "Objects/WaterObject.h"
++#include <algorithm>
++#include <bit>
++#include <span>
++#include <type_traits>
++#include <stdexcept>
++#include <vector>
++namespace OpenLoco::ObjectWire {
++template<class F> inline void fields(OpenLoco::AirportObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::BridgeObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::BuildingObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::CargoObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::CliffEdgeObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::ClimateObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::CompetitorObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::CurrencyObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::DockObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::HillShapesObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::IndustryObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::IndustryObjectProductionRateRange& value, F&& f);
++template<class F> inline void fields(OpenLoco::InterfaceSkinObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::LandObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::LevelCrossingObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::RegionObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::RoadExtraObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::RoadObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::RoadStationObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::ScaffoldingObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::ScenarioTextObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::SnowObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::SoundObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::SteamObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::StreetLightObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::TownNamesObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::TownNamesObject::Category& value, F&& f);
++template<class F> inline void fields(OpenLoco::TrackExtraObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::TrackObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::TrainSignalObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::TrainStationObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::TreeObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::TunnelObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::VehicleObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::VehicleObjectCar& value, F&& f);
++template<class F> inline void fields(OpenLoco::VehicleObjectBodySprite& value, F&& f);
++template<class F> inline void fields(OpenLoco::VehicleObjectBogieSprite& value, F&& f);
++template<class F> inline void fields(OpenLoco::VehicleObjectEmitterAnimation& value, F&& f);
++template<class F> inline void fields(OpenLoco::WallObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::WaterObject& value, F&& f);
++template<class F> inline void fields(OpenLoco::VehicleObjectFrictionSound& value, F&& f);
++template<class F> inline void fields(OpenLoco::VehicleSimpleMotorSound& value, F&& f);
++template<class F> inline void fields(OpenLoco::VehicleGearboxMotorSound& value, F&& f);
++template<class F> inline void fields(OpenLoco::ObjectHeader& value, F&& f);
++template<class T,class F> inline void fields(SpeedTemplate<T>& value,F&& f) { f(value.value); }
++template<class T,class Tag,class F> inline void fields(Math::Vector::TVector2<T,Tag>& value,F&& f) { f(value.x);f(value.y); }
++template<class T,class F> inline void walk(T& value,F&& f) {
++    if constexpr(std::is_integral_v<T> || std::is_enum_v<T>) f(reinterpret_cast<uint8_t*>(&value),sizeof(T));
++    else if constexpr(std::is_array_v<T>) { for(auto& item:value) walk(item,f); }
++    else fields(value,[&](auto& item){walk(item,f);});
++}
++template<class F> inline void fields(OpenLoco::AirportObject& value,F&& f) {
++    f(value.name);
++    f(value.buildCostFactor);
++    f(value.sellCostFactor);
++    f(value.costIndex);
++    f(value.var_07);
++    f(value.image);
++    f(value.buildingImage);
++    f(value.flags);
++    f(value.numSpriteSets);
++    f(value.numTiles);
++    f(value.buildingPartHeightsOffset);
++    f(value.buildingPartAnimationsOffset);
++    f(value.buildingVariationPartOffsets);
++    f(value.buildingPositionsOffset);
++    f(value.largeTiles);
++    f(value.minX);
++    f(value.minY);
++    f(value.maxX);
++    f(value.maxY);
++    f(value.designedYear);
++    f(value.obsoleteYear);
++    f(value.numMovementNodes);
++    f(value.numMovementEdges);
++    f(value.movementNodesOffset);
++    f(value.movementEdgesOffset);
++    f(value.var_B6);
++}
++template<class F> inline void fields(OpenLoco::BridgeObject& value,F&& f) {
++    f(value.name);
++    f(value.flags);
++    f(value.pad_03);
++    f(value.clearHeight);
++    f(value.deckDepth);
++    f(value.spanLength);
++    f(value.pillarSpacing);
++    f(value.maxSpeed);
++    f(value.maxHeight);
++    f(value.costIndex);
++    f(value.baseCostFactor);
++    f(value.heightCostFactor);
++    f(value.sellCostFactor);
++    f(value.disabledTrackCfg);
++    f(value.image);
++    f(value.trackNumCompatible);
++    f(value.trackMods);
++    f(value.roadNumCompatible);
++    f(value.roadMods);
++    f(value.designedYear);
++}
++template<class F> inline void fields(OpenLoco::BuildingObject& value,F&& f) {
++    f(value.name);
++    f(value.image);
++    f(value.numParts);
++    f(value.numVariations);
++    f(value.partHeightsOffset);
++    f(value.partAnimationsOffset);
++    f(value.variationPartsOffset);
++    f(value.colours);
++    f(value.designedYear);
++    f(value.obsoleteYear);
++    f(value.flags);
++    f(value.clearCostIndex);
++    f(value.clearCostFactor);
++    f(value.scaffoldingSegmentType);
++    f(value.scaffoldingColour);
++    f(value.generatorFunction);
++    f(value.averageNumberOnMap);
++    f(value.producedQuantity);
++    f(value.producedCargoType);
++    f(value.consumedCargoType);
++    f(value.producedCargoQty);
++    f(value.consumedCargoQty);
++    f(value.demolishRatingReduction);
++    f(value.townAmenityCategory);
++    f(value.numElevatorSequences);
++    f(value.elevatorHeightSequencesOffset);
++}
++template<class F> inline void fields(OpenLoco::CargoObject& value,F&& f) {
++    f(value.name);
++    f(value.unitWeight);
++    f(value.cargoTransferTime);
++    f(value.unitsAndCargoName);
++    f(value.unitNameSingular);
++    f(value.unitNamePlural);
++    f(value.unitInlineSprite);
++    f(value.cargoCategory);
++    f(value.flags);
++    f(value.numPlatformVariations);
++    f(value.stationCargoDensity);
++    f(value.premiumDays);
++    f(value.maxNonPremiumDays);
++    f(value.nonPremiumRate);
++    f(value.penaltyRate);
++    f(value.paymentFactor);
++    f(value.paymentIndex);
++    f(value.unitSize);
++}
++template<class F> inline void fields(OpenLoco::CliffEdgeObject& value,F&& f) {
++    f(value.name);
++    f(value.image);
++}
++template<class F> inline void fields(OpenLoco::ClimateObject& value,F&& f) {
++    f(value.name);
++    f(value.firstSeason);
++    f(value.seasonLength);
++    f(value.winterSnowLine);
++    f(value.summerSnowLine);
++    f(value.pad_09);
++}
++template<class F> inline void fields(OpenLoco::CompetitorObject& value,F&& f) {
++    f(value.firstName);
++    f(value.lastName);
++    f(value.availableNamePrefixes);
++    f(value.availablePlayStyles);
++    f(value.emotions);
++    f(value.images);
++    f(value.intelligence);
++    f(value.aggressiveness);
++    f(value.competitiveness);
++    f(value.var_37);
++}
++template<class F> inline void fields(OpenLoco::CurrencyObject& value,F&& f) {
++    f(value.name);
++    f(value.prefixSymbol);
++    f(value.suffixSymbol);
++    f(value.objectIcon);
++    f(value.separator);
++    f(value.factor);
++}
++template<class F> inline void fields(OpenLoco::DockObject& value,F&& f) {
++    f(value.name);
++    f(value.buildCostFactor);
++    f(value.sellCostFactor);
++    f(value.costIndex);
++    f(value.var_07);
++    f(value.image);
++    f(value.buildingImage);
++    f(value.flags);
++    f(value.numBuildingParts);
++    f(value.numBuildingVariations);
++    f(value.partHeightsOffset);
++    f(value.buildingPartAnimationsOffset);
++    f(value.buildingVariationPartsOffset);
++    f(value.designedYear);
++    f(value.obsoleteYear);
++    f(value.boatPosition);
++}
++template<class F> inline void fields(OpenLoco::HillShapesObject& value,F&& f) {
++    f(value.name);
++    f(value.hillHeightMapCount);
++    f(value.mountainHeightMapCount);
++    f(value.image);
++    f(value.imageHills);
++    f(value.flags);
++}
++template<class F> inline void fields(OpenLoco::IndustryObject& value,F&& f) {
++    f(value.name);
++    f(value.var_02);
++    f(value.nameClosingDown);
++    f(value.nameUpProduction);
++    f(value.nameDownProduction);
++    f(value.nameSingular);
++    f(value.namePlural);
++    f(value.shadowImageIds);
++    f(value.buildingImageIds);
++    f(value.fieldImageIds);
++    f(value.numImagesPerFieldGrowthStage);
++    f(value.numBuildingParts);
++    f(value.numBuildingVariations);
++    f(value.buildingPartHeightsOffset);
++    f(value.buildingPartAnimationsOffset);
++    f(value.animationSequenceOffsets);
++    f(value.var_38_Offset);
++    f(value.buildingVariationPartOffsets);
++    f(value.minNumBuildings);
++    f(value.maxNumBuildings);
++    f(value.buildingsOffset);
++    f(value.availableColours);
++    f(value.buildingSizeFlags);
++    f(value.designedYear);
++    f(value.obsoleteYear);
++    f(value.totalOfTypeInScenario);
++    f(value.costIndex);
++    f(value.costFactor);
++    f(value.clearCostFactor);
++    f(value.scaffoldingSegmentType);
++    f(value.scaffoldingColour);
++    f(value.initialProductionRate);
++    f(value.producedCargoType);
++    f(value.requiredCargoType);
++    f(value.mapColour);
++    f(value.flags);
++    f(value.var_E8);
++    f(value.farmTileNumImageAngles);
++    f(value.farmTileGrowthStageNoProduction);
++    f(value.farmNumFields);
++    f(value.farmTileNumGrowthStages);
++    f(value.wallTypes);
++    f(value.buildingWall);
++    f(value.buildingWallEntrance);
++    f(value.monthlyClosureChance);
++}
++template<class F> inline void fields(OpenLoco::IndustryObjectProductionRateRange& value,F&& f) {
++    f(value.min);
++    f(value.max);
++}
++template<class F> inline void fields(OpenLoco::InterfaceSkinObject& value,F&& f) {
++    f(value.name);
++    f(value.img);
++    f(value.mapTooltipObjectColour);
++    f(value.mapTooltipCargoColour);
++    f(value.tooltipColour);
++    f(value.errorColour);
++    f(value.windowPlayerColor);
++    f(value.windowTitlebarColour);
++    f(value.windowColour);
++    f(value.windowConstructionColour);
++    f(value.windowTerraFormColour);
++    f(value.windowMapColour);
++    f(value.windowOptionsColour);
++    f(value.colour_11);
++    f(value.topToolbarPrimaryColour);
++    f(value.topToolbarSecondaryColour);
++    f(value.topToolbarTertiaryColour);
++    f(value.topToolbarQuaternaryColour);
++    f(value.companyInfoPanelColour);
++    f(value.timePanelColour);
++}
++template<class F> inline void fields(OpenLoco::LandObject& value,F&& f) {
++    f(value.name);
++    f(value.costIndex);
++    f(value.numGrowthStages);
++    f(value.numImageAngles);
++    f(value.flags);
++    f(value.cliffEdgeHeader);
++    f(value.replacementLandHeader);
++    f(value.costFactor);
++    f(value.image);
++    f(value.numImagesPerGrowthStage);
++    f(value.cliffEdgeImage);
++    f(value.mapPixelImage);
++    f(value.distributionPattern);
++    f(value.numVariations);
++    f(value.variationLikelihood);
++    f(value.pad_1D);
++}
++template<class F> inline void fields(OpenLoco::LevelCrossingObject& value,F&& f) {
++    f(value.name);
++    f(value.costFactor);
++    f(value.sellCostFactor);
++    f(value.costIndex);
++    f(value.closedAnimationFrameInterval);
++    f(value.closedAnimationFrameCount);
++    f(value.transitionAnimationFrameCount);
++    f(value.transitionAnimationDelayBitmask);
++    f(value.pad_0B);
++    f(value.designedYear);
++    f(value.image);
++}
++template<class F> inline void fields(OpenLoco::RegionObject& value,F&& f) {
++    f(value.name);
++    f(value.image);
++    f(value.flags);
++    f(value.numCargoInflunceObjects);
++    f(value.cargoInfluenceObjectIds);
++    f(value.cargoInfluenceTownFilter);
++    f(value.pad_11);
++}
++template<class F> inline void fields(OpenLoco::RoadExtraObject& value,F&& f) {
++    f(value.name);
++    f(value.roadPieces);
++    f(value.paintStyle);
++    f(value.costIndex);
++    f(value.buildCostFactor);
++    f(value.sellCostFactor);
++    f(value.image);
++    f(value.var_0E);
++}
++template<class F> inline void fields(OpenLoco::RoadObject& value,F&& f) {
++    f(value.name);
++    f(value.roadPieces);
++    f(value.buildCostFactor);
++    f(value.sellCostFactor);
++    f(value.tunnelCostFactor);
++    f(value.costIndex);
++    f(value.tunnel);
++    f(value.maxSpeed);
++    f(value.image);
++    f(value.flags);
++    f(value.numBridges);
++    f(value.bridges);
++    f(value.numStations);
++    f(value.stations);
++    f(value.paintStyle);
++    f(value.numMods);
++    f(value.mods);
++    f(value.numCompatible);
++    f(value.displayOffset);
++    f(value.compatibleRoads);
++    f(value.compatibleTracks);
++    f(value.targetTownSize);
++    f(value.pad_2F);
++}
++template<class F> inline void fields(OpenLoco::RoadStationObject& value,F&& f) {
++    f(value.name);
++    f(value.paintStyle);
++    f(value.height);
++    f(value.roadPieces);
++    f(value.buildCostFactor);
++    f(value.sellCostFactor);
++    f(value.costIndex);
++    f(value.flags);
++    f(value.image);
++    f(value.imageOffsets);
++    f(value.numCompatible);
++    f(value.mods);
++    f(value.designedYear);
++    f(value.obsoleteYear);
++    f(value.cargoType);
++    f(value.pad_2D);
++    f(value.cargoOffsetBytes);
++}
++template<class F> inline void fields(OpenLoco::ScaffoldingObject& value,F&& f) {
++    f(value.name);
++    f(value.image);
++    f(value.segmentHeights);
++    f(value.roofHeights);
++}
++template<class F> inline void fields(OpenLoco::ScenarioTextObject& value,F&& f) {
++    f(value.name);
++    f(value.details);
++    f(value.pad_04);
++}
++template<class F> inline void fields(OpenLoco::SnowObject& value,F&& f) {
++    f(value.name);
++    f(value.image);
++}
++template<class F> inline void fields(OpenLoco::SoundObject& value,F&& f) {
++    f(value.name);
++    f(value.dataOffset);
++    f(value.shouldLoop);
++    f(value.pad_07);
++    f(value.volume);
++}
++template<class F> inline void fields(OpenLoco::SteamObject& value,F&& f) {
++    f(value.name);
++    f(value.numImages);
++    f(value.numStationaryTicks);
++    f(value.spriteWidth);
++    f(value.spriteHeightNegative);
++    f(value.spriteHeightPositive);
++    f(value.flags);
++    f(value.var_0A);
++    f(value.baseImageId);
++    f(value.totalNumFramesType0);
++    f(value.totalNumFramesType1);
++    f(value.frameInfoType0Offset);
++    f(value.frameInfoType1Offset);
++    f(value.numSoundEffects);
++    f(value.soundEffects);
++}
++template<class F> inline void fields(OpenLoco::StreetLightObject& value,F&& f) {
++    f(value.name);
++    f(value.designedYear);
++    f(value.image);
++}
++template<class F> inline void fields(OpenLoco::TownNamesObject& value,F&& f) {
++    f(value.name);
++    f(value.categories);
++}
++template<class F> inline void fields(OpenLoco::TownNamesObject::Category& value,F&& f) {
++    f(value.count);
++    f(value.bias);
++    f(value.offset);
++}
++template<class F> inline void fields(OpenLoco::TrackExtraObject& value,F&& f) {
++    f(value.name);
++    f(value.trackPieces);
++    f(value.paintStyle);
++    f(value.costIndex);
++    f(value.buildCostFactor);
++    f(value.sellCostFactor);
++    f(value.image);
++    f(value.var_0E);
++}
++template<class F> inline void fields(OpenLoco::TrackObject& value,F&& f) {
++    f(value.name);
++    f(value.trackPieces);
++    f(value.stationTrackPieces);
++    f(value.var_06);
++    f(value.numCompatible);
++    f(value.numMods);
++    f(value.numSignals);
++    f(value.mods);
++    f(value.signals);
++    f(value.compatibleTracks);
++    f(value.compatibleRoads);
++    f(value.buildCostFactor);
++    f(value.sellCostFactor);
++    f(value.tunnelCostFactor);
++    f(value.costIndex);
++    f(value.tunnel);
++    f(value.curveSpeed);
++    f(value.image);
++    f(value.flags);
++    f(value.numBridges);
++    f(value.bridges);
++    f(value.numStations);
++    f(value.stations);
++    f(value.displayOffset);
++    f(value.pad_35);
++}
++template<class F> inline void fields(OpenLoco::TrainSignalObject& value,F&& f) {
++    f(value.name);
++    f(value.flags);
++    f(value.animationFrameInterval);
++    f(value.numFrames);
++    f(value.costFactor);
++    f(value.sellCostFactor);
++    f(value.costIndex);
++    f(value.var_0B);
++    f(value.description);
++    f(value.image);
++    f(value.numCompatible);
++    f(value.mods);
++    f(value.designedYear);
++    f(value.obsoleteYear);
++}
++template<class F> inline void fields(OpenLoco::TrainStationObject& value,F&& f) {
++    f(value.name);
++    f(value.paintStyle);
++    f(value.height);
++    f(value.trackPieces);
++    f(value.buildCostFactor);
++    f(value.sellCostFactor);
++    f(value.costIndex);
++    f(value.var_0B);
++    f(value.flags);
++    f(value.var_0D);
++    f(value.image);
++    f(value.imageOffsets);
++    f(value.numCompatible);
++    f(value.mods);
++    f(value.designedYear);
++    f(value.obsoleteYear);
++    f(value.cargoOffsetBytes);
++    f(value.var_6E);
++}
++template<class F> inline void fields(OpenLoco::TreeObject& value,F&& f) {
++    f(value.name);
++    f(value.initialHeight);
++    f(value.height);
++    f(value.var_04);
++    f(value.var_05);
++    f(value.numRotations);
++    f(value.growth);
++    f(value.flags);
++    f(value.sprites);
++    f(value.snowSprites);
++    f(value.shadowImageOffset);
++    f(value.var_3C);
++    f(value.seasonState);
++    f(value.currentSeason);
++    f(value.costIndex);
++    f(value.buildCostFactor);
++    f(value.clearCostFactor);
++    f(value.colours);
++    f(value.rating);
++    f(value.demolishRatingReduction);
++}
++template<class F> inline void fields(OpenLoco::TunnelObject& value,F&& f) {
++    f(value.name);
++    f(value.image);
++}
++template<class F> inline void fields(OpenLoco::VehicleObject& value,F&& f) {
++    f(value.name);
++    f(value.mode);
++    f(value.type);
++    f(value.numCarComponents);
++    f(value.trackType);
++    f(value.numTrackExtras);
++    f(value.costIndex);
++    f(value.costFactor);
++    f(value.reliability);
++    f(value.runCostIndex);
++    f(value.runCostFactor);
++    f(value.colourType);
++    f(value.numCompatibleVehicles);
++    f(value.compatibleVehicles);
++    f(value.requiredTrackExtras);
++    f(value.carComponents);
++    f(value.bodySprites);
++    f(value.bogieSprites);
++    f(value.power);
++    f(value.speed);
++    f(value.rackSpeed);
++    f(value.weight);
++    f(value.flags);
++    f(value.maxCargo);
++    f(value.compatibleCargoCategories);
++    f(value.cargoTypeSpriteOffsets);
++    f(value.numSimultaneousCargoTypes);
++    f(value.animation);
++    f(value.shipWakeSpacing);
++    f(value.designed);
++    f(value.obsolete);
++    f(value.rackRailType);
++    f(value.drivingSoundType);
++    f(value.pad_135);
++    f(value.numStartSounds);
++    f(value.startSounds);
++    switch(value.drivingSoundType) {
++        case DrivingSoundType::none: break;
++        case DrivingSoundType::friction: f(value.sound.friction); break;
++        case DrivingSoundType::simpleMotor: f(value.sound.simpleMotor); break;
++        case DrivingSoundType::gearboxMotor: f(value.sound.gearboxMotor); break;
++        default: throw std::runtime_error("Invalid vehicle driving sound type");
++    }
++}
++template<class F> inline void fields(OpenLoco::VehicleObjectCar& value,F&& f) {
++    f(value.frontBogiePosition);
++    f(value.backBogiePosition);
++    f(value.frontBogieSpriteInd);
++    f(value.backBogieSpriteInd);
++    f(value.bodySpriteInd);
++    f(value.emitterHorizontalPos);
++}
++template<class F> inline void fields(OpenLoco::VehicleObjectBodySprite& value,F&& f) {
++    f(value.numFlatRotationFrames);
++    f(value.numSlopedRotationFrames);
++    f(value.numAnimationFrames);
++    f(value.numCargoLoadFrames);
++    f(value.numCargoFrames);
++    f(value.numRollFrames);
++    f(value.halfLength);
++    f(value.flags);
++    f(value.width);
++    f(value.heightNegative);
++    f(value.heightPositive);
++    f(value.flatYawAccuracy);
++    f(value.slopedYawAccuracy);
++    f(value.numFramesPerRotation);
++    f(value.flatImageId);
++    f(value.unkImageId);
++    f(value.gentleImageId);
++    f(value.steepImageId);
++}
++template<class F> inline void fields(OpenLoco::VehicleObjectBogieSprite& value,F&& f) {
++    f(value.numAnimationFrames);
++    f(value.flags);
++    f(value.width);
++    f(value.heightNegative);
++    f(value.heightPositive);
++    f(value.numFramesPerRotation);
++    f(value.flatImageIds);
++    f(value.gentleImageIds);
++    f(value.steepImageIds);
++}
++template<class F> inline void fields(OpenLoco::VehicleObjectEmitterAnimation& value,F&& f) {
++    f(value.objectId);
++    f(value.emitterVerticalPos);
++    f(value.type);
++}
++template<class F> inline void fields(OpenLoco::WallObject& value,F&& f) {
++    f(value.name);
++    f(value.sprite);
++    f(value.var_06);
++    f(value.flags);
++    f(value.height);
++    f(value.var_09);
++}
++template<class F> inline void fields(OpenLoco::WaterObject& value,F&& f) {
++    f(value.name);
++    f(value.costIndex);
++    f(value.var_03);
++    f(value.costFactor);
++    f(value.image);
++    f(value.mapPixelImage);
++}
++template<class F> inline void fields(OpenLoco::VehicleObjectFrictionSound& value,F&& f) {
++    f(value.soundObjectId);
++    f(value.minSpeed);
++    f(value.speedFreqFactor);
++    f(value.baseFrequency);
++    f(value.speedVolumeFactor);
++    f(value.baseVolume);
++    f(value.maxVolume);
++}
++template<class F> inline void fields(OpenLoco::VehicleSimpleMotorSound& value,F&& f) {
++    f(value.soundObjectId);
++    f(value.idleFrequency);
++    f(value.idleVolume);
++    f(value.coastingFrequency);
++    f(value.coastingVolume);
++    f(value.accelerationBaseFreq);
++    f(value.acclerationVolume);
++    f(value.freqIncreaseStep);
++    f(value.freqDecreaseStep);
++    f(value.volumeIncreaseStep);
++    f(value.volumeDecreaseStep);
++    f(value.speedFreqFactor);
++}
++template<class F> inline void fields(OpenLoco::VehicleGearboxMotorSound& value,F&& f) {
++    f(value.soundObjectId);
++    f(value.idleFrequency);
++    f(value.idleVolume);
++    f(value.firstGearFrequency);
++    f(value.firstGearSpeed);
++    f(value.secondGearFreqOffset);
++    f(value.secondGearSpeed);
++    f(value.thirdGearFreqOffset);
++    f(value.thirdGearSpeed);
++    f(value.fourthGearFreqOffset);
++    f(value.coastingVolume);
++    f(value.acceleratingVolume);
++    f(value.freqIncreaseStep);
++    f(value.freqDecreaseStep);
++    f(value.volumeIncreaseStep);
++    f(value.volumeDecreaseStep);
++    f(value.speedFreqFactor);
++}
++template<class F> inline void fields(OpenLoco::ObjectHeader& value,F&& f) {
++    f(value.flags);
++    f(value.name);
++    f(value.checksum);
++}
++inline size_t fixedHeaderSize(ObjectType type) { switch(type) {
++    case AirportObject::kObjectType: return sizeof(AirportObject);
++    case BridgeObject::kObjectType: return sizeof(BridgeObject);
++    case BuildingObject::kObjectType: return sizeof(BuildingObject);
++    case CargoObject::kObjectType: return sizeof(CargoObject);
++    case CliffEdgeObject::kObjectType: return sizeof(CliffEdgeObject);
++    case ClimateObject::kObjectType: return sizeof(ClimateObject);
++    case CompetitorObject::kObjectType: return sizeof(CompetitorObject);
++    case CurrencyObject::kObjectType: return sizeof(CurrencyObject);
++    case DockObject::kObjectType: return sizeof(DockObject);
++    case HillShapesObject::kObjectType: return sizeof(HillShapesObject);
++    case IndustryObject::kObjectType: return sizeof(IndustryObject);
++    case InterfaceSkinObject::kObjectType: return sizeof(InterfaceSkinObject);
++    case LandObject::kObjectType: return sizeof(LandObject);
++    case LevelCrossingObject::kObjectType: return sizeof(LevelCrossingObject);
++    case RegionObject::kObjectType: return sizeof(RegionObject);
++    case RoadExtraObject::kObjectType: return sizeof(RoadExtraObject);
++    case RoadObject::kObjectType: return sizeof(RoadObject);
++    case RoadStationObject::kObjectType: return sizeof(RoadStationObject);
++    case ScaffoldingObject::kObjectType: return sizeof(ScaffoldingObject);
++    case ScenarioTextObject::kObjectType: return sizeof(ScenarioTextObject);
++    case SnowObject::kObjectType: return sizeof(SnowObject);
++    case SoundObject::kObjectType: return sizeof(SoundObject);
++    case SteamObject::kObjectType: return sizeof(SteamObject);
++    case StreetLightObject::kObjectType: return sizeof(StreetLightObject);
++    case TownNamesObject::kObjectType: return sizeof(TownNamesObject);
++    case TrackExtraObject::kObjectType: return sizeof(TrackExtraObject);
++    case TrackObject::kObjectType: return sizeof(TrackObject);
++    case TrainSignalObject::kObjectType: return sizeof(TrainSignalObject);
++    case TrainStationObject::kObjectType: return sizeof(TrainStationObject);
++    case TreeObject::kObjectType: return sizeof(TreeObject);
++    case TunnelObject::kObjectType: return sizeof(TunnelObject);
++    case VehicleObject::kObjectType: return sizeof(VehicleObject);
++    case WallObject::kObjectType: return sizeof(WallObject);
++    case WaterObject::kObjectType: return sizeof(WaterObject);
++    default: throw std::runtime_error("Unknown object type");
++} }
++template<class F> inline void walkFixedFields(ObjectType type,std::span<std::byte> data,F&& f) {
++    if(data.size()<fixedHeaderSize(type)) throw std::runtime_error("Truncated fixed object fields");
++    switch(type) {
++    case AirportObject::kObjectType: walk(*reinterpret_cast<AirportObject*>(data.data()),f);break;
++    case BridgeObject::kObjectType: walk(*reinterpret_cast<BridgeObject*>(data.data()),f);break;
++    case BuildingObject::kObjectType: walk(*reinterpret_cast<BuildingObject*>(data.data()),f);break;
++    case CargoObject::kObjectType: walk(*reinterpret_cast<CargoObject*>(data.data()),f);break;
++    case CliffEdgeObject::kObjectType: walk(*reinterpret_cast<CliffEdgeObject*>(data.data()),f);break;
++    case ClimateObject::kObjectType: walk(*reinterpret_cast<ClimateObject*>(data.data()),f);break;
++    case CompetitorObject::kObjectType: walk(*reinterpret_cast<CompetitorObject*>(data.data()),f);break;
++    case CurrencyObject::kObjectType: walk(*reinterpret_cast<CurrencyObject*>(data.data()),f);break;
++    case DockObject::kObjectType: walk(*reinterpret_cast<DockObject*>(data.data()),f);break;
++    case HillShapesObject::kObjectType: walk(*reinterpret_cast<HillShapesObject*>(data.data()),f);break;
++    case IndustryObject::kObjectType: walk(*reinterpret_cast<IndustryObject*>(data.data()),f);break;
++    case InterfaceSkinObject::kObjectType: walk(*reinterpret_cast<InterfaceSkinObject*>(data.data()),f);break;
++    case LandObject::kObjectType: walk(*reinterpret_cast<LandObject*>(data.data()),f);break;
++    case LevelCrossingObject::kObjectType: walk(*reinterpret_cast<LevelCrossingObject*>(data.data()),f);break;
++    case RegionObject::kObjectType: walk(*reinterpret_cast<RegionObject*>(data.data()),f);break;
++    case RoadExtraObject::kObjectType: walk(*reinterpret_cast<RoadExtraObject*>(data.data()),f);break;
++    case RoadObject::kObjectType: walk(*reinterpret_cast<RoadObject*>(data.data()),f);break;
++    case RoadStationObject::kObjectType: walk(*reinterpret_cast<RoadStationObject*>(data.data()),f);break;
++    case ScaffoldingObject::kObjectType: walk(*reinterpret_cast<ScaffoldingObject*>(data.data()),f);break;
++    case ScenarioTextObject::kObjectType: walk(*reinterpret_cast<ScenarioTextObject*>(data.data()),f);break;
++    case SnowObject::kObjectType: walk(*reinterpret_cast<SnowObject*>(data.data()),f);break;
++    case SoundObject::kObjectType: walk(*reinterpret_cast<SoundObject*>(data.data()),f);break;
++    case SteamObject::kObjectType: walk(*reinterpret_cast<SteamObject*>(data.data()),f);break;
++    case StreetLightObject::kObjectType: walk(*reinterpret_cast<StreetLightObject*>(data.data()),f);break;
++    case TownNamesObject::kObjectType: walk(*reinterpret_cast<TownNamesObject*>(data.data()),f);break;
++    case TrackExtraObject::kObjectType: walk(*reinterpret_cast<TrackExtraObject*>(data.data()),f);break;
++    case TrackObject::kObjectType: walk(*reinterpret_cast<TrackObject*>(data.data()),f);break;
++    case TrainSignalObject::kObjectType: walk(*reinterpret_cast<TrainSignalObject*>(data.data()),f);break;
++    case TrainStationObject::kObjectType: walk(*reinterpret_cast<TrainStationObject*>(data.data()),f);break;
++    case TreeObject::kObjectType: walk(*reinterpret_cast<TreeObject*>(data.data()),f);break;
++    case TunnelObject::kObjectType: walk(*reinterpret_cast<TunnelObject*>(data.data()),f);break;
++    case VehicleObject::kObjectType: walk(*reinterpret_cast<VehicleObject*>(data.data()),f);break;
++    case WallObject::kObjectType: walk(*reinterpret_cast<WallObject*>(data.data()),f);break;
++    case WaterObject::kObjectType: walk(*reinterpret_cast<WaterObject*>(data.data()),f);break;
++    default: throw std::runtime_error("Unknown object type");
++} }
++inline void swapFixedFields(ObjectType type,std::span<std::byte> data) {
++    walkFixedFields(type,data,[](uint8_t* p,size_t size){std::reverse(p,p+size);});
++}
++inline void decodeFixedFields(ObjectType type,std::span<std::byte> data) {
++    if(data.size()<fixedHeaderSize(type)) throw std::runtime_error("Truncated fixed object fields");
++    if constexpr(std::endian::native==std::endian::big) swapFixedFields(type,data);
++}
++inline std::vector<std::byte> canonicalFixedFields(ObjectType type,std::span<std::byte> data) {
++    std::vector<std::byte> result;
++    walkFixedFields(type,data,[&](uint8_t* p,size_t size){
++        for(size_t i=0;i<size;++i) result.push_back(std::byte(p[std::endian::native==std::endian::big?size-1-i:i]));
++    });return result;
++}
++}
+diff --git a/src/OpenLoco/include/OpenLoco/Objects/SoundObject.h b/src/OpenLoco/include/OpenLoco/Objects/SoundObject.h
+index 7fa2dfc..216423b 100644
+--- a/src/OpenLoco/include/OpenLoco/Objects/SoundObject.h
++++ b/src/OpenLoco/include/OpenLoco/Objects/SoundObject.h
+@@ -24,6 +24,10 @@ namespace OpenLoco
+         uint32_t length;
+         Audio::WAVEFORMATEX pcmHeader;
+ 
++        int32_t getOffset() const;
++        uint32_t getLength() const;
++        Audio::WAVEFORMATEX getPcmHeader() const;
++
+         const void* pcm() const
+         {
+             return (void*)((uintptr_t)this + sizeof(SoundObjectData));
+diff --git a/src/OpenLoco/src/Audio/Audio.cpp b/src/OpenLoco/src/Audio/Audio.cpp
+index aad87b4..baabfbd 100644
+--- a/src/OpenLoco/src/Audio/Audio.cpp
++++ b/src/OpenLoco/src/Audio/Audio.cpp
+@@ -528,8 +528,8 @@ namespace OpenLoco::Audio
+                 {
+                     const auto* data = obj->getData();
+                     assert(data != nullptr);
+-                    assert(data->offset == 8);
+-                    _objectSamples[static_cast<size_t>(id)] = loadSoundFromWaveMemory(data->pcmHeader, data->pcm(), data->length);
++                    assert(data->getOffset() == 8);
++                    _objectSamples[static_cast<size_t>(id)] = loadSoundFromWaveMemory(data->getPcmHeader(), data->pcm(), data->getLength());
+                     return _objectSamples[static_cast<size_t>(id)];
+                 }
+             }
+diff --git a/src/OpenLoco/src/Objects/BridgeObject.cpp b/src/OpenLoco/src/Objects/BridgeObject.cpp
+index 72fdb8e..a22840c 100644
+--- a/src/OpenLoco/src/Objects/BridgeObject.cpp
++++ b/src/OpenLoco/src/Objects/BridgeObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/BridgeObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -64,7 +65,7 @@ namespace OpenLoco
+         for (auto i = 0; i < trackNumCompatible; ++i)
+         {
+             trackMods[i] = 0xFF;
+-            ObjectHeader trackModHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader trackModHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(trackModHeader);
+             if (res.has_value())
+             {
+@@ -76,7 +77,7 @@ namespace OpenLoco
+         for (auto i = 0; i < roadNumCompatible; ++i)
+         {
+             roadMods[i] = 0xFF;
+-            ObjectHeader roadModHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader roadModHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(roadModHeader);
+             if (res.has_value())
+             {
+diff --git a/src/OpenLoco/src/Objects/BuildingObject.cpp b/src/OpenLoco/src/Objects/BuildingObject.cpp
+index 6a9b3b3..637a868 100644
+--- a/src/OpenLoco/src/Objects/BuildingObject.cpp
++++ b/src/OpenLoco/src/Objects/BuildingObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/BuildingObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -103,7 +104,7 @@ namespace OpenLoco
+             cargo = 0xFF;
+             if (*remainingData.data() != static_cast<std::byte>(0xFF))
+             {
+-                ObjectHeader cargoHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++                ObjectHeader cargoHeader = ObjectWire::decodeHeader(remainingData);
+                 if (dependencies != nullptr)
+                 {
+                     dependencies->required.push_back(cargoHeader);
+@@ -123,7 +124,7 @@ namespace OpenLoco
+             cargo = 0xFF;
+             if (*remainingData.data() != static_cast<std::byte>(0xFF))
+             {
+-                ObjectHeader cargoHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++                ObjectHeader cargoHeader = ObjectWire::decodeHeader(remainingData);
+ 
+                 if (dependencies != nullptr)
+                 {
+@@ -142,7 +143,7 @@ namespace OpenLoco
+         for (auto i = 0; i < numElevatorSequences; ++i)
+         {
+             elevatorHeightSequencesOffset[i] = static_cast<uint32_t>(remainingData.data() - data.data());
+-            const auto size = *reinterpret_cast<const uint16_t*>(remainingData.data());
++            const auto size = Utility::readLittleEndian<uint16_t>(remainingData);
+             remainingData = remainingData.subspan(sizeof(uint16_t) + size);
+         }
+ 
+@@ -188,7 +189,7 @@ namespace OpenLoco
+         // elevatorHeightSequences comprises of a size (16bit) then data (8 bit). Size will always be a power of 2
+         const auto* base = reinterpret_cast<const uint8_t*>(this);
+         const auto offset = elevatorHeightSequencesOffset[animIdx];
+-        const auto size = *reinterpret_cast<const uint16_t*>(base + offset);
++        const auto size = Utility::readLittleEndian16(base + offset);
+         const auto* sequencePointer = base + offset + sizeof(uint16_t);
+         return std::span<const std::uint8_t>(sequencePointer, size);
+     }
+diff --git a/src/OpenLoco/src/Objects/IndustryObject.cpp b/src/OpenLoco/src/Objects/IndustryObject.cpp
+index de7cbf8..6f17007 100644
+--- a/src/OpenLoco/src/Objects/IndustryObject.cpp
++++ b/src/OpenLoco/src/Objects/IndustryObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/IndustryObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -249,7 +250,7 @@ namespace OpenLoco
+             cargo = 0xFF;
+             if (*remainingData.data() != static_cast<std::byte>(0xFF))
+             {
+-                ObjectHeader cargoHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++                ObjectHeader cargoHeader = ObjectWire::decodeHeader(remainingData);
+                 if (dependencies != nullptr)
+                 {
+                     dependencies->required.push_back(cargoHeader);
+@@ -269,7 +270,7 @@ namespace OpenLoco
+             cargo = 0xFF;
+             if (*remainingData.data() != static_cast<std::byte>(0xFF))
+             {
+-                ObjectHeader cargoHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++                ObjectHeader cargoHeader = ObjectWire::decodeHeader(remainingData);
+ 
+                 if (dependencies != nullptr)
+                 {
+@@ -290,7 +291,7 @@ namespace OpenLoco
+             wallType = 0xFF;
+             if (*remainingData.data() != static_cast<std::byte>(0xFF))
+             {
+-                ObjectHeader wallHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++                ObjectHeader wallHeader = ObjectWire::decodeHeader(remainingData);
+ 
+                 if (dependencies != nullptr)
+                 {
+@@ -309,7 +310,7 @@ namespace OpenLoco
+         buildingWall = 0xFF;
+         if (*remainingData.data() != static_cast<std::byte>(0xFF))
+         {
+-            ObjectHeader unkHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader unkHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(unkHeader);
+@@ -326,7 +327,7 @@ namespace OpenLoco
+         buildingWallEntrance = 0xFF;
+         if (*remainingData.data() != static_cast<std::byte>(0xFF))
+         {
+-            ObjectHeader unkHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader unkHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(unkHeader);
+diff --git a/src/OpenLoco/src/Objects/LandObject.cpp b/src/OpenLoco/src/Objects/LandObject.cpp
+index 499249d..c35f80f 100644
+--- a/src/OpenLoco/src/Objects/LandObject.cpp
++++ b/src/OpenLoco/src/Objects/LandObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/LandObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -49,7 +50,7 @@ namespace OpenLoco
+         name = strRes.str;
+         remainingData = remainingData.subspan(strRes.tableLength);
+ 
+-        ObjectHeader cliffEdgeHeader_ = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++        ObjectHeader cliffEdgeHeader_ = ObjectWire::decodeHeader(remainingData);
+         if (dependencies != nullptr)
+         {
+             dependencies->required.push_back(cliffEdgeHeader_);
+@@ -65,7 +66,7 @@ namespace OpenLoco
+ 
+         if (hasFlags(LandObjectFlags::hasReplacementLandHeader))
+         {
+-            ObjectHeader replacementLandHeader_ = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader replacementLandHeader_ = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(replacementLandHeader_);
+diff --git a/src/OpenLoco/src/Objects/ObjectIndex.cpp b/src/OpenLoco/src/Objects/ObjectIndex.cpp
+index f2b9fb6..d7bbfdb 100644
+--- a/src/OpenLoco/src/Objects/ObjectIndex.cpp
++++ b/src/OpenLoco/src/Objects/ObjectIndex.cpp
+@@ -1,4 +1,5 @@
+ #include "Objects/ObjectIndex.h"
++#include "Objects/ObjectWire.hpp"
+ #include "Environment.h"
+ #include "Game.h"
+ #include "GameCommands/GameCommands.h"
+@@ -402,7 +403,7 @@ namespace OpenLoco::ObjectManager
+                 Logging::error("Unable to open object index file.");
+                 return;
+             }
+-            objHeader = stream.readValue<ObjectHeader>();
++            objHeader = ObjectWire::readHeader(stream);
+         }
+         catch (const std::runtime_error& ex)
+         {
+diff --git a/src/OpenLoco/src/Objects/ObjectManager.cpp b/src/OpenLoco/src/Objects/ObjectManager.cpp
+index 0161ac1..9475381 100644
+--- a/src/OpenLoco/src/Objects/ObjectManager.cpp
++++ b/src/OpenLoco/src/Objects/ObjectManager.cpp
+@@ -1,3 +1,5 @@
++#include "Objects/ObjectWire.hpp"
++#include "Objects/ObjectWireFields.hpp"
+ #include "Objects/ObjectManager.h"
+ #include "Date.h"
+ #include "Environment.h"
+@@ -67,7 +69,6 @@ using namespace OpenLoco::Diagnostics;
+ 
+ namespace OpenLoco::ObjectManager
+ {
+-    constexpr auto objectChecksumMagic = 0xF369A75B;
+ #pragma pack(push, 1)
+     struct ObjectEntry2 : public ObjectHeader
+     {
+@@ -374,33 +375,10 @@ namespace OpenLoco::ObjectManager
+     }
+ 
+     // 0x00472754
+-    static uint32_t computeChecksum(std::span<const std::byte> data, uint32_t seed)
+-    {
+-        auto checksum = seed;
+-        for (auto d : data)
+-        {
+-            checksum = std::rotl(checksum ^ static_cast<uint8_t>(d), 11);
+-        }
+-        return checksum;
+-    }
+-
+     // 0x0047270B
+     static bool computeObjectChecksum(const ObjectHeader& object, std::span<const std::byte> data)
+     {
+-        // Compute the checksum of header and data
+-
+-        // Annoyingly the header you need to only compute the first byte of the flags
+-        const auto headerFlag = std::span(reinterpret_cast<const std::byte*>(&object), 1);
+-        auto checksum = computeChecksum(headerFlag, objectChecksumMagic);
+-
+-        // And then the name
+-        const auto headerName = std::span(reinterpret_cast<const std::byte*>(&object.name), sizeof(ObjectHeader::name));
+-        checksum = computeChecksum(headerName, checksum);
+-
+-        // Finally compute the data's checksum
+-        checksum = computeChecksum(data, checksum);
+-
+-        return checksum == object.checksum;
++        return ObjectWire::checksum(object, data) == object.checksum;
+     }
+ 
+     // 0x00471B95
+@@ -433,7 +411,7 @@ namespace OpenLoco::ObjectManager
+         FileStream fs(filePath, StreamMode::read);
+         SawyerStreamReader stream(fs);
+         PreLoadedObject preLoadObj{};
+-        stream.read(&preLoadObj.header, sizeof(preLoadObj.header));
++        preLoadObj.header = ObjectWire::readHeader(stream);
+         if (preLoadObj.header != header)
+         {
+             // Something wrong has happened and installed object does not match index
+@@ -471,6 +449,7 @@ namespace OpenLoco::ObjectManager
+ 
+         preLoadObj.objectData = std::span<std::byte>(reinterpret_cast<std::byte*>(preLoadObj.object), data.size());
+ 
++        ObjectWire::decodeFixedFields(preLoadObj.header.getType(), preLoadObj.objectData);
+         if (!callObjectValidate(preLoadObj.header.getType(), *preLoadObj.object))
+         {
+             free(preLoadObj.object);
+@@ -777,6 +756,7 @@ namespace OpenLoco::ObjectManager
+         std::copy(std::begin(data), std::end(data), objectData);
+ 
+         auto* obj = reinterpret_cast<Object*>(objectData);
++        ObjectWire::decodeFixedFields(objectHeader.getType(), std::span(objectData, data.size()));
+         if (!callObjectValidate(objectHeader.getType(), *obj))
+         {
+             return false;
+@@ -843,8 +823,16 @@ namespace OpenLoco::ObjectManager
+                 auto obj = ObjectManager::getAny(*handle);
+                 auto objSize = ObjectManager::getByteLength(*handle);
+ 
+-                fs.write(header);
+-                fs.writeChunk(encodingType, obj, objSize);
++                const auto wireHeader = ObjectWire::encodeHeader(header);
++                fs.write(wireHeader.data(), wireHeader.size());
++                if constexpr (std::endian::native == std::endian::big)
++                {
++                    auto bytes = std::span(reinterpret_cast<const std::byte*>(obj), objSize);
++                    std::vector<std::byte> wire(bytes.begin(), bytes.end());
++                    ObjectWire::swapFixedFields(header.getType(), wire);
++                    fs.writeChunk(encodingType, wire.data(), wire.size());
++                }
++                else fs.writeChunk(encodingType, obj, objSize);
+             }
+             else
+             {
+diff --git a/src/OpenLoco/src/Objects/RegionObject.cpp b/src/OpenLoco/src/Objects/RegionObject.cpp
+index 0b4bbda..91cd47d 100644
+--- a/src/OpenLoco/src/Objects/RegionObject.cpp
++++ b/src/OpenLoco/src/Objects/RegionObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/RegionObject.h"
+ #include "Graphics/DrawingContext.h"
+ #include "Graphics/Gfx.h"
+@@ -26,7 +27,7 @@ namespace OpenLoco
+         // Load cargo? maybe default production?
+         for (auto i = 0U; i < numCargoInflunceObjects; ++i)
+         {
+-            ObjectHeader cargoHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader cargoHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(cargoHeader);
+@@ -42,7 +43,7 @@ namespace OpenLoco
+         // Find all the objects that this object loads
+         while (*remainingData.data() != static_cast<std::byte>(0xFF))
+         {
+-            ObjectHeader willLoadHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader willLoadHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->willLoad.push_back(willLoadHeader);
+diff --git a/src/OpenLoco/src/Objects/RoadObject.cpp b/src/OpenLoco/src/Objects/RoadObject.cpp
+index 88f84ee..3da5877 100644
+--- a/src/OpenLoco/src/Objects/RoadObject.cpp
++++ b/src/OpenLoco/src/Objects/RoadObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/RoadObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -75,7 +76,7 @@ namespace OpenLoco
+         compatibleRoads = 0;
+         for (auto i = 0; i < numCompatible; ++i)
+         {
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandleFuzzy(modHeader);
+             if (res.has_value())
+             {
+@@ -95,7 +96,7 @@ namespace OpenLoco
+         std::fill(std::begin(mods), std::end(mods), 0xFF);
+         for (auto i = 0U, index = 0U; i < numMods; ++i)
+         {
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(modHeader);
+             if (res.has_value() && res->type == ObjectType::roadExtra)
+             {
+@@ -107,7 +108,7 @@ namespace OpenLoco
+         // Load Tunnel (DEPENDENT OBJECT)
+         tunnel = 0xFF;
+         {
+-            ObjectHeader unkHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader unkHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(unkHeader);
+@@ -124,7 +125,7 @@ namespace OpenLoco
+         std::fill(std::begin(bridges), std::end(bridges), 0xFF);
+         for (auto i = 0U; i < numBridges; ++i)
+         {
+-            ObjectHeader bridgeHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader bridgeHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(bridgeHeader);
+@@ -141,7 +142,7 @@ namespace OpenLoco
+         std::fill(std::begin(stations), std::end(stations), 0xFF);
+         for (auto i = 0U; i < numStations; ++i)
+         {
+-            ObjectHeader stationHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader stationHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(stationHeader);
+diff --git a/src/OpenLoco/src/Objects/RoadStationObject.cpp b/src/OpenLoco/src/Objects/RoadStationObject.cpp
+index 3e62109..660b814 100644
+--- a/src/OpenLoco/src/Objects/RoadStationObject.cpp
++++ b/src/OpenLoco/src/Objects/RoadStationObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/RoadStationObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -85,7 +86,7 @@ namespace OpenLoco
+             auto& mod = mods[i];
+             mod = 0xFF;
+ 
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(modHeader);
+             if (res.has_value())
+             {
+@@ -96,7 +97,7 @@ namespace OpenLoco
+ 
+         if (hasFlags(RoadStationFlags::passenger | RoadStationFlags::freight))
+         {
+-            ObjectHeader cargoHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader cargoHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(cargoHeader);
+             if (res.has_value())
+             {
+diff --git a/src/OpenLoco/src/Objects/SoundObject.cpp b/src/OpenLoco/src/Objects/SoundObject.cpp
+index 694d224..01cf4a3 100644
+--- a/src/OpenLoco/src/Objects/SoundObject.cpp
++++ b/src/OpenLoco/src/Objects/SoundObject.cpp
+@@ -1,3 +1,6 @@
++#include "Objects/ObjectWire.hpp"
++#include <OpenLoco/Audio/CssFile.hpp>
++#include <OpenLoco/Core/Exception.hpp>
+ #include "Objects/SoundObject.h"
+ #include "Objects/ObjectStringTable.h"
+ 
+@@ -5,6 +8,19 @@
+ 
+ namespace OpenLoco
+ {
++    int32_t SoundObjectData::getOffset() const
++    {
++        return Utility::readLittleEndian<int32_t>(std::span(reinterpret_cast<const std::byte*>(this), sizeof(*this)), 4);
++    }
++    uint32_t SoundObjectData::getLength() const
++    {
++        return Utility::readLittleEndian<uint32_t>(std::span(reinterpret_cast<const std::byte*>(this), sizeof(*this)), 8);
++    }
++    Audio::WAVEFORMATEX SoundObjectData::getPcmHeader() const
++    {
++        return Audio::decodeWaveFormat(std::span(reinterpret_cast<const std::byte*>(this), sizeof(*this)).subspan(12));
++    }
++
+     // 0x0048AFAF
+     void SoundObject::load(const LoadedObjectHandle& handle, std::span<const std::byte> objData, ObjectManager::DependentObjects*)
+     {
+@@ -15,17 +31,19 @@ namespace OpenLoco
+         remainingData = remainingData.subspan(strRes.tableLength);
+ 
+         // Unknown structure size 0x10
+-        uint32_t numUnkStructs = *reinterpret_cast<const uint32_t*>(remainingData.data());
++        uint32_t numUnkStructs = Utility::readLittleEndian<uint32_t>(remainingData);
+         remainingData = remainingData.subspan(sizeof(uint32_t));
+         // Not really used as there is another length field within the fixed size pcm structure
+-        [[maybe_unused]] uint32_t pcmDataAndHeaderLength = *reinterpret_cast<const uint32_t*>(remainingData.data());
++        [[maybe_unused]] uint32_t pcmDataAndHeaderLength = Utility::readLittleEndian<uint32_t>(remainingData);
+         remainingData = remainingData.subspan(sizeof(uint32_t));
+         remainingData = remainingData.subspan(numUnkStructs * 16);
+ 
+         // Main pcm data structure
+         dataOffset = static_cast<uint32_t>(remainingData.data() - objData.data());
+-        [[maybe_unused]] auto* data = getData();
+-        assert(remainingData.size() >= (data->length + sizeof(SoundObjectData)));
++        if (remainingData.size() < sizeof(SoundObjectData)) throw Exception::OutOfRange();
++        const auto* data = getData();
++        if (data->getLength() > remainingData.size() - sizeof(SoundObjectData)) throw Exception::OutOfRange();
++        data->getPcmHeader();
+     }
+ 
+     // 0x0048AFE1
+diff --git a/src/OpenLoco/src/Objects/SteamObject.cpp b/src/OpenLoco/src/Objects/SteamObject.cpp
+index 99ad9de..47ba5f7 100644
+--- a/src/OpenLoco/src/Objects/SteamObject.cpp
++++ b/src/OpenLoco/src/Objects/SteamObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/SteamObject.h"
+ #include "Graphics/Gfx.h"
+ #include "Objects/ObjectImageTable.h"
+@@ -39,7 +40,7 @@ namespace OpenLoco
+         {
+             auto& soundId = soundEffects[i];
+ 
+-            ObjectHeader soundHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader soundHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(soundHeader);
+diff --git a/src/OpenLoco/src/Objects/TrackObject.cpp b/src/OpenLoco/src/Objects/TrackObject.cpp
+index 961015b..b2c8240 100644
+--- a/src/OpenLoco/src/Objects/TrackObject.cpp
++++ b/src/OpenLoco/src/Objects/TrackObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/TrackObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -72,7 +73,7 @@ namespace OpenLoco
+         compatibleRoads = 0;
+         for (auto i = 0; i < numCompatible; ++i)
+         {
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandleFuzzy(modHeader);
+             if (res.has_value())
+             {
+@@ -92,7 +93,7 @@ namespace OpenLoco
+         std::fill(std::begin(mods), std::end(mods), 0xFF);
+         for (auto i = 0U, index = 0U; i < numMods; ++i)
+         {
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(modHeader);
+             if (res.has_value() && res->type == ObjectType::trackExtra)
+             {
+@@ -105,7 +106,7 @@ namespace OpenLoco
+         signals = 0;
+         for (auto i = 0; i < numSignals; ++i)
+         {
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(modHeader);
+             if (res.has_value() && res->type == ObjectType::trackSignal)
+             {
+@@ -117,7 +118,7 @@ namespace OpenLoco
+         // Load Tunnel (DEPENDENT OBJECT)
+         tunnel = 0xFF;
+         {
+-            ObjectHeader unkHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader unkHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(unkHeader);
+@@ -134,7 +135,7 @@ namespace OpenLoco
+         std::fill(std::begin(bridges), std::end(bridges), 0xFF);
+         for (auto i = 0U; i < numBridges; ++i)
+         {
+-            ObjectHeader bridgeHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader bridgeHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(bridgeHeader);
+@@ -151,7 +152,7 @@ namespace OpenLoco
+         std::fill(std::begin(stations), std::end(stations), 0xFF);
+         for (auto i = 0U; i < numStations; ++i)
+         {
+-            ObjectHeader stationHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader stationHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(stationHeader);
+             if (res.has_value())
+             {
+diff --git a/src/OpenLoco/src/Objects/TrainSignalObject.cpp b/src/OpenLoco/src/Objects/TrainSignalObject.cpp
+index 515c9a5..c260738 100644
+--- a/src/OpenLoco/src/Objects/TrainSignalObject.cpp
++++ b/src/OpenLoco/src/Objects/TrainSignalObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/TrainSignalObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -73,7 +74,7 @@ namespace OpenLoco
+             auto& mod = mods[i];
+             mod = 0xFF;
+ 
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(modHeader);
+             if (res.has_value())
+             {
+diff --git a/src/OpenLoco/src/Objects/TrainStationObject.cpp b/src/OpenLoco/src/Objects/TrainStationObject.cpp
+index 665ef3b..df395a7 100644
+--- a/src/OpenLoco/src/Objects/TrainStationObject.cpp
++++ b/src/OpenLoco/src/Objects/TrainStationObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/TrainStationObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -80,7 +81,7 @@ namespace OpenLoco
+             auto& mod = mods[i];
+             mod = 0xFF;
+ 
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandle(modHeader);
+             if (res.has_value())
+             {
+diff --git a/src/OpenLoco/src/Objects/VehicleObject.cpp b/src/OpenLoco/src/Objects/VehicleObject.cpp
+index f440f19..8d66725 100644
+--- a/src/OpenLoco/src/Objects/VehicleObject.cpp
++++ b/src/OpenLoco/src/Objects/VehicleObject.cpp
+@@ -1,3 +1,4 @@
++#include "Objects/ObjectWire.hpp"
+ #include "Objects/VehicleObject.h"
+ #include "Graphics/Colour.h"
+ #include "Graphics/DrawingContext.h"
+@@ -347,7 +348,7 @@ namespace OpenLoco
+         trackType = 0xFF;
+         if (!hasFlags(VehicleObjectFlags::anyRoadType) && (mode == TransportMode::rail || mode == TransportMode::road))
+         {
+-            ObjectHeader trackHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader trackHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(trackHeader);
+@@ -363,7 +364,7 @@ namespace OpenLoco
+         // Load Extra
+         for (auto i = 0U, index = 0U; i < numTrackExtras; ++i)
+         {
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(modHeader);
+@@ -428,7 +429,7 @@ namespace OpenLoco
+             {
+                 continue;
+             }
+-            ObjectHeader modHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader modHeader = ObjectWire::decodeHeader(remainingData);
+             remainingData = remainingData.subspan(sizeof(ObjectHeader));
+             if (modHeader.getType() != ObjectType::steam)
+             {
+@@ -447,7 +448,7 @@ namespace OpenLoco
+ 
+         for (auto i = 0U, index = 0U; i < numCompatibleVehicles; ++i)
+         {
+-            ObjectHeader vehHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader vehHeader = ObjectWire::decodeHeader(remainingData);
+             auto res = ObjectManager::findObjectHandleFuzzy(vehHeader);
+             if (res.has_value())
+             {
+@@ -458,7 +459,7 @@ namespace OpenLoco
+ 
+         if (hasFlags(VehicleObjectFlags::rackRail))
+         {
+-            ObjectHeader unkHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader unkHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(unkHeader);
+@@ -473,7 +474,7 @@ namespace OpenLoco
+ 
+         if (drivingSoundType != DrivingSoundType::none)
+         {
+-            ObjectHeader soundHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader soundHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(soundHeader);
+@@ -489,7 +490,7 @@ namespace OpenLoco
+         const auto startSoundCount = std::min(kMaxStartSounds, numStartSounds & NumStartSounds::kMask);
+         for (auto i = 0; i < startSoundCount; ++i)
+         {
+-            ObjectHeader soundHeader = *reinterpret_cast<const ObjectHeader*>(remainingData.data());
++            ObjectHeader soundHeader = ObjectWire::decodeHeader(remainingData);
+             if (dependencies != nullptr)
+             {
+                 dependencies->required.push_back(soundHeader);

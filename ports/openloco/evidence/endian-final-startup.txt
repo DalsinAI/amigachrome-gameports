@@ -1,0 +1,14 @@
+[2026-10-23 20:40:01] [INF] OpenLoco, 26.09 (6d7f5b1 on amiga-sdl3)
+[2026-10-23 20:40:01] [INF] AmigaOS 3.x (m68k)
+[2026-10-23 20:40:01] [INF] Using Locomotion install path: DH1:Games/OpenLoco/Locomotion
+[2026-10-23 20:40:01] [INF] Creating directory: Work:Games/OpenLoco/User/save/
+[2026-10-23 20:40:01] [INF] Using save path: Work:Games/OpenLoco/User/save/
+[2026-10-23 20:40:01] [INF] Creating directory: Work:Games/OpenLoco/User/landscape/
+[2026-10-23 20:40:01] [INF] Using landscape path: Work:Games/OpenLoco/User/landscape/
+[2026-10-23 20:40:01] [ERR] Warning: file Work:Games/OpenLoco/User/objects could not be found
+[2026-10-23 20:40:01] [INF] Creating directory: Work:Games/OpenLoco/User/objects
+[2026-10-24 01:40:26] [ERR] Warning: file Work:Games/OpenLoco/User/scores.dat could not be found
+[2026-10-24 01:40:31] [ERR] Warning: file Work:Games/OpenLoco/User/scores.dat could not be found
+[2026-10-24 01:40:31] [INF] Scene transition: boot -> title
+[2026-10-24 01:40:37] [ERR] Unable to load S5: Unsupported S5 version
+[2026-10-24 01:42:11] [ERR] Unable to load S5: Unsupported S5 version

@@ -26,3 +26,29 @@ target_include_directories(core-probes PRIVATE
 add_custom_target(port-probes DEPENDS wire-probe core-probes)
 enable_testing()
 add_test(NAME sawyer-wire-format COMMAND wire-probe)
+
+add_executable(asset-wire asset_wire.cpp)
+target_include_directories(asset-wire PRIVATE
+    "${OPENLOCO_SOURCE}/src/OpenLoco/include"
+    "${OPENLOCO_SOURCE}/src/OpenLoco/include/OpenLoco"
+    "${OPENLOCO_SOURCE}/src/Core/include"
+    "${OPENLOCO_SOURCE}/src/Engine/include"
+    "${OPENLOCO_SOURCE}/src/Math/include"
+    "${OPENLOCO_SOURCE}/src/Audio/include")
+add_executable(object-wire object_wire.cpp
+    "${OPENLOCO_SOURCE}/src/OpenLoco/src/S5/SawyerStream.cpp"
+    "${OPENLOCO_SOURCE}/src/Core/src/MemoryStream.cpp")
+target_include_directories(object-wire PRIVATE
+    "${OPENLOCO_SOURCE}/src/OpenLoco/include"
+    "${OPENLOCO_SOURCE}/src/OpenLoco/include/OpenLoco"
+    "${OPENLOCO_SOURCE}/src/Core/include"
+    "${OPENLOCO_SOURCE}/src/Core/include/OpenLoco/Core"
+    "${OPENLOCO_SOURCE}/src/Engine/include"
+    "${OPENLOCO_SOURCE}/src/Math/include"
+    "${OPENLOCO_SOURCE}/src/Audio/include"
+    "${FMT_SOURCE}/include"
+    "${SFL_SOURCE}/include")
+target_compile_definitions(object-wire PRIVATE FMT_HEADER_ONLY=1)
+add_dependencies(port-probes asset-wire object-wire)
+add_test(NAME graphics-css-wire-format COMMAND asset-wire)
+add_test(NAME object-fixed-wire-format COMMAND object-wire)

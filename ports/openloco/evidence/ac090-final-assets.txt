@@ -1,0 +1,3 @@
+PASS synthetic little-endian fields, signed values, bitmap, CSS PCM and malformed/truncated ranges
+PASS G1 entries=4122 payload=2484252 canonical equals original wire bytes
+PASS CSS sounds=32 PCM bytes=2585554

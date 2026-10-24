@@ -1,0 +1,36 @@
+PASS unaligned object header, truncated-header rejection, checksum flag byte and typed climate field round trip
+PASS 545 object headers, original checksums, typed fixed-field decode and wire-order round trips; 50153847 decoded bytes
+TYPE 0 1
+TYPE 1 42
+TYPE 2 13
+TYPE 3 5
+TYPE 4 2
+TYPE 5 1
+TYPE 6 5
+TYPE 7 6
+TYPE 8 14
+TYPE 9 8
+TYPE 10 10
+TYPE 11 4
+TYPE 12 1
+TYPE 13 2
+TYPE 14 5
+TYPE 15 5
+TYPE 16 3
+TYPE 17 2
+TYPE 18 7
+TYPE 19 1
+TYPE 20 6
+TYPE 21 4
+TYPE 22 1
+TYPE 23 165
+TYPE 24 39
+TYPE 25 1
+TYPE 26 6
+TYPE 27 1
+TYPE 28 76
+TYPE 29 1
+TYPE 30 22
+TYPE 31 3
+TYPE 32 38
+TYPE 33 45
