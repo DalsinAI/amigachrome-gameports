@@ -1,0 +1,3603 @@
+{
+  "pin": "6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e",
+  "records": {
+    "OpenLoco::S5::Header": [
+      {
+        "name": "type",
+        "type": "OpenLoco::S5::S5Type"
+      },
+      {
+        "name": "flags",
+        "type": "OpenLoco::S5::HeaderFlags"
+      },
+      {
+        "name": "numPackedObjects",
+        "type": "unsigned short"
+      },
+      {
+        "name": "version",
+        "type": "unsigned int"
+      },
+      {
+        "name": "magic",
+        "type": "unsigned int"
+      },
+      {
+        "name": "padding",
+        "type": "std::byte[20]"
+      }
+    ],
+    "OpenLoco::S5::SaveDetails": [
+      {
+        "name": "company",
+        "type": "char[256]"
+      },
+      {
+        "name": "owner",
+        "type": "char[256]"
+      },
+      {
+        "name": "date",
+        "type": "unsigned int"
+      },
+      {
+        "name": "performanceIndex",
+        "type": "unsigned short"
+      },
+      {
+        "name": "scenario",
+        "type": "char[64]"
+      },
+      {
+        "name": "challengeProgress",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_247",
+        "type": "std::byte"
+      },
+      {
+        "name": "image",
+        "type": "uint8_t[50000]"
+      },
+      {
+        "name": "challengeFlags",
+        "type": "OpenLoco::CompanyFlags"
+      },
+      {
+        "name": "pad_C59C",
+        "type": "std::byte[124]"
+      }
+    ],
+    "OpenLoco::S5::LoadError": [
+      {
+        "name": "errorCode",
+        "type": "signed char"
+      },
+      {
+        "name": "errorMessage",
+        "type": "int"
+      },
+      {
+        "name": "objectList",
+        "type": "int"
+      }
+    ],
+    "OpenLoco::S5::Animation": [
+      {
+        "name": "baseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "type",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pos",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      }
+    ],
+    "OpenLoco::S5::AiThought": [
+      {
+        "name": "type",
+        "type": "unsigned char"
+      },
+      {
+        "name": "destinationA",
+        "type": "unsigned char"
+      },
+      {
+        "name": "destinationB",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numStations",
+        "type": "unsigned char"
+      },
+      {
+        "name": "stationLength",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_05",
+        "type": "unsigned char"
+      },
+      {
+        "name": "stations",
+        "type": "Station[4]"
+      },
+      {
+        "name": "trackObjId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "rackRailType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "mods",
+        "type": "unsigned short"
+      },
+      {
+        "name": "cargoType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numVehiclesTarget",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numVehicles",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numVehicleObjTypes",
+        "type": "unsigned char"
+      },
+      {
+        "name": "vehicleObjTypes",
+        "type": "uint16_t[16]"
+      },
+      {
+        "name": "vehicles",
+        "type": "uint16_t[8]"
+      },
+      {
+        "name": "totalCost",
+        "type": "int"
+      },
+      {
+        "name": "pad_7A",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "totalRunningCost",
+        "type": "int"
+      },
+      {
+        "name": "income",
+        "type": "int"
+      },
+      {
+        "name": "previousIncome",
+        "type": "int"
+      },
+      {
+        "name": "thoughtAge",
+        "type": "unsigned char"
+      },
+      {
+        "name": "stationObjId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "signalObjId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "purchaseFlags",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::AiThought::Station": [
+      {
+        "name": "id",
+        "type": "unsigned short"
+      },
+      {
+        "name": "flags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "rotation",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pos",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "baseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "nextStationIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "prevStationIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "connectionFlagsA",
+        "type": "unsigned char"
+      },
+      {
+        "name": "connectionFlagsB",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_D",
+        "type": "uint8_t[1]"
+      }
+    ],
+    "OpenLoco::S5::Company": [
+      {
+        "name": "name",
+        "type": "unsigned short"
+      },
+      {
+        "name": "ownerName",
+        "type": "unsigned short"
+      },
+      {
+        "name": "challengeFlags",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cash",
+        "type": "OpenLoco::currency48_t"
+      },
+      {
+        "name": "currentLoan",
+        "type": "int"
+      },
+      {
+        "name": "updateCounter",
+        "type": "unsigned int"
+      },
+      {
+        "name": "performanceIndex",
+        "type": "short"
+      },
+      {
+        "name": "competitorId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "ownerEmotion",
+        "type": "unsigned char"
+      },
+      {
+        "name": "mainColours",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "vehicleColours",
+        "type": "uint8_t[10][2]"
+      },
+      {
+        "name": "customVehicleColoursSet",
+        "type": "unsigned int"
+      },
+      {
+        "name": "unlockedVehicles",
+        "type": "uint32_t[7]"
+      },
+      {
+        "name": "availableVehicles",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPlaystyleFlags",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiPlaystyleTownId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numExpenditureYears",
+        "type": "unsigned char"
+      },
+      {
+        "name": "expenditures",
+        "type": "currency32_t[16][17]"
+      },
+      {
+        "name": "startedDate",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cargoTypesDelivered",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cargoTypesDelivered2",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiThinkState",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiThinkSubState",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPlaceVehicleState",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPlaceVehiclePad",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiThoughts",
+        "type": "AiThought[60]"
+      },
+      {
+        "name": "activeThoughtId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "headquartersZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "headquartersX",
+        "type": "short"
+      },
+      {
+        "name": "headquartersY",
+        "type": "short"
+      },
+      {
+        "name": "activeThoughtRevenueEstimate",
+        "type": "int"
+      },
+      {
+        "name": "aiThoughtCooldown",
+        "type": "unsigned int"
+      },
+      {
+        "name": "pad_2586",
+        "type": "uint8_t[16]"
+      },
+      {
+        "name": "aiBridgeSelectionCounter",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiBridgeTypeLow",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiBridgeTypeMedium",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiBridgeTypeHigh",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_259D",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPlaceVehicleIndex",
+        "type": "unsigned int"
+      },
+      {
+        "name": "pad_25A2",
+        "type": "uint8_t[28]"
+      },
+      {
+        "name": "aiSavedThoughtType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "currentRating",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackandRoadHashTable",
+        "type": "TrackRoadHashTableEntry[4096]"
+      },
+      {
+        "name": "hashTableLength",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiStationIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiStationFlags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindTargetPos",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPathfindTargetBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindTargetPos2",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPathfindTargetBaseZ2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindTargetRot",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindTargetRot2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindStartPos",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPathfindStartBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindStartTad",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPathfindStartPos2",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPathfindStartBaseZ2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindStartTad2",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPathfindWeighting1",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiPathfindWeighting2",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiBestTrackRoadId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPathfindPhase",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPathfindMaxWeighting",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiPathfindUndoCount1",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindUndoCount2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindIterCount",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiVehicleCost",
+        "type": "int"
+      },
+      {
+        "name": "aiThinkTimer",
+        "type": "unsigned short"
+      },
+      {
+        "name": "cargoUnitsTotalDelivered",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cargoUnitsDeliveredHistory",
+        "type": "uint32_t[120]"
+      },
+      {
+        "name": "performanceIndexHistory",
+        "type": "int16_t[120]"
+      },
+      {
+        "name": "historySize",
+        "type": "unsigned short"
+      },
+      {
+        "name": "companyValueHistory",
+        "type": "currency48_t[120]"
+      },
+      {
+        "name": "vehicleProfit",
+        "type": "OpenLoco::currency48_t"
+      },
+      {
+        "name": "transportTypeCount",
+        "type": "uint16_t[6]"
+      },
+      {
+        "name": "activeEmotions",
+        "type": "uint8_t[9]"
+      },
+      {
+        "name": "observationStatus",
+        "type": "unsigned char"
+      },
+      {
+        "name": "observationTownId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "observationEntity",
+        "type": "unsigned short"
+      },
+      {
+        "name": "observationX",
+        "type": "short"
+      },
+      {
+        "name": "observationY",
+        "type": "short"
+      },
+      {
+        "name": "observationObject",
+        "type": "unsigned short"
+      },
+      {
+        "name": "observationTimeout",
+        "type": "unsigned short"
+      },
+      {
+        "name": "ownerStatus",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "pad_8BCA",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "cargoDelivered",
+        "type": "uint32_t[32]"
+      },
+      {
+        "name": "challengeProgress",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numMonthsInTheRed",
+        "type": "unsigned char"
+      },
+      {
+        "name": "cargoUnitsTotalDistance",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cargoUnitsDistanceHistory",
+        "type": "uint32_t[120]"
+      },
+      {
+        "name": "jailStatus",
+        "type": "unsigned short"
+      },
+      {
+        "name": "pad_8E36",
+        "type": "uint8_t[370]"
+      }
+    ],
+    "OpenLoco::S5::Company::TrackRoadHashTableEntry": [
+      {
+        "name": "posX",
+        "type": "unsigned short"
+      },
+      {
+        "name": "posYAndFlags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "posZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackRoadIdAndDirection",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::CompanyType2": [
+      {
+        "name": "name",
+        "type": "unsigned short"
+      },
+      {
+        "name": "ownerName",
+        "type": "unsigned short"
+      },
+      {
+        "name": "challengeFlags",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cash",
+        "type": "OpenLoco::currency48_t"
+      },
+      {
+        "name": "currentLoan",
+        "type": "int"
+      },
+      {
+        "name": "updateCounter",
+        "type": "unsigned int"
+      },
+      {
+        "name": "performanceIndex",
+        "type": "short"
+      },
+      {
+        "name": "competitorId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "ownerEmotion",
+        "type": "unsigned char"
+      },
+      {
+        "name": "mainColours",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "vehicleColours",
+        "type": "uint8_t[10][2]"
+      },
+      {
+        "name": "customVehicleColoursSet",
+        "type": "unsigned int"
+      },
+      {
+        "name": "unlockedVehicles",
+        "type": "uint32_t[7]"
+      },
+      {
+        "name": "availableVehicles",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPlaystyleFlags",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiPlaystyleTownId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numExpenditureYears",
+        "type": "unsigned char"
+      },
+      {
+        "name": "expenditures",
+        "type": "currency32_t[16][17]"
+      },
+      {
+        "name": "startedDate",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cargoTypesDelivered",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cargoTypesDelivered2",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiThinkState",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiThinkSubState",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPlaceVehicleState",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPlaceVehiclePad",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiThoughts",
+        "type": "AiThought[60]"
+      },
+      {
+        "name": "activeThoughtId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "headquartersZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "headquartersX",
+        "type": "short"
+      },
+      {
+        "name": "headquartersY",
+        "type": "short"
+      },
+      {
+        "name": "activeThoughtRevenueEstimate",
+        "type": "int"
+      },
+      {
+        "name": "aiThoughtCooldown",
+        "type": "unsigned int"
+      },
+      {
+        "name": "pad_2586",
+        "type": "uint8_t[16]"
+      },
+      {
+        "name": "aiBridgeSelectionCounter",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiBridgeTypeLow",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiBridgeTypeMedium",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiBridgeTypeHigh",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_259D",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPlaceVehicleIndex",
+        "type": "unsigned int"
+      },
+      {
+        "name": "pad_25A2",
+        "type": "uint8_t[28]"
+      },
+      {
+        "name": "aiSavedThoughtType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "currentRating",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackandRoadHashTable",
+        "type": "TrackRoadHashTableEntry[4096]"
+      },
+      {
+        "name": "hashTableLength",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiStationIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiStationFlags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindTargetPos",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPathfindTargetBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindTargetPos2",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPathfindTargetBaseZ2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindTargetRot",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindTargetRot2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindStartPos",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPathfindStartBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindStartTad",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPathfindStartPos2",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPathfindStartBaseZ2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindStartTad2",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPathfindWeighting1",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiPathfindWeighting2",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiBestTrackRoadId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPathfindPhase",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPathfindMaxWeighting",
+        "type": "unsigned int"
+      },
+      {
+        "name": "aiPathfindUndoCount1",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindUndoCount2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPathfindIterCount",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiVehicleCost",
+        "type": "int"
+      },
+      {
+        "name": "aiThinkTimer",
+        "type": "unsigned short"
+      },
+      {
+        "name": "cargoUnitsTotalDelivered",
+        "type": "unsigned int"
+      },
+      {
+        "name": "cargoUnitsDeliveredHistory",
+        "type": "uint32_t[120]"
+      },
+      {
+        "name": "performanceIndexHistory",
+        "type": "int16_t[120]"
+      },
+      {
+        "name": "historySize",
+        "type": "unsigned short"
+      },
+      {
+        "name": "companyValueHistory",
+        "type": "currency48_t[120]"
+      },
+      {
+        "name": "vehicleProfit",
+        "type": "OpenLoco::currency48_t"
+      },
+      {
+        "name": "transportTypeCount",
+        "type": "uint16_t[6]"
+      },
+      {
+        "name": "activeEmotions",
+        "type": "uint8_t[9]"
+      },
+      {
+        "name": "observationStatus",
+        "type": "unsigned char"
+      },
+      {
+        "name": "observationTownId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "observationEntity",
+        "type": "unsigned short"
+      },
+      {
+        "name": "observationX",
+        "type": "short"
+      },
+      {
+        "name": "observationY",
+        "type": "short"
+      },
+      {
+        "name": "observationObject",
+        "type": "unsigned short"
+      },
+      {
+        "name": "observationTimeout",
+        "type": "unsigned short"
+      },
+      {
+        "name": "ownerStatus",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "pad_8BCA",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "cargoDelivered",
+        "type": "uint32_t[32]"
+      },
+      {
+        "name": "challengeProgress",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numMonthsInTheRed",
+        "type": "unsigned char"
+      },
+      {
+        "name": "cargoUnitsTotalDistance",
+        "type": "unsigned int"
+      },
+      {
+        "name": "jailStatus",
+        "type": "unsigned short"
+      },
+      {
+        "name": "pad_8E36",
+        "type": "uint8_t[370]"
+      }
+    ],
+    "OpenLoco::S5::CompanyType2::TrackRoadHashTableEntry": [
+      {
+        "name": "posX",
+        "type": "unsigned short"
+      },
+      {
+        "name": "posYAndFlags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "posZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackRoadIdAndDirection",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::Records": [
+      {
+        "name": "speed",
+        "type": "int16_t[3]"
+      },
+      {
+        "name": "company",
+        "type": "uint8_t[3]"
+      },
+      {
+        "name": "pad_43A",
+        "type": "unsigned char"
+      },
+      {
+        "name": "date",
+        "type": "uint32_t[3]"
+      }
+    ],
+    "OpenLoco::S5::EntityBase": [
+      {
+        "name": "baseType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "type",
+        "type": "unsigned char"
+      },
+      {
+        "name": "nextQuadrantId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "nextEntityId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "llPreviousId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "linkedListOffset",
+        "type": "unsigned char"
+      },
+      {
+        "name": "spriteHeightNegative",
+        "type": "unsigned char"
+      },
+      {
+        "name": "id",
+        "type": "unsigned short"
+      },
+      {
+        "name": "vehicleFlags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "position",
+        "type": "OpenLoco::Math::Vector::TVector3<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "spriteWidth",
+        "type": "unsigned char"
+      },
+      {
+        "name": "spriteHeightPositive",
+        "type": "unsigned char"
+      },
+      {
+        "name": "spriteLeft",
+        "type": "short"
+      },
+      {
+        "name": "spriteTop",
+        "type": "short"
+      },
+      {
+        "name": "spriteRight",
+        "type": "short"
+      },
+      {
+        "name": "spriteBottom",
+        "type": "short"
+      },
+      {
+        "name": "spriteYaw",
+        "type": "unsigned char"
+      },
+      {
+        "name": "spritePitch",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_20",
+        "type": "unsigned char"
+      },
+      {
+        "name": "owner",
+        "type": "unsigned char"
+      },
+      {
+        "name": "name",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::Exhaust": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "frameNum",
+        "type": "unsigned short"
+      },
+      {
+        "name": "stationaryProgress",
+        "type": "short"
+      },
+      {
+        "name": "pad_2A",
+        "type": "uint8_t[8]"
+      },
+      {
+        "name": "windProgress",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_34",
+        "type": "short"
+      },
+      {
+        "name": "var_36",
+        "type": "short"
+      },
+      {
+        "name": "pad_38",
+        "type": "uint8_t[17]"
+      },
+      {
+        "name": "objectId",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::ExplosionCloud": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "frame",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::ExplosionSmoke": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "frame",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::Fireball": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "frame",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::MoneyEffect": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": null,
+        "type": "OpenLoco::S5::MoneyEffect::(anonymous union at build/openloco-s5-clean/source/src/OpenLoco/include/OpenLoco/S5/S5Entity.h:80:9)"
+      },
+      {
+        "name": "frame",
+        "type": null
+      },
+      {
+        "name": "moveDelay",
+        "type": null
+      },
+      {
+        "name": "numMovements",
+        "type": "unsigned short"
+      },
+      {
+        "name": "amount",
+        "type": "int"
+      },
+      {
+        "name": "var_2E",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_2F",
+        "type": "uint8_t[21]"
+      },
+      {
+        "name": "offsetX",
+        "type": "short"
+      },
+      {
+        "name": "wiggle",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::Smoke": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "frame",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::Splash": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "frame",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::VehicleCrashParticle": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "timeToLive",
+        "type": "unsigned short"
+      },
+      {
+        "name": "frame",
+        "type": "unsigned short"
+      },
+      {
+        "name": "pad_2A",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "colourSchemePrimary",
+        "type": "unsigned char"
+      },
+      {
+        "name": "colourSchemeSecondary",
+        "type": "unsigned char"
+      },
+      {
+        "name": "crashedSpriteBase",
+        "type": "unsigned short"
+      },
+      {
+        "name": "velocity",
+        "type": "OpenLoco::Math::Vector::TVector3<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "accelerationX",
+        "type": "int"
+      },
+      {
+        "name": "accelerationY",
+        "type": "int"
+      },
+      {
+        "name": "accelerationZ",
+        "type": "int"
+      }
+    ],
+    "OpenLoco::S5::VehicleCargo": [
+      {
+        "name": "acceptedTypes",
+        "type": "unsigned int"
+      },
+      {
+        "name": "type",
+        "type": "unsigned char"
+      },
+      {
+        "name": "maxQty",
+        "type": "unsigned char"
+      },
+      {
+        "name": "townFrom",
+        "type": "unsigned short"
+      },
+      {
+        "name": "numDays",
+        "type": "unsigned char"
+      },
+      {
+        "name": "qty",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::VehicleHead": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "head",
+        "type": "unsigned short"
+      },
+      {
+        "name": "remainingDistance",
+        "type": "int"
+      },
+      {
+        "name": "trackAndDirection",
+        "type": "unsigned short"
+      },
+      {
+        "name": "subPosition",
+        "type": "unsigned short"
+      },
+      {
+        "name": "tileX",
+        "type": "short"
+      },
+      {
+        "name": "tileY",
+        "type": "short"
+      },
+      {
+        "name": "tileBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "routingHandle",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_38",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_39",
+        "type": "unsigned char"
+      },
+      {
+        "name": "nextCarId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_3C",
+        "type": "int"
+      },
+      {
+        "name": "pad_40",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "mode",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_43",
+        "type": "unsigned char"
+      },
+      {
+        "name": "ordinalNumber",
+        "type": "short"
+      },
+      {
+        "name": "orderTableOffset",
+        "type": "unsigned int"
+      },
+      {
+        "name": "currentOrder",
+        "type": "unsigned short"
+      },
+      {
+        "name": "sizeOfOrderTable",
+        "type": "unsigned short"
+      },
+      {
+        "name": "trainAcceptedCargoTypes",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_52",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_53",
+        "type": "unsigned char"
+      },
+      {
+        "name": "stationId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "cargoTransferTimeout",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_58",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_5C",
+        "type": "unsigned char"
+      },
+      {
+        "name": "status",
+        "type": "unsigned char"
+      },
+      {
+        "name": "vehicleType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "breakdownFlags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiThoughtId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "aiPlacementPos",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "aiPlacementTaD",
+        "type": "unsigned short"
+      },
+      {
+        "name": "aiPlacementBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "airportMovementEdge",
+        "type": "unsigned char"
+      },
+      {
+        "name": "totalRefundCost",
+        "type": "unsigned int"
+      },
+      {
+        "name": "crashedTimeout",
+        "type": "unsigned char"
+      },
+      {
+        "name": "manualPower",
+        "type": "signed char"
+      },
+      {
+        "name": "journeyStartPos",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "journeyStartTicks",
+        "type": "unsigned int"
+      },
+      {
+        "name": "lastAverageSpeed",
+        "type": "short"
+      },
+      {
+        "name": "restartStoppedCarsTimeout",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::IncomeStats": [
+      {
+        "name": "day",
+        "type": "int"
+      },
+      {
+        "name": "cargoTypes",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "cargoQtys",
+        "type": "uint16_t[4]"
+      },
+      {
+        "name": "cargoDistances",
+        "type": "uint16_t[4]"
+      },
+      {
+        "name": "cargoAges",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "cargoProfits",
+        "type": "currency32_t[4]"
+      }
+    ],
+    "OpenLoco::S5::Vehicle1": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "head",
+        "type": "unsigned short"
+      },
+      {
+        "name": "remainingDistance",
+        "type": "int"
+      },
+      {
+        "name": "trackAndDirection",
+        "type": "unsigned short"
+      },
+      {
+        "name": "subPosition",
+        "type": "unsigned short"
+      },
+      {
+        "name": "tileX",
+        "type": "short"
+      },
+      {
+        "name": "tileY",
+        "type": "short"
+      },
+      {
+        "name": "tileBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "routingHandle",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_38",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_39",
+        "type": "unsigned char"
+      },
+      {
+        "name": "nextCarId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_3C",
+        "type": "int"
+      },
+      {
+        "name": "pad_40",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "mode",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_43",
+        "type": "unsigned char"
+      },
+      {
+        "name": "targetSpeed",
+        "type": "short"
+      },
+      {
+        "name": "timeAtSignal",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_48",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_49",
+        "type": "unsigned char"
+      },
+      {
+        "name": "dayCreated",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_4E",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_50",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_52",
+        "type": "unsigned char"
+      },
+      {
+        "name": "lastIncome",
+        "type": "OpenLoco::S5::IncomeStats"
+      }
+    ],
+    "OpenLoco::S5::Vehicle2": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "head",
+        "type": "unsigned short"
+      },
+      {
+        "name": "remainingDistance",
+        "type": "int"
+      },
+      {
+        "name": "trackAndDirection",
+        "type": "unsigned short"
+      },
+      {
+        "name": "subPosition",
+        "type": "unsigned short"
+      },
+      {
+        "name": "tileX",
+        "type": "short"
+      },
+      {
+        "name": "tileY",
+        "type": "short"
+      },
+      {
+        "name": "tileBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "routingHandle",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_38",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_39",
+        "type": "unsigned char"
+      },
+      {
+        "name": "nextCarId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_3C",
+        "type": "int"
+      },
+      {
+        "name": "pad_40",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "mode",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_43",
+        "type": "unsigned char"
+      },
+      {
+        "name": "drivingSoundId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "drivingSoundVolume",
+        "type": "unsigned char"
+      },
+      {
+        "name": "drivingSoundFrequency",
+        "type": "unsigned short"
+      },
+      {
+        "name": "objectId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "soundFlags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "soundWindowNumber",
+        "type": "unsigned short"
+      },
+      {
+        "name": "soundWindowType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_4F",
+        "type": "signed char"
+      },
+      {
+        "name": "totalPower",
+        "type": "unsigned short"
+      },
+      {
+        "name": "totalWeight",
+        "type": "unsigned short"
+      },
+      {
+        "name": "maxSpeed",
+        "type": "short"
+      },
+      {
+        "name": "currentSpeed",
+        "type": "int"
+      },
+      {
+        "name": "motorState",
+        "type": "unsigned char"
+      },
+      {
+        "name": "brakeLightTimeout",
+        "type": "unsigned char"
+      },
+      {
+        "name": "rackRailMaxSpeed",
+        "type": "short"
+      },
+      {
+        "name": "curMonthRevenue",
+        "type": "int"
+      },
+      {
+        "name": "profit",
+        "type": "currency32_t[4]"
+      },
+      {
+        "name": "reliability",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_73",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::VehicleBody": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "colourSchemePrimary",
+        "type": "unsigned char"
+      },
+      {
+        "name": "colourSchemeSecondary",
+        "type": "unsigned char"
+      },
+      {
+        "name": "head",
+        "type": "unsigned short"
+      },
+      {
+        "name": "remainingDistance",
+        "type": "int"
+      },
+      {
+        "name": "trackAndDirection",
+        "type": "unsigned short"
+      },
+      {
+        "name": "subPosition",
+        "type": "unsigned short"
+      },
+      {
+        "name": "tileX",
+        "type": "short"
+      },
+      {
+        "name": "tileY",
+        "type": "short"
+      },
+      {
+        "name": "tileBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "routingHandle",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_38",
+        "type": "unsigned char"
+      },
+      {
+        "name": "objectSpriteType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "nextCarId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_3C",
+        "type": "int"
+      },
+      {
+        "name": "objectId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "mode",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_43",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_44",
+        "type": "short"
+      },
+      {
+        "name": "animationFrame",
+        "type": "unsigned char"
+      },
+      {
+        "name": "cargoFrame",
+        "type": "unsigned char"
+      },
+      {
+        "name": "primaryCargo",
+        "type": "OpenLoco::S5::VehicleCargo"
+      },
+      {
+        "name": "pad_52",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "bodyIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "chuffSoundIndex",
+        "type": "signed char"
+      },
+      {
+        "name": "creationDay",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_5A",
+        "type": "unsigned int"
+      },
+      {
+        "name": "wheelSlipping",
+        "type": "unsigned char"
+      },
+      {
+        "name": "breakdownFlags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_60",
+        "type": "unsigned short"
+      },
+      {
+        "name": "refundCost",
+        "type": "unsigned int"
+      },
+      {
+        "name": "pad_66",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "breakdownTimeout",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::VehicleBogie": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "colourSchemePrimary",
+        "type": "unsigned char"
+      },
+      {
+        "name": "colourSchemeSecondary",
+        "type": "unsigned char"
+      },
+      {
+        "name": "head",
+        "type": "unsigned short"
+      },
+      {
+        "name": "remainingDistance",
+        "type": "int"
+      },
+      {
+        "name": "trackAndDirection",
+        "type": "unsigned short"
+      },
+      {
+        "name": "subPosition",
+        "type": "unsigned short"
+      },
+      {
+        "name": "tileX",
+        "type": "short"
+      },
+      {
+        "name": "tileY",
+        "type": "short"
+      },
+      {
+        "name": "tileBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "routingHandle",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_38",
+        "type": "unsigned char"
+      },
+      {
+        "name": "objectSpriteType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "nextCarId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_3C",
+        "type": "int"
+      },
+      {
+        "name": "objectId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "mode",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_43",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_44",
+        "type": "unsigned short"
+      },
+      {
+        "name": "animationIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_47",
+        "type": "unsigned char"
+      },
+      {
+        "name": "secondaryCargo",
+        "type": "OpenLoco::S5::VehicleCargo"
+      },
+      {
+        "name": "totalCarWeight",
+        "type": "unsigned short"
+      },
+      {
+        "name": "bodyIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_55",
+        "type": "unsigned char"
+      },
+      {
+        "name": "creationDay",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_5A",
+        "type": "unsigned int"
+      },
+      {
+        "name": "wheelSlipping",
+        "type": "unsigned char"
+      },
+      {
+        "name": "breakdownFlags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_60",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_61",
+        "type": "unsigned char"
+      },
+      {
+        "name": "refundCost",
+        "type": "unsigned int"
+      },
+      {
+        "name": "reliability",
+        "type": "unsigned short"
+      },
+      {
+        "name": "timeoutToBreakdown",
+        "type": "unsigned short"
+      },
+      {
+        "name": "breakdownTimeout",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::VehicleTail": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "head",
+        "type": "unsigned short"
+      },
+      {
+        "name": "remainingDistance",
+        "type": "int"
+      },
+      {
+        "name": "trackAndDirection",
+        "type": "unsigned short"
+      },
+      {
+        "name": "subPosition",
+        "type": "unsigned short"
+      },
+      {
+        "name": "tileX",
+        "type": "short"
+      },
+      {
+        "name": "tileY",
+        "type": "short"
+      },
+      {
+        "name": "tileBaseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trackType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "routingHandle",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_38",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_39",
+        "type": "unsigned char"
+      },
+      {
+        "name": "nextCarId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_3C",
+        "type": "int"
+      },
+      {
+        "name": "pad_40",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "mode",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_43",
+        "type": "unsigned char"
+      },
+      {
+        "name": "drivingSoundId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "drivingSoundVolume",
+        "type": "unsigned char"
+      },
+      {
+        "name": "drivingSoundFrequency",
+        "type": "unsigned short"
+      },
+      {
+        "name": "objectId",
+        "type": "unsigned short"
+      },
+      {
+        "name": "soundFlags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "soundWindowNumber",
+        "type": "unsigned short"
+      },
+      {
+        "name": "soundWindowType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trainDanglingTimeout",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::Entity": [
+      {
+        "name": "base",
+        "type": "OpenLoco::S5::EntityBase"
+      },
+      {
+        "name": "pad_24",
+        "type": "uint8_t[92]"
+      }
+    ],
+    "OpenLoco::S5::Industry": [
+      {
+        "name": "name",
+        "type": "unsigned short"
+      },
+      {
+        "name": "x",
+        "type": "short"
+      },
+      {
+        "name": "y",
+        "type": "short"
+      },
+      {
+        "name": "flags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "prng0",
+        "type": "unsigned int"
+      },
+      {
+        "name": "prng1",
+        "type": "unsigned int"
+      },
+      {
+        "name": "objectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "under_construction",
+        "type": "unsigned char"
+      },
+      {
+        "name": "foundingYear",
+        "type": "unsigned short"
+      },
+      {
+        "name": "numTiles",
+        "type": "unsigned char"
+      },
+      {
+        "name": "tiles",
+        "type": "World::Pos3[32]"
+      },
+      {
+        "name": "town",
+        "type": "unsigned short"
+      },
+      {
+        "name": "tileLoop",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "numFarmTiles",
+        "type": "short"
+      },
+      {
+        "name": "numIdleFarmTiles",
+        "type": "short"
+      },
+      {
+        "name": "productionRate",
+        "type": "unsigned char"
+      },
+      {
+        "name": "owner",
+        "type": "unsigned char"
+      },
+      {
+        "name": "stationsInRange",
+        "type": "uint32_t[32]"
+      },
+      {
+        "name": "producedCargoStatsStation",
+        "type": "uint16_t[2][4]"
+      },
+      {
+        "name": "producedCargoStatsRating",
+        "type": "uint8_t[2][4]"
+      },
+      {
+        "name": "dailyProductionTarget",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "dailyProduction",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "outputBuffer",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "producedCargoQuantityMonthlyTotal",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "producedCargoQuantityPreviousMonth",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "receivedCargoQuantityMonthlyTotal",
+        "type": "uint16_t[3]"
+      },
+      {
+        "name": "receivedCargoQuantityPreviousMonth",
+        "type": "uint16_t[3]"
+      },
+      {
+        "name": "receivedCargoQuantityDailyTotal",
+        "type": "uint16_t[3]"
+      },
+      {
+        "name": "producedCargoQuantityDeliveredMonthlyTotal",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "producedCargoQuantityDeliveredPreviousMonth",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "producedCargoPercentTransportedPreviousMonth",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "producedCargoMonthlyHistorySize",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "producedCargoMonthlyHistory1",
+        "type": "uint8_t[240]"
+      },
+      {
+        "name": "producedCargoMonthlyHistory2",
+        "type": "uint8_t[240]"
+      },
+      {
+        "name": "history_min_production",
+        "type": "int32_t[2]"
+      },
+      {
+        "name": "pad_393",
+        "type": "uint8_t[192]"
+      }
+    ],
+    "OpenLoco::S5::LabelFrame": [
+      {
+        "name": "left",
+        "type": "int16_t[4]"
+      },
+      {
+        "name": "right",
+        "type": "int16_t[4]"
+      },
+      {
+        "name": "top",
+        "type": "int16_t[4]"
+      },
+      {
+        "name": "bottom",
+        "type": "int16_t[4]"
+      }
+    ],
+    "OpenLoco::S5::Message": [
+      {
+        "name": "type",
+        "type": "unsigned char"
+      },
+      {
+        "name": "messageString",
+        "type": "char[198]"
+      },
+      {
+        "name": "companyId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "timeActive",
+        "type": "unsigned short"
+      },
+      {
+        "name": "itemSubjects",
+        "type": "uint16_t[3]"
+      },
+      {
+        "name": "date",
+        "type": "unsigned int"
+      }
+    ],
+    "OpenLoco::S5::StationCargoStats": [
+      {
+        "name": "quantity",
+        "type": "unsigned short"
+      },
+      {
+        "name": "origin",
+        "type": "unsigned short"
+      },
+      {
+        "name": "flags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "age",
+        "type": "unsigned char"
+      },
+      {
+        "name": "rating",
+        "type": "unsigned char"
+      },
+      {
+        "name": "enrouteAge",
+        "type": "unsigned char"
+      },
+      {
+        "name": "vehicleSpeed",
+        "type": "short"
+      },
+      {
+        "name": "vehicleAge",
+        "type": "unsigned char"
+      },
+      {
+        "name": "industryId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "densityPerTile",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::Station": [
+      {
+        "name": "name",
+        "type": "unsigned short"
+      },
+      {
+        "name": "x",
+        "type": "short"
+      },
+      {
+        "name": "y",
+        "type": "short"
+      },
+      {
+        "name": "z",
+        "type": "short"
+      },
+      {
+        "name": "labelFrame",
+        "type": "OpenLoco::S5::LabelFrame"
+      },
+      {
+        "name": "owner",
+        "type": "unsigned char"
+      },
+      {
+        "name": "noTilesTimeout",
+        "type": "unsigned char"
+      },
+      {
+        "name": "flags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "town",
+        "type": "unsigned short"
+      },
+      {
+        "name": "cargoStats",
+        "type": "StationCargoStats[32]"
+      },
+      {
+        "name": "stationTileSize",
+        "type": "unsigned short"
+      },
+      {
+        "name": "stationTiles",
+        "type": "World::Pos3[80]"
+      },
+      {
+        "name": "var_3B0",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_3B1",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_3B2",
+        "type": "unsigned char"
+      },
+      {
+        "name": "airportRotation",
+        "type": "unsigned char"
+      },
+      {
+        "name": "airportStartPos",
+        "type": "OpenLoco::Math::Vector::TVector3<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "airportMovementOccupiedEdges",
+        "type": "unsigned int"
+      },
+      {
+        "name": "pad_3BE",
+        "type": "uint8_t[20]"
+      }
+    ],
+    "OpenLoco::S5::Town": [
+      {
+        "name": "name",
+        "type": "unsigned short"
+      },
+      {
+        "name": "x",
+        "type": "short"
+      },
+      {
+        "name": "y",
+        "type": "short"
+      },
+      {
+        "name": "flags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "labelFrame",
+        "type": "OpenLoco::S5::LabelFrame"
+      },
+      {
+        "name": "prng0",
+        "type": "unsigned int"
+      },
+      {
+        "name": "prng1",
+        "type": "unsigned int"
+      },
+      {
+        "name": "population",
+        "type": "unsigned int"
+      },
+      {
+        "name": "populationCapacity",
+        "type": "unsigned int"
+      },
+      {
+        "name": "numBuildings",
+        "type": "short"
+      },
+      {
+        "name": "companyRatings",
+        "type": "int16_t[15]"
+      },
+      {
+        "name": "companiesWithRating",
+        "type": "unsigned short"
+      },
+      {
+        "name": "size",
+        "type": "unsigned char"
+      },
+      {
+        "name": "historySize",
+        "type": "unsigned char"
+      },
+      {
+        "name": "history",
+        "type": "uint8_t[240]"
+      },
+      {
+        "name": "historyMinPopulation",
+        "type": "int"
+      },
+      {
+        "name": "amenityCounts",
+        "type": "uint8_t[8]"
+      },
+      {
+        "name": "monthlyCargoDelivered",
+        "type": "uint16_t[32]"
+      },
+      {
+        "name": "cargoInfluenceFlags",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_19C",
+        "type": "uint16_t[2][2]"
+      },
+      {
+        "name": "buildSpeed",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numberOfAirports",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numStations",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_1A8",
+        "type": "unsigned int"
+      },
+      {
+        "name": "pad_1AC",
+        "type": "uint8_t[196]"
+      }
+    ],
+    "OpenLoco::S5::Wave": [
+      {
+        "name": "loc",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "frame",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::Construction": [
+      {
+        "name": "signals",
+        "type": "uint8_t[8]"
+      },
+      {
+        "name": "bridges",
+        "type": "uint8_t[8]"
+      },
+      {
+        "name": "trainStations",
+        "type": "uint8_t[8]"
+      },
+      {
+        "name": "trackMods",
+        "type": "uint8_t[8]"
+      },
+      {
+        "name": "var_17A",
+        "type": "uint8_t[8]"
+      },
+      {
+        "name": "roadStations",
+        "type": "uint8_t[8]"
+      },
+      {
+        "name": "roadMods",
+        "type": "uint8_t[8]"
+      }
+    ],
+    "OpenLoco::S5::GeneralState": [
+      {
+        "name": "rng",
+        "type": "uint32_t[2]"
+      },
+      {
+        "name": "unkRng",
+        "type": "uint32_t[2]"
+      },
+      {
+        "name": "flags",
+        "type": "unsigned int"
+      },
+      {
+        "name": "currentDay",
+        "type": "unsigned int"
+      },
+      {
+        "name": "dayCounter",
+        "type": "unsigned short"
+      },
+      {
+        "name": "currentYear",
+        "type": "unsigned short"
+      },
+      {
+        "name": "currentMonth",
+        "type": "unsigned char"
+      },
+      {
+        "name": "currentDayOfMonth",
+        "type": "unsigned char"
+      },
+      {
+        "name": "savedViewX",
+        "type": "short"
+      },
+      {
+        "name": "savedViewY",
+        "type": "short"
+      },
+      {
+        "name": "savedViewZoom",
+        "type": "unsigned char"
+      },
+      {
+        "name": "savedViewRotation",
+        "type": "unsigned char"
+      },
+      {
+        "name": "playerCompanies",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "entityListHeads",
+        "type": "uint16_t[7]"
+      },
+      {
+        "name": "entityListCounts",
+        "type": "uint16_t[7]"
+      },
+      {
+        "name": "pad_0042",
+        "type": "uint8_t[4]"
+      },
+      {
+        "name": "currencyMultiplicationFactor",
+        "type": "uint32_t[32]"
+      },
+      {
+        "name": "unusedCurrencyMultiplicationFactor",
+        "type": "uint32_t[32]"
+      },
+      {
+        "name": "scenarioTicks",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_014A",
+        "type": "unsigned short"
+      },
+      {
+        "name": "scenarioTicks2",
+        "type": "unsigned int"
+      },
+      {
+        "name": "magicNumber",
+        "type": "unsigned int"
+      },
+      {
+        "name": "numMapAnimations",
+        "type": "unsigned short"
+      },
+      {
+        "name": "tileUpdateStartLocation",
+        "type": "OpenLoco::Math::Vector::TVector2<short, OpenLoco::World::WorldSpaceTag>"
+      },
+      {
+        "name": "scenarioConstruction",
+        "type": "OpenLoco::S5::Construction"
+      },
+      {
+        "name": "defaultRailroadObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "defaultRoadObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "lastAirport",
+        "type": "unsigned char"
+      },
+      {
+        "name": "lastShipPort",
+        "type": "unsigned char"
+      },
+      {
+        "name": "trafficHandedness",
+        "type": "bool"
+      },
+      {
+        "name": "lastVehicleType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pickupDirection",
+        "type": "unsigned char"
+      },
+      {
+        "name": "defaultTreeObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "seaLevel",
+        "type": "unsigned short"
+      },
+      {
+        "name": "currentSnowLine",
+        "type": "unsigned char"
+      },
+      {
+        "name": "currentSeason",
+        "type": "unsigned char"
+      },
+      {
+        "name": "defaultLandObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "maxCompetingCompanies",
+        "type": "unsigned char"
+      },
+      {
+        "name": "orderTableLength",
+        "type": "unsigned int"
+      },
+      {
+        "name": "roadObjectIdIsAnyRoadTypeCompatible",
+        "type": "unsigned int"
+      },
+      {
+        "name": "roadObjectIdIsUsableByAllCompanies",
+        "type": "unsigned int"
+      },
+      {
+        "name": "currentDefaultLevelCrossingType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "defaultTrackTypeObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "loanInterestRate",
+        "type": "unsigned char"
+      },
+      {
+        "name": "defaultIndustryObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "defaultBuildingObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "defaultMiscBuildingObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "defaultWallObjectId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "produceAICompanyTimeout",
+        "type": "unsigned char"
+      },
+      {
+        "name": "tickStartPrngState",
+        "type": "uint32_t[2]"
+      },
+      {
+        "name": "scenarioFileName",
+        "type": "char[256]"
+      },
+      {
+        "name": "scenarioName",
+        "type": "char[64]"
+      },
+      {
+        "name": "scenarioDetails",
+        "type": "char[256]"
+      },
+      {
+        "name": "competitorStartDelay",
+        "type": "unsigned char"
+      },
+      {
+        "name": "preferredAIIntelligence",
+        "type": "unsigned char"
+      },
+      {
+        "name": "preferredAIAggressiveness",
+        "type": "unsigned char"
+      },
+      {
+        "name": "preferredAICompetitiveness",
+        "type": "unsigned char"
+      },
+      {
+        "name": "startingLoanSize",
+        "type": "unsigned short"
+      },
+      {
+        "name": "maxLoanSize",
+        "type": "unsigned short"
+      },
+      {
+        "name": "multiplayerPrng",
+        "type": "uint32_t[2]"
+      },
+      {
+        "name": "multiplayerChecksumA",
+        "type": "unsigned int"
+      },
+      {
+        "name": "multiplayerChecksumB",
+        "type": "unsigned int"
+      },
+      {
+        "name": "defaultBuildVehicleType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numberOfIndustries",
+        "type": "unsigned char"
+      },
+      {
+        "name": "vehiclePreviewRotationFrame",
+        "type": "unsigned short"
+      },
+      {
+        "name": "objectiveType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "objectiveFlags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "objectiveCompanyValue",
+        "type": "unsigned int"
+      },
+      {
+        "name": "objectiveMonthlyVehicleProfit",
+        "type": "unsigned int"
+      },
+      {
+        "name": "objectivePerformanceIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "objectiveDeliveredCargoType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "objectiveDeliveredCargoAmount",
+        "type": "unsigned int"
+      },
+      {
+        "name": "objectiveTimeLimitYears",
+        "type": "unsigned char"
+      },
+      {
+        "name": "objectiveTimeLimitUntilYear",
+        "type": "unsigned short"
+      },
+      {
+        "name": "objectiveMonthsInChallenge",
+        "type": "unsigned short"
+      },
+      {
+        "name": "objectiveCompletedChallengeInMonths",
+        "type": "unsigned short"
+      },
+      {
+        "name": "industryFlags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "forbiddenVehiclesPlayers",
+        "type": "unsigned short"
+      },
+      {
+        "name": "forbiddenVehiclesCompetitors",
+        "type": "unsigned short"
+      },
+      {
+        "name": "fixFlags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "companyRecords",
+        "type": "OpenLoco::S5::Records"
+      },
+      {
+        "name": "var_44C",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_450",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_454",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_458",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_45C",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_460",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_464",
+        "type": "unsigned int"
+      },
+      {
+        "name": "var_468",
+        "type": "unsigned int"
+      },
+      {
+        "name": "lastMapWindowFlags",
+        "type": "unsigned int"
+      },
+      {
+        "name": "lastMapWindowSize",
+        "type": "uint16_t[2]"
+      },
+      {
+        "name": "lastMapWindowVar88A",
+        "type": "unsigned short"
+      },
+      {
+        "name": "lastMapWindowVar88C",
+        "type": "unsigned short"
+      },
+      {
+        "name": "var_478",
+        "type": "unsigned int"
+      },
+      {
+        "name": "pad_047C",
+        "type": "uint8_t[3898]"
+      },
+      {
+        "name": "numMessages",
+        "type": "unsigned short"
+      },
+      {
+        "name": "activeMessageIndex",
+        "type": "unsigned short"
+      },
+      {
+        "name": "messages",
+        "type": "Message[200]"
+      },
+      {
+        "name": "pad_B95A",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "var_B95C",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_B95D",
+        "type": "uint8_t[3]"
+      },
+      {
+        "name": "var_B960",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_B961",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_B962",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_B963",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_B964",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_B965",
+        "type": "unsigned char"
+      },
+      {
+        "name": "var_B966",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_B967",
+        "type": "unsigned char"
+      },
+      {
+        "name": "currentRainLevel",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_B969",
+        "type": "uint8_t[3]"
+      }
+    ],
+    "OpenLoco::S5::GameState": [
+      {
+        "name": "general",
+        "type": "OpenLoco::S5::GeneralState"
+      },
+      {
+        "name": "companies",
+        "type": "Company[15]"
+      },
+      {
+        "name": "towns",
+        "type": "Town[80]"
+      },
+      {
+        "name": "industries",
+        "type": "Industry[128]"
+      },
+      {
+        "name": "stations",
+        "type": "Station[1024]"
+      },
+      {
+        "name": "entities",
+        "type": "Entity[20000]"
+      },
+      {
+        "name": "animations",
+        "type": "Animation[8192]"
+      },
+      {
+        "name": "waves",
+        "type": "Wave[64]"
+      },
+      {
+        "name": "userStrings",
+        "type": "char[2048][32]"
+      },
+      {
+        "name": "routings",
+        "type": "uint16_t[1000][64]"
+      },
+      {
+        "name": "orders",
+        "type": "uint8_t[256000]"
+      }
+    ],
+    "OpenLoco::S5::GameStateType2": [
+      {
+        "name": "general",
+        "type": "OpenLoco::S5::GeneralState"
+      },
+      {
+        "name": "companies",
+        "type": "CompanyType2[15]"
+      },
+      {
+        "name": "towns",
+        "type": "Town[80]"
+      },
+      {
+        "name": "industries",
+        "type": "Industry[128]"
+      },
+      {
+        "name": "stations",
+        "type": "Station[1024]"
+      },
+      {
+        "name": "entities",
+        "type": "Entity[20000]"
+      },
+      {
+        "name": "animations",
+        "type": "Animation[8192]"
+      },
+      {
+        "name": "waves",
+        "type": "Wave[64]"
+      },
+      {
+        "name": "userStrings",
+        "type": "char[2048][32]"
+      },
+      {
+        "name": "routings",
+        "type": "uint16_t[1000][64]"
+      },
+      {
+        "name": "orders",
+        "type": "uint8_t[256000]"
+      }
+    ],
+    "OpenLoco::S5::TileElementBase": [
+      {
+        "name": "_type",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_flags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_baseZ",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_clearZ",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::TileElement": [
+      {
+        "name": "_pad",
+        "type": "uint8_t[4]"
+      }
+    ],
+    "OpenLoco::S5::SurfaceElement": [
+      {
+        "name": "_slope",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_water",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_terrain",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_7",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::TrackElement": [
+      {
+        "name": "_4",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_5",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_6",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_7",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::StationElement": [
+      {
+        "name": "_4",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_5",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_stationId",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::SignalElement": [
+      {
+        "name": "_sides",
+        "type": "Side[2]"
+      }
+    ],
+    "OpenLoco::S5::SignalElement::Side": [
+      {
+        "name": "_4",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_5",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::BuildingElement": [
+      {
+        "name": "_4",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_5",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_6",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::TreeElement": [
+      {
+        "name": "_4",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_5",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_6",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_7",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::WallElement": [
+      {
+        "name": "_4",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_5",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_6",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_7",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::RoadElement": [
+      {
+        "name": "_4",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_5",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_6",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_7",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::IndustryElement": [
+      {
+        "name": "_industryId",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_5",
+        "type": "unsigned char"
+      },
+      {
+        "name": "_6",
+        "type": "unsigned short"
+      }
+    ],
+    "OpenLoco::S5::S5File": [
+      {
+        "name": "header",
+        "type": "OpenLoco::S5::Header"
+      },
+      {
+        "name": "scenarioOptions",
+        "type": "int"
+      },
+      {
+        "name": "saveDetails",
+        "type": "int"
+      },
+      {
+        "name": "requiredObjects",
+        "type": "ObjectHeader[859]"
+      },
+      {
+        "name": "gameState",
+        "type": "OpenLoco::S5::GameState"
+      },
+      {
+        "name": "tileElements",
+        "type": "int"
+      },
+      {
+        "name": "packedObjects",
+        "type": "int"
+      }
+    ],
+    "OpenLoco::S5::Objective": [
+      {
+        "name": "type",
+        "type": "unsigned char"
+      },
+      {
+        "name": "flags",
+        "type": "unsigned char"
+      },
+      {
+        "name": "companyValue",
+        "type": "unsigned int"
+      },
+      {
+        "name": "monthlyVehicleProfit",
+        "type": "unsigned int"
+      },
+      {
+        "name": "performanceIndex",
+        "type": "unsigned char"
+      },
+      {
+        "name": "deliveredCargoType",
+        "type": "unsigned char"
+      },
+      {
+        "name": "deliveredCargoAmount",
+        "type": "unsigned int"
+      },
+      {
+        "name": "timeLimitYears",
+        "type": "unsigned char"
+      }
+    ],
+    "OpenLoco::S5::Options": [
+      {
+        "name": "editorStep",
+        "type": "unsigned char"
+      },
+      {
+        "name": "difficulty",
+        "type": "unsigned char"
+      },
+      {
+        "name": "scenarioStartYear",
+        "type": "unsigned short"
+      },
+      {
+        "name": "pad_4",
+        "type": "uint8_t[2]"
+      },
+      {
+        "name": "scenarioFlags",
+        "type": "unsigned short"
+      },
+      {
+        "name": "madeAnyChanges",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_9",
+        "type": "uint8_t[1]"
+      },
+      {
+        "name": "landDistributionPatterns",
+        "type": "uint8_t[32]"
+      },
+      {
+        "name": "scenarioName",
+        "type": "char[64]"
+      },
+      {
+        "name": "scenarioDetails",
+        "type": "char[256]"
+      },
+      {
+        "name": "scenarioText",
+        "type": "OpenLoco::ObjectHeader"
+      },
+      {
+        "name": "numberOfForests",
+        "type": "unsigned short"
+      },
+      {
+        "name": "minForestRadius",
+        "type": "unsigned char"
+      },
+      {
+        "name": "maxForestRadius",
+        "type": "unsigned char"
+      },
+      {
+        "name": "minForestDensity",
+        "type": "unsigned char"
+      },
+      {
+        "name": "maxForestDensity",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numberRandomTrees",
+        "type": "unsigned short"
+      },
+      {
+        "name": "minAltitudeForTrees",
+        "type": "unsigned char"
+      },
+      {
+        "name": "maxAltitudeForTrees",
+        "type": "unsigned char"
+      },
+      {
+        "name": "minLandHeight",
+        "type": "unsigned char"
+      },
+      {
+        "name": "topographyStyle",
+        "type": "unsigned char"
+      },
+      {
+        "name": "hillDensity",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numberOfTowns",
+        "type": "unsigned char"
+      },
+      {
+        "name": "maxTownSize",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numberOfIndustries",
+        "type": "unsigned char"
+      },
+      {
+        "name": "preview",
+        "type": "uint8_t[128][128]"
+      },
+      {
+        "name": "maxCompetingCompanies",
+        "type": "unsigned char"
+      },
+      {
+        "name": "competitorStartDelay",
+        "type": "unsigned char"
+      },
+      {
+        "name": "objective",
+        "type": "OpenLoco::S5::Objective"
+      },
+      {
+        "name": "objectiveDeliveredCargo",
+        "type": "OpenLoco::ObjectHeader"
+      },
+      {
+        "name": "currency",
+        "type": "OpenLoco::ObjectHeader"
+      },
+      {
+        "name": "generator",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numTerrainSmoothingPasses",
+        "type": "unsigned char"
+      },
+      {
+        "name": "numRiverbeds",
+        "type": "unsigned char"
+      },
+      {
+        "name": "minRiverWidth",
+        "type": "unsigned char"
+      },
+      {
+        "name": "maxRiverWidth",
+        "type": "unsigned char"
+      },
+      {
+        "name": "riverbankWidth",
+        "type": "unsigned char"
+      },
+      {
+        "name": "riverMeanderRate",
+        "type": "unsigned char"
+      },
+      {
+        "name": "pad_41BD",
+        "type": "std::byte[342]"
+      }
+    ]
+  }
+}

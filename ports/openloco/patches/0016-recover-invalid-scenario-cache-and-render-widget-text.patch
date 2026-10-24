@@ -1,0 +1,73 @@
+diff --git a/src/OpenLoco/include/OpenLoco/Graphics/G1File.hpp b/src/OpenLoco/include/OpenLoco/Graphics/G1File.hpp
+index 201fe0e..73c0198 100644
+--- a/src/OpenLoco/include/OpenLoco/Graphics/G1File.hpp
++++ b/src/OpenLoco/include/OpenLoco/Graphics/G1File.hpp
+@@ -56,7 +56,7 @@ namespace OpenLoco::Gfx
+                             if (cursor > pixels.size() || pixels.size() - cursor < 2)
+                                 throw std::runtime_error("Truncated G1 RLE run");
+                             const auto code = std::to_integer<uint8_t>(pixels[cursor]);
+-                            const auto count = code & 0x7f;
++                            const size_t count = code & 0x7f;
+                             cursor += 2;
+                             if (count > pixels.size() - cursor)
+                                 throw std::runtime_error("G1 RLE pixels exceed file");
+diff --git a/src/OpenLoco/include/OpenLoco/Ui/Widget.h b/src/OpenLoco/include/OpenLoco/Ui/Widget.h
+index 886fe72..9529f55 100644
+--- a/src/OpenLoco/include/OpenLoco/Ui/Widget.h
++++ b/src/OpenLoco/include/OpenLoco/Ui/Widget.h
+@@ -176,10 +176,20 @@ namespace OpenLoco::Ui
+         WidgetId id{ WidgetId::none };
+         FormatArgumentsBuffer textArgs;
+         WidgetEventsList events;
++        // Read the numeric low 16 bits, regardless of host byte order.
++        // The conversion also preserves the 0xFFFFFFFF content-null marker
++        // as StringIds::null, rather than exposing a 32-bit string ID.
++        struct TextContent
++        {
++            uint32_t value;
++            constexpr operator StringId() const { return static_cast<StringId>(value); }
++            constexpr TextContent& operator=(StringId id) { value = id; return *this; }
++        };
++
+         union
+         {
+             uint32_t image{ ImageIds::null };
+-            StringId text;
++            TextContent text;
+             uint32_t content;
+         };
+         int32_t left{};
+diff --git a/src/OpenLoco/src/Scenario/ScenarioManager.cpp b/src/OpenLoco/src/Scenario/ScenarioManager.cpp
+index 54dee8a..bc8d6c7 100644
+--- a/src/OpenLoco/src/Scenario/ScenarioManager.cpp
++++ b/src/OpenLoco/src/Scenario/ScenarioManager.cpp
+@@ -184,14 +184,24 @@ namespace OpenLoco::ScenarioManager
+             return false;
+         }
+ 
+-        const auto scenarioListSize = _scenarioHeader.numScenarios * sizeof(ScenarioIndexEntry);
+-        _scenarioList.clear();
+-        _scenarioList.resize(_scenarioHeader.numScenarios);
+-        if (_scenarioList.empty())
++        // An empty or truncated cache is recoverable: rebuild it from the
++        // scenario files rather than reporting an allocation failure. Validate
++        // the on-disk extent before using an untrusted count to allocate.
++        const auto payloadStart = stream.tellg();
++        stream.seekg(0, std::ios::end);
++        const auto payloadEnd = stream.tellg();
++        stream.seekg(payloadStart);
++        const uint64_t scenarioListSize = static_cast<uint64_t>(_scenarioHeader.numScenarios) * sizeof(ScenarioIndexEntry);
++        if (payloadStart < 0 || payloadEnd < payloadStart
++            || scenarioListSize != static_cast<uint64_t>(payloadEnd - payloadStart)
++            || (_scenarioHeader.numScenarios == 0 && currentState.numFiles != 0))
+         {
+-            exitWithError(StringIds::unable_to_allocate_enough_memory, StringIds::game_init_failure);
++            _scenarioHeader = ScoreHeader{};
++            _scenarioList.clear();
+             return false;
+         }
++        _scenarioList.clear();
++        _scenarioList.resize(_scenarioHeader.numScenarios);
+         Utility::readData(stream, _scenarioList.data(), _scenarioHeader.numScenarios);
+         if (stream.gcount() != static_cast<int32_t>(scenarioListSize))
+         {

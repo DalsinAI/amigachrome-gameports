@@ -1,0 +1,1210 @@
+diff --git a/src/OpenLoco/include/OpenLoco/S5/S5StateWire.hpp b/src/OpenLoco/include/OpenLoco/S5/S5StateWire.hpp
+new file mode 100644
+index 0000000..4f87347
+--- /dev/null
++++ b/src/OpenLoco/include/OpenLoco/S5/S5StateWire.hpp
+@@ -0,0 +1,1038 @@
++// Copyright (c) 2026 AmigaChrome Team. MIT licensed.
++#pragma once
++// Field walk audited against the exact OpenLoco 6d7f5b1 S5 records.
++#include "S5/S5File.h"
++#include "S5/S5Options.h"
++#include <algorithm>
++#include <bit>
++#include <cstring>
++#include <type_traits>
++#include <stdexcept>
++
++namespace OpenLoco::S5::StateWire {
++// Only actual vector types use the coordinate walk. Towns, industries,
++// stations and entity bases also have x/y members and need every field.
++template<class T> inline constexpr bool isVector = false;
++template<class T, class Tag> inline constexpr bool isVector<Math::Vector::TVector2<T, Tag>> = true;
++template<class T, class Tag> inline constexpr bool isVector<Math::Vector::TVector3<T, Tag>> = true;
++template<class F> inline void fields(OpenLoco::S5::Header& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::SaveDetails& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Animation& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::AiThought& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::AiThought::Station& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Company& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Company::TrackRoadHashTableEntry& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::CompanyType2& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::CompanyType2::TrackRoadHashTableEntry& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Records& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::EntityBase& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Exhaust& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::ExplosionCloud& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::ExplosionSmoke& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Fireball& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::MoneyEffect& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Smoke& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Splash& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::VehicleCrashParticle& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::VehicleCargo& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::VehicleHead& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::IncomeStats& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Vehicle1& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Vehicle2& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::VehicleBody& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::VehicleBogie& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::VehicleTail& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Entity& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Industry& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::LabelFrame& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Message& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::StationCargoStats& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Station& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Town& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Wave& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Construction& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::GeneralState& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::GameState& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::GameStateType2& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Objective& v,F&& f);
++template<class F> inline void fields(OpenLoco::S5::Options& v,F&& f);
++template<class F> inline void fields(OpenLoco::ObjectHeader& v,F&& f) { f(v.flags);f(v.name);f(v.checksum); }
++template<class F> inline void fields(OpenLoco::currency48_t& v,F&& f) { f(v.var_00);f(v.var_04); }
++template<class F> inline void fields(OpenLoco::S5::TileElement& v,F&& f) {
++    if(v.baseZ()==0xff) return;
++    const auto type=static_cast<unsigned>(v.type());
++    if(type>8)throw std::runtime_error("Invalid S5 tile type");
++    if(type==2 || type==4 || type==8) {
++        uint16_t n;std::memcpy(&n,v.rawData().data()+6,2);f(n);std::memcpy(v.rawData().data()+6,&n,2);
++    }
++}
++template<class T> inline void swapAll(T& v) {
++    if constexpr(std::is_array_v<T>) {
++        using E=std::remove_all_extents_t<T>;
++        if constexpr(sizeof(E)>1 || !(std::is_integral_v<E> || std::is_enum_v<E>))
++            for(auto& item:v)swapAll(item);
++    } else if constexpr(std::is_integral_v<T> || std::is_enum_v<T>) {
++        if constexpr(sizeof(T)>1) {
++            auto* p=reinterpret_cast<unsigned char*>(&v);std::reverse(p,p+sizeof(T));
++        }
++    } else if constexpr(isVector<T>) {
++        swapAll(v.x);swapAll(v.y);
++        if constexpr(requires {v.z;})swapAll(v.z);
++    } else fields(v,[](auto& member){swapAll(member);});
++}
++template<class T> inline void native(T& v) {
++    if constexpr(std::endian::native==std::endian::big)swapAll(v);
++}
++template<class T> inline std::vector<std::byte> encode(const T& v) {
++    static_assert(!std::is_array_v<T>);
++    std::vector<std::byte> bytes(sizeof(T));
++    if constexpr(std::endian::native==std::endian::big) {
++        auto copy=std::make_unique<T>();std::memcpy(copy.get(),&v,sizeof(T));swapAll(*copy);
++        std::memcpy(bytes.data(),copy.get(),sizeof(T));
++    } else std::memcpy(bytes.data(),&v,sizeof(T));
++    return bytes;
++}
++template<class T> inline std::vector<std::byte> encodeArray(std::span<const T> values) {
++    std::vector<T> copy(values.begin(),values.end());
++    if constexpr(std::endian::native==std::endian::big)
++        for(auto& v:copy)swapAll(v);
++    std::vector<std::byte> bytes(copy.size()*sizeof(T));
++    if(!bytes.empty())std::memcpy(bytes.data(),copy.data(),bytes.size());
++    return bytes;
++}
++template<class F> inline void fields(OpenLoco::S5::Header& v,F&& f) {
++    f(v.type);
++    f(v.flags);
++    f(v.numPackedObjects);
++    f(v.version);
++    f(v.magic);
++    f(v.padding);
++}
++template<class F> inline void fields(OpenLoco::S5::SaveDetails& v,F&& f) {
++    f(v.company);
++    f(v.owner);
++    f(v.date);
++    f(v.performanceIndex);
++    f(v.scenario);
++    f(v.challengeProgress);
++    f(v.pad_247);
++    f(v.image);
++    f(v.challengeFlags);
++    f(v.pad_C59C);
++}
++template<class F> inline void fields(OpenLoco::S5::Animation& v,F&& f) {
++    f(v.baseZ);
++    f(v.type);
++    f(v.pos);
++}
++template<class F> inline void fields(OpenLoco::S5::AiThought& v,F&& f) {
++    f(v.type);
++    f(v.destinationA);
++    f(v.destinationB);
++    f(v.numStations);
++    f(v.stationLength);
++    f(v.pad_05);
++    f(v.stations);
++    f(v.trackObjId);
++    f(v.rackRailType);
++    f(v.mods);
++    f(v.cargoType);
++    f(v.numVehiclesTarget);
++    f(v.numVehicles);
++    f(v.numVehicleObjTypes);
++    f(v.vehicleObjTypes);
++    f(v.vehicles);
++    f(v.totalCost);
++    f(v.pad_7A);
++    f(v.totalRunningCost);
++    f(v.income);
++    f(v.previousIncome);
++    f(v.thoughtAge);
++    f(v.stationObjId);
++    f(v.signalObjId);
++    f(v.purchaseFlags);
++}
++template<class F> inline void fields(OpenLoco::S5::AiThought::Station& v,F&& f) {
++    f(v.id);
++    f(v.flags);
++    f(v.rotation);
++    f(v.pos);
++    f(v.baseZ);
++    f(v.nextStationIndex);
++    f(v.prevStationIndex);
++    f(v.connectionFlagsA);
++    f(v.connectionFlagsB);
++    f(v.pad_D);
++}
++template<class F> inline void fields(OpenLoco::S5::Company& v,F&& f) {
++    f(v.name);
++    f(v.ownerName);
++    f(v.challengeFlags);
++    f(v.cash);
++    f(v.currentLoan);
++    f(v.updateCounter);
++    f(v.performanceIndex);
++    f(v.competitorId);
++    f(v.ownerEmotion);
++    f(v.mainColours);
++    f(v.vehicleColours);
++    f(v.customVehicleColoursSet);
++    f(v.unlockedVehicles);
++    f(v.availableVehicles);
++    f(v.aiPlaystyleFlags);
++    f(v.aiPlaystyleTownId);
++    f(v.numExpenditureYears);
++    f(v.expenditures);
++    f(v.startedDate);
++    f(v.cargoTypesDelivered);
++    f(v.cargoTypesDelivered2);
++    f(v.aiThinkState);
++    f(v.aiThinkSubState);
++    f(v.aiPlaceVehicleState);
++    f(v.aiPlaceVehiclePad);
++    f(v.aiThoughts);
++    f(v.activeThoughtId);
++    f(v.headquartersZ);
++    f(v.headquartersX);
++    f(v.headquartersY);
++    f(v.activeThoughtRevenueEstimate);
++    f(v.aiThoughtCooldown);
++    f(v.pad_2586);
++    f(v.aiBridgeSelectionCounter);
++    f(v.aiBridgeTypeLow);
++    f(v.aiBridgeTypeMedium);
++    f(v.aiBridgeTypeHigh);
++    f(v.pad_259D);
++    f(v.aiPlaceVehicleIndex);
++    f(v.pad_25A2);
++    f(v.aiSavedThoughtType);
++    f(v.currentRating);
++    f(v.trackandRoadHashTable);
++    f(v.hashTableLength);
++    f(v.aiStationIndex);
++    f(v.aiStationFlags);
++    f(v.aiPathfindTargetPos);
++    f(v.aiPathfindTargetBaseZ);
++    f(v.aiPathfindTargetPos2);
++    f(v.aiPathfindTargetBaseZ2);
++    f(v.aiPathfindTargetRot);
++    f(v.aiPathfindTargetRot2);
++    f(v.aiPathfindStartPos);
++    f(v.aiPathfindStartBaseZ);
++    f(v.aiPathfindStartTad);
++    f(v.aiPathfindStartPos2);
++    f(v.aiPathfindStartBaseZ2);
++    f(v.aiPathfindStartTad2);
++    f(v.aiPathfindWeighting1);
++    f(v.aiPathfindWeighting2);
++    f(v.aiBestTrackRoadId);
++    f(v.aiPathfindPhase);
++    f(v.aiPathfindMaxWeighting);
++    f(v.aiPathfindUndoCount1);
++    f(v.aiPathfindUndoCount2);
++    f(v.aiPathfindIterCount);
++    f(v.aiVehicleCost);
++    f(v.aiThinkTimer);
++    f(v.cargoUnitsTotalDelivered);
++    f(v.cargoUnitsDeliveredHistory);
++    f(v.performanceIndexHistory);
++    f(v.historySize);
++    f(v.companyValueHistory);
++    f(v.vehicleProfit);
++    f(v.transportTypeCount);
++    f(v.activeEmotions);
++    f(v.observationStatus);
++    f(v.observationTownId);
++    f(v.observationEntity);
++    f(v.observationX);
++    f(v.observationY);
++    f(v.observationObject);
++    f(v.observationTimeout);
++    f(v.ownerStatus);
++    f(v.pad_8BCA);
++    f(v.cargoDelivered);
++    f(v.challengeProgress);
++    f(v.numMonthsInTheRed);
++    f(v.cargoUnitsTotalDistance);
++    f(v.cargoUnitsDistanceHistory);
++    f(v.jailStatus);
++    f(v.pad_8E36);
++}
++template<class F> inline void fields(OpenLoco::S5::Company::TrackRoadHashTableEntry& v,F&& f) {
++    f(v.posX);
++    f(v.posYAndFlags);
++    f(v.posZ);
++    f(v.trackRoadIdAndDirection);
++}
++template<class F> inline void fields(OpenLoco::S5::CompanyType2& v,F&& f) {
++    f(v.name);
++    f(v.ownerName);
++    f(v.challengeFlags);
++    f(v.cash);
++    f(v.currentLoan);
++    f(v.updateCounter);
++    f(v.performanceIndex);
++    f(v.competitorId);
++    f(v.ownerEmotion);
++    f(v.mainColours);
++    f(v.vehicleColours);
++    f(v.customVehicleColoursSet);
++    f(v.unlockedVehicles);
++    f(v.availableVehicles);
++    f(v.aiPlaystyleFlags);
++    f(v.aiPlaystyleTownId);
++    f(v.numExpenditureYears);
++    f(v.expenditures);
++    f(v.startedDate);
++    f(v.cargoTypesDelivered);
++    f(v.cargoTypesDelivered2);
++    f(v.aiThinkState);
++    f(v.aiThinkSubState);
++    f(v.aiPlaceVehicleState);
++    f(v.aiPlaceVehiclePad);
++    f(v.aiThoughts);
++    f(v.activeThoughtId);
++    f(v.headquartersZ);
++    f(v.headquartersX);
++    f(v.headquartersY);
++    f(v.activeThoughtRevenueEstimate);
++    f(v.aiThoughtCooldown);
++    f(v.pad_2586);
++    f(v.aiBridgeSelectionCounter);
++    f(v.aiBridgeTypeLow);
++    f(v.aiBridgeTypeMedium);
++    f(v.aiBridgeTypeHigh);
++    f(v.pad_259D);
++    f(v.aiPlaceVehicleIndex);
++    f(v.pad_25A2);
++    f(v.aiSavedThoughtType);
++    f(v.currentRating);
++    f(v.trackandRoadHashTable);
++    f(v.hashTableLength);
++    f(v.aiStationIndex);
++    f(v.aiStationFlags);
++    f(v.aiPathfindTargetPos);
++    f(v.aiPathfindTargetBaseZ);
++    f(v.aiPathfindTargetPos2);
++    f(v.aiPathfindTargetBaseZ2);
++    f(v.aiPathfindTargetRot);
++    f(v.aiPathfindTargetRot2);
++    f(v.aiPathfindStartPos);
++    f(v.aiPathfindStartBaseZ);
++    f(v.aiPathfindStartTad);
++    f(v.aiPathfindStartPos2);
++    f(v.aiPathfindStartBaseZ2);
++    f(v.aiPathfindStartTad2);
++    f(v.aiPathfindWeighting1);
++    f(v.aiPathfindWeighting2);
++    f(v.aiBestTrackRoadId);
++    f(v.aiPathfindPhase);
++    f(v.aiPathfindMaxWeighting);
++    f(v.aiPathfindUndoCount1);
++    f(v.aiPathfindUndoCount2);
++    f(v.aiPathfindIterCount);
++    f(v.aiVehicleCost);
++    f(v.aiThinkTimer);
++    f(v.cargoUnitsTotalDelivered);
++    f(v.cargoUnitsDeliveredHistory);
++    f(v.performanceIndexHistory);
++    f(v.historySize);
++    f(v.companyValueHistory);
++    f(v.vehicleProfit);
++    f(v.transportTypeCount);
++    f(v.activeEmotions);
++    f(v.observationStatus);
++    f(v.observationTownId);
++    f(v.observationEntity);
++    f(v.observationX);
++    f(v.observationY);
++    f(v.observationObject);
++    f(v.observationTimeout);
++    f(v.ownerStatus);
++    f(v.pad_8BCA);
++    f(v.cargoDelivered);
++    f(v.challengeProgress);
++    f(v.numMonthsInTheRed);
++    f(v.cargoUnitsTotalDistance);
++    f(v.jailStatus);
++    f(v.pad_8E36);
++}
++template<class F> inline void fields(OpenLoco::S5::CompanyType2::TrackRoadHashTableEntry& v,F&& f) {
++    f(v.posX);
++    f(v.posYAndFlags);
++    f(v.posZ);
++    f(v.trackRoadIdAndDirection);
++}
++template<class F> inline void fields(OpenLoco::S5::Records& v,F&& f) {
++    f(v.speed);
++    f(v.company);
++    f(v.pad_43A);
++    f(v.date);
++}
++template<class F> inline void fields(OpenLoco::S5::EntityBase& v,F&& f) {
++    f(v.baseType);
++    f(v.type);
++    f(v.nextQuadrantId);
++    f(v.nextEntityId);
++    f(v.llPreviousId);
++    f(v.linkedListOffset);
++    f(v.spriteHeightNegative);
++    f(v.id);
++    f(v.vehicleFlags);
++    f(v.position);
++    f(v.spriteWidth);
++    f(v.spriteHeightPositive);
++    f(v.spriteLeft);
++    f(v.spriteTop);
++    f(v.spriteRight);
++    f(v.spriteBottom);
++    f(v.spriteYaw);
++    f(v.spritePitch);
++    f(v.pad_20);
++    f(v.owner);
++    f(v.name);
++}
++template<class F> inline void fields(OpenLoco::S5::Exhaust& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.frameNum);
++    f(v.stationaryProgress);
++    f(v.pad_2A);
++    f(v.windProgress);
++    f(v.var_34);
++    f(v.var_36);
++    f(v.pad_38);
++    f(v.objectId);
++}
++template<class F> inline void fields(OpenLoco::S5::ExplosionCloud& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.frame);
++}
++template<class F> inline void fields(OpenLoco::S5::ExplosionSmoke& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.frame);
++}
++template<class F> inline void fields(OpenLoco::S5::Fireball& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.frame);
++}
++template<class F> inline void fields(OpenLoco::S5::MoneyEffect& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.frame);
++    f(v.numMovements);
++    f(v.amount);
++    f(v.var_2E);
++    f(v.pad_2F);
++    f(v.offsetX);
++    f(v.wiggle);
++}
++template<class F> inline void fields(OpenLoco::S5::Smoke& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.frame);
++}
++template<class F> inline void fields(OpenLoco::S5::Splash& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.frame);
++}
++template<class F> inline void fields(OpenLoco::S5::VehicleCrashParticle& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.timeToLive);
++    f(v.frame);
++    f(v.pad_2A);
++    f(v.colourSchemePrimary);
++    f(v.colourSchemeSecondary);
++    f(v.crashedSpriteBase);
++    f(v.velocity);
++    f(v.accelerationX);
++    f(v.accelerationY);
++    f(v.accelerationZ);
++}
++template<class F> inline void fields(OpenLoco::S5::VehicleCargo& v,F&& f) {
++    f(v.acceptedTypes);
++    f(v.type);
++    f(v.maxQty);
++    f(v.townFrom);
++    f(v.numDays);
++    f(v.qty);
++}
++template<class F> inline void fields(OpenLoco::S5::VehicleHead& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.head);
++    f(v.remainingDistance);
++    f(v.trackAndDirection);
++    f(v.subPosition);
++    f(v.tileX);
++    f(v.tileY);
++    f(v.tileBaseZ);
++    f(v.trackType);
++    f(v.routingHandle);
++    f(v.var_38);
++    f(v.pad_39);
++    f(v.nextCarId);
++    f(v.var_3C);
++    f(v.pad_40);
++    f(v.mode);
++    f(v.pad_43);
++    f(v.ordinalNumber);
++    f(v.orderTableOffset);
++    f(v.currentOrder);
++    f(v.sizeOfOrderTable);
++    f(v.trainAcceptedCargoTypes);
++    f(v.var_52);
++    f(v.var_53);
++    f(v.stationId);
++    f(v.cargoTransferTimeout);
++    f(v.var_58);
++    f(v.var_5C);
++    f(v.status);
++    f(v.vehicleType);
++    f(v.breakdownFlags);
++    f(v.aiThoughtId);
++    f(v.aiPlacementPos);
++    f(v.aiPlacementTaD);
++    f(v.aiPlacementBaseZ);
++    f(v.airportMovementEdge);
++    f(v.totalRefundCost);
++    f(v.crashedTimeout);
++    f(v.manualPower);
++    f(v.journeyStartPos);
++    f(v.journeyStartTicks);
++    f(v.lastAverageSpeed);
++    f(v.restartStoppedCarsTimeout);
++}
++template<class F> inline void fields(OpenLoco::S5::IncomeStats& v,F&& f) {
++    f(v.day);
++    f(v.cargoTypes);
++    f(v.cargoQtys);
++    f(v.cargoDistances);
++    f(v.cargoAges);
++    f(v.cargoProfits);
++}
++template<class F> inline void fields(OpenLoco::S5::Vehicle1& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.head);
++    f(v.remainingDistance);
++    f(v.trackAndDirection);
++    f(v.subPosition);
++    f(v.tileX);
++    f(v.tileY);
++    f(v.tileBaseZ);
++    f(v.trackType);
++    f(v.routingHandle);
++    f(v.var_38);
++    f(v.pad_39);
++    f(v.nextCarId);
++    f(v.var_3C);
++    f(v.pad_40);
++    f(v.mode);
++    f(v.pad_43);
++    f(v.targetSpeed);
++    f(v.timeAtSignal);
++    f(v.var_48);
++    f(v.var_49);
++    f(v.dayCreated);
++    f(v.var_4E);
++    f(v.var_50);
++    f(v.var_52);
++    f(v.lastIncome);
++}
++template<class F> inline void fields(OpenLoco::S5::Vehicle2& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.head);
++    f(v.remainingDistance);
++    f(v.trackAndDirection);
++    f(v.subPosition);
++    f(v.tileX);
++    f(v.tileY);
++    f(v.tileBaseZ);
++    f(v.trackType);
++    f(v.routingHandle);
++    f(v.var_38);
++    f(v.pad_39);
++    f(v.nextCarId);
++    f(v.var_3C);
++    f(v.pad_40);
++    f(v.mode);
++    f(v.pad_43);
++    f(v.drivingSoundId);
++    f(v.drivingSoundVolume);
++    f(v.drivingSoundFrequency);
++    f(v.objectId);
++    f(v.soundFlags);
++    f(v.soundWindowNumber);
++    f(v.soundWindowType);
++    f(v.var_4F);
++    f(v.totalPower);
++    f(v.totalWeight);
++    f(v.maxSpeed);
++    f(v.currentSpeed);
++    f(v.motorState);
++    f(v.brakeLightTimeout);
++    f(v.rackRailMaxSpeed);
++    f(v.curMonthRevenue);
++    f(v.profit);
++    f(v.reliability);
++    f(v.var_73);
++}
++template<class F> inline void fields(OpenLoco::S5::VehicleBody& v,F&& f) {
++    f(v.base);
++    f(v.colourSchemePrimary);
++    f(v.colourSchemeSecondary);
++    f(v.head);
++    f(v.remainingDistance);
++    f(v.trackAndDirection);
++    f(v.subPosition);
++    f(v.tileX);
++    f(v.tileY);
++    f(v.tileBaseZ);
++    f(v.trackType);
++    f(v.routingHandle);
++    f(v.var_38);
++    f(v.objectSpriteType);
++    f(v.nextCarId);
++    f(v.var_3C);
++    f(v.objectId);
++    f(v.mode);
++    f(v.pad_43);
++    f(v.var_44);
++    f(v.animationFrame);
++    f(v.cargoFrame);
++    f(v.primaryCargo);
++    f(v.pad_52);
++    f(v.bodyIndex);
++    f(v.chuffSoundIndex);
++    f(v.creationDay);
++    f(v.var_5A);
++    f(v.wheelSlipping);
++    f(v.breakdownFlags);
++    f(v.pad_60);
++    f(v.refundCost);
++    f(v.pad_66);
++    f(v.breakdownTimeout);
++}
++template<class F> inline void fields(OpenLoco::S5::VehicleBogie& v,F&& f) {
++    f(v.base);
++    f(v.colourSchemePrimary);
++    f(v.colourSchemeSecondary);
++    f(v.head);
++    f(v.remainingDistance);
++    f(v.trackAndDirection);
++    f(v.subPosition);
++    f(v.tileX);
++    f(v.tileY);
++    f(v.tileBaseZ);
++    f(v.trackType);
++    f(v.routingHandle);
++    f(v.var_38);
++    f(v.objectSpriteType);
++    f(v.nextCarId);
++    f(v.var_3C);
++    f(v.objectId);
++    f(v.mode);
++    f(v.pad_43);
++    f(v.var_44);
++    f(v.animationIndex);
++    f(v.var_47);
++    f(v.secondaryCargo);
++    f(v.totalCarWeight);
++    f(v.bodyIndex);
++    f(v.pad_55);
++    f(v.creationDay);
++    f(v.var_5A);
++    f(v.wheelSlipping);
++    f(v.breakdownFlags);
++    f(v.var_60);
++    f(v.var_61);
++    f(v.refundCost);
++    f(v.reliability);
++    f(v.timeoutToBreakdown);
++    f(v.breakdownTimeout);
++}
++template<class F> inline void fields(OpenLoco::S5::VehicleTail& v,F&& f) {
++    f(v.base);
++    f(v.pad_24);
++    f(v.head);
++    f(v.remainingDistance);
++    f(v.trackAndDirection);
++    f(v.subPosition);
++    f(v.tileX);
++    f(v.tileY);
++    f(v.tileBaseZ);
++    f(v.trackType);
++    f(v.routingHandle);
++    f(v.var_38);
++    f(v.pad_39);
++    f(v.nextCarId);
++    f(v.var_3C);
++    f(v.pad_40);
++    f(v.mode);
++    f(v.pad_43);
++    f(v.drivingSoundId);
++    f(v.drivingSoundVolume);
++    f(v.drivingSoundFrequency);
++    f(v.objectId);
++    f(v.soundFlags);
++    f(v.soundWindowNumber);
++    f(v.soundWindowType);
++    f(v.trainDanglingTimeout);
++}
++template<class F> inline void fields(OpenLoco::S5::Industry& v,F&& f) {
++    f(v.name);
++    f(v.x);
++    f(v.y);
++    f(v.flags);
++    f(v.prng0);
++    f(v.prng1);
++    f(v.objectId);
++    f(v.under_construction);
++    f(v.foundingYear);
++    f(v.numTiles);
++    f(v.tiles);
++    f(v.town);
++    f(v.tileLoop);
++    f(v.numFarmTiles);
++    f(v.numIdleFarmTiles);
++    f(v.productionRate);
++    f(v.owner);
++    f(v.stationsInRange);
++    f(v.producedCargoStatsStation);
++    f(v.producedCargoStatsRating);
++    f(v.dailyProductionTarget);
++    f(v.dailyProduction);
++    f(v.outputBuffer);
++    f(v.producedCargoQuantityMonthlyTotal);
++    f(v.producedCargoQuantityPreviousMonth);
++    f(v.receivedCargoQuantityMonthlyTotal);
++    f(v.receivedCargoQuantityPreviousMonth);
++    f(v.receivedCargoQuantityDailyTotal);
++    f(v.producedCargoQuantityDeliveredMonthlyTotal);
++    f(v.producedCargoQuantityDeliveredPreviousMonth);
++    f(v.producedCargoPercentTransportedPreviousMonth);
++    f(v.producedCargoMonthlyHistorySize);
++    f(v.producedCargoMonthlyHistory1);
++    f(v.producedCargoMonthlyHistory2);
++    f(v.history_min_production);
++    f(v.pad_393);
++}
++template<class F> inline void fields(OpenLoco::S5::LabelFrame& v,F&& f) {
++    f(v.left);
++    f(v.right);
++    f(v.top);
++    f(v.bottom);
++}
++template<class F> inline void fields(OpenLoco::S5::Message& v,F&& f) {
++    f(v.type);
++    f(v.messageString);
++    f(v.companyId);
++    f(v.timeActive);
++    f(v.itemSubjects);
++    f(v.date);
++}
++template<class F> inline void fields(OpenLoco::S5::StationCargoStats& v,F&& f) {
++    f(v.quantity);
++    f(v.origin);
++    f(v.flags);
++    f(v.age);
++    f(v.rating);
++    f(v.enrouteAge);
++    f(v.vehicleSpeed);
++    f(v.vehicleAge);
++    f(v.industryId);
++    f(v.densityPerTile);
++}
++template<class F> inline void fields(OpenLoco::S5::Station& v,F&& f) {
++    f(v.name);
++    f(v.x);
++    f(v.y);
++    f(v.z);
++    f(v.labelFrame);
++    f(v.owner);
++    f(v.noTilesTimeout);
++    f(v.flags);
++    f(v.town);
++    f(v.cargoStats);
++    f(v.stationTileSize);
++    f(v.stationTiles);
++    f(v.var_3B0);
++    f(v.var_3B1);
++    f(v.var_3B2);
++    f(v.airportRotation);
++    f(v.airportStartPos);
++    f(v.airportMovementOccupiedEdges);
++    f(v.pad_3BE);
++}
++template<class F> inline void fields(OpenLoco::S5::Town& v,F&& f) {
++    f(v.name);
++    f(v.x);
++    f(v.y);
++    f(v.flags);
++    f(v.labelFrame);
++    f(v.prng0);
++    f(v.prng1);
++    f(v.population);
++    f(v.populationCapacity);
++    f(v.numBuildings);
++    f(v.companyRatings);
++    f(v.companiesWithRating);
++    f(v.size);
++    f(v.historySize);
++    f(v.history);
++    f(v.historyMinPopulation);
++    f(v.amenityCounts);
++    f(v.monthlyCargoDelivered);
++    f(v.cargoInfluenceFlags);
++    f(v.var_19C);
++    f(v.buildSpeed);
++    f(v.numberOfAirports);
++    f(v.numStations);
++    f(v.var_1A8);
++    f(v.pad_1AC);
++}
++template<class F> inline void fields(OpenLoco::S5::Wave& v,F&& f) {
++    f(v.loc);
++    f(v.frame);
++}
++template<class F> inline void fields(OpenLoco::S5::Construction& v,F&& f) {
++    f(v.signals);
++    f(v.bridges);
++    f(v.trainStations);
++    f(v.trackMods);
++    f(v.var_17A);
++    f(v.roadStations);
++    f(v.roadMods);
++}
++template<class F> inline void fields(OpenLoco::S5::GeneralState& v,F&& f) {
++    f(v.rng);
++    f(v.unkRng);
++    f(v.flags);
++    f(v.currentDay);
++    f(v.dayCounter);
++    f(v.currentYear);
++    f(v.currentMonth);
++    f(v.currentDayOfMonth);
++    f(v.savedViewX);
++    f(v.savedViewY);
++    f(v.savedViewZoom);
++    f(v.savedViewRotation);
++    f(v.playerCompanies);
++    f(v.entityListHeads);
++    f(v.entityListCounts);
++    f(v.pad_0042);
++    f(v.currencyMultiplicationFactor);
++    f(v.unusedCurrencyMultiplicationFactor);
++    f(v.scenarioTicks);
++    f(v.var_014A);
++    f(v.scenarioTicks2);
++    f(v.magicNumber);
++    f(v.numMapAnimations);
++    f(v.tileUpdateStartLocation);
++    f(v.scenarioConstruction);
++    f(v.defaultRailroadObjectId);
++    f(v.defaultRoadObjectId);
++    f(v.lastAirport);
++    f(v.lastShipPort);
++    f(v.trafficHandedness);
++    f(v.lastVehicleType);
++    f(v.pickupDirection);
++    f(v.defaultTreeObjectId);
++    f(v.seaLevel);
++    f(v.currentSnowLine);
++    f(v.currentSeason);
++    f(v.defaultLandObjectId);
++    f(v.maxCompetingCompanies);
++    f(v.orderTableLength);
++    f(v.roadObjectIdIsAnyRoadTypeCompatible);
++    f(v.roadObjectIdIsUsableByAllCompanies);
++    f(v.currentDefaultLevelCrossingType);
++    f(v.defaultTrackTypeObjectId);
++    f(v.loanInterestRate);
++    f(v.defaultIndustryObjectId);
++    f(v.defaultBuildingObjectId);
++    f(v.defaultMiscBuildingObjectId);
++    f(v.defaultWallObjectId);
++    f(v.produceAICompanyTimeout);
++    f(v.tickStartPrngState);
++    f(v.scenarioFileName);
++    f(v.scenarioName);
++    f(v.scenarioDetails);
++    f(v.competitorStartDelay);
++    f(v.preferredAIIntelligence);
++    f(v.preferredAIAggressiveness);
++    f(v.preferredAICompetitiveness);
++    f(v.startingLoanSize);
++    f(v.maxLoanSize);
++    f(v.multiplayerPrng);
++    f(v.multiplayerChecksumA);
++    f(v.multiplayerChecksumB);
++    f(v.defaultBuildVehicleType);
++    f(v.numberOfIndustries);
++    f(v.vehiclePreviewRotationFrame);
++    f(v.objectiveType);
++    f(v.objectiveFlags);
++    f(v.objectiveCompanyValue);
++    f(v.objectiveMonthlyVehicleProfit);
++    f(v.objectivePerformanceIndex);
++    f(v.objectiveDeliveredCargoType);
++    f(v.objectiveDeliveredCargoAmount);
++    f(v.objectiveTimeLimitYears);
++    f(v.objectiveTimeLimitUntilYear);
++    f(v.objectiveMonthsInChallenge);
++    f(v.objectiveCompletedChallengeInMonths);
++    f(v.industryFlags);
++    f(v.forbiddenVehiclesPlayers);
++    f(v.forbiddenVehiclesCompetitors);
++    f(v.fixFlags);
++    f(v.companyRecords);
++    f(v.var_44C);
++    f(v.var_450);
++    f(v.var_454);
++    f(v.var_458);
++    f(v.var_45C);
++    f(v.var_460);
++    f(v.var_464);
++    f(v.var_468);
++    f(v.lastMapWindowFlags);
++    f(v.lastMapWindowSize);
++    f(v.lastMapWindowVar88A);
++    f(v.lastMapWindowVar88C);
++    f(v.var_478);
++    f(v.pad_047C);
++    f(v.numMessages);
++    f(v.activeMessageIndex);
++    f(v.messages);
++    f(v.pad_B95A);
++    f(v.var_B95C);
++    f(v.pad_B95D);
++    f(v.var_B960);
++    f(v.pad_B961);
++    f(v.var_B962);
++    f(v.pad_B963);
++    f(v.var_B964);
++    f(v.pad_B965);
++    f(v.var_B966);
++    f(v.pad_B967);
++    f(v.currentRainLevel);
++    f(v.pad_B969);
++}
++template<class F> inline void fields(OpenLoco::S5::GameState& v,F&& f) {
++    f(v.general);
++    f(v.companies);
++    f(v.towns);
++    f(v.industries);
++    f(v.stations);
++    f(v.entities);
++    f(v.animations);
++    f(v.waves);
++    f(v.userStrings);
++    f(v.routings);
++    f(v.orders);
++}
++template<class F> inline void fields(OpenLoco::S5::GameStateType2& v,F&& f) {
++    f(v.general);
++    f(v.companies);
++    f(v.towns);
++    f(v.industries);
++    f(v.stations);
++    f(v.entities);
++    f(v.animations);
++    f(v.waves);
++    f(v.userStrings);
++    f(v.routings);
++    f(v.orders);
++}
++template<class F> inline void fields(OpenLoco::S5::Objective& v,F&& f) {
++    f(v.type);
++    f(v.flags);
++    f(v.companyValue);
++    f(v.monthlyVehicleProfit);
++    f(v.performanceIndex);
++    f(v.deliveredCargoType);
++    f(v.deliveredCargoAmount);
++    f(v.timeLimitYears);
++}
++template<class F> inline void fields(OpenLoco::S5::Options& v,F&& f) {
++    f(v.editorStep);
++    f(v.difficulty);
++    f(v.scenarioStartYear);
++    f(v.pad_4);
++    f(v.scenarioFlags);
++    f(v.madeAnyChanges);
++    f(v.pad_9);
++    f(v.landDistributionPatterns);
++    f(v.scenarioName);
++    f(v.scenarioDetails);
++    f(v.scenarioText);
++    f(v.numberOfForests);
++    f(v.minForestRadius);
++    f(v.maxForestRadius);
++    f(v.minForestDensity);
++    f(v.maxForestDensity);
++    f(v.numberRandomTrees);
++    f(v.minAltitudeForTrees);
++    f(v.maxAltitudeForTrees);
++    f(v.minLandHeight);
++    f(v.topographyStyle);
++    f(v.hillDensity);
++    f(v.numberOfTowns);
++    f(v.maxTownSize);
++    f(v.numberOfIndustries);
++    f(v.preview);
++    f(v.maxCompetingCompanies);
++    f(v.competitorStartDelay);
++    f(v.objective);
++    f(v.objectiveDeliveredCargo);
++    f(v.currency);
++    f(v.generator);
++    f(v.numTerrainSmoothingPasses);
++    f(v.numRiverbeds);
++    f(v.minRiverWidth);
++    f(v.maxRiverWidth);
++    f(v.riverbankWidth);
++    f(v.riverMeanderRate);
++    f(v.pad_41BD);
++}
++template<class T,class F> inline void entityVariant(Entity& v,F&& f) {
++    static_assert(sizeof(T)<=sizeof(Entity));
++    static_assert(std::is_trivially_copyable_v<T> && std::is_trivially_copyable_v<Entity>);
++    T item{};
++    std::memcpy(static_cast<void*>(&item),static_cast<const void*>(&v),sizeof(T));
++    f(item);
++    std::memcpy(static_cast<void*>(&v),static_cast<const void*>(&item),sizeof(T));
++}
++template<class F> inline void fields(Entity& v,F&& f) {
++    // Discriminators are bytes, unchanged in either direction.
++    if(v.base.baseType==0xff) { f(v.base);return; }
++    if(v.base.baseType==0) {
++        switch(v.base.type) {
++            case 0:entityVariant<VehicleHead>(v,f);return;
++            case 1:entityVariant<Vehicle1>(v,f);return;
++            case 2:entityVariant<Vehicle2>(v,f);return;
++            case 3:entityVariant<VehicleBogie>(v,f);return;
++            case 4:case 5:entityVariant<VehicleBody>(v,f);return;
++            case 6:entityVariant<VehicleTail>(v,f);return;
++        }
++    } else if(v.base.baseType==1) {
++        switch(v.base.type) {
++            case 0:entityVariant<Exhaust>(v,f);return;
++            case 1:case 2:entityVariant<MoneyEffect>(v,f);return;
++            case 3:entityVariant<VehicleCrashParticle>(v,f);return;
++            case 4:entityVariant<ExplosionCloud>(v,f);return;
++            case 5:entityVariant<Splash>(v,f);return;
++            case 6:entityVariant<Fireball>(v,f);return;
++            case 7:entityVariant<ExplosionSmoke>(v,f);return;
++            case 8:entityVariant<Smoke>(v,f);return;
++        }
++    }
++    throw std::runtime_error("Invalid S5 entity variant");
++}
++}
+diff --git a/src/OpenLoco/src/S5/S5.cpp b/src/OpenLoco/src/S5/S5.cpp
+index c11aaba..14e3307 100644
+--- a/src/OpenLoco/src/S5/S5.cpp
++++ b/src/OpenLoco/src/S5/S5.cpp
+@@ -2,6 +2,7 @@
+ 
+ #include "S5/S5.h"
+ #include "S5/S5Wire.hpp"
++#include "S5/S5StateWire.hpp"
+ 
+ #include "Audio/Audio.h"
+ #include "EditorController.h"
+@@ -446,17 +447,12 @@ namespace OpenLoco::S5
+     // 0x00441C26
+     bool exportGameStateToFile(const fs::path& path, SaveFlags flags)
+     {
+-        // Refuse before opening/truncating an existing save on an unsupported host.
+-        if constexpr (std::endian::native != std::endian::little)
+-            return false;
+         FileStream fs(path, StreamMode::write);
+         return exportGameStateToFile(fs, flags);
+     }
+ 
+     bool exportGameStateToFile(Stream& stream, SaveFlags flags)
+     {
+-        if constexpr (std::endian::native != std::endian::little)
+-            return false;
+         if ((flags & SaveFlags::isAutosave) == SaveFlags::none)
+         {
+             Ui::ProgressBar::begin(StringIds::please_wait);
+@@ -534,30 +530,36 @@ namespace OpenLoco::S5
+         try
+         {
+             SawyerStreamWriter fs(stream);
+-            fs.writeChunk(SawyerEncoding::rotate, file.header);
++            const auto writeRecord = [&](const auto& record) {
++                const auto bytes=StateWire::encode(record);
++                fs.writeChunk(SawyerEncoding::rotate,bytes.data(),bytes.size());
++            };
++            writeRecord(file.header);
+             if (file.header.type == S5Type::scenario || file.header.type == S5Type::landscape)
+             {
+-                fs.writeChunk(SawyerEncoding::rotate, *file.scenarioOptions);
++                writeRecord(*file.scenarioOptions);
+             }
+             if (file.header.hasFlags(HeaderFlags::hasSaveDetails))
+             {
+-                fs.writeChunk(SawyerEncoding::rotate, *file.saveDetails);
++                writeRecord(*file.saveDetails);
+             }
+             if (file.header.numPackedObjects != 0)
+             {
+                 ObjectManager::writePackedObjects(fs, packedObjects);
+             }
+-            fs.writeChunk(SawyerEncoding::rotate, file.requiredObjects, sizeof(file.requiredObjects));
++            const auto objectBytes=StateWire::encodeArray<ObjectHeader>(file.requiredObjects);
++            fs.writeChunk(SawyerEncoding::rotate, objectBytes.data(), objectBytes.size());
++            const auto stateBytes=StateWire::encode(file.gameState);
+ 
+             if (file.header.type == S5Type::scenario)
+             {
+-                fs.writeChunk(SawyerEncoding::runLengthSingle, &file.gameState.general, sizeof(S5::GeneralState));
+-                fs.writeChunk(SawyerEncoding::runLengthSingle, file.gameState.towns, 0x123480);
+-                fs.writeChunk(SawyerEncoding::runLengthSingle, file.gameState.animations, 0x79D80);
++                fs.writeChunk(SawyerEncoding::runLengthSingle, stateBytes.data(), sizeof(S5::GeneralState));
++                fs.writeChunk(SawyerEncoding::runLengthSingle, stateBytes.data()+0x092444, 0x123480);
++                fs.writeChunk(SawyerEncoding::runLengthSingle, stateBytes.data()+0x4268C4, 0x79D80);
+             }
+             else
+             {
+-                fs.writeChunk(SawyerEncoding::runLengthSingle, file.gameState);
++                fs.writeChunk(SawyerEncoding::runLengthSingle, stateBytes.data(),stateBytes.size());
+             }
+ 
+             if (file.header.hasFlags(HeaderFlags::isRaw))
+@@ -566,7 +568,8 @@ namespace OpenLoco::S5
+             }
+             else
+             {
+-                fs.writeChunk(SawyerEncoding::runLengthMulti, file.tileElements.data(), file.tileElements.size() * sizeof(TileElement));
++                const auto tileBytes=StateWire::encodeArray<TileElement>(file.tileElements);
++                fs.writeChunk(SawyerEncoding::runLengthMulti, tileBytes.data(), tileBytes.size());
+             }
+ 
+             fs.writeChecksum();
+@@ -590,7 +593,7 @@ namespace OpenLoco::S5
+ 
+         // Validate the wire header before allocating or interpreting packed state.
+         const auto header = Wire::decodeHeader(fs.readChunk());
+-        Wire::requireGameStateSupport(header);
++        if (header.version != Wire::kVersion) throw std::runtime_error("Unsupported S5 version");
+         auto file = std::make_unique<S5File>();
+         file->header = header;
+ 
+@@ -603,7 +606,7 @@ namespace OpenLoco::S5
+         if (file->header.type == S5Type::scenario)
+         {
+             file->scenarioOptions = std::make_unique<S5::Options>();
+-            Wire::copyExact(fs.readChunk(), file->scenarioOptions.get(), sizeof(S5::Options));
++            *file->scenarioOptions = Wire::decodeOptions(fs.readChunk());
+         }
+         // Read packed objects
+         if (file->header.numPackedObjects > 0)
+@@ -612,6 +615,7 @@ namespace OpenLoco::S5
+             {
+                 ObjectHeader object;
+                 fs.read(&object, sizeof(ObjectHeader));
++                StateWire::native(object);
+                 auto unownedObjectData = fs.readChunk();
+                 std::vector<std::byte> objectData;
+                 objectData.resize(unownedObjectData.size());
+@@ -625,13 +629,15 @@ namespace OpenLoco::S5
+         {
+             // Load required objects
+             Wire::copyExact(fs.readChunk(), file->requiredObjects, sizeof(file->requiredObjects));
++            StateWire::native(file->requiredObjects);
+ 
+             // Load game state up to just before companies
+             Wire::copyExact(fs.readChunk(), &file->gameState.general, sizeof(S5::GeneralState));
+             // Load game state towns industry and stations
+-            Wire::copyExact(fs.readChunk(), file->gameState.towns, offsetof(S5::GameState, entities) - offsetof(S5::GameState, towns));
++            Wire::copyExact(fs.readChunk(), file->gameState.towns, 0x123480);
+             // Load the rest of gamestate after animations
+-            Wire::copyExact(fs.readChunk(), file->gameState.animations, sizeof(S5::GameState) - offsetof(S5::GameState, animations));
++            Wire::copyExact(fs.readChunk(), file->gameState.animations, 0x79D80);
++            StateWire::native(file->gameState);
+             file->gameState.general.fixFlags |= enumValue(S5FixFlags::fixFlag1);
+             // fixState(file->gameState); this doesn't do anything as we have set fixFlag1
+ 
+@@ -642,12 +648,14 @@ namespace OpenLoco::S5
+                 auto numTileElements = Wire::tileCount(tileElements, sizeof(TileElement), World::TileManager::kMaxElements);
+                 file->tileElements.resize(numTileElements);
+                 std::memcpy(file->tileElements.data(), tileElements.data(), numTileElements * sizeof(TileElement));
++                for (auto& tile : file->tileElements) StateWire::native(tile);
+             }
+         }
+         else
+         {
+             // Load required objects
+             Wire::copyExact(fs.readChunk(), file->requiredObjects, sizeof(file->requiredObjects));
++            StateWire::native(file->requiredObjects);
+ 
+             // Load game state
+             auto chunkData = fs.readChunk();
+@@ -655,11 +663,13 @@ namespace OpenLoco::S5
+             {
+                 auto oldGameState = std::make_unique<S5::GameStateType2>();
+                 Wire::copyExact(chunkData, oldGameState.get(), sizeof(S5::GameStateType2));
++                StateWire::native(*oldGameState);
+                 file->gameState = *importGameStateType2(*oldGameState);
+             }
+             else
+             {
+                 Wire::copyExact(chunkData, &file->gameState, sizeof(S5::GameState));
++                StateWire::native(file->gameState);
+             }
+             // old fixState 0x00445A4A would set this after adjusting the data
+             file->gameState.general.fixFlags |= enumValue(S5FixFlags::fixFlag1);
+@@ -669,6 +679,7 @@ namespace OpenLoco::S5
+             auto numTileElements = Wire::tileCount(tileElements, sizeof(TileElement), World::TileManager::kMaxElements);
+             file->tileElements.resize(numTileElements);
+             std::memcpy(file->tileElements.data(), tileElements.data(), numTileElements * sizeof(TileElement));
++                for (auto& tile : file->tileElements) StateWire::native(tile);
+         }
+ 
+         // Reset fields that don't affect the simulation, but would cause issues when comparing game states.

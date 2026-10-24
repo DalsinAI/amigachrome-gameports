@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "source_commit": "6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e",
+  "status": "engineering; full-game repeat and release gates open",
+  "checks": {
+    "repository_tests": 63,
+    "host_probes": 6,
+    "host_retail_files": 46,
+    "target_widget_rc": 0,
+    "target_state_rc": 0,
+    "target_state_files": 2,
+    "target_rom": "stock Kickstart 3.2.3 compatibility lab; intended OpenKick repeat pending"
+  },
+  "canonical_value_hashes": [
+    {
+      "kind": "title",
+      "state": "d4927890",
+      "state_and_tiles": "fe302313"
+    },
+    {
+      "kind": "scenario",
+      "state": "6ee39188",
+      "state_and_tiles": "d40b3208"
+    }
+  ],
+  "remaining": [
+    "Corrected full-app scenario and owner-name UI repeat",
+    "Simulation, in-game save and reload",
+    "Audio on deployed native OpenAL stack",
+    "Intended Team 4 ROM qualification"
+  ],
+  "notes": [
+    "The earlier x/y duck-type walk was incomplete; actual vector types now use explicit specializations.",
+    "Wire-byte assertions and named-field checks cover town/station/industry names and entity IDs.",
+    "Round trips and matching hashes alone do not certify playable simulation.",
+    "Retail input bytes and raw lab logs remain local."
+  ]
+}

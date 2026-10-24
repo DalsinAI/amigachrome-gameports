@@ -1,7 +1,12 @@
 # OpenLoco
 
 Target: AmigaOS 3.x / 68040 + FPU / AC090, GCC 16.2.0-open3 and OpenAmiga SDL3.
-Status (24 October): the final endian patch set builds with open3 and passes host/AC090 G1, CSS and 545-object canonical comparisons. Full startup now reaches the separate S5 game-state endian barrier; visible gameplay/release qualification remains open. Audio remains disabled. See [asset-loader results and limits](ASSET_ENDIAN.md). The earlier baseline below is retained as history.
+Status (24 October): graphics/audio-file/object wire probes pass. S5 headers,
+save-preview and scenario-options metadata now decode explicitly; state copies
+have exact size checks. Full S5 simulation import/export on big-endian hosts is
+still unimplemented and explicitly refused. OpenLoco is not playable yet;
+audio remains disabled. See [S5 boundaries](S5_ENDIAN.md) and the earlier
+[asset-loader results](ASSET_ENDIAN.md). Earlier evidence below is historical.
 
 The exact upstream source is `OpenLoco/OpenLoco`
 `6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e` (version 26.09).
