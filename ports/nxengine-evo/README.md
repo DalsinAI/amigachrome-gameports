@@ -1,31 +1,53 @@
-# NXEngine-evo — m68k AROS
+# NXEngine-evo — AmigaOS 3.x / AC090
 
-**Status:** COMPILED / RUNTIME TEST PENDING
+Status: **COMPILED / TESTING**, not RELEASE.
 
-## Upstream
+Pinned upstream: `nxengine/nxengine-evo` commit
+`1f093d1423cc395eb199230cd609b806ef1daa36`.
 
-- repository: https://github.com/nxengine/nxengine-evo.git
-- pinned commit: `1f093d1423cc395eb199230cd609b806ef1daa36`
+## Approved compiler build
 
-## Compile result
+Use `STOVE=/path/to/verified-open3 sh ports/nxengine-evo/build-amigaos3.sh`.
+The recipe requires GCC 16.2.0-open3 and verified zlib/PNG/JPEG dependencies.
+It enables portable adjacent data and the 68040/FPU null-pointer compiler
+workaround. It no longer relies on a host-installed data directory.
 
-- target: m68k AROS / 68040
-- executable: `nxengine-evo`
-- observed size: 17,390,596 bytes
-- SHA-256: `3f36ae8bcf0efb89db9317e2891cd8f6da3b0ef0aa7acf4f5178b789202e0abe`
+The 24 October clean build produced an AmigaOS loadseg executable with SHA-256
+`3b3773b7b1ec63c31e09f719695dc72b4d474a5b00a5b632c6065908c4c8f866`.
+Unsupported visibility attributes in bundled fmt are warnings; target runtime
+qualification remains separate from compile success.
 
-## AROS portability
+## Local external data
 
-Upstream `ResourceManager.cpp` recognises several Unix-like targets but not AROS. The preserved compile-success probe previously forced `-D__unix__`.
+Cave Story assets are not bundled. Prepare an owner-authorised local archive:
 
-The AmigaChrome lane now carries `patches/0001-aros-resource-manager.patch`, which recognises `__AROS__` explicitly for the existing stat-based resource lookup path. The build script applies and verifies that patch and no longer impersonates a Unix target.
+```sh
+python3 ports/nxengine-evo/import_data.py \
+  --archive /path/to/cavestory-nx-data.zip \
+  --engine-data build/game-ports/sources/nxengine-evo/data \
+  --out build/nx-test-data
+```
 
-The remaining gate is a clean rebuild with the current AROS GCC16 toolchain followed by AC090 runtime qualification.
+The importer creates a new directory and digest receipt, flattens the old
+`data/data` mirror layout, overlays the pinned engine metadata, and adds original
+music filenames only where size and CRC match upstream's extraction table.
+It rejects unsafe/conflicting archive paths and never replaces an existing
+output. The observed external archive SHA-256 is
+`444c4265b5acc11495b8d5b00ef7e7843b5ee8e0f6a5d9c4201ed36adbd018f0`;
+there is no publisher digest in the manifest. This is local integrity evidence,
+not a redistribution grant. The tested import contains 661 files including
+26 music aliases. Keep the executable beside `data` in the isolated lab.
 
-## Data
+## Runtime gate
 
-NXEngine-evo requires Cave Story data. The AmigaChrome field lab uses freeware Cave Story/NXEngine data locally. No game data is committed here.
+The earlier open3 candidate reached the title, opening dialogue and Start Point
+room. Right-arrow input moved the player and the Quit menu returned RC 0.
+The SDL software renderer cannot satisfy this engine's accelerated-renderer
+request; leave `SDL_OPENGPU` unset for the OpenGPU path.
 
-## Gate
-
-Opening room -> map/sprites -> movement -> input -> audio -> clean exit.
+The fresh binary repeated the opening room and movement, captured a jump
+in flight, wrote a save, exited RC 0, reloaded the save in a fresh process at
+the saved disk position, then exited RC 0 again. The restored music files no
+longer produce missing-song warnings. See [the run receipt](evidence/runtime-20261024.json).
+Audio (including remaining missing-PXT warnings), weapon/fire, wider input and
+window handling, and an intended clean-ROM repeat remain release gates. A muted lab run does not establish audible audio.

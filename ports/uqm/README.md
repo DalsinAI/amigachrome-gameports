@@ -7,17 +7,18 @@ SHA-256. Source and game content remain separate inputs.
 
 ## Current status
 
-**COMPILED — provisional old-stove artifact.**
+**COMPILED / TESTING — approved open3 build.**
 
-The AmigaOS/OpenGPU lane now compiles and final-links the full UQM executable.
-The successful provisional old-stove binary is an AmigaOS loadseg executable
-with SHA-256:
+The clean 24 October AmigaOS build with GCC 16.2.0-open3 produces SHA-256
+`ce39e3a7c020194d3a6249e4f28477f2d8c64c9211f7f0f0cdf9254c421ea6fe`.
+This supersedes the provisional old-stove binary. It is not a release.
 
-`4173391559e65d7cfb6c330cd2820bc33cb97a6402175f895c11c3f057f386b8`
-
-It is not a release binary. The installed GCC 16.2.0b stove has known compiler
-defects on AC090/68040 and the port must be rebuilt and runtime-qualified with
-the approved fixed stove.
+Runtime testing found and fixed native Amiga volume paths being prefixed with
+Unix `/`, and enabled ZIP content support in the cross profile. An interim
+direct-content build reached the main menu, new game and Sol solar-system view,
+then returned to Shell with RC 0. The final packaged-content binary also reached Sol and returned RC 0.
+See [the exact run receipt](evidence/runtime-20261024.json) for environment,
+hashes and remaining gates.
 
 ## Portability work
 
@@ -28,6 +29,8 @@ adaptation to its copied build tree. The important target fixes are:
 - use the AmigaOS/OpenGPU SDL2, GL and pthread personality;
 - supply `NAME_MAX=255` for Amiga where POSIX `_POSIX_NAME_MAX` is absent;
 - use libnix `readdir()` rather than absent `readdir_r()`;
+- preserve native Amiga volume/assign paths at the physical UIO boundary;
+- enable ZIP I/O for the official `.uqm` content packages;
 - use the existing `HOME` path on Amiga instead of Unix `getpwuid()`;
 - account for libnix `strcasecmp` / `stricmp` despite UQM's cross-probe not
   seeing their declarations;
@@ -50,8 +53,10 @@ No source or dependency fetch is performed by this build script.
 ## Runtime/content gate
 
 UQM game content is deliberately not bundled. Runtime qualification requires
-an already-authorised local UQM 0.8 content tree, or explicit approval before
-any external content fetch.
+the pinned UQM 0.8.0 content archive from `gameports/runtime-data.json`,
+kept external to the repository. The fetcher verifies its SHA-256. Set the
+content directory to a folder containing `version` and a `packages` subfolder
+with `uqm-0.8.0-content.uqm`. Pass a writable directory with `--configdir`.
 
 Required first visible gate:
 
