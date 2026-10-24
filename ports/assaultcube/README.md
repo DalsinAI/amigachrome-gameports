@@ -53,3 +53,29 @@ AmigaOS guest, in addition to host regression tests. Actual AssaultCube
 client/server runtime and audio integration remain unqualified.
 
 [Raw evidence and hashes](../../evidence/open2-20261012-followup/README.md).
+
+## Reproducible source preparation
+
+Both Amiga recipes verify the checkout HEAD against `gameports/catalog.json`
+and check each required patch in forward or reverse direction. The server
+applies 0001, 0003 and 0004; the client also applies 0002 automatically. A repeat
+build accepts those exact patches already applied; a mismatching patch fails
+with its filename. The old server grep for one `__amigaos__` occurrence could
+skip an incomplete bootstrap, and the client previously required manual 0002
+application.
+
+Use a disposable checkout at the pin above. `STOVE` is a stove root containing
+`prefix/` and a verified compiler receipt; current recipes require open3.
+Build the ENet/server first, then the client in the same checkout:
+
+```sh
+export STOVE=/path/to/verified-open3-stove
+export ASSAULTCUBE_SRC=/path/to/pinned-assaultcube/source
+sh ports/assaultcube/build-amiga-server.sh
+sh ports/assaultcube/build-amiga-client.sh
+```
+
+The client now gives an explicit server/ENet prerequisite error when the archive
+is absent. This checks existence, not the provenance of an arbitrary preexisting
+ENet archive: start from a clean checkout and build it through the server recipe.
+The first-light audio stub remains; these changes add no audio or runtime pass.

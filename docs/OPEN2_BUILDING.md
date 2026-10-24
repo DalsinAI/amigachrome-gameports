@@ -47,12 +47,10 @@ STOVE="$PWD/build/open2-stove" sh ports/sdlpop/build-amigaos3.sh
 STOVE="$PWD/build/open2-stove" JOBS=2 sh ports/nxengine-evo/build-amigaos3.sh
 ```
 
-AssaultCube additionally needs its two existing checked portability patches in order, before the client build. Build its ENet/server first, then the client. The client intentionally retains the first-light audio stub; building it is not an audio pass.
+Current AssaultCube recipes require a verified open3 stove and automatically check/apply the complete patch set for each target. Build its ENet/server first, then the client in the same disposable pinned checkout. The client intentionally retains the first-light audio stub; building it is not an audio pass. See `ports/assaultcube/README.md` for the current procedure. The commands below require `STOVE` to select open3, despite this document’s historical Open2 title.
 
 ```sh
 STOVE="$PWD/build/open2-stove" sh ports/assaultcube/build-amiga-server.sh
-# Apply ports/assaultcube/patches/0002-opengpu-sdk-client-first-light.patch
-# to the exact source tree, checking whether it is already applied first.
 STOVE="$PWD/build/open2-stove" sh ports/assaultcube/build-amiga-client.sh
 ```
 

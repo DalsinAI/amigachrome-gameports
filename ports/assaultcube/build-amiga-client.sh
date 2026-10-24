@@ -14,18 +14,12 @@ P="$STOVE/prefix"
 CXX="$P/bin/m68k-amigaos-g++"
 [ -x "$P/bin/sdl2-config" ] || { echo "OpenGPU SDK missing from stove" >&2; exit 2; }
 [ -f "$ZLIB_ROOT/lib/libz.a" ] || { echo "Amiga zlib missing" >&2; exit 3; }
-# Exactly one emitted definition for small stream virtuals on Amiga/HUNK.
-for STREAM_PATCH in "$HERE/patches/0003-amiga-stream-single-definition.patch" \
-                    "$HERE/patches/0004-match-mode-buffer-array-delete.patch"; do
-if git -C "$(dirname "$SRC")" apply --check "$STREAM_PATCH" >/dev/null 2>&1; then
-    git -C "$(dirname "$SRC")" apply "$STREAM_PATCH"
-elif git -C "$(dirname "$SRC")" apply --reverse --check "$STREAM_PATCH" >/dev/null 2>&1; then
-    :
-else
-    echo "AssaultCube stream patch does not match this source tree" >&2
-    exit 4
-fi
-done
+# Prepare every patch required by this target, including on repeat builds.
+python3 "$HERE/prepare_source.py" "$SRC" --client
+
+[ -f "$SRC/enet/.libs/libenet.a" ] || {
+    echo "Build the Amiga ENet/server first: sh $HERE/build-amiga-server.sh" >&2; exit 2;
+}
 
 cd "$SRC/src"
 SDK_CFLAGS="$(SDL2_RUNTIME=-mcrt=nix20 "$P/bin/sdl2-config" --cflags)"

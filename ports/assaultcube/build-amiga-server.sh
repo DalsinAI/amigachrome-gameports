@@ -20,23 +20,8 @@ NM="$P/bin/m68k-amigaos-nm"
 [ -f "$SRC/src/Makefile" ] || { echo "AssaultCube source not prepared: $SRC" >&2; exit 2; }
 [ -f "$ZLIB_ROOT/include/zlib.h" ] && [ -f "$ZLIB_ROOT/lib/libz.a" ] || { echo "Amiga zlib not found: $ZLIB_ROOT" >&2; exit 3; }
 
-# Apply only once to the disposable pinned source checkout.
-if ! grep -q '__amigaos__' "$SRC/src/stream.cpp"; then
-    (cd "$(dirname "$SRC")" && git apply "$HERE/patches/0001-amigaos-server-bootstrap.patch")
-fi
-
-# Exactly one emitted definition for small stream virtuals on Amiga/HUNK.
-for STREAM_PATCH in "$HERE/patches/0003-amiga-stream-single-definition.patch" \
-                    "$HERE/patches/0004-match-mode-buffer-array-delete.patch"; do
-if git -C "$(dirname "$SRC")" apply --check "$STREAM_PATCH" >/dev/null 2>&1; then
-    git -C "$(dirname "$SRC")" apply "$STREAM_PATCH"
-elif git -C "$(dirname "$SRC")" apply --reverse --check "$STREAM_PATCH" >/dev/null 2>&1; then
-    :
-else
-    echo "AssaultCube stream patch does not match this source tree" >&2
-    exit 4
-fi
-done
+# Prepare every patch required by this target, including on repeat builds.
+python3 "$HERE/prepare_source.py" "$SRC"
 
 cd "$SRC/enet"
 make distclean >/dev/null 2>&1 || true
