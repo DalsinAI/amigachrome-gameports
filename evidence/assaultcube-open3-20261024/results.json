@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-24",
+  "repository_base": "ed4dca0226511bca9223c03d655b056a940df9ab",
+  "source_pin": "13f0d8eea4822dee5c976661218d022be74342e3",
+  "compiler": "16.2.0-open3",
+  "compiler_archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+  "target": "AmigaOS 3.x / 68040 + FPU / nix20",
+  "sdk_status": "reused OpenGPU SDK, not rebuilt or runtime-qualified",
+  "dependency_lock_sha256": "90f9a9ff48ffefd61ef894bcfe575491aac579d741c1c75446b75b4e39a39bd4",
+  "artifacts": {
+    "server": {
+      "bytes": 765488,
+      "sha256": "cd1705c0f1d76a35365cc60c21da69304a5a190c51a1a79f9b6745762042e3c4",
+      "two_independent_builds_identical": true,
+      "format": "AmigaOS loadseg executable",
+      "runtime": "not tested"
+    },
+    "client": {
+      "bytes": 2608004,
+      "sha256": "99f28548a43c3967865da23f61e68bba7aa41291d129f29dada73efb37382869",
+      "two_independent_builds_identical": true,
+      "format": "AmigaOS loadseg executable",
+      "runtime": "not tested"
+    }
+  },
+  "logs": {
+    "server.txt": "6c40f5a7e94bc8684a01e35a6e881e4f120c5208806ba862b6bb1e07387d849b",
+    "client.txt": "b60f944bdcc1cb3596058ce15372e853ed35d0eb41d666a0c6d63bd2581ecb38",
+    "server-second.txt": "9af4fa6b9333bbf932f4ee29a0fdb6e5df643ac93cf1a6ad60241011c320011b",
+    "client-second.txt": "5e0c2cb561de550108fdca2464f47f223541cf46842aded22ececf2e76d031eb",
+    "tests.txt": "1159d6890e4154152deae64298f9d8a4e446295e37a478e915cf534e13279244"
+  },
+  "tests_passed": 68,
+  "qualification": "compile/link only; not RELEASE"
+}

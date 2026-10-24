@@ -107,14 +107,13 @@ class StreamPatchTests(unittest.TestCase):
         self.assertEqual(removed,['    delete buf;'])
         self.assertEqual(added,['    delete[] buf;'])
         for name in ('build-amiga-server.sh','build-amiga-client.sh'):
-            self.assertIn('0004-match-mode-buffer-array-delete.patch',
+            self.assertIn('prepare_source.py',
                           (ROOT/'ports/assaultcube'/name).read_text())
 
-    def test_both_build_recipes_apply_and_verify_the_patch(self):
+    def test_both_build_recipes_use_the_checked_source_preparer(self):
         for name in ('build-amiga-server.sh','build-amiga-client.sh'):
             text=(ROOT/'ports/assaultcube'/name).read_text()
-            self.assertIn(PATCH.name,text)
-            self.assertIn('apply --reverse --check "$STREAM_PATCH"',text)
-            self.assertIn('stream patch does not match',text)
+            self.assertIn('python3 "$HERE/prepare_source.py" "$SRC"',text)
+        self.assertIn('"$SRC" --client', (ROOT/'ports/assaultcube/build-amiga-client.sh').read_text())
 
 if __name__=='__main__':unittest.main()

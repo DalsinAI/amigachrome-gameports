@@ -19,3 +19,25 @@ Current upstream is a modern CMake/C++ codebase. The root build defaults to C++2
 Main menu -> start skirmish -> terrain and units render -> camera movement -> unit selection/pathing -> audio -> clean exit.
 
 The exact dependency set will be reduced for AmigaChrome before a first compile is attempted.
+
+## Pinned-source review, 24 October 2026
+
+The local checkout was checked at the exact catalog pin above; no configure,
+compile or runtime pass is claimed. In particular, this revision requires
+**SDL3 3.2.12** (`lib/sdl/CMakeLists.txt`), rather than the SDL2 SDK used by
+Neverball/AssaultCube. The root build requires C++20 and defaults
+`WZ_ENABLE_BACKEND_VULKAN` on for supported platforms.
+
+The checked CMake files also require PhysFS and Sodium >= 1.0.16
+(`lib/framework`), curl (`cmake/IncludeFindCurl.cmake`), PNG and FreeType
+(`lib/ivis_opengl`), OpenAL/Ogg/Vorbis/Opus (`lib/sound`), and OggVorbis
+(`lib/sequence`). Optional Opusfile is separately detected. This is a minimum
+observed dependency list, not a complete transitive inventory.
+
+Before a target build, pin and qualify those dependencies and the submodules,
+provide the OpenGPU SDL3/GL interface and the Open-family audio path, and route
+curl's TLS through OpenTLS. A first OpenGPU GL build should explicitly disable
+the upstream Vulkan backend; it must not silently pick host libraries or bundle
+an unrelated SDL/Mesa/TLS stack. OpenMulticore work must keep Exec/SDL calls on
+the OS CPU and qualify worker jobs/fallbacks separately. No acceleration or
+plain-68040 performance result follows from this source review.

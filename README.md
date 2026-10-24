@@ -85,7 +85,7 @@ The OpenGPU SDK archives remain explicitly recorded reused dependencies.
 
 | Port | Build state | Runtime state | Target / notes |
 |---|---|---|---|
-| The Ur-Quan Masters 0.8.0 | COMPILED | PENDING | m68k / 68040 |
+| The Ur-Quan Masters 0.8.0 | COMPILED open3 | TESTING | Native paths and zipped content fixed; menu/New Game/Sol and exit 0 observed muted. Audio, persistence and clean-ROM repeat remain. |
 | Chocolate Doom | COMPILED | PENDING | m68k / 68040 |
 | SDLPoP | COMPILED | PENDING | m68k / 68040 |
 | OpenJazz | COMPILED | PENDING | m68k / 68040 |
