@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-24",
+  "upstream_commit": "6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e",
+  "compiler_release": "16.2.0-open3",
+  "compiler_archive_sha256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+  "patch_sha256": {
+    "0001-amiga-platform-identity.patch": "97dee6010e3ddaad36b3542c7f2c77fbcdba3621ddfabc3eef3344dd024cc5d4",
+    "0002-optional-sequential-viewport.patch": "7ef4888c2c296a3edd0a997a82e7a88d9fc3927a463222588be1560004762c57",
+    "0003-optional-runtime-assets.patch": "c0788394b67f6c7e3aec6cdbda1aa4d4e2e69c5baa85b7640b05caa56e5ab478",
+    "0004-little-endian-sawyer-container.patch": "3ba4fe502fc52c04842b295928c6d94517edf69122c385c6d0dba356a7c28410",
+    "0005-optional-audio-disabled-engineering-build.patch": "11030657b64d15b5d0ce95212f17cb36e45e397ffd8cd679587e1eb9a0c8a36f",
+    "0006-amiga-stdio-and-optional-ipo.patch": "0db5d935d886e33dcd1c11aee40d1b1d7a7f4a62b9b598fb772c44a1888a4581",
+    "0007-amiga-native-platform.patch": "e318b8b2f250791b043298cba4f9b63ce514823cdf24238c5c086f5f442e875f",
+    "0008-native-bsdsocket-client.patch": "d4f6f98d1f9ba24efc18b088e7d6d97cc12c58b578d751ea21ec66c84623f7e8",
+    "0009-scope-open3-compiler-ice-workaround.patch": "19c5b4cdcbbb001aab20e9726808f63fb60121a99b60ecdb7fb9273259c93d4e",
+    "0010-identify-pinned-export-and-mapped-source-paths.patch": "157c5440c375720f91d8787a0efc1f8a190dde077d3c1e5bc21f7527a36a34e1",
+    "0011-native-filesystem-space-and-atomic-runtime.patch": "253e6ead00f9daab9cc3af2ce95316bca6167d904c34a0436f01c463171d31d4",
+    "0012-decode-little-endian-graphics-and-audio.patch": "f9b77b1555298cf04e162fdda24cb5d26a36fb30c3d00ce53223e6ad885f2b02",
+    "0013-normalize-object-headers-and-fixed-fields.patch": "2c1ba42de2a55e1bcdc638c895e49f778c62b17ba2b659a8ddbb39cd1c1fac7d"
+  },
+  "application_sha256": "c76c031473cb47d12662f0ae381ce222aaf53305fb90b14330c90eac9ae9602e",
+  "application_build": "Clean offline export; full App target compiled; no byte-identical repeat claimed for this new patch set",
+  "host_probe_tests_passed": 3,
+  "repository_tests_passed": 55,
+  "g1_entries": 4122,
+  "g1_payload_bytes": 2484252,
+  "css_sounds": 32,
+  "css_pcm_bytes": 2585554,
+  "dat_objects": 545,
+  "object_types": 34,
+  "object_decompressed_bytes": 50153847,
+  "canonical_outputs": {
+    "g1": {
+      "bytes": 2550212,
+      "host_sha256": "36b6dce6a9aebfaf9212c73e1aa77e2cf642f6a29a33fa65f98fb0ef7818f63d",
+      "ac090_sha256": "36b6dce6a9aebfaf9212c73e1aa77e2cf642f6a29a33fa65f98fb0ef7818f63d",
+      "equal": true
+    },
+    "css": {
+      "bytes": 2586262,
+      "host_sha256": "b6224ff5ac4e258f3272ac9909fa9e79ff3ae53046c96dca07780e527f9c6fcd",
+      "ac090_sha256": "b6224ff5ac4e258f3272ac9909fa9e79ff3ae53046c96dca07780e527f9c6fcd",
+      "equal": true
+    },
+    "objects": {
+      "bytes": 99678,
+      "host_sha256": "9ecd9afb29f754d1ed7305950a953f6d2ba6671487044fb37fb2fe1c40aec223",
+      "ac090_sha256": "9ecd9afb29f754d1ed7305950a953f6d2ba6671487044fb37fb2fe1c40aec223",
+      "equal": true
+    }
+  },
+  "target_probe_return_codes": {
+    "asset-wire": 0,
+    "object-wire": 0
+  },
+  "target_probe_sha256": {
+    "asset-wire": "aacedb5ebe86486916e92cc0c250e58f2a4086abf7edcc645cf914507027a204",
+    "object-wire": "b41610ec7920d59e78b41ac0ab590b37e4f561bfbbb557679cbd5201e9f6ac5a"
+  },
+  "schema_inventory_sha256": "4c8fcfc9ff146f9a1c6ec058842b17c08439d8088906755b056051659b11a86c",
+  "lab": "Isolated team1-ac090; 68040+FPU; 8 MiB Chip/512 MiB Fast; copied Kickstart 3.2.3 47.115",
+  "runtime": "9fbc38c2 (20261023T202943Z)",
+  "sdk": "Frozen SDL3 3.4.14 baseline described in README; not the newly merged renderer SDK",
+  "audio_disabled": true,
+  "application_startup": "Previous G1/CSS/header/checksum failures absent; boot -> title log transition; Unsupported S5 version remains",
+  "limits": [
+    "Variable object tables need more audit",
+    "S5 saved-game/scenario/entity/map state not normalized",
+    "No visible menu or gameplay pass",
+    "No audible audio or save/load pass",
+    "No physical AC090 or release qualification",
+    "Duplicate fmt/libstdc++ section diagnostics remain"
+  ],
+  "source_assets_modified": false,
+  "instance32_modified": false,
+  "release_qualified": false
+}

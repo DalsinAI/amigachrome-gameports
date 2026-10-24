@@ -1,7 +1,7 @@
 # OpenLoco
 
 Target: AmigaOS 3.x / 68040 + FPU / AC090, GCC 16.2.0-open3 and OpenAmiga SDL3.
-Status: two clean open3 builds produce identical HUNK binaries with audio disabled. Native audio-disabled, filesystem-space and IPv4 probes pass on AC090. Game startup stops on packed little-endian assets; gameplay/release qualification remains open.
+Status (24 October): the final endian patch set builds with open3 and passes host/AC090 G1, CSS and 545-object canonical comparisons. Full startup now reaches the separate S5 game-state endian barrier; visible gameplay/release qualification remains open. Audio remains disabled. See [asset-loader results and limits](ASSET_ENDIAN.md). The earlier baseline below is retained as history.
 
 The exact upstream source is `OpenLoco/OpenLoco`
 `6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e` (version 26.09).
@@ -60,7 +60,8 @@ After a game configure attempt has exported the patched source:
 ```sh
 cmake -S ports/openloco/probes -B build/openloco-probes \
   -DOPENLOCO_SOURCE="$PWD/build/openloco-clean/source" \
-  -DFMT_SOURCE="$PWD/build/game-ports/dependencies/fmt"
+  -DFMT_SOURCE="$PWD/build/game-ports/dependencies/fmt" \
+  -DSFL_SOURCE="$PWD/build/game-ports/dependencies/sfl"
 cmake --build build/openloco-probes --target port-probes -j2
 ctest --test-dir build/openloco-probes --output-on-failure
 ```
