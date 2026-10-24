@@ -3,6 +3,11 @@ name: Open2 toolchain selection
 on:
   push:
     paths:
+      - 'PORT_BACKLOG.md'
+      - 'README.md'
+      - 'docs/SDL3_PORT_REVIEW_20261024.md'
+      - 'scripts/build_sdl3_port.py'
+      - 'scripts/verify_gameport_stove.py'
       - 'toolchain/**'
       - 'ports/**'
       - 'scripts/stage_open2_stove.py'
@@ -11,6 +16,11 @@ on:
       - '.github/workflows/open2-toolchain-tests.yml'
   pull_request:
     paths:
+      - 'PORT_BACKLOG.md'
+      - 'README.md'
+      - 'docs/SDL3_PORT_REVIEW_20261024.md'
+      - 'scripts/build_sdl3_port.py'
+      - 'scripts/verify_gameport_stove.py'
       - 'toolchain/**'
       - 'ports/**'
       - 'scripts/stage_open2_stove.py'

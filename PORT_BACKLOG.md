@@ -7,7 +7,8 @@ OpenGPU-dependent client. No untested target is promoted by these updates.
 
 **[Unified Port Atlas](https://github.com/DalsinAI/amigachrome/tree/main/docs/porting)** — searchable cross-programme game/application catalogue with existing Amiga-port evidence, source/rights assessment and proposed Open-family acceleration or development benefit. This does not replace the local source pins, build notes or qualification gates.
 
-Snapshot date: **9 October 2026**
+Live programme updated: **24 October 2026**. The older port table below is historical;
+the execution order and SDL3 intake sections take precedence.
 
 Primary target: **AmigaChrome AC090 / AmigaOS 3.x / 68040 + FPU**
 
@@ -28,8 +29,7 @@ SDLPoP and AssaultCube client/server have new compile/link results. NXEngine
 was still compiling at snapshot. No new source-only candidate is promoted to
 playable or RELEASE by this pass; the historical table below remains context.
 
-**Priority is intentionally TBD for every entry.** The next prioritisation pass should rank
-the whole list together using: **P0 = finish now, P1 = next wave, P2 = planned, P3 = stretch, PARK = research / low-return for now**.
+**Live priority scale:** **P0 = finish now, P1 = next wave, P2 = planned, P3 = stretch, PARK = research / low-return for now**.
 
 Status words are descriptive, not release claims. **DONE means RELEASE** and still requires
 the normal clean-build, provenance, packaging and AC090 runtime gates.
@@ -124,6 +124,72 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | Speed Dreams | STRETCH | OpenGPU | TBD | Large racing/physics/3D target. |
 | 0 A.D. | STRETCH | OpenGPU | TBD | Very large RTS/engine/dependency stress target. |
 
+## Live execution order - 24 October 2026
+
+OpenAL is **nearing readiness**, per the project owner's update. This changes
+engineering order; it does not establish an available SDK, ABI, successful link
+or AC090 audio pass. SDL audio/OpenAudio and OpenAL are distinct interfaces:
+SDL3 candidates do not automatically depend on OpenAL.
+
+| Priority | Work | Next action and remaining gate |
+|---|---|---|
+| P0 | UQM, Chocolate Doom, SDLPoP, OpenJazz, Neverball/Neverputt, AssaultCube, NXEngine-evo | Finish the active playable campaign with verified GCC 16.2.0-open3 builds. Retain each title's outstanding graphics, input, audio, persistence and exit gates; existing muted runs do not pass audio. |
+| P0 SDL3 | LBA2, OpenLoco | Finish the existing SDL3 ports alongside the playable campaign. OpenLoco's endian barrier remains independent of audio. |
+| P0 platform gate | OpenAL qualification | When an identifiable SDK/runtime is available, record version/ABI/hashes, verify 68040/FPU and endian assumptions, then prove device/context creation, sample playback, streaming, teardown and repeat on AC090. Until then, dependency preparation only. |
+| P1 audio intake | AstroMenace | Prepare the OpenAL/ALUT/Ogg/Vorbis dependency audit now. Make this the first OpenAL consumer qualification after the platform gate; retain renderer, asset-endian, input, persistence and clean-exit gates. |
+| P1 active follow-up | OpenOMF, C-Dogs | Resume current build/runtime blockers after the P0 finish queue. |
+| P1 SDL3 intake | DevilutionX -> ScummVM -> xrick -> Frozen Bubble -> Freeserf -> Street Rod 1/2 -> DOSBox-X SDL3 | Accept into the live programme now. First pin and audit source/licence/dependencies/data, then add a build recipe and reach the target-specific interactive gate in the review. |
+| P1 lab | Space Invaders SDL3, Dinosaur SDL3, sdl3-gl | Small audio/input and OpenGPU regression targets; qualify independently of flagship ports. |
+| P2 | Remaining accepted SDL3 targets below; Serious Sam TFE, Warzone 2100, OpenLara, OpenTTD | Planned intake after the active finish queue. OpenAL progress alone does not clear architecture, renderer or data gates. |
+| P3 / PARK | Heavy modern renderers, toolchains and emulators listed below | Research only until their independent platform blockers are addressed. |
+
+The SDL3 entries below are live **INTAKE** work (or **ACTIVE** for the two
+existing ports). New candidates are not build-enabled by their inclusion:
+`gameports/catalog.json` remains the exact-pinned fetch/build catalogue and gains
+entries only after the source, licence, dependency and runtime-data audit.
+No compiler, build, PLAYABLE or RELEASE result is inferred from a priority.
+
+## SDL3 programme - 24 October 2026
+
+This is the live SDL3 intake queue. See [the wider SDL3 game and application review](docs/SDL3_PORT_REVIEW_20261024.md).
+
+### P0 - finish active SDL3 ports
+
+| Port | State | Lane | Priority | Next gate |
+|---|---|---|---:|---|
+| LBA2 Classic Community | ACTIVE | SDL3 / OpenGPU / OpenAudio / OpenInput | P0 | Finish visual/runtime qualification on AC090. |
+| OpenLoco | ACTIVE | SDL3 / OpenGPU / networking | P0 | Clear S5/game-state endian barrier, then visible gameplay and audio. |
+
+### P1 - next SDL3 intake
+
+| Port / app | Lane | Priority | Why now |
+|---|---|---:|---|
+| DevilutionX | SDL3 / OpenGPU / OpenAudio | P1 | Explicit upstream SDL3 path; high game value; strong fit for AC090. |
+| ScummVM | SDL3 / OpenGPU / OpenAudio / OpenInput | P1 | Platform multiplier; one backend unlocks many engines. |
+| xrick | SDL3 / OpenAudio / OpenInput | P1 | Small C codebase, Rick Dangerous I/II, excellent 68040 fit. |
+| Frozen Bubble SDL3 | SDL3 / OpenAudio / networking | P1 | Native SDL3 2D title; good audio/input/network coverage. |
+| Freeserf | SDL3 / OpenAudio / filesystem | P1 | Settlers-class workload with strong 68k fit; original data external. |
+| Street Rod SDL3 | SDL3 / OpenAudio / OpenInput | P1 | C11, low rendering cost, highly suitable first-wave port. |
+| Street Rod 2 SDL3 | SDL3 / OpenAudio / OpenInput | P1 | Shares the same family and likely reusable port work. |
+| Space Invaders SDL3 | SDL3 / OpenAudio / OpenInput | P1-LAB | Tiny deterministic SDL3 regression/playability canary. |
+| Dinosaur SDL3 | SDL3 / OpenAudio / OpenInput | P1-LAB | Small deterministic play loop and high-score persistence canary. |
+| sdl3-gl | SDL3 / OpenGPU | P1-LAB | Minimal SDL3 + OpenGL/OpenGPU regression harness. |
+| DOSBox-X SDL3 | SDL3 / OpenAudio / OpenInput | P1 | Application/game multiplier; interpreter-first reduced feature build. |
+
+### P2 - second SDL3 wave
+
+Woof!, Project Picori / TMC PC port, Principia, OpenCMR2, SuperTux, Quetoo,
+Richman 4 Remastered, Atrinik classic client, Retro-DOS, portty, BubiC-8801MA,
+OpenBumpy, GSplus and simple2d are accepted P2 SDL3 candidates subject to exact source pin,
+licence, dependency and data review.
+
+### P3 / PARK - research only
+
+JA2 Pecel Bakwan, ChupathingyCE/OpenCE Halo CE, Ymir, Atrinik editor, CrossDesk,
+modern SDL GPU/Vulkan-heavy projects, Zig/.NET-dependent SDL3 projects and
+x86-only recompilation projects remain research or PARK. SDL3 alone is not
+sufficient reason to consume AC090 porting time.
+
 ## Post-merge checks - 13 October 2026
 
 The port/SDL changes are merged and rebuilt. A new Amiga-only OpenJazz
@@ -147,4 +213,4 @@ When we rank this backlog, useful dimensions are:
 - **Showcase value** — usefulness for release demos and demonstrating AC090 capability.
 - **Reuse value** — whether solving the port unlocks a family of related titles or engines.
 
-The priority column should be filled only after comparing the whole list together.
+Use the live execution order above; historical TBD rows are not a competing queue.
