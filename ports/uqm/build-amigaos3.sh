@@ -4,9 +4,10 @@ HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
 SRC=${1:-"$ROOT/build/game-ports/sources/uqm/uqm-0.8.0"}
 BUILD=${2:-"$ROOT/build/os3/uqm"}
-STOVE=${STOVE:-"$HOME/AmigaChrome/stoves/os32-gcc16"}
+: "${STOVE:?set STOVE to an isolated 16.2.0-open3 stove root}"
 SDK="$STOVE/prefix/m68k-amigaos"
 DEPS=$(python3 "$ROOT/scripts/port_dependencies.py" verify --stove "$STOVE" --require zlib png)
+python3 "$ROOT/scripts/verify_gameport_stove.py" --stove "$STOVE" >/dev/null
 [ -z "${UQM_DEPS:-}" ] || [ "$UQM_DEPS" = "$DEPS" ] || {
     echo "UQM_DEPS must use the verified stove dependency directory: $DEPS" >&2; exit 3;
 }
