@@ -6,6 +6,14 @@ Pinned upstream commit: `a1626f4edd4a7af72c54103021790c56d8ecfced`.
 
 ## Status
 
+**24 October update: TESTING.** The normal open3/SDL2 executable now reaches
+Diamondus Level One in an isolated AC090 lab. Player movement, camera scrolling,
+item collection and the in-game menu were observed on the software renderer,
+with audio muted. Clean shutdown and the remaining runtime gates are open.
+See [the gameplay recipe and limits](GAMEPLAY.md).
+
+Historical build baseline:
+
 **COMPILED — provisional old-stove artifact.**
 
 A pristine local archive of the exact pin rebuilt successfully with no network
