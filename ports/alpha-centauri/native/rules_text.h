@@ -9,7 +9,7 @@
 #include <stdint.h>
 namespace alpha {
 enum class Error { ok, missing_section, line_too_long, bad_row, bad_number,
-                   bad_key, duplicate_key, unknown_prerequisite, wrong_count };
+                   bad_key, duplicate_key, unknown_prerequisite, wrong_count, too_many_bonuses };
 class Text {
  public:
   Text(const uint8_t* bytes, size_t length);
@@ -90,6 +90,40 @@ int social_effect(const SocialRules& state, const char* key);
 int social_category(const SocialRules& state, const char* key);
 int social_model(const SocialRules& state, size_t category, const char* key);
 int bonus_kind(const SocialRules& state, const char* key);
+enum class FactionBonusKind : int32_t {
+  tech=0, unit=1, facility=2, social=3, immunity=4, impunity=5, penalty=6,
+  fungus_nutrient=7, fungus_minerals=8, fungus_energy=9, robust=10, votes=11,
+  free_facility=12, revolt=13, no_drone=14, free_ability=15, probe_cost=16,
+  defense=17, offense=18
+};
+struct FactionBonus { FactionBonusKind kind; int32_t value, modifier; };
+struct Ideology { int32_t category, model, effect; };
+struct Faction {
+  char formal_name_faction[40], desc_name_faction[24], noun_faction[24], name_leader[24];
+  int32_t noun_gender, is_noun_plural, is_leader_female;
+  int32_t ai_fight, ai_power, ai_tech, ai_wealth, ai_growth;
+  int32_t rule_tech_selected, rule_morale, rule_research, rule_drone, rule_talent,
+    rule_energy, rule_interest, rule_population, rule_hurry, rule_techcost,
+    rule_psi, rule_sharetech, rule_commerce;
+  uint32_t rule_flags;
+  FactionBonus bonuses[8];
+  size_t bonus_count;
+  Ideology ideology[2];
+  char adj_name_faction[128], abbreviation[128];
+  char assistant_name[24], scientist_name[24], assistant_city[24], title_leader[24];
+  char adj_leader[128], adj_insult_leader[128], adj_faction[128], adj_insult_faction[128];
+  char insult_leader[24];
+};
+enum class IdeologyMatch { exact, localized_first_four };
+/* Reads the first eight faction rows; remaining narrative/art/base-name data
+ * is outside this API. Search section first, then filename section on absence.
+ * Strict numeric/unknown-key errors replace upstream atoi/silent omissions.
+ * Uses OpenSMACX's corrected AI ideology-emphasis value, not original -1 bug.
+ * Tables must be qualified together. Discard partial output after any error.
+ */
+Error read_faction(const uint8_t* bytes, size_t length, const char* search_section,
+                   const char* filename_section, const Rules& technologies,
+                   const SocialRules& social, IdeologyMatch matching, Faction& output);
 const char* error_name(Error error);
 }
 #endif

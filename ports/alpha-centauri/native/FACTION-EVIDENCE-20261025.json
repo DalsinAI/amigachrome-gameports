@@ -1,0 +1,170 @@
+{
+  "date": "2026-10-25",
+  "source": "OpenSMACX 2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c alpha.cpp::read_faction/clear_faction; owned native adaptation",
+  "host": "101 synthetic cases and 21 original faction/rules combinations pass ASan/UBSan",
+  "raw68040": "RC0 on all fields of all21 combinations: base7, expansion14",
+  "compiler": "OpenAmigaGCC16.2.0-open3 private normal corrected-libnix SDK",
+  "libnixSHA256": "dfdd9efa2293caa463fa25612a427c492e22744076839d101f8bc520e9cf5449",
+  "binarySHA256": "7aa96a69f8106d716805ef9171e7f891550a376a85aa6d01feb32b7596c12481",
+  "cases": [
+    {
+      "variant": "base",
+      "file": "gaians",
+      "fields": 62,
+      "bonusCount": 6
+    },
+    {
+      "variant": "base",
+      "file": "hive",
+      "fields": 62,
+      "bonusCount": 6
+    },
+    {
+      "variant": "base",
+      "file": "univ",
+      "fields": 56,
+      "bonusCount": 4
+    },
+    {
+      "variant": "base",
+      "file": "morgan",
+      "fields": 53,
+      "bonusCount": 3
+    },
+    {
+      "variant": "base",
+      "file": "spartans",
+      "fields": 56,
+      "bonusCount": 4
+    },
+    {
+      "variant": "base",
+      "file": "believe",
+      "fields": 59,
+      "bonusCount": 5
+    },
+    {
+      "variant": "base",
+      "file": "peace",
+      "fields": 53,
+      "bonusCount": 3
+    },
+    {
+      "variant": "expansion",
+      "file": "gaians",
+      "fields": 62,
+      "bonusCount": 6
+    },
+    {
+      "variant": "expansion",
+      "file": "hive",
+      "fields": 62,
+      "bonusCount": 6
+    },
+    {
+      "variant": "expansion",
+      "file": "univ",
+      "fields": 56,
+      "bonusCount": 4
+    },
+    {
+      "variant": "expansion",
+      "file": "morgan",
+      "fields": 53,
+      "bonusCount": 3
+    },
+    {
+      "variant": "expansion",
+      "file": "spartans",
+      "fields": 56,
+      "bonusCount": 4
+    },
+    {
+      "variant": "expansion",
+      "file": "believe",
+      "fields": 59,
+      "bonusCount": 5
+    },
+    {
+      "variant": "expansion",
+      "file": "peace",
+      "fields": 53,
+      "bonusCount": 3
+    },
+    {
+      "variant": "expansion",
+      "file": "cyborg",
+      "fields": 62,
+      "bonusCount": 6
+    },
+    {
+      "variant": "expansion",
+      "file": "pirates",
+      "fields": 62,
+      "bonusCount": 6
+    },
+    {
+      "variant": "expansion",
+      "file": "drone",
+      "fields": 59,
+      "bonusCount": 5
+    },
+    {
+      "variant": "expansion",
+      "file": "angels",
+      "fields": 65,
+      "bonusCount": 7
+    },
+    {
+      "variant": "expansion",
+      "file": "fungboy",
+      "fields": 65,
+      "bonusCount": 7
+    },
+    {
+      "variant": "expansion",
+      "file": "caretake",
+      "fields": 62,
+      "bonusCount": 6
+    },
+    {
+      "variant": "expansion",
+      "file": "usurper",
+      "fields": 68,
+      "bonusCount": 8
+    }
+  ],
+  "sourceSHA256": {
+    "basic_fields.inc": "acce4e5e87f6968abfc5a6450a4bf2b322800413c2637c5115e62b8cecf2b0db",
+    "rules_text.h": "227bfa7e39cb62cdc74db33163401100f266bc6320a7ac23a878ec2a2639be83",
+    "social_probe.cpp": "4a32d224636a0f91bee984335d15b4bcc677e71b7cd671a2d6e88be73f70db31",
+    "world_fields.inc": "4af71c22e4392917f036b2729bf07479fcbff5381e31a78a215c5454d48432a2",
+    "basic_probe.cpp": "5cb25d4bf23fb94d496b872041b0c9e003f9795bae5f3caf9bff6ccb9db0d12d",
+    "faction_probe.cpp": "def2bd2224b0c23ac70b803c13f972cae7e6362c4e9aed675b0d095a4534100f",
+    "probe_digest.h": "fb4679a81320a63b986f50b8d5d5384d181552dabf2f0373040bcbd32cd74c74",
+    "rules_text.cpp": "f1ba0c4e71cdfc0fed45942f99672be19dc33b6603c2808774ec363793229ca8",
+    "rules_probe.cpp": "f124dc742479e94e83b54f9d4ddd72c5d4e73e54be3eebda8df8a5c934d13028"
+  },
+  "limits": [
+    "First eight faction rows only, not narrative/art/base names",
+    "Original files and private arrays excluded from repository",
+    "Strict malformed/unknown/overflow rejection rather than original silent skips or permissive atoi",
+    "Uses OpenSMACX corrected ideology emphasis; no original-executable differential fidelity",
+    "No faction effects applied to gameplay, UI, saved games or full engine"
+  ],
+  "nativeAmigaOS": {
+    "combinations": 21,
+    "fieldsCompared": 1245,
+    "allMatch": true,
+    "allSuccessRC": 0,
+    "bonusOverflowRC": 20,
+    "labStopped": true,
+    "ROMModuleStartupUnchanged": true,
+    "logSHA256": "5219f07cc1ab461c54235f6f9eb09f0929fe9729582488025c405de23001c866",
+    "ROMHashes": {
+      "aros-amiga-m68k-ext.bin": "52a01954c7c425dd712ae89eecbe75b5cf6277f47082b5bc07ff0697ed295136",
+      "openkick-rom4.rom": "c0013cbb0b66292ffb78d7e454bceb2960c84b95c35aea293780893d40ec6a07"
+    },
+    "scope": "Actual AmigaOS CLI, restored isolated lab, no live changes"
+  }
+}

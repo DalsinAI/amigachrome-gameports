@@ -122,3 +122,51 @@ These tables enable faction parsing next. They do not apply faction bonuses,
 choose social policies, run AI or qualify a playable game. The localized
 four-character ideology matching and faction data-file fallback rules are
 also outside this reader's scope.
+
+
+## Eight-row faction definitions
+
+`read_faction` takes caller-supplied bytes, a requested section and a filename
+section fallback, plus technology and social tables qualified together. It
+reads the first eight data rows: names/genders and five AI preferences, bonus
+pairs, two ideology records, adjective/abbreviation, assistants, leader/faction
+adjectives and leader insult. Further narrative, city names and art are not
+consumed. The ignored upstream abbreviation is retained as owned text.
+
+Defaults follow `clear_faction`: numeric rules zero, hurry/technology cost100,
+flags zero and no slot bonuses. The original nineteen slot-bonus IDs and flag
+bits are preserved as explicit native values; these are not packed save records.
+BONUSNAMES position determines semantics, including translated labels. Named
+TECH resolves against the technology table; a nonzero strict numeric value
+sets selectable-tech count. SOCIAL/ROBUST/IMMUNITY signs sum, with zero becoming
+one (different from SOCIO). IMPUNITY/PENALTY resolve category and model. At most
+eight slot bonuses are allowed; surplus bonuses fail instead of disappearing.
+Flag parameters remain present but their value is ignored, as upstream does.
+
+Ideologies use full ASCII case-insensitive matching by default. Explicit
+`localized_first_four` matches the first four bytes as pinned upstream does;
+ambiguous matches fail. `nil`/`None` indicate no ideology/effect. Unknown names
+fail rather than silently choosing model zero or dropping modifiers. This uses
+**OpenSMACX's corrected AI-emphasis field**, not the original executable's -1
+bug. It does not prove original-AI equivalence. Character data remains bytes;
+no Unicode or locale-dependent folding is introduced. Overlong fields and
+malformed/overflowing numbers fail; no silent truncation/atoi-prefix behavior.
+All original files have a pair-bearing bonus row; a missing row is an error.
+
+```sh
+python3 ports/alpha-centauri/native/test_faction.py --out /tmp/faction-host
+python3 ports/alpha-centauri/native/test_faction.py --out /tmp/faction-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+Optional local original files: `--owner-dir /path/to/private-data`, containing
+alpha/alphax and the fourteen faction text files. The control compares every
+field in seven base and fourteen expansion faction/rules combinations with
+an independent Python reader. `faction-probe base|expansion RULES FACTION SEARCH
+FILENAME [localized]` is the native diagnostic. Synthetic controls cover all41
+bonus kinds, defaults, eight-slot boundary, malformed input, fallback priority,
+character bytes and localized matching. No original assets are included in CI.
+
+Loading faction definitions does not apply them to bases, units or a running
+turn. Starting-game state, AI, original save compatibility, UI/audio and actual
+playable gameplay remain separate qualification gates.

@@ -339,6 +339,199 @@ Error read_social_rules(const uint8_t* bytes, size_t length, const Rules& techno
   out.bonus_count = count;
   return Error::ok;
 }
+static bool faction_number(Text& text, int32_t& value) {
+  char token[128];
+  return text.item(token, sizeof(token)) && number(token, value);
+}
+static int faction_technology(const Rules& rules, const char* key) {
+  if (equal(key, "None")) return -1;
+  if (equal(key, "Disable")) return -2;
+  for (size_t i = 0; i < rules.count; ++i)
+    if (equal(key, rules.technologies[i].key)) return (int)i;
+  return -3;
+}
+static bool ideology_equal(const char* a, const char* b, IdeologyMatch matching) {
+  if (matching == IdeologyMatch::exact) return equal(a, b);
+  for (size_t i = 0; i < 4; ++i) {
+    if (lower((unsigned char)a[i]) != lower((unsigned char)b[i])) return false;
+    if (!a[i]) return true;
+  }
+  return true;
+}
+static bool no_ideology(const char* key) { return equal(key, "nil") || equal(key, "None"); }
+Error read_faction(const uint8_t* bytes, size_t length, const char* search_section,
+                   const char* filename_section, const Rules& technologies,
+                   const SocialRules& social, IdeologyMatch matching, Faction& out) {
+  if (!bytes || !length || !search_section || !*search_section || !filename_section || !*filename_section)
+    return Error::missing_section;
+  if (technologies.count != technology_count || (social.bonus_count != 29 && social.bonus_count != 41))
+    return Error::wrong_count;
+  if (matching != IdeologyMatch::exact && matching != IdeologyMatch::localized_first_four) return Error::bad_row;
+  out = Faction{};
+  out.rule_hurry = out.rule_techcost = 100;
+  for (auto& ideology : out.ideology) { ideology.category = ideology.effect = -1; }
+  Text text(bytes, length);
+  if (!text.section(search_section)) {
+    if (text.error() != Error::missing_section) return text.error();
+    if (!text.section(filename_section)) return text.error();
+  }
+  Error error = next_rule_row(text);
+  if (error != Error::ok) return error;
+#define FACTION_STRING(field) if (!text.item(out.field, sizeof(out.field)) || !*out.field) return Error::bad_row
+#define FACTION_NUMBER(field) if (!faction_number(text, out.field)) return Error::bad_number
+  FACTION_STRING(formal_name_faction);
+  FACTION_STRING(desc_name_faction);
+  FACTION_STRING(noun_faction);
+  char gender[24];
+  if (!text.item(gender, sizeof(gender)) || !*gender) return Error::bad_key;
+  out.noun_gender = lower((unsigned char)*gender) == 'f' ? 1 : lower((unsigned char)*gender) == 'n' ? 2 : 0;
+  int32_t plural;
+  if (!faction_number(text, plural)) return Error::bad_number;
+  // Avoid signed overflow in upstream's number - 1 before clamping to Boolean.
+  out.is_noun_plural = plural >= 2;
+  FACTION_STRING(name_leader);
+  if (!text.item(gender, sizeof(gender)) || !*gender) return Error::bad_key;
+  out.is_leader_female = lower((unsigned char)*gender) == 'f';
+  FACTION_NUMBER(ai_fight); FACTION_NUMBER(ai_power); FACTION_NUMBER(ai_tech);
+  FACTION_NUMBER(ai_wealth); FACTION_NUMBER(ai_growth);
+  if (!text.end_items()) return Error::bad_row;
+  error = next_rule_row(text);
+  if (error != Error::ok) return error;
+  // Require a pair-bearing bonus row, as in all original factions. Empty
+  // physical rows are whitespace and must not shift the ideology records.
+  while (!text.end_items()) {
+    char key[24], parameter[128];
+    if (!text.item(key, sizeof(key)) || !*key ||
+        !text.item(parameter, sizeof(parameter)) || !*parameter) return Error::bad_key;
+    const int kind = bonus_kind(social, key);
+    if (kind < 0) return Error::bad_key;
+    int32_t value = 0, second = 0;
+    int slot = -1;
+    // BONUSNAMES position, not English spelling, determines the operation.
+    switch (kind) {
+      case 0:
+        if (number(parameter, value) && value != 0) out.rule_tech_selected = value;
+        else {
+          value = faction_technology(technologies, parameter);
+          if (value == -3) return Error::unknown_prerequisite;
+          slot = 0;
+        }
+        break;
+      case 1:
+        if (!number(parameter, out.rule_morale)) return Error::bad_number;
+        if (!out.rule_morale) out.rule_flags |= 0x8000u;
+        break;
+      case 2: if (!number(parameter, out.rule_psi)) return Error::bad_number; break;
+      case 4: if (!number(parameter, out.rule_research)) return Error::bad_number; break;
+      case 5: if (!number(parameter, out.rule_drone)) return Error::bad_number; break;
+      case 6: if (!number(parameter, out.rule_talent)) return Error::bad_number; break;
+      case 7: if (!number(parameter, out.rule_energy)) return Error::bad_number; break;
+      case 8:
+        if (!number(parameter, out.rule_interest)) return Error::bad_number;
+        out.rule_flags |= 0x4000u; break;
+      case 9: if (!number(parameter, out.rule_commerce)) return Error::bad_number; break;
+      case 10: if (!number(parameter, out.rule_population)) return Error::bad_number; break;
+      case 11:
+        if (!number(parameter, value)) return Error::bad_number;
+        out.rule_hurry = value < 1 ? 1 : value > 1000 ? 1000 : value; break;
+      case 13: if (!number(parameter, out.rule_techcost)) return Error::bad_number; break;
+      case 14: if (!number(parameter, out.rule_sharetech)) return Error::bad_number; break;
+      case 16: case 17: case 18: {
+        const char* effect = parameter;
+        while (*effect == '+' || *effect == '-') second += *effect++ == '+' ? 1 : -1;
+        if (!second) second = 1;
+        value = social_effect(social, effect);
+        if (value < 0) return Error::bad_key;
+        slot = kind == 16 ? 3 : kind == 17 ? 10 : 4;
+        break;
+      }
+      case 19: case 20: {
+        bool found = false;
+        for (size_t cat = 0; cat < social_category_count; ++cat) {
+          const int model = social_model(social, cat, parameter);
+          if (model < 0) continue;
+          if (found) return Error::duplicate_key; // ambiguous model in different categories
+          found = true; value = (int32_t)cat; second = model;
+        }
+        if (!found) return Error::bad_key;
+        slot = kind == 19 ? 5 : 6;
+        break;
+      }
+      case 3: case 12: case 21: case 22: case 23: case 27:
+      case 31: case 32: case 33: case 35: case 36: case 37: case 38:
+        if (!number(parameter, value)) return Error::bad_number;
+        switch (kind) {
+          case 3: slot=2; break; case 12: slot=1; break;
+          case 21: slot=7; break; case 22: slot=8; break; case 23: slot=9; break;
+          case 27: slot=11; break; case 31: slot=12; break; case 32: slot=13; break;
+          case 33: slot=14; break; case 35: slot=15; break; case 36: slot=16; break;
+          case 37: slot=17; break; case 38: slot=18; break;
+        }
+        break;
+      case 39:
+        if (!number(parameter, out.rule_sharetech)) return Error::bad_number;
+        out.rule_flags |= 0x20u; break;
+      default: {
+        uint32_t flag = 0;
+        switch (kind) {
+          case 15: flag=0x2000u; break; case 24: flag=0x1000u; break;
+          case 25: flag=0x800u; break; case 26: flag=0x400u; break;
+          case 28: flag=0x200u; break; case 29: flag=0x100u; break;
+          case 30: flag=0x80u; break; case 34: flag=0x40u; break;
+          case 40: flag=0x10u; break; default: return Error::bad_key;
+        }
+        out.rule_flags |= flag; break; // upstream ignores the flag parameter's value
+      }
+    }
+    if (slot >= 0) {
+      if (out.bonus_count == 8) return Error::too_many_bonuses;
+      out.bonuses[out.bonus_count++] = { (FactionBonusKind)slot, value, second };
+    }
+  }
+  for (auto& ideology : out.ideology) {
+    error = next_rule_row(text);
+    if (error != Error::ok) return error;
+    char category[128], model[128], effect[24];
+    if (!text.item(category, sizeof(category)) || !*category ||
+        !text.item(model, sizeof(model)) || !*model ||
+        !text.item(effect, sizeof(effect)) || !*effect || !text.end_items()) return Error::bad_row;
+    if (!no_ideology(category)) {
+      for (size_t i = 0; i < social_category_count; ++i)
+        if (ideology_equal(category, social.categories[i], matching)) {
+          if (ideology.category != -1) return Error::duplicate_key;
+          ideology.category = (int32_t)i;
+        }
+      if (ideology.category == -1) return Error::bad_key;
+      bool found = false;
+      for (size_t i = 0; i < social_model_count; ++i)
+        if (ideology_equal(model, social.models[ideology.category][i].name, matching)) {
+          if (found) return Error::duplicate_key;
+          found = true; ideology.model = (int32_t)i;
+        }
+      if (!found) return Error::bad_key;
+    } else if (!no_ideology(model)) return Error::bad_key;
+    if (!no_ideology(effect)) {
+      ideology.effect = social_effect(social, effect);
+      if (ideology.effect < 0) return Error::bad_key;
+    }
+  }
+  error = next_rule_row(text); if (error != Error::ok) return error;
+  FACTION_STRING(adj_name_faction);
+  // Upstream ignores the optional abbreviation; retain it as owned data.
+  if (!text.item(out.abbreviation, sizeof(out.abbreviation)) || !text.end_items()) return Error::bad_row;
+  error = next_rule_row(text); if (error != Error::ok) return error;
+  FACTION_STRING(assistant_name); FACTION_STRING(scientist_name); FACTION_STRING(assistant_city);
+  if (!text.end_items()) return Error::bad_row;
+  error = next_rule_row(text); if (error != Error::ok) return error;
+  FACTION_STRING(title_leader); FACTION_STRING(adj_leader); FACTION_STRING(adj_insult_leader);
+  FACTION_STRING(adj_faction); FACTION_STRING(adj_insult_faction);
+  if (!text.end_items()) return Error::bad_row;
+  error = next_rule_row(text); if (error != Error::ok) return error;
+  FACTION_STRING(insult_leader);
+#undef FACTION_STRING
+#undef FACTION_NUMBER
+  return text.end_items() ? Error::ok : Error::bad_row;
+}
 const char* error_name(Error e) {
   switch(e) {
     case Error::ok: return "ok";
@@ -350,6 +543,7 @@ const char* error_name(Error e) {
     case Error::duplicate_key: return "duplicate key";
     case Error::unknown_prerequisite: return "unknown prerequisite";
     case Error::wrong_count: return "wrong technology count";
+    case Error::too_many_bonuses: return "too many faction bonuses";
   }
   return "unknown error";
 }
