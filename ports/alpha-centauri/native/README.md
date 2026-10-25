@@ -1077,3 +1077,12 @@ The caller supplies the actual runtime edition and transient stage state. It
 returns a checked result without changing the world or runtime RNG. This is a
 snapshot query, not worker allocation or upkeep. See
 [WORLD-TILE-YIELDS.md](WORLD-TILE-YIELDS.md).
+
+## Original worker-radius availability
+
+`world_worker_radius` derives the original 25 availability flags and 21-bit
+unavailable mask from owned world records. It retains original visibility,
+territory, convoy/hostile-stack and neighboring-base reservation behavior.
+The explicit normal inspection stage is supported; editor and AI-goal stages
+reject. This does not select workers or execute upkeep. See
+[WORLD-WORKER-RADIUS.md](WORLD-WORKER-RADIUS.md).
