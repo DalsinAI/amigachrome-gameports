@@ -3,6 +3,7 @@
 import argparse,os,subprocess,json
 from pathlib import Path
 from test_cvr_infantry import model
+from test_cvr_lod import chain
 NAMES=['vrcp00.cvr','vgmc.cvr','vgmcp.cvr','vb.cvr','vbp.cvr','vsp.cvr','vsptb.cvr','vsptf.cvr','vlights.cvr','vr00.cvr']
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--cc',default='g++');ap.add_argument('--m68k-linux',action='store_true');a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=False);src=Path(__file__).resolve().parent
@@ -17,6 +18,7 @@ def main():
  parts=[model(red,frames=1)]+[model(blue,frames=1)for _ in range(9)];parts[-1]=model(blue,frames=1,offset=(100,0,0));cases.append(('last-part-distinct-palette',parts,1,1,True))
  for i in range(10):
   parts=[model(red,frames=1)for _ in NAMES];parts[i]=model(blue,frames=1,singular=True);cases.append((f'singular-{i}',parts,0,0,False))
+ parts=[model(red,frames=1)for _ in NAMES];parts[8]=model(blue,frames=1,geom=chain((10,20)));cases.append(('unsupported-zoom-lod-change',parts,0,0,False))
  cases.append(('all-hidden',[model(red,frames=1,hidden=True)for _ in NAMES],0,0,False))
  cases.append(('missing-component',[model(red,frames=1)for _ in range(9)],0,0,False))
  report=[]

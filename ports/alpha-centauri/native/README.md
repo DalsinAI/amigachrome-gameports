@@ -1079,11 +1079,13 @@ VLIGHTS requires CVR10.0 and five chained geometry LODs. The reader now validate
 up to16 ordered levels, including unselected geometry, and selects using the
 original1.414199948310852 threshold. Exact float-input products are compared in
 double: a bounded original x86 helper exposed premature float rounding at LOD
-boundaries. Non-STOP single streams and the observed CVR10.0 opaque alternate
+boundaries. This bounded static profile rejects assets whose selected LOD
+changes between its two supported zooms; the owner lights choose the same
+coarsest level at both. Non-STOP single streams and the observed CVR10.0 opaque alternate
 palette length are supported; unknown flags/offset jumps remain rejected.
 
 Run `test_cvr_lod.py` for40 synthetic LOD/legacy/boundary rejection controls and
-`test_cvr_speeder.py` for33 ten-part ordering/palette/hidden/transactional/cache
+`test_cvr_speeder.py` for34 ten-part ordering/palette/hidden/transactional/cache
 controls. Both have independent big-endian68040 CI commands. The normal SDK
 `build_cvr_speeder.sh probe OUTPUT` builds a16-facing/zoom original-asset control;
 run it as `PROBE PRIVATE_MODEL_DIRECTORY OUTPUT.ppm`. The actual frontend is

@@ -34,7 +34,16 @@ bool CvrUnitAssembly::load_parts(const CvrPartInput* parts,unsigned count,unsign
  ready_=false;parts_=0;for(auto&c:cache_){free(c.rgba);c.rgba=nullptr;}
  if(!parts || !count || count>10)return false;
  size_t total=0;
- for(unsigned i=0;i<count;++i){if(!models_[i].load_at_scale(parts[i].data,parts[i].size,.07000000029802322f*scale*(64.0f/100.0f)*2) || models_[i].frame_count()<(i?1:body_frames))return false;total+=models_[i].voxel_count();if(total>limit)return false;}
+ for(unsigned i=0;i<count;++i){
+  const float normal_scale=.07000000029802322f*scale*(64.0f/100.0f);
+  if(!models_[i].load_at_scale(parts[i].data,parts[i].size,normal_scale*2) || models_[i].frame_count()<(i?1:body_frames))return false;
+  // This bounded profile keeps one geometry snapshot for both viewer zooms.
+  // Reject other assets whose selected LOD changes, rather than quietly using
+  // the wrong level at normal zoom. Qualified original lights select the same.
+  CvrModel low;if(!low.load_at_scale(parts[i].data,parts[i].size,normal_scale) || low.object_count()!=models_[i].object_count())return false;
+  for(unsigned j=0;j<low.object_count();++j)if(low.object(j)->units!=models_[i].object(j)->units || low.object(j)->count!=models_[i].object(j)->count)return false;
+  total+=models_[i].voxel_count();if(total>limit)return false;
+ }
  if(!lattice_)lattice_=(uint8_t*)malloc(cvr_shade_lattice_size);
  parts_=count;limit_=limit;scale_=scale;root_x_=root;
  ready_=lattice_ && build_cvr_shade_lattice(lattice_,cvr_shade_lattice_size);return ready_;

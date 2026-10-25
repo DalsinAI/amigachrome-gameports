@@ -14,7 +14,7 @@ public:
  CvrUnitAssembly();~CvrUnitAssembly();
  bool load(const void* body,size_t body_size,const void* reactor,size_t reactor_size);
  // Static human speeder parts, in original append order: VRCP00,VGMC,VGMCP,
- // VB,VBP,VSP,vsptb,vsptf,VLIGHTS,VR00. LODs selected at maximum viewer scale.
+ // VB,VBP,VSP,vsptb,vsptf,VLIGHTS,VR00. Selected LOD must match at both zooms.
  bool load_speeder(const CvrPartInput* parts,size_t count);
  bool draw(uint8_t* rgb,size_t capacity,unsigned width,unsigned height,int center_x,int foot_y,unsigned zoom,unsigned facing);
  bool ready()const{return ready_;}

@@ -1,9 +1,29 @@
 {
   "status": "host-qualified, native execution pending",
   "scope": "Static base-human basic speeder assembly inside the actual original-world viewer; no game actions",
-  "gate": {"dataVersion": "below11", "chassis": 1, "weapon": 0, "armour": 0, "reactor": 1, "rawAbilityFlags": 0, "alienFaction": false},
-  "orderedComponents": ["vrcp00.cvr", "vgmc.cvr", "vgmcp.cvr", "vb.cvr", "vbp.cvr", "vsp.cvr", "vsptb.cvr", "vsptf.cvr", "vlights.cvr", "vr00.cvr"],
+  "gate": {
+    "dataVersion": "below11",
+    "chassis": 1,
+    "weapon": 0,
+    "armour": 0,
+    "reactor": 1,
+    "rawAbilityFlags": 0,
+    "alienFaction": false
+  },
+  "orderedComponents": [
+    "vrcp00.cvr",
+    "vgmc.cvr",
+    "vgmcp.cvr",
+    "vb.cvr",
+    "vbp.cvr",
+    "vsp.cvr",
+    "vsptb.cvr",
+    "vsptf.cvr",
+    "vlights.cvr",
+    "vr00.cvr"
+  ],
   "frame": 0,
+  "zoomLODPolicy": "Reject assets whose selected geometry differs across supported zoom1/2; qualified original parts match",
   "sourceFacts": {
     "chassisAppendTrace": "Nine actual original x86 chassis appends match the chosen order/frame; append methods are private trace adapters, not original rendering",
     "reactor": "Generic VR00 after chassis/weapon/armour; no basic weapon0 or armour0 attachment",
@@ -16,7 +36,7 @@
     "addressAndUndefinedSanitizers": true,
     "existingReaderCases": 32,
     "lodCases": 40,
-    "speederCompositionCases": 33,
+    "speederCompositionCases": 34,
     "existingInfantryCompositionCases": 9,
     "ownerModelsFullFieldChecks": 10,
     "selectedOwnerVoxels": 113855,
@@ -26,8 +46,8 @@
   },
   "normalSDKBuild": {
     "compiler": "OpenAmigaGCC16.2.0-open3, normal private rebuilt SDK",
-    "frontendSHA256": "9ac578c6d4928f15162d9ffd7fa4e437195e3f40a80e0ca6da81ed90a218b778",
-    "probeSHA256": "ad47d47d44663e389012c5ca263353933027a68f16cd656f3fdb8af7c15a2f39",
+    "frontendSHA256": "d5a1ae95f042b0173ebbd396043fc031b7ab6d35caecd1cb731fcb7a24a13a77",
+    "probeSHA256": "0d195d9c9af3c2a3faf108e11b97aea6729841d3330729aadb4f9e0f880065b3",
     "executedOnAmigaOS": false
   },
   "limits": [
