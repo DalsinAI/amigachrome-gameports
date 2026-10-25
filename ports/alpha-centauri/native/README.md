@@ -1059,3 +1059,12 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+## Original fresh tile yields
+
+`tile_yields.h` adds checked original nutrient/mineral/energy calculations from a
+decoded tile and explicit current-stage facts, plus map-seed resource placement.
+It preserves edition differences and returns the original counter/scratch effects
+as data. Saved base intake is not an input. No world stage, worker allocation,
+turn or frontend is wired to this API. See [TILE-YIELDS.md](TILE-YIELDS.md) for
+required facts, original behavior, numerical controls and remaining native gates.

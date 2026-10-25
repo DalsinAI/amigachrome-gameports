@@ -20,6 +20,14 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq g++-m68k-linux-gnu qemu-user
+      - name: Host original fresh tile-yield controls
+        run: python3 ports/alpha-centauri/native/test_tile_yields.py --out "$RUNNER_TEMP/tile-yields-host"
+      - name: Big-endian original fresh tile-yield controls
+        run: python3 ports/alpha-centauri/native/test_tile_yields.py --out "$RUNNER_TEMP/tile-yields-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original resource placement controls
+        run: python3 ports/alpha-centauri/native/test_tile_bonus.py --out "$RUNNER_TEMP/tile-bonus-host"
+      - name: Big-endian original resource placement controls
+        run: python3 ports/alpha-centauri/native/test_tile_bonus.py --out "$RUNNER_TEMP/tile-bonus-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host memory and undefined-behaviour controls
         run: python3 ports/alpha-centauri/native/test_rules.py --out "$RUNNER_TEMP/alpha-host"
       - name: Big-endian 68040 control
