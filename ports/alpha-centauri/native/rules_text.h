@@ -124,6 +124,45 @@ enum class IdeologyMatch { exact, localized_first_four };
 Error read_faction(const uint8_t* bytes, size_t length, const char* search_section,
                    const char* filename_section, const Rules& technologies,
                    const SocialRules& social, IdeologyMatch matching, Faction& output);
+struct ChassisNoun { char name[128]; int32_t gender, plural; };
+struct ChassisDefinition {
+  ChassisNoun nouns[6]; // offensive1/2, defensive1/2, large offensive/defensive
+  int32_t speed, triad, range, missile, cargo, cost, prerequisite;
+};
+struct ReactorDefinition { char name[128], short_name[128]; int32_t power, prerequisite; };
+struct WeaponDefinition {
+  char name[128], short_name[128];
+  int32_t offense, mode, cost, icon, prerequisite;
+};
+struct ArmorDefinition {
+  char name[128], short_name[128];
+  int32_t defense, mode, cost, prerequisite;
+};
+struct AbilityDefinition {
+  char name[128], abbreviation[128], description[256];
+  int32_t cost_factor, prerequisite;
+  uint32_t flags;
+};
+struct UnitBlueprint {
+  char name[32];
+  int32_t chassis, weapon, armor, plan, cost, carry, prerequisite, icon, reactor;
+  uint32_t abilities;
+};
+struct UnitDefinitions {
+  ChassisDefinition chassis[9];
+  ReactorDefinition reactors[4];
+  WeaponDefinition weapons[26];
+  ArmorDefinition armor[14];
+  AbilityDefinition abilities[29];
+  UnitBlueprint units[64];
+  size_t weapon_count, armor_count, ability_count, unit_count;
+};
+/* Variant-specific component tables and up to64 declared blueprints. Unit cost,
+ * plan/carry overrides remain raw: make_proto derivation is a separate step.
+ * Qualified technology input required; discard partial output after failure.
+ */
+Error read_unit_definitions(const uint8_t* bytes, size_t length, const Rules& technologies,
+                            Variant variant, UnitDefinitions& output);
 const char* error_name(Error error);
 }
 #endif

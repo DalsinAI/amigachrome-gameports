@@ -343,7 +343,7 @@ static bool faction_number(Text& text, int32_t& value) {
   char token[128];
   return text.item(token, sizeof(token)) && number(token, value);
 }
-static int faction_technology(const Rules& rules, const char* key) {
+static int technology_index(const Rules& rules, const char* key) {
   if (equal(key, "None")) return -1;
   if (equal(key, "Disable")) return -2;
   for (size_t i = 0; i < rules.count; ++i)
@@ -412,7 +412,7 @@ Error read_faction(const uint8_t* bytes, size_t length, const char* search_secti
       case 0:
         if (number(parameter, value) && value != 0) out.rule_tech_selected = value;
         else {
-          value = faction_technology(technologies, parameter);
+          value = technology_index(technologies, parameter);
           if (value == -3) return Error::unknown_prerequisite;
           slot = 0;
         }
@@ -531,6 +531,138 @@ Error read_faction(const uint8_t* bytes, size_t length, const char* search_secti
 #undef FACTION_STRING
 #undef FACTION_NUMBER
   return text.end_items() ? Error::ok : Error::bad_row;
+}
+class DefinitionInput {
+ public:
+  DefinitionInput(Text& text, const Rules& technology) : text_(text), technology_(technology), error_(Error::ok) {}
+  Error error() const { return error_; }
+  bool section(const char* name) {
+    if (!text_.section(name)) { error_ = text_.error(); return false; }
+    return true;
+  }
+  bool row() { error_ = next_rule_row(text_); return error_ == Error::ok; }
+  bool end() {
+    if (!text_.end_items()) { error_ = Error::bad_row; return false; }
+    return true;
+  }
+  bool finish() {
+    if (!end()) return false;
+    if (data_line(text_) && text_.line()[0] != '#') { error_ = Error::bad_row; return false; }
+    if (text_.error() != Error::ok) { error_ = text_.error(); return false; }
+    return true;
+  }
+  template<size_t N> bool string(char (&value)[N], bool required = true) {
+    if (!text_.item(value, N) || (required && !*value)) { error_ = Error::bad_row; return false; }
+    return true;
+  }
+  bool numeric(int32_t& value, int32_t low, int32_t high) {
+    char token[128];
+    if (!string(token) || !number(token, value) || value < low || value > high) {
+      error_ = Error::bad_number; return false;
+    }
+    return true;
+  }
+  bool technology(int32_t& value) {
+    char token[8];
+    if (!string(token)) { error_ = Error::bad_key; return false; }
+    value = technology_index(technology_, token);
+    if (value == -3) { error_ = Error::unknown_prerequisite; return false; }
+    return true;
+  }
+  bool bits(uint32_t& value) {
+    char token[128];
+    if (!string(token) || !binary(token, value)) { error_ = Error::bad_number; return false; }
+    return true;
+  }
+  bool noun(ChassisNoun& value) {
+    char grammar[24];
+    if (!string(value.name) || !string(grammar)) return false;
+    value.gender = lower((unsigned char)grammar[0]) == 'f' ? 1 : lower((unsigned char)grammar[0]) == 'n' ? 2 : 0;
+    value.plural = grammar[1] == '2';
+    return true;
+  }
+ private:
+  Text& text_;
+  const Rules& technology_;
+  Error error_;
+};
+Error read_unit_definitions(const uint8_t* bytes, size_t length, const Rules& technologies,
+                            Variant variant, UnitDefinitions& out) {
+  if (!bytes || !length) return Error::missing_section;
+  if (technologies.count != technology_count) return Error::wrong_count;
+  if (variant != Variant::base && variant != Variant::alien_crossfire) return Error::bad_row;
+  out = UnitDefinitions{};
+  const bool expansion = variant == Variant::alien_crossfire;
+  out.weapon_count = expansion ? 26 : 21;
+  out.armor_count = expansion ? 14 : 10;
+  out.ability_count = expansion ? 29 : 24;
+  Text text(bytes, length);
+  DefinitionInput input(text, technologies);
+  if (!input.section("CHASSIS")) return input.error();
+  for (size_t i = 0; i < 9; ++i) {
+    auto& c = out.chassis[i];
+    if (!input.row()) return input.error();
+    for (size_t j = 0; j < 4; ++j) if (!input.noun(c.nouns[j])) return input.error();
+    for (size_t j = 0; j < i; ++j) if (equal(out.chassis[j].nouns[0].name, c.nouns[0].name)) return Error::duplicate_key;
+    if (!input.numeric(c.speed,0,255) || !input.numeric(c.triad,0,2) ||
+        !input.numeric(c.range,0,255) || !input.numeric(c.missile,0,1) ||
+        !input.numeric(c.cargo,0,255) || !input.numeric(c.cost,0,255) || !input.technology(c.prerequisite) ||
+        !input.noun(c.nouns[4]) || !input.noun(c.nouns[5]) || !input.end()) return input.error();
+  }
+  if (!input.finish() || !input.section("REACTORS")) return input.error();
+  for (auto& r : out.reactors) {
+    if (!input.row() || !input.string(r.name) || !input.string(r.short_name) ||
+        !input.numeric(r.power,0,65535) || !input.technology(r.prerequisite) || !input.end()) return input.error();
+  }
+  if (!input.finish() || !input.section("WEAPONS")) return input.error();
+  for (size_t i = 0; i < out.weapon_count; ++i) {
+    auto& w = out.weapons[i];
+    if (!input.row() || !input.string(w.name) || !input.string(w.short_name) ||
+        !input.numeric(w.offense,-128,127) || !input.numeric(w.mode,0,255) ||
+        !input.numeric(w.cost,0,255) || !input.numeric(w.icon,-128,127) ||
+        !input.technology(w.prerequisite) || !input.end()) return input.error();
+    for (size_t j = 0; j < i; ++j) if (equal(out.weapons[j].short_name,w.short_name)) return Error::duplicate_key;
+  }
+  if (!input.finish() || !input.section("DEFENSES")) return input.error();
+  for (size_t i = 0; i < out.armor_count; ++i) {
+    auto& a = out.armor[i];
+    if (!input.row() || !input.string(a.name) || !input.string(a.short_name) ||
+        !input.numeric(a.defense,-128,127) || !input.numeric(a.mode,0,255) ||
+        !input.numeric(a.cost,0,255) || !input.technology(a.prerequisite) || !input.end()) return input.error();
+    for (size_t j = 0; j < i; ++j) if (equal(out.armor[j].short_name,a.short_name)) return Error::duplicate_key;
+  }
+  if (!input.finish() || !input.section("ABILITIES")) return input.error();
+  for (size_t i = 0; i < out.ability_count; ++i) {
+    auto& a = out.abilities[i];
+    if (!input.row() || !input.string(a.name) || !input.numeric(a.cost_factor,(-2147483647-1),2147483647) ||
+        !input.technology(a.prerequisite) || !input.string(a.abbreviation,false) ||
+        !input.bits(a.flags) || !input.string(a.description,false) || !input.end()) return input.error();
+  }
+  if (!input.finish() || !input.section("UNITS") || !input.row()) return input.error();
+  int32_t total;
+  if (!input.numeric(total,0,64) || !input.end()) return input.error();
+  out.unit_count = (size_t)total;
+  for (size_t i = 0; i < out.unit_count; ++i) {
+    auto& u = out.units[i];
+    char chassis[128], weapon[128], armor[128];
+    if (!input.row() || !input.string(u.name) || !input.string(chassis) ||
+        !input.string(weapon) || !input.string(armor)) return input.error();
+    u.chassis = u.weapon = u.armor = -1;
+    for (size_t j = 0; j < 9; ++j) if (equal(chassis,out.chassis[j].nouns[0].name)) u.chassis = (int32_t)j;
+    for (size_t j = 0; j < out.weapon_count; ++j) if (equal(weapon,out.weapons[j].short_name)) u.weapon = (int32_t)j;
+    for (size_t j = 0; j < out.armor_count; ++j) if (equal(armor,out.armor[j].short_name)) u.armor = (int32_t)j;
+    if (u.chassis < 0 || u.weapon < 0 || u.armor < 0) return Error::bad_key;
+    if (!input.numeric(u.plan,-1,255) || !input.numeric(u.cost,0,255) ||
+        !input.numeric(u.carry,0,255) || !input.technology(u.prerequisite) ||
+        !input.numeric(u.icon,-128,127) || !input.bits(u.abilities)) return input.error();
+    int32_t reactor = 0;
+    // Source enhancement: the final reactor column is optional, including a
+    // single terminal comma. Preserve stock Ogre defaults by prototype index.
+    if (!text.end_items() && !input.numeric(reactor,0,4)) return input.error();
+    u.reactor = reactor ? reactor : i == 17 ? 2 : i == 18 ? 3 : 1;
+    if (!input.end()) return input.error();
+  }
+  return input.finish() ? Error::ok : input.error();
 }
 const char* error_name(Error e) {
   switch(e) {
