@@ -673,3 +673,47 @@ original tutorials with real saved morale/project/research state. The lab is
 stopped/restored and assets remain private. These bindings remove supplied test
 settings; they do not move units, grant terrain access, run AI/upkeep/combat or
 advance research/turns. No original-executable differential fidelity is claimed.
+
+
+### Movement prices on restored worlds
+
+`world_movement_price.cpp/h` prices an adjacent edge for a real saved unit and
+its saved design, including faction-specific slots64–511. Terrain comes from
+owned original map bytes, Planet from the actual faction, and Xenoempathy
+from project array index8 and its referenced base owner. Prototype speed is
+recovered for the land/fungus branch. Antigrav/Slow queries also resolve
+FREEABIL grants from the design owner and its actual prerequisite technologies;
+the current vehicle owner does not receive another faction's bonus. These are
+the only ability queries used by land pricing; radar/algorithm bonuses cannot
+affect them. This does not yet extend the earlier vehicle-speed API to every
+faction-granted ability. No supplied morale or project switches
+stand in for world state. Base and expansion component profiles must match;
+expansion-only Sealurk/Spore native exceptions are disabled in base mode.
+The recovered source's Sealurk fix is retained explicitly.
+
+`terrain_price.h` shares the original ordered arithmetic with the earlier
+predefined API, whose stricter tile/native-ID contract remains unchanged.
+The world API accepts all four raw rock encodings, including0xc0. In fungus,
+a faction-specific psi design is distinguished from a predefined native unit:
+the original condition is `id>=64 || offense>=0`. Roads, tubes, diagonal
+rivers, ocean shelf fungus, Planet/Xeno/native exceptions, hover/antigrav,
+rough terrain and former/artifact ordering follow recovered `hex_cost`.
+Unknown item bits are inert for this price calculation, granting no action
+permission. Invalid references/components fail with unchanged output.
+
+`test_world_movement_price.py --out NEW_DIR` compares248 synthetic cases
+against the recovered function body with owned-data adapters and an independent
+Python interpretation of raw wire fields. It includes16 named cases per profile,
+empty/narrow wrapped worlds, raw rock bits, varied road rates, faction-specific
+psi, native profile differences and malformed references/components. Existing
+predefined movement regression controls remain unchanged. Host sanitizers and
+independent big-endian68040 CI run these cases.
+
+The normal SDK recipe is `CXX=.../m68k-amigaos-g++ sh
+build_world_movement_price_probe.sh OUTPUT`. Actual AmigaOS qualification in
+`WORLD-MOVEMENT-PRICE-EVIDENCE-20261025.json` passed251 cases and25,588 edge
+prices including all three original tutorials; the isolated lab is stopped and
+its original configuration, ROMs, startup and module restored. Assets stay
+private. These are prices, not unit actions: passability, stacks, ownership,
+ZOC, events, spending, combat and turns still need integration. No original
+executable differential fidelity is claimed.
