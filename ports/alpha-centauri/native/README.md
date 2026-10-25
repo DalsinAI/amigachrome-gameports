@@ -369,3 +369,56 @@ stop and config/ROM/module/startup restoration. See
 the host CI does not compile the Amiga window. This is an interactive movement
 slice, not a complete game: bases, economy, AI, combat, savegames and campaign
 state are absent. No original assets are distributed.
+
+### Early colony gameplay slice (supersedes the movement-only window)
+
+Build with `CXX=/qualified/sdk/bin/m68k-amigaos-g++ ./build_colony.sh OUTPUT`.
+The compiler supplies the normal NDK and libnix; no installed SDK overlay, ROM
+change or replacement library is required. Run `alpha-colony base alpha.txt` or
+`alpha-colony expansion alphax.txt`, using your own original rules file. These
+are separate launch modes of this small scenario, not two completed ports.
+
+The hand-authored map starts with a neutral human colony and a scout. Move the
+scout with the existing keys/clicks. W toggles worker mode: click a land cell in
+the twenty-cell base radius to assign/remove a citizen. N advances the colony's
+food/growth phase and restores scout movement. A new citizen begins unassigned;
+assign it explicitly. Watch food intake, consumption, surplus, stored food and
+population. Worker choices can grow or starve the colony. Q closes normally.
+
+`RESOURCEINFO` reads nine positional rows/four signed values. The source ignores
+trailing annotations, and its unused improved-land mineral/energy `*` cells
+become zero. Other malformed numeric cells fail, missing/extra rows fail, and
+failed parsing leaves output unchanged. No original rule text is distributed.
+
+`colony.cpp` owns human nutrient/mineral cost factors, plain/base/forest land
+yields, and population advancement. It explicitly preserves Thinker's minimum
+cost of one for tiny modded multipliers, rather than OpenSMACX's possible zero.
+Growth is split at `base_compute`: the caller recomputes **both** the food store's
+starvation marker and the surplus at the new population before finishing. Boom
+clamping happens after that recomputation. It does not reuse the old population's
+surplus. `colony_scenario.cpp` connects those functions with the qualified nutrient
+calculation and a final post-growth recomputation as in base upkeep. Starvation
+trims excess work slots highest-slot first as a stated **scenario allocation
+policy**, not a reconstruction of the original governor.
+
+The scene has no projects, facilities beyond HQ, resource bonuses, landmarks,
+fungus work, technology unlocks, improvements beyond inert roads/magtubes, events,
+foreign ownership, support, riots or specialist output. Mineral/energy **yields**
+are displayed; they are not falsely credited as production/research. Population
+limits use the selected rules. Existing owned base indices are passed explicitly
+to movement; unknown base bits still fail. There is no base founding, production,
+research, combat, AI, savegame, world generation or full campaign yet. This is a
+playable food/worker/scout slice with placeholder geometry, not a finished game.
+
+Validation in `COLONY-EVIDENCE-20261025.json`: 34 resource parsing cases; 12,348
+cost, 6,912 yield and 23,040 population controls against independent Python;
+overflow/invalid-state checks; a 31-turn scenario covering growth, starvation and
+colony removal. Generated OpenAmigaGCC 68040 code also checks all 72 resource
+fields from the owner's two original rule files against independent decoding.
+Actual AmigaOS gameplay passed with **both** variants: scout movement/exhaustion,
+mouse worker allocation, population 1 to 3, then starvation back to 1 across 29
+turns, and RC0 exit. Display polling remained active; a private then-current
+Instance-32 ROM pair was used, followed by stop and verified lab restoration.
+Host CI covers portable controls on sanitizers and big-endian 68040. The Amiga
+window is additionally qualified by that recorded native build/run, not compiled
+by host CI. No original-executable differential fidelity is claimed.

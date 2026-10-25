@@ -204,6 +204,28 @@ class RuleInput {
   bool pending_;
   Error error_;
 };
+Error read_resource_info(const uint8_t* bytes,size_t length,ResourceInfo& output) {
+  if(!bytes || !length)return Error::missing_section;
+  Text text(bytes,length);if(!text.section("RESOURCEINFO"))return text.error();
+  ResourceInfo result{};
+  for(size_t i=0;i<resource_info_count;++i) {
+    if(!data_line(text) || text.line()[0]=='#')return text.error()==Error::ok?Error::wrong_count:text.error();
+    char token[128];if(!text.item(token,sizeof(token)) || !*token)return Error::bad_row;
+    int32_t* values[]={&result.rows[i].nutrients,&result.rows[i].minerals,&result.rows[i].energy,&result.rows[i].unused};
+    for(unsigned column=0;column<4;++column){
+      if(!text.item(token,sizeof(token)))return Error::bad_number;
+      // The original table marks the unused improved-land mineral/energy
+      // columns "*". Source text_item_number converts these to zero.
+      if(i==5 && (column==1 || column==2) && equal(token,"*"))*values[column]=0;
+      else if(!number(token,*values[column]))return Error::bad_number;
+    }
+    // Source reads exactly four data columns; the remaining text is annotation
+    // (including commas), not another resource field. Do not parse it as data.
+  }
+  if(data_line(text) && text.line()[0]!='#')return Error::wrong_count;
+  if(text.error()!=Error::ok)return text.error();
+  output=result;return Error::ok;
+}
 Error read_basic_rules(const uint8_t* bytes, size_t length, const Rules& technologies,
                        Variant variant, BasicRules& basic, WorldRules& world) {
   if (!bytes || !length) return Error::missing_section;

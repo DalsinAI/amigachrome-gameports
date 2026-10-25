@@ -42,6 +42,10 @@ int main(){
   if(alpha::exploration_step(map,d,ctx,8,u,r)!=alpha::LogicError::bad_state || memcmp(&u,&before,sizeof(u)))return 17;
   turn=0xffffffffu;
   if(alpha::exploration_next_movement_turn(u,turn)!=alpha::LogicError::overflow || memcmp(&u,&before,sizeof(u)))return 18;
+ // Friendly bases must be explicitly owned; arbitrary base bits remain rejected.
+  tiles[10]={1,0x60,0};u={2,2,2,{3,0,0,1}};size_t base=10;
+  if(alpha::exploration_step(map,d,ctx,1,u,r,nullptr,1)!=alpha::LogicError::bad_state || u.x!=2)return 20;
+  if(alpha::exploration_step(map,d,ctx,1,u,r,&base,1)!=alpha::LogicError::ok || u.x!=4 || r.cost!=1 || u.budget.spent!=1)return 21;
 #ifndef ALPHA_CONTROL_RAW
   printf("scenario=128 road=3 wrap=1 ocean=1 rough=1 exhausted=2 invalid=3 fractional_failed=%u fractional_moved=%u rc=0\n",failed,succeeded);
 #endif

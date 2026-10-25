@@ -64,6 +64,15 @@ struct WorldRules {
  */
 Error read_basic_rules(const uint8_t* bytes, size_t length, const Rules& technologies,
                        Variant variant, BasicRules& basic, WorldRules& world);
+constexpr size_t resource_info_count=9;
+struct ResourceValues { int32_t nutrients,minerals,energy,unused; };
+struct ResourceInfo { ResourceValues rows[resource_info_count]; };
+/* RESOURCEINFO positional rows: ocean,base,bonus,forest,recycling,land
+ * improvement,sea improvement,monolith,borehole. Signed source values remain
+ * unmodified; consumers must validate domains before arithmetic. Trailing
+ * annotations are ignored like the source; improved-land mineral/energy
+ * wildcard columns are zero (unused). Other malformed numeric cells fail. */
+Error read_resource_info(const uint8_t* bytes,size_t length,ResourceInfo& output);
 constexpr size_t social_effect_count = 11;
 constexpr size_t social_category_count = 4;
 constexpr size_t social_model_count = 4;
