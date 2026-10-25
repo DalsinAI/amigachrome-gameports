@@ -16,6 +16,7 @@ class Text {
   bool section(const char* name);
   bool next();
   bool item(char* output, size_t capacity);
+  bool end_items() const;
   const char* line() const { return line_; }
   Error error() const { return error_; }
  private:
@@ -63,6 +64,32 @@ struct WorldRules {
  */
 Error read_basic_rules(const uint8_t* bytes, size_t length, const Rules& technologies,
                        Variant variant, BasicRules& basic, WorldRules& world);
+constexpr size_t social_effect_count = 11;
+constexpr size_t social_category_count = 4;
+constexpr size_t social_model_count = 4;
+constexpr size_t maximum_bonus_keys = 41;
+struct SocialModel {
+  char name[128];
+  int32_t prerequisite, effects[social_effect_count];
+};
+struct SocialRules {
+  char effect_keys[social_effect_count][24], effect_labels[social_effect_count][24];
+  char categories[social_category_count][128];
+  SocialModel models[social_category_count][social_model_count];
+  char bonus_keys[maximum_bonus_keys][24];
+  size_t bonus_count;
+};
+/* SOCIO and BONUSNAMES only. Base has 29 bonus keys; expansion has 41.
+ * Requires the qualified technology table from the same input. Partial output
+ * must not be used after failure. These lookups do not apply faction bonuses.
+ */
+Error read_social_rules(const uint8_t* bytes, size_t length, const Rules& technologies,
+                        Variant variant, SocialRules& output);
+/* Index or -1; ASCII case-insensitive. Use only successfully parsed state. */
+int social_effect(const SocialRules& state, const char* key);
+int social_category(const SocialRules& state, const char* key);
+int social_model(const SocialRules& state, size_t category, const char* key);
+int bonus_kind(const SocialRules& state, const char* key);
 const char* error_name(Error error);
 }
 #endif

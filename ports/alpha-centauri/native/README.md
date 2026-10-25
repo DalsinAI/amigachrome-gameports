@@ -1,7 +1,7 @@
 # Alpha Centauri native rules-reader prototype
 
 A bounded first implementation for separate Alpha Centauri and Alien Crossfire
-ports. It reads **TECHNOLOGY, RULES and WORLDBUILDER**. Technology has 89 records, case-insensitive
+ports. It reads **TECHNOLOGY, RULES, WORLDBUILDER, SOCIO and BONUSNAMES**. Technology has 89 records, case-insensitive
 keys, None/Disable sentinels, priorities, binary flags and resolved forward
 prerequisites. It is not a game engine or launcher.
 
@@ -84,3 +84,41 @@ keys and input bounds. The diagnostic CLI `basic-probe base|expansion FILE`
 prints every named field so local original files can be compared to a separate
 reference. World parameters are only inputs: **no world generator, faction
 behavior, combat, production or turn processing runs yet**.
+
+## Social and faction-bonus lookups
+
+`read_social_rules` loads eleven effect keys/labels, four social categories and
+four models per category, with a prerequisite and eleven signed effect values
+per model. The separate BONUSNAMES table has 29 keys for the base game or 41
+for Alien Crossfire. Its index defines the bonus kind; custom labels retain
+that order. Case-insensitive lookup functions return an index or -1.
+
+Model modifiers preserve upstream sign counting (`++` means 2; `+-` means 0),
+last repeated effect wins, and a key without signs means zero. Faction SOCIAL
+bonuses use a different zero rule and are not applied here. Unknown effect
+names now fail instead of being silently discarded. Duplicate effect keys,
+category names, names within one category and bonus keys fail to prevent
+ambiguous lookups; translated effect labels need not be unique. Names have
+explicit bounded storage, shown in the public structs.
+
+One terminal comma is accepted, as used by the original files. Extra empty
+columns cannot hide subsequent fields: the shared token-tail check now checks
+the remaining input directly. Technology/basic regression controls cover this
+case too. All readers require successful prior technology parsing from the
+same file; the caller must discard partial outputs on any error.
+
+```sh
+python3 ports/alpha-centauri/native/test_social.py --out /tmp/social-host
+python3 ports/alpha-centauri/native/test_social.py --out /tmp/social-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+Optional local original files: `--data base=/path/alpha.txt` and
+`--data expansion=/path/alphax.txt`. `social-probe base|expansion FILE` dumps
+all named strings and values. The independent Python reference compares every
+one, rather than just counts. The synthetic controls are asset-free.
+
+These tables enable faction parsing next. They do not apply faction bonuses,
+choose social policies, run AI or qualify a playable game. The localized
+four-character ideology matching and faction data-file fallback rules are
+also outside this reader's scope.

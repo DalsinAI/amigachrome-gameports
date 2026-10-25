@@ -109,6 +109,7 @@ def main():
         ('long-line', b';'+b'x'*600+b'\n'+fixture, 'line too long'),
         ('empty', b'', 'empty file'),
         ('truncated', fixture[:fixture.index(b'Test 88')], 'wrong technology count'),
+        ('hidden-field', fixture.replace(b'000000001', b'000000001,,unexpected', 1), 'bad row'),
         ('extra-field', fixture.replace(b'000000001', b'000000001,unexpected', 1), 'bad row'),
         ('nul', fixture.replace(b'Test 0', b'Test\x000', 1), 'bad row'),
         ('too-many', fixture.replace(b'#CHASSIS', b'Test 89,T89,0,1,2,3,None,None,000000001\n#CHASSIS'), 'wrong technology count'),
