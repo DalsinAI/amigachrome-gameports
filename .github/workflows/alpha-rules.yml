@@ -28,3 +28,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_basic.py --out "$RUNNER_TEMP/basic-host"
       - name: Big-endian basic and world rules controls
         run: python3 ports/alpha-centauri/native/test_basic.py --out "$RUNNER_TEMP/basic-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host social and bonus-name controls
+        run: python3 ports/alpha-centauri/native/test_social.py --out "$RUNNER_TEMP/social-host"
+      - name: Big-endian social and bonus-name controls
+        run: python3 ports/alpha-centauri/native/test_social.py --out "$RUNNER_TEMP/social-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

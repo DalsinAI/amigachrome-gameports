@@ -59,6 +59,12 @@ bool Text::item(char* output, size_t capacity) {
   output[last-first] = 0;
   return true;
 }
+bool Text::end_items() const {
+  if (error_ != Error::ok) return false;
+  size_t p = cursor_;
+  while (space((unsigned char)line_[p])) ++p;
+  return !line_[p] || line_[p] == ';';
+}
 static bool number(const char* p, int32_t& result) {
   bool negative = false;
   if (*p == '-' || *p == '+') negative = *p++ == '-';
@@ -120,7 +126,7 @@ Error read_technologies(const uint8_t* bytes, size_t length, Rules& out) {
       if (!text.item(t.prerequisite_key[i], sizeof(t.prerequisite_key[i])) ||
           !*t.prerequisite_key[i]) return Error::bad_key;
     if (!text.item(token, sizeof(token)) || !binary(token, t.flags)) return Error::bad_number;
-    if (!text.item(token, sizeof(token)) || *token) return Error::bad_row;
+    if (!text.end_items()) return Error::bad_row;
     ++out.count;
   }
   if (text.error() != Error::ok) return text.error();
@@ -190,8 +196,7 @@ class RuleInput {
  private:
   bool end_row() {
     if (!pending_) return true;
-    char extra[128];
-    if (!text_.item(extra, sizeof(extra)) || *extra) { error_ = Error::bad_row; return false; }
+    if (!text_.end_items()) { error_ = Error::bad_row; return false; }
     pending_ = false;
     return true;
   }
@@ -233,6 +238,106 @@ Error read_basic_rules(const uint8_t* bytes, size_t length, const Rules& technol
 #undef RULE_ITEM
 #undef RULE_TECH
   return world_input.finish() ? Error::ok : world_input.error();
+}
+template<size_t N, size_t W>
+static int find_key(const char (&keys)[N][W], const char* key, size_t count = N) {
+  if (!key) return -1;
+  for (size_t i = 0; i < count; ++i) if (equal(keys[i], key)) return (int)i;
+  return -1;
+}
+int social_effect(const SocialRules& state, const char* key) {
+  return find_key(state.effect_keys, key);
+}
+int social_category(const SocialRules& state, const char* key) {
+  return find_key(state.categories, key);
+}
+int social_model(const SocialRules& state, size_t category, const char* key) {
+  if (category >= social_category_count || !key) return -1;
+  for (size_t i = 0; i < social_model_count; ++i)
+    if (equal(state.models[category][i].name, key)) return (int)i;
+  return -1;
+}
+int bonus_kind(const SocialRules& state, const char* key) {
+  if (state.bonus_count > maximum_bonus_keys) return -1;
+  return find_key(state.bonus_keys, key, state.bonus_count);
+}
+static Error next_rule_row(Text& text) {
+  if (!data_line(text)) return text.error() == Error::ok ? Error::bad_row : text.error();
+  return text.line()[0] == '#' ? Error::bad_row : Error::ok;
+}
+template<size_t N, size_t W>
+static Error key_row(Text& text, char (&keys)[N][W], bool unique) {
+  Error error = next_rule_row(text);
+  if (error != Error::ok) return error;
+  for (size_t i = 0; i < N; ++i) {
+    if (!text.item(keys[i], W) || !*keys[i]) return Error::bad_key;
+    if (unique && find_key(keys, keys[i], i) != -1) return Error::duplicate_key;
+  }
+  return text.end_items() ? Error::ok : Error::bad_row;
+}
+Error read_social_rules(const uint8_t* bytes, size_t length, const Rules& technologies,
+                        Variant variant, SocialRules& out) {
+  if (!bytes || !length) return Error::missing_section;
+  if (technologies.count != technology_count) return Error::wrong_count;
+  if (variant != Variant::base && variant != Variant::alien_crossfire) return Error::bad_row;
+  out = SocialRules{};
+  Text text(bytes, length);
+  if (!text.section("SOCIO")) return text.error();
+  Error error = key_row(text, out.effect_keys, true);
+  if (error != Error::ok) return error;
+  error = key_row(text, out.effect_labels, false);
+  if (error != Error::ok) return error;
+  error = key_row(text, out.categories, true);
+  if (error != Error::ok) return error;
+  for (size_t cat = 0; cat < social_category_count; ++cat) {
+    for (size_t mod = 0; mod < social_model_count; ++mod) {
+      error = next_rule_row(text);
+      if (error != Error::ok) return error;
+      SocialModel& model = out.models[cat][mod];
+      if (!text.item(model.name, sizeof(model.name)) || !*model.name) return Error::bad_key;
+      for (size_t prior = 0; prior < mod; ++prior)
+        if (equal(out.models[cat][prior].name, model.name)) return Error::duplicate_key;
+      char token[128];
+      if (!text.item(token, sizeof(token)) || !*token) return Error::bad_key;
+      if (equal(token, "None")) model.prerequisite = -1;
+      else if (equal(token, "Disable")) model.prerequisite = -2;
+      else {
+        size_t i = 0;
+        while (i < technologies.count && !equal(token, technologies.technologies[i].key)) ++i;
+        if (i == technologies.count) return Error::unknown_prerequisite;
+        model.prerequisite = (int32_t)i;
+      }
+      while (!text.end_items()) {
+        if (!text.item(token, sizeof(token)) || !*token) return Error::bad_key;
+        const char* key = token;
+        int32_t amount = 0;
+        while (*key == '+' || *key == '-') amount += *key++ == '+' ? 1 : -1;
+        const int effect = social_effect(out, key);
+        if (effect < 0) return Error::bad_key;
+        // As upstream: repeated effects overwrite; an unsigned key means 0.
+        // Faction SOCIAL bonuses have a different zero rule, implemented later.
+        model.effects[effect] = amount;
+      }
+    }
+  }
+  if (data_line(text) && text.line()[0] != '#') return Error::bad_row;
+  if (text.error() != Error::ok) return text.error();
+  if (!text.section("BONUSNAMES")) return text.error();
+  const size_t count = variant == Variant::base ? 29 : maximum_bonus_keys;
+  for (size_t i = 0; i < count; ++i) {
+    if (!(i % 8)) {
+      if (i && !text.end_items()) return Error::bad_row;
+      error = next_rule_row(text);
+      if (error != Error::ok) return error;
+    }
+    if (!text.item(out.bonus_keys[i], sizeof(out.bonus_keys[i])) || !*out.bonus_keys[i]) return Error::bad_key;
+    if (find_key(out.bonus_keys, out.bonus_keys[i], i) != -1) return Error::duplicate_key;
+  }
+  if (!text.end_items()) return Error::bad_row;
+  if (data_line(text) && text.line()[0] != '#') return Error::bad_row;
+  if (text.error() != Error::ok) return text.error();
+  out.bonus_count = count;
+  return Error::ok;
 }
 const char* error_name(Error e) {
   switch(e) {

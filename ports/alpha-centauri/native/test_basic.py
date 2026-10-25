@@ -78,11 +78,11 @@ def main():
                 short = [r[:] for r in rows]
                 short[index] = row[:-1]
                 check(f'{section}-short-group-{index}', material('expansion', **{section: short}), error='bad number')
-        for suffix in ['12garbage', '2147483648', '', '0x', '1,2']:
+        for suffix in ['12garbage', '2147483648', '', '0x', '1,2', '1,,hidden']:
             changed = [r[:] for r in rows]
             changed[0] = [suffix]
             check(section+'-bad-'+str(len(results)), material('expansion', **{section: changed}),
-                  error='bad row' if suffix == '1,2' or not suffix else 'bad number')
+                  error='bad row' if ',' in suffix or not suffix else 'bad number')
         check(section+'-extra-row', material('expansion', **{section: rows+[['7']]}), error='bad row')
     for replacement, number in [('none', -1), ('DISABLE', -2), ('t1', 1)]:
         values = expected('expansion')

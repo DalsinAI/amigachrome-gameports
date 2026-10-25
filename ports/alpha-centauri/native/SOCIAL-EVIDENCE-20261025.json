@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-25",
+  "reference": "Independent Python section/token interpretation, pinned upstream semantics; no original-executable differential",
+  "host": "50 synthetic and both actual CD tables passed ASan/UBSan",
+  "raw68040": "RC 0, both actual tables: technology fingerprint, all108 basic/world fields and every social string/value",
+  "results": [
+    {
+      "data": "alpha",
+      "variant": "base",
+      "socialDumpFields": 264,
+      "matched": true
+    },
+    {
+      "data": "alphax",
+      "variant": "expansion",
+      "socialDumpFields": 276,
+      "matched": true
+    }
+  ],
+  "native_binary_sha256": "fa02cbf5e1ab337c83089a25cb2b3d609fffad8b098600651aa3f96aaa3c2e5e",
+  "source_sha256": {
+    "basic_fields.inc": "acce4e5e87f6968abfc5a6450a4bf2b322800413c2637c5115e62b8cecf2b0db",
+    "rules_text.h": "1166e4b64c9b086ff0a210ed0dff6ac4c223135f0d5ca31e78acd5115b854801",
+    "social_probe.cpp": "4a32d224636a0f91bee984335d15b4bcc677e71b7cd671a2d6e88be73f70db31",
+    "world_fields.inc": "4af71c22e4392917f036b2729bf07479fcbff5381e31a78a215c5454d48432a2",
+    "basic_probe.cpp": "5cb25d4bf23fb94d496b872041b0c9e003f9795bae5f3caf9bff6ccb9db0d12d",
+    "probe_digest.h": "fb4679a81320a63b986f50b8d5d5384d181552dabf2f0373040bcbd32cd74c74",
+    "rules_text.cpp": "d36f8ba7017db87aa81096282cdcfe24e243d638d8657ef7874986cc4b7277a7",
+    "rules_probe.cpp": "f124dc742479e94e83b54f9d4ddd72c5d4e73e54be3eebda8df8a5c934d13028"
+  },
+  "scope": "Social lookup tables, not faction semantics, map generation, gameplay or save compatibility",
+  "nativeAmigaOS": {
+    "alphaRC": 0,
+    "alphaxRC": 0,
+    "wrongVariantRC": 20,
+    "allDumpFieldsCompared": true,
+    "labStopped": true,
+    "ROMModuleStartupUnchanged": true,
+    "logSHA256": "a99efdb977aeef0fc3238c43623cf8e0b8229f12b77f26d58154ba59fd168587",
+    "ROMHashes": {
+      "aros-amiga-m68k-ext.bin": "52a01954c7c425dd712ae89eecbe75b5cf6277f47082b5bc07ff0697ed295136",
+      "openkick-rom4.rom": "c0013cbb0b66292ffb78d7e454bceb2960c84b95c35aea293780893d40ec6a07"
+    },
+    "scope": "Actual AmigaOS CLI in restored isolated lab, no live changes"
+  },
+  "rawSupport": {
+    "library": "private normal corrected SDK libnix libm020/libnix.a (memset pulled by generated zero initialization)",
+    "sha256": "dfdd9efa2293caa463fa25612a427c492e22744076839d101f8bc520e9cf5449"
+  },
+  "hostSyntheticCases": {
+    "technology": 22,
+    "basicWorld": 137,
+    "socialBonus": 50
+  }
+}
