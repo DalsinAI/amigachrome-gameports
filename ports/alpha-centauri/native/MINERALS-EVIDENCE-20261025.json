@@ -1,0 +1,43 @@
+{
+  "status": "DRAFT: host and private original helper passed; independent big-endian CI and actual AmigaOS execution pending",
+  "scope": "Explicit-input mineral and ecological-damage numeric stage only; no owned-world binding or turn execution",
+  "source": {
+    "project": "OpenSMACX",
+    "pin": "2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c",
+    "function": "base.cpp::base_minerals",
+    "license": "GPL-3.0-or-later"
+  },
+  "host": {
+    "cases": 16657,
+    "valid": 16566,
+    "badState": 75,
+    "overflow": 16,
+    "outputSHA256": "b04c333bab354db2b02d75158066a0bd806b0af7ae48c1e2f3c10d6d7319d00a"
+  },
+  "privateOriginalHelper": {
+    "originalHelper": "base_minerals 0x4e9cb0 with original has_fac and bitmask helpers",
+    "contexts": 16566,
+    "outputBytes": 397584,
+    "outputSHA256": "b33fa1c9e67941f3cdbb81555b8fffd6e3a4b70c4ffd7ce567546fcae262bd19",
+    "unchangedCodePages": {
+      "0x421000": "3765030273f2e77e1fc0dce3f36acbbe9cdf350928dee2f37b52ca1d4d9bab04",
+      "0x4e9000": "9f139d3964a13640287fb2bebb5d1604646497666faaf1b667f7a370684ccac2",
+      "0x50b000": "ddecd57bf21837201c7b1b11ae59e2123f12f88134561282746e6fd6349b60ad"
+    },
+    "rc": 0,
+    "fullGameExecution": false,
+    "limits": "Bounded numeric helper with seeded explicit globals; no PE startup/imports, original world upkeep or full economy execution"
+  },
+  "native": {
+    "status": "Normal SDK build only; actual AmigaOS execution UNRUN",
+    "binarySHA256": "b2eae591902065bbaf9b5be7cc08daa09f2796811412a86181dc808cb528e8e7"
+  },
+  "limits": [
+    "Pre-stage intake/support/convoy/terraforming eco and facility/project facts must be supplied by source-backed stages; saved calculated intake is not a fresh yield input",
+    "Nonnegative supported counts/resources, population 0..127, native life 0..2 and original signed32 representable intermediates only; rejects unsupported inputs/overflow before output replacement",
+    "Original incoming convoy amplification, Nanoreplicator OR Singularity ecological reduction, and pre-Space-Elevator final surplus intentionally preserved",
+    "Recovered-source unsigned temporaries corrected to original signed instructions; human atrocity and tectonic penalties divided separately as original instructions do",
+    "No production completion, support/yield generation, base upkeep, ecology events, turn advancement, AI or savewriter",
+    "No proprietary executable bytes, decompile text or owner assets included; only private bounded helper executed, not original PE startup/imports/full game"
+  ]
+}

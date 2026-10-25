@@ -1059,3 +1059,8 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+
+### Mineral/ecology numeric stage (draft, native gate pending)
+
+`base_minerals.h` exposes explicit pre-stage numeric accounting without mutating a world or advancing turns. [Scope and original instruction corrections](MINERAL-ACCOUNTING.md) and [evidence](MINERALS-EVIDENCE-20261025.json) distinguish the completed host/original-helper checks from pending native execution. Saved post-calculation intake is not a fresh yield input.
