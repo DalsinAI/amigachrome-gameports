@@ -16,11 +16,12 @@ layout has not been restored. Original `NewTechWin_exec` builds
 
 `alpha_technology_browser(rules_path)` is the integration entry for both Alpha
 profiles. The caller supplies its already-open Intuition/graphics/CyberGraphX
-libraries and SDL audio lifetime. Suspend unrelated menu music before entering
-and restore its previous enabled state after return. Restore the parent window's
-focus after return. Add `technology_browser.cpp` and
-`technology_browser_window.cpp` to the frontend build. This separate API avoids
-changing the menu/HUD files owned by the graphics workstream.
+libraries and SDL audio lifetime. Release the unrelated menu audio device before entering (a paused allocated
+menu device prevents another device from opening on the native backend), then
+reopen the menu device retaining its previous cursor and enabled/muted preference. Restore the parent window's
+focus after return. Both the frontend and original world now expose [T] through this entry; the
+normal frontend/map build recipes link both browser source files. The
+implementation remains separate from the renderer.
 
 For standalone native qualification, run `build_technology_browser.sh OUTPUT`
 with the normal SDK. `alpha-technology alpha.txt` or `alphax.txt` uses the
@@ -41,9 +42,9 @@ dependents; this bounded view does not change graph data.
 
 Host ASan/UBSan controls pass 17 synthetic graph/text cases, plus actual original
 base 77 active / 136 edges (162 checks) and expansion 86 / 152 (178 checks).
-Normal SDK browser and CLI control build cleanly. Native UI/audio execution and
-independent big-endian CI remain pending: these builds are not yet qualified for
-merge/deployment. No original assets or proprietary decompiled code are present
+Normal SDK browser, integrated frontend and CLI control build cleanly. Native
+UI/audio qualification is recorded in the separate evidence receipt; independent
+big-endian CI must complete before merge. No original assets or proprietary decompiled code are present
 in this change.
 
 ## Recovery findings (private receipts retained outside Git)

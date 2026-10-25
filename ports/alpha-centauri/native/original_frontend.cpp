@@ -3,6 +3,7 @@
  */
 #define SDL_MAIN_HANDLED
 #include "pcx_image.h"
+#include "technology_browser.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <exec/types.h>
@@ -24,6 +25,7 @@ struct Library* AslBase;
 int alpha_original_view(int argc,char** argv);
 static alpha::PcxImage base_title,expansion_title;
 static uint8_t* frame;static bool expansion=false,music_on=true;static SDL_AudioDeviceID audio_device;
+static bool menu_audio_ready=false;
 static uint8_t* audio_data;static Uint32 audio_length,audio_pos;
 static char status[160]="Select a game; open a tutorial, scenario or save.";
 static LONG text_pen=-1,border_pen=-1;static bool text_pen_owned=false,border_pen_owned=false;static TTF_Font* menu_font;static TTF_Font* detail_font;
@@ -32,6 +34,13 @@ static void music(void*,Uint8* stream,int length){
  if(length<=0)return;
  if(!audio_data || !audio_length){memset(stream,0,(size_t)length);return;}
  while(length){Uint32 n=audio_length-audio_pos;if(n>(Uint32)length)n=(Uint32)length;memcpy(stream,audio_data+audio_pos,n);stream+=n;length-=(int)n;audio_pos=(audio_pos+n)%audio_length;}
+}
+static void release_menu_audio(){if(audio_device)SDL_CloseAudioDevice(audio_device);audio_device=0;}
+static void restore_menu_audio(){
+ if(!menu_audio_ready)return;
+ SDL_AudioSpec spec{};spec.freq=22050;spec.channels=1;spec.format=AUDIO_S16SYS;spec.samples=1024;spec.callback=music;
+ audio_device=SDL_OpenAudioDevice(nullptr,0,&spec,nullptr,0);
+ if(audio_device && music_on)SDL_PauseAudioDevice(audio_device,0);
 }
 static bool image(const char* name,alpha::PcxImage& img){
  FILE* f=fopen(name,"rb");if(!f)return false;if(fseek(f,0,SEEK_END)){fclose(f);return false;}long n=ftell(f);rewind(f);if(n<=0 || n>8*1024*1024){fclose(f);return false;}
@@ -70,17 +79,18 @@ static void draw(struct Window* w){
  button(w,45,192,462,"Open original scenario or save... [O]");
  button(w,45,244,462,audio_device?(music_on?"Original menu music: ON [M]":"Original menu music: OFF [M]"):"Original menu music unavailable");
  button(w,45,296,462,"Exit [Q]");
- FillPixelArray(w->RPort,45,348,600,64,0x00100905u);SetAPen(w->RPort,(ULONG)text_pen);SetDrMd(w->RPort,JAM1);text(w->RPort,58,372,status,true);
- text(w->RPort,58,395,"Read-only preview; campaign restoration in progress.",true);
+ button(w,45,348,462,"Technology discovery tree [T]");
+ FillPixelArray(w->RPort,45,410,600,64,0x00100905u);SetAPen(w->RPort,(ULONG)text_pen);SetDrMd(w->RPort,JAM1);text(w->RPort,58,434,status,true);
+ text(w->RPort,58,457,"Read-only preview; campaign restoration in progress.",true);
  printf("FRONTEND variant=%s music=%d device=%lu\n",expansion?"expansion":"base",music_on,(unsigned long)audio_device);fflush(stdout);
 }
 static void open_map(struct Window* w,const char* path){
  char* args[6]={const_cast<char*>("alpha-original-view"),const_cast<char*>(expansion?"expansion":"base"),const_cast<char*>(expansion?"alphax.txt":"alpha.txt"),const_cast<char*>(path),const_cast<char*>("texture.pcx"),const_cast<char*>("Units.pcx")};
  // The opening-menu loop belongs to this screen. Do not play it as a
  // substitute for the world's not-yet-restored ambient music system.
- if(audio_device)SDL_PauseAudioDevice(audio_device,1);
+ release_menu_audio();
  int rc=alpha_original_view(6,args);
- if(audio_device && music_on)SDL_PauseAudioDevice(audio_device,0);
+ restore_menu_audio();
  snprintf(status,sizeof(status),rc==0?"Returned from the original world view.":"Could not open that game/rules profile or a required original asset.");printf("FRONTEND MAP RC %d music_resumed=%d\n",rc,audio_device && music_on);fflush(stdout);ActivateWindow(w);draw(w);
 }
 static void choose_map(struct Window* w){
@@ -93,6 +103,13 @@ static void choose_map(struct Window* w){
  }
  FreeAslRequest(req);ActivateWindow(w);if(valid)open_map(w,path);else draw(w);
 }
+static void open_technologies(struct Window* w){
+ release_menu_audio();
+ int rc=alpha_technology_browser(expansion?"alphax.txt":"alpha.txt");
+ restore_menu_audio();
+ snprintf(status,sizeof(status),rc==0?"Returned from technology discovery tree.":"Technology rules/browser could not be opened.");
+ printf("FRONTEND TECHNOLOGY RC %d music_resumed=%d\n",rc,audio_device && music_on);fflush(stdout);ActivateWindow(w);draw(w);
+}
 static void toggle_music(struct Window* w){if(audio_device){music_on=!music_on;SDL_PauseAudioDevice(audio_device,music_on?0:1);}draw(w);}
 int main(int argc,char**){
  if(argc!=1){puts("Run alpha-restoration from the directory containing original game assets.");return 20;}
@@ -104,7 +121,7 @@ int main(int argc,char**){
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     for(Uint32 i=0;i<audio_length;i+=2){Uint8 a=audio_data[i];audio_data[i]=audio_data[i+1];audio_data[i+1]=a;}
 #endif
-    spec.format=AUDIO_S16SYS;spec.samples=1024;spec.callback=music;spec.userdata=nullptr;audio_device=SDL_OpenAudioDevice(nullptr,0,&spec,nullptr,0);if(audio_device)SDL_PauseAudioDevice(audio_device,0);
+    spec.format=AUDIO_S16SYS;spec.samples=1024;spec.callback=music;spec.userdata=nullptr;menu_audio_ready=true;audio_device=SDL_OpenAudioDevice(nullptr,0,&spec,nullptr,0);if(audio_device)SDL_PauseAudioDevice(audio_device,0);
    }
   }
  }
@@ -123,9 +140,9 @@ int main(int argc,char**){
    while((m=(struct IntuiMessage*)GetMsg(w->UserPort))){ULONG kind=m->Class;UWORD code=m->Code;WORD x=m->MouseX,y=m->MouseY;ReplyMsg((struct Message*)m);int action=0;
     if(kind==IDCMP_CLOSEWINDOW)quit=true;
     else if(kind==IDCMP_REFRESHWINDOW){BeginRefresh(w);draw(w);EndRefresh(w,TRUE);}
-    else if(kind==IDCMP_VANILLAKEY){switch(code){case 'a':case 'A':action=1;break;case 'x':case 'X':action=2;break;case 'e':case 'E':action=3;break;case 'o':case 'O':action=4;break;case 'm':case 'M':action=5;break;case 'q':case 'Q':quit=true;break;}}
-    else if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN){if(y>=78 && y<120){if(x>=45 && x<265)action=1;else if(x>=277 && x<507)action=2;}else if(x>=45 && x<507){if(y>=140 && y<182)action=3;else if(y>=192 && y<234)action=4;else if(y>=244 && y<286)action=5;else if(y>=296 && y<338)quit=true;}}
-    switch(action){case 1:expansion=false;draw(w);break;case 2:expansion=true;draw(w);break;case 3:if(expansion)choose_map(w);else open_map(w,"Explore.SC");break;case 4:choose_map(w);break;case 5:toggle_music(w);break;}
+    else if(kind==IDCMP_VANILLAKEY){switch(code){case 'a':case 'A':action=1;break;case 'x':case 'X':action=2;break;case 'e':case 'E':action=3;break;case 'o':case 'O':action=4;break;case 'm':case 'M':action=5;break;case 't':case 'T':action=6;break;case 'q':case 'Q':quit=true;break;}}
+    else if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN){if(y>=78 && y<120){if(x>=45 && x<265)action=1;else if(x>=277 && x<507)action=2;}else if(x>=45 && x<507){if(y>=140 && y<182)action=3;else if(y>=192 && y<234)action=4;else if(y>=244 && y<286)action=5;else if(y>=296 && y<338)quit=true;else if(y>=348 && y<390)action=6;}}
+    switch(action){case 1:expansion=false;draw(w);break;case 2:expansion=true;draw(w);break;case 3:if(expansion)choose_map(w);else open_map(w,"Explore.SC");break;case 4:choose_map(w);break;case 5:toggle_music(w);break;case 6:open_technologies(w);break;}
    }
   }
   if(text_pen_owned)ReleasePen(colors,(ULONG)text_pen);

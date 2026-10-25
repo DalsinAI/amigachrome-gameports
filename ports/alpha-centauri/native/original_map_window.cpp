@@ -7,6 +7,7 @@
 #include "world_movement_price.h"
 #include "pcx_image.h"
 #include "original_ui_text.h"
+#include "technology_browser.h"
 #include <exec/types.h>
 #include <intuition/intuition.h>
 #include <graphics/gfxbase.h>
@@ -189,7 +190,7 @@ int alpha_original_view(int argc,char** argv){
     else for(size_t i=0;i<world.game().base_count;++i){int x,y;const auto&b=*world.base(i);if(position(b.x,b.y,x,y) && abs(mouse_x-12-x)<24*zoom && abs(mouse_y-70-y)<24*zoom){selected_base=i;base_open=true;break;}}
     draw(window);
    }
-   else if(kind==IDCMP_VANILLAKEY){switch(code){case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world.game().base_count){selected_base=(selected_base+1)%world.game().base_count;camera_x=world.base(selected_base)->x;camera_y=world.base(selected_base)->y;}break;case 'i':if(world.game().base_count)base_open=!base_open;break;case 27:base_open=false;break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world.game().vehicle_count)selected=(selected+1)%world.game().vehicle_count;break;case 'c':if(world.game().vehicle_count){camera_x=world.vehicle(selected)->x;camera_y=world.vehicle(selected)->y;}break;}
+   else if(kind==IDCMP_VANILLAKEY){switch(code){case 't':case 'T':{int rc=alpha_technology_browser(argv[2]);printf("WORLD TECHNOLOGY RC %d\n",rc);fflush(stdout);ActivateWindow(window);}break;case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world.game().base_count){selected_base=(selected_base+1)%world.game().base_count;camera_x=world.base(selected_base)->x;camera_y=world.base(selected_base)->y;}break;case 'i':if(world.game().base_count)base_open=!base_open;break;case 27:base_open=false;break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world.game().vehicle_count)selected=(selected+1)%world.game().vehicle_count;break;case 'c':if(world.game().vehicle_count){camera_x=world.vehicle(selected)->x;camera_y=world.vehicle(selected)->y;}break;}
     if(camera_x<0)camera_x=0;
     if(camera_x>=(int)world.game().map.info.width)camera_x=(int)world.game().map.info.width-1;
     if(camera_y<0)camera_y=0;
