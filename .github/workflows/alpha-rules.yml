@@ -176,3 +176,15 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-host"
       - name: Native infantry composition big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host technology effects raw controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects.py --out "$RUNNER_TEMP/technology-effects-raw-host"
+      - name: Big-endian 68040 technology effects raw controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects.py --out "$RUNNER_TEMP/technology-effects-raw-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host technology effects owned-world controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects_world.py --out "$RUNNER_TEMP/technology-effects-owned-world-host"
+      - name: Big-endian 68040 technology effects owned-world controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects_world.py --out "$RUNNER_TEMP/technology-effects-owned-world-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host technology effects transactional alias controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects_alias.py --out "$RUNNER_TEMP/technology-effects-transactional-alias-host"
+      - name: Big-endian 68040 technology effects transactional alias controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects_alias.py --out "$RUNNER_TEMP/technology-effects-transactional-alias-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

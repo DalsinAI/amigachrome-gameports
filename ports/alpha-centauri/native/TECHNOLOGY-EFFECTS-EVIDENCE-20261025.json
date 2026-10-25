@@ -50,9 +50,9 @@
   },
   "worldWireRNGUnchanged": true,
   "native": "UNRUN",
-  "independent68040": "UNRUN",
+  "independent68040": "PENDING final-head draft CI",
   "labInteractions": 0,
-  "publication": "Local candidate only; no award/commit/UI/root source changes",
+  "publication": "Draft stacked on frozen103; final-head CI pending; native remains held",
   "aliasCorrection": {
     "frozenUnsafeCandidate": "3ef0e6b925944d557847ee6a03ddc9e14a5b33a6",
     "fixtures": 4,
@@ -64,5 +64,10 @@
     "allSourcesUnchanged": true,
     "oldSourceRegressionRC": 21,
     "SHA256": "6c74318566e46f8175e14df44e15489b6ade0f24a1956fc1c4b2b013ad5024da"
+  },
+  "workflow": {
+    "retainedParent103RunCommands": 79,
+    "addedCommands": 6,
+    "onlyPublicSyntheticVectors": true
   }
 }

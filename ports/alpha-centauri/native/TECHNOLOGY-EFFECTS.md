@@ -139,3 +139,5 @@ social/interlude and notification/persistence dependencies remain part of the
 complete award contract. No research commit/award path should be added until
 that whole dependency set is implemented or source-backed pre-commit rejection
 covers each triggered unsupported effect.
+
+Draft validation: the workflow retains every parent103 command and adds public synthetic raw, owned-world and alias suites on host sanitizers and independent Linux68040/QEMU. Final-head CI is pending at publication; actual AmigaOS execution remains UNRUN. No original media or executable-derived vectors are published.
