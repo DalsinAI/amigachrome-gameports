@@ -40,11 +40,11 @@
     "built": true,
     "executed": false
   },
-  "independentBigEndianExecution": "PENDING draft CI",
+  "independentBigEndianExecution": "PASS public generated corpus, code_review reader121184253964",
   "nativeExecution": "UNRUN",
   "labInteraction": false,
   "watchPreviewUntouched": true,
-  "publication": "Stacked draft targeting PR86; final-head CI required; native gate held",
+  "publication": "Draft PR92 targeting PR86; dependency/native gates held; final revision must retain passing CI",
   "notImplemented": [
     "Blind/AI selection",
     "Trade/steal/forced-dialog modes",
@@ -60,6 +60,12 @@
     "architectures": [
       "host ASan/UBSan",
       "independent big-endian68040"
-    ]
+    ],
+    "verifiedHead": "26cf884c394878f8bf1acd6fbafc5bf4cbe89d95",
+    "readerJob": 121184253964,
+    "workflowRun": 40198439667,
+    "rawOutputSHA256": "db0f7429a8122f3f872210b3c8312b5ae0f852b0e8b3cdf4ee193a3b744d9b9b",
+    "worldOutputSHA256": "e9bc5c147fcb843f1fe551217b319356cf2891bb6ac68bae7243d3d638adf782",
+    "bothArchitecturesActuallyExecuted": true
   }
 }

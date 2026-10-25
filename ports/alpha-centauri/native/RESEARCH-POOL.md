@@ -94,6 +94,8 @@ Public CI runs 115 generated raw contexts plus two invalid snapshot controls,
 and 64 owned worlds / 512 faction queries, on host sanitizers and independent
 big-endian 68040. Final-head CI status must be checked before review completion.
 Normal SDK raw/world probes build. Actual AmigaOS execution is **unrun**;
-independent big-endian execution is pending the draft CI. The user's watch preview owns the lab;
+independent big-endian execution passed the public corpus in draft reader
+121184253964 (run40198439667), matching host outputs byte-for-byte. Evidence
+records that tested revision; check the latest draft revision as well. The user's watch preview owns the lab;
 this workstream has made no lab reads, writes, inputs, starts, stops or restores.
 No browser/gameplay wiring or native qualification/merge is implied.
