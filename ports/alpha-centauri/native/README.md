@@ -897,3 +897,49 @@ in `RASTER-EVIDENCE-20261025.json`; no original code or assets are included.
 The existing approximate model preview has **not** been corrected merely by
 qualifying this stage: camera, light/shade preparation, faction palette mapping
 and exact unit assembly remain separate work.
+
+## Procedural CVR normal lighting
+
+`cvr_lighting.h/cpp` generates the 24-by-2,137 reachable shade lattice from
+spherical geometry. It includes no copied executable tables or game data.
+The lattice uses 89 azimuth positions, a clamped 24-position polar grid, the
+absolute normal/light dot product and rounded angular shade levels. The offset
+of 88 in the normal indexing is deliberate; the older preview's normal decode
+and clamped directional dot lighting did not reproduce these values.
+
+The direction selector accepts finite light coefficients **already transformed and
+scaled into object space**. It folds negative Z into the other hemisphere, selects quantized light
+orientation and returns the 2,048 normal shades. Its azimuth scale deliberately
+rounds 2*pi to float before computing the float scale; rounding the full-precision
+ratio instead selects the wrong bin on the negative X axis. It does not normalize these coefficients: original animation matrices
+and intensity change their magnitude. It rejects non-finite coefficients and bad buffer sizes or invalid selected lattice values before changing
+output or orientation indices. Inputs and output must not overlap.
+
+```sh
+python3 ports/alpha-centauri/native/test_cvr_lighting.py --out /tmp/lighting-host
+python3 ports/alpha-centauri/native/test_cvr_lighting.py --out /tmp/lighting-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_lighting.sh probe /tmp/lighting-probe
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_lighting.sh control /tmp/lighting-control
+```
+
+Public controls compare all 51,288 lattice bytes, 380 generated light vectors
+(including signed-zero/cardinal axes) and 15 rejection/transactional cases.
+The private original reference additionally checks every reachable original
+lattice byte and the complete normal-shade outputs of 1,370 actual original
+shade-preparation calls: 384 with four orthonormal object matrices and lights in
+both hemispheres, plus 986 from all 17 frames of the original 58-object infantry
+model (including non-unit transformed light coefficients). This is a lighting-stage comparison, not original camera,
+scene light setup, matrix inversion, faction palette, unit assembly or full-game
+qualification. Those remain separate integration work.
+
+The final normal-SDK AmigaOS probe generates all 51,288 lattice bytes and matches
+both the synthetic corpus and all 1,370 original selected tables byte-for-byte.
+Fifteen invalid/transactional controls also pass. The isolated lab is stopped
+and its configuration, ROM pair, module and startup are restored. Details are in
+`LIGHTING-EVIDENCE-20261025.json`.
+
+A native edge case was caught before qualification: the target math library's
+`atan2(0,0)` returns NaN. The original FPATAN specifies signed-zero axes, so this
+stage handles all axes explicitly instead of passing that case through the target
+library. No installed SDK replacement or invented math-library stubs are used.

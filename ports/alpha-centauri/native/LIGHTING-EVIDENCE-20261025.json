@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-25",
+  "scope": "Procedural normal-shade lattice and selection for already transformed object-space light coefficients",
+  "host": {
+    "latticeEntries": 51288,
+    "directions": 380,
+    "invalidControls": 15,
+    "latticeSHA256": "67e38d0ee2d10fc892b5e9bf82af902510ad53bf2c2d9e531792cf2634684054",
+    "outputSHA256": "a72c2b00130c2d0a76caff76be0d993b52bec309b466b786a0289b26daa6f6c2"
+  },
+  "originalReference": {
+    "latticeEntries": 51288,
+    "latticeSHA256": "67e38d0ee2d10fc892b5e9bf82af902510ad53bf2c2d9e531792cf2634684054",
+    "originalExecutedDirections": 1370,
+    "outputSHA256": "25881dd2f5430ea13c80f2be172973959e74ed8e1d5c08517ea2ecf691045941",
+    "originalImageSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf",
+    "scope": "All reachable original table bytes plus384 original full shade-preparation selected LUTs; 384unit directions/four orthonormal matrices/two hemispheres plus986actual animated model transforms with non-unit coefficients, no original scene/faction palette"
+  },
+  "native": [
+    {
+      "name": "output.bin",
+      "bytes": 832568,
+      "outputSHA256": "a72c2b00130c2d0a76caff76be0d993b52bec309b466b786a0289b26daa6f6c2"
+    },
+    {
+      "name": "original-output.bin",
+      "bytes": 2868008,
+      "outputSHA256": "25881dd2f5430ea13c80f2be172973959e74ed8e1d5c08517ea2ecf691045941"
+    },
+    {
+      "latticeEntries": 51288,
+      "generatedDirections": 380,
+      "originalExecutedDirections": 1370,
+      "invalidControls": 15,
+      "probeSHA256": "c6160352d6782b3888bf64ac82e078956560ce1478301c8269a02eeb572b3505",
+      "controlSHA256": "4215f138cf07542de52dfd5475ce1945b149596c5a1a77a9e07eb5a810bb49c6"
+    }
+  ],
+  "nativeFrames": 47,
+  "isolatedLabStopped": true,
+  "configROMModuleStartupRestored": true,
+  "corrections": [
+    "Float azimuth scale divides by float-rounded2pi: true-double ratio selects wrong -X bin",
+    "Signed-zero axes follow original FPATAN instead of target atan2(0,0) NaN",
+    "Transformed light coefficients are NOT normalized: actual model matrices change magnitude"
+  ],
+  "limits": [
+    "No matrix inverse, original camera, scene-light configuration, faction palette or unit assembly in this stage",
+    "All original table bytes and reference helper outputs remain private; public code generates lattice mathematically",
+    "No full game/PE startup/Windows imports executed",
+    "Existing world viewer still has no full human unit assembly or original turn actions"
+  ]
+}
