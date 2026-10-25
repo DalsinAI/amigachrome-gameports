@@ -1072,3 +1072,7 @@ production orders or advancing the game; native execution remains held.
 [WORLD-FACILITY-OPTIONS.md](WORLD-FACILITY-OPTIONS.md) binds those predicates to
 actual saved bases/factions/projects/technology and neighbouring map tiles. This
 read-only query grants no production-order authority; native execution is held.
+Original production switching has a read-only classification/loss preview bound
+to saved base facts: [scope](PRODUCTION-RETOOL.md),
+[evidence](PRODUCTION-RETOOL-EVIDENCE-20261025.json). It does not place orders;
+actual AmigaOS qualification remains pending.
