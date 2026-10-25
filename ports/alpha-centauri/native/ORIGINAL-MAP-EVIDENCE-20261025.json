@@ -1,0 +1,283 @@
+{
+  "date": "2026-10-25",
+  "syntheticCases": 66,
+  "originalMaps": [
+    {
+      "name": "planet.MP",
+      "size": 143667,
+      "sha256": "24b1a6b018f0aaddde0ecc5712cc302359c872228b0342f0f30b9004670cdb30",
+      "version": 5,
+      "dimensions": [
+        80,
+        80
+      ],
+      "tiles": 3200,
+      "abstractBytes": 128,
+      "landmarkCount": 30
+    },
+    {
+      "name": "planetx.MP",
+      "size": 363525,
+      "sha256": "81e96fbe71c7be0b829e014bb66a15e033052e9c86d0e9b01c93aab10fc2614c",
+      "version": 5,
+      "dimensions": [
+        128,
+        128
+      ],
+      "tiles": 8192,
+      "abstractBytes": 338,
+      "landmarkCount": 31
+    },
+    {
+      "name": "xplanet.MP",
+      "size": 143667,
+      "sha256": "f9e99006281a88f33cfe1ae390eae8e6870e1baeb520947a0169d329e0ef50d6",
+      "version": 5,
+      "dimensions": [
+        80,
+        80
+      ],
+      "tiles": 3200,
+      "abstractBytes": 128,
+      "landmarkCount": 34
+    },
+    {
+      "name": "xplanetx.MP",
+      "size": 363525,
+      "sha256": "f93deb3cc59aaf74a4d5efdda08358ce2c2a1a4e837c043a82afea59bce90023",
+      "version": 5,
+      "dimensions": [
+        128,
+        128
+      ],
+      "tiles": 8192,
+      "abstractBytes": 338,
+      "landmarkCount": 35
+    }
+  ],
+  "host": "ASan/UBSan; all decoded tile fields/header/landmark/raw-block fingerprints match independent Python",
+  "rawHarness": "Not used: normal SDK memcpy delegates to Exec CopyMem and requires AmigaOS; no replacement stubs supplied",
+  "nativeAmigaOS": {
+    "corpus": 70,
+    "originalMaps": 4,
+    "originalTiles": 22784,
+    "frames": 7,
+    "results": [
+      {
+        "width": "80",
+        "height": "80",
+        "tiles": "3200",
+        "abstract": "128",
+        "seed": "000069bb",
+        "flat": "0",
+        "landmarks": "30",
+        "counts_differ": "0",
+        "off_map_landmarks": "0",
+        "land": "1374",
+        "fungus": "1221",
+        "forests": "0",
+        "rivers": "126",
+        "rocky": "66",
+        "tile_digest": "e15aac44",
+        "info_digest": "d5571517",
+        "landmark_digest": "28669650",
+        "metadata_digest": "5020cec8",
+        "abstract_digest": "f148364b",
+        "rc": "0"
+      },
+      {
+        "width": "128",
+        "height": "128",
+        "tiles": "8192",
+        "abstract": "338",
+        "seed": "00005ec6",
+        "flat": "0",
+        "landmarks": "31",
+        "counts_differ": "0",
+        "off_map_landmarks": "2",
+        "land": "3049",
+        "fungus": "2622",
+        "forests": "0",
+        "rivers": "321",
+        "rocky": "178",
+        "tile_digest": "40e0124a",
+        "info_digest": "add80ba9",
+        "landmark_digest": "7c838cae",
+        "metadata_digest": "f76d4a2c",
+        "abstract_digest": "11f9070f",
+        "rc": "0"
+      },
+      {
+        "width": "80",
+        "height": "80",
+        "tiles": "3200",
+        "abstract": "128",
+        "seed": "000069bb",
+        "flat": "0",
+        "landmarks": "34",
+        "counts_differ": "0",
+        "off_map_landmarks": "0",
+        "land": "1381",
+        "fungus": "1210",
+        "forests": "0",
+        "rivers": "117",
+        "rocky": "63",
+        "tile_digest": "9864c3da",
+        "info_digest": "e706130b",
+        "landmark_digest": "5201df2e",
+        "metadata_digest": "6fd48530",
+        "abstract_digest": "f148364b",
+        "rc": "0"
+      },
+      {
+        "width": "128",
+        "height": "128",
+        "tiles": "8192",
+        "abstract": "338",
+        "seed": "00005ec6",
+        "flat": "0",
+        "landmarks": "35",
+        "counts_differ": "0",
+        "off_map_landmarks": "2",
+        "land": "3048",
+        "fungus": "2607",
+        "forests": "0",
+        "rivers": "312",
+        "rocky": "175",
+        "tile_digest": "223385c1",
+        "info_digest": "3d482575",
+        "landmark_digest": "b7de8250",
+        "metadata_digest": "dd217ab3",
+        "abstract_digest": "df23a152",
+        "rc": "0"
+      }
+    ],
+    "rc": 0,
+    "logSHA256": "37d8c3ecb7518d94a057242c9340efbb71df1ffefd0055a58410e45d0fe02cd6"
+  },
+  "controlSHA256": "069ac92d793ec531881be692ddd3bbe51af48889fc9d04890bb22e92d313cb00",
+  "probeSHA256": "119fa56907ef472d1158dedbcb7232551cef84bdbc47fa472856489be3c6a5d1",
+  "sourceSHA256": {
+    "original_map.h": "29f0b8e3239a3269af60c4ffbf44ec0b4e43818b2046607707a7712c161db6db",
+    "original_map.cpp": "aa051b53c1b2a631d6d77bf7d0b5ed056f6e706ec551baba8e93063e75cd2437",
+    "original_map_probe.cpp": "c67595beffeb7a35d298b53af9c5dda01a019915dfa9055cf846b128c18378d8",
+    "test_original_map.py": "9d05fb57f0386e6661cc67c82c144c4b41cf99ff7d0bd7ac3ae20e1e69b1e75f"
+  },
+  "limits": [
+    "Plain TERRANMAP version5 decode only, not full original SAV/SC game import or restored gameplay",
+    "Borrowed immutable byte spans; no serialized PC pointers are imported or used",
+    "Counts recomputed from bounded dimensions; opaque metadata/unknown tile bits preserved",
+    "Raw off-map landmark coordinates flagged and preserved; original fixup_landmarks not reconstructed/executed",
+    "No original-executable differential claim; all original assets remain private"
+  ],
+  "privateTestROM": {
+    "roms/openkick-rom4.rom": "c2341dc9434823515edee4e1fcd21b99d1a9af6f5fcbcb5c361b956229b71fec",
+    "roms/aros-amiga-m68k-ext.bin": "22ac131ff8ddef0cf01c6158f74e782b7ea1f2e63444dde22c15027ae105109c"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "originalExpectedValues": [
+    {
+      "name": "planet.MP",
+      "values": {
+        "width": "80",
+        "height": "80",
+        "tiles": "3200",
+        "abstract": "128",
+        "seed": "000069bb",
+        "flat": "0",
+        "landmarks": "30",
+        "counts_differ": "0",
+        "off_map_landmarks": "0",
+        "land": "1374",
+        "fungus": "1221",
+        "forests": "0",
+        "rivers": "126",
+        "rocky": "66",
+        "tile_digest": "e15aac44",
+        "info_digest": "d5571517",
+        "landmark_digest": "28669650",
+        "metadata_digest": "5020cec8",
+        "abstract_digest": "f148364b",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "planetx.MP",
+      "values": {
+        "width": "128",
+        "height": "128",
+        "tiles": "8192",
+        "abstract": "338",
+        "seed": "00005ec6",
+        "flat": "0",
+        "landmarks": "31",
+        "counts_differ": "0",
+        "off_map_landmarks": "2",
+        "land": "3049",
+        "fungus": "2622",
+        "forests": "0",
+        "rivers": "321",
+        "rocky": "178",
+        "tile_digest": "40e0124a",
+        "info_digest": "add80ba9",
+        "landmark_digest": "7c838cae",
+        "metadata_digest": "f76d4a2c",
+        "abstract_digest": "11f9070f",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "xplanet.MP",
+      "values": {
+        "width": "80",
+        "height": "80",
+        "tiles": "3200",
+        "abstract": "128",
+        "seed": "000069bb",
+        "flat": "0",
+        "landmarks": "34",
+        "counts_differ": "0",
+        "off_map_landmarks": "0",
+        "land": "1381",
+        "fungus": "1210",
+        "forests": "0",
+        "rivers": "117",
+        "rocky": "63",
+        "tile_digest": "9864c3da",
+        "info_digest": "e706130b",
+        "landmark_digest": "5201df2e",
+        "metadata_digest": "6fd48530",
+        "abstract_digest": "f148364b",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "xplanetx.MP",
+      "values": {
+        "width": "128",
+        "height": "128",
+        "tiles": "8192",
+        "abstract": "338",
+        "seed": "00005ec6",
+        "flat": "0",
+        "landmarks": "35",
+        "counts_differ": "0",
+        "off_map_landmarks": "2",
+        "land": "3048",
+        "fungus": "2607",
+        "forests": "0",
+        "rivers": "312",
+        "rocky": "175",
+        "tile_digest": "223385c1",
+        "info_digest": "3d482575",
+        "landmark_digest": "b7de8250",
+        "metadata_digest": "dd217ab3",
+        "abstract_digest": "df23a152",
+        "rc": "0"
+      }
+    }
+  ]
+}

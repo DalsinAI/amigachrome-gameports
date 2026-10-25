@@ -72,3 +72,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_colony_scenario.py --out "$RUNNER_TEMP/colony-scenario-host"
       - name: Big-endian multi-turn colony scenario controls
         run: python3 ports/alpha-centauri/native/test_colony_scenario.py --out "$RUNNER_TEMP/colony-scenario-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original map format controls
+        run: python3 ports/alpha-centauri/native/test_original_map.py --out "$RUNNER_TEMP/original-map-host"
+      - name: Big-endian original map format controls
+        run: python3 ports/alpha-centauri/native/test_original_map.py --out "$RUNNER_TEMP/original-map-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
