@@ -96,7 +96,8 @@ static void draw_hud(struct Window* window){
    hud_text(rp,146,109,(t->climate&0xe0u)<0x60?"Ocean":"Land",98,false,alpha::UiInk::value);
    if((t->climate&0xe0u)>=0x60){hud_text(rp,146,128,(t->val3&0xc0u)>=0x80?"Rocky":(t->val3&0xc0u)==0x40?"Rolling":"Flat",98);}
    if(t->items&0x20u)hud_text(rp,146,147,"Fungus",98);
-   if(t->items&0x80u)hud_text(rp,146,166,"Forest",98);
+   if(t->items&0x80u)hud_text(rp,146,166,"River",98);
+   if(t->items&0x200000u)hud_text(rp,146,184,"Forest",98);
    hud_text(rp,146,215,"Saved tile",98);hud_text(rp,146,234,"Read only",98);
   }
  }
