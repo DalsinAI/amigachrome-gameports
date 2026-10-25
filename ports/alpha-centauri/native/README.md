@@ -1125,3 +1125,7 @@ expose this draft encoder to user save operations before those gates pass.
 python3 ports/alpha-centauri/native/test_movement_snapshot.py --out /tmp/movement-snapshot-host
 CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_movement_snapshot.sh /tmp/movement-snapshot-probe
 ```
+
+### Saved faction speed grants (draft, native gate pending)
+
+`world_speed_ability_flags` retains base raw-only abilities and supplies the expansion design owner's eligible FREEABIL speed bits to vehicle speed and land pricing. [Scope and controls](SPEED-ABILITIES.md) distinguish this change from historical native evidence and from legal player actions. [Evidence](SPEED-ABILITIES-EVIDENCE-20261025.json) records host/source/helper checks and pending native qualification.
