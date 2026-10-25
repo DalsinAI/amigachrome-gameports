@@ -116,3 +116,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-host"
       - name: Big-endian procedural CVR lighting controls
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original vehicle-stack relocation controls
+        run: python3 ports/alpha-centauri/native/test_vehicle_stack.py --out "$RUNNER_TEMP/vehicle-stack-host"
+      - name: Big-endian original vehicle-stack relocation controls
+        run: python3 ports/alpha-centauri/native/test_vehicle_stack.py --out "$RUNNER_TEMP/vehicle-stack-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
