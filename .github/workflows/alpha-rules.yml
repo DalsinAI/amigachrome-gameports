@@ -116,3 +116,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-host"
       - name: Big-endian procedural CVR lighting controls
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host technology browser graph and description controls
+        run: python3 ports/alpha-centauri/native/test_technology_browser.py --out "$RUNNER_TEMP/technology-browser-host"
+      - name: Big-endian technology browser graph and description controls
+        run: python3 ports/alpha-centauri/native/test_technology_browser.py --out "$RUNNER_TEMP/technology-browser-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

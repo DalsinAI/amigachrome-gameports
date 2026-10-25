@@ -1,0 +1,70 @@
+{
+  "scope": "Read-only original technology/prerequisite browser integrated in Alpha frontend and original world [T]; no research advancement or fabricated unlocks",
+  "normalSDK": "OpenAmigaGCC16.2.0-open3, normal private libnix profiles",
+  "nativeBinarySHA256": "f8c8be21b1d1d345828798b35bbc607795ccfe308e161a04f03ad2a8d5810885",
+  "nativeControlSHA256": "9dd2a6237d536379364bb13b16065a08f8ef98e77a46db4ec32b378d61fdc0eb",
+  "hostSyntheticCases": 17,
+  "nativeOriginalRules": {
+    "base": {
+      "checks": 162,
+      "active": 77,
+      "edges": 136
+    },
+    "alienCrossfire": {
+      "checks": 178,
+      "active": 86,
+      "edges": 152
+    }
+  },
+  "independentPythonDFS": {
+    "depthValues": 178,
+    "matches": 178
+  },
+  "nativeUI": {
+    "frontendBase": true,
+    "frontendExpansion": true,
+    "originalIconsTransparency255": true,
+    "originalDescriptions": true,
+    "prerequisiteDependentNavigation": true,
+    "worldEntryAndReturn": true,
+    "normalExitRC": 0,
+    "streamedFrames": 231,
+    "baseVoiceID": 0,
+    "baseVoicePCMNonzero": 196488,
+    "baseVoicePCMPeak": 1117,
+    "expansionVoiceID": 78,
+    "expansionVoicePCMNonzero": 171666,
+    "expansionVoicePCMPeak": 1603,
+    "mutedMenuReturnPCMNonzero": 0,
+    "menuDeviceOwnership": "release before child, reopen after child preserving cursor and enabled/muted preference"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true,
+    "liveChanges": false
+  },
+  "recovery": {
+    "technologyIcons": 90,
+    "numberedQuoteMP3Files": 89,
+    "normalTechnologyQuotesStrictDecode": 88,
+    "disabledUserID87Missing": true,
+    "unusedExtra92QuarantinedBadHeader": true,
+    "AMBScoreDefinitions": 8,
+    "literalReferencedSamples": 220,
+    "recoveredLiteralSamplePaths": 160,
+    "pathsAbsentFromAvailableDiscAndGOG": 60,
+    "AMBSequencerImplemented": false
+  },
+  "preservedFailures": [
+    "native-1: paused allocated menu audio device blocked child speech; final release/reopen lifecycle passed native-2/native-3",
+    "native-2 first attempt: stopped-lab stale failed-command marker preserved before retry"
+  ],
+  "originalAssetsOrProprietaryCodeCommitted": false,
+  "limits": [
+    "Own browser layout, not exact original discovery screen reconstruction",
+    "Original MP3s decoded privately by host ffmpeg into PCM16LE mono22050 WAVs; no native MP3 decoder",
+    "No research choice, turn progression, grant or original save mutation",
+    "No full music score playback or fabricated missing sample aliases"
+  ],
+  "ci": "Required final-head host and independent big-endian controls must actually run before merge"
+}
