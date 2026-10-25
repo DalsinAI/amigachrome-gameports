@@ -22,7 +22,7 @@ def rule_rows():
 ROW=rule_rows()
 def rules(profile,case):
  tech,fac=tables(profile)
- if case%3: 
+ if case%3:
   for row in fac:row[3]='Disable' if case%5==4 else 'None'
  tech[1][6:8]=['Disable','None'];tech[2][6:8]=['None','Disable'];tech[3][6:8]=['T0','Disable']
  a=json.loads((HERE/'basic_fixture.json').read_text());rows=[r[:] for r in a['rules_rows']]
