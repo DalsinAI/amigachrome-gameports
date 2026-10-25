@@ -19,12 +19,17 @@ struct TechnologyEffectsResult {
 /* Complete callback-free original recomputation. Qualified same-profile Rules
  * are required. Known-tech semantics ignore faction0/future88 and retain
  * None/Disable asymmetry. Edition does not insert extra tech exclusions here.
- * Every signed addition is checked; errors preserve output. Does not award a
+ * Output must be disjoint from the complete Rules/Facts ranges. Overlap or
+ * wrapping address extents reject before writes. Every signed addition is
+ * checked; errors preserve output. Does not award a
  * tech, mutate a world, refresh a tile, or execute income/turn/event callbacks.
  */
 LogicError recompute_technology_effects(const Rules&,const TechnologyEffectsFacts&,TechnologyEffectsResult&);
 /* Binds actual decoded owner bits, local rules/bonuses and pending SE economy.
- * Saved effect counters are not inputs. Original wire and world stay unchanged.
+ * Saved effect counters are not inputs. Output must be disjoint from Rules,
+ * the complete World object, raw allocation and every decoded map/actor/prototype/faction/definition
+ * allocation; even partial range overlap rejects before writes. Original wire
+ * and world stay unchanged.
  */
 LogicError world_technology_effects(const OriginalWorld&,const Rules&,int32_t faction,TechnologyEffectsResult&);
 }

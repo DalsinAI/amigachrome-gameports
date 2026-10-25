@@ -11,6 +11,25 @@ This is a reusable complete effect stage, **not a research award or transaction*
 It does not set ownership, refresh the world/tile records, consume labs, select a
 research target, discover a technology, increment a turn or run callbacks.
 
+## Range-alias correction
+
+The frozen first candidate3ef0e6b checked numeric failures but did not reject a
+Result stored inside input objects. This separate correction rejects the complete
+output range against complete Rules/Facts inputs and, for the world wrapper, the
+World object, raw allocation, decoded tile/vehicle/base arrays, all512 prototypes,
+and all8 faction/definition arrays. Start, middle, end and before-start partial
+overlap reject with bad_state before any write. Address/array-size wrap is also
+rejected; zero-length actor arrays and genuinely adjacent output objects remain
+valid. Both input bytes and the aliased output region remain unchanged on reject.
+
+Alias controls pass four legacy/current/empty/populated worlds:32 pure aliases,
+96 World/Rules aliases,16 valid adjacent outputs,40 boundary/wrap/product controls
+and4 disjoint results. Entire World object/decoded/raw state and Rules/Facts
+snapshots remain unchanged after every rejected call. The same controls against
+the frozen old source fail with RC21 at the first Rules alias, demonstrating the
+regression. Existing1,533 raw and1,048 owned queries retain identical numeric
+hashes. Normal SDK raw/world/alias builds pass; no native execution is claimed.
+
 ## Exact inputs and outputs
 
 The pure stage takes qualified same-profile89-row Rules and typed facts:

@@ -1,9 +1,25 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in technology_effects.h. */
 #include "technology_effects.h"
+#include "technology_effects_ranges.h"
 namespace alpha { namespace {
+using detail::effects_range_overlap;
+bool array_overlap(const TechnologyEffectsResult& output,const void* p,size_t count,size_t size){
+ return detail::effects_array_overlap(&output,sizeof(output),p,count,size);
+}
+bool world_overlap(const OriginalWorld& world,const TechnologyEffectsResult& output){
+ return effects_range_overlap(&output,sizeof(output),&world,sizeof(world)) ||
+  effects_range_overlap(&output,sizeof(output),world.original_bytes(),world.original_size()) ||
+  array_overlap(output,world.tile(0),world.game().map.info.tile_count,sizeof(OriginalMapTile)) ||
+  array_overlap(output,world.vehicle(0),world.game().vehicle_count,sizeof(OriginalVehicle)) ||
+  array_overlap(output,world.base(0),world.game().base_count,sizeof(OriginalBase)) ||
+  array_overlap(output,world.prototype(0),512,sizeof(OriginalPrototype)) ||
+  array_overlap(output,world.faction(0),8,sizeof(OriginalFactionState)) ||
+  array_overlap(output,world.faction_definition(0),8,sizeof(OriginalFactionDefinition));
+}
 bool add(int32_t& n,int32_t value){const int64_t result=(int64_t)n+value;if(result<INT32_MIN || result>INT32_MAX)return false;n=(int32_t)result;return true;}
 }
 LogicError recompute_technology_effects(const Rules& rules,const TechnologyEffectsFacts& facts,TechnologyEffectsResult& output){
+ if(effects_range_overlap(&output,sizeof(output),&rules,sizeof(rules)) || effects_range_overlap(&output,sizeof(output),&facts,sizeof(facts)))return LogicError::bad_state;
  if(rules.count!=technology_count || facts.faction<0 || facts.faction>7 || facts.bonus_count<0 || facts.bonus_count>8)return LogicError::bad_state;
  for(size_t id=0;id<technology_count;++id)for(unsigned p=0;p<2;++p)
   if(rules.technologies[id].prerequisites[p]<-2 || rules.technologies[id].prerequisites[p]>=89)return LogicError::bad_state;
@@ -32,7 +48,9 @@ LogicError recompute_technology_effects(const Rules& rules,const TechnologyEffec
  output=next;return LogicError::ok;
 }
 LogicError world_technology_effects(const OriginalWorld& world,const Rules& rules,int32_t faction,TechnologyEffectsResult& output){
+ if(effects_range_overlap(&output,sizeof(output),&rules,sizeof(rules)) || effects_range_overlap(&output,sizeof(output),&world,sizeof(world)))return LogicError::bad_state;
  if(!world.loaded() || faction<0 || faction>7)return LogicError::bad_state;
+ if(world_overlap(world,output))return LogicError::bad_state;
  const auto* state=world.faction((size_t)faction);const auto* definition=world.faction_definition((size_t)faction);
  if(!state || !definition)return LogicError::bad_state;
  TechnologyEffectsFacts facts{};facts.faction=faction;facts.rule_commerce=definition->rule_commerce;

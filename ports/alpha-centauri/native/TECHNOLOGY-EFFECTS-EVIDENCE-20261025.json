@@ -42,14 +42,27 @@
     "originalExpansionSave": false
   },
   "normalSDK": {
-    "rawSHA256": "f52d7354395560c36f83bc3799a05dda8b07d3f3186038637798e5f80ee7abf0",
-    "worldSHA256": "5b1a188cb96a87596991b97bc189e968016bedb1f916280d5f9b297aadb8d2b5",
+    "rawSHA256": "2334c2bde4938c1b3afd249cbfe9c4d43ed6e4067491657d8bece1a9a1e42332",
+    "worldSHA256": "b5b91f04a8cf8e531c72311bfdfd207ed7ce173202007f9d052cc6a171c84a04",
     "built": true,
-    "executed": false
+    "executed": false,
+    "aliasSHA256": "ce4c360efc67351db21d9f8bf6bb529c78f1f18cd276fb4f0afd59bbe0c86f6f"
   },
   "worldWireRNGUnchanged": true,
   "native": "UNRUN",
   "independent68040": "UNRUN",
   "labInteractions": 0,
-  "publication": "Local candidate only; no award/commit/UI/root source changes"
+  "publication": "Local candidate only; no award/commit/UI/root source changes",
+  "aliasCorrection": {
+    "frozenUnsafeCandidate": "3ef0e6b925944d557847ee6a03ddc9e14a5b33a6",
+    "fixtures": 4,
+    "pureAliases": 32,
+    "worldAndRulesAliases": 96,
+    "adjacentValidOutputs": 16,
+    "rangeControls": 40,
+    "disjointWorldOutputs": 4,
+    "allSourcesUnchanged": true,
+    "oldSourceRegressionRC": 21,
+    "SHA256": "6c74318566e46f8175e14df44e15489b6ade0f24a1956fc1c4b2b013ad5024da"
+  }
 }
