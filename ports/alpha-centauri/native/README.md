@@ -977,7 +977,7 @@ synthetic bold style; if Arial is unavailable it retains the prior original
 Arial Narrow13/title16 fallback and reports that choice. The port includes no
 font files. Menus still use their existing separate title-font profile.
 
-## Basic infantry in the original-world viewer (qualification pending)
+## Basic infantry in the original-world viewer
 
 `cvr_infantry.h/cpp` composes a static frame of the owner's original VI infantry
 body and Viptr00 reactor backpack. It reuses the bounded model reader, procedural
@@ -1012,4 +1012,11 @@ CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_infantry.sh contro
 Public synthetic controls exercise separate component colours, equal-depth
 occlusion, hidden parts, singular transforms, size/frame/profile limits,
 16 facing/zoom combinations, transparent caching and transactional rejection.
-Native original-model/in-world qualification remains pending for this draft.
+Actual normal-SDK AmigaOS qualification passes the9 synthetic CLI cases and
+16 original-model facing/zoom outputs, with all hashes and the rendered PPM
+matching host results exactly. The actual original Explore world shows its basic
+infantry body/backpack at both zooms, selects the next unit and returns/exits
+normally. Owner Arial12/Arial-Bold14 fonts are selected. The isolated lab actively
+streams102 frames, then stops and restores all configuration, ROM/module/startup
+hashes. `INFANTRY-EVIDENCE-20261025.json` records this bounded proof; original
+whole-scene pixel equivalence and the other stated limits remain unclaimed.
