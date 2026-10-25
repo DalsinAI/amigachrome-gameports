@@ -6,7 +6,7 @@ from test_original_world import valid_fixture
 from test_original_game import decode
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--cc',default='g++');a=ap.parse_args();out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=False);src=Path(__file__).resolve().parent;exe=out/'probe';subprocess.run([a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer',*[str(src/n)for n in ['original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','cvr_flat_context.cpp','cvr_flat_context_probe.cpp']],'-o',str(exe)],check=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--cc',default='g++');ap.add_argument('--m68k-linux',action='store_true');a=ap.parse_args();out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=False);src=Path(__file__).resolve().parent;exe=out/'probe';flags=['-m68040','-static']if a.m68k_linux else ['-g','-fsanitize=address,undefined','-fno-omit-frame-pointer'];runner=['qemu-m68k','-cpu','m68040']if a.m68k_linux else [];subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*[str(src/n)for n in ['original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','cvr_flat_context.cpp','cvr_flat_context_probe.cpp']],'-o',str(exe)],check=True)
  b=bytearray(valid_fixture());_,offsets,_=decode(b);start=offsets['tiles'];
  def tile(x,y):return start+(y*4+x//2)*44
  for y in range(6):
@@ -25,6 +25,6 @@ def main():
  for x,y in [(-1,1),(8,0),(0,-2),(0,6),(1,0),(0,0)]:cases.append((f'edge-or-invalid-{x}-{y}',good,x,y,reject))
  sea=bytearray(good);sea[tile(4,2)]=2<<5;cases.append(('sea',sea,4,2,[(1,1,4,0),(2,1,4,0)]));records=[]
  for i,(name,data,x,y,want)in enumerate(cases):
-  path=out/f'{i}.SC';path.write_bytes(data);r=subprocess.run([str(exe),str(path),str(x),str(y)],capture_output=True,text=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'));assert r.returncode==0,(name,r.returncode,r.stderr);got=[tuple(map(int,line.split()))for line in r.stdout.splitlines()];assert got==want,(name,got,want);records.append(dict(name=name,result=got))
- (out/'receipt.json').write_text(json.dumps(dict(cases=records,originalCodeExecuted=False),indent=2)+'\n');print('Known flat context',len(cases),'synthetic cases PASS')
+  path=out/f'{i}.SC';path.write_bytes(data);r=subprocess.run(runner+[str(exe),str(path),str(x),str(y)],capture_output=True,text=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'));assert r.returncode==0,(name,r.returncode,r.stderr);got=[tuple(map(int,line.split()))for line in r.stdout.splitlines()];assert got==want,(name,got,want);records.append(dict(name=name,result=got))
+ (out/'receipt.json').write_text(json.dumps(dict(cases=records,originalCodeExecuted=False,bigEndian=a.m68k_linux),indent=2)+'\n');print('Known flat context',len(cases),'synthetic cases PASS')
 if __name__=='__main__':main()

@@ -148,3 +148,27 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_palette_render.py --out "$RUNNER_TEMP/cvr-palette-render-host"
       - name: Integrated CVR palette and cache transitions on independent big-endian 68040
         run: python3 ports/alpha-centauri/native/test_cvr_palette_render.py --out "$RUNNER_TEMP/cvr-palette-render-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned CVR group metadata host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_groups.py --out "$RUNNER_TEMP/cvr-groups-host"
+      - name: Owned CVR group metadata independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_groups.py --out "$RUNNER_TEMP/cvr-groups-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Source projection fixed conversion and scene alias host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_scene_support.py --out "$RUNNER_TEMP/cvr-scene-support-host"
+      - name: Source projection fixed conversion and scene alias independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_scene_support.py --out "$RUNNER_TEMP/cvr-scene-support-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Source map caller and viewer anchor host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_map_anchor.py --out "$RUNNER_TEMP/cvr-map-anchor-host"
+      - name: Source map caller and viewer anchor independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_map_anchor.py --out "$RUNNER_TEMP/cvr-map-anchor-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Conservative source flat terrain context host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_flat_context.py --out "$RUNNER_TEMP/cvr-flat-context-host"
+      - name: Conservative source flat terrain context independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_flat_context.py --out "$RUNNER_TEMP/cvr-flat-context-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Independent source scene compositor host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_scene_blit.py --out "$RUNNER_TEMP/cvr-scene-blit-host"
+      - name: Independent source scene compositor independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_scene_blit.py --out "$RUNNER_TEMP/cvr-scene-blit-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Source scene exact synthetic and palette cache host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_source_scene.py --out "$RUNNER_TEMP/cvr-source-scene-host"
+      - name: Source scene exact synthetic and palette cache independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_source_scene.py --out "$RUNNER_TEMP/cvr-source-scene-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

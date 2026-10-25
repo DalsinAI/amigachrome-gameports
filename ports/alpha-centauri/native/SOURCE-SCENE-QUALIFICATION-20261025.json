@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-25",
+  "scope": "Asset-free public qualification for the frozen original source-scene integration; tests/workflow only, production source unchanged.",
+  "frozenIntegration": "ceb7cc940bc9bcff0b066d88907aead4abdf0dc1",
+  "localValidation": {
+    "host": "ASan/UBSan, GCC; all new controls actually executed",
+    "independentBigEndian": "Linux68040 GCC15.2.0, static, qemu-m68k -cpu m68040; all new controls actually executed",
+    "numericMismatches": 0,
+    "nativeAmigaOS": "UNRUN for this source-scene integration",
+    "finalHeadCI": "UNRUN; workflow prepared, no publication"
+  },
+  "suites": {
+    "sourceScenes": {
+      "exactSceneVectors": 128,
+      "independentRgbCacheBorderKeyLodComposites": 360,
+      "goldens": "SOURCE-SYNTHETIC-GOLDENS-20261025.json",
+      "goldensSHA256": "e69c7f80f3cb70d4069c0fca3bc1b06261994367b13be6a57089314714366d28",
+      "provenance": "Own synthetic models/palettes only; expected hashes derived privately with unchanged bounded original no-shadow helper and real dependencies. No original instructions/tables/assets in public tests."
+    },
+    "support": {
+      "projectionValidInvalid": 26,
+      "fixedObjectNormalInvalid": 24,
+      "widenedGroupSeedControls": 8,
+      "exactAliasSceneVectors": 16,
+      "aliasRejections": 3477,
+      "adjacentFactoryOutputs": 2,
+      "fixedObjectSHA256": "b3388742e9ea065ec2cb4a354968b1829dd6788da0cd26066097bc91fdd95671",
+      "aliasSceneSHA256": "3e11a29be54539323f830b01603c32648c2a481223dd631baf5b56140f632523"
+    },
+    "ownedGroups": {
+      "valid": 4,
+      "malformed": 3
+    },
+    "knownFlatContext": {
+      "syntheticCases": 27
+    },
+    "mapAnchor": {
+      "placementCases": 1000,
+      "dimensionCases": 22,
+      "placementSHA256": "76d83d739e2174f313309613df22bb81615fc76d4051a3db364f97811e8233ff",
+      "dimensionSHA256": "279eee320d920a0622c00410d88216d5264e2172f848ee385ce9e69844a9e0fb"
+    },
+    "compositor": {
+      "independentDestinationCases": 75,
+      "aliasRejections": 10,
+      "invalid": 4,
+      "legacyArithmetic": 2,
+      "originalWindowsWrapperExecuted": false
+    }
+  },
+  "workflow": {
+    "parentRunPythonCommands": 64,
+    "allParentBytesPreservedAsPrefix": true,
+    "newPairedCommands": 12,
+    "totalRunPythonCommands": 76
+  },
+  "privateAdditionalEvidence": {
+    "ownerScenes": 32,
+    "bytes": 6291456,
+    "originalHostAndIndependentBigEndianSHA256": "1eeed34dbaa128c3575b916956823b485918bfbd1f2ef7c2a50563062f908bb8",
+    "rgbCacheComposites": 90,
+    "ownerAssetsPublished": false
+  },
+  "normalSdk": {
+    "compiler": "OpenAmigaGCC16.2.0-open3 normal private SDK",
+    "frontendSHA256": "c84e69b7496e3287c7eb0f4af88410a099f3ebddd7cae5104f6d033686c9e81c",
+    "byteIdenticalToFrozenIntegration": true,
+    "sdkOverlays": false
+  },
+  "limits": [
+    "No native/UI/performance proof of this final source-scene integration; no deployment or new screenshot.",
+    "Only source-supported basic infantry/Explore rover, known-flat terrain and static poses; unsupported scene/faction/ability contexts remain explicit.",
+    "Final USER32-backed original17230 screen wrapper was not executed; owned compositor has its own independent destination-coordinate oracle.",
+    "Private original helper controls do not execute a complete original game, PE startup or Windows imports.",
+    "CI must run actual final-head host and independent big-endian controls before any merge."
+  ]
+}
