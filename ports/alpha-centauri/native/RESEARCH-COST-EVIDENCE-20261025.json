@@ -15,23 +15,6 @@
     "independentWireMatches": true,
     "outputSHA256": "3963bcf079af90a0cd54b5337f398375dd4621b9415143e5e472727b58b3b0ac"
   },
-  "actualOriginalHelperComparison": {
-    "contexts": 797,
-    "allCostsMatch": true,
-    "originalHelper": "unchanged tech_rate0x5be6b0",
-    "fullGameExecution": false,
-    "costSHA256": "5d3e9f6d6d11c60667879adc85e63e9174d0d70b28ee3edd01ca4e3bae988210",
-    "worldDerivedContexts": 408,
-    "privateOriginalCodeNeverUploaded": true
-  },
-  "integerRoot": {
-    "unchangedOriginalHelper": "quick_root0x6290e0",
-    "contexts": 10003,
-    "allMatchIndependentIntegerSqrt": true,
-    "codeRegionSHA256": "b58ca89546485e7ef49aa8631185e4d502ed4049364bee2102bebc8d9ed33590",
-    "rc": 0,
-    "fullGameExecution": false
-  },
   "normalSDK": {
     "version": "OpenAmigaGCC16.2.0-open3 normal SDK",
     "rawProbeSHA256": "0671b4b7cf8dde5a758141183db5586e27f924bdd989bf78b957da63f6429216",
@@ -60,5 +43,23 @@
   "labInteractions": false,
   "runningWatchPreviewUntouched": true,
   "fullOriginalGameExecution": false,
-  "originalBytesAssetsUploaded": false
+  "originalBytesAssetsUploaded": false,
+  "privateOriginalCrosscheckSummary": {
+    "costContexts": 797,
+    "integerRootContexts": 10003,
+    "allMatched": true,
+    "artifacts": "Retained privately; no original code, original inputs, binary outputs or helper reproduction artifacts distributed"
+  },
+  "publicCIPlan": {
+    "rawContextsPerArchitecture": 400,
+    "additionalAtomicShortcutControls": 4,
+    "integerRootBoundaryCases": 10003,
+    "ownedWorldContextsPerArchitecture": 48,
+    "factionQueriesPerArchitecture": 384,
+    "architectures": [
+      "host-ASan-UBSan",
+      "independent-big-endian68040"
+    ],
+    "status": "Final-head actual results pending"
+  }
 }
