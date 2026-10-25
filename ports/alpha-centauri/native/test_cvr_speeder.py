@@ -8,7 +8,7 @@ NAMES=['vrcp00.cvr','vgmc.cvr','vgmcp.cvr','vb.cvr','vbp.cvr','vsp.cvr','vsptb.c
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--cc',default='g++');ap.add_argument('--m68k-linux',action='store_true');a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=False);src=Path(__file__).resolve().parent
  flags=['-m68040','-static']if a.m68k_linux else['-g','-fsanitize=address,undefined'];exe=out/'control'
- subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*[str(src/(n+'.cpp'))for n in ['cvr_model','cvr_raster','cvr_lighting','cvr_infantry','cvr_speeder_control']],'-lm','-o',str(exe)],check=True)
+ subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*[str(src/(n+'.cpp'))for n in ['cvr_model','cvr_raster','cvr_lighting','cvr_infantry','cvr_palette','cvr_speeder_control']],'-lm','-o',str(exe)],check=True)
  cases=[];red=(255,0,0);blue=(0,0,255)
  for i in range(10):
   parts=[model(blue,frames=1)for _ in NAMES];parts[i]=model(red,frames=1)

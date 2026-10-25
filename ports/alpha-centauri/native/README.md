@@ -1145,3 +1145,30 @@ container (RGB768, neutral6144, tint3), the latter reads raw PCX RGB768.
 selection and shared renderer cache binding remain required before this can be
 called a visible colour fix. This scope neither changes PR87 nor touches the
 user's lab session. See `PALETTE-EVIDENCE-20261025.json`.
+
+
+## Optional game-palette viewer integration (native execution pending)
+
+The scoped integration now binds the default global palette from the owner's
+`palette.pcx` to supported infantry and basic speeder rendering. Speeder panels
+VGMCP/VBP additionally use the actual unit faction's valid tint metadata. All
+other components retain their own shade-index tables; their resulting indices
+resolve through the global palette. The original final blit key9 remains
+transparent. No original asset or palette table is included in this repository.
+
+Changed global RGB, tint, or mode invalidates all sixteen facing/zoom cache
+entries transactionally. Repeating a configuration preserves cached results;
+invalid inputs leave the previous configuration intact. Missing game palette
+uses the explicitly labelled raw-model preview. Missing/unsafe faction metadata
+uses explicitly labelled neutral global colours, without inventing the original
+system/default tint. Unsupported unit profiles are unchanged from PR87.
+
+`test_cvr_palette_render.py` exercises both faction-panel positions, eighteen
+cache transitions/288 draws, and sixteen original-key9 draws with synthetic
+assets under host sanitizers. Original-owner host controls preserve the earlier
+raw infantry image exactly and exercise global infantry plus three actual
+faction rover colours. The normal SDK frontend and CLI probes build without
+toolchain overlays. Native CLI execution and integrated Explore UI validation
+are still pending while the user's live watch session owns the lab. This is
+not yet a verified visible/native colour fix, and does not restore original
+shadows, custom gamma, alternate system palettes, or additional unit profiles.

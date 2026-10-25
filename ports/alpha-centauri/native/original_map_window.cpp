@@ -9,6 +9,7 @@
 #include "original_ui_text.h"
 #include "technology_browser.h"
 #include "cvr_infantry.h"
+#include "cvr_palette.h"
 #include <exec/types.h>
 #include <intuition/intuition.h>
 #include <graphics/gfxbase.h>
@@ -22,7 +23,8 @@
 #include <string.h>
 struct IntuitionBase* IntuitionBase;struct GfxBase* GfxBase;struct Library* CyberGfxBase;
 static alpha::CvrUnitAssembly infantry,speeder;static bool infantry_available=false,speeder_available=false;
-static alpha::OriginalWorld world;static alpha::PcxImage terrain,sprites,faction_images[8];
+static uint8_t game_rgb[768],faction_tints[8][3];static bool game_palette_ready=false,faction_tint_ready[8]{};
+static alpha::OriginalWorld world;static alpha::PcxImage terrain,sprites,faction_images[8],game_palette_image;
 static alpha::Rules technologies;static alpha::UnitDefinitions definitions;static alpha::BasicRules basic;static alpha::WorldRules world_rules;
 static const int W=928,H=480;static uint8_t* frame;static size_t selected=0;static int camera_x,camera_y,zoom=2;
 static uint8_t* read_file(const char* path,size_t& size){
@@ -43,6 +45,12 @@ static bool infantry_profile(const alpha::OriginalVehicle& v){
 static bool speeder_profile(const alpha::OriginalVehicle& v){
  const auto* p=world.prototype((size_t)v.unit_id);const auto* f=world.faction_definition(v.faction_id);
  return speeder_available && speeder.ready() && p && f && v.rotate_angle>=-1 && v.rotate_angle<=7 && world.game().data_version<11 && p->chassis_id==1 && p->weapon_id==0 && p->armor_id==0 && p->reactor_id==1 && p->ability_flags==0 && !(f->rule_flags&0x80u);
+}
+static const char* speeder_colours(const alpha::OriginalVehicle& v){
+ if(!game_palette_ready){speeder.clear_game_palette();return "raw-model-preview";}
+ const bool tint=v.faction_id>0 && v.faction_id<8 && faction_tint_ready[v.faction_id];
+ if(!speeder.set_game_palette(game_rgb,sizeof(game_rgb),tint?faction_tints[v.faction_id]:nullptr,tint?3:0)){speeder.clear_game_palette();return "raw-model-preview-config-failure";}
+ return tint?"game-global-and-faction":"game-global-neutral-preview-metadata-unavailable";
 }
 static void pixel(int x,int y,const uint8_t* rgb){if(x<0 || y<0 || x>=W || y>=H || !rgb)return;auto* p=frame+((size_t)y*W+x)*3;p[0]=rgb[0];p[1]=rgb[1];p[2]=rgb[2];}
 static void diamond(int cx,int cy,int atlas_x,int atlas_y,bool overlay){
@@ -93,6 +101,10 @@ static void draw_hud(struct Window* window){
   snprintf(line,sizeof(line),"Position %d, %d",v.x,v.y);hud_text(rp,10,105,line,116);
   const auto& owner=*world.faction_definition(v.faction_id);snprintf(line,sizeof(line),"%.30s",owner.formal_name_faction[0]?owner.formal_name_faction:"Native life");hud_text(rp,10,123,line,116);
   snprintf(line,sizeof(line),"Damage %u",v.damage_taken);hud_text(rp,10,141,line,116);
+  if(infantry_profile(v) || speeder_profile(v)){
+   hud_text(rp,10,162,game_palette_ready?"Game colours":"Raw preview",116);
+   if(speeder_profile(v))hud_text(rp,10,181,(v.faction_id>0 && v.faction_id<8 && faction_tint_ready[v.faction_id])?"Faction tint":"No tint metadata",116);
+  }
   hud_text(rp,10,215,"TAB: select unit",116);hud_text(rp,10,234,"C: centre unit",116);
   const auto* t=tile(v.x,v.y);
   if(t){
@@ -156,7 +168,7 @@ static void draw(struct Window* window){
   if(row>=0)sprite(sx,sy,row,col);
   else if(infantry_profile(v) || speeder_profile(v)){
    const unsigned facing=v.rotate_angle<0?0:(unsigned)v.rotate_angle&7u;
-   if(sx>=0 && sx<W && sy>=0 && sy<H){bool drawn=(speeder_profile(v)?speeder:infantry).draw(frame,(size_t)W*H*3,W,H,sx,sy,(unsigned)zoom,facing);printf("%s DRAW unit=%lu facing=%u ok=%d\n",speeder_profile(v)?"SPEEDER":"INFANTRY",(unsigned long)i,facing,drawn);}
+   if(sx>=0 && sx<W && sy>=0 && sy<H){const char* colours=speeder_profile(v)?speeder_colours(v):(game_palette_ready?"game-global":"raw-model-preview");bool drawn=(speeder_profile(v)?speeder:infantry).draw(frame,(size_t)W*H*3,W,H,sx,sy,(unsigned)zoom,facing);printf("%s DRAW unit=%lu facing=%u ok=%d colours=%s\n",speeder_profile(v)?"SPEEDER":"INFANTRY",(unsigned long)i,facing,drawn,colours);}
   }
  }
  }
@@ -164,7 +176,7 @@ static void draw(struct Window* window){
  FillPixelArray(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-window->BorderLeft,64-window->BorderTop,0x00071316u);FillPixelArray(rp,window->BorderLeft,554,window->Width-window->BorderRight-window->BorderLeft,window->Height-window->BorderBottom-554,0x00071316u);
  SetAPen(rp,1);SetBPen(rp,0);SetDrMd(rp,JAM2);char line[180];
  snprintf(line,sizeof(line),"ORIGINAL TUTORIAL | Turn %ld | %lu x %lu | %lu units, %lu bases",(long)world.game().preferences.CurrentTurn,(unsigned long)world.game().map.info.width,(unsigned long)world.game().map.info.height,(unsigned long)world.game().vehicle_count,(unsigned long)world.game().base_count);text(rp,15,42,line);
- text(rp,15,62,"Read-only original world | Basic infantry/speeder CVR; other models pending | WASD scroll | TAB select | +/- zoom | Q quit");
+ text(rp,15,62,game_palette_ready?"Read-only original world | CVR game palette; faction overrides where available | WASD | TAB | +/- | Q":"Read-only original world | CVR raw colour preview: palette.pcx missing | WASD | TAB | +/- | Q");
  for(size_t i=0;i<world.game().base_count;++i){const auto& b=*world.base(i);int sx,sy;if(position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){snprintf(line,sizeof(line),"[Base] %.24s",b.name);ui_text.draw(rp,12+sx-24,70+sy+24,line,W-(12+sx-24),false,alpha::UiInk::map_label);}}
  for(size_t i=0;i<world.game().vehicle_count;++i){const auto& v=*world.vehicle(i);int sx,sy;if(!position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
   const auto& p=*world.prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || infantry_profile(v) || speeder_profile(v);
@@ -182,12 +194,13 @@ int alpha_original_view(int argc,char** argv){
  if(!load_image(argv[4],terrain) || !load_image(argv[5],sprites))return 20;
  p=read_file("console.pcx",n);if(!p)return 20;ok=console_image.load(p,n);free(p);if(!ok || console_image.width()!=800 || console_image.height()!=257)return 20;
  selected=selected_base=0;base_open=false;
- bool needed[8]{};
- for(size_t i=0;i<world.game().base_count;++i){int f=world.base(i)->faction_id;if(f<0 || f>=8)return 20;needed[f]=true;}
- for(unsigned f=0;f<8;++f)if(needed[f]){char name[32];unsigned len=0;const auto& def=*world.faction_definition(f);
-  for(;len<24 && def.filename[len];++len){unsigned char c=(unsigned char)def.filename[len];if(c>='A' && c<='Z')c=(unsigned char)(c-'A'+'a');if(!((c>='a' && c<='z') || (c>='0' && c<='9') || c=='_' || c=='-'))return 20;name[len]=(char)c;}
-  if(!len || len>=24)return 20;
-  memcpy(name+len,".pcx",5);if(!load_image(name,faction_images[f])){fprintf(stderr,"Missing faction art %s\n",name);return 20;}
+ bool needed[8]{},base_needed[8]{},loaded_faction_art[8]{};
+ for(size_t i=0;i<world.game().base_count;++i){int f=world.base(i)->faction_id;if(f<0 || f>=8)return 20;needed[f]=base_needed[f]=true;}
+ for(size_t i=0;i<world.game().vehicle_count;++i){int f=world.vehicle(i)->faction_id;if(f>0 && f<8)needed[f]=true;}
+ for(unsigned f=0;f<8;++f)if(needed[f]){char name[32];unsigned len=0;bool valid_name=true;const auto& def=*world.faction_definition(f);
+  for(;len<24 && def.filename[len];++len){unsigned char c=(unsigned char)def.filename[len];if(c>='A' && c<='Z')c=(unsigned char)(c-'A'+'a');if(!((c>='a' && c<='z') || (c>='0' && c<='9') || c=='_' || c=='-')){valid_name=false;break;}name[len]=(char)c;}
+  if(!valid_name || !len || len>=24){if(base_needed[f])return 20;fprintf(stderr,"Faction %u has no safe optional colour asset name\n",f);continue;}
+  memcpy(name+len,".pcx",5);loaded_faction_art[f]=load_image(name,faction_images[f]);if(!loaded_faction_art[f]){fprintf(stderr,"Missing faction art %s; faction colours unavailable\n",name);if(base_needed[f])return 20;}
  }
  // Optional original models: missing/unsupported assets keep the explicit CVR
  // label instead of silently substituting a different chassis.
@@ -197,7 +210,15 @@ int alpha_original_view(int argc,char** argv){
  alpha::CvrPartInput parts[10]{};uint8_t* owned[10]{};bool all=true;
  for(unsigned i=0;i<10;++i){owned[i]=read_file(names[i],parts[i].size);parts[i].data=owned[i];all=all && owned[i];}
  speeder_available=all && speeder.load_speeder(parts,10);for(auto*p:owned)free(p);
- printf("SPEEDER PROFILE ready=%d base-human-basic-static; raw component palettes; no faction remap/shadows\n",speeder_available);
+ game_palette_ready=load_image("palette.pcx",game_palette_image) && alpha::build_cvr_default_global_palette(game_palette_image.palette(),768,game_rgb,sizeof(game_rgb));
+ memset(faction_tint_ready,0,sizeof(faction_tint_ready));
+ for(unsigned f=1;f<8;++f)if(game_palette_ready && loaded_faction_art[f]){
+  const auto& image=faction_images[f];const auto* pixels=image.pixels();const unsigned intensity=pixels[757*image.width()+161],colour=pixels[745*image.width()+435];
+  if(intensity!=255 && colour!=255){const unsigned index=(colour+10)&255;memcpy(faction_tints[f],game_rgb+index*3,3);faction_tint_ready[f]=true;printf("CVR FACTION TINT faction=%u source=metadata game-index=%u\n",f,index);}
+ }
+ if(infantry_available && game_palette_ready && !infantry.set_game_palette(game_rgb,sizeof(game_rgb))){game_palette_ready=false;infantry.clear_game_palette();}
+ printf("CVR GAME PALETTE ready=%d source=palette.pcx default-gamma1; no custom gamma/system-default tint guesses\n",game_palette_ready);
+ printf("SPEEDER PROFILE ready=%d base-human-basic-static; colours selected explicitly; no original viewport/shadows\n",speeder_available);
  printf("INFANTRY PROFILE ready=%d base-human-basic-static; tile-foot anchor; no original viewport/shadows\n",infantry_available);fflush(stdout);
  if(!ui_text.open()){puts("Original UI fonts are required.");return 20;}
  frame=(uint8_t*)malloc((size_t)W*H*3);hud_frame=(uint8_t*)malloc((size_t)W*HUD_H*3);if(!frame || !hud_frame){free(frame);free(hud_frame);ui_text.close();return 20;}

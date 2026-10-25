@@ -16,7 +16,7 @@ def model(color,offset=(0,0,0),hidden=False,singular=False,frames=15,geom=None):
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--cc',default='g++');ap.add_argument('--m68k-linux',action='store_true');a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=False);src=Path(__file__).resolve().parent
  flags=['-m68040','-static'] if a.m68k_linux else ['-g','-fsanitize=address,undefined']
- exe=out/'control';subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*map(str,[src/(n+'.cpp') for n in ['cvr_model','cvr_raster','cvr_lighting','cvr_infantry','cvr_infantry_control']]),'-lm','-o',str(exe)],check=True)
+ exe=out/'control';subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*map(str,[src/(n+'.cpp') for n in ['cvr_model','cvr_raster','cvr_lighting','cvr_infantry','cvr_palette','cvr_infantry_control']]),'-lm','-o',str(exe)],check=True)
  red=(255,0,0);blue=(0,0,255)
  cases=[('equal-depth-keeps-body',model(red),model(blue),1,0,True),('distinct-component-palettes',model(red),model(blue,offset=(100,0,0)),1,1,True),('hidden-body',model(red,hidden=True),model(blue),0,1,True),('hidden-reactor',model(red),model(blue,hidden=True),1,0,True),('all-hidden',model(red,hidden=True),model(blue,hidden=True),0,0,False),('singular-body',model(red,singular=True),model(blue),0,0,False),('singular-reactor',model(red),model(blue,singular=True),0,0,False),('missing-body-frames',model(red,frames=1),model(blue),0,0,False),('profile-voxel-limit',model(red,geom=geometry(points=bytes([13<<3,0,5,12<<3,0,5])*50001+bytes([26<<3,0,5]),count=100003)),model(blue),0,0,False)]
  reports=[]

@@ -4,6 +4,7 @@
 #include "cvr_infantry.h"
 #include "cvr_lighting.h"
 #include "cvr_raster.h"
+#include "cvr_palette.h"
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,8 +21,9 @@ bool inverse_light(const float* m,const float* light,float* out){
  return true;
 }
 }
-CvrUnitAssembly::CvrUnitAssembly():parts_(0),limit_(0),scale_(0),root_x_(0),lattice_(nullptr),ready_(false),cache_{}{}
-CvrUnitAssembly::~CvrUnitAssembly(){for(auto&c:cache_)free(c.rgba);free(lattice_);}
+CvrUnitAssembly::CvrUnitAssembly():parts_(0),limit_(0),scale_(0),root_x_(0),lattice_(nullptr),ready_(false),game_palette_(false),faction_palette_(false),global_rgb_{},tint_{},faction_shades_{},cache_{}{}
+CvrUnitAssembly::~CvrUnitAssembly(){reset_cache();free(lattice_);}
+void CvrUnitAssembly::reset_cache(){for(auto&c:cache_){free(c.rgba);c.rgba=nullptr;}}
 bool CvrUnitAssembly::load(const void* body,size_t body_size,const void* reactor,size_t reactor_size){
  const CvrPartInput parts[2]={{body,body_size},{reactor,reactor_size}};
  return load_parts(parts,2,100000,15,1.25f,-400);
@@ -31,7 +33,7 @@ bool CvrUnitAssembly::load_speeder(const CvrPartInput* parts,size_t count){
  return load_parts(parts,10,160000,1,1.0f,0);
 }
 bool CvrUnitAssembly::load_parts(const CvrPartInput* parts,unsigned count,unsigned limit,unsigned body_frames,float scale,float root){
- ready_=false;parts_=0;for(auto&c:cache_){free(c.rgba);c.rgba=nullptr;}
+ ready_=false;parts_=0;game_palette_=faction_palette_=false;reset_cache();
  if(!parts || !count || count>10)return false;
  size_t total=0;
  for(unsigned i=0;i<count;++i){
@@ -48,6 +50,19 @@ bool CvrUnitAssembly::load_parts(const CvrPartInput* parts,unsigned count,unsign
  parts_=count;limit_=limit;scale_=scale;root_x_=root;
  ready_=lattice_ && build_cvr_shade_lattice(lattice_,cvr_shade_lattice_size);return ready_;
 }
+bool CvrUnitAssembly::set_game_palette(const uint8_t* rgb,size_t size,const uint8_t* tint,size_t tint_size){
+ if(!ready_ || !rgb || size!=768 || (!tint && tint_size) || (tint && (tint_size!=3 || parts_!=10)))return false;
+ const bool faction=tint!=nullptr;
+ if(game_palette_ && faction_palette_==faction && !memcmp(rgb,global_rgb_,768) && (!faction || !memcmp(tint,tint_,3)))return true;
+ uint8_t* table=faction?(uint8_t*)malloc(12288):nullptr;if(faction && !table)return false;
+ if(faction){for(unsigned shade=0;shade<24;++shade)for(unsigned c=0;c<256;++c)table[shade*256+c]=models_[4].shaded_index((uint8_t)c,shade);
+  // Build into temporary storage before committing or touching existing caches.
+  if(!build_cvr_faction_palette(rgb,size,table,6144,tint,tint_size,table+6144,6144)){free(table);return false;}
+ }
+ reset_cache();memcpy(global_rgb_,rgb,768);if(faction){memcpy(tint_,tint,3);memcpy(faction_shades_,table+6144,6144);}
+ free(table);game_palette_=true;faction_palette_=faction;return true;
+}
+void CvrUnitAssembly::clear_game_palette(){if(game_palette_){reset_cache();game_palette_=faction_palette_=false;}}
 bool CvrUnitAssembly::draw(uint8_t* output,size_t capacity,unsigned width,unsigned height,int cx,int foot,unsigned zoom,unsigned facing){
  if(!ready_ || !output || !width || !height || width>4096 || height>4096 || capacity<(size_t)width*height*3 || zoom<1 || zoom>2 || facing>7 || cx<0 || foot<0 || cx>=(int)width || foot>=(int)height)return false;
  const unsigned sw=128*zoom,sh=144*zoom;const size_t cells=(size_t)sw*sh;
@@ -81,7 +96,7 @@ bool CvrUnitAssembly::draw(uint8_t* output,size_t capacity,unsigned width,unsign
  const float view_light=.5773500204086304f;
  const float light[3]={-view_light,(.500459611415863f-.8657598495483398f)*view_light,-(.8657598495483398f+.500459611415863f)*view_light};
  at=0;
- for(unsigned component=0;ok && component<parts_;++component){const CvrModel&model=models_[component];uint8_t palette[6144];for(unsigned s=0;s<24;++s)for(unsigned c=0;c<256;++c)palette[s*256+c]=model.shaded_index((uint8_t)c,s);
+ for(unsigned component=0;ok && component<parts_;++component){const CvrModel&model=models_[component];uint8_t palette[6144];for(unsigned s=0;s<24;++s)for(unsigned c=0;c<256;++c)palette[s*256+c]=faction_palette_ && (component==2 || component==4)?faction_shades_[s*256+c]:model.shaded_index((uint8_t)c,s);
   for(unsigned i=0;ok && i<model.object_count();++i){const auto*o=model.object(i);const auto&f=o->frames[0];if(f.flags&0x80)continue;
    float pose[9];for(unsigned col=0;col<3;++col){pose[col]=co*f.matrix[col]-si*f.matrix[3+col];pose[3+col]=si*f.matrix[col]+co*f.matrix[3+col];pose[6+col]=f.matrix[6+col];}
    float object_light[3];uint8_t shades[2048];if(!inverse_light(pose,light,object_light) || !cvr_shades_for_light(lattice_,cvr_shade_lattice_size,object_light[0],object_light[1],object_light[2],shades,sizeof(shades))){ok=false;break;}
@@ -92,12 +107,12 @@ bool CvrUnitAssembly::draw(uint8_t* output,size_t capacity,unsigned width,unsign
    memcpy(before,depths,cells*sizeof(uint16_t));
    if(ok)ok=raster_cvr_points(batch,o->count,shades,sizeof(shades),palette,sizeof(palette),clip,scale*o->units>.5f,surface);
    free(batch);
-   if(ok)for(size_t j=0;j<cells;++j)if(depths[j]!=before[j])memcpy(rgb+j*3,model.palette_rgb(pixels[j]),3);
+   if(ok)for(size_t j=0;j<cells;++j)if(depths[j]!=before[j])memcpy(rgb+j*3,game_palette_?global_rgb_+pixels[j]*3:model.palette_rgb(pixels[j]),3);
   }
  }
  // Commit the private surface only after all model/transformation checks pass.
- if(ok){cached.rgba=(uint8_t*)malloc(cells*4);if(cached.rgba){for(size_t i=0;i<cells;++i){memcpy(cached.rgba+i*4,rgb+i*3,3);cached.rgba[i*4+3]=depths[i]!=65535;}blit(cached.rgba,sw,sh,output,width,height,cx,foot,zoom);}}
- if(ok && !cached.rgba)for(unsigned y=0;y<sh;++y)for(unsigned x=0;x<sw;++x){const size_t n=(size_t)y*sw+x;const int dx=cx-(int)sw/2+(int)x,dy=foot-(int)sh+8*(int)zoom+(int)y;if(depths[n]!=65535 && dx>=0 && dy>=0 && dx<(int)width && dy<(int)height)memcpy(output+((size_t)dy*width+dx)*3,rgb+n*3,3);}
+ if(ok){cached.rgba=(uint8_t*)malloc(cells*4);if(cached.rgba){for(size_t i=0;i<cells;++i){memcpy(cached.rgba+i*4,rgb+i*3,3);cached.rgba[i*4+3]=depths[i]!=65535 && (!game_palette_ || pixels[i]!=9);}blit(cached.rgba,sw,sh,output,width,height,cx,foot,zoom);}}
+ if(ok && !cached.rgba)for(unsigned y=0;y<sh;++y)for(unsigned x=0;x<sw;++x){const size_t n=(size_t)y*sw+x;const int dx=cx-(int)sw/2+(int)x,dy=foot-(int)sh+8*(int)zoom+(int)y;if(depths[n]!=65535 && (!game_palette_ || pixels[n]!=9) && dx>=0 && dy>=0 && dx<(int)width && dy<(int)height)memcpy(output+((size_t)dy*width+dx)*3,rgb+n*3,3);}
  free(pixels);free(depths);free(before);free(rgb);free(points);return ok;
 }
 }

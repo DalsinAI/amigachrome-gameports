@@ -144,3 +144,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_palette.py --out "$RUNNER_TEMP/cvr-palette-host"
       - name: Default global and faction CVR palette controls on independent big-endian 68040
         run: python3 ports/alpha-centauri/native/test_cvr_palette.py --out "$RUNNER_TEMP/cvr-palette-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Integrated CVR palette and cache transitions on host
+        run: python3 ports/alpha-centauri/native/test_cvr_palette_render.py --out "$RUNNER_TEMP/cvr-palette-render-host"
+      - name: Integrated CVR palette and cache transitions on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_cvr_palette_render.py --out "$RUNNER_TEMP/cvr-palette-render-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

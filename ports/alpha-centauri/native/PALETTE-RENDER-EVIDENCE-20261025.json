@@ -1,0 +1,29 @@
+{
+  "status": "HOST QUALIFIED / NORMAL SDK BUILT / NATIVE EXECUTION PENDING",
+  "frozenParents": {
+    "87": "2fa8d1f8e7498e70fac2db5be953e28270f44061",
+    "90": "21aebe97b6eb87985742ce0b778cff854163823f"
+  },
+  "synthetic": {
+    "panelCases": 2,
+    "transitions": 18,
+    "draws": 288,
+    "transparentKeyDraws": 16,
+    "unsupportedProfiles": "unchanged"
+  },
+  "native": "Build only; actual native CLI and Explore UI execution pending. No lab accessed.",
+  "sourcePolicy": "No owner assets or original executable bytes/tables included.",
+  "binaries": {
+    "alpha-restoration-palette-integration-final": "2b00456688ab49859c104f8a937bfedd46a5774b5b996501e64b22ac71168205",
+    "speeder-palette-integration-final": "1ecd22893e83dd804ab133e08cbda2f751c90a44b5c5ad7efa09051d58452b16",
+    "infantry-palette-integration-final": "8ebf729b33578eaaf69e82a35ec2b4c2966136041994b4dcbf630150a01f774c",
+    "palette-render-control-native": "fb8384de12d913a7de1dedcdec43ebeb2a9f31e9f766d706a2bb1326f51c1677"
+  },
+  "limitations": [
+    "native execution pending",
+    "defaultgamma1 only",
+    "neutral explicit fallback for missing tint metadata",
+    "unchanged unsupported profiles",
+    "original shadows/camera pipeline not complete"
+  ]
+}
