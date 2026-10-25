@@ -42,7 +42,7 @@ def cases():
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--cc',default='g++');ap.add_argument('--m68k-linux',action='store_true');args=ap.parse_args();out=Path(args.out);out.mkdir(parents=True,exist_ok=False);src=Path(__file__).resolve().parent;exe=out/'probe'
- flags=['-m68040','-m68881','-static'] if args.m68k_linux else ['-g','-fsanitize=address,undefined']
+ flags=['-m68040','-static'] if args.m68k_linux else ['-g','-fsanitize=address,undefined']
  subprocess.run([args.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,str(src/'cvr_model.cpp'),str(src/'cvr_probe.cpp'),'-o',str(exe)],check=True)
  report=[];env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0');want=expected()
  for index,(name,data,valid) in enumerate(cases()):
