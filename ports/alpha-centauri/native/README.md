@@ -1064,3 +1064,7 @@ Original ordinal facility/project definitions are parsed with effective free-tec
 kept disabled as in the original loaders: [scope](FACILITIES.md),
 [evidence](FACILITY-EVIDENCE-20261025.json). No production eligibility or UI is
 implied, and actual AmigaOS qualification remains pending.
+
+Pure original facility availability over explicit facts is described in
+[FACILITY-AVAILABILITY.md](FACILITY-AVAILABILITY.md). It is separate from placing
+production orders or advancing the game; native execution remains held.
