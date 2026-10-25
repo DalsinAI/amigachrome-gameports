@@ -40,16 +40,26 @@
     "built": true,
     "executed": false
   },
-  "independentBigEndianExecution": "UNRUN",
+  "independentBigEndianExecution": "PENDING draft CI",
   "nativeExecution": "UNRUN",
   "labInteraction": false,
   "watchPreviewUntouched": true,
-  "publication": "Local scoped preparation; handoff before draft publication",
+  "publication": "Stacked draft targeting PR86; final-head CI required; native gate held",
   "notImplemented": [
     "Blind/AI selection",
     "Trade/steal/forced-dialog modes",
     "Valuation/default highlighting/RNG",
     "Exact GUI rendering",
     "Research point updates/discovery awards/network callbacks"
-  ]
+  ],
+  "publicCI": {
+    "rawContexts": 115,
+    "additionalInvalidControls": 2,
+    "savedWorlds": 64,
+    "factionQueries": 512,
+    "architectures": [
+      "host ASan/UBSan",
+      "independent big-endian68040"
+    ]
+  }
 }

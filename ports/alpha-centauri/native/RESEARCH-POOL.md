@@ -1,4 +1,4 @@
-# Normal human research candidate pool — host-only preparation
+# Normal human research candidate pool — draft validation
 
 `world_human_research_pool` combines the owned original `tech_avail` query with
 the deterministic candidate-membership part of normal
@@ -7,8 +7,9 @@ their original categories and a per-ID offered bit. It does not pick a technolog
 show a fake popup, consume RNG, update research history or award discoveries.
 
 This branch depends on PR86's `research_options` API. PR86 and the separate cost
-PR89 are preserved unchanged. The pool source is prepared locally for review;
-there is no pool PR or deployment/native qualification yet.
+PR89 are preserved unchanged. The pool is published as a stacked draft targeting the PR86 branch. It must
+remain held until its dependency and actual AmigaOS qualification pass; no
+deployment or native qualification is claimed.
 
 ## Recovered pool mechanics
 
@@ -89,7 +90,10 @@ SMAX executable is exercised with both runtime variant flags; a separate origina
 base executable GUI differential is not claimed. All original helper artifacts
 and original media remain private.
 
-Normal SDK raw/world probes build. Actual AmigaOS and independent big-endian
-execution are **unrun** for this addition. The user's watch preview owns the lab;
+Public CI runs 115 generated raw contexts plus two invalid snapshot controls,
+and 64 owned worlds / 512 faction queries, on host sanitizers and independent
+big-endian 68040. Final-head CI status must be checked before review completion.
+Normal SDK raw/world probes build. Actual AmigaOS execution is **unrun**;
+independent big-endian execution is pending the draft CI. The user's watch preview owns the lab;
 this workstream has made no lab reads, writes, inputs, starts, stops or restores.
 No browser/gameplay wiring or native qualification/merge is implied.
