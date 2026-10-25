@@ -76,7 +76,12 @@ static void draw(struct Window* w){
 }
 static void open_map(struct Window* w,const char* path){
  char* args[6]={const_cast<char*>("alpha-original-view"),const_cast<char*>(expansion?"expansion":"base"),const_cast<char*>(expansion?"alphax.txt":"alpha.txt"),const_cast<char*>(path),const_cast<char*>("texture.pcx"),const_cast<char*>("Units.pcx")};
- int rc=alpha_original_view(6,args);snprintf(status,sizeof(status),rc==0?"Returned from the original world view.":"Could not open that game/rules profile or a required original asset.");printf("FRONTEND MAP RC %d\n",rc);fflush(stdout);ActivateWindow(w);draw(w);
+ // The opening-menu loop belongs to this screen. Do not play it as a
+ // substitute for the world's not-yet-restored ambient music system.
+ if(audio_device)SDL_PauseAudioDevice(audio_device,1);
+ int rc=alpha_original_view(6,args);
+ if(audio_device && music_on)SDL_PauseAudioDevice(audio_device,0);
+ snprintf(status,sizeof(status),rc==0?"Returned from the original world view.":"Could not open that game/rules profile or a required original asset.");printf("FRONTEND MAP RC %d music_resumed=%d\n",rc,audio_device && music_on);fflush(stdout);ActivateWindow(w);draw(w);
 }
 static void choose_map(struct Window* w){
  if(!AslBase){snprintf(status,sizeof(status),"The file requester library is unavailable.");draw(w);return;}

@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-25",
+  "scope": "Integrated original-world presentation profile and opening-menu music lifecycle; not original UI metric or full renderer fidelity",
+  "compiler": "OpenAmigaGCC 16.2.0-open3 normal private SDK",
+  "build": "build_original_frontend.sh",
+  "binarySHA256": "6d461d9521643e0f9012bfae40558bf5b55e50a663efd1b87614a531861ba97e",
+  "native": {
+    "activeDisplayFrames": 210,
+    "frontendExitRC": 0,
+    "labStopped": true,
+    "configROMModuleStartupRestored": true,
+    "audio": {
+      "audioOn": {
+        "bytes": 346296,
+        "chunks": 19,
+        "nonzero": 171304,
+        "peak": 251
+      },
+      "audioResumed": {
+        "bytes": 346296,
+        "chunks": 19,
+        "nonzero": 169116,
+        "peak": 852
+      },
+      "userMuted": {
+        "bytes": 332160,
+        "chunks": 18,
+        "nonzero": 0,
+        "peak": 0
+      },
+      "remainsMuted": {
+        "bytes": 335692,
+        "chunks": 18,
+        "nonzero": 0,
+        "peak": 0
+      },
+      "reenabled": {
+        "bytes": 346296,
+        "chunks": 19,
+        "nonzero": 171738,
+        "peak": 313
+      }
+    },
+    "worldMenuAudio": {
+      "bytes": 349832,
+      "chunks": 19,
+      "nonzero": 0,
+      "peak": 0
+    }
+  },
+  "changes": [
+    "Compact 13-pixel original Arial Narrow body, 16-pixel original Alpha Centauri headings; crisp glyphs, ascent-correct baseline and role colours",
+    "Original console unit and terrain columns have separate text bounds",
+    "Original saved selected terrain facts; no recalculated or invented yields",
+    "Row-ordered base and native-unit painting rather than global bases-then-units order",
+    "Opening-menu loop paused during world view and resumed only if user enabled it"
+  ],
+  "limits": [
+    "Chosen presentation profile guided by original screenshots, not recovered exact original metrics",
+    "Existing flat coast/terrain rendering remains incomplete",
+    "Human CVR world models, faction palettes, original ambient score and gameplay remain unfinished",
+    "Layer-order change compiled and exercised in native scene; no separate exhaustive overlap pixel oracle"
+  ]
+}
