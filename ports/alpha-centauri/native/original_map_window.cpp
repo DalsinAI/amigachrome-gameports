@@ -6,6 +6,7 @@
 #include "original_world.h"
 #include "world_movement_price.h"
 #include "pcx_image.h"
+#include "original_ui_text.h"
 #include <exec/types.h>
 #include <intuition/intuition.h>
 #include <graphics/gfxbase.h>
@@ -55,7 +56,58 @@ static void base_sprite(int cx,int cy,const alpha::OriginalBase& b){
  }
 }
 
-static void text(struct RastPort* rp,int x,int y,const char* s){Move(rp,x,y);Text(rp,(STRPTR)s,(ULONG)strlen(s));}
+static const int HUD_H=257,HUD_X=64,HUD_Y=554;
+static alpha::PcxImage console_image;static alpha::OriginalUiText ui_text;static uint8_t* hud_frame;
+static size_t selected_base=0;static bool base_open=false;
+static void hud_text(struct RastPort* rp,int x,int y,const char* s,int width=220,bool heading=false){ui_text.draw(rp,12+HUD_X+x,HUD_Y+y,s,width,heading);}
+static void production_name(const alpha::OriginalBase& base,char* out,size_t bytes){
+ if(base.queue_size<0 || base.queue_size>9){snprintf(out,bytes,"Production details unavailable");return;}
+ int id=base.queue_items[0];if(id>=0 && id<512){const auto* p=world.prototype((size_t)id);snprintf(out,bytes,"%.31s",p && p->name[0]?p->name:"Original unit design");}
+ else snprintf(out,bytes,"Facility details not restored");
+}
+static void draw_hud(struct Window* window){
+ for(int y=0;y<HUD_H;++y)for(int x=0;x<W;++x){auto* dst=hud_frame+((size_t)y*W+x)*3;dst[0]=7;dst[1]=19;dst[2]=22;
+  if(x>=HUD_X && x<HUD_X+800){const auto* c=console_image.rgb((unsigned)(x-HUD_X),(unsigned)y);if(c && !(c[0]==100 && c[1]==16 && c[2]==156) && !(c[0]==125 && c[1]==0 && c[2]==128) && !(c[0]==255 && c[1]==0 && c[2]==255)){dst[0]=c[0];dst[1]=c[1];dst[2]=c[2];}}
+ }
+ // Navigation thumbnail of the actual saved world, coloured from loaded terrain.
+ const auto& map=world.game().map.info;
+ for(int py=0;py<174;++py)for(int px=0;px<224;++px){int y=(int)((uint32_t)py*map.height/174),x=(int)((uint32_t)px*map.width/224);if((x+y)&1)x=x+1<(int)map.width?x+1:x-1;const auto*t=tile(x,y);if(!t)continue;
+  const auto*c=terrain.rgb((t->climate&0xe0)<0x60?308u:29u,(t->climate&0xe0)<0x60?105u:143u);auto*dst=hud_frame+((size_t)(52+py)*W+HUD_X+563+px)*3;if(c)for(int k=0;k<3;++k)dst[k]=c[k];
+ }
+ for(size_t i=0;i<world.game().base_count;++i){const auto& b=*world.base(i);int x=HUD_X+563+(int)((uint32_t)b.x*224/map.width),y=52+(int)((uint32_t)b.y*174/map.height);for(int dy=0;dy<3;++dy)for(int dx=0;dx<3;++dx){int px=x+dx,py=y+dy;if(px>=0 && px<W && py>=0 && py<HUD_H){auto*p=hud_frame+((size_t)py*W+px)*3;p[0]=230;p[1]=212;p[2]=144;}}}
+ WritePixelArray(hud_frame,0,0,W*3,window->RPort,12,HUD_Y,W,HUD_H,RECTFMT_RGB);auto*rp=window->RPort;char line[180];
+
+ if(world.game().vehicle_count){const auto&v=*world.vehicle(selected);const auto&p=*world.prototype((size_t)v.unit_id);hud_text(rp,20,86,p.name[0]?p.name:"Original unit design",220,true);
+  snprintf(line,sizeof(line),"Position %d, %d",v.x,v.y);hud_text(rp,20,116,line);
+  const auto& owner=*world.faction_definition(v.faction_id);snprintf(line,sizeof(line),"%.30s",owner.formal_name_faction[0]?owner.formal_name_faction:"Native life");hud_text(rp,20,142,line);
+  snprintf(line,sizeof(line),"Damage %u",v.damage_taken);hud_text(rp,20,168,line);
+  hud_text(rp,20,216,"TAB: select unit");hud_text(rp,20,240,"C: centre unit");
+ }
+ if(world.game().base_count){const auto&b=*world.base(selected_base);hud_text(rp,274,89,b.name,260,true);
+  snprintf(line,sizeof(line),"Population %d",b.pop_size);hud_text(rp,274,113,line);
+  snprintf(line,sizeof(line),"Nutrients %ld   Minerals %ld",(long)b.nutrients_accumulated,(long)b.minerals_accumulated);hud_text(rp,274,137,line,260);
+  snprintf(line,sizeof(line),"Surplus  N %+ld   M %+ld   E %+ld",(long)b.nutrient_surplus,(long)b.mineral_surplus,(long)b.energy_surplus);hud_text(rp,274,161,line,260);
+  production_name(b,line,sizeof(line));hud_text(rp,274,212,"Production (saved turn)",260);hud_text(rp,274,236,line,260);
+
+ }
+ hud_text(rp,565,245,"Click map to navigate",210);
+ ui_text.draw(rp,20,840,"Saved turn | B: next base | I: details | ESC: close | Q: quit | Orders / End Turn unavailable",910);
+}
+static void draw_base_details(struct Window* window){
+ if(!base_open || !world.game().base_count)return;
+ const auto&b=*world.base(selected_base);auto*rp=window->RPort;FillPixelArray(rp,104,120,744,398,0x00071316u);char line[160];
+ ui_text.draw(rp,128,162,b.name,660,true);ui_text.draw(rp,128,190,"Original saved-turn snapshot - read only",660);
+ snprintf(line,sizeof(line),"Population %d    Specialists %ld",b.pop_size,(long)b.specialist_total);ui_text.draw(rp,128,228,line,660);
+ snprintf(line,sizeof(line),"Nutrients: stored %ld   intake %ld   surplus %+ld",(long)b.nutrients_accumulated,(long)b.nutrient_intake,(long)b.nutrient_surplus);ui_text.draw(rp,128,260,line,660);
+ snprintf(line,sizeof(line),"Minerals: stored %ld   intake %ld   surplus %+ld",(long)b.minerals_accumulated,(long)b.mineral_intake,(long)b.mineral_surplus);ui_text.draw(rp,128,292,line,660);
+ snprintf(line,sizeof(line),"Energy: intake %ld   surplus %+ld",(long)b.energy_intake,(long)b.energy_surplus);ui_text.draw(rp,128,324,line,660);
+ snprintf(line,sizeof(line),"Economy %ld    Labs %ld    Psych %ld",(long)b.economy_total,(long)b.labs_total,(long)b.psych_total);ui_text.draw(rp,128,356,line,660);
+ production_name(b,line,sizeof(line));ui_text.draw(rp,128,398,"Production recorded in save:",660);ui_text.draw(rp,128,426,line,660,true);
+ ui_text.draw(rp,128,482,"B selects the next base. ESC returns to the map.",660);
+ printf("BASE SNAPSHOT index=%lu pop=%d nutrients=%ld minerals=%ld intake=%ld,%ld,%ld surplus=%ld,%ld,%ld\n",(unsigned long)selected_base,b.pop_size,(long)b.nutrients_accumulated,(long)b.minerals_accumulated,(long)b.nutrient_intake,(long)b.mineral_intake,(long)b.energy_intake,(long)b.nutrient_surplus,(long)b.mineral_surplus,(long)b.energy_surplus);fflush(stdout);
+}
+
+static void text(struct RastPort* rp,int x,int y,const char* s){if(x>=0 && x<W)ui_text.draw(rp,x,y,s,W-x);}
 static void draw(struct Window* window){
  for(size_t i=0;i<(size_t)W*H;++i){frame[3*i]=6;frame[3*i+1]=15;frame[3*i+2]=24;}
  for(int y=camera_y-17;y<=camera_y+17;++y)for(int raw=camera_x-17;raw<=camera_x+17;++raw){
@@ -79,22 +131,17 @@ static void draw(struct Window* window){
   if(row>=0)sprite(sx,sy,row,col);
  }
  auto* rp=window->RPort;WritePixelArray(frame,0,0,(UWORD)(W*3),rp,12,70,W,H,RECTFMT_RGB);
- SetAPen(rp,0);RectFill(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-1,64);RectFill(rp,window->BorderLeft,554,window->Width-window->BorderRight-1,window->Height-window->BorderBottom-1);
+ FillPixelArray(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-window->BorderLeft,64-window->BorderTop,0x00071316u);FillPixelArray(rp,window->BorderLeft,554,window->Width-window->BorderRight-window->BorderLeft,window->Height-window->BorderBottom-554,0x00071316u);
  SetAPen(rp,1);SetBPen(rp,0);SetDrMd(rp,JAM2);char line[180];
- snprintf(line,sizeof(line),"ORIGINAL TUTORIAL | Turn %ld | %lu x %lu | %lu units, %lu bases",(long)world.game().preferences.CurrentTurn,(unsigned long)world.game().map.info.width,(unsigned long)world.game().map.info.height,(unsigned long)world.game().vehicle_count,(unsigned long)world.game().base_count);text(rp,15,36,line);
- text(rp,15,55,"Original terrain/native art; read-only view. WASD scroll | TAB next unit | C centre | B base | +/- zoom | Q quit");
+ snprintf(line,sizeof(line),"ORIGINAL TUTORIAL | Turn %ld | %lu x %lu | %lu units, %lu bases",(long)world.game().preferences.CurrentTurn,(unsigned long)world.game().map.info.width,(unsigned long)world.game().map.info.height,(unsigned long)world.game().vehicle_count,(unsigned long)world.game().base_count);text(rp,15,42,line);
+ text(rp,15,62,"Original terrain/native art; read-only view. WASD scroll | TAB next unit | C centre | B base | +/- zoom | Q quit");
  for(size_t i=0;i<world.game().base_count;++i){const auto& b=*world.base(i);int sx,sy;if(position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){snprintf(line,sizeof(line),"[Base] %.24s",b.name);text(rp,12+sx-24,70+sy+24,line);}}
  for(size_t i=0;i<world.game().vehicle_count;++i){const auto& v=*world.vehicle(i);int sx,sy;if(!position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
   const auto& p=*world.prototype((size_t)v.unit_id);bool native=v.unit_id>=7 && v.unit_id<=10;
   if(!native && sx>=30 && sx<W-180){snprintf(line,sizeof(line),"%.16s [CVR]",p.name[0]?p.name:"Saved design");text(rp,12+sx-25,70+sy-16,line);}
   if(i==selected){Move(rp,12+sx,70+sy-14);Draw(rp,12+sx+29,70+sy);Draw(rp,12+sx,70+sy+14);Draw(rp,12+sx-29,70+sy);Draw(rp,12+sx,70+sy-14);}
  }
- if(world.game().vehicle_count){const auto& v=*world.vehicle(selected);const auto& p=*world.prototype((size_t)v.unit_id);
-  snprintf(line,sizeof(line),"Selected %lu: %.31s | design %d | faction %u | original position %d,%d",(unsigned long)selected,p.name[0]?p.name:"Unnamed original design",v.unit_id,v.faction_id,v.x,v.y);text(rp,15,575,line);
-  const int dx[8]={1,2,1,0,-1,-2,-1,0},dy[8]={-1,0,1,2,1,0,-1,-2};size_t used=0;used+=(size_t)snprintf(line,sizeof(line),"Adjacent prices:");
-  for(unsigned d=0;d<8 && used<sizeof(line);++d){uint32_t price=0;auto error=alpha::world_movement_price(world,definitions,technologies,selected,basic.move_rate_roads,wrap(v.x+dx[d]),v.y+dy[d],false,price);used+=(size_t)snprintf(line+used,sizeof(line)-used,error==alpha::LogicError::ok?" %u:%lu":" %u:edge",d,(unsigned long)price);}text(rp,15,594,line);
- }
- text(rp,15,614,"Flat terrain preview: slopes/coast joins, human CVR models and movement actions are not restored yet.");
+ draw_hud(window);draw_base_details(window);
  printf("DRAW selected=%lu camera=%d,%d zoom=%d\n",(unsigned long)selected,camera_x,camera_y,zoom);fflush(stdout);
 }
 int alpha_original_view(int argc,char** argv){
@@ -103,6 +150,8 @@ int alpha_original_view(int argc,char** argv){
  bool ok=alpha::read_technologies(p,n,technologies)==alpha::Error::ok && alpha::read_unit_definitions(p,n,technologies,variant,definitions)==alpha::Error::ok && alpha::read_basic_rules(p,n,technologies,variant,basic,world_rules)==alpha::Error::ok;free(p);if(!ok)return 20;
  p=read_file(argv[3],n);if(!p)return 20;ok=world.load(p,n,0x12345678u)==alpha::WorldLoadError::ok;free(p);if(!ok || (world.game().data_version<11)!=(variant==alpha::Variant::base))return 20;
  if(!load_image(argv[4],terrain) || !load_image(argv[5],sprites))return 20;
+ p=read_file("console.pcx",n);if(!p)return 20;ok=console_image.load(p,n);free(p);if(!ok || console_image.width()!=800 || console_image.height()!=257)return 20;
+ selected=selected_base=0;base_open=false;
  bool needed[8]{};
  for(size_t i=0;i<world.game().base_count;++i){int f=world.base(i)->faction_id;if(f<0 || f>=8)return 20;needed[f]=true;}
  for(unsigned f=0;f<8;++f)if(needed[f]){char name[32];unsigned len=0;const auto& def=*world.faction_definition(f);
@@ -110,17 +159,23 @@ int alpha_original_view(int argc,char** argv){
   if(!len || len>=24)return 20;
   memcpy(name+len,".pcx",5);if(!load_image(name,faction_images[f])){fprintf(stderr,"Missing faction art %s\n",name);return 20;}
  }
- frame=(uint8_t*)malloc((size_t)W*H*3);if(!frame)return 20;
+ if(!ui_text.open()){puts("Original UI fonts are required.");return 20;}
+ frame=(uint8_t*)malloc((size_t)W*H*3);hud_frame=(uint8_t*)malloc((size_t)W*HUD_H*3);if(!frame || !hud_frame){free(frame);free(hud_frame);ui_text.close();return 20;}
  if(world.game().vehicle_count){camera_x=world.vehicle(0)->x;camera_y=world.vehicle(0)->y;}else {camera_x=(int)world.game().map.info.width/2;camera_y=(int)world.game().map.info.height/2;}
  IntuitionBase=(struct IntuitionBase*)OpenLibrary((STRPTR)"intuition.library",39);GfxBase=(struct GfxBase*)OpenLibrary((STRPTR)"graphics.library",39);CyberGfxBase=OpenLibrary((STRPTR)"cybergraphics.library",41);
  struct Window* window=nullptr;
- if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(NULL,WA_Title,(ULONG)"Alpha Centauri - original tutorial data and art",WA_Width,952,WA_Height,632,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_REFRESHWINDOW,TAG_DONE);
+ if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(NULL,WA_Title,(ULONG)"Alpha Centauri - original tutorial data and art",WA_Width,952,WA_Height,864,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
  int rc=20;
  if(window){draw(window);bool quit=false;while(!quit){WaitPort(window->UserPort);struct IntuiMessage* m;
-  while((m=(struct IntuiMessage*)GetMsg(window->UserPort))){ULONG kind=m->Class;UWORD code=m->Code;ReplyMsg((struct Message*)m);
+  while((m=(struct IntuiMessage*)GetMsg(window->UserPort))){ULONG kind=m->Class;UWORD code=m->Code;WORD mouse_x=m->MouseX,mouse_y=m->MouseY;ReplyMsg((struct Message*)m);
    if(kind==IDCMP_CLOSEWINDOW)quit=true;
    else if(kind==IDCMP_REFRESHWINDOW){BeginRefresh(window);draw(window);EndRefresh(window,TRUE);}
-   else if(kind==IDCMP_VANILLAKEY){switch(code){case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world.game().base_count){camera_x=world.base(0)->x;camera_y=world.base(0)->y;}break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world.game().vehicle_count)selected=(selected+1)%world.game().vehicle_count;break;case 'c':if(world.game().vehicle_count){camera_x=world.vehicle(selected)->x;camera_y=world.vehicle(selected)->y;}break;}
+   else if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN){
+    if(mouse_x>=12+HUD_X+563 && mouse_x<12+HUD_X+787 && mouse_y>=HUD_Y+52 && mouse_y<HUD_Y+226){camera_x=(int)((uint32_t)(mouse_x-12-HUD_X-563)*world.game().map.info.width/224);camera_y=(int)((uint32_t)(mouse_y-HUD_Y-52)*world.game().map.info.height/174);}
+    else for(size_t i=0;i<world.game().base_count;++i){int x,y;const auto&b=*world.base(i);if(position(b.x,b.y,x,y) && abs(mouse_x-12-x)<24*zoom && abs(mouse_y-70-y)<24*zoom){selected_base=i;base_open=true;break;}}
+    draw(window);
+   }
+   else if(kind==IDCMP_VANILLAKEY){switch(code){case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world.game().base_count){selected_base=(selected_base+1)%world.game().base_count;camera_x=world.base(selected_base)->x;camera_y=world.base(selected_base)->y;}break;case 'i':if(world.game().base_count)base_open=!base_open;break;case 27:base_open=false;break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world.game().vehicle_count)selected=(selected+1)%world.game().vehicle_count;break;case 'c':if(world.game().vehicle_count){camera_x=world.vehicle(selected)->x;camera_y=world.vehicle(selected)->y;}break;}
     if(camera_x<0)camera_x=0;
     if(camera_x>=(int)world.game().map.info.width)camera_x=(int)world.game().map.info.width-1;
     if(camera_y<0)camera_y=0;
@@ -131,7 +186,7 @@ int alpha_original_view(int argc,char** argv){
  if(CyberGfxBase)CloseLibrary(CyberGfxBase);
  if(GfxBase)CloseLibrary((struct Library*)GfxBase);
  if(IntuitionBase)CloseLibrary((struct Library*)IntuitionBase);
- free(frame);printf("ORIGINAL VIEW RC %d\n",rc);return rc;
+ free(frame);free(hud_frame);ui_text.close();printf("ORIGINAL VIEW RC %d\n",rc);return rc;
 }
 
 #ifndef ALPHA_EMBEDDED_VIEW
