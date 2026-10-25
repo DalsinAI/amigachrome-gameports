@@ -585,3 +585,46 @@ including all custom prototype/faction records. Build with
 `ORIGINAL-WORLD-EVIDENCE-20261025.json`. The lab is stopped/restored; no live
 instance or original user data was changed. Full restored gameplay remains work
 in progress: importing original state alone does not execute it.
+
+### Saved and faction-specific unit speed
+
+`saved_speed.cpp/h` restores the recovered `speed_proto/speed` arithmetic for
+all512 saved design slots. It uses the actual saved component IDs/abilities,
+including unnamed, flags0 faction-specific designs. It does not replace them
+with the predefined unit table or require that a design has a stored name.
+Air/transport/slow/antigravity/fuel/air-superiority ordering, project bonuses,
+elite eligibility, damage rounding, artifact hitpoints and sea minimum speed
+follow the pinned OpenSMACX functions.
+
+The dependencies are explicit: Cloudbase ownership belongs to the design's
+faction (`id/64`), Maritime ownership to the vehicle's faction, and effective
+morale is the resolved `morale_veh(veh,true,0)` result. It is **not simply the raw
+saved morale byte**. This API does not invoke an unported morale/project callback
+or claim these dependencies are already bound into the world. Road rate and
+qualified base/expansion component tables are required. The byte-capacity guard
+rejects movement speeds above255 rather than wrapping; no mod-specific maximum
+is applied implicitly. The Fungal Tower exception is enabled for expansion
+rules; the documented base-profile adapter disables it. Failure leaves outputs
+unchanged. Speed is not passability, expenditure or an action/turn dispatcher.
+
+`upstream_saved_speed_reference.h` contains the two source function bodies with
+explicit test adapters for global state and callbacks. Unexpected callbacks are
+errors. It runs portable recovered C++ logic, not residual original x86 code.
+`test_saved_speed.py --out NEW_DIR` checks1,492,992 source-reference cases,
+including242,586 storage-overflow rejections,12 malformed-input controls and1024
+independent Python vectors. Host sanitizers and independent big-endian68040 CI
+run the controls. The diagnostic accepts `base|expansion RULES ORIGINAL.SC` and
+checks controlled dependencies on the saved designs. It rejects old-base game
+IDs mixed with SMAX component tables, rather than silently misinterpreting them.
+
+Native normal-SDK recipes are `build_saved_speed_control.sh OUTPUT` and
+`build_saved_speed_probe.sh OUTPUT`. `SAVED-SPEED-EVIDENCE-20261025.json` records
+the actual AmigaOS control sweep, all20 vehicles from the three original base
+tutorials, and a synthetic expansion container using the owner's original
+alphax tables:384 controlled original/synthetic design contexts match source
+reference and independent Python. The synthetic expansion is not an original
+SMAX campaign/save. Effective morale/project ownership remains supplied test
+context in those probes. The lab is stopped/restored; assets remain private.
+These calculations support restoration but do not yet let the original games
+execute full turns, AI, combat or saves. No original-executable differential
+fidelity is claimed.
