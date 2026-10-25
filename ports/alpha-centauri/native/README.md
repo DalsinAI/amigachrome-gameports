@@ -1159,3 +1159,55 @@ CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_movement_snapshot.sh /
 facility orders through one owning session/revision, and adds a combined
 original-container buffer snapshot. Exhaustion is preserved across reload;
 frontend/player save/turn/AI and native qualification remain pending.
+
+## Original fresh tile yields
+
+`tile_yields.h` adds checked original nutrient/mineral/energy calculations from a
+decoded tile and explicit current-stage facts, plus map-seed resource placement.
+It preserves edition differences and returns the original counter/scratch effects
+as data. Saved base intake is not an input. No world stage, worker allocation,
+turn or frontend is wired to this API. See [TILE-YIELDS.md](TILE-YIELDS.md) for
+required facts, original behavior, numerical controls and remaining native gates.
+
+## Owned-world tile-yield binding
+
+`world_tile_yields.h` derives the tile/resource, physical facilities, technology,
+project, faction and adjacent mirror facts from an owned original save snapshot.
+The caller supplies the actual runtime edition and transient stage state. It
+returns a checked result without changing the world or runtime RNG. This is a
+snapshot query, not worker allocation or upkeep. See
+[WORLD-TILE-YIELDS.md](WORLD-TILE-YIELDS.md).
+
+## Original worker-radius availability
+
+`world_worker_radius` derives the original 25 availability flags and 21-bit
+unavailable mask from owned world records. It retains original visibility,
+territory, convoy/hostile-stack and neighboring-base reservation behavior.
+The explicit normal inspection stage is supported; editor and AI-goal stages
+reject. This does not select workers or execute upkeep. See
+[WORLD-WORKER-RADIUS.md](WORLD-WORKER-RADIUS.md).
+
+## Fresh owned terraforming ecology
+
+`world_terraform_ecology` computes raw terraforming damage from actual radius
+items, physical Tree Farm/Hybrid Forest and the current owned worked-tile mask.
+It preserves negative forests and per-tile signed reductions. It does not read
+saved ecological or intake totals, allocate workers or execute upkeep. See
+[WORLD-TERRAFORM-ECOLOGY.md](WORLD-TERRAFORM-ECOLOGY.md).
+
+## Fresh intake from an existing human worker assignment
+
+`world_stable_intake` composes actual satellites, fresh selected-tile yields and
+signed raw ecology without feeding back saved intake. It supports an already
+valid directed-human assignment with explicit transient stage facts. Unsupported
+allocation, specialist and fungus branches reject. The owned world remains
+unchanged; no upkeep or player action is added. See
+[WORLD-STABLE-INTAKE.md](WORLD-STABLE-INTAKE.md).
+
+## Original nutrient accounting after fresh intake
+
+`base_nutrients` calculates checked original growth scratch, food consumption,
+surplus and stored-food adjustments. `world_fresh_nutrients` binds it to actual
+owned records and fresh stable intake, with explicit convoy facts. The same
+normal worker inspection stage is retained; no upkeep or population growth is
+executed. See [BASE-NUTRIENTS.md](BASE-NUTRIENTS.md).

@@ -20,6 +20,22 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq g++-m68k-linux-gnu qemu-user
+      - name: Host original owned worker-radius controls
+        run: python3 ports/alpha-centauri/native/test_world_worker_radius.py --out "$RUNNER_TEMP/worker-radius-host"
+      - name: Big-endian original owned worker-radius controls
+        run: python3 ports/alpha-centauri/native/test_world_worker_radius.py --out "$RUNNER_TEMP/worker-radius-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned-world tile-yield binding controls
+        run: python3 ports/alpha-centauri/native/test_world_tile_yields.py --out "$RUNNER_TEMP/world-tile-yields-host"
+      - name: Big-endian owned-world tile-yield binding controls
+        run: python3 ports/alpha-centauri/native/test_world_tile_yields.py --out "$RUNNER_TEMP/world-tile-yields-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original fresh tile-yield controls
+        run: python3 ports/alpha-centauri/native/test_tile_yields.py --out "$RUNNER_TEMP/tile-yields-host"
+      - name: Big-endian original fresh tile-yield controls
+        run: python3 ports/alpha-centauri/native/test_tile_yields.py --out "$RUNNER_TEMP/tile-yields-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original resource placement controls
+        run: python3 ports/alpha-centauri/native/test_tile_bonus.py --out "$RUNNER_TEMP/tile-bonus-host"
+      - name: Big-endian original resource placement controls
+        run: python3 ports/alpha-centauri/native/test_tile_bonus.py --out "$RUNNER_TEMP/tile-bonus-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host memory and undefined-behaviour controls
         run: python3 ports/alpha-centauri/native/test_rules.py --out "$RUNNER_TEMP/alpha-host"
       - name: Big-endian 68040 control
@@ -176,3 +192,19 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-host"
       - name: Native infantry composition big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned terraforming ecology controls
+        run: python3 ports/alpha-centauri/native/test_world_terraform_ecology.py --out "$RUNNER_TEMP/world-terraform-ecology-host"
+      - name: Big-endian owned terraforming ecology controls
+        run: python3 ports/alpha-centauri/native/test_world_terraform_ecology.py --out "$RUNNER_TEMP/world-terraform-ecology-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh stable-human intake controls
+        run: python3 ports/alpha-centauri/native/test_world_stable_intake.py --out "$RUNNER_TEMP/world-stable-intake-host"
+      - name: Big-endian fresh stable-human intake controls
+        run: python3 ports/alpha-centauri/native/test_world_stable_intake.py --out "$RUNNER_TEMP/world-stable-intake-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original nutrient accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-host"
+      - name: Big-endian original nutrient accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh owned nutrient composition controls
+        run: python3 ports/alpha-centauri/native/test_world_fresh_nutrients.py --out "$RUNNER_TEMP/world-fresh-nutrients-host"
+      - name: Big-endian fresh owned nutrient composition controls
+        run: python3 ports/alpha-centauri/native/test_world_fresh_nutrients.py --out "$RUNNER_TEMP/world-fresh-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
