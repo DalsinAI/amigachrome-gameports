@@ -48,3 +48,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_prototype.py --out "$RUNNER_TEMP/prototype-host"
       - name: Big-endian predefined prototype controls
         run: python3 ports/alpha-centauri/native/test_prototype.py --out "$RUNNER_TEMP/prototype-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host map geometry and movement pricing controls
+        run: python3 ports/alpha-centauri/native/test_movement.py --out "$RUNNER_TEMP/movement-host"
+      - name: Big-endian map geometry and movement pricing controls
+        run: python3 ports/alpha-centauri/native/test_movement.py --out "$RUNNER_TEMP/movement-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
