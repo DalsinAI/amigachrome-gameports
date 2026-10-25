@@ -96,6 +96,10 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_unit_stats.py --out "$RUNNER_TEMP/world-unit-stats-host"
       - name: Big-endian owned-world unit dependency controls
         run: python3 ports/alpha-centauri/native/test_world_unit_stats.py --out "$RUNNER_TEMP/world-unit-stats-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original facility definitions
+        run: python3 ports/alpha-centauri/native/test_facility_definitions.py --out "$RUNNER_TEMP/facility-host"
+      - name: Big-endian original facility definitions
+        run: python3 ports/alpha-centauri/native/test_facility_definitions.py --out "$RUNNER_TEMP/facility-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host saved-world movement pricing controls
         run: python3 ports/alpha-centauri/native/test_world_movement_price.py --out "$RUNNER_TEMP/world-price-host"
       - name: Big-endian saved-world movement pricing controls

@@ -1059,3 +1059,8 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+Original ordinal facility/project definitions are parsed with effective free-tech
+kept disabled as in the original loaders: [scope](FACILITIES.md),
+[evidence](FACILITY-EVIDENCE-20261025.json). No production eligibility or UI is
+implied, and actual AmigaOS qualification remains pending.

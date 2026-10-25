@@ -16,10 +16,12 @@ class Text {
   bool section(const char* name);
   bool next();
   bool item(char* output, size_t capacity);
+  bool item_literal(char* output, size_t capacity);
   bool end_items() const;
   const char* line() const { return line_; }
   Error error() const { return error_; }
  private:
+  bool item_impl(char*,size_t,bool semicolon_comments);
   const uint8_t* bytes_;
   size_t length_, position_, cursor_;
   char line_[512];
@@ -172,6 +174,26 @@ struct UnitDefinitions {
  */
 Error read_unit_definitions(const uint8_t* bytes, size_t length, const Rules& technologies,
                             Variant variant, UnitDefinitions& output);
+constexpr size_t facility_capacity = 134;
+struct FacilityDefinition {
+  char name[128], effect[192];
+  int32_t cost, maintenance, prerequisite;
+  int32_t declared_free_technology, effective_free_technology;
+  int32_t priorities[5]; // file order: fight, power, tech, wealth, growth
+};
+struct FacilityDefinitions {
+  FacilityDefinition slots[facility_capacity];
+  size_t slot_count, first_repeatable, first_project, project_count;
+};
+/* Original ordinal facility/project tables, slot0unused: base72slots, SMAX134.
+ * Original loader overwrites every free-tech entry with Disable; retain the
+ * configured token separately without enabling the later source enhancement.
+ * Caller-owned storage; no allocation. Only inspect output after Error::ok;
+ * on failure slot_count remains0 and partially decoded fields are unqualified.
+ * Costs/maintenance/priorities retain signed32 raw values, not build legality.
+ */
+Error read_facility_definitions(const uint8_t*,size_t,const Rules&,Variant,
+                                FacilityDefinitions&);
 const char* error_name(Error error);
 }
 #endif
