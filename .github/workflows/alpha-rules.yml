@@ -104,3 +104,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_pcx_image.py --out "$RUNNER_TEMP/pcx-host"
       - name: Big-endian bounded PCX image import controls
         run: python3 ports/alpha-centauri/native/test_pcx_image.py --out "$RUNNER_TEMP/pcx-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host bounded owned CVR controls
+        run: python3 ports/alpha-centauri/native/test_cvr_model.py --out "$RUNNER_TEMP/cvr-host"
+      - name: Big-endian bounded owned CVR controls
+        run: python3 ports/alpha-centauri/native/test_cvr_model.py --out "$RUNNER_TEMP/cvr-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

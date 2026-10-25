@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-25",
+  "scope": "Bounded owned original CVR geometry, animation and indexed palette reader; no render fidelity or full-game claim",
+  "supportedProfile": {
+    "versions": [
+      "10.1",
+      "10.2"
+    ],
+    "geometryHeaderFlags": [
+      8,
+      10
+    ],
+    "jumpFlags": [
+      0
+    ],
+    "limits": {
+      "fileBytes": 16777216,
+      "objects": 256,
+      "frames": 256,
+      "geometryVoxels": 2000000
+    }
+  },
+  "host": {
+    "syntheticCases": 32,
+    "sanitizers": "ASan/UBSan",
+    "originalModels": {
+      "VI.cvr": {
+        "objects": 58,
+        "frames": 17,
+        "voxels": 42810,
+        "geometry": "8b912ac5",
+        "animation": "62b24c5a",
+        "palette": "341423c1"
+      },
+      "vr00.cvr": {
+        "objects": 1,
+        "frames": 1,
+        "voxels": 12198,
+        "geometry": "0baae297",
+        "animation": "e7550a55",
+        "palette": "e398c5e5"
+      }
+    },
+    "independentModel": "Separately interpreted Python raw chunk/voxel/animation/palette reader"
+  },
+  "native": {
+    "originalCases": 2,
+    "syntheticCases": 32,
+    "validRC": 0,
+    "invalidRC": 20,
+    "poisonedFreedInput": true,
+    "failedReloadPreservesOwnedState": true,
+    "binarySHA256": "ea750682b87814eadc6cf64baa30be73d583346e72174b2ce2aee010f8758bfc",
+    "logSHA256": "f899bb533498f80aad2e4803daac4ccc088a34153fddb7ed06a218cc84f179fb",
+    "framesPolled": 38
+  },
+  "sourceSHA256": {
+    "cvr_model.h": "6d05826e6c4f962f8cf655cb7dd908d27af5946a94d008fbb12c712bf8026b77",
+    "cvr_model.cpp": "0d48309012960e89e679ad520a3eaf24a2014bb90c43ae560c9afc987afb3a7c",
+    "cvr_probe.cpp": "0809c6b9c6b9e7e70c9fb5d8c657db2e13be7a5ce05e5878f0d1ad6570cb31f1",
+    "build_cvr_probe.sh": "dc1b328a91a35628a8ac63822dac04020f0934ca77287436844857f3e08d2845",
+    "test_cvr_model.py": "3e7d4e114ecc5bb75503b2893bcd1892d06a1cc801353388fa72f2a1949b71c6"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "formatReference": "https://alphacentauri2.info/wiki/Caviar.html",
+  "limits": [
+    "Only observed geometry profiles are supported; chained headers and offset jump headers reject",
+    "Animation and normal/material values are read, not a qualified original renderer or transform pipeline",
+    "No original executable differential validation; raw Ghidra output remains private and unqualified",
+    "No human unit assembly/rendering or gameplay is claimed",
+    "No original game assets or decompiled game code are included; original asset imports were private",
+    "Independent implementation from format facts; no GPL2-only CVR-Colorizer or AGPL GLSMAC code copied"
+  ]
+}

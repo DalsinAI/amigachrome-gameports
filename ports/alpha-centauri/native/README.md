@@ -796,3 +796,33 @@ The final test used a private current target ROM/module with continuous frame
 polling; the isolated lab was stopped and its original inputs restored. An
 earlier test caught the requester leaving the menu inactive; this is fixed
 and the full final sequence passed. Assets and captured screens stay private.
+
+
+### Owned CVR model input
+
+`cvr_model.cpp/h` independently reads the observed original CVR10.1/10.2
+single-header geometry profiles: flags8 and flags10 with offset-free jump
+groups. It owns voxel coordinates/normal indexes/colours, per-object animation
+flags/locations/matrices, and indexed shade tables. Input bytes and failed
+replacement loads cannot invalidate an existing model. Size, nested chunks,
+counts, duplicate fields, finite values, coordinate bounds and termination
+are checked. Chained geometry and offset jump headers fail explicitly.
+
+The layout reference is the [Caviar format description](https://alphacentauri2.info/wiki/Caviar.html),
+checked against original bytes. No GPL2-only CVR-Colorizer code or AGPL GLSMAC
+code is incorporated. Original assets remain external and private.
+
+`test_cvr_model.py --out NEW_DIR` exercises32 synthetic semantic/malformed
+cases with sanitizers; `--cc m68k-linux-gnu-g++ --m68k-linux` runs them on an
+independent big-endian68040. Build the actual AmigaOS probe using
+`CXX=.../m68k-amigaos-g++ sh build_cvr_probe.sh OUTPUT`, then run
+`cvr-probe MODEL.cvr`. `CVR-EVIDENCE-20261025.json` records all32 cases and two
+original models on actual AmigaOS: the infantry's58 objects/17 frames/42,810
+voxels and a reactor's12,198 voxels. Every geometry/animation/palette fingerprint
+matches a separate Python interpretation; both input poisoning/freeing and
+transactional failed replacement are checked. The isolated lab was stopped
+and its original inputs restored.
+
+This is a reader qualification. Original transforms, material/lighting and
+chassis/weapon/armour/reactor assembly still require restoration and validation.
+It does not turn the original-world viewer into a restored campaign.
