@@ -40,8 +40,10 @@ Private 25 October controls using the owner's CD files find 89 records in each,
 77/86 active records and 136/152 prerequisite edges. The Amiga GCC 16.2.0-open3
 build additionally passes a raw 68040/QEMU control against fingerprints of both
 actual files. That raw control checks the parser's generated m68k instructions,
-not AmigaOS startup. An AmigaOS command-line probe builds; live execution remains
-unqualified. The CI Linux ABI is not an AmigaOS ABI qualification.
+not AmigaOS startup. The actual AmigaOS command-line probe also passes both files in the existing
+isolated lab (RC 0), and rejects a duplicate-key file with RC 20. The lab was
+stopped; its ROM/module/startup were unchanged. No live-instance execution or
+full-game qualification is claimed. The CI Linux ABI is not an AmigaOS ABI qualification.
 
 The full rules, faction reader, gameplay algorithms, original-game differential
 checks, UI/audio, saves and launchable game separation remain future work.
