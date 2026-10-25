@@ -73,3 +73,5 @@ Normal SDK builds are separate from actual AmigaOS execution. Local independent
 Linux68040/QEMU is additional proof, not final-head GitHub CI or native AmigaOS.
 No UI, filesystem save protocol, deployment, discovery transaction or full-game
 completion is introduced. The user's running watch lab is untouched.
+
+Local validation preparation retains the complete frozen106/frozen113 workflow command union and adds the fresh tile binding on host and independent68040. The inherited convoy command now executes572 meaningful contexts including128 selected/harvested-fungus successes and8 malformed/overflow contexts. These configured checks have not run as final-head CI; local actual execution is recorded separately. No push or PR is authorised at this checkpoint.

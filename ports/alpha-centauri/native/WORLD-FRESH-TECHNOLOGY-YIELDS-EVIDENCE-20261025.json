@@ -76,7 +76,7 @@
   "hostAndIndependentLinux68040": "PASS local actual execution, not final-head CI",
   "AmigaOS": "UNRUN",
   "CI": "UNRUN on this unpublished integration",
-  "publication": "LOCAL root-review candidate only",
+  "publication": "LOCAL validation preparation only; no push/PR",
   "labInteractions": 0,
   "originalAssetsOrVectorsPublished": false,
   "limits": [
@@ -85,5 +85,25 @@
     "Owned proposals intentionally leave original actor-support writes and cache commits unapplied.",
     "Original128 composition cases: Planet0, Manifold absent; wider project/planet leaves/bindings separately controlled.",
     "Current original scratch page captured; convoy fields compared, not all scratch bytes independently modeled."
-  ]
+  ],
+  "workflowUnion": {
+    "parents": {
+      "106": {
+        "head": "972b0d20804909e00022e84483fad8c2e36b42f5",
+        "runEntries": 85,
+        "workflowSHA256": "c400b04a1adc6bf33e595d638119a6e10c5991f2930e50c5dddb04728922e5a4"
+      },
+      "113": {
+        "head": "1f7a3ed2b68fb654a4a87ec97ff572db98e93da4",
+        "runEntries": 97,
+        "workflowSHA256": "327993a06fa291d9f223fee9fa01c48689659c122a022d4b4540d7dfeb941e2c"
+      }
+    },
+    "unionRunEntries": 103,
+    "newRunEntries": 105,
+    "addedFreshCommands": 2,
+    "allParentCommandsRetainedExactly": true,
+    "noDuplicateCommands": true,
+    "workflowSHA256": "d2877ce1a90e0b3c1d05917af7a11ba3b524affc240fe9e4ce49542fec7ea4ab"
+  }
 }
