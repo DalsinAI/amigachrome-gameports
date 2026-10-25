@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-25",
+  "host": "ASan/UBSan scenario control passed",
+  "raw68040": "OpenAmigaGCC16.2.0-open3 scenario RC0",
+  "binarySHA256": "6a225d8a1589766573221cf048c625f36315335ded2394ff2b65899630843bd3",
+  "privateTestROM": {
+    "roms/openkick-rom4.rom": "87e1688d8f054f3332dc87f93e8b55ddc4fd2d1f51a98f92f537e8a9fdae1eaf",
+    "roms/aros-amiga-m68k-ext.bin": "8f02af8e9837b2121f95112a9fb06ba4bfb74b72a61858b30f1b8f9b4156f4ac"
+  },
+  "native": {
+    "base": {
+      "frames": 36,
+      "keyboardMovement": true,
+      "exhaustion": true,
+      "nextMovementTurn": true,
+      "roughStep": true,
+      "mouseMovement": false,
+      "exitRC": 0,
+      "logSHA256": "2a3c5641f60d9932d1de73d48a143a068e282938b5070e6eec3c693062e6033f"
+    },
+    "expansion": {
+      "frames": 44,
+      "keyboardMovement": true,
+      "exhaustion": true,
+      "nextMovementTurn": true,
+      "roughStep": true,
+      "mouseMovement": true,
+      "exitRC": 0,
+      "logSHA256": "e59daf93f6c922c6ef3b85bbac54f1e9a26addd50ee943bbd74a87c80dc42b25"
+    }
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "scope": [
+    "Empty-land interactive movement slice with placeholder terrain only; not complete Alpha gameplay",
+    "Original base and expansion technology/basic/unit rules read locally; no original assets in repository",
+    "No bases,economy,AI,combat,ZOC,savegame,map generation or campaign; next movement turn resets movement only",
+    "No original-executable differential claim"
+  ],
+  "sourceSHA256": {
+    "exploration_control.cpp": "23b782cf4df996046d0b03babcca9f8712f1b4667dab231434879f575056d6d6",
+    "exploration.h": "594607c6e2fd21bcc37c1f2eaed052ac8e69922f544335edf8054859535fd4f5",
+    "exploration.cpp": "3598f91d86a6d0098608fd945f65152f48bcdc5d95034ccf2400fd00015f9123",
+    "exploration_window.cpp": "b4f00d723a06c7947f4c99ab86a7c5171c57eddae1c0b47d33553bfcac0990ad"
+  }
+}
