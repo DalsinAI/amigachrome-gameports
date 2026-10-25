@@ -116,3 +116,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-host"
       - name: Big-endian procedural CVR lighting controls
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host startup movie cache and pixel controls
+        run: python3 ports/alpha-centauri/native/test_startup_movie.py --out "$RUNNER_TEMP/startup-movie-host"
+      - name: Big-endian startup movie cache and pixel controls
+        run: python3 ports/alpha-centauri/native/test_startup_movie.py --out "$RUNNER_TEMP/startup-movie-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
