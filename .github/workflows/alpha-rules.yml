@@ -112,3 +112,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_raster.py --out "$RUNNER_TEMP/cvr-raster-host"
       - name: Big-endian fixed-depth CVR raster controls
         run: python3 ports/alpha-centauri/native/test_cvr_raster.py --out "$RUNNER_TEMP/cvr-raster-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host procedural CVR lighting controls
+        run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-host"
+      - name: Big-endian procedural CVR lighting controls
+        run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
