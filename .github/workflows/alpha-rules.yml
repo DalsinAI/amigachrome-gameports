@@ -248,3 +248,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-host"
       - name: Big-endian plain original energy allocation controls
         run: python3 ports/alpha-centauri/native/test_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original five-phase base psych controls
+        run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-host"
+      - name: Big-endian original five-phase base psych controls
+        run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

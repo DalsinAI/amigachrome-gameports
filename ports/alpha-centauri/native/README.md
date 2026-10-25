@@ -1,5 +1,10 @@
 # Alpha Centauri native rules-reader prototype
 
+The separate [five-phase psych proposal](BASE-PSYCH.md) now has host and
+independent68040 controls plus private original-code comparisons. It remains
+unconnected to player input, World accounting mutation and turn processing;
+AmigaOS execution and full CI are pending.
+
 A bounded first implementation for separate Alpha Centauri and Alien Crossfire
 ports. It reads **TECHNOLOGY, RULES, WORLDBUILDER, SOCIO and BONUSNAMES**. Technology has 89 records, case-insensitive
 keys, None/Disable sentinels, priorities, binary flags and resolved forward
