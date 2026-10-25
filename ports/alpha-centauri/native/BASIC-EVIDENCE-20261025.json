@@ -1,0 +1,56 @@
+{
+  "reference": "Pinned upstream read_basic_rules independently interpreted in Python; not original-executable differential",
+  "host": "ASan and UBSan pass both original tables",
+  "raw68040": "RC 0; compares every named field with reference",
+  "results": [
+    {
+      "data": "alpha",
+      "variant": "base",
+      "fields": 108,
+      "matched": true,
+      "sha256": "38399e1d0b967455a9146b1c468b9ec9decda43dd168afd8c3c23e0f46e357d4"
+    },
+    {
+      "data": "alphax",
+      "variant": "expansion",
+      "fields": 108,
+      "matched": true,
+      "sha256": "bb01e3ac23793da0a46713f4851d65e63b599c24aef8300ffe45e7e57b332c42"
+    }
+  ],
+  "native_binary_sha256": "25dcf73c34e94ebec7c43717933a1aba7d1a530cb6899591c0e67c724715db27",
+  "source_sha256": {
+    "basic_fields.inc": "acce4e5e87f6968abfc5a6450a4bf2b322800413c2637c5115e62b8cecf2b0db",
+    "rules_text.h": "19dae345bbd9957e4e25b2a0784336b1a8a4c47a0b339f39bdc807a1813f8e5d",
+    "world_fields.inc": "4af71c22e4392917f036b2729bf07479fcbff5381e31a78a215c5454d48432a2",
+    "basic_probe.cpp": "5cb25d4bf23fb94d496b872041b0c9e003f9795bae5f3caf9bff6ccb9db0d12d",
+    "probe_digest.h": "fb4679a81320a63b986f50b8d5d5384d181552dabf2f0373040bcbd32cd74c74",
+    "rules_text.cpp": "14f3abb62c9cb1be848437b3cb200c46b186a14e2148548c590d185d2a1b247f",
+    "rules_probe.cpp": "f124dc742479e94e83b54f9d4ddd72c5d4e73e54be3eebda8df8a5c934d13028"
+  },
+  "scope": "RULES and WORLDBUILDER parameters only; no factions, map generation or full game",
+  "nativeAmigaOS": {
+    "alphaRC": 0,
+    "alphaxRC": 0,
+    "wrongVariantRC": 20,
+    "fieldsComparedPerFile": 108,
+    "labStopped": true,
+    "ROMModuleStartupUnchanged": true,
+    "logSHA256": "aa53e089e48225f21311b5111cae7d51f624d26fb228ad4bb4d4605026189e13",
+    "romHashes": {
+      "aros-amiga-m68k-ext.bin": "52a01954c7c425dd712ae89eecbe75b5cf6277f47082b5bc07ff0697ed295136",
+      "openkick-rom4.rom": "c0013cbb0b66292ffb78d7e454bceb2960c84b95c35aea293780893d40ec6a07"
+    },
+    "scope": "Actual native AmigaOS CLI in restored isolated lab, not live Instance-32 or full game"
+  },
+  "date": "2026-10-25",
+  "syntheticCases": 135,
+  "oldTechnologyCases": 21,
+  "compiler": "OpenAmigaGCC 16.2.0-open3, private normal corrected-libnix SDK rebuild",
+  "provenance": "work/opentyrian-sdk-20261025/receipt.json and stove/provenance.json (private local receipts)",
+  "limits": [
+    "Pinned OpenSMACX patched bounds, not proof against every original executable",
+    "No faction reader, other rules sections, map generator or playable game",
+    "Original CD files and private validation arrays are not included"
+  ]
+}

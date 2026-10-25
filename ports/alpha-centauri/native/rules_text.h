@@ -38,6 +38,31 @@ struct Rules {
  * Failure does not qualify partially filled output: inspect only on Error::ok.
  */
 Error read_technologies(const uint8_t* bytes, size_t length, Rules& output);
+enum class Variant { base, alien_crossfire };
+/* All values have explicit width. These are owned native objects, not the
+ * original executable's packed structs or a serialized save-game format.
+ * Expansion-only fields are zero in the base variant and must not be used.
+ */
+#define RULE_ROW(name, low, high) int32_t name;
+#define RULE_ITEM(name, low, high) int32_t name;
+#define RULE_TECH(name) int32_t name;
+#define ALPHA_EXPANSION_FIELDS
+struct BasicRules {
+#include "basic_fields.inc"
+};
+#undef ALPHA_EXPANSION_FIELDS
+struct WorldRules {
+#include "world_fields.inc"
+};
+#undef RULE_ROW
+#undef RULE_ITEM
+#undef RULE_TECH
+/* Requires a successfully parsed technology table from the same input.
+ * Numeric ranges clamp like OpenSMACX; malformed tokens/rows are errors.
+ * Both sections must succeed before either output may be used.
+ */
+Error read_basic_rules(const uint8_t* bytes, size_t length, const Rules& technologies,
+                       Variant variant, BasicRules& basic, WorldRules& world);
 const char* error_name(Error error);
 }
 #endif
