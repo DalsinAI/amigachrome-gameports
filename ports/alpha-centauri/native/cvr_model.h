@@ -19,6 +19,8 @@ public:
  uint32_t voxel_count()const{return voxels_;}
  const CvrObject* object(uint32_t i)const{return i<objects_?items_+i:nullptr;}
  const uint8_t* rgb(uint8_t color,unsigned shade)const;
+ uint8_t shaded_index(uint8_t color,unsigned shade)const{return shade<24?shades_[shade*256+color]:0;}
+ const uint8_t* palette_rgb(uint8_t index)const{return palette_+3*index;}
 private:
  CvrModel(const CvrModel&)=delete;CvrModel& operator=(const CvrModel&)=delete;
  bool parse(const uint8_t* data,size_t size);void clear();

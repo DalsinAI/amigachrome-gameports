@@ -946,9 +946,9 @@ library. No installed SDK replacement or invented math-library stubs are used.
 
 ## Integrated compact UI and menu-audio lifecycle
 
-The world viewer uses the owner's Arial Narrow and Alpha Centauri fonts at
-13 and 16 pixels, crisp glyphs, ascent-correct baselines and separate text ink
-roles. The original console's unit and terrain columns have independent bounds;
+The fallback UI profile uses the owner's Arial Narrow and Alpha Centauri fonts
+at13 and16 pixels, crisp glyphs, ascent-correct baselines and separate text ink
+roles. The preferred original Arial face is described below. The original console's unit and terrain columns have independent bounds;
 selected terrain is read from the owned original map. These are presentation
 choices guided by reference screenshots, not recovered exact original font
 metrics. Bases and native-unit sprites paint in map-row order so a record ID
@@ -964,6 +964,62 @@ and manual re-enable. The complete frontend exits normally. The isolated lab
 stops and restores configuration, both ROMs, SDL module and startup hashes.
 `UI-AUDIO-EVIDENCE-20261025.json` records bounded evidence; original assets,
 screenshots and PCM remain private.
+
+## Original UI face selection
+
+The recovered original font setup requests the Arial family for status/datalink
+text, including normal, italic and bold roles. Status text uses logical height10
+at800px and12 otherwise; datalink roles include12/14/18. These are Win32 logical
+heights, not a claim of identical SDL_ttf hinting or pixel metrics.
+`OriginalUiText` now prefers owner-provided `Arial.ttf` at12 and
+`Arial_Bold.ttf` at14. If the bold file is absent it uses the regular file's
+synthetic bold style; if Arial is unavailable it retains the prior original
+Arial Narrow13/title16 fallback and reports that choice. The port includes no
+font files. Menus still use their existing separate title-font profile.
+
+## Basic infantry in the original-world viewer
+
+`cvr_infantry.h/cpp` composes a static frame of the owner's original VI infantry
+body and Viptr00 reactor backpack. It reuses the bounded model reader, procedural
+normal lighting and strict depth raster. Every component retains its own palette
+while sharing the depth surface; a later component cannot overwrite an equal-depth
+pixel or change a previously painted component's colours. Lazy facing/zoom RGBA
+caches preserve the caller's background and are bounded below 3 MiB. Model profiles
+are limited to 100,000 total voxels and all failures precede output writes.
+
+The actual original-world viewer uses this path only for base-format, non-alien,
+basic human infantry with chassis0, weapon0, armour0, reactor1 and no design
+abilities. Other designs retain explicit CVR labels; an infantry body is never
+substituted for the original tutorial's rover. VI.cvr and Viptr00.cvr are optional
+owner assets in the game directory. No original models or palettes are included.
+
+The camera tilt, heading convention, root component translation, base scale and
+single-pixel profile follow recovered original facts. This viewer maps that scale
+to its own 64-pixel tile basis. Tile-foot anchoring is new presentation wiring,
+not recovered original viewport placement. Only frame0 is shown. Original shadow,
+complete animation, terrain-dependent camera, full faction/ability assemblies,
+global indexed-palette remapping and original whole-scene pixel fidelity are not
+claimed. The terrain view and game interactions retain their existing limits.
+
+```sh
+python3 ports/alpha-centauri/native/test_cvr_infantry.py --out /tmp/infantry-host
+python3 ports/alpha-centauri/native/test_cvr_infantry.py --out /tmp/infantry-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_infantry.sh probe /tmp/infantry-probe
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_infantry.sh control /tmp/infantry-control
+```
+
+Public synthetic controls exercise separate component colours, equal-depth
+occlusion, hidden parts, singular transforms, size/frame/profile limits,
+16 facing/zoom combinations, transparent caching and transactional rejection.
+Actual normal-SDK AmigaOS qualification passes the9 synthetic CLI cases and
+16 original-model facing/zoom outputs, with all hashes and the rendered PPM
+matching host results exactly. The actual original Explore world shows its basic
+infantry body/backpack at both zooms, selects the next unit and returns/exits
+normally. Owner Arial12/Arial-Bold14 fonts are selected. The isolated lab actively
+streams102 frames, then stops and restores all configuration, ROM/module/startup
+hashes. `INFANTRY-EVIDENCE-20261025.json` records this bounded proof; original
+whole-scene pixel equivalence and the other stated limits remain unclaimed.
 
 ## Original vehicle stacks and relocation storage
 
