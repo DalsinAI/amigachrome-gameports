@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-25",
+  "scope": "Decoded vehicle stack validation and lift/drop storage only",
+  "host": {
+    "addressAndUndefinedSanitizers": true,
+    "sourceFlowCases": 18432,
+    "invalidNoWriteCases": 20,
+    "fieldDigest": "61fa6357",
+    "originalTutorials": [
+      {"name": "Explore.SC", "vehicles": 4, "relocations": 60, "sha256": "7b828aa4c06772d0e961c66729a1d80a389e603b2dc58e09faa05ba2816668d0"},
+      {"name": "Build.SC", "vehicles": 7, "relocations": 168, "sha256": "bf56d50d18866f715a036cc5322bef579455af5f953d1981a415fcf0dafde310"},
+      {"name": "conquer.SC", "vehicles": 9, "relocations": 270, "sha256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45"}
+    ],
+    "originalDataCommitted": false
+  },
+  "amigaSDK": {
+    "compiler": "OpenAmigaGCC 16.2.0-open3",
+    "normalRecipeBuildPassed": true,
+    "controlSHA256": "e3e3e72c0ebd2f6755e14a2ee9d67bbc79bc576b715bce89c3bed7386b702755",
+    "probeSHA256": "5cd98b18148b04e66ecb06ecc30ea645dc3d4244ca7749c17c3718c28e29f3d1",
+    "nativeExecution": "passed",
+    "nativeSourceFlowCases": 18432,
+    "nativeInvalidNoWriteCases": 20,
+    "nativeOriginalTutorialRelocations": 498,
+    "nativeControlExit": 0,
+    "nativeOriginalProbeExits": [0, 0, 0],
+    "privateEvidence": "alpha-stack-control/native-proof/native-amiga.log",
+    "qualifiedInputHashesVerified": true,
+    "isolatedLabRestoredAndStopped": true
+  },
+  "independentBigEndianCI": "pending",
+  "limitations": [
+    "Not exposed as a player movement command or mutable OriginalWorld API",
+    "No authority, passability, transport, ZOC, event or cost gate",
+    "No movement expenditure, RNG mutation, upkeep, turns or save writer",
+    "Original tutorial controls mutate private decoded copies, not original files",
+    "No original executable differential trace claimed",
+    "Suspended or off-map units explicitly unsupported"
+  ]
+}

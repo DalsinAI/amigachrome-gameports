@@ -946,9 +946,9 @@ library. No installed SDK replacement or invented math-library stubs are used.
 
 ## Integrated compact UI and menu-audio lifecycle
 
-The world viewer uses the owner's Arial Narrow and Alpha Centauri fonts at
-13 and 16 pixels, crisp glyphs, ascent-correct baselines and separate text ink
-roles. The original console's unit and terrain columns have independent bounds;
+The fallback UI profile uses the owner's Arial Narrow and Alpha Centauri fonts
+at13 and16 pixels, crisp glyphs, ascent-correct baselines and separate text ink
+roles. The preferred original Arial face is described below. The original console's unit and terrain columns have independent bounds;
 selected terrain is read from the owned original map. These are presentation
 choices guided by reference screenshots, not recovered exact original font
 metrics. Bases and native-unit sprites paint in map-row order so a record ID
@@ -1020,3 +1020,42 @@ normally. Owner Arial12/Arial-Bold14 fonts are selected. The isolated lab active
 streams102 frames, then stops and restores all configuration, ROM/module/startup
 hashes. `INFANTRY-EVIDENCE-20261025.json` records this bounded proof; original
 whole-scene pixel equivalence and the other stated limits remain unclaimed.
+
+## Original vehicle stacks and relocation storage
+
+`vehicle_stack.h/cpp` adapts the recovered `veh_lift`, `veh_drop` and `veh_top`
+storage operations. It validates every stack link before writing: bounded
+references, reciprocal links, matching coordinates, unique roots, no cycles,
+and agreement with the map's vehicle-present bits. Corrupt state is rejected
+without silently repairing it. Storage arrays must be disjoint and exclusively
+owned by the caller; suspended/off-map actors are not supported.
+
+Relocation preserves the original source tile's owner, updates both neighbors,
+inserts the actor at the destination's stack head, preserves base ownership and
+the high nibble of the tile owner byte, and marks supply suppression for
+non-native land/sea units. Moving within the same square promotes the actor to
+the head, as lift/drop does. All validation and allocation precedes all writes.
+
+This is an internal storage primitive, **not a legal movement command**. It does
+not establish player authority, passability, transport rules, zone of control,
+events, movement expenditure, animation, upkeep, turns or save serialization.
+It is not yet exposed by the read-only world or UI. Those action gates must be
+implemented before wiring it to player input.
+
+```sh
+python3 ports/alpha-centauri/native/test_vehicle_stack.py --out /tmp/stack-host
+python3 ports/alpha-centauri/native/test_vehicle_stack.py --out /tmp/stack-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_vehicle_stack.sh control /tmp/stack-control
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_vehicle_stack.sh probe /tmp/stack-probe
+```
+
+Controls compare 18,432 relocations against a separate recovered-source-flow
+reference and reject 20 malformed/no-write cases. The original-file probe works
+on copied decoded tutorial records, leaving the imported world and original
+file unchanged. Host sanitizers pass all three owner's tutorials (498 storage
+relocation controls); normal SDK builds pass. Actual normal-SDK AmigaOS
+execution passes those same 18,432/20 controls and all 498 original-tutorial
+relocations with RC0. The isolated lab is stopped and restored. Independent
+big-endian CI remains required before merge; evidence is recorded in
+`STACK-EVIDENCE-20261025.json`.

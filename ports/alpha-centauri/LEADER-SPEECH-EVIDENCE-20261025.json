@@ -1,0 +1,66 @@
+{
+  "scope": "14 named faction-selection recordings; not dynamic diplomacy; private host preparation PCM, not native MP3 decoder",
+  "originalFiles": 14,
+  "originalMP3StrictHostDecodes": 14,
+  "independentRealPCMFingerprints": 14,
+  "hostSyntheticControls": 105,
+  "independentBigEndianCIAtInitialHead": {
+    "head": "d2b5384f75c13869d7169d985211032b6bfd0f6e",
+    "readerJob": 121151190119,
+    "hostControls": 105,
+    "bigEndian68040Controls": 105
+  },
+  "actualAmigaOS": {
+    "cases": [
+      {
+        "name": "native-gaians-speech",
+        "bytes": 1395780,
+        "nonzero": 687120,
+        "peak": 997
+      },
+      {
+        "name": "native-usurper-speech",
+        "bytes": 1409916,
+        "nonzero": 701754,
+        "peak": 1671
+      },
+      {
+        "originalSampleFiles": 14,
+        "syntheticControls": 105,
+        "probeSHA256": "ff76ce48b980f82e87dc2db2386baf3d558c3a87845a2effe52ea3a1160ddc61",
+        "auditionSHA256": "ba0c551f8cd8998a5896dca54a15da4956180369eed114aa175097f9ca54885b"
+      }
+    ],
+    "frames": 336,
+    "stopped": true,
+    "configROMModuleStartupRestored": true,
+    "restoredHashes": {
+      "config/local.json": "667467c1e71a005b80d1378c41f58b322a1fd61bdee735348c373718ebfb393e",
+      "roms/openkick-rom4.rom": "c0013cbb0b66292ffb78d7e454bceb2960c84b95c35aea293780893d40ec6a07",
+      "roms/aros-amiga-m68k-ext.bin": "52a01954c7c425dd712ae89eecbe75b5cf6277f47082b5bc07ff0697ed295136",
+      "devices/harddisks/DH0/S/Startup-sequence": "851d540ac603f9be3ad754c888483da62e55e0f2fc64eb8584b07d21a1e4f90b",
+      "devices/harddisks/DH0/Libs/OpenGPU/SDL2.module": "33d667ca1bd3891b7fbe7992b681d27b1e590ffc92ff14ecaacde7de3c940a99"
+    }
+  },
+  "testedPrivateSDLModuleSHA256": "6c2d2ef0c202b7a4f18231f5e9de11e96ab17d55a474513efe3ef4ee697c967d",
+  "limitations": [
+    "Main frontend not modified",
+    "No original assets included",
+    "No dynamic diplomacy",
+    "No native MP3 decoder",
+    "Two leaders actually auditioned; all fourteen decoded and fingerprinted by native executable",
+    "No live instance changes"
+  ],
+  "media": [
+    {
+      "name": "native-gaians-speech.wav",
+      "sha256": "593cdbe400494ab750bb2a55926e81af2f67b07f82dffe59daf430191d705f64",
+      "bytes": 1395824
+    },
+    {
+      "name": "native-usurper-speech.wav",
+      "sha256": "dde0a9a3cc4d9c1d2b3510004a8a6f86f1b3f2faf43d5feb46da0cded5482ed3",
+      "bytes": 1409960
+    }
+  ]
+}

@@ -112,10 +112,18 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_raster.py --out "$RUNNER_TEMP/cvr-raster-host"
       - name: Big-endian fixed-depth CVR raster controls
         run: python3 ports/alpha-centauri/native/test_cvr_raster.py --out "$RUNNER_TEMP/cvr-raster-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host named leader speech and PCM controls
+        run: python3 ports/alpha-centauri/native/test_leader_speech.py --out "$RUNNER_TEMP/leader-speech-host"
+      - name: Big-endian named leader speech and PCM controls
+        run: python3 ports/alpha-centauri/native/test_leader_speech.py --out "$RUNNER_TEMP/leader-speech-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host procedural CVR lighting controls
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-host"
       - name: Big-endian procedural CVR lighting controls
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original vehicle-stack relocation controls
+        run: python3 ports/alpha-centauri/native/test_vehicle_stack.py --out "$RUNNER_TEMP/vehicle-stack-host"
+      - name: Big-endian original vehicle-stack relocation controls
+        run: python3 ports/alpha-centauri/native/test_vehicle_stack.py --out "$RUNNER_TEMP/vehicle-stack-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host technology browser graph and description controls
         run: python3 ports/alpha-centauri/native/test_technology_browser.py --out "$RUNNER_TEMP/technology-browser-host"
       - name: Big-endian technology browser graph and description controls

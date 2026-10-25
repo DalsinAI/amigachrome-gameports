@@ -18,7 +18,6 @@
   },
   "native": {
     "compiler": "OpenAmigaGCC16.2.0-open3 normal private SDK",
-    "frontendSHA256": "fe7750c82229d8e66de36951bb3d7141520ab0b6ba7a66174d66a08a36b9ec8c",
     "probeSHA256": "17b14d63ba2f6a963e6d176cf86f1391015f1d259a3000d726f003b06dedd2b8",
     "controlSHA256": "3960127ce406f79cdbf14ff262c7daff052b202e8eac5999eafdc1b8f20ba452",
     "originalModelFacingZoomCases": 16,
@@ -30,7 +29,8 @@
     "font": "Owner Arial12/Arial-Bold14 path selected",
     "activeDisplayFrames": 102,
     "labStopped": true,
-    "configROMModuleStartupRestored": true
+    "configROMModuleStartupRestored": true,
+    "initialFrontendSHA256": "fe7750c82229d8e66de36951bb3d7141520ab0b6ba7a66174d66a08a36b9ec8c"
   },
   "memory": "At most100,000 profile voxels; lazy transparent facing/zoom caches below3MiB",
   "limits": [
@@ -42,5 +42,29 @@
     "Original map UI remains read-only; terrain/coast and gameplay gaps remain",
     "Exact Win32 GDI font metrics/hinting are not claimed; old font fallback remains when owner Arial files absent"
   ],
-  "privateEvidence": "work/alpha-infantry-map-control/native-1; original assets, screenshots and proprietary source/bytes not uploaded"
+  "privateEvidence": "work/alpha-infantry-map-control/native-1; original assets, screenshots and proprietary source/bytes not uploaded",
+  "finalFrontendQualification": {
+    "frontendSHA256": "53abc79718acd8bc5363a15354ef552c57fd1e5156758b8e323a13818b827bb5",
+    "sourceCodeHead": "f7356b688dc21495d6c5ac16166ed3ca09902907",
+    "nativeProof": "work/alpha-startup-control/combined-native-1",
+    "scenes": [
+      "original Explore",
+      "private River flag copy",
+      "private Forest flag copy"
+    ],
+    "font": "Owner Arial12/Arial-Bold14 selected",
+    "returnAndExitRC": 0,
+    "originalScenarioUnchanged": true,
+    "labStoppedAndRestoredBeforeSeparateUserWatch": true
+  },
+  "mainIntegration": {
+    "main": "1c4420c5e2f8b0beb35840ebd18b60f6c82bc652",
+    "buildScriptAndAllLinkedSourcesUnchanged": true,
+    "existingNativeHeadersUnchanged": 38,
+    "rebuiltFrontendByteIdenticalToNativeProof": true,
+    "frontendSHA256": "53abc79718acd8bc5363a15354ef552c57fd1e5156758b8e323a13818b827bb5",
+    "allPriorWorkflowCommandsRetained": true,
+    "workflowCommands": 57,
+    "noLabAccessDuringHostOnlyIntegration": true
+  }
 }
