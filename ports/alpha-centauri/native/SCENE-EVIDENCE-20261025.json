@@ -1,0 +1,63 @@
+{
+  "status": "HOST EXACT / NORMAL SDK BUILD PASS / NATIVE AND BE EXECUTION UNRUN",
+  "sceneComparison": {
+    "cases": 16,
+    "bytes": 3145728,
+    "outputSHA256": "40dbf43dff5208607e780317b45966a47b46d8c6cfb57afb9e7826c3ed68c0a0",
+    "sourceDefaultFactory": true,
+    "providedOriginalStateAlsoExact": true,
+    "invalidTransactionalCases": 96,
+    "nativeExecution": false,
+    "finalOriginalBlitExecuted": false
+  },
+  "actualOriginalPaths": {
+    "0x4bf740": true,
+    "0x627d00": true,
+    "0x627f50": true,
+    "0x6280e0": true,
+    "0x6396a0": true,
+    "0x639e60": true,
+    "0x63a280": true,
+    "0x6385d0": true,
+    "0x6282e0": true,
+    "0x618da0": true,
+    "0x645930": true,
+    "0x63e950": true,
+    "0x63fca0": true,
+    "0x664000": false,
+    "0x6647f0": true,
+    "0x6646fb": true,
+    "0x664d51": true,
+    "0x617230": false
+  },
+  "scope": "Complete frame0 infantry/reactor and basic Gaian rover private viewports; no full game, no imports/substitutes, no final17230 execution",
+  "blitContract": {
+    "cases": 75,
+    "independentDestinationCoordinateOracle": true,
+    "originalWrapperExecuted": false
+  },
+  "markerOwnerMetadata": {
+    "infantry": [
+      13,
+      12
+    ],
+    "rover": [
+      14,
+      14
+    ],
+    "shift": 10,
+    "rawMarker": 251
+  },
+  "correctAppendVector": [
+    -400,
+    200,
+    0
+  ],
+  "nativeExecution": false,
+  "viewerChanged": false,
+  "labAccess": false,
+  "normalSdkBinaries": {
+    "scene-native-final": "7c0aa033dd60d2d7dd004eb5f526ad0a47fe7d6d2a49381c16a0e49549d0c455",
+    "blit-native-final": "cea793ebe4195e12788d817f9803af7c2a05b2d03db8c68909119615b0d97d75"
+  }
+}
