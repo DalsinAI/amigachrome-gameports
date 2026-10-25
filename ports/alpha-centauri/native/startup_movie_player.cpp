@@ -42,7 +42,7 @@ bool interrupted(struct Window* w){struct IntuiMessage* m;bool quit=false;while(
 /* Return 0 on completed playback, 5 on user skip, 20 on invalid/unavailable.
  * The player owns only its own device/window/library references. */
 int alpha_startup_movie(const char* path){
- if(!path || SDL_WasInit(SDL_INIT_AUDIO))return 20;
+ if(!path)return 20;
  FILE* f=fopen(path,"rb");if(!f)return 20;
  uint8_t header[40];alpha::StartupMovieInfo movie;bool valid=false;
  if(!fseek(f,0,SEEK_END)){long bytes=ftell(f);rewind(f);valid=bytes>=40 && fread(header,1,40,f)==40 && alpha::startup_movie_header(header,40,uint64_t(bytes),movie);}
@@ -52,7 +52,9 @@ int alpha_startup_movie(const char* path){
  IntuitionBase=(struct IntuitionBase*)OpenLibrary((STRPTR)"intuition.library",39);GfxBase=(struct GfxBase*)OpenLibrary((STRPTR)"graphics.library",39);CyberGfxBase=OpenLibrary((STRPTR)"cybergraphics.library",41);
  struct Window* window=nullptr;SDL_AudioDeviceID device=0;int rc=20;uint32_t displayed=0,max_video_late=0;bool audio_init=false;
  if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(nullptr,WA_Title,(ULONG)"Alpha original startup movie - Esc/Space skips",WA_InnerWidth,movie.width,WA_InnerHeight,movie.height,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS,TAG_DONE);
- if(window && SDL_InitSubSystem(SDL_INIT_AUDIO)==0){audio_init=true;SDL_AudioSpec spec{};spec.freq=22050;spec.format=AUDIO_S16SYS;spec.channels=2;spec.samples=512;spec.callback=sound;spec.userdata=state;device=SDL_OpenAudioDevice(nullptr,0,&spec,nullptr,0);}
+ if(window){bool ready=SDL_WasInit(SDL_INIT_AUDIO)!=0;if(!ready && SDL_InitSubSystem(SDL_INIT_AUDIO)==0){audio_init=true;ready=true;}
+  if(ready){SDL_AudioSpec spec{};spec.freq=22050;spec.format=AUDIO_S16SYS;spec.channels=2;spec.samples=512;spec.callback=sound;spec.userdata=state;device=SDL_OpenAudioDevice(nullptr,0,&spec,nullptr,0);}
+ }
  if(device){
   printf("STARTUP BEGIN width=%lu height=%lu frames=%lu audio=%lu\n",(unsigned long)movie.width,(unsigned long)movie.height,(unsigned long)movie.frames,(unsigned long)movie.audio_frames);fflush(stdout);
   rc=0;uint32_t start=SDL_GetTicks();bool started=false;

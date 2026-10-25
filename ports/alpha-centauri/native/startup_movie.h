@@ -22,7 +22,7 @@ uint32_t startup_movie_audio_frames(const StartupMovieInfo& movie,uint32_t frame
  * Caller supplies non-overlapping, tightly packed output width*height*3. */
 bool startup_movie_rgb(const StartupMovieInfo& movie,const uint8_t* yuv,size_t input_bytes,uint8_t* rgb,size_t output_bytes);
 }
-/* AmigaOS presentation API. Invoke before opening menu audio. Return 0 on
+/* AmigaOS presentation API. Caller must release any menu audio device. Return 0 on
  * completion, 5 on user skip, 20 on invalid/unavailable playback. Build the
  * player with ALPHA_EMBEDDED_MOVIE to suppress its standalone main. */
 int alpha_startup_movie(const char* cache_path);

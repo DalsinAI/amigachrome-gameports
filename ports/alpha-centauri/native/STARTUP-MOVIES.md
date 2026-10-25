@@ -49,9 +49,10 @@ the final audio packet and is not this recovery path.
 The standalone native command is `alpha-startup-movie opening.amov`.
 The integration API is `alpha_startup_movie(path)` and returns completed `0`,
 user skipped `5`, or unavailable/invalid `20`. Compile the player with
-`ALPHA_EMBEDDED_MOVIE` when linking into a frontend. Invoke it **before** opening
-menu music; it rejects a competing initialized SDL audio subsystem. The menu
-must remain usable if optional movie data is absent or the user skips playback.
+`ALPHA_EMBEDDED_MOVIE` when linking into a frontend. Close/release menu music's
+device before invoking it, then reopen that device afterward. The player reuses
+an already initialized audio subsystem without shutting the caller's subsystem
+down. The menu must remain usable if optional movie data is absent or skipped.
 It opens its own window/device, uses bounded frame/ring buffers and an audio
 sample clock, then closes its own resources. Enter, Escape, Space, Q, left/right
 mouse button or window close skip playback. Native screen sizing is currently
@@ -76,8 +77,16 @@ conversion and preference persistence are not claimed.
   shared-chroma conversion optimization passes the same host oracle and normal
   SDK build, but needs a new native performance run. The preserved native3
   source/binary is distinguished from this candidate in the evidence JSON.
-- Frontend integration remains pending. Independent big-endian controls are
-  wired into CI but must actually run before merge. Compilation is not runtime proof.
+- The frontend now has an explicit **Play original intro [V]** action for the
+  selected base/expansion profile. It releases the menu audio device, calls the
+  corresponding `opening.amov`/`openingx.amov`, restores the original menu cursor
+  and enabled/muted preference, reactivates the parent window, and keeps the
+  read-only campaign limitation visible. This is an interactive restoration
+  preview, not automatic original startup/preference persistence. Its integration
+  still needs actual native qualification.
+- Independent big-endian controls actually passed on PR84 head `1a35544`,
+  alongside all other required checks; changes after that head require their
+  own final validation before merge. Compilation is not runtime proof.
 
 The public code and tests contain no original assets or proprietary decoder code.
 The public presentation conversion is explicit BT.601 limited-range arithmetic;
