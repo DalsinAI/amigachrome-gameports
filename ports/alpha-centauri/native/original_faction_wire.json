@@ -1,0 +1,3563 @@
+{
+  "source": "Thinker dabe62f2d1abba03de40f3dd3048494843f6a9af MIT engine_types.h/engine_data.h",
+  "records": {
+    "MFaction": {
+      "size": 1436,
+      "fields": [
+        {
+          "type": "int32_t",
+          "name": "is_leader_female",
+          "dimensions": [],
+          "count": 1,
+          "offset": 0
+        },
+        {
+          "type": "char",
+          "name": "filename",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 4
+        },
+        {
+          "type": "char",
+          "name": "search_key",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 28
+        },
+        {
+          "type": "char",
+          "name": "name_leader",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 52
+        },
+        {
+          "type": "char",
+          "name": "title_leader",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 76
+        },
+        {
+          "type": "char",
+          "name": "adj_leader",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 100
+        },
+        {
+          "type": "char",
+          "name": "adj_insult_leader",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 228
+        },
+        {
+          "type": "char",
+          "name": "adj_faction",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 356
+        },
+        {
+          "type": "char",
+          "name": "adj_insult_faction",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 484
+        },
+        {
+          "type": "int32_t",
+          "name": "thinker_unused",
+          "dimensions": [
+            3
+          ],
+          "count": 3,
+          "offset": 612
+        },
+        {
+          "type": "uint8_t",
+          "name": "thinker_probe_lost",
+          "dimensions": [],
+          "count": 1,
+          "offset": 624
+        },
+        {
+          "type": "uint8_t",
+          "name": "thinker_probe_renew",
+          "dimensions": [],
+          "count": 1,
+          "offset": 625
+        },
+        {
+          "type": "int16_t",
+          "name": "thinker_last_mc_turn",
+          "dimensions": [],
+          "count": 1,
+          "offset": 626
+        },
+        {
+          "type": "int16_t",
+          "name": "thinker_probe_end_turn",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 628
+        },
+        {
+          "type": "char",
+          "name": "pad_1",
+          "dimensions": [
+            96
+          ],
+          "count": 96,
+          "offset": 644
+        },
+        {
+          "type": "char",
+          "name": "noun_faction",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 740
+        },
+        {
+          "type": "int32_t",
+          "name": "noun_gender",
+          "dimensions": [],
+          "count": 1,
+          "offset": 764
+        },
+        {
+          "type": "int32_t",
+          "name": "is_noun_plural",
+          "dimensions": [],
+          "count": 1,
+          "offset": 768
+        },
+        {
+          "type": "char",
+          "name": "adj_name_faction",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 772
+        },
+        {
+          "type": "char",
+          "name": "formal_name_faction",
+          "dimensions": [
+            40
+          ],
+          "count": 40,
+          "offset": 900
+        },
+        {
+          "type": "char",
+          "name": "insult_leader",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 940
+        },
+        {
+          "type": "char",
+          "name": "desc_name_faction",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 964
+        },
+        {
+          "type": "char",
+          "name": "assistant_name",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 988
+        },
+        {
+          "type": "char",
+          "name": "scientist_name",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 1012
+        },
+        {
+          "type": "char",
+          "name": "assistant_city",
+          "dimensions": [
+            24
+          ],
+          "count": 24,
+          "offset": 1036
+        },
+        {
+          "type": "char",
+          "name": "pad_2",
+          "dimensions": [
+            176
+          ],
+          "count": 176,
+          "offset": 1060
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_tech_selected",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1236
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_morale",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1240
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_research",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1244
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_drone",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1248
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_talent",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1252
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_energy",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1256
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_interest",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1260
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_population",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1264
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_hurry",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1268
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_techcost",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1272
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_psi",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1276
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_sharetech",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1280
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_commerce",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1284
+        },
+        {
+          "type": "int32_t",
+          "name": "rule_flags",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1288
+        },
+        {
+          "type": "int32_t",
+          "name": "faction_bonus_count",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1292
+        },
+        {
+          "type": "int32_t",
+          "name": "faction_bonus_id",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 1296
+        },
+        {
+          "type": "int32_t",
+          "name": "faction_bonus_val1",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 1328
+        },
+        {
+          "type": "int32_t",
+          "name": "faction_bonus_val2",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 1360
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_fight",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1392
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_growth",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1396
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_tech",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1400
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_wealth",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1404
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_power",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1408
+        },
+        {
+          "type": "int32_t",
+          "name": "soc_priority_category",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1412
+        },
+        {
+          "type": "int32_t",
+          "name": "soc_opposition_category",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1416
+        },
+        {
+          "type": "int32_t",
+          "name": "soc_priority_model",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1420
+        },
+        {
+          "type": "int32_t",
+          "name": "soc_opposition_model",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1424
+        },
+        {
+          "type": "int32_t",
+          "name": "soc_priority_effect",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1428
+        },
+        {
+          "type": "int32_t",
+          "name": "soc_opposition_effect",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1432
+        }
+      ]
+    },
+    "Faction": {
+      "size": 8396,
+      "fields": [
+        {
+          "type": "uint32_t",
+          "name": "player_flags",
+          "dimensions": [],
+          "count": 1,
+          "offset": 0
+        },
+        {
+          "type": "int32_t",
+          "name": "ranking",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4
+        },
+        {
+          "type": "int32_t",
+          "name": "diff_level",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8
+        },
+        {
+          "type": "int32_t",
+          "name": "base_name_offset",
+          "dimensions": [],
+          "count": 1,
+          "offset": 12
+        },
+        {
+          "type": "int32_t",
+          "name": "base_sea_name_offset",
+          "dimensions": [],
+          "count": 1,
+          "offset": 16
+        },
+        {
+          "type": "int32_t",
+          "name": "last_base_turn",
+          "dimensions": [],
+          "count": 1,
+          "offset": 20
+        },
+        {
+          "type": "uint32_t",
+          "name": "diplo_status",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 24
+        },
+        {
+          "type": "uint32_t",
+          "name": "diplo_agenda",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 56
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_friction",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 88
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_spoke",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 120
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_merc",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 152
+        },
+        {
+          "type": "int8_t",
+          "name": "diplo_patience",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 184
+        },
+        {
+          "type": "int32_t",
+          "name": "sanction_turns",
+          "dimensions": [],
+          "count": 1,
+          "offset": 192
+        },
+        {
+          "type": "int32_t",
+          "name": "loan_balance",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 196
+        },
+        {
+          "type": "int32_t",
+          "name": "loan_payment",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 228
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_1",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 260
+        },
+        {
+          "type": "int32_t",
+          "name": "integrity_blemishes",
+          "dimensions": [],
+          "count": 1,
+          "offset": 292
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_reputation",
+          "dimensions": [],
+          "count": 1,
+          "offset": 296
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_gifts",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 300
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_wrongs",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 332
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_betrayed",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 364
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_combat_total",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 396
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_combat_count",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 428
+        },
+        {
+          "type": "int32_t",
+          "name": "traded_maps",
+          "dimensions": [],
+          "count": 1,
+          "offset": 460
+        },
+        {
+          "type": "int32_t",
+          "name": "base_governor_adv",
+          "dimensions": [],
+          "count": 1,
+          "offset": 464
+        },
+        {
+          "type": "int32_t",
+          "name": "atrocities",
+          "dimensions": [],
+          "count": 1,
+          "offset": 468
+        },
+        {
+          "type": "int32_t",
+          "name": "major_atrocities",
+          "dimensions": [],
+          "count": 1,
+          "offset": 472
+        },
+        {
+          "type": "int32_t",
+          "name": "mind_control_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 476
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_mind_control",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 480
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_stolen_techs",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 512
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_credits",
+          "dimensions": [],
+          "count": 1,
+          "offset": 544
+        },
+        {
+          "type": "int32_t",
+          "name": "hurry_cost_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 548
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Politics_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 552
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Economics_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 556
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Values_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 560
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Future_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 564
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Politics",
+          "dimensions": [],
+          "count": 1,
+          "offset": 568
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Economics",
+          "dimensions": [],
+          "count": 1,
+          "offset": 572
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Values",
+          "dimensions": [],
+          "count": 1,
+          "offset": 576
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Future",
+          "dimensions": [],
+          "count": 1,
+          "offset": 580
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_upheaval_cost_paid",
+          "dimensions": [],
+          "count": 1,
+          "offset": 584
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_economy_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 588
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_effic_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 592
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_support_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 596
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_talent_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 600
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_morale_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 604
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_police_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 608
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_growth_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 612
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_planet_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 616
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_probe_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 620
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_industry_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 624
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_research_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 628
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_economy",
+          "dimensions": [],
+          "count": 1,
+          "offset": 632
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_effic",
+          "dimensions": [],
+          "count": 1,
+          "offset": 636
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_support",
+          "dimensions": [],
+          "count": 1,
+          "offset": 640
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_talent",
+          "dimensions": [],
+          "count": 1,
+          "offset": 644
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_morale",
+          "dimensions": [],
+          "count": 1,
+          "offset": 648
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_police",
+          "dimensions": [],
+          "count": 1,
+          "offset": 652
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_growth",
+          "dimensions": [],
+          "count": 1,
+          "offset": 656
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_planet",
+          "dimensions": [],
+          "count": 1,
+          "offset": 660
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_probe",
+          "dimensions": [],
+          "count": 1,
+          "offset": 664
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_industry",
+          "dimensions": [],
+          "count": 1,
+          "offset": 668
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_research",
+          "dimensions": [],
+          "count": 1,
+          "offset": 672
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_economy_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 676
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_effic_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 680
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_support_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 684
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_talent_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 688
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_morale_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 692
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_police_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 696
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_growth_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 700
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_planet_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 704
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_probe_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 708
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_industry_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 712
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_research_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 716
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_economy_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 720
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_effic_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 724
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_support_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 728
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_talent_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 732
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_morale_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 736
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_police_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 740
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_growth_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 744
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_planet_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 748
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_probe_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 752
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_industry_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 756
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_research_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 760
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_surplus_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 764
+        },
+        {
+          "type": "int32_t",
+          "name": "facility_maint_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 768
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_commerce_bonus",
+          "dimensions": [],
+          "count": 1,
+          "offset": 772
+        },
+        {
+          "type": "int32_t",
+          "name": "turn_commerce_income",
+          "dimensions": [],
+          "count": 1,
+          "offset": 776
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_17",
+          "dimensions": [],
+          "count": 1,
+          "offset": 780
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_18",
+          "dimensions": [],
+          "count": 1,
+          "offset": 784
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_fungus_nutrient",
+          "dimensions": [],
+          "count": 1,
+          "offset": 788
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_fungus_mineral",
+          "dimensions": [],
+          "count": 1,
+          "offset": 792
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_fungus_energy",
+          "dimensions": [],
+          "count": 1,
+          "offset": 796
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_fungus_unused",
+          "dimensions": [],
+          "count": 1,
+          "offset": 800
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_alloc_psych",
+          "dimensions": [],
+          "count": 1,
+          "offset": 804
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_alloc_labs",
+          "dimensions": [],
+          "count": 1,
+          "offset": 808
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_pact_shared_goals",
+          "dimensions": [
+            12
+          ],
+          "count": 12,
+          "offset": 812
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_ranking",
+          "dimensions": [],
+          "count": 1,
+          "offset": 860
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_27",
+          "dimensions": [],
+          "count": 1,
+          "offset": 864
+        },
+        {
+          "type": "int32_t",
+          "name": "ODP_deployed",
+          "dimensions": [],
+          "count": 1,
+          "offset": 868
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_count_transcendent",
+          "dimensions": [],
+          "count": 1,
+          "offset": 872
+        },
+        {
+          "type": "int8_t",
+          "name": "tech_trade_source",
+          "dimensions": [
+            92
+          ],
+          "count": 92,
+          "offset": 876
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_accumulated",
+          "dimensions": [],
+          "count": 1,
+          "offset": 968
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_research_id",
+          "dimensions": [],
+          "count": 1,
+          "offset": 972
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_cost",
+          "dimensions": [],
+          "count": 1,
+          "offset": 976
+        },
+        {
+          "type": "int32_t",
+          "name": "earned_techs_saved",
+          "dimensions": [],
+          "count": 1,
+          "offset": 980
+        },
+        {
+          "type": "int32_t",
+          "name": "net_random_event",
+          "dimensions": [],
+          "count": 1,
+          "offset": 984
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_fight",
+          "dimensions": [],
+          "count": 1,
+          "offset": 988
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_growth",
+          "dimensions": [],
+          "count": 1,
+          "offset": 992
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_tech",
+          "dimensions": [],
+          "count": 1,
+          "offset": 996
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_wealth",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1000
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_power",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1004
+        },
+        {
+          "type": "int32_t",
+          "name": "target_x",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1008
+        },
+        {
+          "type": "int32_t",
+          "name": "target_y",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1012
+        },
+        {
+          "type": "int32_t",
+          "name": "best_mineral_output",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1016
+        },
+        {
+          "type": "int32_t",
+          "name": "council_call_turn",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1020
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_29",
+          "dimensions": [
+            11
+          ],
+          "count": 11,
+          "offset": 1024
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_30",
+          "dimensions": [
+            11
+          ],
+          "count": 11,
+          "offset": 1068
+        },
+        {
+          "type": "uint8_t",
+          "name": "facility_announced",
+          "dimensions": [
+            12
+          ],
+          "count": 12,
+          "offset": 1112
+        },
+        {
+          "type": "int32_t",
+          "name": "clean_minerals_modifier",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1124
+        },
+        {
+          "type": "int32_t",
+          "name": "base_id_attack_target",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1128
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_37",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1132
+        },
+        {
+          "type": "char",
+          "name": "saved_queue_name",
+          "dimensions": [
+            8,
+            24
+          ],
+          "count": 192,
+          "offset": 1136
+        },
+        {
+          "type": "int32_t",
+          "name": "saved_queue_size",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 1328
+        },
+        {
+          "type": "int32_t",
+          "name": "saved_queue_items",
+          "dimensions": [
+            8,
+            10
+          ],
+          "count": 80,
+          "offset": 1360
+        },
+        {
+          "type": "int32_t",
+          "name": "social_support",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 1680
+        },
+        {
+          "type": "int32_t",
+          "name": "social_psych",
+          "dimensions": [
+            8,
+            9
+          ],
+          "count": 72,
+          "offset": 1712
+        },
+        {
+          "type": "int32_t",
+          "name": "social_effic",
+          "dimensions": [
+            9
+          ],
+          "count": 9,
+          "offset": 2000
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_45",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2036
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_46",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2040
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_47",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2044
+        },
+        {
+          "type": "int32_t",
+          "name": "nutrient_surplus_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2048
+        },
+        {
+          "type": "int32_t",
+          "name": "labs_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2052
+        },
+        {
+          "type": "int32_t",
+          "name": "satellites_nutrient",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2056
+        },
+        {
+          "type": "int32_t",
+          "name": "satellites_mineral",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2060
+        },
+        {
+          "type": "int32_t",
+          "name": "satellites_energy",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2064
+        },
+        {
+          "type": "int32_t",
+          "name": "satellites_ODP",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2068
+        },
+        {
+          "type": "int32_t",
+          "name": "best_weapon_value",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2072
+        },
+        {
+          "type": "int32_t",
+          "name": "best_psi_land_offense",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2076
+        },
+        {
+          "type": "int32_t",
+          "name": "best_psi_land_defense",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2080
+        },
+        {
+          "type": "int32_t",
+          "name": "best_armor_value",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2084
+        },
+        {
+          "type": "int32_t",
+          "name": "best_land_speed",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2088
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_weapon_value",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2092
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_armor_value",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2096
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_land_speed",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2100
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_psi_land_offense",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2104
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_psi_land_defense",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2108
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_64",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2112
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_65",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2116
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_66",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2120
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_67",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2124
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_68",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2128
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_69",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2132
+        },
+        {
+          "type": "uint8_t",
+          "name": "units_active",
+          "dimensions": [
+            512
+          ],
+          "count": 512,
+          "offset": 2136
+        },
+        {
+          "type": "uint8_t",
+          "name": "units_queue",
+          "dimensions": [
+            512
+          ],
+          "count": 512,
+          "offset": 2648
+        },
+        {
+          "type": "uint16_t",
+          "name": "units_lost",
+          "dimensions": [
+            512
+          ],
+          "count": 512,
+          "offset": 3160
+        },
+        {
+          "type": "int32_t",
+          "name": "total_combat_units",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4184
+        },
+        {
+          "type": "int32_t",
+          "name": "base_count",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4188
+        },
+        {
+          "type": "int32_t",
+          "name": "mil_strength_1",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4192
+        },
+        {
+          "type": "int32_t",
+          "name": "mil_strength_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4196
+        },
+        {
+          "type": "int32_t",
+          "name": "pop_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4200
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_70",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4204
+        },
+        {
+          "type": "int32_t",
+          "name": "planet_busters",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4208
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_71",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4212
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_72",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4216
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_total_combat_units",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4220
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_total_bases",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4476
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_total_offensive_units",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4604
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_force_rating",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4732
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_flags",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4988
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_territory_tiles",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 5244
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_visible_tiles",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 5500
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_good_tiles",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 5756
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_unk_5",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 6012
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_unk_6",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 6268
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_territory_pods",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 6396
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_base_plan",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 6524
+        },
+        {
+          "type": "Goal",
+          "name": "goals",
+          "dimensions": [
+            75
+          ],
+          "count": 75,
+          "offset": 6652
+        },
+        {
+          "type": "Goal",
+          "name": "sites",
+          "dimensions": [
+            25
+          ],
+          "count": 25,
+          "offset": 7852
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_93",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8252
+        },
+        {
+          "type": "int32_t",
+          "name": "goody_opened",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8256
+        },
+        {
+          "type": "int32_t",
+          "name": "goody_artifact",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8260
+        },
+        {
+          "type": "int32_t",
+          "name": "goody_earthquake",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8264
+        },
+        {
+          "type": "int32_t",
+          "name": "goody_tech",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8268
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_achieved",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8272
+        },
+        {
+          "type": "int32_t",
+          "name": "time_bonus_count",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8276
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_99",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8280
+        },
+        {
+          "type": "uint32_t",
+          "name": "secret_project_intel",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 8284
+        },
+        {
+          "type": "int32_t",
+          "name": "corner_market_turn",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8316
+        },
+        {
+          "type": "int32_t",
+          "name": "corner_market_cost",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8320
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_101",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8324
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_102",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8328
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_103",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8332
+        },
+        {
+          "type": "uint32_t",
+          "name": "player_flags_ext",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8336
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_105",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8340
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_106",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8344
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_107",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8348
+        },
+        {
+          "type": "int32_t",
+          "name": "eliminated_count",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8352
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_109",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8356
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_110",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8360
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_111",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8364
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_112",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8368
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_113",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8372
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_114",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8376
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_115",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8380
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_116",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8384
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_117",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8388
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_118",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8392
+        }
+      ]
+    },
+    "LegacyFactionV10": {
+      "size": 8380,
+      "fields": [
+        {
+          "type": "int32_t",
+          "name": "player_flags",
+          "dimensions": [],
+          "count": 1,
+          "offset": 0
+        },
+        {
+          "type": "int32_t",
+          "name": "ranking",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4
+        },
+        {
+          "type": "int32_t",
+          "name": "diff_level",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8
+        },
+        {
+          "type": "int32_t",
+          "name": "base_name_offset",
+          "dimensions": [],
+          "count": 1,
+          "offset": 12
+        },
+        {
+          "type": "int32_t",
+          "name": "base_sea_name_offset",
+          "dimensions": [],
+          "count": 1,
+          "offset": 16
+        },
+        {
+          "type": "int32_t",
+          "name": "last_base_turn",
+          "dimensions": [],
+          "count": 1,
+          "offset": 20
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_status",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 24
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_agenda",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 56
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_friction",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 88
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_spoke",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 120
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_merc",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 152
+        },
+        {
+          "type": "int8_t",
+          "name": "diplo_patience",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 184
+        },
+        {
+          "type": "int32_t",
+          "name": "sanction_turns",
+          "dimensions": [],
+          "count": 1,
+          "offset": 192
+        },
+        {
+          "type": "int32_t",
+          "name": "loan_balance",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 196
+        },
+        {
+          "type": "int32_t",
+          "name": "loan_payment",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 228
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_1",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 260
+        },
+        {
+          "type": "int32_t",
+          "name": "integrity_blemishes",
+          "dimensions": [],
+          "count": 1,
+          "offset": 292
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_reputation",
+          "dimensions": [],
+          "count": 1,
+          "offset": 296
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_gifts",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 300
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_wrongs",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 332
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_betrayed",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 364
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_combat_total",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 396
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_combat_count",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 428
+        },
+        {
+          "type": "int32_t",
+          "name": "traded_maps",
+          "dimensions": [],
+          "count": 1,
+          "offset": 460
+        },
+        {
+          "type": "int32_t",
+          "name": "base_governor_adv",
+          "dimensions": [],
+          "count": 1,
+          "offset": 464
+        },
+        {
+          "type": "int32_t",
+          "name": "atrocities",
+          "dimensions": [],
+          "count": 1,
+          "offset": 468
+        },
+        {
+          "type": "int32_t",
+          "name": "major_atrocities",
+          "dimensions": [],
+          "count": 1,
+          "offset": 472
+        },
+        {
+          "type": "int32_t",
+          "name": "mind_control_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 476
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_mind_control",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 480
+        },
+        {
+          "type": "int32_t",
+          "name": "diplo_stolen_techs",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 512
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_credits",
+          "dimensions": [],
+          "count": 1,
+          "offset": 544
+        },
+        {
+          "type": "int32_t",
+          "name": "hurry_cost_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 548
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Politics_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 552
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Economics_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 556
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Values_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 560
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Future_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 564
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Politics",
+          "dimensions": [],
+          "count": 1,
+          "offset": 568
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Economics",
+          "dimensions": [],
+          "count": 1,
+          "offset": 572
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Values",
+          "dimensions": [],
+          "count": 1,
+          "offset": 576
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_Future",
+          "dimensions": [],
+          "count": 1,
+          "offset": 580
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_upheaval_cost_paid",
+          "dimensions": [],
+          "count": 1,
+          "offset": 584
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_economy_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 588
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_effic_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 592
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_support_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 596
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_talent_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 600
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_morale_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 604
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_police_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 608
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_growth_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 612
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_planet_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 616
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_probe_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 620
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_industry_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 624
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_research_pending",
+          "dimensions": [],
+          "count": 1,
+          "offset": 628
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_economy",
+          "dimensions": [],
+          "count": 1,
+          "offset": 632
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_effic",
+          "dimensions": [],
+          "count": 1,
+          "offset": 636
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_support",
+          "dimensions": [],
+          "count": 1,
+          "offset": 640
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_talent",
+          "dimensions": [],
+          "count": 1,
+          "offset": 644
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_morale",
+          "dimensions": [],
+          "count": 1,
+          "offset": 648
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_police",
+          "dimensions": [],
+          "count": 1,
+          "offset": 652
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_growth",
+          "dimensions": [],
+          "count": 1,
+          "offset": 656
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_planet",
+          "dimensions": [],
+          "count": 1,
+          "offset": 660
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_probe",
+          "dimensions": [],
+          "count": 1,
+          "offset": 664
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_industry",
+          "dimensions": [],
+          "count": 1,
+          "offset": 668
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_research",
+          "dimensions": [],
+          "count": 1,
+          "offset": 672
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_economy_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 676
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_effic_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 680
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_support_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 684
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_talent_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 688
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_morale_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 692
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_police_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 696
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_growth_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 700
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_planet_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 704
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_probe_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 708
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_industry_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 712
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_research_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 716
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_economy_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 720
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_effic_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 724
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_support_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 728
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_talent_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 732
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_morale_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 736
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_police_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 740
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_growth_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 744
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_planet_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 748
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_probe_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 752
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_industry_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 756
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_research_base",
+          "dimensions": [],
+          "count": 1,
+          "offset": 760
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_surplus_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 764
+        },
+        {
+          "type": "int32_t",
+          "name": "facility_maint_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 768
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_commerce_bonus",
+          "dimensions": [],
+          "count": 1,
+          "offset": 772
+        },
+        {
+          "type": "int32_t",
+          "name": "turn_commerce_income",
+          "dimensions": [],
+          "count": 1,
+          "offset": 776
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_17",
+          "dimensions": [],
+          "count": 1,
+          "offset": 780
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_18",
+          "dimensions": [],
+          "count": 1,
+          "offset": 784
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_fungus_nutrient",
+          "dimensions": [],
+          "count": 1,
+          "offset": 788
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_fungus_mineral",
+          "dimensions": [],
+          "count": 1,
+          "offset": 792
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_fungus_energy",
+          "dimensions": [],
+          "count": 1,
+          "offset": 796
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_fungus_unused",
+          "dimensions": [],
+          "count": 1,
+          "offset": 800
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_alloc_psych",
+          "dimensions": [],
+          "count": 1,
+          "offset": 804
+        },
+        {
+          "type": "int32_t",
+          "name": "SE_alloc_labs",
+          "dimensions": [],
+          "count": 1,
+          "offset": 808
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_pact_shared_goals",
+          "dimensions": [
+            12
+          ],
+          "count": 12,
+          "offset": 812
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_ranking",
+          "dimensions": [],
+          "count": 1,
+          "offset": 860
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_27",
+          "dimensions": [],
+          "count": 1,
+          "offset": 864
+        },
+        {
+          "type": "int32_t",
+          "name": "ODP_deployed",
+          "dimensions": [],
+          "count": 1,
+          "offset": 868
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_count_transcendent",
+          "dimensions": [],
+          "count": 1,
+          "offset": 872
+        },
+        {
+          "type": "int8_t",
+          "name": "tech_trade_source",
+          "dimensions": [
+            92
+          ],
+          "count": 92,
+          "offset": 876
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_accumulated",
+          "dimensions": [],
+          "count": 1,
+          "offset": 968
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_research_id",
+          "dimensions": [],
+          "count": 1,
+          "offset": 972
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_cost",
+          "dimensions": [],
+          "count": 1,
+          "offset": 976
+        },
+        {
+          "type": "int32_t",
+          "name": "earned_techs_saved",
+          "dimensions": [],
+          "count": 1,
+          "offset": 980
+        },
+        {
+          "type": "int32_t",
+          "name": "net_random_event",
+          "dimensions": [],
+          "count": 1,
+          "offset": 984
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_fight",
+          "dimensions": [],
+          "count": 1,
+          "offset": 988
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_growth",
+          "dimensions": [],
+          "count": 1,
+          "offset": 992
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_tech",
+          "dimensions": [],
+          "count": 1,
+          "offset": 996
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_wealth",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1000
+        },
+        {
+          "type": "int32_t",
+          "name": "AI_power",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1004
+        },
+        {
+          "type": "int32_t",
+          "name": "target_x",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1008
+        },
+        {
+          "type": "int32_t",
+          "name": "target_y",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1012
+        },
+        {
+          "type": "int32_t",
+          "name": "best_mineral_output",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1016
+        },
+        {
+          "type": "int32_t",
+          "name": "council_call_turn",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1020
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_29",
+          "dimensions": [
+            11
+          ],
+          "count": 11,
+          "offset": 1024
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_30",
+          "dimensions": [
+            11
+          ],
+          "count": 11,
+          "offset": 1068
+        },
+        {
+          "type": "uint8_t",
+          "name": "facility_announced",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 1112
+        },
+        {
+          "type": "int32_t",
+          "name": "clean_minerals_modifier",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1120
+        },
+        {
+          "type": "int32_t",
+          "name": "base_id_attack_target",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1124
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_37",
+          "dimensions": [],
+          "count": 1,
+          "offset": 1128
+        },
+        {
+          "type": "char",
+          "name": "saved_queue_name",
+          "dimensions": [
+            8,
+            24
+          ],
+          "count": 192,
+          "offset": 1132
+        },
+        {
+          "type": "int32_t",
+          "name": "saved_queue_size",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 1324
+        },
+        {
+          "type": "int32_t",
+          "name": "saved_queue_items",
+          "dimensions": [
+            8,
+            10
+          ],
+          "count": 80,
+          "offset": 1356
+        },
+        {
+          "type": "int32_t",
+          "name": "social_support",
+          "dimensions": [
+            8
+          ],
+          "count": 8,
+          "offset": 1676
+        },
+        {
+          "type": "int32_t",
+          "name": "social_psych",
+          "dimensions": [
+            8,
+            9
+          ],
+          "count": 72,
+          "offset": 1708
+        },
+        {
+          "type": "int32_t",
+          "name": "social_effic",
+          "dimensions": [
+            9
+          ],
+          "count": 9,
+          "offset": 1996
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_45",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2032
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_46",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2036
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_47",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2040
+        },
+        {
+          "type": "int32_t",
+          "name": "nutrient_surplus_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2044
+        },
+        {
+          "type": "int32_t",
+          "name": "labs_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2048
+        },
+        {
+          "type": "int32_t",
+          "name": "satellites_nutrient",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2052
+        },
+        {
+          "type": "int32_t",
+          "name": "satellites_mineral",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2056
+        },
+        {
+          "type": "int32_t",
+          "name": "satellites_energy",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2060
+        },
+        {
+          "type": "int32_t",
+          "name": "satellites_ODP",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2064
+        },
+        {
+          "type": "int32_t",
+          "name": "best_weapon_value",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2068
+        },
+        {
+          "type": "int32_t",
+          "name": "best_psi_land_offense",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2072
+        },
+        {
+          "type": "int32_t",
+          "name": "best_psi_land_defense",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2076
+        },
+        {
+          "type": "int32_t",
+          "name": "best_armor_value",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2080
+        },
+        {
+          "type": "int32_t",
+          "name": "best_land_speed",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2084
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_weapon_value",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2088
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_armor_value",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2092
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_land_speed",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2096
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_psi_land_offense",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2100
+        },
+        {
+          "type": "int32_t",
+          "name": "enemy_best_psi_land_defense",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2104
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_64",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2108
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_65",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2112
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_66",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2116
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_67",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2120
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_68",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2124
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_69",
+          "dimensions": [],
+          "count": 1,
+          "offset": 2128
+        },
+        {
+          "type": "uint8_t",
+          "name": "units_active",
+          "dimensions": [
+            512
+          ],
+          "count": 512,
+          "offset": 2132
+        },
+        {
+          "type": "uint8_t",
+          "name": "units_queue",
+          "dimensions": [
+            512
+          ],
+          "count": 512,
+          "offset": 2644
+        },
+        {
+          "type": "uint16_t",
+          "name": "units_lost",
+          "dimensions": [
+            512
+          ],
+          "count": 512,
+          "offset": 3156
+        },
+        {
+          "type": "int32_t",
+          "name": "total_combat_units",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4180
+        },
+        {
+          "type": "int32_t",
+          "name": "base_count",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4184
+        },
+        {
+          "type": "int32_t",
+          "name": "mil_strength_1",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4188
+        },
+        {
+          "type": "int32_t",
+          "name": "mil_strength_2",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4192
+        },
+        {
+          "type": "int32_t",
+          "name": "pop_total",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4196
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_70",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4200
+        },
+        {
+          "type": "int32_t",
+          "name": "planet_busters",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4204
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_71",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4208
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_72",
+          "dimensions": [],
+          "count": 1,
+          "offset": 4212
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_total_combat_units",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4216
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_total_bases",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4472
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_total_offensive_units",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4600
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_force_rating",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4728
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_flags",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 4984
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_territory_tiles",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 5240
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_visible_tiles",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 5496
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_good_tiles",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 5752
+        },
+        {
+          "type": "uint16_t",
+          "name": "region_unk_5",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 6008
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_unk_6",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 6264
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_territory_pods",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 6392
+        },
+        {
+          "type": "uint8_t",
+          "name": "region_base_plan",
+          "dimensions": [
+            128
+          ],
+          "count": 128,
+          "offset": 6520
+        },
+        {
+          "type": "Goal",
+          "name": "goals",
+          "dimensions": [
+            75
+          ],
+          "count": 75,
+          "offset": 6648
+        },
+        {
+          "type": "Goal",
+          "name": "sites",
+          "dimensions": [
+            25
+          ],
+          "count": 25,
+          "offset": 7848
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_93",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8248
+        },
+        {
+          "type": "int32_t",
+          "name": "goody_opened",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8252
+        },
+        {
+          "type": "int32_t",
+          "name": "goody_artifact",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8256
+        },
+        {
+          "type": "int32_t",
+          "name": "goody_earthquake",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8260
+        },
+        {
+          "type": "int32_t",
+          "name": "goody_tech",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8264
+        },
+        {
+          "type": "int32_t",
+          "name": "tech_achieved",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8268
+        },
+        {
+          "type": "int32_t",
+          "name": "time_bonus_count",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8272
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_99",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8276
+        },
+        {
+          "type": "uint32_t",
+          "name": "secret_project_intel",
+          "dimensions": [
+            5
+          ],
+          "count": 5,
+          "offset": 8280
+        },
+        {
+          "type": "int32_t",
+          "name": "corner_market_turn",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8300
+        },
+        {
+          "type": "int32_t",
+          "name": "corner_market_cost",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8304
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_101",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8308
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_102",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8312
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_103",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8316
+        },
+        {
+          "type": "int32_t",
+          "name": "player_flags_ext",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8320
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_105",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8324
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_106",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8328
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_107",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8332
+        },
+        {
+          "type": "int32_t",
+          "name": "eliminated_count",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8336
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_109",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8340
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_110",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8344
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_111",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8348
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_112",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8352
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_113",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8356
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_114",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8360
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_115",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8364
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_116",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8368
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_117",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8372
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_118",
+          "dimensions": [],
+          "count": 1,
+          "offset": 8376
+        }
+      ]
+    }
+  }
+}

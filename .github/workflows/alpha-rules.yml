@@ -80,3 +80,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_original_game.py --out "$RUNNER_TEMP/original-game-host"
       - name: Big-endian original scenario and save format controls
         run: python3 ports/alpha-centauri/native/test_original_game.py --out "$RUNNER_TEMP/original-game-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original saved faction state controls
+        run: python3 ports/alpha-centauri/native/test_original_faction.py --out "$RUNNER_TEMP/original-faction-host"
+      - name: Big-endian original saved faction state controls
+        run: python3 ports/alpha-centauri/native/test_original_faction.py --out "$RUNNER_TEMP/original-faction-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
