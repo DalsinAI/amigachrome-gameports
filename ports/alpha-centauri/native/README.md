@@ -422,3 +422,41 @@ Instance-32 ROM pair was used, followed by stop and verified lab restoration.
 Host CI covers portable controls on sanitizers and big-endian 68040. The Amiga
 window is additionally qualified by that recorded native build/run, not compiled
 by host CI. No original-executable differential fidelity is claimed.
+
+### Original Planet map import
+
+`original_map.cpp/h` decodes the original `TERRANMAP` version5 `.MP` files using
+the reconstructed Thinker `map_read/map_init` layout. This replaces neither a
+full game loader nor the test scene yet. The original map view borrows immutable
+input bytes: keep that buffer alive and unchanged. Tiles are decoded field by
+field with explicit little-endian reads; use them to initialize owned world
+state. Never cast the bytes to native packed records or import serialized PC
+pointers. Unknown metadata/tile bits remain available in the bounded raw spans.
+
+Width must be even2..4096 and height1..4096. Counts and abstract dimensions derive
+from those dimensions exactly as in source; stored counts cannot drive memory
+allocation. An inconsistency is flagged. File length must match exactly. Version5
+is supported explicitly; other versions fail. Landmark count is bounded64. All32
+label bytes are retained, with an added terminator in native state. Raw off-map
+coordinates are retained and flagged, not used as array indices: two such labels
+occur in each supplied large Planet map. The remaining original
+`fixup_landmarks` binding is **not executed or claimed reconstructed**. No editor
+field clearing, unit/base creation, gameplay initialization, original SAV/SC
+state loading or original-executable differential fidelity is claimed by this
+file reader.
+
+Build the CLI probe using the qualified SDK with `original_map.cpp` and
+`original_map_probe.cpp`; run `map-probe ORIGINAL.MP`. Host/independent big-endian
+controls: `test_original_map.py --out NEW_DIR` (or `--cc m68k-linux-gnu-g++
+--m68k-linux`). They cover66 cases: every decoded tile field, signed owner,
+landmark bytes and flags, metadata/world fields, recomputed counts, inert pointer
+bytes, edge geometry, malformed/truncated/trailing data and unchanged outputs on
+failure. Independent Python interprets the byte format directly.
+
+Native qualification is recorded in `ORIGINAL-MAP-EVIDENCE-20261025.json` after
+all four original CD maps and the synthetic corpus pass. The normal SDK's large
+structure copy uses real Exec CopyMem, so the standalone raw Linux syscall
+harness is not used or replaced with stubs. Actual AmigaOS tests run the final
+OpenAmigaGCC16.2.0-open3 binary, plus file probes of all original maps, against
+independent expected fields/fingerprints. Original media remains private and is
+not distributed with the source.
