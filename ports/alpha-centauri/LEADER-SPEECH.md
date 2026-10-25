@@ -67,8 +67,15 @@ restoration centrally. Current audition is a shell tool, not a diplomacy screen.
 truncation, malformed-format, capacity and transactional-output controls under
 host ASan/UBSan or independent big-endian 68040 Linux/QEMU. No original media is
 needed in CI. The normal private Amiga SDK audition build compiles cleanly.
-**Native playback, final-head CI and live frontend integration remain pending.**
-Do not describe this branch as native audio-qualified until those checks run.
+Actual isolated AmigaOS testing passed all 105 controls and every sample fingerprint
+for all fourteen original WAV files against independent Python results. Deirdre's
+and Judaa Marr's complete speeches played once, produced nonzero captured native
+PCM, and exited RC0. Invalid faction selection returned RC20. The test used private
+then-current target ROMs and SDL module, with 336 continuously polled display frames;
+the lab stopped and configuration, ROMs, module and startup hashes were restored.
+See `LEADER-SPEECH-EVIDENCE-20261025.json`. Initial-head CI actually ran and passed
+all 105 cases on host and independent big-endian 68040. Final-head checks must also
+pass before merge. Main frontend integration remains a separate step.
 
 Technology quote recordings belong to the technology/discovery component.
 Facility completion voices (`fac*`), secret-project narrations, computer warnings,
