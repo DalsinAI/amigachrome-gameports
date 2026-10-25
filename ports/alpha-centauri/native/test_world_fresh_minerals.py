@@ -27,6 +27,18 @@ def fixture(variant,version,case):
  struct.pack_into('<i',b,o['bases']+0x50,[-34,-35,-65,-66,-68,320][case%6]);struct.pack_into('<i',b,o['metadata']+0xa48,case%3)
  if version>=12:struct.pack_into('<i',b,o['tectonic']+4,case%4)
  return bytes(b)
+def fungus_fixture(variant,version,case):
+ text,raw=convoy.fungus_case(variant,version,case);b=bytearray(fixture(variant,version,case));_,o,_=convoy.intake.decode(b);_,source,_=convoy.intake.decode(raw);legacy=version<11;pf=o['legacy'] if legacy else o['preferences'];sp=source['legacy'] if legacy else source['preferences'];shift=0x7c if legacy else 0;fs=0x20bc if legacy else 0x20cc
+ b[pf+0x1e0-shift:pf+0x1e0-shift+89]=raw[sp+0x1e0-shift:sp+0x1e0-shift+89]
+ for i in range(96):
+  at=o['tiles']+44*i;items=struct.unpack_from('<I',b,at+8)[0]
+  if not items&1:struct.pack_into('<I',b,at+8,0x20|(items&2))
+ schema=convoy.intake.FACTIONS['LegacyFactionV10' if legacy else 'Faction']
+ for name in ['tech_commerce_bonus','tech_fungus_nutrient','tech_fungus_mineral','tech_fungus_energy','tech_fungus_unused']:
+  off=next(f['offset'] for f in schema['fields'] if f['name']==name);b[o['factions']+fs+off:o['factions']+fs+off+4]=raw[source['factions']+fs+off:source['factions']+fs+off+4]
+ dest=o['faction_definitions']+0x59c;src=source['faction_definitions']+0x59c
+ b[dest+0x504:dest+0x550]=raw[src+0x504:src+0x550]
+ return text,bytes(b)
 def model(variant,text,data,mode=0):
  fail=lambda e:[e]+[0x5a5a5a5a]*130
  food=convoy.model(variant,text,data)
@@ -64,10 +76,13 @@ def model(variant,text,data,mode=0):
  return [*food,*unit,*values,flags,*result[1:]]
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--cc',default='c++');ap.add_argument('--m68k-linux',action='store_true');ap.add_argument('--binary',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','world_unit_support.cpp','vehicle_stack.cpp','tile_yields.cpp','world_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','base_nutrients.cpp','world_fresh_nutrients.cpp','world_convoy_nutrients.cpp','base_minerals.cpp','world_fresh_minerals.cpp','world_fresh_minerals_probe.cpp'];exe=a.binary if a.binary else a.out/'world-fresh-minerals';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[] if a.binary else [a.cc,*flags,*[str(HERE/n) for n in names],'-o',str(exe)]
+ names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','world_unit_support.cpp','vehicle_stack.cpp','tile_yields.cpp','world_tile_yields.cpp','technology_effects.cpp','world_fresh_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','base_nutrients.cpp','world_fresh_nutrients.cpp','world_convoy_nutrients.cpp','base_minerals.cpp','world_fresh_minerals.cpp','world_fresh_minerals_probe.cpp'];exe=a.binary if a.binary else a.out/'world-fresh-minerals';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[] if a.binary else [a.cc,*flags,*[str(HERE/n) for n in names],'-o',str(exe)]
  if cmd:subprocess.run(cmd,check=True)
  runner=['qemu-m68k','-cpu','m68040'] if a.m68k_linux else []
- cases=[]
+ cases=[];overrides={}
+ for variant in ['base','expansion']:
+  for n in range(1,65):
+   version=7+n%4 if variant=='base' else 11+n%2;text,data=fungus_fixture(variant,version,n);name=f'{variant}-fresh-fungus-{n}';cases.append((name,variant,data,1));overrides[name]=text
  for version in range(7,13):
   variant='base' if version<11 else 'expansion'
   for case in range(1,17):
@@ -78,7 +93,7 @@ def main():
   b=bytearray(seed);struct.pack_into('<i',b,offset,value);cases.append((name,'expansion',bytes(b),0))
  digest=hashlib.sha256();records=[];accepted=rejected=0
  for name,variant,data,mode in cases:
-  text=convoy.nutrients.rules(variant);p=a.out/(name+'.SC');p.write_bytes(data);rp=a.out/(variant+'.txt');rp.write_bytes(text);want=model(variant,text,data,mode)
+  text=overrides.get(name,convoy.nutrients.rules(variant));p=a.out/(name+'.SC');p.write_bytes(data);rp=a.out/(variant+'.txt');rp.write_bytes(text);want=model(variant,text,data,mode)
   r=subprocess.run([*runner,str(exe),variant,str(rp),str(p),str(mode)],capture_output=True,timeout=60,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'));assert r.returncode==0,(name,r.returncode,r.stderr);encoded=struct.pack('<131I',*[x&0xffffffff for x in want]);assert r.stdout==encoded,(name,len(r.stdout),[(i,x,y) for i,(x,y) in enumerate(zip(struct.unpack('<131I',r.stdout),[v&0xffffffff for v in want])) if x!=y][:20]);assert p.read_bytes()==data;digest.update(encoded);accepted+=want[0]==0;rejected+=want[0]!=0;records.append({'name':name,'error':want[0],'inputSHA256':hashlib.sha256(data).hexdigest(),'outputSHA256':hashlib.sha256(encoded).hexdigest()})
  receipt={'worlds':len(cases),'accepted':accepted,'rejected':rejected,'outputSHA256':digest.hexdigest(),'binarySHA256':hashlib.sha256(exe.read_bytes()).hexdigest(),'records':records,'command':cmd,'native':'UNRUN','scope':'Fresh read-only food/mineral proposal with actual convoy/support/project/map/faction facts; no accounting/actor/faction mutation/upkeep/turn/UI.'};(a.out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps({k:v for k,v in receipt.items() if k not in ['records','command']}))
 if __name__=='__main__':main()

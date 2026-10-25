@@ -51,6 +51,8 @@ def fungus_case(variant,version,case):
 def flow_model(variant,text,data,mode=0):
  info,off,spans=intake.decode(data);bs=304 if int(info['version'])<11 else 308;b=spans['bases'][:bs];faction=b[4];to=[0]*4;fr=[0]*4;harvesters=0;reduction=-2 if mode==2 else 2147483647 if mode==3 else 0;energy=-123456 if mode>=2 else 0
  tables=intake.sections(text);row_index,column,_=intake.ROW['limit_mineral_mine_sans_road'];mine_limit=int(tables['RULES'][row_index][column])
+ fs=0x20bc if int(info['version'])<11 else 0x20cc;schema=intake.FACTIONS['LegacyFactionV10' if int(info['version'])<11 else 'Faction']
+ def state(name):return intake.scalar(spans['factions'][faction*fs:(faction+1)*fs],schema,name)
  effect_error,fresh_effects=intake.effect_model(intake.effect_facts(text,data)[faction])
  if effect_error:return (7 if effect_error==2 else 1),None
  for i in range(int(info['vehicles'])):
@@ -64,7 +66,7 @@ def flow_model(variant,text,data,mode=0):
    harvesters+=1
    if channel==3:reduction=0;continue
    # Independently reconstruct the controlled plain/forest fixture leaf facts.
-   row=[0]*59;row[0]=int(variant=='expansion');row[1]=sq[0];row[2]=sq[2];row[4]=items;row[11:14]=fresh_effects[1:4];row[14]=2;row[18],row[19]=struct.unpack_from('<II',b,0x8c);row[20]=15;row[25]=mode&1;row[28]=mine_limit;row[30]=reduction;row[31]=energy
+   row=[0]*59;row[0]=int(variant=='expansion');row[1]=sq[0];row[2]=sq[2];row[4]=items;row[9]=state('SE_planet_pending');row[10]=state('SE_economy_pending');row[11:14]=fresh_effects[1:4];row[14]=state('base_count');row[18],row[19]=struct.unpack_from('<II',b,0x8c);row[20]=15;row[25]=mode&1;row[28]=mine_limit;row[30]=reduction;row[31]=energy
    for k,resource in enumerate(tables['RESOURCEINFO']):row[32+3*k:35+3*k]=[0 if x=='*' else int(x) for x in resource[1:4]]
    result=intake.leaf_expected(row)
    if result[0]:return (7 if result[0]==2 else 1),None

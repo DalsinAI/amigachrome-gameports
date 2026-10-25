@@ -1,36 +1,44 @@
 {
   "scope": "Read-only fresh food/mineral proposal; no mutation/upkeep/turn/UI/player save",
   "validation": {
-    "host-final-3": {
-      "worlds": 293,
-      "accepted": 209,
+    "host-2": {
+      "worlds": 421,
+      "accepted": 337,
       "rejected": 84,
-      "outputSHA256": "882c681eadb957a9c04f0518ff05e4a299033ac7191d3ae59524fa879cf22575",
-      "binarySHA256": "d172f9b07e304b0d8c0502256d0119ef2cbc3432209207a8ada76292a987e697",
+      "outputSHA256": "8020367034f8fa4fcd465ba603f465620a2efa884b5a8b1711ab67b75a007478",
+      "binarySHA256": "70b73f1a8d7e3d34ed05302f7914ef2f82e4ebc23dd56738bb57eb9db9bf55ea",
       "native": "UNRUN",
       "scope": "Fresh read-only food/mineral proposal with actual convoy/support/project/map/faction facts; no accounting/actor/faction mutation/upkeep/turn/UI."
     },
-    "be-final-3": {
-      "worlds": 293,
-      "accepted": 209,
+    "be-2": {
+      "worlds": 421,
+      "accepted": 337,
       "rejected": 84,
-      "outputSHA256": "882c681eadb957a9c04f0518ff05e4a299033ac7191d3ae59524fa879cf22575",
-      "binarySHA256": "4ab2b5771042d5bd66a7947220e8ba7464fa72e764e08d8623bd87262f162ae7",
+      "outputSHA256": "8020367034f8fa4fcd465ba603f465620a2efa884b5a8b1711ab67b75a007478",
+      "binarySHA256": "a468277b6c28ca37d0bcf8c61b3170fc47fc281697934d7a858dfdc12148b2c6",
       "native": "UNRUN",
       "scope": "Fresh read-only food/mineral proposal with actual convoy/support/project/map/faction facts; no accounting/actor/faction mutation/upkeep/turn/UI."
     }
   },
   "originalMineralHelperContexts": {
-    "base": 128,
-    "expansion": 81,
+    "base": 192,
+    "expansion": 145,
     "allMatch": true,
-    "limit": "Exact accepted derived facts passed to unchanged original numeric helpers, not full world upkeep"
+    "limit": "Exact accepted fresh derived facts passed to unchanged original numeric helpers; not complete original world upkeep."
   },
   "normalSDK": {
-    "SHA256": "3836a7e6f3fe5ebd342e9bc79d109af7bdd8ca6f588e327fa2af3705f98414c0",
+    "SHA256": "e280cdbb6481cbb98446f643bbf0215c7f9b99823d0ac8d18c8060f01d3a6dd9",
     "freshBuilds": 2,
     "execution": "UNRUN"
   },
   "CI": "pending final-head actual logs",
-  "workflowEntries": 103
+  "workflowEntries": 111,
+  "fungusCases": 128,
+  "sessionComposition": {
+    "worlds": 48,
+    "orders": 96,
+    "bothArchitecturesPass": true,
+    "completeContainerSHA256": "0e2590c783408f7b4e5e45fee0935fbb81cb22fa0c3b3d266b956d1ef0e0af02",
+    "native": "UNRUN"
+  }
 }
