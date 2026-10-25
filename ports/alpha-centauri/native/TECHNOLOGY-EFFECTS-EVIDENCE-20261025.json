@@ -1,0 +1,55 @@
+{
+  "scope": "Complete original callback-free commerce/fungus recomputation and owned-world binding only",
+  "base": "frozen draft103 fc7fd576cd56d3658eb7a9cd94b1aca222da1349",
+  "publicRaw": {
+    "contexts": 285,
+    "additionalInvalidRulesCount": 1,
+    "overflowCases": 14,
+    "invalidCases": 6,
+    "SHA256": "15afffd49accba042b9db9483a2cef6dbb70d5fc6dc9989ba837be16531e5fb2"
+  },
+  "expandedRaw": {
+    "contexts": 1533,
+    "originalHelperContexts": 1248,
+    "SHA256": "0a67217c8196726357d3acd96f711a73ae5f1fab4d1d69ed3af2916e770d0b48"
+  },
+  "publicWorld": {
+    "worlds": 64,
+    "queries": 512,
+    "overflowRejections": 28,
+    "SHA256": "777441cd5955aa757b645956a368cd5e273148fdc9c479f47677b8025eb90bab"
+  },
+  "expandedWorld": {
+    "worlds": 131,
+    "queries": 1048,
+    "overflowRejections": 56,
+    "safeOriginalFacts": 992,
+    "SHA256": "c3a77b8894ddf9ae0493aec981717c444ba77256d677dc69d33f85345dc6e318"
+  },
+  "originalHelpers": {
+    "base": "0x5d22e0/403bytes",
+    "expansion": "0x5bae60/411bytes",
+    "contextsPerEdition": 1248,
+    "allFiveResultFieldsMatch": true,
+    "globalSnapshotBytes": 589824,
+    "onlyFiveFieldsMayChange": true,
+    "sameOutputSHA256": "719fed271779ea9da21a7a624b65a7d44131a6f7104dbf13308c5e3b45ba6678"
+  },
+  "originalDataScope": {
+    "baseTutorials": 3,
+    "originalBaseRulesSynthetic": 32,
+    "originalExpansionRulesSynthetic": 32,
+    "originalExpansionSave": false
+  },
+  "normalSDK": {
+    "rawSHA256": "f52d7354395560c36f83bc3799a05dda8b07d3f3186038637798e5f80ee7abf0",
+    "worldSHA256": "5b1a188cb96a87596991b97bc189e968016bedb1f916280d5f9b297aadb8d2b5",
+    "built": true,
+    "executed": false
+  },
+  "worldWireRNGUnchanged": true,
+  "native": "UNRUN",
+  "independent68040": "UNRUN",
+  "labInteractions": 0,
+  "publication": "Local candidate only; no award/commit/UI/root source changes"
+}

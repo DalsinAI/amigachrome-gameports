@@ -1159,3 +1159,14 @@ CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_movement_snapshot.sh /
 facility orders through one owning session/revision, and adds a combined
 original-container buffer snapshot. Exhaustion is preserved across reload;
 frontend/player save/turn/AI and native qualification remain pending.
+
+## Complete technology commerce/fungus effects (local draft, native unrun)
+
+`technology_effects.h` provides the complete checked original callback-free
+recomputation and an owned-world binding using real ownership/rules/bonuses and
+pending SE economy. Saved effect counters are not reused. Both original base and
+expansion helpers agree on1,248 contexts each; host raw285/world512-query public
+controls and expanded original-file controls pass. Normal SDK builds pass;
+native/independent68040 remain unrun. This returns five fresh values without
+awarding a technology or mutating world/wire/turn state. See
+`TECHNOLOGY-EFFECTS.md` and its evidence for the full discovery dependencies.
