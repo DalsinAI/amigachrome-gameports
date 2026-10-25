@@ -39,6 +39,7 @@ int main(int argc,char** argv){
   in.global_difficulty=signed_word(row+68);
   in.queue_id=signed_word(row+72);
   const uint32_t flags=word(row+76);
+  in.expansion=(flags&(1u<<14))!=0;
   in.human=(flags&(1u<<0))!=0;
   in.ascending=(flags&(1u<<1))!=0;
   in.transcendence_enabled=(flags&(1u<<2))!=0;
@@ -54,7 +55,7 @@ int main(int argc,char** argv){
   in.pholus_mutagen=(flags&(1u<<12))!=0;
   in.space_elevator=(flags&(1u<<13))!=0;
   const MineralResult sentinel{0x31415926,0x31415926,0x31415926,0x31415926,0x31415926,0x31415926,0x31415926};
-  MineralResult result=sentinel;const auto error=(flags&~0x3fffu)?LogicError::bad_state:calculate_minerals(in,result);
+  MineralResult result=sentinel;const auto error=(flags&~0x7fffu)?LogicError::bad_state:calculate_minerals(in,result);
   if(error==LogicError::ok){if(!same(result,minerals_reference::calculate(in))){free(output);fclose(f);return 21;}}
   else{++rejected;if(!same(result,sentinel)){free(output);fclose(f);return 21;}}
   auto* p=output+(size_t)i*32;put(p,(uint32_t)error);

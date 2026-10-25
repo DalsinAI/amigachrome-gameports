@@ -2,6 +2,7 @@
  * TEST ONLY: OpenSMACX base.cpp::base_minerals body, Brendan Casey
  * (C)2013-2021, pinned2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c.
  * Numeric state/callback adapters bind explicit fixture facts.
+ * Explicit edition selects original orbital facility IDs; base rejects tectonic counts.
  * Three recovered unsigned types and combined penalty rounding are corrected
  * to the unchanged original instruction behavior; see private helper controls.
  * These are explicit adaptations, not an unmodified-source equivalence claim; no original
@@ -104,11 +105,12 @@ void original_body() {
         * (3 - range(PlayersData[faction_id].soc_effect_pending.planet, -3, 2))
         * (*MapNativeLifeForms + 1) * (*BaseCurrent)->eco_damage * diff_factor) / 6;
     (*BaseCurrent)->eco_damage = ((*BaseCurrent)->eco_damage + 50) / 100;
+    const int satellite_first=context->expansion?65:34;
     int queue_id;
     if (has_project(SP_SPACE_ELEVATOR, faction_id) // orbital facilities double mineral prod rate
-        && (queue_id = (*BaseCurrent)->queue_production_id[0], queue_id == -FAC_SKY_HYDRO_LAB
-            || queue_id == -FAC_NESSUS_MINING_STATION || queue_id == -FAC_ORBITAL_POWER_TRANS
-            || queue_id == -FAC_ORBITAL_DEFENSE_POD)) {
+        && (queue_id = (*BaseCurrent)->queue_production_id[0], queue_id == -satellite_first
+            || queue_id == -(satellite_first+1) || queue_id == -(satellite_first+2)
+            || queue_id == -(satellite_first+3))) {
         (*BaseCurrent)->mineral_intake_2 *= 2;
         (*BaseCurrent)->mineral_surplus = // doesn't update mineral_surplus_final?
             (*BaseCurrent)->mineral_intake_2 - (*BaseCurrent)->mineral_consumption;

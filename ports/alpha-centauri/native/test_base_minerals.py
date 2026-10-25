@@ -5,7 +5,7 @@ import argparse,hashlib,json,os,struct,subprocess
 from pathlib import Path
 SRC=Path(__file__).resolve().parent
 FIELDS='intake convoy_to convoy_from maintenance raw_eco_damage population clean_minerals_modifier satellites atrocities tectonic_detonations sea_level sea_level_rises tech_ranking transcendent_techs planet native_life faction_difficulty global_difficulty queue_id'.split()
-FLAGS='human ascending transcendence_enabled perihelion quantum_converter robotic_assembly genejack nanoreplicator singularity_inductor bulk_matter centauri_preserve temple pholus_mutagen space_elevator'.split()
+FLAGS='human ascending transcendence_enabled perihelion quantum_converter robotic_assembly genejack nanoreplicator singularity_inductor bulk_matter centauri_preserve temple pholus_mutagen space_elevator expansion'.split()
 SENTINEL=0x31415926
 def clamp(n,lo,hi):return min(hi,max(lo,n))
 def checked(n):
@@ -14,7 +14,7 @@ def checked(n):
 def divide(n,d):return (abs(n)//d)*(1 if n>=0 else -1)
 def model(values,flags):
  d=dict(zip(FIELDS,values));d.update((n,bool(flags&(1<<i))) for i,n in enumerate(FLAGS))
- invalid=flags&~0x3fff or any(d[n]<0 for n in ['intake','convoy_to','convoy_from','maintenance','raw_eco_damage','population','clean_minerals_modifier','atrocities','tectonic_detonations','tech_ranking','transcendent_techs']) or d['population']>127 or d['transcendent_techs']>d['tech_ranking'] or not(0<=d['native_life']<=2) or (d['human'] and not(0<=d['faction_difficulty']<=5)) or (not d['human'] and not(0<=d['global_difficulty']<=5))
+ invalid=flags&~0x7fff or any(d[n]<0 for n in ['intake','convoy_to','convoy_from','maintenance','raw_eco_damage','population','clean_minerals_modifier','atrocities','tectonic_detonations','tech_ranking','transcendent_techs']) or (not d['expansion'] and d['tectonic_detonations']!=0) or d['population']>127 or d['transcendent_techs']>d['tech_ranking'] or not(0<=d['native_life']<=2) or (d['human'] and not(0<=d['faction_difficulty']<=5)) or (not d['human'] and not(0<=d['global_difficulty']<=5))
  if invalid:return [1]+[SENTINEL]*7
  try:
   bonus=int(d['quantum_converter'] or d['singularity_inductor'])+d['robotic_assembly']+d['genejack']+d['nanoreplicator']+d['bulk_matter']
@@ -37,14 +37,15 @@ def model(values,flags):
   effective=checked((d['tech_ranking']-d['transcendent_techs'])*(3-clamp(d['planet'],-3,2)))
   weighted=checked(effective*(d['native_life']+1));weighted=checked(weighted*damage);weighted=checked(weighted*difficulty)
   eco=(weighted//6+50)//100
-  if d['space_elevator'] and d['queue_id'] in (-65,-66,-67,-68):intake=checked(intake*2);surplus=checked(intake-consumption)
+  if d['space_elevator'] and d['queue_id'] in ((-65,-66,-67,-68) if d['expansion'] else (-34,-35,-36,-37)):intake=checked(intake*2);surplus=checked(intake-consumption)
   return [0,intake,consumption,surplus,final_surplus,eco,bonus,0]
  except OverflowError:return [2]+[SENTINEL]*7
 
 def controls():
  rows=[]
- for f in range(1<<14):
+ for f in range(1<<15):
   v=[f%37,3*(f%7),f%5,f%4,(f*73)%400,3+f%25,f%10,f%71-10,f%4,f%3,f%171-40,f%121-10,10+f%50,f%5,f%11-5,f%3,f%6,(f//6)%6,[0,-65,-66,-67,-68,-69,-70,320][f%8]]
+  if not(f&0x4000):v[9]=0
   rows.append((v,f))
  baseline=[10,0,0,0,8,3,0,0,0,0,0,5,10,0,0,1,3,3,0]
  for k in range(19):
@@ -60,14 +61,21 @@ def controls():
  v=v[:];v[1]=1;rows.append((v,0))
  # Preserve original convoy amplification and stale final surplus after elevator.
  v=baseline[:];v[0]=8;v[1]=4;v[2]=1;v[3]=2;v[18]=-65
- flags=(1<<4)|(1<<13);expected=model(v,flags);assert expected[1:5]==[36,3,33,15],expected
+ flags=(1<<4)|(1<<13)|(1<<14);expected=model(v,flags);assert expected[1:5]==[36,3,33,15],expected
  rows.append((v,flags))
  # Separate original atrocity/tectonic divisions: floor(5/3)+floor(5/3)=2,
  # whereas the recovered combined expression gives floor(10/3)=3.
  v=baseline[:];v[0]=16;v[4]=0;v[8]=v[9]=1;v[10]=2;v[11]=1;v[12]=600;v[14]=2;v[15]=0;v[16]=0
- assert model(v,1)[5]==4
- rows.append((v,1))
- rows.append((baseline,0x4000))
+ assert model(v,0x4001)[5]==4
+ rows.append((v,0x4001))
+ # The base game uses orbital facilities34..37, not expansion65..68.
+ v=baseline[:];v[0]=8;v[1]=4;v[2]=1;v[3]=2;v[18]=-34
+ assert model(v,(1<<4)|(1<<13))[1:5]==[36,3,33,15]
+ rows.append((v,(1<<4)|(1<<13)))
+ v=v[:];v[18]=-65
+ assert model(v,(1<<4)|(1<<13))[1:5]==[18,3,15,15]
+ rows.append((v,(1<<4)|(1<<13)))
+ rows.append((baseline,0x8000))
  return rows
 
 def main():

@@ -8,31 +8,15 @@
     "license": "GPL-3.0-or-later"
   },
   "host": {
-    "cases": 16657,
-    "valid": 16566,
-    "badState": 75,
-    "overflow": 16,
-    "outputSHA256": "b04c333bab354db2b02d75158066a0bd806b0af7ae48c1e2f3c10d6d7319d00a"
-  },
-  "privateOriginalHelper": {
-    "originalHelper": "base_minerals 0x4e9cb0 with original has_fac and bitmask helpers",
-    "contexts": 16566,
-    "outputBytes": 397584,
-    "outputSHA256": "b33fa1c9e67941f3cdbb81555b8fffd6e3a4b70c4ffd7ce567546fcae262bd19",
-    "unchangedCodePages": {
-      "0x421000": "3765030273f2e77e1fc0dce3f36acbbe9cdf350928dee2f37b52ca1d4d9bab04",
-      "0x4e9000": "9f139d3964a13640287fb2bebb5d1604646497666faaf1b667f7a370684ccac2",
-      "0x50b000": "ddecd57bf21837201c7b1b11ae59e2123f12f88134561282746e6fd6349b60ad"
-    },
-    "rc": 0,
-    "fullGameExecution": false,
-    "limits": "Bounded numeric helper with seeded explicit globals; no PE startup/imports, original world upkeep or full economy execution",
-    "edition": "Owner GOG Alien Crossfire terranx.exe",
-    "inputSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf"
+    "cases": 33043,
+    "valid": 32945,
+    "badState": 83,
+    "overflow": 15,
+    "outputSHA256": "52f654affd01a1defe00b8added16513b3075e3a773460cc7129361f474577f7"
   },
   "native": {
     "status": "Normal SDK build only; actual AmigaOS execution UNRUN",
-    "binarySHA256": "b2eae591902065bbaf9b5be7cc08daa09f2796811412a86181dc808cb528e8e7"
+    "binarySHA256": "ec300ce19c84dcb91013677325be45137fca5d780de400dd6327a2ee1a87b4e7"
   },
   "limits": [
     "Pre-stage intake/support/convoy/terraforming eco and facility/project facts must be supplied by source-backed stages; saved calculated intake is not a fresh yield input",
@@ -41,6 +25,40 @@
     "Recovered-source unsigned temporaries corrected to original signed instructions; human atrocity and tectonic penalties divided separately as original instructions do",
     "No production completion, support/yield generation, base upkeep, ecology events, turn advancement, AI or savewriter",
     "No proprietary executable bytes, decompile text or owner assets included; only private bounded helper executed, not original PE startup/imports/full game",
-    "Private original helper comparison uses the exact owner Alien Crossfire executable; no corresponding original Alpha Centauri executable helper comparison claimed"
+    "Explicit runtime edition controls raw satellite production IDs: base34..37 versus expansion65..68; nonzero tectonic counts rejected in base mode. Both original edition helpers compared independently."
+  ],
+  "privateOriginalHelpers": [
+    {
+      "originalHelper": "base_minerals 0x4ff1e0 with original has_fac and bitmask helpers",
+      "contexts": 16559,
+      "outputBytes": 397416,
+      "outputSHA256": "c9c26c7f79ea3938b03b18116fd185ff5c84ea70e278bde861f32a45b4bb9b98",
+      "unchangedCodePages": {
+        "0x421000": "36feaf99b4ffdf9bb6cf1bed82ac438ab7f707407f11bbe4a3e205ce748bea88",
+        "0x4ff000": "d2b82c347162eac6fb3c6d45614e4a7df41aa2bed71e33da00bc77dffaf29652",
+        "0x51f000": "b59d3f2e1a3f53ae780c5891f93ff788e64f8a9b7098bdb009dcaaf8fd815da0"
+      },
+      "rc": 0,
+      "fullGameExecution": false,
+      "limits": "Bounded numeric helper with seeded explicit globals; no PE startup/imports, original world upkeep or full economy execution",
+      "edition": "base",
+      "inputSHA256": "0a61eb3642df750c0d5e516c3e3efeb4ad5ae7e1ce3163617759449327952a01"
+    },
+    {
+      "originalHelper": "base_minerals 0x4e9cb0 with original has_fac and bitmask helpers",
+      "contexts": 16386,
+      "outputBytes": 393264,
+      "outputSHA256": "1b601259c5d3a29f5a9c37614fe7e1d152c24bd84e0302c132e6a6944bf16334",
+      "unchangedCodePages": {
+        "0x421000": "3765030273f2e77e1fc0dce3f36acbbe9cdf350928dee2f37b52ca1d4d9bab04",
+        "0x4e9000": "9f139d3964a13640287fb2bebb5d1604646497666faaf1b667f7a370684ccac2",
+        "0x50b000": "ddecd57bf21837201c7b1b11ae59e2123f12f88134561282746e6fd6349b60ad"
+      },
+      "rc": 0,
+      "fullGameExecution": false,
+      "limits": "Bounded numeric helper with seeded explicit globals; no PE startup/imports, original world upkeep or full economy execution",
+      "edition": "expansion",
+      "inputSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf"
+    }
   ]
 }

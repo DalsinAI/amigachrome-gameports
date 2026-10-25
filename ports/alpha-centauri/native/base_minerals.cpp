@@ -7,7 +7,7 @@ bool checked(int64_t n,int32_t& out){if(n<(-2147483647LL-1) || n>2147483647LL)re
 LogicError calculate_minerals(const MineralInput& in,MineralResult& output){
  if(in.intake<0 || in.convoy_to<0 || in.convoy_from<0 || in.maintenance<0 || in.raw_eco_damage<0 ||
     in.population<0 || in.population>127 || in.clean_minerals_modifier<0 || in.atrocities<0 ||
-    in.tectonic_detonations<0 || in.tech_ranking<0 || in.transcendent_techs<0 ||
+    in.tectonic_detonations<0 || (!in.expansion && in.tectonic_detonations!=0) || in.tech_ranking<0 || in.transcendent_techs<0 ||
     in.transcendent_techs>in.tech_ranking || in.native_life<0 || in.native_life>2 ||
     (in.human && (in.faction_difficulty<0 || in.faction_difficulty>5)) ||
     (!in.human && (in.global_difficulty<0 || in.global_difficulty>5)))return LogicError::bad_state;
@@ -51,7 +51,8 @@ LogicError calculate_minerals(const MineralInput& in,MineralResult& output){
     !checked((int64_t)weighted*damage,weighted) ||
     !checked((int64_t)weighted*difficulty,weighted))return LogicError::overflow;
  next.eco_damage=(int32_t)((weighted/6+50)/100);
- if(in.space_elevator && in.queue_id>=-68 && in.queue_id<=-65){
+ const int32_t satellite_first=in.expansion?65:34;
+ if(in.space_elevator && in.queue_id>=-(satellite_first+3) && in.queue_id<=-satellite_first){
   if(!checked((int64_t)next.intake*2,next.intake) ||
      !checked((int64_t)next.intake-next.consumption,next.surplus))return LogicError::overflow;
  }
