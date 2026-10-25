@@ -20,6 +20,9 @@ LogicError world_effective_morale(const OriginalWorld& world,const UnitDefinitio
  * Does not answer Deep Radar/Nethack or other unrelated ability questions. */
 LogicError world_speed_ability_flags(const OriginalWorld& world,const UnitDefinitions& definitions,
  const Rules& technologies,size_t prototype,uint32_t& output);
+/* Original Clean Reactor query for mineral support. Base is raw-only; expansion
+ * FREEABIL uses design-owner technology. No general-ability/special-bonus API. */
+LogicError world_has_clean_reactor(const OriginalWorld&,const UnitDefinitions&,const Rules&,size_t prototype,bool& output);
 LogicError world_vehicle_speed(const OriginalWorld& world,const UnitDefinitions& definitions,
  const Rules& technologies,size_t vehicle,int32_t road_rate,bool skip_morale,uint32_t& output);
 }
