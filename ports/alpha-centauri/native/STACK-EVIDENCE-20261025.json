@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-25",
+  "scope": "Decoded vehicle stack validation and lift/drop storage only",
+  "host": {
+    "addressAndUndefinedSanitizers": true,
+    "sourceFlowCases": 18432,
+    "invalidNoWriteCases": 20,
+    "fieldDigest": "61fa6357",
+    "originalTutorials": [
+      {"name": "Explore.SC", "vehicles": 4, "relocations": 60},
+      {"name": "Build.SC", "vehicles": 7, "relocations": 168},
+      {"name": "conquer.SC", "vehicles": 9, "relocations": 270}
+    ],
+    "originalDataCommitted": false
+  },
+  "amigaSDK": {
+    "compiler": "OpenAmigaGCC 16.2.0-open3",
+    "normalRecipeBuildPassed": true,
+    "controlSHA256": "e3e3e72c0ebd2f6755e14a2ee9d67bbc79bc576b715bce89c3bed7386b702755",
+    "probeSHA256": "5cd98b18148b04e66ecb06ecc30ea645dc3d4244ca7749c17c3718c28e29f3d1",
+    "nativeExecution": "pending"
+  },
+  "independentBigEndianCI": "pending",
+  "limitations": [
+    "Not exposed as a player movement command or mutable OriginalWorld API",
+    "No authority, passability, transport, ZOC, event or cost gate",
+    "No movement expenditure, RNG mutation, upkeep, turns or save writer",
+    "Original tutorial controls mutate private decoded copies, not original files",
+    "No original executable differential trace claimed",
+    "Suspended or off-map units explicitly unsupported"
+  ]
+}
