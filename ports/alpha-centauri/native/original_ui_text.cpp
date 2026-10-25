@@ -6,12 +6,26 @@
 #include <proto/cybergraphics.h>
 #include <cybergraphx/cybergraphics.h>
 #include <stdlib.h>
+#include <stdio.h>
 namespace alpha {
 OriginalUiText::OriginalUiText():body_(nullptr),heading_(nullptr),initialized_(false){}
 OriginalUiText::~OriginalUiText(){close();}
 bool OriginalUiText::open(){
  close();if(TTF_Init()!=0)return false;initialized_=true;
- body_=TTF_OpenFont("arialn.ttf",13);heading_=TTF_OpenFont("ALPHC___.TTF",16);
+ // The original status/datalink screens request Arial, not Arial Narrow or
+ // the title typeface. Use owner-provided system fonts when available. Their
+ // Win32 logical-height/hinting metrics are not identical to SDL_ttf pixels.
+ body_=TTF_OpenFont("Arial.ttf",12);
+ if(body_){
+  heading_=TTF_OpenFont("Arial_Bold.ttf",14);
+  if(!heading_){heading_=TTF_OpenFont("Arial.ttf",14);if(heading_)TTF_SetFontStyle(heading_,TTF_STYLE_BOLD);}
+ }
+ if(!body_ || !heading_){
+  if(body_)TTF_CloseFont(body_);
+  if(heading_)TTF_CloseFont(heading_);
+  body_=TTF_OpenFont("arialn.ttf",13);heading_=TTF_OpenFont("ALPHC___.TTF",16);
+  printf("UI FONT fallback=Arial-Narrow13/title16; original Arial unavailable\n");
+ }else printf("UI FONT face=Arial12 heading=Arial-Bold14; Win32 metrics not identical\n");
  if(!body_ || !heading_){close();return false;}return true;
 }
 void OriginalUiText::close(){if(body_)TTF_CloseFont(body_);if(heading_)TTF_CloseFont(heading_);body_=heading_=nullptr;if(initialized_)TTF_Quit();initialized_=false;}
