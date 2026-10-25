@@ -108,3 +108,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_model.py --out "$RUNNER_TEMP/cvr-host"
       - name: Big-endian bounded owned CVR controls
         run: python3 ports/alpha-centauri/native/test_cvr_model.py --out "$RUNNER_TEMP/cvr-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fixed-depth CVR raster controls
+        run: python3 ports/alpha-centauri/native/test_cvr_raster.py --out "$RUNNER_TEMP/cvr-raster-host"
+      - name: Big-endian fixed-depth CVR raster controls
+        run: python3 ports/alpha-centauri/native/test_cvr_raster.py --out "$RUNNER_TEMP/cvr-raster-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

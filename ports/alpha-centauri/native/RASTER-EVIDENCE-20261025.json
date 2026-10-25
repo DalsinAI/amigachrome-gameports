@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-25",
+  "scope": "Projected CVR 1x1/2x2 fixed-depth raster stage only",
+  "host": {
+    "batches": 464,
+    "points": 9568,
+    "invalidAndBoundaryControls": 26,
+    "bytes": 445440,
+    "sha256": "86c5d37d1a96d7b2d8368157c66ba8add030da6ff4df1e0af24ba770de64d963"
+  },
+  "originalReference": {
+    "originalInstructionsExecuted": true,
+    "originalPatcherExecuted": true,
+    "fullPEEntryExecuted": false,
+    "batches": 464,
+    "points": 9568,
+    "outputSHA256": "86c5d37d1a96d7b2d8368157c66ba8add030da6ff4df1e0af24ba770de64d963",
+    "kernelSHA256": "054276f9b8f26015c2d60826e9f3cf0607df04d838a016e4a61ba67e0bd38d6c",
+    "scope": "Single bounded projected-point calls for both original count-path pixel profiles, variable synthetic shade/palette tables, not camera/lighting preparation or full original renderer"
+  },
+  "native": {
+    "batches": 464,
+    "points": 9568,
+    "invalidAndBoundaryControls": 26,
+    "bytes": 445440,
+    "outputSHA256": "86c5d37d1a96d7b2d8368157c66ba8add030da6ff4df1e0af24ba770de64d963",
+    "probeSHA256": "c89692f5dfd5861f56cfcf19bf037d4564f19d9d62660d6b2b55f9e8ed76f3df",
+    "controlSHA256": "bc2841a8776d6580368afab05cd84b4b637689f70c12d93dbcf43f9511287820"
+  },
+  "nativeFrames": 27,
+  "isolatedLabStopped": true,
+  "configurationROMModuleStartupRestored": true,
+  "limits": [
+    "No original camera/projection transform or normal-to-shade preparation is implemented here",
+    "Shade and color tables are explicitly supplied by caller; synthetic tables were varied in differential controls",
+    "Original x86 helper executed privately at 0x664000 with own address patcher; full PE startup/imports/game not executed",
+    "No camera/render/unit-assembly fidelity or full-game qualification",
+    "No original game bytes, assets or proprietary decompile included",
+    "Existing approximate viewer has not yet been replaced by this stage"
+  ]
+}
