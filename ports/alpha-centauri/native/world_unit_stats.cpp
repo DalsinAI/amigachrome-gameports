@@ -75,14 +75,12 @@ LogicError world_effective_morale(const OriginalWorld& w,const UnitDefinitions& 
  const int64_t total=modifier+v->morale;if(!signed_word(total))return LogicError::overflow;
  output=(uint32_t)clamp((int32_t)total,0,6);return LogicError::ok;
 }
-LogicError world_speed_ability_flags(const OriginalWorld& w,const UnitDefinitions& d,const Rules& tech,size_t id,uint32_t& output){
+static LogicError requested_ability_flags(const OriginalWorld& w,const UnitDefinitions& d,const Rules& tech,size_t id,uint32_t requested,uint32_t& output){
  if(!profile(w,d))return LogicError::bad_state;
  const auto* p=w.prototype(id);if(!p)return LogicError::bad_state;
  uint32_t ignored;auto error=saved_prototype_speed(d,*p,id,1,false,ignored);if(error!=LogicError::ok)return error;
  uint32_t flags=p->ability_flags;
  if(d.weapon_count==21 || id<64){output=flags;return LogicError::ok;}
- const uint32_t requested=d.chassis[p->chassis_id].triad==2?
-   (0x800420u | (d.ability_count>27?0x8000000u:0u)):0x800400u;
  if((flags&requested)==requested){output=flags;return LogicError::ok;}
  const auto* faction=w.faction_definition(id/64);
  if(!faction || faction->faction_bonus_count<0 || faction->faction_bonus_count>8)return LogicError::bad_state;
@@ -94,6 +92,19 @@ LogicError world_speed_ability_flags(const OriginalWorld& w,const UnitDefinition
   if(achieved)flags|=bit;
  }
  output=flags;return LogicError::ok;
+}
+LogicError world_speed_ability_flags(const OriginalWorld& w,const UnitDefinitions& d,const Rules& tech,size_t id,uint32_t& output){
+ if(!profile(w,d))return LogicError::bad_state;
+ const auto* p=w.prototype(id);if(!p)return LogicError::bad_state;
+ uint32_t ignored;auto error=saved_prototype_speed(d,*p,id,1,false,ignored);if(error!=LogicError::ok)return error;
+ const uint32_t requested=d.chassis[p->chassis_id].triad==2?
+   (0x800420u | (d.ability_count>27?0x8000000u:0u)):0x800400u;
+ return requested_ability_flags(w,d,tech,id,requested,output);
+}
+LogicError world_has_clean_reactor(const OriginalWorld& w,const UnitDefinitions& d,const Rules& tech,size_t id,bool& output){
+ uint32_t flags;auto error=requested_ability_flags(w,d,tech,id,0x10000u,flags);
+ if(error!=LogicError::ok)return error;
+ output=(flags&0x10000u)!=0;return LogicError::ok;
 }
 LogicError world_vehicle_speed(const OriginalWorld& w,const UnitDefinitions& d,const Rules& tech,size_t index,int32_t road,bool skip_morale,uint32_t& output){
  if(!profile(w,d))return LogicError::bad_state;

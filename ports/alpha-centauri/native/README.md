@@ -1211,3 +1211,6 @@ surplus and stored-food adjustments. `world_fresh_nutrients` binds it to actual
 owned records and fresh stable intake, with explicit convoy facts. The same
 normal worker inspection stage is retained; no upkeep or population growth is
 executed. See [BASE-NUTRIENTS.md](BASE-NUTRIENTS.md).
+Original per-base unit mineral support is a read-only aggregate with separate
+[scope and controls](UNIT-SUPPORT.md) and [evidence](UNIT-SUPPORT-EVIDENCE-20261025.json).
+Actual AmigaOS qualification remains pending; this does not execute upkeep.
