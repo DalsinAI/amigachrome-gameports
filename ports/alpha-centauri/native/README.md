@@ -1068,3 +1068,12 @@ It preserves edition differences and returns the original counter/scratch effect
 as data. Saved base intake is not an input. No world stage, worker allocation,
 turn or frontend is wired to this API. See [TILE-YIELDS.md](TILE-YIELDS.md) for
 required facts, original behavior, numerical controls and remaining native gates.
+
+## Owned-world tile-yield binding
+
+`world_tile_yields.h` derives the tile/resource, physical facilities, technology,
+project, faction and adjacent mirror facts from an owned original save snapshot.
+The caller supplies the actual runtime edition and transient stage state. It
+returns a checked result without changing the world or runtime RNG. This is a
+snapshot query, not worker allocation or upkeep. See
+[WORLD-TILE-YIELDS.md](WORLD-TILE-YIELDS.md).

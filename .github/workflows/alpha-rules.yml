@@ -20,6 +20,10 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq g++-m68k-linux-gnu qemu-user
+      - name: Host owned-world tile-yield binding controls
+        run: python3 ports/alpha-centauri/native/test_world_tile_yields.py --out "$RUNNER_TEMP/world-tile-yields-host"
+      - name: Big-endian owned-world tile-yield binding controls
+        run: python3 ports/alpha-centauri/native/test_world_tile_yields.py --out "$RUNNER_TEMP/world-tile-yields-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host original fresh tile-yield controls
         run: python3 ports/alpha-centauri/native/test_tile_yields.py --out "$RUNNER_TEMP/tile-yields-host"
       - name: Big-endian original fresh tile-yield controls
