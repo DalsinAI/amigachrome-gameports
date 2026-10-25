@@ -324,3 +324,20 @@ negative planet, fungus exemptions and ignore-rough. Another1,200 geometry
 cases include the maximal coordinate domain;14 invalid cases check rejection.
 Source test callbacks use owned objects and mark unexpected requests invalid.
 No original assets are needed by CI and no gameplay is claimed by this helper.
+
+### Offline movement expenditure
+
+`resolve_move_budget` owns the integer RNG and expenditure stage of Thinker's
+`order_veh` (pinned dabe62f2; MIT notice retained). It preserves over-budget moves,
+fractional failure spending, and retry allowance. It does not relocate units,
+check access or occupancy, execute full `veh_skip` side effects, or run turns.
+Inputs must describe an already legal move and effective vehicle speed. Failed
+fractional checks mutate even non-executing requests, as in the source: a UI
+preview must use a copy. Multiplayer RNG and tutorial exits are outside scope.
+Byte storage overflow is rejected rather than wrapped. No floating RNG is used.
+
+`test_move_budget.py --out NEW_DIR` checks 331,776 budget cases, 30 full-width
+integer RNG cases and five invalid-state cases against an independent Python
+model. CI runs host sanitizers and big-endian 68040 controls. Native qualification
+is recorded in `MOVE-BUDGET-EVIDENCE-20261025.json`. These controls establish the
+budget stage, not original-executable fidelity or an integrated game.

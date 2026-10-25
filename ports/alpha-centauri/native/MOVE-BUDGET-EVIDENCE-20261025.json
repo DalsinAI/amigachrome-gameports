@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-25",
+  "cases": 331776,
+  "rng": 30,
+  "invalid": 5,
+  "digest": "ddc41e3f",
+  "host": "ASan/UBSan with independent Python match",
+  "raw68040": "GCC16.2.0-open3 generated instructions RC0",
+  "binarySHA256": "565f0f6bef6c1a43efc8327b4b62db44bd136ead4ea05de76fb606500eaed8ff",
+  "limits": [
+    "Budget stage of offline Thinker order_veh only, not legality, movement dispatch, full veh_skip side effects or gameplay",
+    "No original-executable differential proof; source-backed adaptation and independent model controls",
+    "Overflow rejects original byte storage wrap; effective speed bounded0..255",
+    "Alternate multiplayer RNG/tutorial early-outs outside API"
+  ],
+  "nativeAmigaOS": {
+    "rc": 0,
+    "labStopped": true,
+    "ROMModuleStartupUnchanged": true,
+    "logSHA256": "153f373110c7903b0090f08ec7cd57d037ec5ac6604d83ef014e7cb23bbd27d4"
+  },
+  "sourceSHA256": {
+    "move_budget_control.cpp": "f33e15aac577555cb60bae91689b53cd3cd8becd9c03a7b6c9df2c4e6806f8c5",
+    "move_budget.h": "2656eba6bfbdb628228bcfce9d3dc3510ec5b23f131d0c40653524cdfceffdc3",
+    "move_budget.cpp": "274f13708d424a44641abb0fcadebd1894d2a26eb512ff69cc302b8ec431da09"
+  }
+}
