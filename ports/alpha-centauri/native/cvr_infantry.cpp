@@ -20,34 +20,45 @@ bool inverse_light(const float* m,const float* light,float* out){
  return true;
 }
 }
-CvrInfantry::CvrInfantry():lattice_(nullptr),ready_(false),cache_{}{}
-CvrInfantry::~CvrInfantry(){for(auto&c:cache_)free(c.rgba);free(lattice_);}
-bool CvrInfantry::load(const void* body,size_t body_size,const void* reactor,size_t reactor_size){
- ready_=false;for(auto&c:cache_){free(c.rgba);c.rgba=nullptr;}
- if(!body_.load(body,body_size) || !reactor_.load(reactor,reactor_size) || body_.frame_count()<15 || reactor_.frame_count()<1 || (size_t)body_.voxel_count()+reactor_.voxel_count()>100000)return false;
+CvrUnitAssembly::CvrUnitAssembly():parts_(0),limit_(0),scale_(0),root_x_(0),lattice_(nullptr),ready_(false),cache_{}{}
+CvrUnitAssembly::~CvrUnitAssembly(){for(auto&c:cache_)free(c.rgba);free(lattice_);}
+bool CvrUnitAssembly::load(const void* body,size_t body_size,const void* reactor,size_t reactor_size){
+ const CvrPartInput parts[2]={{body,body_size},{reactor,reactor_size}};
+ return load_parts(parts,2,100000,15,1.25f,-400);
+}
+bool CvrUnitAssembly::load_speeder(const CvrPartInput* parts,size_t count){
+ if(count!=10)return load_parts(nullptr,0,0,0,0,0);
+ return load_parts(parts,10,160000,1,1.0f,0);
+}
+bool CvrUnitAssembly::load_parts(const CvrPartInput* parts,unsigned count,unsigned limit,unsigned body_frames,float scale,float root){
+ ready_=false;parts_=0;for(auto&c:cache_){free(c.rgba);c.rgba=nullptr;}
+ if(!parts || !count || count>10)return false;
+ size_t total=0;
+ for(unsigned i=0;i<count;++i){if(!models_[i].load_at_scale(parts[i].data,parts[i].size,.07000000029802322f*scale*(64.0f/100.0f)*2) || models_[i].frame_count()<(i?1:body_frames))return false;total+=models_[i].voxel_count();if(total>limit)return false;}
  if(!lattice_)lattice_=(uint8_t*)malloc(cvr_shade_lattice_size);
+ parts_=count;limit_=limit;scale_=scale;root_x_=root;
  ready_=lattice_ && build_cvr_shade_lattice(lattice_,cvr_shade_lattice_size);return ready_;
 }
-bool CvrInfantry::draw(uint8_t* output,size_t capacity,unsigned width,unsigned height,int cx,int foot,unsigned zoom,unsigned facing){
+bool CvrUnitAssembly::draw(uint8_t* output,size_t capacity,unsigned width,unsigned height,int cx,int foot,unsigned zoom,unsigned facing){
  if(!ready_ || !output || !width || !height || width>4096 || height>4096 || capacity<(size_t)width*height*3 || zoom<1 || zoom>2 || facing>7 || cx<0 || foot<0 || cx>=(int)width || foot>=(int)height)return false;
  const unsigned sw=128*zoom,sh=144*zoom;const size_t cells=(size_t)sw*sh;
  Cache& cached=cache_[(zoom-1)*8+facing];
  if(cached.rgba){blit(cached.rgba,sw,sh,output,width,height,cx,foot,zoom);return true;}
  auto* pixels=(uint8_t*)malloc(cells);auto* depths=(uint16_t*)malloc(cells*sizeof(uint16_t));auto* before=(uint16_t*)malloc(cells*sizeof(uint16_t));auto* rgb=(uint8_t*)calloc(cells,3);
- const size_t total=(size_t)body_.voxel_count()+reactor_.voxel_count();
- if(total>100000){free(pixels);free(depths);free(before);free(rgb);return false;}
+ size_t total=0;for(unsigned i=0;i<parts_;++i)total+=models_[i].voxel_count();
+ if(total>limit_){free(pixels);free(depths);free(before);free(rgb);return false;}
  auto* points=(Projected*)malloc(total*sizeof(Projected));
  if(!pixels || !depths || !before || !rgb || !points){free(pixels);free(depths);free(before);free(rgb);free(points);return false;}
  bool ok=true;size_t at=0;float min_x=1e30f,max_x=-1e30f,max_y=-1e30f;
  const float angle=(float)((facing+5)&7)*.7853749990463257f,co=cosf(angle),si=sinf(angle);
  // Original flat camera tilt and source normal-zoom scale, adjusted to this
  // viewer's 64-pixel tile rather than the original 100-pixel tile basis.
- const float scale=.07000000029802322f*1.25f*(64.0f/100.0f)*zoom;
- for(unsigned component=0;component<2;++component){const CvrModel& model=component?reactor_:body_;
+ const float scale=.07000000029802322f*scale_*(64.0f/100.0f)*zoom;
+ for(unsigned component=0;component<parts_;++component){const CvrModel& model=models_[component];
   for(unsigned i=0;i<model.object_count();++i){const auto*o=model.object(i);const auto&f=o->frames[0];if(f.flags&0x80)continue;
    for(unsigned j=0;j<o->count;++j){const auto&v=o->voxels[j];float local[3]={v.z*o->units,v.x*o->units,v.y*o->units},world[3];
     for(unsigned a=0;a<3;++a){world[a]=f.location[a];for(unsigned b=0;b<3;++b)world[a]+=f.matrix[a*3+b]*local[b];}
-    world[0]-=400;const float side=world[0]*co-world[1]*si,along=world[0]*si+world[1]*co;
+    world[0]+=root_x_;const float side=world[0]*co-world[1]*si,along=world[0]*si+world[1]*co;
     Projected p{side,along*.500459611415863f-world[2]*.8657598495483398f,-along*.8657598495483398f-world[2]*.500459611415863f,v.normal,v.color};
     if(!isfinite(p.x) || !isfinite(p.y) || !isfinite(p.z) || fabsf(p.x)>100000 || fabsf(p.y)>100000 || fabsf(p.z)>100000){ok=false;break;}
     points[at++]=p;min_x=fminf(min_x,p.x);max_x=fmaxf(max_x,p.x);max_y=fmaxf(max_y,p.y);
@@ -61,7 +72,7 @@ bool CvrInfantry::draw(uint8_t* output,size_t capacity,unsigned width,unsigned h
  const float view_light=.5773500204086304f;
  const float light[3]={-view_light,(.500459611415863f-.8657598495483398f)*view_light,-(.8657598495483398f+.500459611415863f)*view_light};
  at=0;
- for(unsigned component=0;ok && component<2;++component){const CvrModel&model=component?reactor_:body_;uint8_t palette[6144];for(unsigned s=0;s<24;++s)for(unsigned c=0;c<256;++c)palette[s*256+c]=model.shaded_index((uint8_t)c,s);
+ for(unsigned component=0;ok && component<parts_;++component){const CvrModel&model=models_[component];uint8_t palette[6144];for(unsigned s=0;s<24;++s)for(unsigned c=0;c<256;++c)palette[s*256+c]=model.shaded_index((uint8_t)c,s);
   for(unsigned i=0;ok && i<model.object_count();++i){const auto*o=model.object(i);const auto&f=o->frames[0];if(f.flags&0x80)continue;
    float pose[9];for(unsigned col=0;col<3;++col){pose[col]=co*f.matrix[col]-si*f.matrix[3+col];pose[3+col]=si*f.matrix[col]+co*f.matrix[3+col];pose[6+col]=f.matrix[6+col];}
    float object_light[3];uint8_t shades[2048];if(!inverse_light(pose,light,object_light) || !cvr_shades_for_light(lattice_,cvr_shade_lattice_size,object_light[0],object_light[1],object_light[2],shades,sizeof(shades))){ok=false;break;}

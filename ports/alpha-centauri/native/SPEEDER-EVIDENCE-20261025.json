@@ -1,0 +1,42 @@
+{
+  "status": "host-qualified, native execution pending",
+  "scope": "Static base-human basic speeder assembly inside the actual original-world viewer; no game actions",
+  "gate": {"dataVersion": "below11", "chassis": 1, "weapon": 0, "armour": 0, "reactor": 1, "rawAbilityFlags": 0, "alienFaction": false},
+  "orderedComponents": ["vrcp00.cvr", "vgmc.cvr", "vgmcp.cvr", "vb.cvr", "vbp.cvr", "vsp.cvr", "vsptb.cvr", "vsptf.cvr", "vlights.cvr", "vr00.cvr"],
+  "frame": 0,
+  "sourceFacts": {
+    "chassisAppendTrace": "Nine actual original x86 chassis appends match the chosen order/frame; append methods are private trace adapters, not original rendering",
+    "reactor": "Generic VR00 after chassis/weapon/armour; no basic weapon0 or armour0 attachment",
+    "lodSelector": "25 actual original x86 selector controls match; comparison retains exact float-input products using double to avoid premature rounding",
+    "lodThreshold": 1.414199948310852,
+    "facing": "((facing+5)&7)*0.7853749990463257",
+    "normalScale": "0.07000000029802322*(64/100)*zoom; no infantry1.25 multiplier or infantry root offset"
+  },
+  "hostValidation": {
+    "addressAndUndefinedSanitizers": true,
+    "existingReaderCases": 32,
+    "lodCases": 40,
+    "speederCompositionCases": 33,
+    "existingInfantryCompositionCases": 9,
+    "ownerModelsFullFieldChecks": 10,
+    "selectedOwnerVoxels": 113855,
+    "ownerSpeederFacingZoomDraws": 16,
+    "ownerInfantryRegressionDraws": 16,
+    "infantryPPMStillMatchesQualifiedNativeSHA256": "69db6486b02dca21a1d0c262880e0f42d31df1c898789aaff693a6be33595bcf"
+  },
+  "normalSDKBuild": {
+    "compiler": "OpenAmigaGCC16.2.0-open3, normal private rebuilt SDK",
+    "frontendSHA256": "9ac578c6d4928f15162d9ffd7fa4e437195e3f40a80e0ca6da81ed90a218b778",
+    "probeSHA256": "ad47d47d44663e389012c5ca263353933027a68f16cd656f3fdb8af7c15a2f39",
+    "executedOnAmigaOS": false
+  },
+  "limits": [
+    "User owns the shared lab; no lab access performed for this change. Actual native core and integrated UI qualification remain required before merge.",
+    "Static frame0 only; track animation not claimed.",
+    "Each component retains its raw model palette. The original faction remapping for VGMCP/VBP is not implemented; exact faction colours are not claimed.",
+    "Tile-foot anchor, world projection and global palette/shadow path remain the documented viewer approximation.",
+    "No full original scene equivalence, unsupported design substitution or restored campaign claim."
+  ],
+  "privateEvidence": "work/alpha-speeder-control; work/alpha-original-reference-control/lod-native-reference; work/alpha-original-reference-control/speeder-assembly-reference",
+  "originalAssetsOrExecutableBytesIncluded": false
+}
