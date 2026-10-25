@@ -1,0 +1,64 @@
+{
+  "scope": "Complete bounded original faction-level tech_rate cost query and owned-world binding; not a per-turn research/discovery state machine",
+  "hostASanUBSan": {
+    "contexts": 1197,
+    "computed": 925,
+    "overflowRejected": 5,
+    "invalidRejected": 5,
+    "additionalAtomicShortcutControls": 4,
+    "outputSHA256": "c33e8206faa9cbe8faff33b924de6d56a323a421957009f1f6104bfbb88b9d8d"
+  },
+  "worldBindings": {
+    "savedWorlds": 51,
+    "factionCostQueries": 408,
+    "mapRootDerivedFromOwnedTiles": true,
+    "independentWireMatches": true,
+    "outputSHA256": "3963bcf079af90a0cd54b5337f398375dd4621b9415143e5e472727b58b3b0ac"
+  },
+  "actualOriginalHelperComparison": {
+    "contexts": 797,
+    "allCostsMatch": true,
+    "originalHelper": "unchanged tech_rate0x5be6b0",
+    "fullGameExecution": false,
+    "costSHA256": "5d3e9f6d6d11c60667879adc85e63e9174d0d70b28ee3edd01ca4e3bae988210",
+    "worldDerivedContexts": 408,
+    "privateOriginalCodeNeverUploaded": true
+  },
+  "integerRoot": {
+    "unchangedOriginalHelper": "quick_root0x6290e0",
+    "contexts": 10003,
+    "allMatchIndependentIntegerSqrt": true,
+    "codeRegionSHA256": "b58ca89546485e7ef49aa8631185e4d502ed4049364bee2102bebc8d9ed33590",
+    "rc": 0,
+    "fullGameExecution": false
+  },
+  "normalSDK": {
+    "version": "OpenAmigaGCC16.2.0-open3 normal SDK",
+    "rawProbeSHA256": "0671b4b7cf8dde5a758141183db5586e27f924bdd989bf78b957da63f6429216",
+    "worldProbeSHA256": "e3db5a4cf9880a7c71ba57032594b61c97cb42972fdb77d182aa301e8d89adfc",
+    "built": true,
+    "executed": false
+  },
+  "qualificationsStillRequired": [
+    "Independent big-endian execution",
+    "Actual AmigaOS execution",
+    "Integration into a real research turn"
+  ],
+  "preservedOriginalDifferences": [
+    "Top rank excludes Planet0; Thinker comparison includes it",
+    "Signed32 safe-domain arithmetic; reject original-overflow domain instead of Thinker64bit widening",
+    "Cached cost exact unchanged, includingzero; rate0sentinel999999999",
+    "Integer quick_root of owned tile_count; no invented runtime scalar"
+  ],
+  "explicitlyNotImplemented": [
+    "Per-base lab generation and fractional carry",
+    "Human choice filter/AI/blind research selection",
+    "Technology awards/secrets/free advances/notifications",
+    "Climactic-battle AI bonus",
+    "Networking and research mutations"
+  ],
+  "labInteractions": false,
+  "runningWatchPreviewUntouched": true,
+  "fullOriginalGameExecution": false,
+  "originalBytesAssetsUploaded": false
+}
