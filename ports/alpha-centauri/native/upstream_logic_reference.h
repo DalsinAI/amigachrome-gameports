@@ -52,7 +52,7 @@ void compute_faction_modifiers(uint32_t faction_id) {
     for (int i = 0; i < count; i++) {
         if (Players[faction_id].faction_bonus_id[i] == RULE_SOCIAL) {
             *(PlayersData[faction_id].soc_effect_base.values
-                + Players[faction_id].faction_bonus_val1[i]) 
+                + Players[faction_id].faction_bonus_val1[i])
                 += Players[faction_id].faction_bonus_val2[i];
         }
     }
@@ -75,7 +75,7 @@ void social_calc(SocialCategory *category, SocialEffect *effect, uint32_t factio
                             effect_val = 0;
                         }
                     }
-                } else if (cat == SOCIAL_CAT_VALUES && model == SE_POWER 
+                } else if (cat == SOCIAL_CAT_VALUES && model == SE_POWER
                     && has_project(SP_CLONING_VATS, faction_id)) {
                     effect_val = 0;
                 }
@@ -115,11 +115,11 @@ void social_calc(SocialCategory *category, SocialEffect *effect, uint32_t factio
         }
         for (int i = 0; i < Players[faction_id].faction_bonus_count; i++) {
             if (Players[faction_id].faction_bonus_id[i] == RULE_IMMUNITY) { // cancels neg effects
-                int *eff_faction_mod 
+                int *eff_faction_mod
                     = (effect->values + Players[faction_id].faction_bonus_val1[i]);
                 *eff_faction_mod = range(*eff_faction_mod, 0, 999);
             } else if (Players[faction_id].faction_bonus_id[i] == RULE_ROBUST) {
-                int *eff_faction_mod 
+                int *eff_faction_mod
                     = (effect->values + Players[faction_id].faction_bonus_val1[i]);
                 if (*eff_faction_mod < 0) {
                     *eff_faction_mod /= 2; // halves neg effects

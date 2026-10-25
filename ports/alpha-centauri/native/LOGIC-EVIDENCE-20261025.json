@@ -19,7 +19,7 @@
     "game_logic.cpp": "f5a942e7cd911645ad58dac4618524886fe99f438eac271fd936a97a24356f9e",
     "social_probe.cpp": "4a32d224636a0f91bee984335d15b4bcc677e71b7cd671a2d6e88be73f70db31",
     "world_fields.inc": "4af71c22e4392917f036b2729bf07479fcbff5381e31a78a215c5454d48432a2",
-    "upstream_logic_reference.h": "f231e4d5f2c6b4e84f4dff1b48fb7e69148e56cb0e458478128aba262fcd21b2",
+    "upstream_logic_reference.h": "208b8c83fb0b0044bb0da0378ab16d5cf9801040e2dc1c5e0e90c9a31a6e7517",
     "basic_probe.cpp": "5cb25d4bf23fb94d496b872041b0c9e003f9795bae5f3caf9bff6ccb9db0d12d",
     "faction_probe.cpp": "def2bd2224b0c23ac70b803c13f972cae7e6362c4e9aed675b0d095a4534100f",
     "probe_digest.h": "fb4679a81320a63b986f50b8d5d5384d181552dabf2f0373040bcbd32cd74c74",
@@ -41,5 +41,6 @@
     },
     "logSHA256": "6a1f035fd5f838cc24258adab53e69b23b630c59327ff4672336726c8c8e67bd",
     "scope": "Actual AmigaOS control in restored isolated lab, no live changes or integrated gameplay"
-  }
+  },
+  "referenceWhitespaceNormalized": true
 }
