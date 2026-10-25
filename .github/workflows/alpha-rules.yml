@@ -216,3 +216,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_convoy_nutrients.py --out "$RUNNER_TEMP/world-convoy-nutrients-host"
       - name: Big-endian owned convoy-derived nutrient composition
         run: python3 ports/alpha-centauri/native/test_world_convoy_nutrients.py --out "$RUNNER_TEMP/world-convoy-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original mineral and ecology accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-host"
+      - name: Big-endian original mineral and ecology accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

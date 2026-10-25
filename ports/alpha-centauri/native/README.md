@@ -1214,3 +1214,7 @@ executed. See [BASE-NUTRIENTS.md](BASE-NUTRIENTS.md).
 Original per-base unit mineral support is a read-only aggregate with separate
 [scope and controls](UNIT-SUPPORT.md) and [evidence](UNIT-SUPPORT-EVIDENCE-20261025.json).
 Actual AmigaOS qualification remains pending; this does not execute upkeep.
+
+### Mineral/ecology numeric stage (draft, native gate pending)
+
+`base_minerals.h` exposes explicit pre-stage numeric accounting without mutating a world or advancing turns. [Scope and original instruction corrections](MINERAL-ACCOUNTING.md) and [evidence](MINERALS-EVIDENCE-20261025.json) distinguish the completed host/original-helper checks from pending native execution. Saved post-calculation intake is not a fresh yield input.
