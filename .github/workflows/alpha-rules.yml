@@ -100,6 +100,14 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_production_snapshot.py --out "$RUNNER_TEMP/production-snapshot-host"
       - name: Big-endian production-only container snapshots
         run: python3 ports/alpha-centauri/native/test_production_snapshot.py --out "$RUNNER_TEMP/production-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned local action session
+        run: python3 ports/alpha-centauri/native/test_local_actions.py --out "$RUNNER_TEMP/local-actions-host"
+      - name: Big-endian owned local action session
+        run: python3 ports/alpha-centauri/native/test_local_actions.py --out "$RUNNER_TEMP/local-actions-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host union action snapshots
+        run: python3 ports/alpha-centauri/native/test_local_actions_snapshot.py --out "$RUNNER_TEMP/local-snapshot-host"
+      - name: Big-endian union action snapshots
+        run: python3 ports/alpha-centauri/native/test_local_actions_snapshot.py --out "$RUNNER_TEMP/local-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host owned local production session
         run: python3 ports/alpha-centauri/native/test_local_production_session.py --out "$RUNNER_TEMP/local-production-host"
       - name: Big-endian owned local production session

@@ -1,19 +1,9 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-#include "local_production_session.h"
+#include "local_session_data.h"
 #include <stdlib.h>
 #include <new>
 #include <limits.h>
 namespace alpha {
-struct LocalProductionSession::Data {
- OriginalWorld world;
- Rules technology;
- FacilityDefinitions facilities;
- BasicRules rules;
- WorldRules world_rules;
- Variant profile;
- bool expansion_enabled;
- int32_t local_human;
-};
 namespace {
 uint64_t identity_sequence=0;
 bool at_limit(uint64_t revision){return revision==UINT64_MAX;}
@@ -29,20 +19,36 @@ const OriginalWorld* LocalProductionSession::world()const{return data_?&data_->w
 int32_t LocalProductionSession::local_human()const{return data_?data_->local_human:-1;}
 LocalOrderError LocalProductionSession::load_local(const uint8_t* save,size_t length,const uint8_t* text,size_t text_length,
  Variant profile,bool expansion,int32_t human,uint32_t seed,size_t memory_limit){
+ return load_impl(save,length,text,text_length,profile,expansion,human,seed,memory_limit,false);
+}
+LocalOrderError LocalProductionSession::load_local_land_actions(const uint8_t* save,size_t length,const uint8_t* text,size_t text_length,
+ Variant profile,bool expansion,int32_t human,uint32_t seed,size_t memory_limit){
+ if(profile!=Variant::base || expansion)return LocalOrderError::unsupported;
+ return load_impl(save,length,text,text_length,profile,expansion,human,seed,memory_limit,true);
+}
+bool LocalProductionSession::land_actions_enabled()const{return data_ && data_->units;}
+LocalOrderError LocalProductionSession::load_impl(const uint8_t* save,size_t length,const uint8_t* text,size_t text_length,
+ Variant profile,bool expansion,int32_t human,uint32_t seed,size_t memory_limit,bool actions){
  if(!save || !text || !length || !text_length || (profile!=Variant::base && profile!=Variant::alien_crossfire) ||
     (profile==Variant::base && expansion) || human<1 || human>7)return LocalOrderError::bad_state;
  if(!identity_ || at_limit(revision_))return LocalOrderError::overflow;
- if(memory_limit<sizeof(Data))return LocalOrderError::no_memory;
+ const size_t rules_memory=sizeof(Data)+(actions?sizeof(UnitDefinitions):0);
+ if(memory_limit<rules_memory)return LocalOrderError::no_memory;
  void* storage=malloc(sizeof(Data));if(!storage)return LocalOrderError::no_memory;
  Data* next=new(storage)Data;LocalOrderError result=LocalOrderError::ok;
  if(read_technologies(text,text_length,next->technology)!=Error::ok ||
     read_basic_rules(text,text_length,next->technology,profile,next->rules,next->world_rules)!=Error::ok ||
     read_facility_definitions(text,text_length,next->technology,profile,next->facilities)!=Error::ok)result=LocalOrderError::bad_rules;
+ if(result==LocalOrderError::ok && actions){
+  void* unit_storage=malloc(sizeof(UnitDefinitions));
+  if(!unit_storage)result=LocalOrderError::no_memory;
+  else {next->units=new(unit_storage)UnitDefinitions{};if(read_unit_definitions(text,text_length,next->technology,profile,*next->units)!=Error::ok)result=LocalOrderError::bad_rules;}
+ }
  // The original file loader clamps strictness to2. The standalone retool API
  // also supports3, but does not imply that original text loading accepted3.
  if(result==LocalOrderError::ok && next->rules.retool_strictness>2)next->rules.retool_strictness=2;
  if(result==LocalOrderError::ok){
-  const auto loaded=next->world.load(save,length,seed,memory_limit-sizeof(Data)+sizeof(OriginalWorld));
+  const auto loaded=next->world.load(save,length,seed,memory_limit-rules_memory+sizeof(OriginalWorld));
   if(loaded!=WorldLoadError::ok)result=(loaded==WorldLoadError::memory_limit || loaded==WorldLoadError::out_of_memory)?LocalOrderError::no_memory:LocalOrderError::bad_world;
  }
  if(result==LocalOrderError::ok){

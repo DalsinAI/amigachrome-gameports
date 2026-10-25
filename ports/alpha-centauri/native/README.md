@@ -1154,3 +1154,8 @@ CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_movement_snapshot.sh /
 ### Saved faction speed grants (draft, native gate pending)
 
 `world_speed_ability_flags` retains base raw-only abilities and supplies the expansion design owner's eligible FREEABIL speed bits to vehicle speed and land pricing. [Scope and controls](SPEED-ABILITIES.md) distinguish this change from historical native evidence and from legal player actions. [Evidence](SPEED-ABILITIES-EVIDENCE-20261025.json) records host/source/helper checks and pending native qualification.
+
+[LOCAL-ACTIONS.md](LOCAL-ACTIONS.md) connects the strict clear-land action and
+facility orders through one owning session/revision, and adds a combined
+original-container buffer snapshot. Exhaustion is preserved across reload;
+frontend/player save/turn/AI and native qualification remain pending.
