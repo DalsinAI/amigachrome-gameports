@@ -511,3 +511,36 @@ map66-case regression also passes after the embedded-map refactor. No original
 assets are distributed. Loading their data does not yet execute the restored
 tutorials, original turn loop, AI or combat. This work is part of restoring the
 original games; the neutral test scene remains only a test bed.
+
+### Saved faction state and faction definitions
+
+`original_faction.cpp/h` decodes all eight saved `Faction` and `MFaction` records
+from a validated original-game view. These restore the existing energy credits,
+research progress, social settings, diplomatic flags/loans, queues, unit/region
+accounting, saved AI goals/sites and faction-specific rules/names. They do not
+execute research, diplomacy, AI or a turn. The complete209 state declarations
+and55 definition declarations derive from pinned Thinker MIT layouts; reserved
+and Thinker-labelled original bytes remain inert data. Gameplay reference
+validation belongs to world initialization, not this format reader.
+
+All signed8/16/32-bit fields use explicit endian decoding. Numeric and text
+matrices retain their shape; every text row preserves its wire bytes plus an
+added terminator. Goals decode their five fields explicitly, not through native
+packing. Legacy data7..10 extends facility-announcement bytes8 to12 and project
+intelligence words5 to8 with0, matching `convert_faction_v10_to_current`.
+`original_faction_wire.json` separately records the current and original legacy
+source layouts: independent Python uses the actual legacy offsets rather than
+the native decoder's offset-delta implementation. Raw technology/production IDs
+remain version tagged. No PC pointers or original engine callbacks are used.
+
+`test_original_faction.py --out NEW_DIR` compares every field in all eight
+records using fingerprints, tests full-length strings, matrix rows, goal signed
+widths, legacy extensions and unchanged outputs on invalid indices/short spans.
+The102 synthetic cases include the90 original container controls plus targeted
+zero/all-ones/alternating faction blocks across versions7,10,11,12. Host
+ASan/UBSan and independent big-endian68040 CI run these controls. Build the
+actual AmigaOS probe with `CXX=.../m68k-amigaos-g++ sh build_faction_probe.sh
+OUTPUT`. `ORIGINAL-FACTION-EVIDENCE-20261025.json` records all105 native cases,
+including the three original tutorials. The lab is stopped and its original
+configuration, ROM pair, module and startup verified restored. Assets stay
+private. A decoded saved AI plan is not a working AI or restored full game.

@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-25",
+  "source": "Thinker dabe62f2d1abba03de40f3dd3048494843f6a9af MIT; engine_types.h, engine_data.h, convert_faction_v10_to_current",
+  "syntheticCases": 102,
+  "originalScenarios": 3,
+  "host": "ASan/UBSan all105 cases passed; independent current and legacy wire schema",
+  "native": {
+    "cases": 105,
+    "passed": true,
+    "frames": 46,
+    "rc": 0,
+    "probeSHA256": "89471d3adac9d3e2e442abda3025fb6522666a3661b1a0db23a5202d01e3fc12",
+    "logSHA256": "b472c21e0faabd5fa16bc3438c13ca4fd997092a7be268fa402c6b0202eecdd4"
+  },
+  "originalExpectedValues": [
+    {
+      "index": 102,
+      "name": "Build.SC",
+      "valid": true,
+      "size": 195866,
+      "sha256": "bf56d50d18866f715a036cc5322bef579455af5f953d1981a415fcf0dafde310",
+      "expected": {
+        "version": "7",
+        "states": "59fe6a69",
+        "definitions": "66b213a8",
+        "rc": "0"
+      }
+    },
+    {
+      "index": 103,
+      "name": "Explore.SC",
+      "valid": true,
+      "size": 195086,
+      "sha256": "7b828aa4c06772d0e961c66729a1d80a389e603b2dc58e09faa05ba2816668d0",
+      "expected": {
+        "version": "7",
+        "states": "c5735147",
+        "definitions": "7add27a7",
+        "rc": "0"
+      }
+    },
+    {
+      "index": 104,
+      "name": "conquer.SC",
+      "valid": true,
+      "size": 196594,
+      "sha256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45",
+      "expected": {
+        "version": "7",
+        "states": "b56a24ed",
+        "definitions": "7add27a7",
+        "rc": "0"
+      }
+    }
+  ],
+  "privateTestROM": {
+    "roms/openkick-rom4.rom": "c2341dc9434823515edee4e1fcd21b99d1a9af6f5fcbcb5c361b956229b71fec",
+    "roms/aros-amiga-m68k-ext.bin": "22ac131ff8ddef0cf01c6158f74e782b7ea1f2e63444dde22c15027ae105109c"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "sourceSHA256": {
+    "test_original_faction.py": "1b5b9905f19c62c95cf97bb1b3dcdf79cd9c19c203c950b2f855b55a547c1fef",
+    "original_faction_wire.json": "d7adb8aaba6a291cd3e9b212ec19bfeed13e407190e360b4da7abe0d9da0fc45",
+    "original_faction_definition_fields.inc": "1dc68164434e7b01a1bc140cdecfb1b7a7ae6442df686d89faf0f65b0a04ed7a",
+    "original_faction.cpp": "5f1db1396e75cc6c037872da9afa9909d7ff802a96c3030b7e7211b74fb02f4b",
+    "original_faction_probe.cpp": "f0d5bf26540c1d44f5a63220ab9ef15032913fb76e706747f519b5af0bab12e3",
+    "original_faction_state_fields.inc": "dbb8e4a2d36076d3094a463a6df0730f181bdbd5c28f3ac9d8e7ffafe8fe6ded",
+    "original_faction.h": "9bb63b0f2d9335cfb5494231d26b7a56b875e2995667916ea63edd2ebbb61ec7"
+  },
+  "limits": [
+    "Decodes original saved faction state and MFaction records, not execution of AI/diplomacy/research/turns",
+    "All eight original slots including Planet; reference/semantic validation remains a world-initialization step",
+    "Legacy array extension follows recovered source; raw gameplay IDs are not silently remapped",
+    "Reserved/padding/Thinker-labelled original bytes are preserved and inert; no serialized PC pointers imported",
+    "No original-executable differential fidelity claim; no original assets distributed"
+  ]
+}
