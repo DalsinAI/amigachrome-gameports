@@ -1059,3 +1059,14 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+## Manual research choice field transition (draft, native unrun)
+
+`research_choice.h` provides the pure original post-chooser state transition for
+manual research changes: cancel/same/unset semantics, half-labs penalty when an
+existing target changes, and unchanged cached cost. It reports the unresolved
+synchronisation boundary without invoking it. This is not an owned-world or UI
+transaction: caller authority, eligibility/pool, stale-state and discovery
+effects remain outside its explicit scope. Public CI runs2,486 cases per
+architecture; normal SDK build and host controls pass, actual AmigaOS is unrun.
+See `RESEARCH-CHOICE.md` and its evidence JSON before integrating.

@@ -132,3 +132,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-host"
       - name: Native infantry composition big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host manual research choice controls
+        run: python3 ports/alpha-centauri/native/test_research_choice.py --out "$RUNNER_TEMP/research-choice-host"
+      - name: Big-endian manual research choice controls
+        run: python3 ports/alpha-centauri/native/test_research_choice.py --out "$RUNNER_TEMP/research-choice-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
