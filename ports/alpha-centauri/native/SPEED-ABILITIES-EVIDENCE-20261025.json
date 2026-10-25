@@ -1,0 +1,96 @@
+{
+  "status": "DRAFT: host/original-helper passed, normal SDK build only; native/independent big-endian qualification pending",
+  "scope": "Read-only saved-design speed ability resolution shared by vehicle speed and land movement pricing",
+  "source": {
+    "project": "OpenSMACX",
+    "pin": "2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c",
+    "functions": [
+      "has_abil",
+      "speed_proto",
+      "speed"
+    ],
+    "license": "GPL-3.0-or-later"
+  },
+  "host": {
+    "syntheticContexts": 462,
+    "accepted": 444,
+    "rejected": 18,
+    "sanitizers": [
+      "ASan",
+      "UBSan"
+    ],
+    "independentRawWirePython": true,
+    "adaptedGPLReference": true,
+    "originalTutorials": [
+      {
+        "name": "Explore.SC",
+        "inputSHA256": "7b828aa4c06772d0e961c66729a1d80a389e603b2dc58e09faa05ba2816668d0",
+        "expected": {
+          "version": "7",
+          "vehicles": "4",
+          "stats": "16",
+          "queries": "1248",
+          "digest": "3dcc5b95",
+          "rc": "0"
+        },
+        "unchanged": true
+      },
+      {
+        "name": "Build.SC",
+        "inputSHA256": "bf56d50d18866f715a036cc5322bef579455af5f953d1981a415fcf0dafde310",
+        "expected": {
+          "version": "7",
+          "vehicles": "7",
+          "stats": "28",
+          "queries": "1248",
+          "digest": "0bded644",
+          "rc": "0"
+        },
+        "unchanged": true
+      },
+      {
+        "name": "conquer.SC",
+        "inputSHA256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45",
+        "expected": {
+          "version": "7",
+          "vehicles": "9",
+          "stats": "36",
+          "queries": "1248",
+          "digest": "118a2054",
+          "rc": "0"
+        },
+        "unchanged": true
+      }
+    ],
+    "landPriceRegressionContexts": 248
+  },
+  "privateOriginalHelper": {
+    "worldContexts": 444,
+    "queries": 8788,
+    "outputSHA256": "b815c7cfbe9dab3202b130e336d575a5e3ea32bab3afeb1f43a882ed9c72768f",
+    "inputSHA256": "933767e86d2585b2ca3a7edf4797c95c1061503160da15834c8bde30359ab88f",
+    "rc": 0,
+    "originalHelper": "SMAX has_abil0x5bf1f0 + has_tech0x5b9f20, unchanged instructions, explicit fixture globals",
+    "unchangedCodePages": {
+      "tech": "7c32573c77177ff0cd507f2b6ac96304f6f6bc5ac82d6c8f5dfa708f4cea04a5",
+      "ability": "e9c8935ae9faf7e0e1d1a450c8f05c887a95d009cff8c897dd0f6dda81afb67d"
+    },
+    "fullGameExecution": false,
+    "scope": "Only the four speed-related query bits; no Deep Radar/Nethack ability or original base executable helper comparison"
+  },
+  "native": {
+    "status": "Normal private SDK build only; actual AmigaOS UNRUN",
+    "probeSHA256": "65d310ca875e6300dbd0bb273146918e416317ed8cdf7d2478e0f6a010f2aca4"
+  },
+  "limits": [
+    "Design owner is prototype_id/64; vehicle owner remains separate for morale/Maritime Control Center",
+    "Only speed queried bits are resolved: Slow, Antigrav, Air Superiority and expansion Fuel Nanocells; not a general Deep Radar/Nethack/other-ability API",
+    "Predefined designs bypass faction grants; existing raw flags bypass their own technology requirement; owner FREEABIL grants require prerequisite technology",
+    "Base/current component ID profiles remain explicit; no implicit base/SMAX ID migration or new runtime edition inference",
+    "Malformed bonus metadata and missing required technology context reject before output replacement; no unsafe original indexing emulated",
+    "Original speed byte overflow handling retained; no hidden mod maximum or wrapping",
+    "No world mutation, RNG consumption, legal movement exposure, turn advancement, combat or AI; clear-land action gates remain unchanged",
+    "Original helper execution uses SMAX has_abil/has_tech over controlled base and expansion fixtures; no original base-executable helper comparison or full original game execution",
+    "Previous WORLD-UNIT-STATS evidence/native hashes are historical; no claim they qualify this updated artifact"
+  ]
+}

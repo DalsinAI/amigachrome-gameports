@@ -166,7 +166,22 @@ uint32_t __cdecl morale_veh(uint32_t veh_id, BOOL check_drone_riot, int faction_
     return range(Vehs[veh_id].morale + morale_modifier, 0, 6);
 }
 #undef __cdecl
+static int32_t ability_prerequisite[29];static unsigned ability_count;
+/* Adaptation of original has_abil for the four speed_proto query bits only.
+ * Alien Deep Radar and Nethack cannot answer these bits, so are outside scope.
+ * Production rejects invalid indexes before this original-domain reference. */
+static inline bool has_speed_ability(unsigned prototype,unsigned ability){
+ if(VehPrototypes[prototype].ability_flags&ability)return true;
+ const unsigned faction=prototype/64;if(!faction)return false;
+ const auto& f=Players[faction];
+ for(int i=0;i<f.faction_bonus_count;++i)if(f.faction_bonus_id[i]==15){
+  int id=f.faction_bonus_val1[i];if(id<0 || (unsigned)id>=ability_count){unexpected=true;return false;}
+  if(has_tech(ability_prerequisite[id],(int)faction) && (ability&(1u<<id)))return true;
+ }
+ return false;
+}
 static void setup(const alpha::OriginalWorld& w,const alpha::UnitDefinitions& d,const alpha::Rules& tech,size_t index){
+ ability_count=(unsigned)d.ability_count;for(unsigned a=0;a<ability_count;++a)ability_prerequisite[a]=d.abilities[a].prerequisite;
  world=&w;unexpected=false;const auto* v=w.vehicle(index);Vehs[0]=v?Vehicle{v->x,v->y,v->unit_id,v->home_base_id,v->faction_id,v->morale,v->flags,v->state}:Vehicle{};
  for(size_t i=0;i<512;++i)VehPrototypes[i]=*w.prototype(i);
  for(size_t i=0;i<w.game().base_count;++i)Bases[i].state=(uint32_t)w.base(i)->state_flags;
