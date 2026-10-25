@@ -1,0 +1,177 @@
+{
+  "status": "HOST EXACT / REAL FRONTEND NORMAL SDK BUILD PASS / NATIVE AND BE EXECUTION UNRUN",
+  "frozenBase": "0c7b8649356f88374f59f29070368b077de80a0c",
+  "scenes": {
+    "sceneCases": 32,
+    "bytes": 6291456,
+    "originalSHA256": "1eeed34dbaa128c3575b916956823b485918bfbd1f2ef7c2a50563062f908bb8",
+    "ownedSHA256": "1eeed34dbaa128c3575b916956823b485918bfbd1f2ef7c2a50563062f908bb8",
+    "indexedAndDepthExact": true,
+    "independentRgbBorderCacheComposites": 90,
+    "aliasPaletteAndTintInvalidationControls": true,
+    "alternateTintActuallyChangesPixels": true,
+    "originalTintRestorationExact": true,
+    "message": "SOURCE UNIT32 indexed/depth scenes +90 independent RGB/cached/border composites PASS"
+  },
+  "terrainGuards": {
+    "syntheticCases": 27,
+    "uniformCornerOriginalProfiles": 7,
+    "actualExploreRover": [
+      24,
+      24
+    ],
+    "actualExploreNormal": {
+      "relative": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "normal": [
+        0.0,
+        0.0,
+        0.9999999403953552
+      ],
+      "camera": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.500459611415863,
+        -0.8657598495483398,
+        -0.0,
+        -0.8657598495483398,
+        -0.500459611415863
+      ],
+      "originalFacetInitializerExecuted": true,
+      "originalRecursiveAltitudeAndRelativeHelpersExecuted": true,
+      "originalVectorHelpersExecuted": true,
+      "coordinates": [
+        24,
+        24
+      ],
+      "actualExploreData": true,
+      "renderScale": 25,
+      "zoom": 0,
+      "outputSHA256": "16471b51b18ee55b3347d07a4f70f933f4e0bd61da16325c1c1eda256333bf58"
+    },
+    "actualExploreZooms": [
+      {
+        "relative": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "normal": [
+          0.0,
+          0.0,
+          0.9999999403953552
+        ],
+        "camera": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.500459611415863,
+          -0.8657598495483398,
+          -0.0,
+          -0.8657598495483398,
+          -0.500459611415863
+        ],
+        "originalFacetInitializerExecuted": true,
+        "originalRecursiveAltitudeAndRelativeHelpersExecuted": true,
+        "originalVectorHelpersExecuted": true,
+        "coordinates": [
+          24,
+          24
+        ],
+        "actualExploreData": true,
+        "renderScale": 25,
+        "zoom": -5,
+        "cornerHeights": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "outputSHA256": "a67af397859e065f31c3a050819b2e86bbeff40e81b3939726255e6bd42f88b0"
+      },
+      {
+        "relative": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "normal": [
+          0.0,
+          0.0,
+          0.9999999403953552
+        ],
+        "camera": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.500459611415863,
+          -0.8657598495483398,
+          -0.0,
+          -0.8657598495483398,
+          -0.500459611415863
+        ],
+        "originalFacetInitializerExecuted": true,
+        "originalRecursiveAltitudeAndRelativeHelpersExecuted": true,
+        "originalVectorHelpersExecuted": true,
+        "coordinates": [
+          24,
+          24
+        ],
+        "actualExploreData": true,
+        "renderScale": 25,
+        "zoom": 5,
+        "cornerHeights": [
+          8,
+          8,
+          8,
+          8
+        ],
+        "outputSHA256": "22e0018ff97a001f79039217a1c34537143aaeb4942910ee1ef68905637cbe0a"
+      }
+    ]
+  },
+  "mapBoundaryControls": {
+    "placementCases": 1000,
+    "dimensionCases": 22,
+    "builtInMetricAnchorInvalidAliasControls": true,
+    "originalCodeExecuted": false,
+    "placementSHA256": "76d83d739e2174f313309613df22bb81615fc76d4051a3db364f97811e8233ff",
+    "dimensionSHA256": "279eee320d920a0622c00410d88216d5264e2172f848ee385ce9e69844a9e0fb",
+    "messages": [
+      "MAP ANCHOR 1000 vectors + metric/anchor/invalid/partial-alias controls PASS",
+      "MAP METRICS 22 vectors PASS"
+    ]
+  },
+  "frontendLinksSourceRenderer": true,
+  "fittedRendererLinked": false,
+  "nativeExecution": false,
+  "labAccess": false,
+  "deployment": false,
+  "publication": false,
+  "binaryHashes": {
+    "alpha-restoration-source-scenes-final": "c84e69b7496e3287c7eb0f4af88410a099f3ebddd7cae5104f6d033686c9e81c",
+    "source-unit-native-final": "ca14fd6abc7cdff9ae7f3cc703a297225a176eba1a2b513122da12d19de359dc",
+    "flat-context-native": "f5880a37558925bdb2f108d11f5e5ba36028ff9dcbcf5769218abdebd43dba27",
+    "source-unit-host": "e2487f6a073182c896ee8c163c5802d1208ffd5d506f3844826f618b1c0503b0",
+    "flat-context-host": "ad71649900d6fcd65049ed099d8420c4ad653cab7748c8900ab3937fbc8444bb"
+  },
+  "limits": [
+    "Normal RenderScale25, default gamma1 global palette, explicit owner faction metadata only",
+    "Static frame0 bounded base human/basic profiles; no unsupported model substitution",
+    "Known-flat/sea corner guard; Explore coastal infantry remains unsupported label",
+    "Final original17230/USER32 wrapper unexecuted; no full PE/game run",
+    "Flat presentation, no original terrain/topology/coast/shadows/animation restored",
+    "No native CLI/UI/performance or independent BE qualification",
+    "Requires root review/dependency reconciliation/final-head CI/native gates before publication or deployment"
+  ]
+}

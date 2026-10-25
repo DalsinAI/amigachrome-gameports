@@ -8,7 +8,8 @@
 #include "pcx_image.h"
 #include "original_ui_text.h"
 #include "technology_browser.h"
-#include "cvr_infantry.h"
+#include "cvr_source_unit.h"
+#include "cvr_flat_context.h"
 #include "cvr_palette.h"
 #include <exec/types.h>
 #include <intuition/intuition.h>
@@ -22,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 struct IntuitionBase* IntuitionBase;struct GfxBase* GfxBase;struct Library* CyberGfxBase;
-static alpha::CvrUnitAssembly infantry,speeder;static bool infantry_available=false,speeder_available=false;
+static alpha::CvrSourceUnit infantry,speeder;static bool infantry_available=false,speeder_available=false;
 static uint8_t game_rgb[768],faction_tints[8][3];static bool game_palette_ready=false,faction_tint_ready[8]{};
 static alpha::OriginalWorld world;static alpha::PcxImage terrain,sprites,faction_images[8],game_palette_image;
 static alpha::Rules technologies;static alpha::UnitDefinitions definitions;static alpha::BasicRules basic;static alpha::WorldRules world_rules;
@@ -40,17 +41,16 @@ static bool transparent(const uint8_t* rgb,bool sprite){
 }
 static bool infantry_profile(const alpha::OriginalVehicle& v){
  const auto* p=world.prototype((size_t)v.unit_id);const auto* f=world.faction_definition(v.faction_id);
- return infantry_available && infantry.ready() && p && f && v.rotate_angle>=-1 && v.rotate_angle<=7 && world.game().data_version<11 && p->chassis_id==0 && p->weapon_id==0 && p->armor_id==0 && p->reactor_id==1 && p->ability_flags==0 && !(f->rule_flags&0x80u);
+ return game_palette_ready && alpha::cvr_source_flat_context(world,v.x,v.y,(unsigned)zoom).supported && infantry_available && infantry.ready() && p && f && v.rotate_angle>=-1 && v.rotate_angle<=7 && world.game().data_version<11 && p->chassis_id==0 && p->weapon_id==0 && p->armor_id==0 && p->reactor_id==1 && p->ability_flags==0 && !(f->rule_flags&0x80u);
 }
 static bool speeder_profile(const alpha::OriginalVehicle& v){
  const auto* p=world.prototype((size_t)v.unit_id);const auto* f=world.faction_definition(v.faction_id);
- return speeder_available && speeder.ready() && p && f && v.rotate_angle>=-1 && v.rotate_angle<=7 && world.game().data_version<11 && p->chassis_id==1 && p->weapon_id==0 && p->armor_id==0 && p->reactor_id==1 && p->ability_flags==0 && !(f->rule_flags&0x80u);
+ return game_palette_ready && v.faction_id>0 && v.faction_id<8 && faction_tint_ready[v.faction_id] && alpha::cvr_source_flat_context(world,v.x,v.y,(unsigned)zoom).supported && speeder_available && speeder.ready() && p && f && v.rotate_angle>=-1 && v.rotate_angle<=7 && world.game().data_version<11 && p->chassis_id==1 && p->weapon_id==0 && p->armor_id==0 && p->reactor_id==1 && p->ability_flags==0 && !(f->rule_flags&0x80u);
 }
 static const char* speeder_colours(const alpha::OriginalVehicle& v){
- if(!game_palette_ready){speeder.clear_game_palette();return "raw-model-preview";}
- const bool tint=v.faction_id>0 && v.faction_id<8 && faction_tint_ready[v.faction_id];
- if(!speeder.set_game_palette(game_rgb,sizeof(game_rgb),tint?faction_tints[v.faction_id]:nullptr,tint?3:0)){speeder.clear_game_palette();return "raw-model-preview-config-failure";}
- return tint?"game-global-and-faction":"game-global-neutral-preview-metadata-unavailable";
+ if(!game_palette_ready || v.faction_id<=0 || v.faction_id>=8 || !faction_tint_ready[v.faction_id]){speeder.clear_game_palette();return "unsupported-palette-metadata";}
+ if(!speeder.set_game_palette(game_rgb,sizeof(game_rgb),faction_tints[v.faction_id],3)){speeder.clear_game_palette();return "unsupported-palette-configuration";}
+ return "source-game-global-and-faction";
 }
 static void pixel(int x,int y,const uint8_t* rgb){if(x<0 || y<0 || x>=W || y>=H || !rgb)return;auto* p=frame+((size_t)y*W+x)*3;p[0]=rgb[0];p[1]=rgb[1];p[2]=rgb[2];}
 static void diamond(int cx,int cy,int atlas_x,int atlas_y,bool overlay){
@@ -143,6 +143,7 @@ static void draw_base_details(struct Window* window){
 
 static void text(struct RastPort* rp,int x,int y,const char* s){if(x>=0 && x<W)ui_text.draw(rp,x,y,s,W-x);}
 static void draw(struct Window* window){
+ bool rendered_source[2048]{};
  for(size_t i=0;i<(size_t)W*H;++i){frame[3*i]=6;frame[3*i+1]=15;frame[3*i+2]=24;}
  for(int y=camera_y-17;y<=camera_y+17;++y)for(int raw=camera_x-17;raw<=camera_x+17;++raw){
   int x=wrap(raw);const auto* t=tile(x,y);if(!t)continue;int sx,sy;if(!position(x,y,sx,sy))continue;
@@ -168,7 +169,7 @@ static void draw(struct Window* window){
   if(row>=0)sprite(sx,sy,row,col);
   else if(infantry_profile(v) || speeder_profile(v)){
    const unsigned facing=v.rotate_angle<0?0:(unsigned)v.rotate_angle&7u;
-   if(sx>=0 && sx<W && sy>=0 && sy<H){const char* colours=speeder_profile(v)?speeder_colours(v):(game_palette_ready?"game-global":"raw-model-preview");bool drawn=(speeder_profile(v)?speeder:infantry).draw(frame,(size_t)W*H*3,W,H,sx,sy,(unsigned)zoom,facing);printf("%s DRAW unit=%lu facing=%u ok=%d colours=%s\n",speeder_profile(v)?"SPEEDER":"INFANTRY",(unsigned long)i,facing,drawn,colours);}
+   const bool rover=speeder_profile(v);const char* colours=rover?speeder_colours(v):"source-game-global";const auto context=alpha::cvr_source_flat_context(world,v.x,v.y,(unsigned)zoom);bool drawn=(rover?speeder:infantry).draw(frame,(size_t)W*H*3,W,H,sx,sy,(unsigned)zoom,facing);if(i<2048)rendered_source[i]=drawn;printf("SOURCE %s DRAW unit=%lu facing=%u frame=0 ok=%d colours=%s known-corner=%u height=%ld\n",rover?"SPEEDER":"INFANTRY",(unsigned long)i,facing,drawn,colours,context.relative_corner,(long)context.corner_height);
   }
  }
  }
@@ -176,11 +177,11 @@ static void draw(struct Window* window){
  FillPixelArray(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-window->BorderLeft,64-window->BorderTop,0x00071316u);FillPixelArray(rp,window->BorderLeft,554,window->Width-window->BorderRight-window->BorderLeft,window->Height-window->BorderBottom-554,0x00071316u);
  SetAPen(rp,1);SetBPen(rp,0);SetDrMd(rp,JAM2);char line[180];
  snprintf(line,sizeof(line),"ORIGINAL TUTORIAL | Turn %ld | %lu x %lu | %lu units, %lu bases",(long)world.game().preferences.CurrentTurn,(unsigned long)world.game().map.info.width,(unsigned long)world.game().map.info.height,(unsigned long)world.game().vehicle_count,(unsigned long)world.game().base_count);text(rp,15,42,line);
- text(rp,15,62,game_palette_ready?"Read-only original world | CVR game palette; faction overrides where available | WASD | TAB | +/- | Q":"Read-only original world | CVR raw colour preview: palette.pcx missing | WASD | TAB | +/- | Q");
+ text(rp,15,62,game_palette_ready?"Read-only world | Source CVR: known flat contexts only; static frame0 | WASD | TAB | +/- | Q":"Read-only world | Source CVR unavailable: original palette.pcx required | WASD | TAB | +/- | Q");
  for(size_t i=0;i<world.game().base_count;++i){const auto& b=*world.base(i);int sx,sy;if(position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){snprintf(line,sizeof(line),"[Base] %.24s",b.name);ui_text.draw(rp,12+sx-24,70+sy+24,line,W-(12+sx-24),false,alpha::UiInk::map_label);}}
  for(size_t i=0;i<world.game().vehicle_count;++i){const auto& v=*world.vehicle(i);int sx,sy;if(!position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
-  const auto& p=*world.prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || infantry_profile(v) || speeder_profile(v);
-  if(!native && sx>=30 && sx<W-180){snprintf(line,sizeof(line),"%.16s [CVR]",p.name[0]?p.name:"Saved design");text(rp,12+sx-25,70+sy-16,line);}
+  const auto& p=*world.prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || (i<2048 && rendered_source[i]);
+  if(!native && sx>=30 && sx<W-180){snprintf(line,sizeof(line),"%.16s [unsupported scene]",p.name[0]?p.name:"Saved design");text(rp,12+sx-25,70+sy-16,line);}
   if(i==selected){Move(rp,12+sx,70+sy-14);Draw(rp,12+sx+29,70+sy);Draw(rp,12+sx,70+sy+14);Draw(rp,12+sx-29,70+sy);Draw(rp,12+sx,70+sy-14);}
  }
  draw_hud(window);draw_base_details(window);
@@ -218,8 +219,8 @@ int alpha_original_view(int argc,char** argv){
  }
  if(infantry_available && game_palette_ready && !infantry.set_game_palette(game_rgb,sizeof(game_rgb))){game_palette_ready=false;infantry.clear_game_palette();}
  printf("CVR GAME PALETTE ready=%d source=palette.pcx default-gamma1; no custom gamma/system-default tint guesses\n",game_palette_ready);
- printf("SPEEDER PROFILE ready=%d base-human-basic-static; colours selected explicitly; no original viewport/shadows\n",speeder_available);
- printf("INFANTRY PROFILE ready=%d base-human-basic-static; tile-foot anchor; no original viewport/shadows\n",infantry_available);fflush(stdout);
+ printf("SPEEDER PROFILE ready=%d base-human-basic-static-source; known-flat context + faction metadata required; no shadows\n",speeder_available);
+ printf("INFANTRY PROFILE ready=%d base-human-basic-static-source; qualified caller anchor; known-flat context required; no shadows\n",infantry_available);fflush(stdout);
  if(!ui_text.open()){puts("Original UI fonts are required.");return 20;}
  frame=(uint8_t*)malloc((size_t)W*H*3);hud_frame=(uint8_t*)malloc((size_t)W*HUD_H*3);if(!frame || !hud_frame){free(frame);free(hud_frame);ui_text.close();return 20;}
  if(world.game().vehicle_count){camera_x=world.vehicle(0)->x;camera_y=world.vehicle(0)->y;}else {camera_x=(int)world.game().map.info.width/2;camera_y=(int)world.game().map.info.height/2;}
