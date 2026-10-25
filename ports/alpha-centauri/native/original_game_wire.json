@@ -1,0 +1,1145 @@
+{
+  "source": "Thinker dabe62f2d1abba03de40f3dd3048494843f6a9af; MIT; engine_data.h/engine_veh.h/engine_base.h",
+  "records": {
+    "GamePrefs": {
+      "size": 920,
+      "fields": [
+        {
+          "type": "int32_t",
+          "name": "GamePreferences",
+          "count": 1,
+          "array": false,
+          "offset": 0
+        },
+        {
+          "type": "int32_t",
+          "name": "GameMorePreferences",
+          "count": 1,
+          "array": false,
+          "offset": 4
+        },
+        {
+          "type": "int32_t",
+          "name": "GameWarnings",
+          "count": 1,
+          "array": false,
+          "offset": 8
+        },
+        {
+          "type": "int32_t",
+          "name": "GameRules",
+          "count": 1,
+          "array": false,
+          "offset": 12
+        },
+        {
+          "type": "int32_t",
+          "name": "dword_9A64A0",
+          "count": 1,
+          "array": false,
+          "offset": 16
+        },
+        {
+          "type": "int32_t",
+          "name": "GameInterludeState",
+          "count": 2,
+          "array": true,
+          "offset": 20
+        },
+        {
+          "type": "int32_t",
+          "name": "dword_9A64AC",
+          "count": 1,
+          "array": false,
+          "offset": 28
+        },
+        {
+          "type": "int32_t",
+          "name": "dword_9A64B0",
+          "count": 1,
+          "array": false,
+          "offset": 32
+        },
+        {
+          "type": "int32_t",
+          "name": "TutWinMapState",
+          "count": 2,
+          "array": true,
+          "offset": 36
+        },
+        {
+          "type": "int32_t",
+          "name": "dword_9A64BC",
+          "count": 1,
+          "array": false,
+          "offset": 44
+        },
+        {
+          "type": "int32_t",
+          "name": "GameState",
+          "count": 1,
+          "array": false,
+          "offset": 48
+        },
+        {
+          "type": "int32_t",
+          "name": "DiffLevel",
+          "count": 1,
+          "array": false,
+          "offset": 52
+        },
+        {
+          "type": "int32_t",
+          "name": "VehCount",
+          "count": 1,
+          "array": false,
+          "offset": 56
+        },
+        {
+          "type": "int32_t",
+          "name": "BaseCount",
+          "count": 1,
+          "array": false,
+          "offset": 60
+        },
+        {
+          "type": "int32_t",
+          "name": "dword_9A64D0",
+          "count": 1,
+          "array": false,
+          "offset": 64
+        },
+        {
+          "type": "int32_t",
+          "name": "CurrentTurn",
+          "count": 1,
+          "array": false,
+          "offset": 68
+        },
+        {
+          "type": "int32_t",
+          "name": "CurrentMissionYear",
+          "count": 1,
+          "array": false,
+          "offset": 72
+        },
+        {
+          "type": "int32_t",
+          "name": "CurrentVehID",
+          "count": 1,
+          "array": false,
+          "offset": 76
+        },
+        {
+          "type": "int32_t",
+          "name": "GameTimeControl",
+          "count": 2,
+          "array": true,
+          "offset": 80
+        },
+        {
+          "type": "uint8_t",
+          "name": "FactionStatus",
+          "count": 4,
+          "array": true,
+          "offset": 88
+        },
+        {
+          "type": "int32_t",
+          "name": "FactionRankings",
+          "count": 8,
+          "array": true,
+          "offset": 92
+        },
+        {
+          "type": "int32_t",
+          "name": "RankingFactionIDUnk1",
+          "count": 1,
+          "array": false,
+          "offset": 124
+        },
+        {
+          "type": "int32_t",
+          "name": "RankingFactionIDUnk2",
+          "count": 1,
+          "array": false,
+          "offset": 128
+        },
+        {
+          "type": "int32_t",
+          "name": "SecretProjects",
+          "count": 64,
+          "array": true,
+          "offset": 132
+        },
+        {
+          "type": "int32_t",
+          "name": "GovernorFaction",
+          "count": 1,
+          "array": false,
+          "offset": 388
+        },
+        {
+          "type": "int32_t",
+          "name": "ProposalPassCount",
+          "count": 11,
+          "array": true,
+          "offset": 392
+        },
+        {
+          "type": "int32_t",
+          "name": "ProposalCallTurn",
+          "count": 11,
+          "array": true,
+          "offset": 436
+        },
+        {
+          "type": "uint8_t",
+          "name": "TechOwners",
+          "count": 89,
+          "array": true,
+          "offset": 480
+        },
+        {
+          "type": "char",
+          "name": "LastSavePath",
+          "count": 256,
+          "array": true,
+          "offset": 569
+        },
+        {
+          "type": "uint8_t",
+          "name": "pad0",
+          "count": 3,
+          "array": true,
+          "offset": 825
+        },
+        {
+          "type": "int32_t",
+          "name": "ClimateValueA",
+          "count": 1,
+          "array": false,
+          "offset": 828
+        },
+        {
+          "type": "int32_t",
+          "name": "ClimateValueB",
+          "count": 1,
+          "array": false,
+          "offset": 832
+        },
+        {
+          "type": "int32_t",
+          "name": "ClimateValueC",
+          "count": 1,
+          "array": false,
+          "offset": 836
+        },
+        {
+          "type": "int32_t",
+          "name": "ClimateFutureChange",
+          "count": 1,
+          "array": false,
+          "offset": 840
+        },
+        {
+          "type": "int32_t",
+          "name": "ScoreBonusPts",
+          "count": 1,
+          "array": false,
+          "offset": 844
+        },
+        {
+          "type": "int32_t",
+          "name": "ScorePopTotal",
+          "count": 8,
+          "array": true,
+          "offset": 848
+        },
+        {
+          "type": "int32_t",
+          "name": "SunspotDuration",
+          "count": 1,
+          "array": false,
+          "offset": 880
+        },
+        {
+          "type": "int32_t",
+          "name": "MountPlanetX",
+          "count": 1,
+          "array": false,
+          "offset": 884
+        },
+        {
+          "type": "int32_t",
+          "name": "MountPlanetY",
+          "count": 1,
+          "array": false,
+          "offset": 888
+        },
+        {
+          "type": "int32_t",
+          "name": "DustCloudDuration",
+          "count": 1,
+          "array": false,
+          "offset": 892
+        },
+        {
+          "type": "int32_t",
+          "name": "SaveFileVersion",
+          "count": 1,
+          "array": false,
+          "offset": 896
+        },
+        {
+          "type": "int32_t",
+          "name": "ScnVictFacilityObj",
+          "count": 1,
+          "array": false,
+          "offset": 900
+        },
+        {
+          "type": "int32_t",
+          "name": "SolarFlaresEvent",
+          "count": 1,
+          "array": false,
+          "offset": 904
+        },
+        {
+          "type": "int32_t",
+          "name": "GameMoreRules",
+          "count": 1,
+          "array": false,
+          "offset": 908
+        },
+        {
+          "type": "int32_t",
+          "name": "CurrentFaction",
+          "count": 1,
+          "array": false,
+          "offset": 912
+        },
+        {
+          "type": "int32_t",
+          "name": "ClimateLevel",
+          "count": 1,
+          "array": false,
+          "offset": 916
+        }
+      ]
+    },
+    "VEH": {
+      "size": 52,
+      "fields": [
+        {
+          "type": "int16_t",
+          "name": "x",
+          "count": 1,
+          "array": false,
+          "offset": 0
+        },
+        {
+          "type": "int16_t",
+          "name": "y",
+          "count": 1,
+          "array": false,
+          "offset": 2
+        },
+        {
+          "type": "uint32_t",
+          "name": "state",
+          "count": 1,
+          "array": false,
+          "offset": 4
+        },
+        {
+          "type": "uint16_t",
+          "name": "flags",
+          "count": 1,
+          "array": false,
+          "offset": 8
+        },
+        {
+          "type": "int16_t",
+          "name": "unit_id",
+          "count": 1,
+          "array": false,
+          "offset": 10
+        },
+        {
+          "type": "int16_t",
+          "name": "pad_0",
+          "count": 1,
+          "array": false,
+          "offset": 12
+        },
+        {
+          "type": "uint8_t",
+          "name": "faction_id",
+          "count": 1,
+          "array": false,
+          "offset": 14
+        },
+        {
+          "type": "uint8_t",
+          "name": "year_end_lurking",
+          "count": 1,
+          "array": false,
+          "offset": 15
+        },
+        {
+          "type": "uint8_t",
+          "name": "damage_taken",
+          "count": 1,
+          "array": false,
+          "offset": 16
+        },
+        {
+          "type": "uint8_t",
+          "name": "order",
+          "count": 1,
+          "array": false,
+          "offset": 17
+        },
+        {
+          "type": "uint8_t",
+          "name": "waypoint_count",
+          "count": 1,
+          "array": false,
+          "offset": 18
+        },
+        {
+          "type": "uint8_t",
+          "name": "patrol_current_point",
+          "count": 1,
+          "array": false,
+          "offset": 19
+        },
+        {
+          "type": "int16_t",
+          "name": "waypoint_x",
+          "count": 4,
+          "array": true,
+          "offset": 20
+        },
+        {
+          "type": "int16_t",
+          "name": "waypoint_y",
+          "count": 4,
+          "array": true,
+          "offset": 28
+        },
+        {
+          "type": "uint8_t",
+          "name": "morale",
+          "count": 1,
+          "array": false,
+          "offset": 36
+        },
+        {
+          "type": "uint8_t",
+          "name": "movement_turns",
+          "count": 1,
+          "array": false,
+          "offset": 37
+        },
+        {
+          "type": "uint8_t",
+          "name": "order_auto_type",
+          "count": 1,
+          "array": false,
+          "offset": 38
+        },
+        {
+          "type": "uint8_t",
+          "name": "visibility",
+          "count": 1,
+          "array": false,
+          "offset": 39
+        },
+        {
+          "type": "uint8_t",
+          "name": "moves_spent",
+          "count": 1,
+          "array": false,
+          "offset": 40
+        },
+        {
+          "type": "int8_t",
+          "name": "rotate_angle",
+          "count": 1,
+          "array": false,
+          "offset": 41
+        },
+        {
+          "type": "uint8_t",
+          "name": "iter_count",
+          "count": 1,
+          "array": false,
+          "offset": 42
+        },
+        {
+          "type": "uint8_t",
+          "name": "status_icon",
+          "count": 1,
+          "array": false,
+          "offset": 43
+        },
+        {
+          "type": "uint8_t",
+          "name": "probe_action",
+          "count": 1,
+          "array": false,
+          "offset": 44
+        },
+        {
+          "type": "uint8_t",
+          "name": "probe_sabotage_id",
+          "count": 1,
+          "array": false,
+          "offset": 45
+        },
+        {
+          "type": "int16_t",
+          "name": "home_base_id",
+          "count": 1,
+          "array": false,
+          "offset": 46
+        },
+        {
+          "type": "int16_t",
+          "name": "next_veh_id_stack",
+          "count": 1,
+          "array": false,
+          "offset": 48
+        },
+        {
+          "type": "int16_t",
+          "name": "prev_veh_id_stack",
+          "count": 1,
+          "array": false,
+          "offset": 50
+        }
+      ]
+    },
+    "UNIT": {
+      "size": 52,
+      "fields": [
+        {
+          "type": "char",
+          "name": "name",
+          "count": 32,
+          "array": true,
+          "offset": 0
+        },
+        {
+          "type": "uint32_t",
+          "name": "ability_flags",
+          "count": 1,
+          "array": false,
+          "offset": 32
+        },
+        {
+          "type": "uint8_t",
+          "name": "chassis_id",
+          "count": 1,
+          "array": false,
+          "offset": 36
+        },
+        {
+          "type": "uint8_t",
+          "name": "weapon_id",
+          "count": 1,
+          "array": false,
+          "offset": 37
+        },
+        {
+          "type": "uint8_t",
+          "name": "armor_id",
+          "count": 1,
+          "array": false,
+          "offset": 38
+        },
+        {
+          "type": "uint8_t",
+          "name": "reactor_id",
+          "count": 1,
+          "array": false,
+          "offset": 39
+        },
+        {
+          "type": "uint8_t",
+          "name": "carry_capacity",
+          "count": 1,
+          "array": false,
+          "offset": 40
+        },
+        {
+          "type": "uint8_t",
+          "name": "cost",
+          "count": 1,
+          "array": false,
+          "offset": 41
+        },
+        {
+          "type": "int8_t",
+          "name": "plan",
+          "count": 1,
+          "array": false,
+          "offset": 42
+        },
+        {
+          "type": "int8_t",
+          "name": "group_id",
+          "count": 1,
+          "array": false,
+          "offset": 43
+        },
+        {
+          "type": "uint8_t",
+          "name": "obsolete_factions",
+          "count": 1,
+          "array": false,
+          "offset": 44
+        },
+        {
+          "type": "uint8_t",
+          "name": "combat_factions",
+          "count": 1,
+          "array": false,
+          "offset": 45
+        },
+        {
+          "type": "int8_t",
+          "name": "icon_offset",
+          "count": 1,
+          "array": false,
+          "offset": 46
+        },
+        {
+          "type": "int8_t",
+          "name": "pad_1",
+          "count": 1,
+          "array": false,
+          "offset": 47
+        },
+        {
+          "type": "uint16_t",
+          "name": "unit_flags",
+          "count": 1,
+          "array": false,
+          "offset": 48
+        },
+        {
+          "type": "int16_t",
+          "name": "preq_tech",
+          "count": 1,
+          "array": false,
+          "offset": 50
+        }
+      ]
+    },
+    "BASE": {
+      "size": 308,
+      "fields": [
+        {
+          "type": "int16_t",
+          "name": "x",
+          "count": 1,
+          "array": false,
+          "offset": 0
+        },
+        {
+          "type": "int16_t",
+          "name": "y",
+          "count": 1,
+          "array": false,
+          "offset": 2
+        },
+        {
+          "type": "int8_t",
+          "name": "faction_id",
+          "count": 1,
+          "array": false,
+          "offset": 4
+        },
+        {
+          "type": "int8_t",
+          "name": "faction_id_former",
+          "count": 1,
+          "array": false,
+          "offset": 5
+        },
+        {
+          "type": "int8_t",
+          "name": "pop_size",
+          "count": 1,
+          "array": false,
+          "offset": 6
+        },
+        {
+          "type": "uint8_t",
+          "name": "assimilation_turns_left",
+          "count": 1,
+          "array": false,
+          "offset": 7
+        },
+        {
+          "type": "uint8_t",
+          "name": "nerve_staple_turns_left",
+          "count": 1,
+          "array": false,
+          "offset": 8
+        },
+        {
+          "type": "uint8_t",
+          "name": "ai_plan_status",
+          "count": 1,
+          "array": false,
+          "offset": 9
+        },
+        {
+          "type": "uint8_t",
+          "name": "visibility",
+          "count": 1,
+          "array": false,
+          "offset": 10
+        },
+        {
+          "type": "int8_t",
+          "name": "factions_pop_size_intel",
+          "count": 8,
+          "array": true,
+          "offset": 11
+        },
+        {
+          "type": "char",
+          "name": "name",
+          "count": 25,
+          "array": true,
+          "offset": 19
+        },
+        {
+          "type": "int16_t",
+          "name": "unk_x",
+          "count": 1,
+          "array": false,
+          "offset": 44
+        },
+        {
+          "type": "int16_t",
+          "name": "unk_y",
+          "count": 1,
+          "array": false,
+          "offset": 46
+        },
+        {
+          "type": "int32_t",
+          "name": "state_flags",
+          "count": 1,
+          "array": false,
+          "offset": 48
+        },
+        {
+          "type": "int32_t",
+          "name": "event_flags",
+          "count": 1,
+          "array": false,
+          "offset": 52
+        },
+        {
+          "type": "int32_t",
+          "name": "governor_flags",
+          "count": 1,
+          "array": false,
+          "offset": 56
+        },
+        {
+          "type": "int32_t",
+          "name": "nutrients_accumulated",
+          "count": 1,
+          "array": false,
+          "offset": 60
+        },
+        {
+          "type": "int32_t",
+          "name": "minerals_accumulated",
+          "count": 1,
+          "array": false,
+          "offset": 64
+        },
+        {
+          "type": "int32_t",
+          "name": "production_id_last",
+          "count": 1,
+          "array": false,
+          "offset": 68
+        },
+        {
+          "type": "int32_t",
+          "name": "eco_damage",
+          "count": 1,
+          "array": false,
+          "offset": 72
+        },
+        {
+          "type": "int32_t",
+          "name": "queue_size",
+          "count": 1,
+          "array": false,
+          "offset": 76
+        },
+        {
+          "type": "int32_t",
+          "name": "queue_items",
+          "count": 10,
+          "array": true,
+          "offset": 80
+        },
+        {
+          "type": "int32_t",
+          "name": "worked_tiles",
+          "count": 1,
+          "array": false,
+          "offset": 120
+        },
+        {
+          "type": "int32_t",
+          "name": "specialist_total",
+          "count": 1,
+          "array": false,
+          "offset": 124
+        },
+        {
+          "type": "int32_t",
+          "name": "specialist_adjust",
+          "count": 1,
+          "array": false,
+          "offset": 128
+        },
+        {
+          "type": "int32_t",
+          "name": "specialist_types",
+          "count": 2,
+          "array": true,
+          "offset": 132
+        },
+        {
+          "type": "uint8_t",
+          "name": "facilities_built",
+          "count": 12,
+          "array": true,
+          "offset": 140
+        },
+        {
+          "type": "int32_t",
+          "name": "mineral_surplus_final",
+          "count": 1,
+          "array": false,
+          "offset": 152
+        },
+        {
+          "type": "int32_t",
+          "name": "minerals_accumulated_2",
+          "count": 1,
+          "array": false,
+          "offset": 156
+        },
+        {
+          "type": "int32_t",
+          "name": "pad_1",
+          "count": 1,
+          "array": false,
+          "offset": 160
+        },
+        {
+          "type": "int32_t",
+          "name": "pad_2",
+          "count": 1,
+          "array": false,
+          "offset": 164
+        },
+        {
+          "type": "int32_t",
+          "name": "pad_3",
+          "count": 1,
+          "array": false,
+          "offset": 168
+        },
+        {
+          "type": "int32_t",
+          "name": "pad_4",
+          "count": 1,
+          "array": false,
+          "offset": 172
+        },
+        {
+          "type": "int32_t",
+          "name": "nutrient_intake",
+          "count": 1,
+          "array": false,
+          "offset": 176
+        },
+        {
+          "type": "int32_t",
+          "name": "mineral_intake",
+          "count": 1,
+          "array": false,
+          "offset": 180
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_intake",
+          "count": 1,
+          "array": false,
+          "offset": 184
+        },
+        {
+          "type": "int32_t",
+          "name": "unused_intake",
+          "count": 1,
+          "array": false,
+          "offset": 188
+        },
+        {
+          "type": "int32_t",
+          "name": "nutrient_intake_2",
+          "count": 1,
+          "array": false,
+          "offset": 192
+        },
+        {
+          "type": "int32_t",
+          "name": "mineral_intake_2",
+          "count": 1,
+          "array": false,
+          "offset": 196
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_intake_2",
+          "count": 1,
+          "array": false,
+          "offset": 200
+        },
+        {
+          "type": "int32_t",
+          "name": "unused_intake_2",
+          "count": 1,
+          "array": false,
+          "offset": 204
+        },
+        {
+          "type": "int32_t",
+          "name": "nutrient_surplus",
+          "count": 1,
+          "array": false,
+          "offset": 208
+        },
+        {
+          "type": "int32_t",
+          "name": "mineral_surplus",
+          "count": 1,
+          "array": false,
+          "offset": 212
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_surplus",
+          "count": 1,
+          "array": false,
+          "offset": 216
+        },
+        {
+          "type": "int32_t",
+          "name": "unused_surplus",
+          "count": 1,
+          "array": false,
+          "offset": 220
+        },
+        {
+          "type": "int32_t",
+          "name": "nutrient_inefficiency",
+          "count": 1,
+          "array": false,
+          "offset": 224
+        },
+        {
+          "type": "int32_t",
+          "name": "mineral_inefficiency",
+          "count": 1,
+          "array": false,
+          "offset": 228
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_inefficiency",
+          "count": 1,
+          "array": false,
+          "offset": 232
+        },
+        {
+          "type": "int32_t",
+          "name": "unused_inefficiency",
+          "count": 1,
+          "array": false,
+          "offset": 236
+        },
+        {
+          "type": "int32_t",
+          "name": "nutrient_consumption",
+          "count": 1,
+          "array": false,
+          "offset": 240
+        },
+        {
+          "type": "int32_t",
+          "name": "mineral_consumption",
+          "count": 1,
+          "array": false,
+          "offset": 244
+        },
+        {
+          "type": "int32_t",
+          "name": "energy_consumption",
+          "count": 1,
+          "array": false,
+          "offset": 248
+        },
+        {
+          "type": "int32_t",
+          "name": "unused_consumption",
+          "count": 1,
+          "array": false,
+          "offset": 252
+        },
+        {
+          "type": "int32_t",
+          "name": "economy_total",
+          "count": 1,
+          "array": false,
+          "offset": 256
+        },
+        {
+          "type": "int32_t",
+          "name": "psych_total",
+          "count": 1,
+          "array": false,
+          "offset": 260
+        },
+        {
+          "type": "int32_t",
+          "name": "labs_total",
+          "count": 1,
+          "array": false,
+          "offset": 264
+        },
+        {
+          "type": "int32_t",
+          "name": "unk_total",
+          "count": 1,
+          "array": false,
+          "offset": 268
+        },
+        {
+          "type": "int16_t",
+          "name": "autoforward_land_base_id",
+          "count": 1,
+          "array": false,
+          "offset": 272
+        },
+        {
+          "type": "int16_t",
+          "name": "autoforward_sea_base_id",
+          "count": 1,
+          "array": false,
+          "offset": 274
+        },
+        {
+          "type": "int16_t",
+          "name": "autoforward_air_base_id",
+          "count": 1,
+          "array": false,
+          "offset": 276
+        },
+        {
+          "type": "int16_t",
+          "name": "pad_5",
+          "count": 1,
+          "array": false,
+          "offset": 278
+        },
+        {
+          "type": "int32_t",
+          "name": "talent_total",
+          "count": 1,
+          "array": false,
+          "offset": 280
+        },
+        {
+          "type": "int32_t",
+          "name": "drone_total",
+          "count": 1,
+          "array": false,
+          "offset": 284
+        },
+        {
+          "type": "int32_t",
+          "name": "superdrone_total",
+          "count": 1,
+          "array": false,
+          "offset": 288
+        },
+        {
+          "type": "int32_t",
+          "name": "random_event_turns",
+          "count": 1,
+          "array": false,
+          "offset": 292
+        },
+        {
+          "type": "int32_t",
+          "name": "nerve_staple_count",
+          "count": 1,
+          "array": false,
+          "offset": 296
+        },
+        {
+          "type": "int8_t",
+          "name": "defend_goal",
+          "count": 1,
+          "array": false,
+          "offset": 300
+        },
+        {
+          "type": "int8_t",
+          "name": "defend_range",
+          "count": 1,
+          "array": false,
+          "offset": 301
+        },
+        {
+          "type": "int8_t",
+          "name": "pad_6",
+          "count": 1,
+          "array": false,
+          "offset": 302
+        },
+        {
+          "type": "int8_t",
+          "name": "pad_7",
+          "count": 1,
+          "array": false,
+          "offset": 303
+        },
+        {
+          "type": "int32_t",
+          "name": "pad_8",
+          "count": 1,
+          "array": false,
+          "offset": 304
+        }
+      ]
+    }
+  }
+}

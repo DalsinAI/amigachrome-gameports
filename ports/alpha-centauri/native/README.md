@@ -460,3 +460,54 @@ harness is not used or replaced with stubs. Actual AmigaOS tests run the final
 OpenAmigaGCC16.2.0-open3 binary, plus file probes of all original maps, against
 independent expected fields/fingerprints. Original media remains private and is
 not distributed with the source.
+
+### Original tutorial/scenario and saved-game decoding
+
+`original_game.cpp/h` reads the original plaintext `TERRAN` outer version0x56,
+with data versions7..12. The recovered `game_data` layout includes legacy/current
+preferences, current-player selection, faction blocks, the embedded map, replay,
+continents, 512 prototypes, counted vehicles/bases, scenario/objective/monument
+blocks, version12 tectonic counters, the saved UI state and the always-written
+tick-seed footer. The footer is preserved; it is **not automatically the gameplay
+RNG seed in ordinary saves**. Encrypted, extra network state and `TERRAE` variants
+are explicitly unsupported. Other versions fail; trailing bytes do not silently
+become accepted state. Counts and spans are bounded before access.
+
+The native record tables derive from the pinned MIT source. Each field is decoded
+explicitly, including signed8/16/32-bit values. Serialized PC data is never cast
+to native structures. Legacy preferences extend 33 project entries to64 with-1;
+legacy bases extend8 facility bytes to12 with0, as in source. Strings preserve
+all wire bytes and gain a terminator. `original_game_wire.json` records the
+source-derived wire schema used by independent Python interpretation. This is a
+**format decoder**, not semantic validation of every game reference: opaque
+faction/other spans require later decoding, and actor coordinates/IDs require
+validation before constructing the owned world.
+
+Raw gameplay IDs remain tagged with their source version. In particular the
+old weapon>=12 to SMAX+3 and old production<=-34 to SMAX-31 migrations are not
+implicitly applied to base-game rules with different component numbering.
+World initialization must select a consistent base/expansion ID space. The
+source's post-load prototype icon corrections, landmark fixup, UI resets and
+other engine callbacks are not pretended to execute. The borrowed input buffer
+must remain alive and unchanged. All failed reads/accessors leave outputs
+unchanged. `read_original_map_block` additionally returns its bounded consumed
+length for embedded maps, preserving both outputs on failure; the standalone
+`.MP` reader still requires exact EOF.
+
+Build the native diagnostic with `CXX=.../m68k-amigaos-g++ sh build_game_probe.sh
+OUTPUT`, then run `OUTPUT ORIGINAL.SC` or `OUTPUT ORIGINAL.SAV`. Portable controls:
+`python3 test_original_game.py --out NEW_DIR` and the independent big-endian
+`--cc m68k-linux-gnu-g++ --m68k-linux` path. The90 synthetic controls include all
+six supported versions, scenario/no-scenario, empty/max actor counts, expanded
+headers with older data, maximum replay, malformed headers/versions/counts/maps,
+block truncations, trailing bytes, signed widths, full strings and unchanged
+outputs. Controls compare all decoded preferences, actor/prototype/base fields,
+map tiles, opaque spans and UI fields against independent byte interpretation.
+
+`ORIGINAL-GAME-EVIDENCE-20261025.json` records the normal SDK AmigaOS build/run:
+all90 synthetic cases and the owner's original Explore, Build and Conquer
+scenarios passed, including every decoded actor field/fingerprint. The existing
+map66-case regression also passes after the embedded-map refactor. No original
+assets are distributed. Loading their data does not yet execute the restored
+tutorials, original turn loop, AI or combat. This work is part of restoring the
+original games; the neutral test scene remains only a test bed.
