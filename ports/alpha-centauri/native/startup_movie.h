@@ -8,7 +8,8 @@ namespace alpha {
  * decoder. Fixed little-endian fields; no native structs are serialized.
  * Header: AMOVYUV1, width,height,frames,rate,channels,samples_per_frame,
  * total_audio_frames,reserved (eight uint32 fields). Each record contains
- * YUV420 planar video then min(samples_per_frame,remaining) stereo S16LE.
+ * YUV420 planar video then min(samples_per_frame,remaining) stereo S16LE;
+ * the final record contains all remaining audio (at most one extra interval).
  * The original 15fps / 22050Hz timing is integral (1470 samples per frame).
  */
 struct StartupMovieInfo {

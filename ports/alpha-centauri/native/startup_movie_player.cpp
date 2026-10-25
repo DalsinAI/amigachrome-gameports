@@ -28,6 +28,15 @@ void sound(void* ptr,Uint8* stream,int bytes){
  for(uint32_t i=0;i<n;++i){out[i*2]=a.ring[a.read*2];out[i*2+1]=a.ring[a.read*2+1];a.read=(a.read+1)%RING;}
  a.available-=n;a.played+=n;if(n<requested && !a.finishing)++a.starves;
 }
+bool read_record(FILE* f,const alpha::StartupMovieInfo& movie,uint32_t frame,uint8_t* target,Audio& state,SDL_AudioDeviceID device){
+ uint32_t samples=alpha::startup_movie_audio_frames(movie,frame);size_t bytes=movie.video_bytes+size_t(samples)*4;
+ if(fread(target,1,bytes,f)!=bytes)return false;
+ SDL_LockAudioDevice(device);
+ if(samples>RING-state.available){SDL_UnlockAudioDevice(device);return false;}
+ const uint8_t* pcm=target+movie.video_bytes;
+ for(uint32_t i=0;i<samples;++i){for(uint32_t c=0;c<2;++c){uint16_t v=uint16_t(pcm[i*4+c*2])|(uint16_t(pcm[i*4+c*2+1])<<8);int32_t signed_value=v<32768?v:int32_t(v)-65536;state.ring[state.write*2+c]=int16_t(signed_value);}state.write=(state.write+1)%RING;}
+ state.available+=samples;if(frame+1==movie.frames)state.finishing=true;SDL_UnlockAudioDevice(device);return true;
+}
 bool interrupted(struct Window* w){struct IntuiMessage* m;bool quit=false;while((m=(struct IntuiMessage*)GetMsg(w->UserPort))){ULONG c=m->Class;UWORD k=m->Code;ReplyMsg((struct Message*)m);if(c==IDCMP_CLOSEWINDOW || (c==IDCMP_VANILLAKEY && (k==13 || k==27 || k=='q' || k=='Q' || k==' ')) || (c==IDCMP_MOUSEBUTTONS && (k==SELECTDOWN || k==MENUDOWN)))quit=true;}return quit;}
 }
 /* Return 0 on completed playback, 5 on user skip, 20 on invalid/unavailable.
@@ -38,32 +47,30 @@ int alpha_startup_movie(const char* path){
  uint8_t header[40];alpha::StartupMovieInfo movie;bool valid=false;
  if(!fseek(f,0,SEEK_END)){long bytes=ftell(f);rewind(f);valid=bytes>=40 && fread(header,1,40,f)==40 && alpha::startup_movie_header(header,40,uint64_t(bytes),movie);}
  if(!valid){fclose(f);puts("STARTUP invalid movie cache");return 20;}
- auto* record=static_cast<uint8_t*>(malloc(movie.max_record_bytes));auto* rgb=static_cast<uint8_t*>(malloc(size_t(movie.width)*movie.height*3));auto* state=static_cast<Audio*>(calloc(1,sizeof(Audio)));
+ auto* record=static_cast<uint8_t*>(malloc(movie.max_record_bytes*4));auto* rgb=static_cast<uint8_t*>(malloc(size_t(movie.width)*movie.height*3));auto* state=static_cast<Audio*>(calloc(1,sizeof(Audio)));
  if(!record || !rgb || !state){free(record);free(rgb);free(state);fclose(f);return 20;}
  IntuitionBase=(struct IntuitionBase*)OpenLibrary((STRPTR)"intuition.library",39);GfxBase=(struct GfxBase*)OpenLibrary((STRPTR)"graphics.library",39);CyberGfxBase=OpenLibrary((STRPTR)"cybergraphics.library",41);
  struct Window* window=nullptr;SDL_AudioDeviceID device=0;int rc=20;uint32_t displayed=0;bool audio_init=false;
  if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(nullptr,WA_Title,(ULONG)"Alpha original startup movie - Esc/Space skips",WA_InnerWidth,movie.width,WA_InnerHeight,movie.height,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS,TAG_DONE);
  if(window && SDL_InitSubSystem(SDL_INIT_AUDIO)==0){audio_init=true;SDL_AudioSpec spec{};spec.freq=22050;spec.format=AUDIO_S16SYS;spec.channels=2;spec.samples=512;spec.callback=sound;spec.userdata=state;device=SDL_OpenAudioDevice(nullptr,0,&spec,nullptr,0);}
  if(device){
-  printf("STARTUP BEGIN width=%lu height=%lu frames=%lu audio=%lu\n",(unsigned long)movie.width,(unsigned long)movie.height,(unsigned long)movie.frames,(unsigned long)movie.audio_frames);
+  printf("STARTUP BEGIN width=%lu height=%lu frames=%lu audio=%lu\n",(unsigned long)movie.width,(unsigned long)movie.height,(unsigned long)movie.frames,(unsigned long)movie.audio_frames);fflush(stdout);
   rc=0;uint32_t start=SDL_GetTicks();bool started=false;
+  uint32_t loaded=0;
+  for(;loaded<movie.frames && loaded<4;++loaded)if(!read_record(f,movie,loaded,record+loaded*movie.max_record_bytes,*state,device)){rc=20;break;}
   for(uint32_t frame=0;frame<movie.frames && !rc;++frame){
-   uint32_t samples=alpha::startup_movie_audio_frames(movie,frame);size_t bytes=movie.video_bytes+size_t(samples)*4;
-   if(fread(record,1,bytes,f)!=bytes || !alpha::startup_movie_rgb(movie,record,movie.video_bytes,rgb,size_t(movie.width)*movie.height*3)){rc=20;break;}
-   SDL_LockAudioDevice(device);
-   if(samples>RING-state->available){SDL_UnlockAudioDevice(device);rc=20;break;}
-   const uint8_t* pcm=record+movie.video_bytes;
-   for(uint32_t i=0;i<samples;++i){for(uint32_t c=0;c<2;++c){uint16_t v=uint16_t(pcm[i*4+c*2])|(uint16_t(pcm[i*4+c*2+1])<<8);int32_t signed_value=v<32768?v:int32_t(v)-65536;state->ring[state->write*2+c]=int16_t(signed_value);}state->write=(state->write+1)%RING;}
-   state->available+=samples;if(frame+1==movie.frames)state->finishing=true;SDL_UnlockAudioDevice(device);
-   if(!started){SDL_PauseAudioDevice(device,0);started=true;}
+   uint8_t* slot=record+(frame%4)*movie.max_record_bytes;
+   if(!alpha::startup_movie_rgb(movie,slot,movie.video_bytes,rgb,size_t(movie.width)*movie.height*3)){rc=20;break;}
    while(!rc){SDL_LockAudioDevice(device);uint32_t played=state->played;SDL_UnlockAudioDevice(device);if(played>=frame*1470)break;if(interrupted(window)){rc=5;break;}if(SDL_GetTicks()-start>movie.frames*1000/15+10000){rc=20;break;}SDL_Delay(1);}
    if(rc)break;
    WritePixelArray(rgb,0,0,movie.width*3,window->RPort,window->BorderLeft,window->BorderTop,movie.width,movie.height,RECTFMT_RGB);++displayed;
-   if(frame==0)printf("STARTUP FIRST FRAME\n");
+   if(!started){start=SDL_GetTicks();SDL_PauseAudioDevice(device,0);started=true;}
+   if(frame==0){printf("STARTUP FIRST FRAME\n");fflush(stdout);}
    if(interrupted(window))rc=5;
+   if(!rc && loaded<movie.frames){if(!read_record(f,movie,loaded,slot,*state,device))rc=20;else ++loaded;}
   }
   while(!rc){SDL_LockAudioDevice(device);bool finished=state->played>=movie.audio_frames;SDL_UnlockAudioDevice(device);if(finished)break;if(interrupted(window)){rc=5;break;}if(SDL_GetTicks()-start>movie.frames*1000/15+10000){rc=20;break;}SDL_Delay(1);}
-  SDL_PauseAudioDevice(device,1);printf("STARTUP END rc=%d displayed=%lu audio_played=%lu starves=%lu elapsed=%lu\n",rc,(unsigned long)displayed,(unsigned long)state->played,(unsigned long)state->starves,(unsigned long)(SDL_GetTicks()-start));
+  SDL_PauseAudioDevice(device,1);printf("STARTUP END rc=%d displayed=%lu audio_played=%lu starves=%lu elapsed=%lu\n",rc,(unsigned long)displayed,(unsigned long)state->played,(unsigned long)state->starves,(unsigned long)(SDL_GetTicks()-start));fflush(stdout);
  }
  if(device)SDL_CloseAudioDevice(device);
  if(audio_init)SDL_QuitSubSystem(SDL_INIT_AUDIO);

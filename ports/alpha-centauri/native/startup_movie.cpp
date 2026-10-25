@@ -27,8 +27,15 @@ bool startup_movie_rgb(const StartupMovieInfo& m,const uint8_t* p,size_t n,uint8
  size_t area=size_t(m.width)*m.height;if(n!=area*3/2 || count!=area*3)return false;
  uintptr_t a=reinterpret_cast<uintptr_t>(p),b=reinterpret_cast<uintptr_t>(out);
  if(a>UINTPTR_MAX-n || b>UINTPTR_MAX-count || (a<b+count && b<a+n))return false;
- for(uint32_t y=0;y<m.height;++y)for(uint32_t x=0;x<m.width;++x){size_t i=size_t(y)*m.width+x,j=size_t(y/2)*(m.width/2)+x/2;int yy=int(p[i])-16,u=int(p[area+j])-128,v=int(p[area+area/4+j])-128;
-  out[i*3]=clamp((298*yy+409*v+128)>>8);out[i*3+1]=clamp((298*yy-100*u-208*v+128)>>8);out[i*3+2]=clamp((298*yy+516*u+128)>>8);
+ int luminance[256];for(unsigned i=0;i<256;++i)luminance[i]=298*(int(i)-16);
+ /* Four neighbouring pixels share chroma. Hoist its arithmetic and avoid
+  * repeated divisions/multiplications in the 68040 inner loop. */
+ for(uint32_t y=0;y<m.height;y+=2)for(uint32_t x=0;x<m.width;x+=2){
+  size_t j=size_t(y/2)*(m.width/2)+x/2;int u=int(p[area+j])-128,v=int(p[area+area/4+j])-128;
+  int red=409*v+128,green=-100*u-208*v+128,blue=516*u+128;
+  for(unsigned dy=0;dy<2;++dy)for(unsigned dx=0;dx<2;++dx){size_t i=size_t(y+dy)*m.width+x+dx;int yy=luminance[p[i]];
+   out[i*3]=clamp((yy+red)>>8);out[i*3+1]=clamp((yy+green)>>8);out[i*3+2]=clamp((yy+blue)>>8);
+  }
  }return true;
 }
 }

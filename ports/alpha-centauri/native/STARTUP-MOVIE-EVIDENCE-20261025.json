@@ -1,0 +1,86 @@
+{
+  "scope": "Original opening recovery and explicit installation cache; native direct TQI decoder absent",
+  "host_controls": {
+    "control": "STARTUP CONTROL cases=22 RC 0",
+    "independent_pixel_values": 49152,
+    "pixel_sha256": "5e8ca408b75830831de1ced4005f98aac3d57d258d007025ad2a8f3f679eb803",
+    "tail_controls": 3
+  },
+  "clips": {
+    "opening": {
+      "source_name": "opening.wve",
+      "source_sha256": "030efbc9edc6121a673d506d82e81b3393c316fdb334cf2eefe82f22ccd3d756",
+      "width": 400,
+      "height": 192,
+      "frames": 2381,
+      "video_seconds": 158.73333333333332,
+      "audio_frames": 3500070,
+      "audio_seconds": 158.73333333333332,
+      "video_yuv420_sha256": "4f126486a3908ce551b392f8c70358ff4b1b89b406ebb7cdac5895d36dcd345f",
+      "audio_s16le_sha256": "ffe0b81e3153bea076232692f84354ed4ab40e591a14259fd8da5c7a631a459c",
+      "cache_bytes": 288291520,
+      "cache_sha256": "e1e0096ffa9e4e2362f6b3cba894ce0408a524c618ff55a57dcd89c9de55c3b1",
+      "private_decoder_tail_normalization": [
+        {
+          "declared": 1470,
+          "padded": 1484
+        }
+      ]
+    },
+    "openingx": {
+      "source_name": "openingx.wve",
+      "source_sha256": "8946b715105f3fa3fa8d9c5cbd5c516e03177ef082b623fa4514fc83a4a0430d",
+      "width": 592,
+      "height": 288,
+      "frames": 1093,
+      "video_seconds": 72.86666666666666,
+      "audio_frames": 1606710,
+      "audio_seconds": 72.86666666666666,
+      "video_yuv420_sha256": "acbe83d3851ecdbed43d762a775316174105b4c429bd2c997140bc9c012c8bd3",
+      "audio_s16le_sha256": "6ddafcddfef78a84f0d69b4d4501e40552f8ffeef94656f857aeeff01e9ca651",
+      "cache_bytes": 285955072,
+      "cache_sha256": "7c56881979d1507ab364c732b7858bd90b96919f8d4ab89a35b297a4b985722a",
+      "private_decoder_tail_normalization": [
+        {
+          "declared": 1470,
+          "padded": 1484
+        }
+      ]
+    }
+  },
+  "native_content_qualification": {
+    "evidence": "native-3",
+    "player_sha256": "ce30f6bdf1b073a9548ac170e86cad663faa4f92d551e7a2823bbdd81d0e0f5e",
+    "base_frames": 2381,
+    "base_audio_frames": 3500070,
+    "base_elapsed_ms": 158952,
+    "base_underruns": 3,
+    "expansion_frames": 1093,
+    "expansion_audio_frames": 1606710,
+    "expansion_elapsed_ms": 74629,
+    "expansion_underruns": 95,
+    "both_rc": 0,
+    "user_skip_rc": 5,
+    "smooth_playback": false,
+    "stopped_and_restored": true
+  },
+  "performance_candidate": {
+    "changes": [
+      "four-frame video read-ahead and audio queue",
+      "2x2 shared-chroma arithmetic, luminance lookup"
+    ],
+    "player_sha256": "59ff0df4cdb0d4d92965f2ae8d285e55d8e5123b3aac22c18efae5b06595d7c8",
+    "host_controls": {
+      "control": "STARTUP CONTROL cases=22 RC 0",
+      "independent_pixel_values": 49152,
+      "pixel_sha256": "5e8ca408b75830831de1ced4005f98aac3d57d258d007025ad2a8f3f679eb803",
+      "tail_controls": 3
+    },
+    "native": "NOT RUN: lab released for queued agents"
+  },
+  "limits": [
+    "Native3 played all original video/audio and normal exit, but underruns prevent smooth-playback claim",
+    "Current read-ahead/conversion optimization awaits native qualification",
+    "Frontend integration not included; no original assets uploaded"
+  ]
+}

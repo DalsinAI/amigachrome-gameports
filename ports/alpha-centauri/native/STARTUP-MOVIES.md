@@ -67,9 +67,17 @@ conversion and preference persistence are not claimed.
   match. A naïve FFmpeg final-audio failure is retained in private evidence.
 - Normal OpenAmigaGCC 16.2.0-open3 SDK builds the native player without toolchain
   overlays or replacement library stubs.
-- Native playback/skip/PCM/normal exit and integration with the frontend are
-  **pending shared-lab allocation**. Independent big-endian controls are wired
-  into CI but must actually run before merge. Compilation is not runtime proof.
+- Actual native content qualification played all 2,381 base frames/3,500,070
+  audio samples and all 1,093 expansion frames/1,606,710 audio samples, both RC0.
+  Actual captured PCM is nonzero and user skip returns RC5. Lab configuration,
+  ROM pair, module and startup were restored after continuous-streamed testing.
+- That initial player incurred three base and 95 expansion callback underruns;
+  **smooth playback is not qualified**. The current four-frame look-ahead and
+  shared-chroma conversion optimization passes the same host oracle and normal
+  SDK build, but needs a new native performance run. The preserved native3
+  source/binary is distinguished from this candidate in the evidence JSON.
+- Frontend integration remains pending. Independent big-endian controls are
+  wired into CI but must actually run before merge. Compilation is not runtime proof.
 
 The public code and tests contain no original assets or proprietary decoder code.
 The public presentation conversion is explicit BT.601 limited-range arithmetic;
