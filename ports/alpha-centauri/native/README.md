@@ -246,3 +246,41 @@ compares every field independently. Synthetic cases include all truncated
 row boundaries, duplicate/unknown keys, byte bounds, unsigned masks, optional
 columns and reactor defaults, including mod-sized64-row tables. Original
 assets remain outside the repository and CI.
+
+
+## Derived predefined prototypes
+
+`derive_predefined_prototype` takes a qualified component/blueprint set, a
+predefined ID0..63 and road rate1..100. It applies pinned make_proto's basic-ID
+path, proto_cost, transport_val, blueprint overrides and speed_proto. It returns
+owned initial cost/capacity, plan, original role code, flags and road-point speed
+with identity/components preserved. The role code remains named as such because
+its full AI semantics are not established. Fungal Tower ID19 is immobile.
+
+Custom designer IDs>=64, prior-prototype history, faction-granted abilities,
+project bonuses, damage and morale are outside this API. The predefined path
+has faction0 for the upstream Cloudbase project query; it is not an arbitrary
+faction's live-unit speed. Disabled prerequisites are retained; constructing a
+stored prototype does not prove that a faction can build it.
+
+`calculate_prototype_cost` is the separate pure pricing operation. Ability bits
+must exist in the selected variant's table, reactor IDs must be1..4. Invalid
+state, signed arithmetic overflow or a derived storage value outside its byte
+range fails without changing output, rather than inheriting wrap/truncation
+from invalid mod values. Explicit blueprint cost/carry overrides apply after
+automatic calculation as in read_units. Predefined plan overrides do not
+recalculate the constructor's role code, matching the pinned source.
+
+```sh
+python3 ports/alpha-centauri/native/test_prototype.py --out /tmp/prototype-host
+python3 ports/alpha-centauri/native/test_prototype.py --out /tmp/prototype-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+Asset-free controls compare2,304 price cases and514 derived cases with pinned
+source bodies in upstream_prototype_reference.h and an independent Python
+checksum. Source adapters use owned globals and reject unexpected faction/
+history callbacks; these are not production callbacks. Six invalid/overflow
+controls verify rejection. `prototype-probe base|expansion FILE` loads original
+rules and prints all initial predefined stats; those originals remain private.
+No movement, combat, complete turn, designer support or gameplay is implied.

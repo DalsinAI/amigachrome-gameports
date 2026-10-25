@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-25",
+  "synthetic": {
+    "cost": 2304,
+    "derived": 514,
+    "invalid": 6,
+    "digest": "6bf7e298"
+  },
+  "stock": {
+    "units": 37,
+    "fields": 592,
+    "costAndRoadRateCases": 185,
+    "digest": "092e1825"
+  },
+  "host": "ASan/UBSan pass; all stock fields and calculations match pinned source adapters and independent Python",
+  "raw68040": "OpenAmigaGCC16.2.0-open3 generated instructions RC0 on all synthetic and stock cases",
+  "binarySHA256": {
+    "control": "1c5f5395baa7bc032aa480159d6789c0452fe76d7efb5115b18a60e8ef25ee06",
+    "probe": "55dede289f52a2aed00467b0100b1d6199375a1a3ad3917e6435173dcbc9e57f"
+  },
+  "sourceSHA256": {
+    "basic_fields.inc": "acce4e5e87f6968abfc5a6450a4bf2b322800413c2637c5115e62b8cecf2b0db",
+    "prototype_probe.cpp": "35df60abe3d44f0d82d2e7c231699efa693b87a5b0767e6c8dcc009a28125859",
+    "logic_control.cpp": "bf6fb08424574715e0b14bef826ea7261e9b0eceaaa10b99fdbb61d4fc10f6f2",
+    "rules_text.h": "2b8bc29677e406b2e61625e05bb6e49b7db8fd0f9bf4ef494ff88714a962c0d8",
+    "game_logic.cpp": "f5a942e7cd911645ad58dac4618524886fe99f438eac271fd936a97a24356f9e",
+    "prototype.cpp": "8b22a1bbdafce001920d97d048a4355fb75f14b70b7915f3fbc51f9f3eea4fe8",
+    "unit_probe.cpp": "1bb924b5cdb452f4d066d3ead0606ef49a99b7d9d24c4699fe643bdb87c0b74d",
+    "social_probe.cpp": "4a32d224636a0f91bee984335d15b4bcc677e71b7cd671a2d6e88be73f70db31",
+    "prototype.h": "3af548f5d51871249782bd0e18afd460122fbb8d466ebae12fe082de1135db22",
+    "prototype_control.cpp": "800af4a4b4fc00427c8e2da807ec37c07d1d25a2cb8f3cfd0680f24c10e3948b",
+    "world_fields.inc": "4af71c22e4392917f036b2729bf07479fcbff5381e31a78a215c5454d48432a2",
+    "upstream_logic_reference.h": "208b8c83fb0b0044bb0da0378ab16d5cf9801040e2dc1c5e0e90c9a31a6e7517",
+    "basic_probe.cpp": "5cb25d4bf23fb94d496b872041b0c9e003f9795bae5f3caf9bff6ccb9db0d12d",
+    "upstream_prototype_reference.h": "5faad77ea4155faccb82332bb5a50981ba0b70d9b80c3c26f28f7dc7731d0c52",
+    "faction_probe.cpp": "def2bd2224b0c23ac70b803c13f972cae7e6362c4e9aed675b0d095a4534100f",
+    "probe_digest.h": "fb4679a81320a63b986f50b8d5d5384d181552dabf2f0373040bcbd32cd74c74",
+    "rules_text.cpp": "f0597815a8d4f92af893af16b2673951ebeea8574a34ca7f5d688616d1e382c6",
+    "rules_probe.cpp": "f124dc742479e94e83b54f9d4ddd72c5d4e73e54be3eebda8df8a5c934d13028",
+    "game_logic.h": "641a0277340f1ccf487b97a48370ecc75b440e40f4978535b5ca00b4fb9ccb35"
+  },
+  "limits": [
+    "Predefined IDs0..63 only; custom designer history and faction extras unsupported",
+    "No movement, combat, full turns or gameplay",
+    "Source adapters reject unexpected faction-history callbacks rather than claim to execute original x86",
+    "Strict unknown ability and arithmetic/storage overflow errors; no wrapping invalid mod values",
+    "Original assets/private validation arrays excluded from repository",
+    "No original-executable differential fidelity"
+  ],
+  "nativeAmigaOS": {
+    "baseRC": 0,
+    "expansionRC": 0,
+    "controlRC": 0,
+    "stockFields": 592,
+    "stockCalculationCases": 185,
+    "stockDigest": "092e1825",
+    "syntheticDigest": "6bf7e298",
+    "allMatch": true,
+    "labStopped": true,
+    "ROMModuleStartupUnchanged": true,
+    "ROMHashes": {
+      "aros-amiga-m68k-ext.bin": "52a01954c7c425dd712ae89eecbe75b5cf6277f47082b5bc07ff0697ed295136",
+      "openkick-rom4.rom": "c0013cbb0b66292ffb78d7e454bceb2960c84b95c35aea293780893d40ec6a07"
+    },
+    "logSHA256": "b59644f935b723f91307f43ecfdd4e94c31a6152c271ff86a070ebef83aec0eb",
+    "scope": "Actual AmigaOS probe/control in restored isolated lab, no live changes or gameplay claim"
+  },
+  "rawCompilerSupport": "Normal corrected SDK libnix plus compiler-provided libgcc64-bit division helpers; no private replacement implementations"
+}
