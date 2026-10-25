@@ -750,7 +750,8 @@ alpha-original-view base alpha.txt Explore.SC texture.pcx Units.pcx
 Place the required original faction PCXs in the current directory with lowercase
 names, such as `gaians.pcx` and `spartans.pcx`. Missing required assets fail
 explicitly. WASD scrolls, Tab selects the next actual unit, C centres it, B
-centres the first base, minus/equal selects zoom1/2, and Q exits normally.
+cycles/centres bases, I opens the selected base snapshot, ESC closes it,
+minus/equal selects zoom1/2, and Q exits normally.
 This is a read-only rendering checkpoint, not a complete playable game.
 
 `test_pcx_image.py --out NEW_DIR` runs23 synthetic image/malformed-input controls
@@ -826,3 +827,32 @@ and its original inputs restored.
 This is a reader qualification. Original transforms, material/lighting and
 chassis/weapon/armour/reactor assembly still require restoration and validation.
 It does not turn the original-world viewer into a restored campaign.
+
+
+### Saved-turn console and base information
+
+The original-world viewer now requires original `console.pcx` (800x257),
+`arialn.ttf` and `ALPHC___.TTF` in addition to its original world/faction art.
+The normal build scripts link SDK SDL2_ttf/SDL2. `original_ui_text.cpp` renders
+original font glyphs into explicit RGB pixels, replacing palette-pen assumptions
+for the information areas. The frontend's existing menu and audio remain active
+while the child viewer runs.
+
+The original console frame contains the actual selected unit/owner, selected
+base population, stored nutrients/minerals, saved surpluses and production name
+when its current unit design is known. Facility names remain unavailable until
+the corresponding reader is restored. A navigation thumbnail uses the actual
+saved map with colours sampled from loaded terrain. Clicking it changes only
+the camera. Clicking a base or pressing I opens its read-only details; B cycles
+bases and ESC closes the details. All displayed accounting is a saved-turn
+snapshot, not new-turn economic computation. Production and turn orders remain
+unavailable.
+
+The frame/fonts are original assets; the HUD labels, layout, thumbnail and base
+details wiring are new restoration UI, not the original recovered screen code.
+`HUD-EVIDENCE-20261025.json` records actual AmigaOS controls and checks both
+original base snapshots against an independent raw save interpretation, including
+legacy field offsets. A separate menu integration run checked fonts, nonzero
+music output during the child view, return, requester cancellation and RC0.
+Both tests continuously streamed the display, preserved the original scenario,
+and stopped/restored the private lab. No live instance or ROM was changed.

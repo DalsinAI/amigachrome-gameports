@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-25",
+  "scope": "New read-only saved-turn HUD/base information using original console art and fonts; not restored original HUD logic or playable turns",
+  "native": {
+    "standaloneBinarySHA256": "3e758b350fc33a17cadadfcffa1facb1648ca8dbe69a4dbbcebe88a6e4ceee22",
+    "frontendBinarySHA256": "b7aaa7d4f3fd5f119df4f68871b365d1a7365a5a3c56be481cd8298d0975f707",
+    "normalExitRC": 0,
+    "scenario": "Original base Explore.SC",
+    "bases": [
+      {
+        "nutrients": 2,
+        "minerals": 22,
+        "nutrient_intake": 6,
+        "mineral_intake": 3,
+        "energy_intake": 2,
+        "nutrient_surplus": 2,
+        "mineral_surplus": 3,
+        "energy_surplus": 2,
+        "index": 0,
+        "name": "Sparta Command",
+        "pop": 2
+      },
+      {
+        "nutrients": 1,
+        "minerals": 0,
+        "nutrient_intake": 3,
+        "mineral_intake": 1,
+        "energy_intake": 2,
+        "nutrient_surplus": 1,
+        "mineral_surplus": 1,
+        "energy_surplus": 2,
+        "index": 1,
+        "name": "Gaia's High Garden",
+        "pop": 1
+      }
+    ],
+    "baseReference": "Independent version-aware raw save decode; legacy BASE fields following facilities shift four bytes relative to current layout",
+    "controls": [
+      "I opens selected base snapshot",
+      "B cycles bases and centres map",
+      "ESC closes snapshot",
+      "TAB selects original unit",
+      "Minimap click navigates actual map",
+      "Q normal exit",
+      "Original menu launches HUD/base view and returns",
+      "Menu music continues with nonzero muted PCM while child HUD is active",
+      "Requester Cancel restores menu focus"
+    ],
+    "standaloneFrames": 78,
+    "integrationFrames": 215,
+    "mapAudio": {
+      "bytes": 515908,
+      "chunks": 28,
+      "nonzero": 254480,
+      "peak": 1172
+    },
+    "logsSHA256": {
+      "standalone": "3873be02a2b663996f66b98a780d3a7bcba0d63fe000eed29fae998b73113b2b",
+      "menuIntegration": "85f46d62b92c78122cd5ad50f7d8583d9dd201dcd249504e6965cae9f56def10"
+    },
+    "originalScenarioUnchanged": true
+  },
+  "sourceSHA256": {
+    "original_ui_text.h": "c37f6cbd8a6911b2c6e40e275c23dac5c871a8e376d1e23d407142559217d38b",
+    "original_ui_text.cpp": "50b807f5521ec4302b4439c8e79d0d2f84c3ba377b4f52534283b4d0b3b01580",
+    "original_map_window.cpp": "4f20c0ee04af829caf90bef4abddbec65bf65510eb34f43aaf4c5a0b860453ec",
+    "build_original_map_window.sh": "726b24847ebd1d14f6a06616f70991be733b5e600cb4a7d606ceb85b0a4d5ef0",
+    "build_original_frontend.sh": "662141e4d42640ce276babc8bc9380cb7046022eca3b960ced2c01b6c44c2c22"
+  },
+  "consoleSHA256": "5f2ab093fd882d8e43bbdaac5e771376ba2740ed78352bcd4c022f2693fc095a",
+  "screenshotsSHA256": {
+    "original-hud-next-unit.png": "d4c8dd5780215ef66cc01f441f3c57b9d73f968522ffa4d0883acd6c1a5297d5",
+    "original-console-hud.png": "347cef060d95584ac3a309e22442558b002461566d3be0ce82a1adb5c505108b",
+    "original-base-snapshot-second.png": "efe20a6d4ce39a4008afd0006e60e5d137a0747728e543742870cb4cbeb44b0f",
+    "original-hud-minimap-navigation.png": "f04049e64614343716b6f21c4a4081ce4913e3d939152af04a0c499de6b2513c",
+    "original-base-snapshot-first.png": "d64ad8cb5e8759284dd869701a63e7739d097f0338319666a0549a5094b7f212"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "limits": [
+    "Read-only decoded saved-turn fields; values are not recomputed for a new turn",
+    "New HUD wiring, layout and navigation; original frame/font assets do not imply restored original HUD/base-screen code",
+    "No production orders, worker edits, research/diplomacy UI, unit actions or End Turn execution",
+    "Minimap colours/projection are a navigation presentation of original map data, not original renderer fidelity",
+    "Human CVR model renderer remains a separate unqualified diagnostic with known colour/layering defects; not integrated here",
+    "Base English original tutorial qualified; no full Alien Crossfire campaign/complete localization claim",
+    "Original game assets and captured screens stay private; no ROM/live instance changes"
+  ]
+}
