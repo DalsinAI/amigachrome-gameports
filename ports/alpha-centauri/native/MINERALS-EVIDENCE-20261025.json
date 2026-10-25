@@ -26,7 +26,9 @@
     },
     "rc": 0,
     "fullGameExecution": false,
-    "limits": "Bounded numeric helper with seeded explicit globals; no PE startup/imports, original world upkeep or full economy execution"
+    "limits": "Bounded numeric helper with seeded explicit globals; no PE startup/imports, original world upkeep or full economy execution",
+    "edition": "Owner GOG Alien Crossfire terranx.exe",
+    "inputSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf"
   },
   "native": {
     "status": "Normal SDK build only; actual AmigaOS execution UNRUN",
@@ -38,6 +40,7 @@
     "Original incoming convoy amplification, Nanoreplicator OR Singularity ecological reduction, and pre-Space-Elevator final surplus intentionally preserved",
     "Recovered-source unsigned temporaries corrected to original signed instructions; human atrocity and tectonic penalties divided separately as original instructions do",
     "No production completion, support/yield generation, base upkeep, ecology events, turn advancement, AI or savewriter",
-    "No proprietary executable bytes, decompile text or owner assets included; only private bounded helper executed, not original PE startup/imports/full game"
+    "No proprietary executable bytes, decompile text or owner assets included; only private bounded helper executed, not original PE startup/imports/full game",
+    "Private original helper comparison uses the exact owner Alien Crossfire executable; no corresponding original Alpha Centauri executable helper comparison claimed"
   ]
 }
