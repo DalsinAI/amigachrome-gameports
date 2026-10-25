@@ -1003,3 +1003,35 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+
+### Restricted owned-world step integration (draft, not exposed to input)
+
+`WorldActions::clear_land_step` joins the qualified speed, edge-price, movement
+budget and transactional stack-storage paths. It changes owned runtime vehicle
+coordinates, stack/tile occupancy, movement expenditure, moved flag and facing
+only after all guards succeed. Original wire bytes remain the baseline snapshot;
+this is not a save writer or replacement for original `order_veh`.
+
+Supported input is deliberately limited to ordinary base-game human land units,
+no special/granted abilities or standing orders, fully seen local terrain,
+cleared non-ocean destinations, and no nearby foreign units/bases or territory.
+Pod encounters (including source-derived generated pods), fungus, monoliths,
+contact/combat/ZOC, wake/transport states, fractional attempts and expansion
+mechanics are deferred. FREEABIL checks cover both vehicle and design owners.
+No discovery/event callbacks, upkeep, artificial next turn or fake AI is added.
+
+`test_world_actions.py` builds synthetic original containers and checks 45
+supported/rejected boundary cases, including full decoded-state no-write checks
+on rejection, runtime RNG preservation, untouched wire bytes and successful
+stack validation. Host address/undefined sanitizers pass. A private copied-data
+probe resets the baseline for each of 160 original tutorial edges and supports
+45 steps (Explore2/Build15/conquer28); all original source files remain unchanged.
+This is an integration control, not a full original executable differential.
+The normal SDK probe compiles, but actual AmigaOS and independent big-endian
+qualification remain pending. Do not expose this draft API to player input yet.
+
+```
+python3 ports/alpha-centauri/native/test_world_actions.py --out /tmp/world-actions-host
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_world_actions_probe.sh /tmp/world-actions-probe
+```
