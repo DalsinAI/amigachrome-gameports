@@ -18,7 +18,15 @@
     "normalRecipeBuildPassed": true,
     "controlSHA256": "e3e3e72c0ebd2f6755e14a2ee9d67bbc79bc576b715bce89c3bed7386b702755",
     "probeSHA256": "5cd98b18148b04e66ecb06ecc30ea645dc3d4244ca7749c17c3718c28e29f3d1",
-    "nativeExecution": "pending"
+    "nativeExecution": "passed",
+    "nativeSourceFlowCases": 18432,
+    "nativeInvalidNoWriteCases": 20,
+    "nativeOriginalTutorialRelocations": 498,
+    "nativeControlExit": 0,
+    "nativeOriginalProbeExits": [0, 0, 0],
+    "privateEvidence": "alpha-startup-control/native-3/native-amiga.log",
+    "qualifiedInputHashesVerified": true,
+    "isolatedLabRestoredAndStopped": true
   },
   "independentBigEndianCI": "pending",
   "limitations": [

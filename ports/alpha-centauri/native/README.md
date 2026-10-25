@@ -998,5 +998,8 @@ Controls compare 18,432 relocations against a separate recovered-source-flow
 reference and reject 20 malformed/no-write cases. The original-file probe works
 on copied decoded tutorial records, leaving the imported world and original
 file unchanged. Host sanitizers pass all three owner's tutorials (498 storage
-relocation controls); normal SDK builds pass. Native AmigaOS execution and
-independent big-endian CI are still pending, so this stage is not yet qualified.
+relocation controls); normal SDK builds pass. Actual normal-SDK AmigaOS
+execution passes those same 18,432/20 controls and all 498 original-tutorial
+relocations with RC0. The isolated lab is stopped and restored. Independent
+big-endian CI remains required before merge; evidence is recorded in
+`STACK-EVIDENCE-20261025.json`.
