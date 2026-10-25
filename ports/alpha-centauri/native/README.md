@@ -1059,3 +1059,35 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+
+### Movement snapshot buffer encoder (draft)
+
+`encode_movement_snapshot` preserves the complete owned original plain SC/SAV
+container and every opaque byte, while encoding runtime tile and vehicle records
+with explicit little-endian fields. It validates stack topology and references
+before the first output write. Unsupported changes to prototypes, bases, faction
+state/definitions, preferences, map metadata or UI state cause rejection; the
+encoder cannot silently save their stale original copies. Output and receipt
+remain unchanged on errors, including short/aliased buffers and invalid stacks.
+
+This is a bounded movement-container encoder, not an in-game save command,
+filesystem transaction, original executable save-compatibility proof or complete
+campaign persistence. It does not create/replace player files or assume SDK
+`O_EXCL` works. The probe writes only caller-selected test evidence files. The
+original tick footer is preserved and never substituted for runtime RNG; the
+current explicit RNG seed is returned separately in the receipt for the caller
+to retain using a separately qualified persistence format. No struct dump or
+custom single-scout codec is used. Player-facing save/load remains unavailable.
+
+Host ASan/UBSan checks pass 86 synthetic cases over wire versions7..12, including
+byte-exact unchanged output, independently computed storage edits, reload, and
+transactional rejection. An additional39 private original-tutorial cases pass
+(125 total), with source data untouched. The normal SDK probe compiles, but
+actual AmigaOS and independent big-endian qualification are pending. Do not
+expose this draft encoder to user save operations before those gates pass.
+
+```
+python3 ports/alpha-centauri/native/test_movement_snapshot.py --out /tmp/movement-snapshot-host
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_movement_snapshot.sh /tmp/movement-snapshot-probe
+```
