@@ -1,0 +1,31 @@
+{
+  "problem": "111NutrientResult collides with existinggame_logic.h type injointTU; privateSessionintegration compilefailure recorded beforeexecution",
+  "fix": "Rename ONLY new result toBaseNutrientResult; retainexistingNutrientResult API; rawprobe nowincludes bothheaders permanently",
+  "productionTypeRenameOnlyVerified": [
+    "base_nutrients.h",
+    "base_nutrients.cpp",
+    "world_fresh_nutrients.h"
+  ],
+  "oldGameLogicFilesByteIdentical": true,
+  "workflowByteIdenticalTo111": true,
+  "hostAndIndependent68040": {
+    "rawCases": 2630,
+    "accepted": 1286,
+    "invalid": 4,
+    "overflow": 1340,
+    "originalAcceptedComparisonsPerEdition": 1284,
+    "rawOutputSHA256": "7cb022162137032173e52bfb08aeaefc9a3fa3c0f08a9c731efcdfa55db2c080",
+    "privateWorlds": 158,
+    "worldAccepted": 146,
+    "worldRejected": 12,
+    "worldOutputSHA256": "eb610877dee1716a1ed8e4580f27b9f5272f614da29f647365f54fb2f88f0c8d",
+    "wholeWorldInputsAndWireUnchanged": true
+  },
+  "normalSDK": {
+    "rawSHA256": "978b24853589bf487de5d87ba6be534c00f89712dff868f86966027c6d085c3e",
+    "worldSHA256": "6644fe3dfcb92c71408dd54be5da7a95f909862121fa8ea2003729d758b9ff5c",
+    "freshRebuildsByteIdentical": true,
+    "actualAmigaOS": "UNRUN"
+  },
+  "qualification": "New artifact; original111binary qualification is not transferred. Prior NUTRIENT-EVIDENCE remains historical. Final-head requiredCI pending; nativeheld."
+}
