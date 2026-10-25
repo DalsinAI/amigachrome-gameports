@@ -1,0 +1,17 @@
+{
+  "scope": "Floating model/camera-to-viewport projection; shadow branch excluded; NOT wired into map renderer",
+  "status": "HOST CONTROLS PASS / NATIVE AND BIG-ENDIAN EXECUTION UNRUN",
+  "cases": 256,
+  "floats": 3840,
+  "integers": 1536,
+  "originalInstructions": "Privately executed unchanged original6396a0 plus matrix/vector/floor/ftol; owned synthetic caller structures; no renderer substitutes/imports/full game",
+  "outputSHA256": "329536ce0e3e9dfc3d5de912724048bcdf7fb9bdd0237a8b74ab7af63e2c7471",
+  "hostComparison": "Every output exact original and independent Python",
+  "invalidTransactionalControls": 25,
+  "identityControl": 1,
+  "nativeBuilds": {
+    "projection-native-final": "db4343031cfdbd448513134e4c67f7ace4a38fb6f013bbaef445d715c4cf03e9",
+    "projection-control-native-final": "28ad483f3a02fc77a36da7a9fec49edef3cd2fc9a5f6833a916ce43d53953b1f"
+  },
+  "privateOriginalDataUploaded": false
+}
