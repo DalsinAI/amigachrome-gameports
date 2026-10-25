@@ -1068,3 +1068,7 @@ implied, and actual AmigaOS qualification remains pending.
 Pure original facility availability over explicit facts is described in
 [FACILITY-AVAILABILITY.md](FACILITY-AVAILABILITY.md). It is separate from placing
 production orders or advancing the game; native execution remains held.
+
+[WORLD-FACILITY-OPTIONS.md](WORLD-FACILITY-OPTIONS.md) binds those predicates to
+actual saved bases/factions/projects/technology and neighbouring map tiles. This
+read-only query grants no production-order authority; native execution is held.

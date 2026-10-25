@@ -96,6 +96,10 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_unit_stats.py --out "$RUNNER_TEMP/world-unit-stats-host"
       - name: Big-endian owned-world unit dependency controls
         run: python3 ports/alpha-centauri/native/test_world_unit_stats.py --out "$RUNNER_TEMP/world-unit-stats-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned world facility options
+        run: python3 ports/alpha-centauri/native/test_world_facility_options.py --out "$RUNNER_TEMP/world-facility-host"
+      - name: Big-endian owned world facility options
+        run: python3 ports/alpha-centauri/native/test_world_facility_options.py --out "$RUNNER_TEMP/world-facility-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host original facility availability
         run: python3 ports/alpha-centauri/native/test_facility_availability.py --out "$RUNNER_TEMP/facility-availability-host"
       - name: Big-endian original facility availability
