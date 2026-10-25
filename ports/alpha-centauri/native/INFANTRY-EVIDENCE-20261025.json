@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-25",
+  "scope": "Static base-human basic-infantry assembly profile integrated into original world viewer, plus original UI Arial face selection",
+  "sourceFacts": {
+    "originalGOGEngineSHA1": "4b19c1fe3266b5ebc4305cd182ed6e864e3a1c4a",
+    "assembly": "VI frame0 + Viptr00 frame0; both component root offsets(-400,0,0); no extra weapon or armor for this profile",
+    "camera": "Recovered flat tilt/facing/scale; viewer tile scale and tile-foot anchor are new presentation wiring",
+    "font": "Original Font_init requests Arial; status logical10 at800px or12 otherwise; datalink has12/14/18 roles; SDL_ttf pixel metrics are not identical"
+  },
+  "publicControls": {
+    "syntheticCompositionCases": 9,
+    "facingZoomDraws": 64,
+    "invalidInputs": 28,
+    "transactionalFailures": 5,
+    "transparentCacheControls": 4,
+    "host": "ASan/UBSan passed",
+    "independent68040": "Final-head CI must pass; not inferred from native SDK build"
+  },
+  "native": {
+    "compiler": "OpenAmigaGCC16.2.0-open3 normal private SDK",
+    "probeSHA256": "17b14d63ba2f6a963e6d176cf86f1391015f1d259a3000d726f003b06dedd2b8",
+    "controlSHA256": "3960127ce406f79cdbf14ff262c7daff052b202e8eac5999eafdc1b8f20ba452",
+    "originalModelFacingZoomCases": 16,
+    "originalRGBOutputsMatchHost": true,
+    "originalPPMBytes": 786447,
+    "originalPPMSHA256": "69db6486b02dca21a1d0c262880e0f42d31df1c898789aaff693a6be33595bcf",
+    "syntheticCompositionCLI": 9,
+    "inWorld": "Original Explore.SC unit0 facing2; both zooms; next-unit selection; Q return and frontend RC0",
+    "font": "Owner Arial12/Arial-Bold14 path selected",
+    "activeDisplayFrames": 102,
+    "labStopped": true,
+    "configROMModuleStartupRestored": true,
+    "initialFrontendSHA256": "fe7750c82229d8e66de36951bb3d7141520ab0b6ba7a66174d66a08a36b9ec8c"
+  },
+  "memory": "At most100,000 profile voxels; lazy transparent facing/zoom caches below3MiB",
+  "limits": [
+    "Base-format only; non-alien chassis0/weapon0/armor0/reactor1/no raw design abilities",
+    "Only frame0; no full animation or alternate/faction/ability assembly",
+    "Tile-foot anchor is our presentation wiring; full original viewport/shadow/whole-scene pixel fidelity not claimed",
+    "Original global indexed palette remapping is not executed; each component retains its raw model palette",
+    "No rover substitution; unsupported models remain explicitly labelled",
+    "Original map UI remains read-only; terrain/coast and gameplay gaps remain",
+    "Exact Win32 GDI font metrics/hinting are not claimed; old font fallback remains when owner Arial files absent"
+  ],
+  "privateEvidence": "work/alpha-infantry-map-control/native-1; original assets, screenshots and proprietary source/bytes not uploaded",
+  "finalFrontendQualification": {
+    "frontendSHA256": "53abc79718acd8bc5363a15354ef552c57fd1e5156758b8e323a13818b827bb5",
+    "sourceCodeHead": "f7356b688dc21495d6c5ac16166ed3ca09902907",
+    "nativeProof": "work/alpha-startup-control/combined-native-1",
+    "scenes": [
+      "original Explore",
+      "private River flag copy",
+      "private Forest flag copy"
+    ],
+    "font": "Owner Arial12/Arial-Bold14 selected",
+    "returnAndExitRC": 0,
+    "originalScenarioUnchanged": true,
+    "labStoppedAndRestoredBeforeSeparateUserWatch": true
+  },
+  "mainIntegration": {
+    "main": "1c4420c5e2f8b0beb35840ebd18b60f6c82bc652",
+    "buildScriptAndAllLinkedSourcesUnchanged": true,
+    "existingNativeHeadersUnchanged": 38,
+    "rebuiltFrontendByteIdenticalToNativeProof": true,
+    "frontendSHA256": "53abc79718acd8bc5363a15354ef552c57fd1e5156758b8e323a13818b827bb5",
+    "allPriorWorkflowCommandsRetained": true,
+    "workflowCommands": 57,
+    "noLabAccessDuringHostOnlyIntegration": true
+  }
+}
