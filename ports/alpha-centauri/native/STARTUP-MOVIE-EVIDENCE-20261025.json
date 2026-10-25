@@ -66,21 +66,66 @@
   },
   "performance_candidate": {
     "changes": [
-      "four-frame video read-ahead and audio queue",
-      "2x2 shared-chroma arithmetic, luminance lookup"
+      "four-frame read-ahead",
+      "2x2 shared-chroma arithmetic and luminance table"
     ],
-    "player_sha256": "59ff0df4cdb0d4d92965f2ae8d285e55d8e5123b3aac22c18efae5b06595d7c8",
+    "qualified_combined_frontend_sha256": "ec483a9f4215adefedc9df2341aba25c71d4dc45d5eed87260373c7580d38286",
     "host_controls": {
       "control": "STARTUP CONTROL cases=22 RC 0",
       "independent_pixel_values": 49152,
       "pixel_sha256": "5e8ca408b75830831de1ced4005f98aac3d57d258d007025ad2a8f3f679eb803",
       "tail_controls": 3
     },
-    "native": "NOT RUN: lab released for queued agents"
+    "native_bounded": {
+      "base": {
+        "displayed_frames": 200,
+        "audio_frames": 292864,
+        "elapsed_ms": 13459,
+        "underruns": 0,
+        "max_video_late_samples": 510
+      },
+      "alien_crossfire": {
+        "displayed_frames": 185,
+        "audio_frames": 271872,
+        "elapsed_ms": 12432,
+        "underruns": 0,
+        "max_video_late_samples": 688
+      },
+      "muted_skip": {
+        "displayed_frames": 16,
+        "audio_frames": 23040,
+        "elapsed_ms": 1116,
+        "underruns": 0,
+        "max_video_late_samples": 842
+      },
+      "scope": "First12-14seconds plus user skip, not full optimized-player playback qualification"
+    },
+    "native_conversion_benchmark": {
+      "alternating_rounds": 4,
+      "frames_per_round_per_version": 20,
+      "old_seconds": 0.834,
+      "candidate_seconds": 0.746,
+      "ratio": 1.118,
+      "identical_rgb": true
+    },
+    "full_length_native_smoothness": "NOT YET QUALIFIED"
   },
   "limits": [
-    "Native3 played all original video/audio and normal exit, but underruns prevent smooth-playback claim",
-    "Current read-ahead/conversion optimization awaits native qualification",
-    "Frontend integration not included; no original assets uploaded"
-  ]
+    "Initial full movies played every original frame and sample, but had documented underruns",
+    "Optimized frontend qualifies first12-14seconds and skips with zero observed underruns; full-length optimized playback remains unrun",
+    "Combined native artifact includes separately reviewed graphicsPR83, sourceheadexplicitabove",
+    "No original assets uploaded; direct native TQI decoder absent"
+  ],
+  "frontend_integration": {
+    "action": "Play original intro [V], selected base or expansion",
+    "linked_graphics_head": "f7356b688dc21495d6c5ac16166ed3ca09902907",
+    "linked_startup_head": "889155f641d644b3e6bb45660e458f032bc1e433",
+    "technology_profiles": "Actual base and expansion voice PCM nonzero",
+    "movie_profiles": "Actual movie PCM nonzero for both profiles",
+    "audio_handoff": "Menu resumes nonzero; muted return exactlyzeroPCM",
+    "input": "Both selected profiles, skip, parentfocus and normalfrontendRC0",
+    "native_core": "22boundedcontrols,49152independentRGBbytes,invalidRC20",
+    "frames_streamed": 515,
+    "lab_stopped_and_config_rom_module_startup_restored": true
+  }
 }

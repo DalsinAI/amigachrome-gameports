@@ -72,18 +72,24 @@ conversion and preference persistence are not claimed.
   audio samples and all 1,093 expansion frames/1,606,710 audio samples, both RC0.
   Actual captured PCM is nonzero and user skip returns RC5. Lab configuration,
   ROM pair, module and startup were restored after continuous-streamed testing.
-- That initial player incurred three base and 95 expansion callback underruns;
-  **smooth playback is not qualified**. The current four-frame look-ahead and
-  shared-chroma conversion optimization passes the same host oracle and normal
-  SDK build, but needs a new native performance run. The preserved native3
-  source/binary is distinguished from this candidate in the evidence JSON.
+- That initial player incurred three base and 95 expansion callback underruns.
+  The optimized combined frontend now passes bounded native playback of 200
+  base frames (13.459 seconds) and 185 expansion frames (12.432 seconds), plus
+  another muted-menu skip. All three runs have zero callback underruns and
+  maximum measured video lateness below 39 milliseconds against the audio clock.
+  The actual native conversion benchmark is 1.118× faster with identical RGB.
+  **Full-length optimized smooth playback remains unqualified**. The preserved
+  native3 source/binary and bounded combined artifact are distinguished in the
+  evidence JSON; a short successful clip is not a complete movie proof.
 - The frontend now has an explicit **Play original intro [V]** action for the
   selected base/expansion profile. It releases the menu audio device, calls the
   corresponding `opening.amov`/`openingx.amov`, restores the original menu cursor
   and enabled/muted preference, reactivates the parent window, and keeps the
-  read-only campaign limitation visible. This is an interactive restoration
-  preview, not automatic original startup/preference persistence. Its integration
-  still needs actual native qualification.
+  read-only campaign limitation visible. The actual combined native frontend
+  passes both profiles, actual technology/movie PCM, skip, parent focus, menu
+  music resumption, exactly silent muted return, and normal RC0 exit. This is an
+  interactive restoration preview, not automatic original startup/preference
+  persistence or a complete playable campaign.
 - Independent big-endian controls actually passed on PR84 head `1a35544`,
   alongside all other required checks; changes after that head require their
   own final validation before merge. Compilation is not runtime proof.
