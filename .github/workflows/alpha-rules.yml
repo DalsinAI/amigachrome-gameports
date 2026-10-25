@@ -208,3 +208,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_fresh_nutrients.py --out "$RUNNER_TEMP/world-fresh-nutrients-host"
       - name: Big-endian fresh owned nutrient composition controls
         run: python3 ports/alpha-centauri/native/test_world_fresh_nutrients.py --out "$RUNNER_TEMP/world-fresh-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned convoy-derived nutrient composition
+        run: python3 ports/alpha-centauri/native/test_world_convoy_nutrients.py --out "$RUNNER_TEMP/world-convoy-nutrients-host"
+      - name: Big-endian owned convoy-derived nutrient composition
+        run: python3 ports/alpha-centauri/native/test_world_convoy_nutrients.py --out "$RUNNER_TEMP/world-convoy-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
