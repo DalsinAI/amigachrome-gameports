@@ -10,6 +10,7 @@
 #define AC_ALPHA_UPSTREAM_WORLD_MOVEMENT_REFERENCE_H
 #include "world_movement_price.h"
 #include "upstream_saved_speed_reference.h"
+#include "upstream_world_stats_reference.h"
 #include <stdlib.h>
 namespace world_movement_reference {
 using BOOL=bool;
@@ -31,7 +32,17 @@ static uint32_t rocky_at(uint32_t x,uint32_t y){const auto* t=tile(x,y);return t
 static bool is_ocean(uint32_t x,uint32_t y){return altitude_at(x,y)<0x60;}
 static int get_proto_triad(int id){return definitions->chassis[VehPrototypes[id].chassis_id].triad;}
 static int get_proto_offense_rating(int id){return definitions->weapons[VehPrototypes[id].weapon_id].offense;}
-static bool has_abil(int id,uint32_t flag){return (VehPrototypes[id].ability_flags&flag)!=0;}
+static bool has_abil(int id,uint32_t flag){
+ if(flag!=0x400u && flag!=0x800000u){unexpected=true;return false;}
+ if(VehPrototypes[id].ability_flags&flag)return true;
+ const unsigned owner=(unsigned)id/64;if(!owner)return false;
+ const auto* f=world->faction_definition(owner);if(!f || f->faction_bonus_count<0 || f->faction_bonus_count>8){unexpected=true;return false;}
+ for(int i=0;i<f->faction_bonus_count;++i)if(f->faction_bonus_id[i]==15){
+  int a=f->faction_bonus_val1[i];if(a<0 || (unsigned)a>=definitions->ability_count){unexpected=true;return false;}
+  if(world_stats_reference::has_tech(definitions->abilities[a].prerequisite,owner) && (flag&(1u<<a)))return true;
+ }
+ return false;
+}
 static bool has_project(int project,int faction){
  if(project!=8 || faction<0 || faction>=8){unexpected=true;return false;}
  int b=world->game().preferences.SecretProjects[project];if(b<0)return false;
@@ -103,14 +114,16 @@ int __cdecl hex_cost(int proto_id, int faction_id, uint32_t x_src, uint32_t y_sr
     return cost;
 }
 #undef __cdecl
-static void setup(const alpha::OriginalWorld& w,const alpha::UnitDefinitions& d,size_t index,int road){
- world=&w;definitions=&d;unexpected=false;basic.move_rate_roads=road;
+static void setup(const alpha::OriginalWorld& w,const alpha::UnitDefinitions& d,const alpha::Rules& tech,size_t index,int road){
+ world=&w;definitions=&d;unexpected=false;world_stats_reference::setup(w,d,tech,index);basic.move_rate_roads=road;
  for(unsigned i=0;i<512;++i)VehPrototypes[i]=*w.prototype(i);
  for(unsigned i=0;i<8;++i)PlayersData[i].soc_effect_active.planet=w.faction(i)->SE_planet;
  BSC_SEALURK=d.weapon_count==26?14:-999;BSC_SPORE_LAUNCHER=d.weapon_count==26?15:-999;
  const auto& v=*w.vehicle(index);alpha::SavedSpeedContext ctx{false,false,true,0};
  // hex_cost calls speed_proto only on land; the air/sea projects cannot affect it.
- saved_speed_reference::setup(d,*w.prototype((size_t)v.unit_id),v,road,ctx);
+ alpha::OriginalPrototype effective=*w.prototype((size_t)v.unit_id);
+ if(get_proto_triad(v.unit_id)==0){if(has_abil(v.unit_id,0x400))effective.ability_flags|=0x400;if(has_abil(v.unit_id,0x800000))effective.ability_flags|=0x800000;}
+ saved_speed_reference::setup(d,effective,v,road,ctx);
 }
 }
 #endif

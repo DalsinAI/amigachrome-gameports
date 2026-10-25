@@ -26,6 +26,21 @@ def original_model(rules,data,variant):
   ch=p[36];weapon=p[37];triad=int(table[f'chassis.{ch}.triad']);offense=int(table[f'weapons.{weapon}.offense']);plan=struct.unpack_from('<b',p,42)[0];abilities=struct.unpack_from('<I',p,32)[0]
   xeno=baseid>=0 and s['bases'][baseid*bs+4]==faction
   planet=scalar(s['factions'][faction*fs:(faction+1)*fs],schema,'SE_planet')
+  if triad==0 and unit>=64:
+   owner=unit//64;definition=s['faction_definitions'][owner*0x59c:(owner+1)*0x59c]
+   count=scalar(definition,SCHEMA['MFaction'],'faction_bonus_count');assert 0<=count<=8
+   techrows=sections(rules)['TECHNOLOGY'];keys={r[1].lower():n for n,r in enumerate(techrows)};keys.update(none=-1,disable=-2)
+   shift=0 if version>=11 else 0x7c
+   def known(tech):
+    if tech==-1:return True
+    if not(0<=tech<88):return False
+    a,b=keys[techrows[tech][6].lower()],keys[techrows[tech][7].lower()]
+    return a!=-2 and not(b==-2 and a!=-1) and bool(pf[0x1e0-shift+tech]&(1<<owner))
+   for slot in range(count):
+    if scalar(definition,SCHEMA['MFaction'],'faction_bonus_id',slot)!=15:continue
+    a=scalar(definition,SCHEMA['MFaction'],'faction_bonus_val1',slot);assert 0<=a<(24 if version<11 else 29)
+    bit=1<<a
+    if bit&0x800400 and known(int(table[f'abilities.{a}.prerequisite'])):abilities|=bit
   speed=calculate([int(version>=11),unit,ch,weapon,p[39],abilities,plan,road,0,8,0],table)[0]
   fa,_,fi=tile(x,y)
   for edge,(dx,dy) in enumerate(OFFSETS):
@@ -77,12 +92,12 @@ def controls():
          ('predefined-psi-fungus',63,12,3,0x60,0x20,0,0,False),
          ('mindworm-fungus',8,12,3,0x60,0x20,0,0,False),
          ('spore-profile',15,0,3,0x60,0x20,0,0,False),
-         ('former-fungus',320,12,9,0x60,0x20,0,1,False),
-         ('artifact-fungus',320,0,12,0x60,0x20,0,1,False),
+         ('former-fungus',320,12,9,0x60,0x20,0,3,False),
+         ('artifact-fungus',320,0,12,0x60,0x20,0,3,False),
          ('xeno-fungus',320,0,3,0x60,0x20,0,0,True),
-         ('sea-fungus',320,0,3,0x40,0x20,0,3,False),
-         ('isle-sea',9,12,3,0x40,0x20,0,3,False),
-         ('sealurk-profile',14,0,3,0x40,0x20,0,3,False),
+         ('sea-fungus',320,0,3,0x40,0x20,0,1,False),
+         ('isle-sea',9,12,3,0x40,0x20,0,1,False),
+         ('sealurk-profile',14,0,3,0x40,0x20,0,1,False),
          ('raw-rock-both-bits',320,0,3,0x60,0,0xc0,0,False),
          ('rock-forest',320,0,3,0x60,0x200000,0x80,0,False),
          ('unknown-items',320,0,3,0x60,0x80000000,0,0,False),
@@ -103,7 +118,24 @@ def controls():
   b=bytearray(world_fixture(version,0));_,o,_=decode(b);b[o['prototypes']+320*52+37]=255
   result.append((variant+'-bad-component',variant,rules_fixture(variant),bytes(b),False))
   result.append((variant+'-wrong-profile',variant,rules_fixture(variant),world_fixture(12 if version==7 else 7,0),False))
- return result
+ # Unused fields in the generic wire fixture are arbitrary bytes. Explicitly
+ # initialise the owned definitions before exercising ability callbacks.
+ cleaned=[]
+ bonus_schema=SCHEMA['MFaction'];countoff=next(f for f in bonus_schema['fields'] if f['name']=='faction_bonus_count')['offset']
+ valoff=next(f for f in bonus_schema['fields'] if f['name']=='faction_bonus_val1')['offset']
+ for name,variant,rules,data,valid in result:
+  b=bytearray(data);_,o,_=decode(b)
+  for faction in range(8):struct.pack_into('<i',b,o['faction_definitions']+faction*0x59c+countoff,0)
+  cleaned.append((name,variant,rules,bytes(b),valid))
+ for variant in ['base','expansion']:
+  # Grants use DESIGN owner5; vehicle owner6 is deliberately different.
+  template=next(c for c in cleaned if c[0]==variant+'-former-fungus')
+  for kind,ability,known_,owner in [('antigrav-known',10,True,5),('antigrav-locked',10,False,5),('antigrav-wrong-owner',10,True,6),('slow-known',23,True,5),('slow-locked',23,False,5),('bad-count',10,True,5),('bad-ability',99,True,5)]:
+   b=bytearray(template[3]);_,o,_=decode(b);pref=o['preferences'] if variant=='expansion' else o['legacy'];shift=0 if variant=='expansion' else 0x7c
+   b[o['vehicles']+14]=6;b[pref+0x1e0-shift]=(1<<owner) if known_ else 0
+   definition=o['faction_definitions']+5*0x59c;struct.pack_into('<iii',b,definition+countoff,9 if kind=='bad-count' else 1,15,0);struct.pack_into('<i',b,definition+valoff,ability)
+   cleaned.append((variant+'-free-'+kind,variant,template[2],bytes(b),not kind.startswith('bad-')))
+ return cleaned
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',required=True,type=Path);ap.add_argument('--cc',default='c++');ap.add_argument('--m68k-linux',action='store_true');a=ap.parse_args()

@@ -5,11 +5,12 @@
 #include "terrain_price.h"
 namespace alpha {
 /* Price one adjacent original-map edge for a saved unit/design. Uses actual
- * faction Planet and Xenoempathy ownership. Pure price, not an action gate.
+ * faction Planet and Xenoempathy ownership, plus design-owner Antigrav/Slow
+ * FREEABIL prerequisites. Pure price, not an action gate.
  * Requires matched original base/expansion component IDs and bounded project
  * references. Output remains unchanged on any failure.
  */
-LogicError world_movement_price(const OriginalWorld& world,const UnitDefinitions& definitions,
+LogicError world_movement_price(const OriginalWorld& world,const UnitDefinitions& definitions,const Rules& technologies,
  size_t vehicle,int32_t road_rate,int32_t x_to,int32_t y_to,bool ignore_rough,uint32_t& output);
 }
 #endif

@@ -29,14 +29,14 @@ int main(int argc,char** argv){
  uint32_t h=2166136261u,cases=0,rejected=0;
  for(size_t i=0;i<w.game().vehicle_count;++i){
   const auto& v=*w.vehicle(i);
-  world_movement_reference::setup(w,definitions,i,basic.move_rate_roads);
+  world_movement_reference::setup(w,definitions,technologies,i,basic.move_rate_roads);
   for(unsigned edge=0;edge<8;++edge){
    int32_t x=v.x+ox[edge],y=v.y+oy[edge];
    if(alpha::movement_wrap_x(geometry,x,x)!=alpha::LogicError::ok)return 21;
    size_t index;if(alpha::movement_tile_index(geometry,x,y,index)!=alpha::LogicError::ok)continue;
    const bool self=x==v.x && y==v.y;
    for(unsigned rough=0;rough<2;++rough){
-    uint32_t price=123;auto result=alpha::world_movement_price(w,definitions,i,basic.move_rate_roads,x,y,rough!=0,price);
+    uint32_t price=123;auto result=alpha::world_movement_price(w,definitions,technologies,i,basic.move_rate_roads,x,y,rough!=0,price);
     if(self){if(result!=alpha::LogicError::bad_state || price!=123)return 21;++rejected;continue;}
     if(result!=alpha::LogicError::ok){if(price!=123)return 21;printf("ERROR price=%d unit=%lu\n",(int)result,(unsigned long)i);return 20;}
     uint32_t source=world_movement_reference::hex_cost(v.unit_id,v.faction_id,v.x,v.y,x,y,rough!=0);
@@ -46,10 +46,10 @@ int main(int argc,char** argv){
   }
  }
  uint32_t sentinel=123;
- if(alpha::world_movement_price(w,definitions,w.game().vehicle_count,basic.move_rate_roads,0,0,false,sentinel)!=alpha::LogicError::bad_state || sentinel!=123)return 21;
+ if(alpha::world_movement_price(w,definitions,technologies,w.game().vehicle_count,basic.move_rate_roads,0,0,false,sentinel)!=alpha::LogicError::bad_state || sentinel!=123)return 21;
  if(w.game().vehicle_count){const auto& v=*w.vehicle(0);
-  if(alpha::world_movement_price(w,definitions,0,basic.move_rate_roads,v.x,v.y,false,sentinel)!=alpha::LogicError::bad_state || sentinel!=123 ||
-     alpha::world_movement_price(w,definitions,0,0,v.x,v.y,false,sentinel)!=alpha::LogicError::bad_state || sentinel!=123)return 21;
+  if(alpha::world_movement_price(w,definitions,technologies,0,basic.move_rate_roads,v.x,v.y,false,sentinel)!=alpha::LogicError::bad_state || sentinel!=123 ||
+     alpha::world_movement_price(w,definitions,technologies,0,0,v.x,v.y,false,sentinel)!=alpha::LogicError::bad_state || sentinel!=123)return 21;
  }
  printf("version=%lu vehicles=%lu prices=%lu rejected=%lu digest=%08lx rc=0\n",(unsigned long)w.game().data_version,(unsigned long)w.game().vehicle_count,(unsigned long)cases,(unsigned long)rejected,(unsigned long)h);return 0;
 }

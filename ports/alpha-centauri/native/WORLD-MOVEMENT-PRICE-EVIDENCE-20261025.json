@@ -2,19 +2,19 @@
   "date": "2026-10-25",
   "source": "OpenSMACX veh.cpp::hex_cost and speed_proto; pin2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c",
   "host": {
-    "syntheticCases": 234,
+    "syntheticCases": 248,
     "sanitizers": "ASan/UBSan",
     "sourceReference": true,
     "independentRawFilePython": true
   },
   "native": {
-    "cases": 237,
-    "prices": 25488,
+    "cases": 251,
+    "prices": 25588,
     "passed": true,
     "originalTutorials": 3,
-    "probeSHA256": "e9d7852b84e7e56583eb777098f090117688faa1b69a8512d34bf59771746aa5",
-    "frames": 88,
-    "logSHA256": "b016cdbc3c19cc58274ae40ece7072b031045ef364ab13a2cd99e58f0b37f05e",
+    "probeSHA256": "c3e39a1a426b96fffafb464e672a2ba5a185a24a0d18693e315990d0ac2c0b87",
+    "frames": 86,
+    "logSHA256": "07849a83b609046c94e14844c659697701a40b286380086401bf22c55a1ad189",
     "validRC": 0,
     "invalidRC": 20
   },
@@ -55,16 +55,16 @@
   ],
   "sourceSHA256": {
     "movement.cpp": "d3ed302763d58d39d619d9bc20e3598d7b412ba1b6bc82911c2dec3e19e66bc8",
-    "upstream_world_movement_reference.h": "ee65e95d664be1a78ea6ae9e79f4ce01917139e03414e9a5c39743f69ca99645",
-    "world_movement_price_probe.cpp": "1447bffcb945a177d5c2c239bd67fc66d40d3ca60ce27b3d522fd05cbd87a63e",
+    "upstream_world_movement_reference.h": "8e1f1f5a757079c1d6f2f9f8ba56bf7d3022f93116ea8d0221c05113ed022ffe",
+    "world_movement_price_probe.cpp": "05a2e786b986d2a27564a60200cdb11b3e27f1866729e7cce801298e424dce98",
     "build_world_movement_price_probe.sh": "25b1ad64444debe4b78683f3d0544e74b38162625a8df0a342c6b03b3ccaf542",
-    "test_world_movement_price.py": "b9ca98d9ee0b51c682cb0459cb1822d56669a21464b84401d51bb4fc2b46cc9c",
+    "test_world_movement_price.py": "ca277e68f6de88557a93eb3e42f127e84e84d593239568fd59bd619046470b5e",
     "test_movement.py": "78545d0a536947d453d0eab6175d521617b4a90fb8a85b5f8399c32c57c41689",
     "movement_control.cpp": "454e4ec2830a9c0d52e5dad6ab6798fab252af7ba717860ee2a1bad108ca5a82",
     "movement.h": "a4cfb478355727cddff1078df9fa260e715823f19021641c22da35b90162144f",
     "upstream_movement_reference.h": "334e864f4cb111bec6f1f34c7c690cc3010ab2fd9f4d78480cdb792bd2e94ca3",
-    "world_movement_price.h": "341e2d2e28db3f22fa15a365f3aa5d99d9844f3304eaf2434c63cfc04712592d",
-    "world_movement_price.cpp": "1aa0058b4237330633659e12cbbf8e1ececd39a45a30a7f6dc746df1ea3b16d3",
+    "world_movement_price.h": "27ff7f5dc8d928597c928030f23eaceb7129d63fc1b3a1449fc20bbe676dff64",
+    "world_movement_price.cpp": "3ea9270fc0997bd19cdad2f0b421412014723ed1d28e059ebd35007497a91ef6",
     "terrain_price.h": "d7c2d6eb4d14e1f8193312fee2abaf29fd49ca04a3f6b161b6f6120bfb7b405f"
   },
   "privateTestROM": {
