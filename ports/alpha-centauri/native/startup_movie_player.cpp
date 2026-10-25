@@ -50,7 +50,7 @@ int alpha_startup_movie(const char* path){
  auto* record=static_cast<uint8_t*>(malloc(movie.max_record_bytes*4));auto* rgb=static_cast<uint8_t*>(malloc(size_t(movie.width)*movie.height*3));auto* state=static_cast<Audio*>(calloc(1,sizeof(Audio)));
  if(!record || !rgb || !state){free(record);free(rgb);free(state);fclose(f);return 20;}
  IntuitionBase=(struct IntuitionBase*)OpenLibrary((STRPTR)"intuition.library",39);GfxBase=(struct GfxBase*)OpenLibrary((STRPTR)"graphics.library",39);CyberGfxBase=OpenLibrary((STRPTR)"cybergraphics.library",41);
- struct Window* window=nullptr;SDL_AudioDeviceID device=0;int rc=20;uint32_t displayed=0;bool audio_init=false;
+ struct Window* window=nullptr;SDL_AudioDeviceID device=0;int rc=20;uint32_t displayed=0,max_video_late=0;bool audio_init=false;
  if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(nullptr,WA_Title,(ULONG)"Alpha original startup movie - Esc/Space skips",WA_InnerWidth,movie.width,WA_InnerHeight,movie.height,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS,TAG_DONE);
  if(window && SDL_InitSubSystem(SDL_INIT_AUDIO)==0){audio_init=true;SDL_AudioSpec spec{};spec.freq=22050;spec.format=AUDIO_S16SYS;spec.channels=2;spec.samples=512;spec.callback=sound;spec.userdata=state;device=SDL_OpenAudioDevice(nullptr,0,&spec,nullptr,0);}
  if(device){
@@ -64,13 +64,15 @@ int alpha_startup_movie(const char* path){
    while(!rc){SDL_LockAudioDevice(device);uint32_t played=state->played;SDL_UnlockAudioDevice(device);if(played>=frame*1470)break;if(interrupted(window)){rc=5;break;}if(SDL_GetTicks()-start>movie.frames*1000/15+10000){rc=20;break;}SDL_Delay(1);}
    if(rc)break;
    WritePixelArray(rgb,0,0,movie.width*3,window->RPort,window->BorderLeft,window->BorderTop,movie.width,movie.height,RECTFMT_RGB);++displayed;
+   SDL_LockAudioDevice(device);uint32_t presented=state->played;SDL_UnlockAudioDevice(device);
+   if(presented>frame*1470 && presented-frame*1470>max_video_late)max_video_late=presented-frame*1470;
    if(!started){start=SDL_GetTicks();SDL_PauseAudioDevice(device,0);started=true;}
    if(frame==0){printf("STARTUP FIRST FRAME\n");fflush(stdout);}
    if(interrupted(window))rc=5;
    if(!rc && loaded<movie.frames){if(!read_record(f,movie,loaded,slot,*state,device))rc=20;else ++loaded;}
   }
   while(!rc){SDL_LockAudioDevice(device);bool finished=state->played>=movie.audio_frames;SDL_UnlockAudioDevice(device);if(finished)break;if(interrupted(window)){rc=5;break;}if(SDL_GetTicks()-start>movie.frames*1000/15+10000){rc=20;break;}SDL_Delay(1);}
-  SDL_PauseAudioDevice(device,1);printf("STARTUP END rc=%d displayed=%lu audio_played=%lu starves=%lu elapsed=%lu\n",rc,(unsigned long)displayed,(unsigned long)state->played,(unsigned long)state->starves,(unsigned long)(SDL_GetTicks()-start));fflush(stdout);
+  SDL_PauseAudioDevice(device,1);printf("STARTUP END rc=%d displayed=%lu audio_played=%lu starves=%lu elapsed=%lu max_video_late_samples=%lu\n",rc,(unsigned long)displayed,(unsigned long)state->played,(unsigned long)state->starves,(unsigned long)(SDL_GetTicks()-start),(unsigned long)max_video_late);fflush(stdout);
  }
  if(device)SDL_CloseAudioDevice(device);
  if(audio_init)SDL_QuitSubSystem(SDL_INIT_AUDIO);
