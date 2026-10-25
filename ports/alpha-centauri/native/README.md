@@ -1,13 +1,14 @@
 # Alpha Centauri native rules-reader prototype
 
 A bounded first implementation for separate Alpha Centauri and Alien Crossfire
-ports. It reads **only the TECHNOLOGY section**, with 89 records, case-insensitive
+ports. It reads **TECHNOLOGY, RULES and WORLDBUILDER**. Technology has 89 records, case-insensitive
 keys, None/Disable sentinels, priorities, binary flags and resolved forward
 prerequisites. It is not a game engine or launcher.
 
 Derived from Brendan Casey's [OpenSMACX](https://github.com/b-casey/OpenSMACX),
 revision `2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c`:
-`text.cpp` token interface and `alpha.cpp::read_tech` two-pass key resolution.
+`text.cpp` token interface, `alpha.cpp::read_tech` two-pass key resolution and
+`alpha.cpp::read_basic_rules` field order and bounds.
 GPL-3.0-or-later; original licence retained in LICENSE. This is an adaptation,
 not an unmodified upstream build. The caller owns the input and Rules state.
 There are no Windows headers, fixed game addresses, original DLL calls, packed
@@ -45,6 +46,41 @@ isolated lab (RC 0), and rejects a duplicate-key file with RC 20. The lab was
 stopped; its ROM/module/startup were unchanged. No live-instance execution or
 full-game qualification is claimed. The CI Linux ABI is not an AmigaOS ABI qualification.
 
-The full rules, faction reader, gameplay algorithms, original-game differential
+The remaining rules sections, faction reader, gameplay algorithms, original-game differential
 checks, UI/audio, saves and launchable game separation remain future work.
 Neither GPL source licensing nor this prototype conveys rights to game assets.
+
+## Basic and world-generation parameters
+
+`read_basic_rules` takes an explicit `Variant::base` or `Variant::alien_crossfire`
+and an already parsed technology table from the same input. The base game's
+RULES section ends two rows earlier: its subspace-generator fields are zero and
+must not be used. Choosing the wrong variant fails instead of consuming a
+section header or ignoring expansion-only rows. Both outputs require Error::ok.
+
+The 77 named basic fields (including two expansion-only fields) and 31 named
+world parameters use explicit signed 32-bit storage. They are not packed game
+memory or a save format. Input numeric values clamp to OpenSMACX's bounds;
+technology references resolve to table indices, None (-1) or Disable (-2).
+Unknown references, missing/extra rows, missing grouped values and trailing
+fields fail. The two `.inc` lists expose the reviewed file order, bounds and
+row grouping; the parser and diagnostic dump use those lists.
+
+This follows **OpenSMACX's patched behavior**, including retool strictness up to
+3 and Boolean minima of 0. It does not prove those choices identical to every
+original executable revision. Base-file support is a native adaptation because
+the pinned upstream reader targets the expansion process.
+
+```sh
+python3 ports/alpha-centauri/native/test_basic.py --out /tmp/basic-host
+python3 ports/alpha-centauri/native/test_basic.py --out /tmp/basic-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+The synthetic fixture is asset-free and records expected named fields separately
+from the implementation. Controls check all fields, every truncated row boundary,
+short groups, wrong variants, malformed/overflowing numbers, clamping, unknown
+keys and input bounds. The diagnostic CLI `basic-probe base|expansion FILE`
+prints every named field so local original files can be compared to a separate
+reference. World parameters are only inputs: **no world generator, faction
+behavior, combat, production or turn processing runs yet**.

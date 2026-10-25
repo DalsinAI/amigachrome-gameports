@@ -1,0 +1,423 @@
+{
+  "provenance": "Synthetic values and expected named fields transcribed from OpenSMACX read_basic_rules at 2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c; no original game assets.",
+  "rules_rows": [
+    [
+      "-12"
+    ],
+    [
+      "-11"
+    ],
+    [
+      "-10",
+      "-9"
+    ],
+    [
+      "-8"
+    ],
+    [
+      "-7"
+    ],
+    [
+      "-6"
+    ],
+    [
+      "-5"
+    ],
+    [
+      "-4"
+    ],
+    [
+      "-3"
+    ],
+    [
+      "-2"
+    ],
+    [
+      "-1"
+    ],
+    [
+      "0"
+    ],
+    [
+      "1"
+    ],
+    [
+      "2"
+    ],
+    [
+      "3"
+    ],
+    [
+      "4"
+    ],
+    [
+      "5"
+    ],
+    [
+      "6",
+      "7"
+    ],
+    [
+      "8",
+      "9"
+    ],
+    [
+      "10",
+      "11"
+    ],
+    [
+      "12"
+    ],
+    [
+      "13"
+    ],
+    [
+      "14"
+    ],
+    [
+      "15"
+    ],
+    [
+      "16"
+    ],
+    [
+      "17"
+    ],
+    [
+      "18"
+    ],
+    [
+      "19"
+    ],
+    [
+      "20"
+    ],
+    [
+      "21"
+    ],
+    [
+      "22"
+    ],
+    [
+      "23"
+    ],
+    [
+      "24"
+    ],
+    [
+      "25"
+    ],
+    [
+      "26"
+    ],
+    [
+      "27"
+    ],
+    [
+      "28"
+    ],
+    [
+      "29"
+    ],
+    [
+      "30"
+    ],
+    [
+      "31"
+    ],
+    [
+      "32"
+    ],
+    [
+      "33"
+    ],
+    [
+      "34"
+    ],
+    [
+      "35"
+    ],
+    [
+      "36"
+    ],
+    [
+      "37"
+    ],
+    [
+      "38"
+    ],
+    [
+      "39"
+    ],
+    [
+      "40"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "T88"
+    ],
+    [
+      "51"
+    ],
+    [
+      "52"
+    ],
+    [
+      "53"
+    ],
+    [
+      "54"
+    ],
+    [
+      "55"
+    ],
+    [
+      "56"
+    ],
+    [
+      "57",
+      "58"
+    ],
+    [
+      "59"
+    ],
+    [
+      "60"
+    ],
+    [
+      "61"
+    ],
+    [
+      "62"
+    ],
+    [
+      "63"
+    ],
+    [
+      "64"
+    ]
+  ],
+  "world_rows": [
+    [
+      "65"
+    ],
+    [
+      "66"
+    ],
+    [
+      "67"
+    ],
+    [
+      "68"
+    ],
+    [
+      "69"
+    ],
+    [
+      "70"
+    ],
+    [
+      "71"
+    ],
+    [
+      "72"
+    ],
+    [
+      "73"
+    ],
+    [
+      "74"
+    ],
+    [
+      "75"
+    ],
+    [
+      "76"
+    ],
+    [
+      "77"
+    ],
+    [
+      "78"
+    ],
+    [
+      "79"
+    ],
+    [
+      "80"
+    ],
+    [
+      "81"
+    ],
+    [
+      "82"
+    ],
+    [
+      "83"
+    ],
+    [
+      "84"
+    ],
+    [
+      "85"
+    ],
+    [
+      "86"
+    ],
+    [
+      "87"
+    ],
+    [
+      "88"
+    ],
+    [
+      "89"
+    ],
+    [
+      "90",
+      "91",
+      "92",
+      "93",
+      "94"
+    ],
+    [
+      "95"
+    ]
+  ],
+  "expected": {
+    "basic.move_rate_roads": 1,
+    "basic.nutrient_req_citizen": 0,
+    "basic.artillery_dmg_num": 1,
+    "basic.artillery_dmg_denom": 1,
+    "basic.artillery_max_rng": 1,
+    "basic.max_airdrop_sans_orb_insert": 1,
+    "basic.nutrient_cost_multi": 1,
+    "basic.mineral_cost_multi": 1,
+    "basic.tech_discovery_rate_pct_std": 0,
+    "basic.limit_mineral_mine_sans_road": 0,
+    "basic.tgl_nutrient_effect_with_mine": -1,
+    "basic.min_base_size_specialists": 0,
+    "basic.drones_genejack_factory": 0,
+    "basic.pop_limit_sans_hab_complex": 1,
+    "basic.pop_limit_sans_hab_dome": 2,
+    "basic.extra_pct_cost_proto_land": 3,
+    "basic.extra_pct_cost_proto_sea": 4,
+    "basic.extra_pct_cost_proto_air": 5,
+    "basic.psi_combat_ratio_atk_land": 6,
+    "basic.psi_combat_ratio_def_land": 7,
+    "basic.psi_combat_ratio_atk_sea": 8,
+    "basic.psi_combat_ratio_def_sea": 9,
+    "basic.psi_combat_ratio_atk_air": 10,
+    "basic.psi_combat_ratio_def_air": 11,
+    "basic.player_start_energy_reserve": 12,
+    "basic.combat_pct_base_def": 13,
+    "basic.combat_pct_atk_road": 14,
+    "basic.combat_pct_atk_higher_elev": 15,
+    "basic.combat_pen_pct_atk_lwr_elev": 16,
+    "basic.combat_pct_mobile_open_ground": 17,
+    "basic.combat_pct_def_vs_mobile_rough": 18,
+    "basic.combat_pct_infantry_vs_base": 19,
+    "basic.combat_pen_pct_atk_airdrop": 20,
+    "basic.combat_pct_fanatic_atk_bonus": 21,
+    "basic.combat_pct_land_gun_vs_ship_art": 22,
+    "basic.combat_pct_art_bonus_lvl_alt": 23,
+    "basic.combat_pct_trance_def_vs_psi": 24,
+    "basic.combat_pct_emp_song_atk_vs_psi": 25,
+    "basic.combat_pen_pct_air_supr_vs_grnd": 26,
+    "basic.combat_pct_air_supr_vs_air": 27,
+    "basic.combat_pen_pct_non_cbt_def_vs_cbt": 28,
+    "basic.combat_pct_com_jam_def_vs_mobl": 29,
+    "basic.combat_pct_bonus_vs_ship_port": 30,
+    "basic.combat_pct_aaa_bonus_vs_air": 31,
+    "basic.combat_pct_def_range_sensor": 32,
+    "basic.combat_pct_psi_atk_bonus_planet": 33,
+    "basic.retool_pct_pen_prod_chg": 34,
+    "basic.retool_strictness": 3,
+    "basic.retool_exemption": 36,
+    "basic.min_turns_councils": 37,
+    "basic.minerals_harvesting_forest": 38,
+    "basic.territory_max_dist_base": 39,
+    "basic.turns_corner_gbl_energy_mrkt": 40,
+    "basic.tech_improve_fungus_sqr": 88,
+    "basic.tech_ease_fungus_movement": 88,
+    "basic.tech_build_roads_fungus": 88,
+    "basic.tech_two_spec_abilities": 88,
+    "basic.tech_three_nutrients_sqr": 88,
+    "basic.tech_three_minerals_sqr": 88,
+    "basic.tech_three_energy_sqr": 88,
+    "basic.tech_orb_insert_sans_spc_elev": 88,
+    "basic.tech_mining_platform_bonus": 88,
+    "basic.tech_economic_victory": 88,
+    "basic.tgl_probe_can_steal_tech": 1,
+    "basic.tgl_human_always_contact_net": 1,
+    "basic.tgl_humans_always_contact_pbem": 1,
+    "basic.max_pct_dmg_art_vs_unit_base_bnkr": 54,
+    "basic.max_pct_dmg_art_vs_units_open": 55,
+    "basic.max_pct_dmg_art_vs_units_sea": 56,
+    "basic.freq_global_warming_num": 57,
+    "basic.freq_global_warming_denom": 58,
+    "basic.normal_starting_year": 59,
+    "basic.normal_end_year_low_three_diff": 60,
+    "basic.normal_end_year_high_three_diff": 61,
+    "basic.tgl_oblit_base_atrocity": 1,
+    "basic.size_base_subspace_gen": 63,
+    "basic.subspace_generators_needed": 64,
+    "world.land_base": 65,
+    "world.land_mod": 66,
+    "world.continent_base": 67,
+    "world.continent_mod": 68,
+    "world.hills_base": 69,
+    "world.hills_mod": 70,
+    "world.plateau_base": 71,
+    "world.plateau_mod": 72,
+    "world.rivers_base": 73,
+    "world.rivers_rain_mod": 74,
+    "world.solar_energy": 64,
+    "world.thermal_band": 64,
+    "world.thermal_deviance": 64,
+    "world.global_warming": 64,
+    "world.sea_level_rises": 79,
+    "world.cloudmass_peaks": 20,
+    "world.cloudmass_hills": 20,
+    "world.rainfall_coeff": 8,
+    "world.deep_water": 83,
+    "world.shelf": 84,
+    "world.plains": 85,
+    "world.beach": 86,
+    "world.hills": 87,
+    "world.peaks": 88,
+    "world.fungus": 5,
+    "world.cont_size_ratio1": 90,
+    "world.cont_size_ratio2": 91,
+    "world.cont_size_ratio3": 92,
+    "world.cont_size_ratio4": 93,
+    "world.cont_size_ratio5": 94,
+    "world.islands": 95
+  }
+}

@@ -145,6 +145,95 @@ Error read_technologies(const uint8_t* bytes, size_t length, Rules& out) {
   }
   return Error::ok;
 }
+/* A new input row cannot discard unconsumed tokens from the previous row.
+ * Reaching another section early is a structural error, never a numeric zero.
+ */
+class RuleInput {
+ public:
+  explicit RuleInput(Text& text) : text_(text), pending_(false), error_(Error::ok) {}
+  bool row() {
+    if (!end_row()) return false;
+    if (!data_line(text_)) {
+      error_ = text_.error() == Error::ok ? Error::bad_row : text_.error();
+      return false;
+    }
+    if (text_.line()[0] == '#') { error_ = Error::bad_row; return false; }
+    pending_ = true;
+    return true;
+  }
+  bool numeric(int32_t& value, int32_t low, int32_t high) {
+    char token[128];
+    if (!text_.item(token, sizeof(token)) || !number(token, value)) {
+      error_ = Error::bad_number; return false;
+    }
+    value = value < low ? low : value > high ? high : value;
+    return true;
+  }
+  bool technology(int32_t& value, const Rules& rules) {
+    if (!row()) return false;
+    char token[8];
+    if (!text_.item(token, sizeof(token)) || !*token) { error_ = Error::bad_key; return false; }
+    if (equal(token, "None")) { value = -1; return true; }
+    if (equal(token, "Disable")) { value = -2; return true; }
+    for (size_t i = 0; i < rules.count; ++i)
+      if (equal(token, rules.technologies[i].key)) { value = (int32_t)i; return true; }
+    error_ = Error::unknown_prerequisite;
+    return false;
+  }
+  bool finish() {
+    if (!end_row()) return false;
+    if (data_line(text_) && text_.line()[0] != '#') { error_ = Error::bad_row; return false; }
+    if (text_.error() != Error::ok) { error_ = text_.error(); return false; }
+    return true;
+  }
+  Error error() const { return error_; }
+ private:
+  bool end_row() {
+    if (!pending_) return true;
+    char extra[128];
+    if (!text_.item(extra, sizeof(extra)) || *extra) { error_ = Error::bad_row; return false; }
+    pending_ = false;
+    return true;
+  }
+  Text& text_;
+  bool pending_;
+  Error error_;
+};
+Error read_basic_rules(const uint8_t* bytes, size_t length, const Rules& technologies,
+                       Variant variant, BasicRules& basic, WorldRules& world) {
+  if (!bytes || !length) return Error::missing_section;
+  if (technologies.count != technology_count) return Error::wrong_count;
+  if (variant != Variant::base && variant != Variant::alien_crossfire) return Error::bad_row;
+  basic = BasicRules{};
+  world = WorldRules{};
+  Text text(bytes, length);
+  if (!text.section("RULES")) return text.error();
+  RuleInput input(text);
+#define RULE_ROW(name, low, high) if (!input.row() || !input.numeric(basic.name, low, high)) return input.error();
+#define RULE_ITEM(name, low, high) if (!input.numeric(basic.name, low, high)) return input.error();
+#define RULE_TECH(name) if (!input.technology(basic.name, technologies)) return input.error();
+#include "basic_fields.inc"
+#undef RULE_ROW
+#undef RULE_ITEM
+#undef RULE_TECH
+  // Base Alpha Centauri has no subspace-generator fields. Do not read the
+  // following section as two extra numbers or silently accept a SMAX ruleset.
+  if (variant == Variant::alien_crossfire) {
+    if (!input.row() || !input.numeric(basic.size_base_subspace_gen, 1, 999) ||
+        !input.row() || !input.numeric(basic.subspace_generators_needed, 1, 999)) return input.error();
+  }
+  if (!input.finish()) return input.error();
+  if (!text.section("WORLDBUILDER")) return text.error();
+  RuleInput world_input(text);
+#define RULE_ROW(name, low, high) if (!world_input.row() || !world_input.numeric(world.name, low, high)) return world_input.error();
+#define RULE_ITEM(name, low, high) if (!world_input.numeric(world.name, low, high)) return world_input.error();
+#define RULE_TECH(name) static_assert(false, "World rules must not contain technology references");
+#include "world_fields.inc"
+#undef RULE_ROW
+#undef RULE_ITEM
+#undef RULE_TECH
+  return world_input.finish() ? Error::ok : world_input.error();
+}
 const char* error_name(Error e) {
   switch(e) {
     case Error::ok: return "ok";
