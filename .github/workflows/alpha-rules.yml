@@ -148,3 +148,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-host"
       - name: Native infantry composition big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned terraforming ecology controls
+        run: python3 ports/alpha-centauri/native/test_world_terraform_ecology.py --out "$RUNNER_TEMP/world-terraform-ecology-host"
+      - name: Big-endian owned terraforming ecology controls
+        run: python3 ports/alpha-centauri/native/test_world_terraform_ecology.py --out "$RUNNER_TEMP/world-terraform-ecology-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

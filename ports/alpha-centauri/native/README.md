@@ -1086,3 +1086,11 @@ territory, convoy/hostile-stack and neighboring-base reservation behavior.
 The explicit normal inspection stage is supported; editor and AI-goal stages
 reject. This does not select workers or execute upkeep. See
 [WORLD-WORKER-RADIUS.md](WORLD-WORKER-RADIUS.md).
+
+## Fresh owned terraforming ecology
+
+`world_terraform_ecology` computes raw terraforming damage from actual radius
+items, physical Tree Farm/Hybrid Forest and the current owned worked-tile mask.
+It preserves negative forests and per-tile signed reductions. It does not read
+saved ecological or intake totals, allocate workers or execute upkeep. See
+[WORLD-TERRAFORM-ECOLOGY.md](WORLD-TERRAFORM-ECOLOGY.md).
