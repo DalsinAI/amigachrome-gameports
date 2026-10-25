@@ -3,10 +3,11 @@
 #define ALPHA_ORIGINAL_UI_TEXT_H
 struct RastPort;struct TTF_Font;
 namespace alpha {
+enum class UiInk { body, label, value, title, map_label, warning };
 class OriginalUiText {
 public:
  OriginalUiText();~OriginalUiText();bool open();void close();
- bool draw(RastPort*,int x,int baseline,const char*,int max_width=900,bool heading=false);
+ bool draw(RastPort*,int x,int baseline,const char*,int max_width=900,bool heading=false,UiInk ink=UiInk::body);
 private:
  OriginalUiText(const OriginalUiText&)=delete;OriginalUiText& operator=(const OriginalUiText&)=delete;
  TTF_Font* body_;TTF_Font* heading_;bool initialized_;

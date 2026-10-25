@@ -943,3 +943,24 @@ A native edge case was caught before qualification: the target math library's
 `atan2(0,0)` returns NaN. The original FPATAN specifies signed-zero axes, so this
 stage handles all axes explicitly instead of passing that case through the target
 library. No installed SDK replacement or invented math-library stubs are used.
+
+## Integrated compact UI and menu-audio lifecycle
+
+The world viewer uses the owner's Arial Narrow and Alpha Centauri fonts at
+13 and 16 pixels, crisp glyphs, ascent-correct baselines and separate text ink
+roles. The original console's unit and terrain columns have independent bounds;
+selected terrain is read from the owned original map. These are presentation
+choices guided by reference screenshots, not recovered exact original font
+metrics. Bases and native-unit sprites paint in map-row order so a record ID
+does not decide foreground overlap. Flat coast joins, original terrain slopes,
+human CVR assembly and faction colours remain separate renderer work.
+
+The opening-menu WAV pauses while the world is open. Returning resumes it only
+if the user had enabled music. The world remains silent until its own audio
+system is restored; the opening loop is not used as substitute ambient music.
+Actual native PCM capture verifies nonzero menu output, zero output inside the
+world, automatic resume, preservation of user mute through a second world visit,
+and manual re-enable. The complete frontend exits normally. The isolated lab
+stops and restores configuration, both ROMs, SDL module and startup hashes.
+`UI-AUDIO-EVIDENCE-20261025.json` records bounded evidence; original assets,
+screenshots and PCM remain private.
