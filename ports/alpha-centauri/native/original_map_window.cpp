@@ -97,7 +97,7 @@ static void draw(struct Window* window){
  text(rp,15,614,"Flat terrain preview: slopes/coast joins, human CVR models and movement actions are not restored yet.");
  printf("DRAW selected=%lu camera=%d,%d zoom=%d\n",(unsigned long)selected,camera_x,camera_y,zoom);fflush(stdout);
 }
-int main(int argc,char** argv){
+int alpha_original_view(int argc,char** argv){
  if(argc!=6 || (strcmp(argv[1],"base") && strcmp(argv[1],"expansion"))){puts("Usage: alpha-original-view base|expansion RULES SCENARIO texture.pcx Units.pcx");return 20;}
  size_t n;auto* p=read_file(argv[2],n);if(!p)return 20;auto variant=strcmp(argv[1],"base")==0?alpha::Variant::base:alpha::Variant::alien_crossfire;
  bool ok=alpha::read_technologies(p,n,technologies)==alpha::Error::ok && alpha::read_unit_definitions(p,n,technologies,variant,definitions)==alpha::Error::ok && alpha::read_basic_rules(p,n,technologies,variant,basic,world_rules)==alpha::Error::ok;free(p);if(!ok)return 20;
@@ -133,3 +133,7 @@ int main(int argc,char** argv){
  if(IntuitionBase)CloseLibrary((struct Library*)IntuitionBase);
  free(frame);printf("ORIGINAL VIEW RC %d\n",rc);return rc;
 }
+
+#ifndef ALPHA_EMBEDDED_VIEW
+int main(int argc,char** argv){return alpha_original_view(argc,argv);}
+#endif
