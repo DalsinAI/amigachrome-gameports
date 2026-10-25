@@ -964,3 +964,42 @@ and manual re-enable. The complete frontend exits normally. The isolated lab
 stops and restores configuration, both ROMs, SDL module and startup hashes.
 `UI-AUDIO-EVIDENCE-20261025.json` records bounded evidence; original assets,
 screenshots and PCM remain private.
+
+## Original vehicle stacks and relocation storage
+
+`vehicle_stack.h/cpp` adapts the recovered `veh_lift`, `veh_drop` and `veh_top`
+storage operations. It validates every stack link before writing: bounded
+references, reciprocal links, matching coordinates, unique roots, no cycles,
+and agreement with the map's vehicle-present bits. Corrupt state is rejected
+without silently repairing it. Storage arrays must be disjoint and exclusively
+owned by the caller; suspended/off-map actors are not supported.
+
+Relocation preserves the original source tile's owner, updates both neighbors,
+inserts the actor at the destination's stack head, preserves base ownership and
+the high nibble of the tile owner byte, and marks supply suppression for
+non-native land/sea units. Moving within the same square promotes the actor to
+the head, as lift/drop does. All validation and allocation precedes all writes.
+
+This is an internal storage primitive, **not a legal movement command**. It does
+not establish player authority, passability, transport rules, zone of control,
+events, movement expenditure, animation, upkeep, turns or save serialization.
+It is not yet exposed by the read-only world or UI. Those action gates must be
+implemented before wiring it to player input.
+
+```sh
+python3 ports/alpha-centauri/native/test_vehicle_stack.py --out /tmp/stack-host
+python3 ports/alpha-centauri/native/test_vehicle_stack.py --out /tmp/stack-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_vehicle_stack.sh control /tmp/stack-control
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_vehicle_stack.sh probe /tmp/stack-probe
+```
+
+Controls compare 18,432 relocations against a separate recovered-source-flow
+reference and reject 20 malformed/no-write cases. The original-file probe works
+on copied decoded tutorial records, leaving the imported world and original
+file unchanged. Host sanitizers pass all three owner's tutorials (498 storage
+relocation controls); normal SDK builds pass. Actual normal-SDK AmigaOS
+execution passes those same 18,432/20 controls and all 498 original-tutorial
+relocations with RC0. The isolated lab is stopped and restored. Independent
+big-endian CI remains required before merge; evidence is recorded in
+`STACK-EVIDENCE-20261025.json`.
