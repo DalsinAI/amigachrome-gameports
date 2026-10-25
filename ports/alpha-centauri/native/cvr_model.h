@@ -6,7 +6,11 @@
 namespace alpha {
 struct CvrVoxel { int16_t z,x,y;uint16_t normal;uint8_t color; };
 struct CvrFrame { uint8_t flags;float location[3],matrix[9]; };
-struct CvrObject { char name[64];float units;uint32_t count;CvrVoxel* voxels;CvrFrame* frames; };
+struct CvrGroup {
+ int32_t seed[3];uint32_t first,count,stream_entries;
+ int16_t jump_header[12]; // Raw signed values; zero for the single-stream profile.
+};
+struct CvrObject { char name[64];float units;uint32_t count;CvrVoxel* voxels;CvrFrame* frames;uint32_t geometry_flags,group_count;CvrGroup* groups;int16_t dimensions[3],position[3],rotation_center[3]; };
 /* Owned, bounded CVR 10.0/10.1/10.2 geometry and animation.
  * Chained ordered LOD levels select by original projected-scale threshold;
  * single streams and offset-free jump groups are supported.

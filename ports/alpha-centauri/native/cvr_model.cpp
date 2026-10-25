@@ -29,20 +29,22 @@ bool geometry_level(const Chunk& c,CvrObject& o,uint32_t& total){
  if(!(flags&2) && c.size!=42+(size_t)declared*3+5)return false;
  for(size_t i=c.size-5;i<c.size;++i)if(c.data[i])return false;
  int scale[3],pos[3],at[3];
- for(int i=0;i<3;++i){scale[i]=s16(c.data+20+2*i);pos[i]=s16(c.data+26+2*i);at[i]=s16(c.data+32+2*i);if(scale[i]<=0)return false;}
+ for(int i=0;i<3;++i){scale[i]=s16(c.data+20+2*i);pos[i]=s16(c.data+26+2*i);at[i]=s16(c.data+32+2*i);if(scale[i]<=0)return false;o.dimensions[i]=(int16_t)scale[i];o.position[i]=(int16_t)pos[i];o.rotation_center[i]=(int16_t)at[i];}
  o.voxels=(CvrVoxel*)malloc((size_t)capacity*sizeof(CvrVoxel));if(!o.voxels)return false;
- size_t offset=42,end=c.size-5;uint32_t groups=0;
+ o.geometry_flags=flags;size_t offset=42,end=c.size-5;
  while(offset<end){
-  uint32_t entries=declared;
+  uint32_t entries=declared;int16_t jump_header[12]{};
   if(flags==10){
    if(end-offset<32)return false;
-   const auto* jump=c.data+offset;entries=u32(jump+24);
+   const auto* jump=c.data+offset;entries=u32(jump+24);for(unsigned j=0;j<12;++j)jump_header[j]=s16(jump+2*j);
    // Linked/offset jump headers remain unsupported until independently qualified.
    if(u32(jump+28)!=0)return false;
    for(int j=0;j<3;++j)at[j]=(int)s16(jump+2*j)+s16(jump+18+2*j);
    offset+=32;
   }
-  if(++groups>4096 || !entries || entries>(end-offset)/3)return false;
+  if(o.group_count>=4096 || !entries || entries>(end-offset)/3)return false;
+  if(!o.group_count || !(o.group_count&(o.group_count-1))){const uint32_t capacity=o.group_count?o.group_count*2:1;auto* fresh=(CvrGroup*)realloc(o.groups,(size_t)capacity*sizeof(CvrGroup));if(!fresh)return false;o.groups=fresh;}
+  CvrGroup& group=o.groups[o.group_count++];group={};for(unsigned j=0;j<3;++j)group.seed[j]=at[j];group.first=o.count;group.stream_entries=entries;memcpy(group.jump_header,jump_header,sizeof(jump_header));
   for(uint32_t i=0;i<entries;++i){
    const uint8_t* v=c.data+offset+(size_t)i*3;unsigned direction=v[0]>>3,normal=((unsigned)(v[0]&7)<<8)|v[1];
    if(direction>26 || ((flags&8) && (direction==26)!=(i==entries-1)) || (!(flags&8) && direction==26))return false;
@@ -53,7 +55,7 @@ bool geometry_level(const Chunk& c,CvrObject& o,uint32_t& total){
    if(o.count>=capacity)return false;
    o.voxels[o.count++]={(int16_t)at[0],(int16_t)at[1],(int16_t)at[2],(uint16_t)normal,v[2]};
   }
-  offset+=(size_t)entries*3;
+  group.count=o.count-group.first;offset+=(size_t)entries*3;
  }
  if(offset!=end || o.count!=capacity)return false;
  total+=o.count;return true;
@@ -71,9 +73,9 @@ bool geometry(const Chunk& c,CvrObject& o,uint32_t& total,float projected_scale)
   // The level decoder expects a standalone header, without changing voxel data.
   for(unsigned j=0;j<4;++j){data[j]=(uint8_t)((flags&~1u)>>(8*j));data[4+j]=(uint8_t)(span>>(8*j));}
   CvrObject level{};uint32_t count=0;bool ok=geometry_level({c.tag,data,span},level,count);free(data);
-  if(!ok){free(level.voxels);return false;}
+  if(!ok){free(level.voxels);free(level.groups);return false;}
   const bool use=offset==0 || (can_select && (double)previous*projected_scale<1.414199948310852 && (double)units*projected_scale<=1.414199948310852);
-  if(use){free(o.voxels);o.voxels=level.voxels;o.count=level.count;o.units=level.units;}else{can_select=false;free(level.voxels);}
+  if(use){free(o.voxels);free(o.groups);o.voxels=level.voxels;o.count=level.count;o.units=level.units;o.geometry_flags=level.geometry_flags;o.group_count=level.group_count;o.groups=level.groups;memcpy(o.dimensions,level.dimensions,sizeof(o.dimensions));memcpy(o.position,level.position,sizeof(o.position));memcpy(o.rotation_center,level.rotation_center,sizeof(o.rotation_center));}else{can_select=false;free(level.voxels);free(level.groups);}
   previous=units;offset+=span;
  }
  if(offset!=c.size || total>2000000-o.count)return false;
@@ -105,7 +107,7 @@ bool parse_object(const Chunk& c,CvrObject& o,uint32_t frames,uint32_t& total,fl
 }
 CvrModel::CvrModel():items_(nullptr),objects_(0),frames_(0),voxels_(0){memset(palette_,0,sizeof(palette_));memset(shades_,0,sizeof(shades_));}
 CvrModel::~CvrModel(){clear();}
-void CvrModel::clear(){if(items_)for(uint32_t i=0;i<objects_;++i){free(items_[i].voxels);free(items_[i].frames);}free(items_);items_=nullptr;objects_=frames_=voxels_=0;}
+void CvrModel::clear(){if(items_)for(uint32_t i=0;i<objects_;++i){free(items_[i].voxels);free(items_[i].frames);free(items_[i].groups);}free(items_);items_=nullptr;objects_=frames_=voxels_=0;}
 const uint8_t* CvrModel::rgb(uint8_t color,unsigned shade)const{return shade<24?palette_+3*shades_[shade*256+color]:nullptr;}
 bool CvrModel::load(const void* data,size_t size){return load_at_scale(data,size,1.0f);}
 bool CvrModel::load_at_scale(const void* data,size_t size,float projected_scale){

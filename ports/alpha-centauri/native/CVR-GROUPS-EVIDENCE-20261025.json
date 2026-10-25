@@ -1,0 +1,128 @@
+{
+  "status": "HOST PASS / NORMAL SDK BUILD PASS / NATIVE AND BIG-ENDIAN EXECUTION UNRUN",
+  "metadataModels": 12,
+  "metadataGroups": 89,
+  "metadataFields": 2373,
+  "readerRegressionCases": 32,
+  "lodRegressionCases": 40,
+  "newMetadataCases": 4,
+  "malformedCases": 3,
+  "fixedGroupCases": 8,
+  "ordinaryRaster": {
+    "originalSHA256": "9904d47e96124155ba002e69e2f0634dee68b8cd6ebc224892ef048285cfaf21",
+    "ownedSHA256": "9904d47e96124155ba002e69e2f0634dee68b8cd6ebc224892ef048285cfaf21",
+    "cases": [
+      {
+        "name": "vb.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vgmc.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vsptb.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vsp.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vgmcp.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vr00.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vsptf.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vbp.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vlights.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vrcp00.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "VI.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "Viptr00.cvr",
+        "differentBytes": 0
+      }
+    ]
+  },
+  "clippedRaster": {
+    "originalSHA256": "237987b81076a6b52239ea8d5152bf4726db447731cbe2837cfcccc9f497ae33",
+    "ownedSHA256": "237987b81076a6b52239ea8d5152bf4726db447731cbe2837cfcccc9f497ae33",
+    "cases": [
+      {
+        "name": "vb.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vgmc.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vsptb.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vsp.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vgmcp.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vr00.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vsptf.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vbp.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vlights.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "vrcp00.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "VI.cvr",
+        "differentBytes": 0
+      },
+      {
+        "name": "Viptr00.cvr",
+        "differentBytes": 0
+      }
+    ]
+  },
+  "nativeExecution": false,
+  "labAccess": false,
+  "viewerChanged": false,
+  "originalProjection": "Controlled identity/scale.15/origin128,128,32000; NOT original scene/animation/faction palette or final blit",
+  "normalSdkBinaries": {
+    "groups-native-final": "030a0d6676a7dfe74303e56127db92aff34bdb0027392f12bd57479febbd70a4",
+    "raster-native-final": "dfff3d5772cbac851f8f5f1fd6ee5af8e0b30b45186daff71c72d9fe929d7dbd",
+    "fixed-groups-native-final": "fb9a01ba5581d79a594bf111540d7c891769850d5b1e1695d6bd18d4ba5a9cc8"
+  }
+}
