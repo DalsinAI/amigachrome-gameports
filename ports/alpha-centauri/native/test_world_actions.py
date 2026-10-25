@@ -110,6 +110,6 @@ def main():
   expected=f'status={status} price={price} unchanged={int(status!="moved")} seed=abcdef01 rc=0\n'
   assert r.returncode==0 and r.stdout==expected,(name,r.returncode,r.stdout,r.stderr,expected)
   records.append(dict(name=name,status=status,price=price,passed=True))
- (out/'receipt.json').write_text(json.dumps(dict(command=cmd,runner=runner,cases=records,binarySHA256=hashlib.sha256(exe.read_bytes()).hexdigest()),indent=2)+'\n')
+ (out/'receipt.json').write_text(json.dumps(dict(command=cmd if not a.probe else None,suppliedProbe=str(exe) if a.probe else None,runner=runner,cases=records,binarySHA256=hashlib.sha256(exe.read_bytes()).hexdigest()),indent=2)+'\n')
  print(f'{len(records)} restricted world-action boundary cases passed')
 if __name__=='__main__':main()
