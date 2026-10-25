@@ -170,3 +170,42 @@ character bytes and localized matching. No original assets are included in CI.
 Loading faction definitions does not apply them to bases, units or a running
 turn. Starting-game state, AI, original save compatibility, UI/audio and actual
 playable gameplay remain separate qualification gates.
+
+
+## First owned-state calculations
+
+`calculate_social` adapts pinned OpenSMACX compute_faction_modifiers/social_calc
+into explicit qualified rule/faction inputs, selected policies and project/
+facility facts. It computes eleven effects, including impunity/penalty, project
+penalty removal, faction base modifiers, immunity and robust. Quick mode skips
+base/project additions and immunity/robust, but still removes relevant project
+penalties. Full mode preserves original bonus ordering and signed division.
+Alien temple research requires the expansion flag as well as the alien flag.
+
+`calculate_nutrients` adapts one base_nutrient calculation: growth modifiers,
+convoys, citizen consumption, surplus, starvation/recovery markers and upkeep
+stage-one faction totals. It does not advance population, accumulate a turn's
+food or choose worked tiles. Supply the current pre-convoy intake/totals each
+time; the helper does not reset those upstream stages for the caller.
+
+Both use owned state, no original global addresses or callbacks. Invalid state
+or a signed overflow returns an error without modifying the supplied output.
+Checked wider intermediates reject arithmetic outside the original signed32
+valid domain instead of inheriting undefined overflow from malformed mod data.
+Population is bounded to the original signed-byte domain (0..127), consumption
+rules to the parsed 0..100 range, and convoy/stage inputs must be nonnegative.
+
+```sh
+python3 ports/alpha-centauri/native/test_logic.py --out /tmp/logic-host
+python3 ports/alpha-centauri/native/test_logic.py --out /tmp/logic-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+Controls compare all outputs with vendored GPL test-only pinned function bodies
+in upstream_logic_reference.h. Its explicit platform/layout adapters replace
+Windows types, global addresses, project/facility queries and unsafe pointer
+arithmetic across struct members; branch/arithmetic order remains the source's.
+An independent Python digest also checks 16,384 social and 2,001 nutrient cases.
+Thirteen invalid/overflow controls verify unchanged output. No original assets
+are needed by CI. Source-function equivalence is not differential verification
+against the original executable, nor proof of an integrated or playable turn.
