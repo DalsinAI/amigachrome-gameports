@@ -7,9 +7,9 @@
     "invalidNoWriteCases": 20,
     "fieldDigest": "61fa6357",
     "originalTutorials": [
-      {"name": "Explore.SC", "vehicles": 4, "relocations": 60},
-      {"name": "Build.SC", "vehicles": 7, "relocations": 168},
-      {"name": "conquer.SC", "vehicles": 9, "relocations": 270}
+      {"name": "Explore.SC", "vehicles": 4, "relocations": 60, "sha256": "7b828aa4c06772d0e961c66729a1d80a389e603b2dc58e09faa05ba2816668d0"},
+      {"name": "Build.SC", "vehicles": 7, "relocations": 168, "sha256": "bf56d50d18866f715a036cc5322bef579455af5f953d1981a415fcf0dafde310"},
+      {"name": "conquer.SC", "vehicles": 9, "relocations": 270, "sha256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45"}
     ],
     "originalDataCommitted": false
   },
@@ -24,7 +24,7 @@
     "nativeOriginalTutorialRelocations": 498,
     "nativeControlExit": 0,
     "nativeOriginalProbeExits": [0, 0, 0],
-    "privateEvidence": "alpha-startup-control/native-3/native-amiga.log",
+    "privateEvidence": "alpha-stack-control/native-proof/native-amiga.log",
     "qualifiedInputHashesVerified": true,
     "isolatedLabRestoredAndStopped": true
   },
