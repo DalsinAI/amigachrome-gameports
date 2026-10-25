@@ -1098,3 +1098,50 @@ our viewer's64px tiles; the foot anchor is our own UI wiring. No gameplay or
 full-scene equivalence claim. Native execution and integrated original tutorial
 qualification are **pending**; the user's live watch session is untouched.
 See `SPEEDER-EVIDENCE-20261025.json` for the explicit current validation bounds.
+### Original global/faction colour mapping (core only; native/integration pending)
+
+The original CVR pixel stage writes **global game-palette indices**. The model's
+embedded RGB triplets are not the final display palette. Normal appends use the
+model's shade-index table; faction appends replace it with a generated table.
+This explains why displaying each component through its own RGB palette cannot
+reproduce all original unit colours.
+
+`cvr_palette.h/cpp` now provides two independent bounded mathematical pieces:
+
+- `build_cvr_default_global_palette` takes the owner's `programs/palette.pcx`
+  RGB palette. Source entries0..235 become game entries10..245. Under the
+  original default gamma1 path each channel is capped at235; reserved slots
+  follow the normal indexed Windows branch and are computed procedurally.
+- `build_cvr_faction_palette` takes an explicit global RGB palette, neutral
+  24x256 shade-index table and RGB tint. Each source global colour is multiplied
+  by the tint with truncating division by255. A squared-RGB nearest-colour
+  search over all256 global entries keeps the first index on equal distance.
+
+The global gamma helper actually uses normalisation by235 and output scale
+235.99, rather than255. Five private original-helper gamma cases match an
+independent formula. Only the default gamma1 integer path is implemented here;
+custom gamma and the alternate OS-system-palette branch are excluded.
+
+Faction file metadata supplies the tint: the raw pixel at(435,745) is shifted
+by10 with byte wrapping before indexing the global palette. The preceding
+intensity metadata at(161,757), and the tint pixel, must not be the raw255
+transparent marker for the per-faction override to run. Initial/system defaults
+and missing metadata require the original fallback path; this core API leaves
+that choice explicit. The source neutral table for faction panels is VBP.
+
+Private controls actually execute original palette initialisation/DIB copying,
+gamma/CRT maths, and the complete faction inner loop plus nearest-colour helper.
+All256 generated default global RGB entries and all43,008 shade bytes for the
+seven original faction metadata tints match the new APIs exactly. Original
+instructions, palettes, shade tables and recordings remain private.
+
+`test_cvr_palette.py` checks24 generated faction tables (147,456 entries),
+14 invalid/overlap cases, three generated global palettes and six invalid global
+inputs on host and independent big-endian68040. `build_cvr_palette.sh faction`
+and `global` build the normal-SDK CLI probes; the former reads an ACPA/version1
+container (RGB768, neutral6144, tint3), the latter reads raw PCX RGB768.
+
+**Not connected to the viewer yet.** Actual AmigaOS execution, faction/default
+selection and shared renderer cache binding remain required before this can be
+called a visible colour fix. This scope neither changes PR87 nor touches the
+user's lab session. See `PALETTE-EVIDENCE-20261025.json`.
