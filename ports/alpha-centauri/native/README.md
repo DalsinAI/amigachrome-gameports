@@ -1085,3 +1085,72 @@ No frontend, turn or player-save interface is added; native execution is held.
 [PRODUCTION-SNAPSHOT.md](PRODUCTION-SNAPSHOT.md) adds a separate, schema-sealed
 buffer encoder for facility-order state. It preserves the original container;
 filesystem/player save controls and native qualification remain pending.
+
+### Restricted owned-world step integration (draft, not exposed to input)
+
+`WorldActions::clear_land_step` joins the qualified speed, edge-price, movement
+budget and transactional stack-storage paths. It changes owned runtime vehicle
+coordinates, stack/tile occupancy, movement expenditure, moved flag and facing
+only after all guards succeed. Original wire bytes remain the baseline snapshot;
+this is not a save writer or replacement for original `order_veh`.
+
+Supported input is deliberately limited to ordinary base-game human land units,
+no special/granted abilities or standing orders, fully seen local terrain,
+cleared non-ocean destinations, and no nearby foreign units/bases or territory.
+Pod encounters (including source-derived generated pods), fungus, monoliths,
+contact/combat/ZOC, wake/transport states, fractional attempts and expansion
+mechanics are deferred. FREEABIL checks cover both vehicle and design owners.
+No discovery/event callbacks, upkeep, artificial next turn or fake AI is added.
+
+`test_world_actions.py` builds synthetic original containers and checks 46
+boundary/sequence cases, including full decoded-state no-write checks
+on rejection, runtime RNG preservation, untouched wire bytes and successful
+stack validation. A cumulative round-trip consumes six movement points, then
+rejects the next step without writes. Host address/undefined sanitizers pass. A private copied-data
+probe resets the baseline for each of 160 original tutorial edges and supports
+45 steps (Explore2/Build15/conquer28); all original source files remain unchanged.
+This is an integration control, not a full original executable differential.
+The normal SDK probe compiles, but actual AmigaOS and independent big-endian
+qualification remain pending. Do not expose this draft API to player input yet.
+
+```
+python3 ports/alpha-centauri/native/test_world_actions.py --out /tmp/world-actions-host
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_world_actions_probe.sh /tmp/world-actions-probe
+
+```
+
+### Movement snapshot buffer encoder (draft)
+
+`encode_movement_snapshot` preserves the complete owned original plain SC/SAV
+container and every opaque byte, while encoding runtime tile and vehicle records
+with explicit little-endian fields. It validates stack topology and references
+before the first output write. Unsupported changes to prototypes, bases, faction
+state/definitions, preferences, map metadata or UI state cause rejection; the
+encoder cannot silently save their stale original copies. Output and receipt
+remain unchanged on errors, including short/aliased buffers and invalid stacks.
+
+This is a bounded movement-container encoder, not an in-game save command,
+filesystem transaction, original executable save-compatibility proof or complete
+campaign persistence. It does not create/replace player files or assume SDK
+`O_EXCL` works. The probe writes only caller-selected test evidence files. The
+original tick footer is preserved and never substituted for runtime RNG; the
+current explicit RNG seed is returned separately in the receipt for the caller
+to retain using a separately qualified persistence format. No struct dump or
+custom single-scout codec is used. Player-facing save/load remains unavailable.
+
+Host ASan/UBSan checks pass 93 synthetic cases over wire versions7..12, including
+byte-exact unchanged output, independently computed storage edits, reload, and
+transactional rejection. An additional42 private original-tutorial cases pass
+(135 total), with source data untouched. The evidence probe rejects an existing readable target,
+including its input; this guard is not an atomic replacement protocol. The normal SDK probe compiles, but
+actual AmigaOS and independent big-endian qualification are pending. Do not
+expose this draft encoder to user save operations before those gates pass.
+
+```
+python3 ports/alpha-centauri/native/test_movement_snapshot.py --out /tmp/movement-snapshot-host
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_movement_snapshot.sh /tmp/movement-snapshot-probe
+```
+
+### Saved faction speed grants (draft, native gate pending)
+
+`world_speed_ability_flags` retains base raw-only abilities and supplies the expansion design owner's eligible FREEABIL speed bits to vehicle speed and land pricing. [Scope and controls](SPEED-ABILITIES.md) distinguish this change from historical native evidence and from legal player actions. [Evidence](SPEED-ABILITIES-EVIDENCE-20261025.json) records host/source/helper checks and pending native qualification.
