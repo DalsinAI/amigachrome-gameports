@@ -717,3 +717,46 @@ its original configuration, ROMs, startup and module restored. Assets stay
 private. These are prices, not unit actions: passability, stacks, ownership,
 ZOC, events, spending, combat and turns still need integration. No original
 executable differential fidelity is claimed.
+
+
+### Original tutorial graphics view
+
+`original_map_window.cpp` loads an owned original world and displays its real
+terrain, unit coordinates and bases with the owner's original PCX artwork.
+`pcx_image.cpp/h` bounds eight-bit one-plane version5 PCX decoding, scanline
+padding, run lengths, palette and dimensions; it owns indexed pixels and RGB
+palette and preserves an existing image on failure. No PC pointer, packed host
+struct or endian-dependent pixel cast is used. Required faction image names
+come from saved faction definitions, are restricted to plain alphanumeric,
+underscore/hyphen basenames and lowercased before adding `.pcx`.
+
+The view projects texture.pcx cells into a flat isometric map. Native unit
+sprites come from Units.pcx. Original faction base sheets select land/water,
+perimeter/tachyon appearance and a documented presentation population tier.
+These asset coordinates and transparency colours were checked against GLSMAC
+as layout facts; no AGPL source code was copied. Human CVR models remain
+explicitly marked with labels, not substituted with invented unit art.
+Slopes/coast joins, full improvements/roads and original fog-of-war are still
+missing. The view reveals the map for inspection and does not execute actions
+or turns.
+
+Build with `CXX=.../m68k-amigaos-g++ sh build_original_map_window.sh OUTPUT`.
+On AmigaOS RTG with cybergraphics.library41+, run:
+
+```
+alpha-original-view base alpha.txt Explore.SC texture.pcx Units.pcx
+```
+
+Place the required original faction PCXs in the current directory with lowercase
+names, such as `gaians.pcx` and `spartans.pcx`. Missing required assets fail
+explicitly. WASD scrolls, Tab selects the next actual unit, C centres it, B
+centres the first base, minus/equal selects zoom1/2, and Q exits normally.
+This is a read-only rendering checkpoint, not a complete playable game.
+
+`test_pcx_image.py --out NEW_DIR` runs23 synthetic image/malformed-input controls
+with host sanitizers and independent big-endian68040 CI. Actual indexed pixels
+and palettes from10 original image sheets match independent Pillow decoding.
+`ORIGINAL-ART-EVIDENCE-20261025.json` records33 actual AmigaOS imports and an
+interactive original Explore.SC run with selection, scrolling, both zoom levels,
+real base/native sprite display and RC0. The muted isolated lab was stopped and
+its original inputs restored. Assets and captured screens remain private.

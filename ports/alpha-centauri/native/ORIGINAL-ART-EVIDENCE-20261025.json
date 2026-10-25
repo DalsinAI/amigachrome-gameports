@@ -1,0 +1,180 @@
+{
+  "date": "2026-10-25",
+  "scope": "Read-only original tutorial renderer, not restored full gameplay",
+  "host": {
+    "syntheticPcxCases": 23,
+    "sanitizers": "ASan/UBSan",
+    "actualImageImports": 10,
+    "independentPixelAndPaletteModel": "Pillow"
+  },
+  "native": {
+    "importCases": 33,
+    "windowVariant": "base",
+    "originalScenario": "Explore.SC",
+    "width": 48,
+    "height": 48,
+    "vehicles": 4,
+    "bases": 2,
+    "binarySHA256": "a90c8abf26cfd52f089ad31707966b73390d4f4d5e6656a05d3376b2b798a51a",
+    "pcxProbeSHA256": "1ff28b03386a01b18287cb02e35849d93c83b28bc39fb30297908957217bca53",
+    "frames": 103,
+    "normalExitRC": 0,
+    "malformedImageRC": 20,
+    "logSHA256": "167c06979857bac463977d2b1cc8a92475058f56c9c3a094f32851d06d71bdcb",
+    "controls": [
+      "Tab unit selection",
+      "C unit centring",
+      "B base centring",
+      "WASD scrolling",
+      "minus/equal zoom1/2",
+      "Q normal exit"
+    ]
+  },
+  "imageFingerprints": [
+    {
+      "name": "Units.pcx",
+      "sha256": "1da9f262b4a90c6d26378e1421cc7bcc9dc561491337c1d8c111793a82b8285d",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "8a92894e",
+        "palette": "289c483a",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "believe.pcx",
+      "sha256": "5c1cdb7b0c79f0f8756b7a8483cd9f97c424142b5e68ccae2a11ad80c975aab0",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "29ee300b",
+        "palette": "b5126e31",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "gaians.pcx",
+      "sha256": "a2d4214c3857c130586a249adf8c48c27d877f3da8321f5d53155ca5836d0891",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "20b938ed",
+        "palette": "b5126e31",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "hive.pcx",
+      "sha256": "33e6ea743186906a57aefc44a74a479f7964a6c8e0baec6857540c6d34861440",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "4fe28f43",
+        "palette": "1780a9c6",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "morgan.pcx",
+      "sha256": "d9eb422a7326e8b042bc7e22b5071c9170e18e4d846751a82df07e9746ae6f5a",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "d26c8e43",
+        "palette": "3652c0cf",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "peace.pcx",
+      "sha256": "0b8ce79edd9ea0d87bddbd6d241e6adbaaf746eb0e9a9f86ac99f7cfa061e772",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "47ea3e88",
+        "palette": "b5126e31",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "spartans.pcx",
+      "sha256": "03223f0985c5c485ede3489f71fabfe437e2011471305572cfbd57b115b0e5a5",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "e2c56c1c",
+        "palette": "b5126e31",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "ter1.pcx",
+      "sha256": "82ef33e48f40d00a60e08fbcc403b1ecd9b340bd065830e2658ba3bacbf5b327",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "693827e2",
+        "palette": "1f40422d",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "texture.pcx",
+      "sha256": "3dfa56f9eaa2a13af4fac199a0ac9ff3bf59effed17871a24f15b1b553b7c0ab",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "aef75f95",
+        "palette": "eb19c826",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "univ.pcx",
+      "sha256": "84ccbaa954808a6fe14dc6f3f41850fbb37350f1af34359a21b8820ecf3019a5",
+      "expected": {
+        "width": "1024",
+        "height": "768",
+        "pixels": "2c292597",
+        "palette": "7ad3ff32",
+        "rc": "0"
+      }
+    }
+  ],
+  "screenshotSHA256": {
+    "original-tutorial-base-art.png": "b301d231bafcc90914d9a2ac788d16c1f5e4e9bca6b42f464a3e96e5547ca1fa",
+    "original-tutorial-first-view.png": "b8476988101fe2574e7f1e7aa57746caefef20cea1c2be1772da8c1be7918723",
+    "original-tutorial-native-unit.png": "cad8d6306fe1b78de80ab8b713b032f776e20b76bf57045f7b88ae320af2bbb0",
+    "original-tutorial-scrolled.png": "e94adcc8adc7a24705de70f3cc42f466947d5d5b2ac2438b716651cf526e8fbc",
+    "original-tutorial-second-unit.png": "6b5101fc549fb07e1495649e1e833642797d9f280d9e39afe13183e5cdd2f891",
+    "original-tutorial-zoom-in.png": "b301d231bafcc90914d9a2ac788d16c1f5e4e9bca6b42f464a3e96e5547ca1fa",
+    "original-tutorial-zoom-out.png": "a1251f77bf1bef5705afd6e2420a31e3bedb5b0b1cd2adb201af7dcc143f302c"
+  },
+  "sourceSHA256": {
+    "pcx_image.h": "99c4108bfa08a3acf2eeef760fc71f24461e27e38bf5da2df598a23c8f2de3ab",
+    "pcx_image.cpp": "7360280e4327d5683cb03758fddd7ab25bb98539b67c71d5073dec954c0430b6",
+    "pcx_probe.cpp": "91cb183b8b05fe514fcfae9a114f997a55b0fdbb1647af147a7604c50b05e3f8",
+    "test_pcx_image.py": "af00bbd8744d6538696bed6e8c67ed45dda51482fc4ff363b1122baa70287236",
+    "original_map_window.cpp": "e23254907d772659de20bd38f8d1d084a2382347ba8c6d624ec6f1fc24d19c2d",
+    "build_original_map_window.sh": "f63c59014f941abec8428a30c6fed0bfabc1e4d7ea01d6dea7e8d14359d9a7f8"
+  },
+  "privateTestROM": {
+    "roms/openkick-rom4.rom": "c2341dc9434823515edee4e1fcd21b99d1a9af6f5fcbcb5c361b956229b71fec",
+    "roms/aros-amiga-m68k-ext.bin": "22ac131ff8ddef0cf01c6158f74e782b7ea1f2e63444dde22c15027ae105109c"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "limits": [
+    "Read-only actual world view; no unit relocation, spending, turn progression, production, AI, combat or persistence",
+    "Flat terrain projection; no original altitude slopes/coastal blending and incomplete improvement/road rendering",
+    "Human CVR models are explicitly labelled as missing; native sprites and original faction base images are rendered",
+    "Base size presentation tiers are a display policy, not original-executable graphics differential fidelity",
+    "Full map is visible for inspection; original fog-of-war is not restored",
+    "Only the base original tutorial was interactively qualified; this is not an original Alien Crossfire campaign claim",
+    "Original assets/screenshots stay private; no game assets are committed or uploaded",
+    "Atlas coordinates/transparency checked as asset layout facts against GLSMAC pin0fe9ef16; no AGPL GLSMAC code copied"
+  ]
+}
