@@ -1,0 +1,365 @@
+{
+  "status": "HOST EXACT / NORMAL SDK BUILD PASS / NATIVE AND BE EXECUTION UNRUN",
+  "frozenBase": "a3686553b1647345082311e6cc3d266a6ee6ecaf",
+  "coordinateComparison": {
+    "cases": 1000,
+    "originalTileHelperExecuted": true,
+    "originalAltitudeHelperExecuted": true,
+    "altitudePath": "Real original cached four signed corner heights only; no terrain recursion",
+    "fullPEEntryExecuted": false,
+    "windowsImportsExecuted": false,
+    "inputSHA256": "e4bb3c78b1965b88b16d051832c5fa707a7964ec78fefa13a4fbaa566bb50eee",
+    "outputSHA256": "76d83d739e2174f313309613df22bb81615fc76d4051a3db364f97811e8233ff"
+  },
+  "dimensionComparison": {
+    "cases": 22,
+    "originalWholeDimensionHelperExecuted": true,
+    "originalFontOrWindowCallbacksExecuted": false,
+    "outputSHA256": "279eee320d920a0622c00410d88216d5264e2172f848ee385ce9e69844a9e0fb",
+    "rows": [
+      {
+        "zoom": -8,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 25,
+        "dimensions": [
+          48,
+          24,
+          24,
+          12,
+          12,
+          6
+        ]
+      },
+      {
+        "zoom": -7,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 28,
+        "dimensions": [
+          56,
+          28,
+          28,
+          14,
+          14,
+          7
+        ]
+      },
+      {
+        "zoom": -6,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 31,
+        "dimensions": [
+          64,
+          32,
+          32,
+          16,
+          16,
+          8
+        ]
+      },
+      {
+        "zoom": -5,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 34,
+        "dimensions": [
+          64,
+          32,
+          32,
+          16,
+          16,
+          8
+        ]
+      },
+      {
+        "zoom": -4,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 37,
+        "dimensions": [
+          72,
+          36,
+          36,
+          18,
+          18,
+          9
+        ]
+      },
+      {
+        "zoom": -3,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 40,
+        "dimensions": [
+          80,
+          40,
+          40,
+          20,
+          20,
+          10
+        ]
+      },
+      {
+        "zoom": -2,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 43,
+        "dimensions": [
+          88,
+          44,
+          44,
+          22,
+          22,
+          11
+        ]
+      },
+      {
+        "zoom": -1,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 46,
+        "dimensions": [
+          88,
+          44,
+          44,
+          22,
+          22,
+          11
+        ]
+      },
+      {
+        "zoom": 0,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 50,
+        "dimensions": [
+          96,
+          48,
+          48,
+          24,
+          24,
+          12
+        ]
+      },
+      {
+        "zoom": 1,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 53,
+        "dimensions": [
+          104,
+          52,
+          52,
+          26,
+          26,
+          13
+        ]
+      },
+      {
+        "zoom": 2,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 56,
+        "dimensions": [
+          112,
+          56,
+          56,
+          28,
+          28,
+          14
+        ]
+      },
+      {
+        "zoom": 3,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 59,
+        "dimensions": [
+          120,
+          60,
+          60,
+          30,
+          30,
+          15
+        ]
+      },
+      {
+        "zoom": 4,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 62,
+        "dimensions": [
+          120,
+          60,
+          60,
+          30,
+          30,
+          15
+        ]
+      },
+      {
+        "zoom": 5,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 65,
+        "dimensions": [
+          128,
+          64,
+          64,
+          32,
+          32,
+          16
+        ]
+      },
+      {
+        "zoom": 6,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 68,
+        "dimensions": [
+          136,
+          68,
+          68,
+          34,
+          34,
+          17
+        ]
+      },
+      {
+        "zoom": 7,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 71,
+        "dimensions": [
+          144,
+          72,
+          72,
+          36,
+          36,
+          18
+        ]
+      },
+      {
+        "zoom": 8,
+        "numerator": 0,
+        "denominator": 16,
+        "scaled50": 75,
+        "dimensions": [
+          152,
+          76,
+          76,
+          38,
+          38,
+          19
+        ]
+      },
+      {
+        "zoom": 0,
+        "numerator": 1,
+        "denominator": 100,
+        "scaled50": 0,
+        "dimensions": [
+          8,
+          4,
+          4,
+          2,
+          2,
+          1
+        ]
+      },
+      {
+        "zoom": 0,
+        "numerator": 8,
+        "denominator": 16,
+        "scaled50": 25,
+        "dimensions": [
+          48,
+          24,
+          24,
+          12,
+          12,
+          6
+        ]
+      },
+      {
+        "zoom": 0,
+        "numerator": 16,
+        "denominator": 16,
+        "scaled50": 50,
+        "dimensions": [
+          96,
+          48,
+          48,
+          24,
+          24,
+          12
+        ]
+      },
+      {
+        "zoom": 0,
+        "numerator": 21,
+        "denominator": 16,
+        "scaled50": 65,
+        "dimensions": [
+          128,
+          64,
+          64,
+          32,
+          32,
+          16
+        ]
+      },
+      {
+        "zoom": 0,
+        "numerator": 32,
+        "denominator": 16,
+        "scaled50": 100,
+        "dimensions": [
+          200,
+          100,
+          100,
+          50,
+          50,
+          25
+        ]
+      }
+    ]
+  },
+  "viewerComparison": {
+    "viewerFlatOriginExact": true,
+    "cases": 6044,
+    "originalTileHelperExecuted": true,
+    "originalAltitudeHelperExecuted": true,
+    "altitudePath": "Real original cached four signed corner heights only; no terrain recursion",
+    "fullPEEntryExecuted": false,
+    "windowsImportsExecuted": false,
+    "inputSHA256": "15457005c6ddc4b8a47d7cbfa7fb1f292e47dc3711ed58311a6afe23049a13b0",
+    "outputSHA256": "c331c7f044259cfe321975397b6598e49f55bb37a29cc2e212eeb83543071de7"
+  },
+  "publicControls": {
+    "placementCases": 1000,
+    "dimensionCases": 22,
+    "builtInMetricAnchorInvalidAliasControls": true,
+    "originalCodeExecuted": false,
+    "placementSHA256": "76d83d739e2174f313309613df22bb81615fc76d4051a3db364f97811e8233ff",
+    "dimensionSHA256": "279eee320d920a0622c00410d88216d5264e2172f848ee385ce9e69844a9e0fb",
+    "messages": [
+      "MAP ANCHOR 1000 vectors + metric/anchor/invalid/partial-alias controls PASS",
+      "MAP METRICS 22 vectors PASS"
+    ]
+  },
+  "importantCorrection": "Units.pcx marker offsets are status/flag overlay offsets, not model draw offsets; original model centre is unadjusted veh_draw caller + scaled50 on both axes.",
+  "nativeExecution": false,
+  "labAccess": false,
+  "viewerChanged": false,
+  "wholeVehDrawExecuted": false,
+  "finalBlitExecuted": false,
+  "binaryHashes": {
+    "anchor-host": "65cb66f9a737bd03ae435d22ff7a64c308200e255944e07267cd337072354527",
+    "anchor-native": "36fda57f0029f0570d37670e3d9443b1cf66d7f9c143ebba7f366c0769f57397",
+    "tile-reference": "543e57c58d4d1da2666520f61a7bf5afeb3d4073cc76accce50107c5d98eb34e",
+    "dimension-reference": "5ed79ed3e3fee9ce7a43888b4f319f9ac2f4b16bb8664cfc0688f987fe70c0a1"
+  }
+}
