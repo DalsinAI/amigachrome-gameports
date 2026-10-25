@@ -240,3 +240,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_fresh_tile_yields.py --out "$RUNNER_TEMP/world-fresh-technology-yields-host"
       - name: Big-endian 68040 fresh technology-effects tile binding
         run: python3 ports/alpha-centauri/native/test_world_fresh_tile_yields.py --out "$RUNNER_TEMP/world-fresh-technology-yields-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original energy inefficiency controls
+        run: python3 ports/alpha-centauri/native/test_energy_inefficiency.py --out "$RUNNER_TEMP/energy-inefficiency-host"
+      - name: Big-endian original energy inefficiency controls
+        run: python3 ports/alpha-centauri/native/test_energy_inefficiency.py --out "$RUNNER_TEMP/energy-inefficiency-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

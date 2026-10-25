@@ -1224,3 +1224,5 @@ Fresh mineral composition is documented in [WORLD-FRESH-MINERALS.md](WORLD-FRESH
 ### Fresh technology-effect tile/intake binding (local candidate)
 
 [WORLD-FRESH-TECHNOLOGY-YIELDS.md](WORLD-FRESH-TECHNOLOGY-YIELDS.md) connects the complete read-only technology-effects stage to original fungus leaves and stable/convoy nutrient proposals. Saved snapshot tile APIs remain unchanged. No cache/award/accounting commit or turn is added; native and publication remain held.
+
+The separate checked [energy inefficiency component](ENERGY-INEFFICIENCY.md) returns numeric loss/diagnostic proposals from explicit facts. Full owned energy accounting, CI and native qualification remain pending.
