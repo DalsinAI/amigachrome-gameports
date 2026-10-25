@@ -856,3 +856,44 @@ legacy field offsets. A separate menu integration run checked fonts, nonzero
 music output during the child view, return, requester cancellation and RC0.
 Both tests continuously streamed the display, preserved the original scenario,
 and stopped/restored the private lab. No live instance or ROM was changed.
+
+## Fixed-depth projected CVR pixel stage
+
+`cvr_raster.h/cpp` is an independently written bounded pixel stage for already
+projected points. It is **not the CVR camera, lighting or a faithful unit renderer**.
+The caller supplies signed 24.8 screen coordinates, a wrapping unsigned 16.16
+depth accumulator, a 2048-entry normal-to-shade table and a 24-by-256 colour table.
+The upper 16 depth bits are compared unsigned; strictly smaller wins and equal
+depth retains the earlier pixel. No host byte-order assumptions or floating
+point conversions are used. Invalid inputs fail before either output changes;
+valid buffers, input points and tables must not overlap.
+
+Two explicitly selected original pixel profiles are represented. Single pixels
+use exclusive right/bottom clip limits. Two-by-two quads include right/bottom,
+accept anchors one pixel left/above the clip and clamp those edge anchors inward.
+This deliberate border behavior is not an ordinary geometric rectangle API.
+The surface must encompass the whole clip and its stride is measured in pixels.
+
+```sh
+python3 ports/alpha-centauri/native/test_cvr_raster.py --out /tmp/raster-host
+python3 ports/alpha-centauri/native/test_cvr_raster.py --out /tmp/raster-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_raster.sh probe /tmp/raster-probe
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_raster.sh control /tmp/raster-control
+```
+
+The synthetic corpus covers 464 batches and 9,568 points, including fractional
+negative positions, both clip profiles, random existing depth/pixels, variable
+shade/colour tables and near/far/tied depth. Another 26 controls check rejection,
+transactional behavior, empty input and extreme coordinates. Public CI requires
+both sanitizer-host and independent big-endian 68040 execution.
+
+Privately, the same corpus matched execution of the owner's unchanged original
+x86 pixel helper and its own address-binding patcher, without PE startup, Windows
+imports or the full game. It also matched the normal SDK's actual AmigaOS binary
+byte-for-byte in the isolated lab. The lab was stopped and its configuration,
+ROM pair, module and startup restored. Only numeric receipts/hashes are public
+in `RASTER-EVIDENCE-20261025.json`; no original code or assets are included.
+The existing approximate model preview has **not** been corrected merely by
+qualifying this stage: camera, light/shade preparation, faction palette mapping
+and exact unit assembly remain separate work.
