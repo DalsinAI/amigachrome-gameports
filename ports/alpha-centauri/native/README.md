@@ -1081,3 +1081,7 @@ actual AmigaOS qualification remains pending.
 facility options and retooling in an owning offline local controller with private
 revision-bound confirmation plans and atomic live queue/mineral/counter changes.
 No frontend, turn or player-save interface is added; native execution is held.
+
+[PRODUCTION-SNAPSHOT.md](PRODUCTION-SNAPSHOT.md) adds a separate, schema-sealed
+buffer encoder for facility-order state. It preserves the original container;
+filesystem/player save controls and native qualification remain pending.
