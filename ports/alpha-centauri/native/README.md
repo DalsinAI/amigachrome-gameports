@@ -284,3 +284,43 @@ history callbacks; these are not production callbacks. Six invalid/overflow
 controls verify rejection. `prototype-probe base|expansion FILE` loads original
 rules and prints all initial predefined stats; those originals remain private.
 No movement, combat, complete turn, designer support or gameplay is implied.
+
+
+## Map geometry and adjacent-step prices
+
+`MovementMap` borrows a caller-owned native tile array and explicit geometry;
+it is not an original map/save decoder. Width is even, cells have parity x+y
+even, and indexing is `(x+width*y)/2`. Bounds use the original nonnegative
+signed16 coordinate domain. `movement_wrap_x` preserves one source xrange
+step, including far-out values still outside the map afterward; latitude never
+wraps. `movement_distance_x` handles flat and wrapped valid coordinates.
+Terrain altitude/rockiness bytes are already masked original encodings; mixed
+rock bits fail rather than being mistaken for a valid rocky tile.
+
+`adjacent_movement_cost` adapts pinned hex_cost for qualified predefined units
+and valid adjacent endpoints. It preserves sea-shelf fungus/native exceptions,
+roads/base tiles, zero-point magtubes, neutral/native/Xeno fungus movement,
+diagonal river shortcuts (including the seam), hover/antigrav, rough/forest
+penalties and plan/planet-dependent full-speed fungus costs. Prototype stats
+are derived for the same road rate. Context explicitly supplies project and
+planet facts, replacing original global callbacks.
+
+This is **pricing**, not terrain passability, occupied-tile handling, combat,
+ZOC, movement expenditure or turn dispatch. For example an immobile tower can
+have a priced endpoint while a move dispatcher must still reject moving it.
+Only predefined IDs0..63 and factions0..7 are accepted. All outputs remain
+unchanged after invalid input. The caller must still check action legality.
+
+```sh
+python3 ports/alpha-centauri/native/test_movement.py --out /tmp/movement-host
+python3 ports/alpha-centauri/native/test_movement.py --out /tmp/movement-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+Controls compare24,576 generated prices with the pinned hex_cost test adapter
+and an independent Python digest. Twenty named cases check specific branch
+values, including wrapped/vertical/horizontal rivers, neutral magtubes,
+negative planet, fungus exemptions and ignore-rough. Another1,200 geometry
+cases include the maximal coordinate domain;14 invalid cases check rejection.
+Source test callbacks use owned objects and mark unexpected requests invalid.
+No original assets are needed by CI and no gameplay is claimed by this helper.
