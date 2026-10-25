@@ -3,6 +3,7 @@
 #include "world_terraform_ecology.h"
 #include "world_unit_stats.h"
 #include "movement.h"
+#include "world_fresh_tile_yields.h"
 namespace alpha {namespace {
 const int32_t dx[21]={0,1,2,1,0,-1,-2,-1,0,2,2,-2,-2,1,3,3,1,-1,-3,-3,-1};
 const int32_t dy[21]={0,-1,0,1,2,1,0,-1,-2,-2,2,2,-2,-3,-1,1,3,3,1,-1,-3};
@@ -44,10 +45,9 @@ StableIntakeError world_stable_intake(const OriginalWorld&w,const Rules&t,const 
  for(unsigned i=0;i<21;++i){if(!(worked&(1u<<i)))continue;
   int32_t x=base->x+dx[i];const int32_t y=base->y+dy[i];if(!geometry.flat){if(x<0)x+=geometry.width;else if(x>=geometry.width)x-=geometry.width;}
   size_t square;if(movement_tile_index(geometry,x,y,square)!=LogicError::ok)return StableIntakeError::needs_allocation;const auto*tile=w.tile(square);if(!tile)return StableIntakeError::bad_state;
-  if(tile->items&0x20u)return StableIntakeError::unsupported_stage;
   if((tile->climate&0xe0u)<0x60u)next.state_flags|=0x8000u;
   WorldTileYieldStage tile_stage{stage.variant,stage.expansion_enabled,false,stage.control_upkeep,(int32_t)id,reduction,next.base_energy_after};TileYieldResult value{};
-  const auto error=world_tile_yields(w,t,basic,resources,id,faction,x,y,tile_stage,value);
+  const auto error=world_fresh_tile_yields(w,t,basic,resources,id,faction,x,y,tile_stage,value);
   if(error==TileYieldError::overflow)return StableIntakeError::overflow;
   if(error!=TileYieldError::ok)return StableIntakeError::bad_state;
   const int32_t yields[]={value.nutrient,value.mineral,value.energy};

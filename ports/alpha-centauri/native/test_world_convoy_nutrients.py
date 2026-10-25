@@ -32,9 +32,27 @@ def fixture(variant,version,case,actors=None):
   p=off['prototypes']+52*proto;b[p:p+52]=bytes(52);struct.pack_into('<b',b,p+42,plan)
  tile=off['tiles']+44*(10*8+7);b[tile+2]=1;struct.pack_into('<I',b,tile+8,1)
  return bytes(b)
+def fungus_case(variant,version,case):
+ b=bytearray(fixture(variant,version,case));_,off,spans=intake.decode(b);legacy=version<11;fs=0x20bc if legacy else 0x20cc;pf=off['legacy'] if legacy else off['preferences'];shift=0x7c if legacy else 0
+ # One actual known technology per fungus channel; no saved-cache authority.
+ b[pf+0x1e0-shift:pf+0x1e0-shift+89]=bytes(89);b[pf+0x1e0-shift]=1
+ for id in [5,6,7]:b[pf+0x1e0-shift+id]=2
+ for i in range(96):
+  p=off['tiles']+44*i;items=struct.unpack_from('<I',b,p+8)[0]
+  if not items&1:struct.pack_into('<I',b,p+8,0x20|(items&2))
+ schema=intake.FACTIONS['LegacyFactionV10' if legacy else 'Faction'];fields={f['name']:f['offset'] for f in schema['fields']};dp=off['faction_definitions']+0x59c
+ for name in ['tech_commerce_bonus','tech_fungus_nutrient','tech_fungus_mineral','tech_fungus_energy','tech_fungus_unused']:struct.pack_into('<i',b,off['factions']+fs+fields[name],-2147483648 if case%2 else 2147483647)
+ struct.pack_into('<i',b,dp+0x504,0);struct.pack_into('<i',b,dp+0x50c,3)
+ for k,kind in enumerate([7,8,9]):struct.pack_into('<i',b,dp+0x510+4*k,kind);struct.pack_into('<i',b,dp+0x530+4*k,(case+k)%5-2)
+ t=intake.sections(nutrients.rules(variant))
+ for row in t['TECHNOLOGY']:row[8]='000000000'
+ for k,flag in enumerate([0x100,0x80,0x40]):t['TECHNOLOGY'][5+k][6:9]=['None','None',format(flag,'09b')]
+ return intake.material(t),bytes(b)
 def flow_model(variant,text,data,mode=0):
  info,off,spans=intake.decode(data);bs=304 if int(info['version'])<11 else 308;b=spans['bases'][:bs];faction=b[4];to=[0]*4;fr=[0]*4;harvesters=0;reduction=-2 if mode==2 else 2147483647 if mode==3 else 0;energy=-123456 if mode>=2 else 0
  tables=intake.sections(text);row_index,column,_=intake.ROW['limit_mineral_mine_sans_road'];mine_limit=int(tables['RULES'][row_index][column])
+ effect_error,fresh_effects=intake.effect_model(intake.effect_facts(text,data)[faction])
+ if effect_error:return (7 if effect_error==2 else 1),None
  for i in range(int(info['vehicles'])):
   v=spans['vehicles'][52*i:52*(i+1)];unit=struct.unpack_from('<h',v,10)[0];plan=struct.unpack_from('<b',spans['prototypes'],52*unit+42)[0]
   if v[14]!=faction or plan!=10 or v[17]!=3:continue
@@ -45,9 +63,8 @@ def flow_model(variant,text,data,mode=0):
    if items&1 and sq[2]&15<8:fr[channel]+=1;continue
    harvesters+=1
    if channel==3:reduction=0;continue
-   if items&0x20:return 3,None
    # Independently reconstruct the controlled plain/forest fixture leaf facts.
-   row=[0]*59;row[0]=int(variant=='expansion');row[1]=sq[0];row[2]=sq[2];row[4]=items;row[11:14]=[1,1,1];row[14]=2;row[18],row[19]=struct.unpack_from('<II',b,0x8c);row[20]=15;row[25]=mode&1;row[28]=mine_limit;row[30]=reduction;row[31]=energy
+   row=[0]*59;row[0]=int(variant=='expansion');row[1]=sq[0];row[2]=sq[2];row[4]=items;row[11:14]=fresh_effects[1:4];row[14]=2;row[18],row[19]=struct.unpack_from('<II',b,0x8c);row[20]=15;row[25]=mode&1;row[28]=mine_limit;row[30]=reduction;row[31]=energy
    for k,resource in enumerate(tables['RESOURCEINFO']):row[32+3*k:35+3*k]=[0 if x=='*' else int(x) for x in resource[1:4]]
    result=intake.leaf_expected(row)
    if result[0]:return (7 if result[0]==2 else 1),None
@@ -69,13 +86,26 @@ def model(variant,text,data,mode=0):
  return [0,*flows,*fresh[1:],*result[1:]]
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--cc',default='c++');ap.add_argument('--m68k-linux',action='store_true');ap.add_argument('--binary',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','vehicle_stack.cpp','tile_yields.cpp','world_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','base_nutrients.cpp','world_fresh_nutrients.cpp','world_convoy_nutrients.cpp','world_convoy_nutrients_probe.cpp']
+ names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','vehicle_stack.cpp','tile_yields.cpp','world_tile_yields.cpp','technology_effects.cpp','world_fresh_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','base_nutrients.cpp','world_fresh_nutrients.cpp','world_convoy_nutrients.cpp','world_convoy_nutrients_probe.cpp']
  exe=a.binary if a.binary else a.out/'world-convoy-nutrients';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[] if a.binary else [a.cc,*flags,*[str(HERE/n) for n in names],'-o',str(exe)]
  if cmd:subprocess.run(cmd,check=True)
  runner=['qemu-m68k','-cpu','m68040'] if a.m68k_linux else []
- cases=[]
+ cases=[];overrides={}
+ for variant in ['base','expansion']:
+  for n in range(1,65):
+   name=f'{variant}-fresh-fungus-{n}';text,data=fungus_case(variant,7+n%4 if variant=='base' else 11+n%2,n);cases.append((name,variant,data,0));overrides[name]=text
  for variant in ['base','expansion']:
   for n in range(1,65):cases.append((f'{variant}-{n}',variant,fixture(variant,7+n%4 if variant=='base' else 11+n%2,n),0))
+ for variant in ['base','expansion']:
+  version=7 if variant=='base' else 12;rawtext,raw= fungus_case(variant,version,3);_,o,_=intake.decode(raw);schema=intake.FACTIONS['LegacyFactionV10' if version<11 else 'Faction'];fs=0x20bc if version<11 else 0x20cc
+  economy=next(f['offset'] for f in schema['fields'] if f['name']=='SE_economy_pending');dp=o['faction_definitions']+0x59c
+  for name in ['effects-badcount','effects-negative-count','effects-commerce-overflow','effects-fungus-overflow']:
+   b=bytearray(raw)
+   if name=='effects-badcount':struct.pack_into('<i',b,dp+0x50c,9)
+   elif name=='effects-negative-count':struct.pack_into('<i',b,dp+0x50c,-1)
+   elif name=='effects-commerce-overflow':struct.pack_into('<i',b,dp+0x504,2147483647);struct.pack_into('<i',b,o['factions']+fs+economy,3)
+   else:struct.pack_into('<i',b,dp+0x530,2147483647)
+   key=variant+'-'+name;cases.append((key,variant,bytes(b),0));overrides[key]=rawtext
  for n,actor in enumerate(itertools.product([1,2],[-1,0,1],[0,3],range(4),[0,1,2],[10,11])):
   version=7+n%6;variant='base' if version<11 else 'expansion';cases.append((f'v{version}-'+ '-'.join(map(str,actor)),variant,fixture(variant,version,32,[actor]),0))
  for version in range(7,13):
@@ -84,7 +114,6 @@ def main():
  for name,offset,fmt,value in [('bad-channel',o['vehicles']+38,'B',4),('bad-channel255',o['vehicles']+38,'B',255),('harvest-fungus',o['tiles']+8,'I',0x22),('bad-stack',o['vehicles']+48,'h',0),('specialists',o['bases']+0x7c,'i',1)]:
   b=bytearray(seed);struct.pack_into('<'+fmt,b,offset,value);cases.append((name,'expansion',bytes(b),0))
  for mode in range(4):cases.append((f'scratch-{mode}','expansion',fixture('expansion',12,32),mode))
- overrides={}
  for name,mode in [('scratch-add-overflow',3),('scratch-add-negative',2)]:
   b=bytearray(fixture('expansion',12,32,[(1,0,3,1,0,10)]));_,o,_=intake.decode(b);struct.pack_into('<I',b,o['tiles']+8,0x12);cases.append((name,'expansion',bytes(b),mode));t=intake.sections(nutrients.rules('expansion'));row,col,_=intake.ROW['limit_mineral_mine_sans_road'];t['RULES'][row][col]='0';overrides[name]=intake.material(t)
  for name,owner,marked in [('foreign-base-transfer',7,1),('invalid-base-owner-harvest',8,1),('resource3-reset',9,0)]:

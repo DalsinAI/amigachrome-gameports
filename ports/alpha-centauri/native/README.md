@@ -1220,3 +1220,7 @@ Actual AmigaOS qualification remains pending; this does not execute upkeep.
 `base_minerals.h` exposes explicit pre-stage numeric accounting without mutating a world or advancing turns. [Scope and original instruction corrections](MINERAL-ACCOUNTING.md) and [evidence](MINERALS-EVIDENCE-20261025.json) distinguish the completed host/original-helper checks from pending native execution. Saved post-calculation intake is not a fresh yield input.
 
 Fresh mineral composition is documented in [WORLD-FRESH-MINERALS.md](WORLD-FRESH-MINERALS.md). It returns a bounded read-only proposal from fresh intake, actual convoys and pending support; native qualification remains UNRUN.
+
+### Fresh technology-effect tile/intake binding (local candidate)
+
+[WORLD-FRESH-TECHNOLOGY-YIELDS.md](WORLD-FRESH-TECHNOLOGY-YIELDS.md) connects the complete read-only technology-effects stage to original fungus leaves and stable/convoy nutrient proposals. Saved snapshot tile APIs remain unchanged. No cache/award/accounting commit or turn is added; native and publication remain held.

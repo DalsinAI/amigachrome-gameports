@@ -15,6 +15,8 @@ from test_world_terraform_ecology import wire_expected as ecology_expected
 from worker_radius_reference import DX,DY
 from test_tile_yields import expected as leaf_expected
 from tile_bonus_reference import bonus_model
+from test_technology_effects_world import facts as effect_facts
+from test_technology_effects import model as effect_model
 HERE=Path(__file__).resolve().parent
 def rules(variant):
  t=sections(rules_fixture(variant));t['RESOURCEINFO']=[[f'R{i}','2','1','1','0'] for i in range(9)]
@@ -34,6 +36,9 @@ def fixture(variant,version,case):
  if flags&8:struct.pack_into('<i',b,pref('SecretProjects',27),0)
  if flags&16 and not legacy:struct.pack_into('<i',b,pref('SecretProjects',35),0)
  for name,value in [('player_flags',0x200),('SE_planet_pending',0),('SE_economy_pending',0),('tech_fungus_nutrient',1),('tech_fungus_mineral',1),('tech_fungus_energy',1),('base_count',1),*zip(['satellites_nutrient','satellites_mineral','satellites_energy'],sat)]:fset(name,value)
+ # These definition facts were previously unused opaque fixture bytes. The fresh stage
+ # now consumes them, so seed a genuine empty bonus list and zero rule commerce.
+ struct.pack_into('<i',b,off['faction_definitions']+0x59c+0x504,0);struct.pack_into('<i',b,off['faction_definitions']+0x59c+0x50c,0)
  field=next(f for f in FACTIONS['MFaction']['fields'] if f['name']=='rule_flags');struct.pack_into('<I',b,off['faction_definitions']+0x59c+field['offset'],0)
  p=off['bases'];b[p:p+bs]=bytes(bs);struct.pack_into('<hhb',b,p,8,6,1);b[p+6]=pop;struct.pack_into('<I',b,p+0x78,(1<<(pop+1))-1);struct.pack_into('<I',b,p+0x8c,fac);struct.pack_into('<I',b,p+0x48,0xdeadbeef)
  for delta in [0xb0,0xb4,0xb8,0xbc,0xc0,0xc4,0xc8,0xcc]:struct.pack_into('<I',b,p+delta,0xcafebabe)
@@ -77,15 +82,16 @@ def model(variant,text,data,mode=0):
   if id==-1:return True
   if id<0 or id>=88:return False
   a,c=[keys[n.lower()] for n in tables['TECHNOLOGY'][id][6:8]];return a!=-2 and not(c==-2 and a!=-1) and bool(pref('TechOwners',id)&(1<<faction))
+ effect_error,fresh_effects=effect_model(effect_facts(text,data)[faction])
+ if effect_error:return fail(7 if effect_error==2 else 1)
  for i,(dx,dy) in enumerate(zip(DX[:21],DY[:21])):
   if not worked&(1<<i):continue
   xx,yy=x+dx,y+dy
   if not flat:xx=xx+w if xx<0 else xx-w if xx>=w else xx
   if not(0<=xx<w and 0<=yy<h):return fail(4)
   sq=tile(xx,yy);items,lm=struct.unpack_from('<II',sq,8)
-  if items&0x20:return fail(3)
   if sq[0]&0xe0<0x60:flags|=0x8000
-  row=[0]*59;row[0]=int(variant=='expansion');row[1:7]=[sq[0],sq[2],sq[5],items,lm,bonus_model(struct.unpack_from('<I',spans['metadata'],8)[0],xx,yy,pref('GameRules'),sq[0],items)];row[9]=state('SE_planet_pending');row[10]=state('SE_economy_pending');row[11:14]=[state(n) for n in ['tech_fungus_nutrient','tech_fungus_mineral','tech_fungus_energy']];row[14]=state('base_count');row[15]=int(bool(struct.unpack_from('<I',b,0x30)[0]&4));row[18],row[19]=struct.unpack_from('<II',b,0x8c)
+  row=[0]*59;row[0]=int(variant=='expansion');row[1:7]=[sq[0],sq[2],sq[5],items,lm,bonus_model(struct.unpack_from('<I',spans['metadata'],8)[0],xx,yy,pref('GameRules'),sq[0],items)];row[9]=state('SE_planet_pending');row[10]=state('SE_economy_pending');row[11:14]=fresh_effects[1:4];row[14]=state('base_count');row[15]=int(bool(struct.unpack_from('<I',b,0x30)[0]&4));row[18],row[19]=struct.unpack_from('<II',b,0x8c)
   if row[14]<0:return fail(1)
   try:row[16]=int(variant=='expansion' and project(33))
   except ValueError:return fail(1)
@@ -113,7 +119,7 @@ def model(variant,text,data,mode=0):
  return [0,*satellites,*tiles,*totals,worked,flags,eco[1],0,energy,*[v for row in values for v in row]]
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--cc',default='c++');ap.add_argument('--m68k-linux',action='store_true');ap.add_argument('--original-control',type=Path);ap.add_argument('--original',type=Path,action='append',default=[]);ap.add_argument('--original-rules',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- sources=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','vehicle_stack.cpp','tile_yields.cpp','world_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','world_stable_intake_probe.cpp'];exe=a.out/'world-stable-intake-probe';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[a.cc,*flags,*[str(HERE/n) for n in sources],'-o',str(exe)];subprocess.run(cmd,check=True);runner=['qemu-m68k','-cpu','m68040'] if a.m68k_linux else [];cases=[];texts={v:rules(v) for v in ['base','expansion']}
+ sources=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','vehicle_stack.cpp','tile_yields.cpp','world_tile_yields.cpp','technology_effects.cpp','world_fresh_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','world_stable_intake_probe.cpp'];exe=a.out/'world-stable-intake-probe';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[a.cc,*flags,*[str(HERE/n) for n in sources],'-o',str(exe)];subprocess.run(cmd,check=True);runner=['qemu-m68k','-cpu','m68040'] if a.m68k_linux else [];cases=[];texts={v:rules(v) for v in ['base','expansion']}
  for variant in ['base','expansion']:
   for case in range(1,65):cases.append((f'{variant}-{case}',variant,fixture(variant,7+case%4 if variant=='base' else 11+case%2,case),case))
  for version in range(7,13):
