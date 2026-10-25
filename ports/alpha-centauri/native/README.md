@@ -1059,3 +1059,7 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+Original human nutrient/mineral factors retain original zero/default-Industry
+behavior in a separate pure API: [scope](HUMAN-COST.md),
+[evidence](HUMAN-COST-EVIDENCE-20261025.json). Native execution remains pending.
