@@ -1,0 +1,27 @@
+{
+  "status": "HOST PASS / SDK BUILD PASS / NATIVE AND BE EXECUTION UNRUN",
+  "fixedPreparation": {
+    "cases": 262,
+    "directionsPerCase": 26,
+    "byteCount": 115280,
+    "outputSHA256": "e8b051b5523d646f23cff7ad92de5c3f289920011efb919be2a1fba73bfc2e13",
+    "independentPythonAndCppExact": true
+  },
+  "objectRaster": {
+    "cases": 8,
+    "bytes": 1536,
+    "outputSHA256": "b3388742e9ea065ec2cb4a354968b1829dd6788da0cd26066097bc91fdd95671",
+    "originalObjectShadeDirectionClippedRasterAndPatcherExecuted": true,
+    "realOriginalCallback": true,
+    "fakeRendererCallbacks": false,
+    "wholeGame": false
+  },
+  "transactionalInvalidCases": 16,
+  "realVIOrRoverDraw": "UNRUN",
+  "finalBlit": "UNRUN",
+  "labAccess": false,
+  "normalSdkBinaryHashes": {
+    "fixed-native-final": "d61c667c1329ac2a722c2ffdde0fddb3d4c5714f8ecc39e77717a81c4f04887b",
+    "object-native-final": "58e0ec9e1b06bd8253e89b843b8054583df4b3bd7b37a1f1e21db3be5d543e81"
+  }
+}
