@@ -544,3 +544,44 @@ OUTPUT`. `ORIGINAL-FACTION-EVIDENCE-20261025.json` records all105 native cases,
 including the three original tutorials. The lab is stopped and its original
 configuration, ROM pair, module and startup verified restored. Assets stay
 private. A decoded saved AI plan is not a working AI or restored full game.
+
+### Owned original world
+
+`OriginalWorld` in `original_world.cpp/h` owns a copy of the original complete
+container and native decoded tiles, all512 prototypes, counted vehicles/bases,
+and all8 faction-state/definition records. Opaque blocks remain in that owned
+snapshot for later interpretation; they are not replaced by invented defaults.
+None of its views depend on the caller's buffer. Original data versions and raw
+ID spaces remain unchanged, including faction-specific prototypes such as320 in
+the original Explore tutorial. This is a read-only import foundation, not a
+working turn loop or a new game. No raw native structures are serialized.
+
+Import checks coordinate parity/ranges, vehicle faction/prototype/home/stack
+index bounds and base faction/queue bounds before the world becomes available.
+These are **partial reference checks**, not complete gameplay legality, stack
+reciprocity/cycle validation or rule-component/version mapping. Later actions
+must validate their actual dependencies. Unknown state is preserved without
+pretending to execute it. Runtime RNG seed is supplied explicitly at world
+level; an ordinary save's tick/map seed is not silently substituted for runtime
+random state. No independent per-unit seeds are initialized.
+
+A64MiB default per-world budget is checked with64-bit arithmetic before any
+allocation. It counts the original snapshot, all native arrays and object size.
+It does not claim to cover peak memory while an old world and caller input
+coexist during replacement. Platform allocation failure remains possible and
+returns an error. Records get explicit C++ object lifetimes in normal allocated
+storage. RAII frees partial allocations. A failed load preserves the previous
+world; a successful self-reload copies input before releasing its predecessor.
+The interface is noncopyable and cleared safely more than once.
+
+`test_original_world.py --out NEW_DIR` covers64 synthetic import/lifetime,
+resource-budget, malformed/truncated and actor-reference cases on host ASan/UBSan
+and independent big-endian68040 CI. Successful cases poison and free caller
+memory, compare every owned record field to the qualified snapshot decoder,
+check failed reloads preserve state/seed, and reload from their own snapshot.
+The actual normal-SDK AmigaOS binary additionally passes all3 original tutorials,
+including all custom prototype/faction records. Build with
+`CXX=.../m68k-amigaos-g++ sh build_world_probe.sh OUTPUT`; evidence is in
+`ORIGINAL-WORLD-EVIDENCE-20261025.json`. The lab is stopped/restored; no live
+instance or original user data was changed. Full restored gameplay remains work
+in progress: importing original state alone does not execute it.

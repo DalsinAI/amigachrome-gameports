@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-25",
+  "scope": "Owned complete original container plus native decoded records, read-only import foundation",
+  "syntheticCases": 64,
+  "originalScenarios": 3,
+  "host": "ASan/UBSan all67 cases, complete caller-buffer poisoning/free and preserved reload state",
+  "native": {
+    "cases": 67,
+    "passed": true,
+    "frames": 42,
+    "rc": 0,
+    "probeSHA256": "10a114715451e0cd1cc0357624419718de086d86b7011e2ccd2c391aad393528",
+    "logSHA256": "041667ac7612117fcc17b89bfc0180bdb006789e31abd49193eb92023d62b691"
+  },
+  "originalExpectedValues": [
+    {
+      "index": 64,
+      "name": "Build.SC",
+      "valid": true,
+      "limit": null,
+      "size": 195866,
+      "sha256": "bf56d50d18866f715a036cc5322bef579455af5f953d1981a415fcf0dafde310",
+      "expected": {
+        "version": "7",
+        "vehicles": "7",
+        "bases": "4",
+        "tiles": "1152",
+        "bytes": "195866",
+        "snapshot": "d733bd53",
+        "seed": "abcdef01",
+        "ownership": "1",
+        "transactional": "1",
+        "rc": "0"
+      }
+    },
+    {
+      "index": 65,
+      "name": "Explore.SC",
+      "valid": true,
+      "limit": null,
+      "size": 195086,
+      "sha256": "7b828aa4c06772d0e961c66729a1d80a389e603b2dc58e09faa05ba2816668d0",
+      "expected": {
+        "version": "7",
+        "vehicles": "4",
+        "bases": "2",
+        "tiles": "1152",
+        "bytes": "195086",
+        "snapshot": "ef4d131f",
+        "seed": "abcdef01",
+        "ownership": "1",
+        "transactional": "1",
+        "rc": "0"
+      }
+    },
+    {
+      "index": 66,
+      "name": "conquer.SC",
+      "valid": true,
+      "limit": null,
+      "size": 196594,
+      "sha256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45",
+      "expected": {
+        "version": "7",
+        "vehicles": "9",
+        "bases": "6",
+        "tiles": "1152",
+        "bytes": "196594",
+        "snapshot": "5525908f",
+        "seed": "abcdef01",
+        "ownership": "1",
+        "transactional": "1",
+        "rc": "0"
+      }
+    }
+  ],
+  "privateTestROM": {
+    "roms/openkick-rom4.rom": "c2341dc9434823515edee4e1fcd21b99d1a9af6f5fcbcb5c361b956229b71fec",
+    "roms/aros-amiga-m68k-ext.bin": "22ac131ff8ddef0cf01c6158f74e782b7ea1f2e63444dde22c15027ae105109c"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "sourceSHA256": {
+    "original_world.cpp": "76b8796c0ff30c102895319f28a5dcbefaed81dd48c8cce32bf633e5475c62c8",
+    "test_original_world.py": "7f1f9a7f76a896853973a227b81ee67520eca5d02cadb95953a15d9bdfdc4642",
+    "original_world_probe.cpp": "9161c1f2e313a14d52c825c9ec7a18032490692319cebdbb702ca31f3ce898ca",
+    "original_world.h": "1c972f22fd2c9db28520e27a85743c4ee1e55c0fb103a5bc9797179548cbd0b0"
+  },
+  "limits": [
+    "Read-only original-world import, no gameplay actions/AI/upkeep/save writer or restored full game claim",
+    "Original version IDs and opaque blocks preserved; later action/rule bindings must validate components and version/variant mapping",
+    "Actor coordinate/indices/queue bounds checked; stack reciprocity/cycles and full gameplay legality not yet reconstructed",
+    "Runtime RNG seed is explicit caller state, not derived from ordinary tick/map footer or per-unit seeds",
+    "Memory budget covers one world, not replacement peak with old world/caller input still alive; OS allocation can still fail",
+    "No original-executable differential fidelity or original assets distributed"
+  ]
+}
