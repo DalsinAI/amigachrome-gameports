@@ -209,3 +209,40 @@ An independent Python digest also checks 16,384 social and 2,001 nutrient cases.
 Thirteen invalid/overflow controls verify unchanged output. No original assets
 are needed by CI. Source-function equivalence is not differential verification
 against the original executable, nor proof of an integrated or playable turn.
+
+
+## Components and starting-unit blueprints
+
+`read_unit_definitions` loads CHASSIS, REACTORS, WEAPONS, DEFENSES, ABILITIES
+and the declared UNITS rows. The explicit base/expansion variants have9/9
+chassis,4/4 reactors,21/26 weapons,10/14 armour and24/29 abilities. UNITS may
+declare0..64 rows; the stock tables declare14/23. Component and technology
+references resolve against owned state; ambiguous or unknown keys fail.
+Chassis noun names/gender/plurality remain available alongside numeric fields.
+
+Storage is native explicit-width state, not packed save structures. Values
+must fit their original byte/word domains instead of silently wrapping casts;
+triads are0..2, missile flags0..1. Empty ability abbreviations/descriptions and
+terminal commas are allowed. A unit must reference actual components, rather
+than passing None/Disable indices into a prototype constructor. Ability masks
+remain unsigned32 values; interpreting those bits belongs to derived stats.
+
+The pinned OpenSMACX reactor-power enhancement is retained. Its optional last
+UNITS reactor column defaults to1, except prototypes17/18 (Ogre Mk2/Mk3) default
+to2/3. Explicit0 also selects that default. Raw plan -1 and cost/carry0 overrides
+remain raw: **this does not implement make_proto or auto-calculated statistics**.
+The next step must derive those before treating a blueprint as a live unit.
+
+```sh
+python3 ports/alpha-centauri/native/test_units.py --out /tmp/unit-host
+python3 ports/alpha-centauri/native/test_units.py --out /tmp/unit-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+Optional local original files: `--owner-dir /path/to/private-data` containing
+alpha.txt/alphax.txt. `unit-probe base|expansion FILE` dumps all component and
+blueprint fields:750 for the stock base file and938 for expansion. Python
+compares every field independently. Synthetic cases include all truncated
+row boundaries, duplicate/unknown keys, byte bounds, unsigned masks, optional
+columns and reactor defaults, including mod-sized64-row tables. Original
+assets remain outside the repository and CI.

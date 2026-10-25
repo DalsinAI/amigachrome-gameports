@@ -40,3 +40,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_logic.py --out "$RUNNER_TEMP/logic-host"
       - name: Big-endian owned social and nutrient logic controls
         run: python3 ports/alpha-centauri/native/test_logic.py --out "$RUNNER_TEMP/logic-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host unit definition controls
+        run: python3 ports/alpha-centauri/native/test_units.py --out "$RUNNER_TEMP/unit-host"
+      - name: Big-endian unit definition controls
+        run: python3 ports/alpha-centauri/native/test_units.py --out "$RUNNER_TEMP/unit-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
