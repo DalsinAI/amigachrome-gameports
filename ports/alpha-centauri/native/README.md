@@ -1021,10 +1021,11 @@ contact/combat/ZOC, wake/transport states, fractional attempts and expansion
 mechanics are deferred. FREEABIL checks cover both vehicle and design owners.
 No discovery/event callbacks, upkeep, artificial next turn or fake AI is added.
 
-`test_world_actions.py` builds synthetic original containers and checks 45
-supported/rejected boundary cases, including full decoded-state no-write checks
+`test_world_actions.py` builds synthetic original containers and checks 46
+boundary/sequence cases, including full decoded-state no-write checks
 on rejection, runtime RNG preservation, untouched wire bytes and successful
-stack validation. Host address/undefined sanitizers pass. A private copied-data
+stack validation. A cumulative round-trip consumes six movement points, then
+rejects the next step without writes. Host address/undefined sanitizers pass. A private copied-data
 probe resets the baseline for each of 160 original tutorial edges and supports
 45 steps (Explore2/Build15/conquer28); all original source files remain unchanged.
 This is an integration control, not a full original executable differential.

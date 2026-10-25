@@ -110,6 +110,13 @@ def main():
   expected=f'status={status} price={price} unchanged={int(status!="moved")} seed=abcdef01 rc=0\n'
   assert r.returncode==0 and r.stdout==expected,(name,r.returncode,r.stdout,r.stderr,expected)
   records.append(dict(name=name,status=status,price=price,passed=True))
+ # Cumulative expenditure is exercised without resetting the runtime world.
+ # Two full-cost steps consume the synthetic rover's six movement points;
+ # the third attempt must preserve the entire post-move state and RNG.
+ sequence=out/'roundtrip.SC';sequence.write_bytes(fixture())
+ r=subprocess.run([*runner,str(exe),str(rules),str(sequence),'--roundtrip'],capture_output=True,text=True,timeout=30,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'))
+ assert r.returncode==0 and r.stdout=='roundtrip=2 exhausted=1 spent=6 rng=abcdef01 rc=0\n',(r.returncode,r.stdout,r.stderr)
+ records.append(dict(name='cumulative-exhaustion',steps=2,exhausted=1,passed=True))
  (out/'receipt.json').write_text(json.dumps(dict(command=cmd if not a.probe else None,suppliedProbe=str(exe) if a.probe else None,runner=runner,cases=records,binarySHA256=hashlib.sha256(exe.read_bytes()).hexdigest()),indent=2)+'\n')
- print(f'{len(records)} restricted world-action boundary cases passed')
+ print(f'{len(records)} restricted world-action boundary/sequence cases passed')
 if __name__=='__main__':main()

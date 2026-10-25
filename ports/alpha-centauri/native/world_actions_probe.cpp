@@ -22,7 +22,8 @@ uint32_t digest(const OriginalWorld& w){
  return h;
 }
 int main(int argc,char** argv){
- if(argc!=3 && argc!=8)return 20;
+ if(argc!=3 && argc!=4 && argc!=8)return 20;
+ if(argc==4 && strcmp(argv[3],"--roundtrip"))return 20;
  size_t n;uint8_t* text=read(argv[1],n);if(!text)return 20;
  auto* tech=(Rules*)calloc(1,sizeof(Rules));auto* defs=(UnitDefinitions*)calloc(1,sizeof(UnitDefinitions));
  if(!tech || !defs){free(text);free(tech);free(defs);return 20;}
@@ -30,6 +31,18 @@ int main(int argc,char** argv){
  free(text);if(!good){free(tech);free(defs);return 20;}
  size_t bytes_count;uint8_t* bytes=read(argv[2],bytes_count);if(!bytes){free(tech);free(defs);return 20;}
  OriginalWorld w;if(w.load(bytes,bytes_count,0xabcdef01)!=WorldLoadError::ok){free(bytes);free(tech);free(defs);return 20;}
+ if(argc==4){
+  const auto* start=w.vehicle(0);if(!start)return 20;
+  const int x=start->x,y=start->y;const auto player=start->faction_id;
+  const auto first=WorldActions::clear_land_step(w,*defs,*tech,0,player,3,x+1,y+1);
+  const auto second=WorldActions::clear_land_step(w,*defs,*tech,0,player,3,x,y);
+  const auto snapshot=digest(w),seed=w.runtime_seed();
+  const auto third=WorldActions::clear_land_step(w,*defs,*tech,0,player,3,x+1,y+1);
+  if(first.status!=StepStatus::moved || second.status!=StepStatus::moved || third.status!=StepStatus::exhausted ||
+     digest(w)!=snapshot || w.runtime_seed()!=seed || memcmp(w.original_bytes(),bytes,bytes_count))return 21;
+  printf("roundtrip=2 exhausted=1 spent=%u rng=abcdef01 rc=0\n",w.vehicle(0)->moves_spent);
+  free(bytes);free(tech);free(defs);return 0;
+ }
  if(argc==8){
   const auto before=digest(w);const auto seed=w.runtime_seed();
   const auto r=WorldActions::clear_land_step(w,*defs,*tech,(size_t)strtoul(argv[3],nullptr,10),atoi(argv[4]),atoi(argv[5]),atoi(argv[6]),atoi(argv[7]));
