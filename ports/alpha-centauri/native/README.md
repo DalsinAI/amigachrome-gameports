@@ -1080,10 +1080,11 @@ current explicit RNG seed is returned separately in the receipt for the caller
 to retain using a separately qualified persistence format. No struct dump or
 custom single-scout codec is used. Player-facing save/load remains unavailable.
 
-Host ASan/UBSan checks pass 86 synthetic cases over wire versions7..12, including
+Host ASan/UBSan checks pass 93 synthetic cases over wire versions7..12, including
 byte-exact unchanged output, independently computed storage edits, reload, and
-transactional rejection. An additional39 private original-tutorial cases pass
-(125 total), with source data untouched. The normal SDK probe compiles, but
+transactional rejection. An additional42 private original-tutorial cases pass
+(135 total), with source data untouched. The evidence probe rejects an existing readable target,
+including its input; this guard is not an atomic replacement protocol. The normal SDK probe compiles, but
 actual AmigaOS and independent big-endian qualification are pending. Do not
 expose this draft encoder to user save operations before those gates pass.
 

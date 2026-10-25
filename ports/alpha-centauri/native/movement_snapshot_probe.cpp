@@ -9,6 +9,10 @@ static uint32_t hash(const uint8_t* p,size_t n){uint32_t h=2166136261;for(size_t
 int main(int argc,char** argv){
  if(argc!=4)return 20;
  const int mode=atoi(argv[3]);if(mode<0 || mode>12)return 20;
+ // Evidence paths are fresh and exclusively owned by the test runner. Refuse
+ // a readable existing target, including aliases of the input. This is not an
+ // atomic filesystem commit or an assumption that the SDK supports O_EXCL.
+ FILE* existing=fopen(argv[2],"rb");if(existing){fclose(existing);return 20;}
  FILE* f=fopen(argv[1],"rb");if(!f)return 20;
  if(fseek(f,0,SEEK_END)){fclose(f);return 20;}const long length=ftell(f);rewind(f);
  if(length<=0 || length>64*1024*1024){fclose(f);return 20;}

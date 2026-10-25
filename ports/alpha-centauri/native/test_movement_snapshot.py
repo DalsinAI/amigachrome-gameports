@@ -60,6 +60,9 @@ def main():
    else:assert not dest.exists() and 'unchanged=1 rc=0' in r.stdout,(name,mode,r.stdout)
    assert path.read_bytes()==data
    records.append(dict(name=name,mode=mode,passed=True,output=r.stdout))
+  r=subprocess.run([*runner,str(exe),str(path),str(path),'0'],capture_output=True,text=True,timeout=60,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'))
+  assert r.returncode==20 and path.read_bytes()==data,(name,'existing source target',r.returncode,r.stderr)
+  records.append(dict(name=name,mode='existing-target',passed=True))
  (out/'receipt.json').write_text(json.dumps(dict(command=None if a.probe else cmd,suppliedProbe=str(exe) if a.probe else None,runner=runner,cases=records,binarySHA256=hashlib.sha256(exe.read_bytes()).hexdigest()),indent=2)+'\n')
  print(f'{len(records)} original-container movement snapshot cases passed')
 if __name__=='__main__':main()
