@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-25",
+  "stockCombinations": 21,
+  "stockSocialCases": 21504,
+  "stockDigest": "d2e64365",
+  "synthetic": {
+    "social": 16384,
+    "nutrient": 2001,
+    "invalid": 13,
+    "digest": "9bdb45e6"
+  },
+  "host": "ASan/UBSan pass; every result compared with pinned source adapters plus independent Python digest",
+  "raw68040": "OpenAmigaGCC16.2.0-open3 generated instructions RC0 on all synthetic and stock controls",
+  "binarySHA256": "1a42f332f1d632db0103954a36cae71ab56669eb83af513295590207002bd323",
+  "sourceSHA256": {
+    "basic_fields.inc": "acce4e5e87f6968abfc5a6450a4bf2b322800413c2637c5115e62b8cecf2b0db",
+    "logic_control.cpp": "bf6fb08424574715e0b14bef826ea7261e9b0eceaaa10b99fdbb61d4fc10f6f2",
+    "rules_text.h": "227bfa7e39cb62cdc74db33163401100f266bc6320a7ac23a878ec2a2639be83",
+    "game_logic.cpp": "f5a942e7cd911645ad58dac4618524886fe99f438eac271fd936a97a24356f9e",
+    "social_probe.cpp": "4a32d224636a0f91bee984335d15b4bcc677e71b7cd671a2d6e88be73f70db31",
+    "world_fields.inc": "4af71c22e4392917f036b2729bf07479fcbff5381e31a78a215c5454d48432a2",
+    "upstream_logic_reference.h": "208b8c83fb0b0044bb0da0378ab16d5cf9801040e2dc1c5e0e90c9a31a6e7517",
+    "basic_probe.cpp": "5cb25d4bf23fb94d496b872041b0c9e003f9795bae5f3caf9bff6ccb9db0d12d",
+    "faction_probe.cpp": "def2bd2224b0c23ac70b803c13f972cae7e6362c4e9aed675b0d095a4534100f",
+    "probe_digest.h": "fb4679a81320a63b986f50b8d5d5384d181552dabf2f0373040bcbd32cd74c74",
+    "rules_text.cpp": "f1ba0c4e71cdfc0fed45942f99672be19dc33b6603c2808774ec363793229ca8",
+    "rules_probe.cpp": "f124dc742479e94e83b54f9d4ddd72c5d4e73e54be3eebda8df8a5c934d13028",
+    "game_logic.h": "641a0277340f1ccf487b97a48370ecc75b440e40f4978535b5ca00b4fb9ccb35"
+  },
+  "scope": "Social modifiers and single-base nutrient calculation; not integrated turns, AI, maps, UI, save compatibility or original-executable differential",
+  "nativeAmigaOS": {
+    "rc": 0,
+    "stockSocialCases": 21504,
+    "stockDigest": "d2e64365",
+    "syntheticDigest": "9bdb45e6",
+    "labStopped": true,
+    "ROMModuleStartupUnchanged": true,
+    "ROMHashes": {
+      "aros-amiga-m68k-ext.bin": "52a01954c7c425dd712ae89eecbe75b5cf6277f47082b5bc07ff0697ed295136",
+      "openkick-rom4.rom": "c0013cbb0b66292ffb78d7e454bceb2960c84b95c35aea293780893d40ec6a07"
+    },
+    "logSHA256": "6a1f035fd5f838cc24258adab53e69b23b630c59327ff4672336726c8c8e67bd",
+    "scope": "Actual AmigaOS control in restored isolated lab, no live changes or integrated gameplay"
+  },
+  "referenceWhitespaceNormalized": true
+}
