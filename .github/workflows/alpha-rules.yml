@@ -52,3 +52,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_movement.py --out "$RUNNER_TEMP/movement-host"
       - name: Big-endian map geometry and movement pricing controls
         run: python3 ports/alpha-centauri/native/test_movement.py --out "$RUNNER_TEMP/movement-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fractional movement expenditure controls
+        run: python3 ports/alpha-centauri/native/test_move_budget.py --out "$RUNNER_TEMP/budget-host"
+      - name: Big-endian fractional movement expenditure controls
+        run: python3 ports/alpha-centauri/native/test_move_budget.py --out "$RUNNER_TEMP/budget-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
