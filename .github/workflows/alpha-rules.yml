@@ -84,3 +84,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_original_faction.py --out "$RUNNER_TEMP/original-faction-host"
       - name: Big-endian original saved faction state controls
         run: python3 ports/alpha-centauri/native/test_original_faction.py --out "$RUNNER_TEMP/original-faction-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned original-world controls
+        run: python3 ports/alpha-centauri/native/test_original_world.py --out "$RUNNER_TEMP/original-world-host"
+      - name: Big-endian owned original-world controls
+        run: python3 ports/alpha-centauri/native/test_original_world.py --out "$RUNNER_TEMP/original-world-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
