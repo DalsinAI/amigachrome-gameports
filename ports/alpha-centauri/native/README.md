@@ -628,3 +628,48 @@ context in those probes. The lab is stopped/restored; assets remain private.
 These calculations support restoration but do not yet let the original games
 execute full turns, AI, combat or saves. No original-executable differential
 fidelity is claimed.
+
+### Unit dependencies bound to the original world
+
+`world_unit_stats.cpp/h` binds saved-unit speed to the actual owned original
+world. It restores `morale_veh(..., versusNative=0)`, including ordinary faction
+social/rule morale, negative Creche mitigation, Brood Pit ordering, immunity and
+the recovered source's riot-morale fix. Probe morale uses SE probe, Telepathic
+Matrix and achieved probe-improving technologies. Basic psi morale uses the raw
+unit value as in source. Planet lifecycle uses the saved turn thresholds,
+monolith state, Locust bonus and native flags; expansion Fungal Towers count
+nearby fungus at shelf-or-higher altitude, preserving original wrap/duplicate
+neighbor behavior. This movement-context API does not qualify opposing-faction
+atrocity/tectonic lifecycle calculations for combat.
+
+Project queries use the original **SP array index**, not the facility ID:
+Maritime10, Telepathic30, Cloudbase35 (Thinker facility IDs80,100,105, with
+SP_ID_First70). Project ownership follows the referenced base's actual faction.
+Cloudbase belongs to the design owner, Maritime to the vehicle owner. Facility
+bits use `id/8` and `1<<(id%8)`. Technology queries preserve faction0 exclusion,
+None/Disable semantics, the disabled-prerequisite special case, ownership bits
+and exclusion of Transcendent Thought88. Failed callbacks are errors, not canned
+answers. Base-profile tower/spore constants are disabled explicitly. Unsafe
+arithmetic and base references fail with unchanged outputs instead of reproducing
+undefined behavior from corrupt inputs. Skip-morale speed does not require or
+pretend to query the absent technology/morale dependencies.
+
+`upstream_world_stats_reference.h` retains the recovered `has_tech`,
+`morale_alien` and `morale_veh` bodies. Its test adapters read actual owned data
+for projects, facilities, terrain and technologies. Unrecognized accesses fail
+the test. `test_world_unit_stats.py --out NEW_DIR` compares144 synthetic worlds
+against those source bodies and independent Python interpretation of raw original
+wire fields. It covers both layouts, turn/lifecycle boundaries, raw/social/rule
+morale, facilities/riots/immunity, probe technologies/ownership, projects by
+owner, empty worlds, a narrow wrapped map, damage, speed storage bounds and
+malformed arithmetic/references. Each valid world also compares1248 project/tech
+queries and failed-call output preservation. Host sanitizers and independent
+big-endian68040 CI run the controls.
+
+The native recipe is `CXX=.../m68k-amigaos-g++ sh
+build_world_unit_stats_probe.sh OUTPUT`. Actual AmigaOS qualification in
+`WORLD-UNIT-STATS-EVIDENCE-20261025.json` passes147 cases, including the three
+original tutorials with real saved morale/project/research state. The lab is
+stopped/restored and assets remain private. These bindings remove supplied test
+settings; they do not move units, grant terrain access, run AI/upkeep/combat or
+advance research/turns. No original-executable differential fidelity is claimed.
