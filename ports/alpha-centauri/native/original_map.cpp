@@ -3,22 +3,16 @@
 namespace alpha {
 static uint32_t word(const uint8_t* p){return (uint32_t)p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);}
 static int32_t signed_word(const uint8_t* p){uint32_t n=word(p);return n<=0x7fffffffu?(int32_t)n:-1-(int32_t)(~n);}
-MapReadError read_original_map(const uint8_t* bytes,size_t length,OriginalMapView& output){
- const uint8_t magic[]={'T','E','R','R','A','N','M','A','P',0,0x1a};
- if(!bytes || length<sizeof(magic))return MapReadError::bad_header;
- for(unsigned i=0;i<sizeof(magic);++i)if(bytes[i]!=magic[i])return MapReadError::bad_header;
- if(length<15)return MapReadError::truncated;
- if(word(bytes+11)!=5)return MapReadError::unsupported_version;
- if(length<15+original_map_metadata_size)return MapReadError::truncated;
- const uint8_t* m=bytes+15;const int32_t width=signed_word(m),height=signed_word(m+4);
+MapReadError read_original_map_block(const uint8_t* bytes,size_t length,OriginalMapView& output,size_t& consumed){
+ if(!bytes || length<original_map_metadata_size)return MapReadError::truncated;
+ const uint8_t* m=bytes;const int32_t width=signed_word(m),height=signed_word(m+4);
  if(width<2 || width>4096 || (width&1) || height<1 || height>4096)return MapReadError::bad_dimensions;
  // These limits make all count/length operations safe even with32-bit size_t.
  const uint32_t count=(uint32_t)height*((uint32_t)width/2);
  const uint32_t ax=((uint32_t)width+4)/5,ay=((uint32_t)height+4)/5,ac=ay*((ax+1)/2);
  const size_t tile_bytes=(size_t)count*original_map_tile_size;
- const size_t required=15+original_map_metadata_size+tile_bytes+ac;
+ const size_t required=original_map_metadata_size+tile_bytes+ac;
  if(length<required)return MapReadError::truncated;
- if(length>required)return MapReadError::trailing_data;
  const int32_t landmarks=signed_word(m+32);
  if(landmarks<0 || landmarks>64)return MapReadError::bad_landmarks;
  OriginalMapView result{};auto& info=result.info;
@@ -36,6 +30,17 @@ MapReadError read_original_map(const uint8_t* bytes,size_t length,OriginalMapVie
   landmark.name[32]=0;
  }
  result.metadata=m;result.tiles=m+original_map_metadata_size;result.abstract=result.tiles+tile_bytes;
+ output=result;consumed=required;return MapReadError::ok;
+}
+MapReadError read_original_map(const uint8_t* bytes,size_t length,OriginalMapView& output){
+ const uint8_t magic[]={'T','E','R','R','A','N','M','A','P',0,0x1a};
+ if(!bytes || length<sizeof(magic))return MapReadError::bad_header;
+ for(unsigned i=0;i<sizeof(magic);++i)if(bytes[i]!=magic[i])return MapReadError::bad_header;
+ if(length<15)return MapReadError::truncated;
+ if(word(bytes+11)!=5)return MapReadError::unsupported_version;
+ OriginalMapView result;size_t used=0;
+ auto error=read_original_map_block(bytes+15,length-15,result,used);if(error!=MapReadError::ok)return error;
+ if(used!=length-15)return MapReadError::trailing_data;
  output=result;return MapReadError::ok;
 }
 MapReadError original_map_tile(const OriginalMapView& view,size_t index,OriginalMapTile& output){

@@ -1,0 +1,126 @@
+{
+  "date": "2026-10-25",
+  "source": "Thinker dabe62f2d1abba03de40f3dd3048494843f6a9af MIT; game_data, game_io, record layouts",
+  "hostCases": 93,
+  "syntheticCases": 90,
+  "originalScenarios": [
+    {
+      "index": 90,
+      "name": "Build.SC",
+      "valid": true,
+      "size": 195866,
+      "sha256": "bf56d50d18866f715a036cc5322bef579455af5f953d1981a415fcf0dafde310",
+      "expected": {
+        "version": "7",
+        "marker": "7",
+        "expanded": "0",
+        "player": "5",
+        "turn": "13",
+        "year": "2113",
+        "vehicles": "7",
+        "bases": "4",
+        "width": "48",
+        "height": "48",
+        "replay": "88",
+        "tick": "00208dea",
+        "prefs": "c165138a",
+        "vehicle_digest": "fe478d91",
+        "prototype_digest": "e98c75c4",
+        "base_digest": "188dfa97",
+        "spans": "3f41f991",
+        "map": "a3097430",
+        "ui": "019ce202",
+        "rc": "0"
+      }
+    },
+    {
+      "index": 91,
+      "name": "Explore.SC",
+      "valid": true,
+      "size": 195086,
+      "sha256": "7b828aa4c06772d0e961c66729a1d80a389e603b2dc58e09faa05ba2816668d0",
+      "expected": {
+        "version": "7",
+        "marker": "7",
+        "expanded": "0",
+        "player": "5",
+        "turn": "12",
+        "year": "2113",
+        "vehicles": "4",
+        "bases": "2",
+        "width": "48",
+        "height": "48",
+        "replay": "72",
+        "tick": "001fab0f",
+        "prefs": "1b5e1610",
+        "vehicle_digest": "21f0b4e0",
+        "prototype_digest": "c7702eb7",
+        "base_digest": "60d9471d",
+        "spans": "7b6fe038",
+        "map": "6a8f061f",
+        "ui": "477362ab",
+        "rc": "0"
+      }
+    },
+    {
+      "index": 92,
+      "name": "conquer.SC",
+      "valid": true,
+      "size": 196594,
+      "sha256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45",
+      "expected": {
+        "version": "7",
+        "marker": "7",
+        "expanded": "0",
+        "player": "5",
+        "turn": "69",
+        "year": "2113",
+        "vehicles": "9",
+        "bases": "6",
+        "width": "48",
+        "height": "48",
+        "replay": "104",
+        "tick": "0021789c",
+        "prefs": "286ed606",
+        "vehicle_digest": "d53b0268",
+        "prototype_digest": "2edd1748",
+        "base_digest": "e21da709",
+        "spans": "24f2f3c8",
+        "map": "f482018d",
+        "ui": "6511de61",
+        "rc": "0"
+      }
+    }
+  ],
+  "native": {
+    "cases": 93,
+    "passed": true,
+    "frames": 43,
+    "rc": 0,
+    "probeSHA256": "c6a53211bbe1eae6e93be42920912656b9bd058c3e1598d3334940ee247194ca",
+    "logSHA256": "44ff8af1176789e776ce46c9a6a79bd3b6de6196ea9d3e63c4755f98eca12db2"
+  },
+  "privateTestROM": {
+    "roms/openkick-rom4.rom": "c2341dc9434823515edee4e1fcd21b99d1a9af6f5fcbcb5c361b956229b71fec",
+    "roms/aros-amiga-m68k-ext.bin": "22ac131ff8ddef0cf01c6158f74e782b7ea1f2e63444dde22c15027ae105109c"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "sourceSHA256": {
+    "original_game_wire.json": "16b96d644e3c938d260dfe62711d8e3bfa9094a65b3a00b48bae5e5a1dd185d7",
+    "original_game.cpp": "801e3d800582270f65a76a915f19830e34cabbb2b8685d3516022ae0172e15c1",
+    "original_game_probe.cpp": "fbdeb74554d22255c458fe4a0ff190a04b6bd883eaee9a283239a83648eaa6c2",
+    "test_original_game.py": "0abda8f958e48955b877b4f2cab7dfaa93f0388867fad6d9c77686c855fdd8a3",
+    "original_game.h": "434c63c99707d7ece426038543f2f1c46ac69f95776971ad9f2f346e5b736171"
+  },
+  "limits": [
+    "Plain TERRAN outer0x56 data versions7..12 only; unsupported encrypted/network/TERRAE variants fail",
+    "No original-executable differential fidelity or restored gameplay claim; this is original container/record decoding",
+    "Raw version-tagged gameplay IDs remain unremapped; world initialization must resolve base versus expansion ID spaces",
+    "Current faction state/definitions/replay/other opaque blocks retained as bounded borrowed spans, not yet semantic owned state",
+    "No serialized PC pointers become native pointers; original load side effects, fixups and UI are not run",
+    "Original assets remain private, no custom mini-game save codec"
+  ]
+}

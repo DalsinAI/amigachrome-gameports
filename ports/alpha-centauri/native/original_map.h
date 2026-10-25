@@ -46,6 +46,11 @@ enum class MapReadError { ok,bad_header,unsupported_version,bad_dimensions,bad_l
  * or full SAV/SC game-state import is claimed. Outputs unchanged on failure.
  */
 MapReadError read_original_map(const uint8_t* bytes,size_t length,OriginalMapView& output);
+/* Same bounded map payload embedded in original SAV/SC containers. Trailing
+ * container data is allowed and consumed reports this block's exact byte size.
+ * Both output and consumed are unchanged on failure. No header/version here:
+ * the container decoder must select a supported wire profile first. */
+MapReadError read_original_map_block(const uint8_t* bytes,size_t length,OriginalMapView& output,size_t& consumed);
 MapReadError original_map_tile(const OriginalMapView& view,size_t index,OriginalMapTile& output);
 const char* map_read_error_name(MapReadError error);
 }
