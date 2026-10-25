@@ -33,6 +33,7 @@ class OriginalWorld {
   const OriginalFactionState* faction(size_t i)const{return loaded() && i<8?factions_+i:nullptr;}
   const OriginalFactionDefinition* faction_definition(size_t i)const{return loaded() && i<8?definitions_+i:nullptr;}
  private:
+  friend class LocalProductionSession;
   void swap(OriginalWorld& other);
   uint8_t* raw_=nullptr;
   OriginalMapTile* tiles_=nullptr;

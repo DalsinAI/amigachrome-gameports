@@ -1076,3 +1076,8 @@ Original production switching has a read-only classification/loss preview bound
 to saved base facts: [scope](PRODUCTION-RETOOL.md),
 [evidence](PRODUCTION-RETOOL-EVIDENCE-20261025.json). It does not place orders;
 actual AmigaOS qualification remains pending.
+
+[LOCAL-PRODUCTION-SESSION.md](LOCAL-PRODUCTION-SESSION.md) combines original
+facility options and retooling in an owning offline local controller with private
+revision-bound confirmation plans and atomic live queue/mineral/counter changes.
+No frontend, turn or player-save interface is added; native execution is held.
