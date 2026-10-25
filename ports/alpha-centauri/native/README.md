@@ -1211,3 +1211,7 @@ surplus and stored-food adjustments. `world_fresh_nutrients` binds it to actual
 owned records and fresh stable intake, with explicit convoy facts. The same
 normal worker inspection stage is retained; no upkeep or population growth is
 executed. See [BASE-NUTRIENTS.md](BASE-NUTRIENTS.md).
+
+### Fresh technology-effect tile/intake binding (local candidate)
+
+[WORLD-FRESH-TECHNOLOGY-YIELDS.md](WORLD-FRESH-TECHNOLOGY-YIELDS.md) connects the complete read-only technology-effects stage to original fungus leaves and stable/convoy nutrient proposals. Saved snapshot tile APIs remain unchanged. No cache/award/accounting commit or turn is added; native and publication remain held.

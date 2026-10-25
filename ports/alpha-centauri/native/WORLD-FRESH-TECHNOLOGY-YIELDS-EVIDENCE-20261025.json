@@ -1,0 +1,89 @@
+{
+  "scope": "Fresh technology-effects binding into original tile leaves, selected stable intake and convoy-derived nutrient proposals. Read-only, no discovery/cache/accounting commits.",
+  "parent113": "1f7a3ed2b68fb654a4a87ec97ff572db98e93da4",
+  "frozen106": "972b0d20804909e00022e84483fad8c2e36b42f5",
+  "freshBinding": {
+    "worlds": 163,
+    "queries": 138600,
+    "accepted": 38384,
+    "rejected": 100216,
+    "differentFromSnapshot": 38080,
+    "outputSHA256": "e699e19391513016ef5e033fa32b065d62dd84801520ed70025cdadde5e12e0f"
+  },
+  "convoyComposition": {
+    "worlds": 572,
+    "accepted": 559,
+    "rejected": 13,
+    "outputSHA256": "352d399891b6e31fa4d802eb9b2f58b17f7a5e87ae20cf4ca5daac624eef8b59"
+  },
+  "privateOriginalComposition": {
+    "completeSequences": 128,
+    "base": 64,
+    "expansion": 64,
+    "originalHelpers": [
+      "tech_effects",
+      "support",
+      "base_yield",
+      "nutrient"
+    ],
+    "wholeSeededGlobalsAndSelectedBaseCompared": true,
+    "directOwnedHostAnd68040Observations": 256,
+    "fieldsEach": 18,
+    "outputSHA256": "1a135d9759f08b6c1e1ccc537bd41817e93370e071e984c4a25ef3e301d91196"
+  },
+  "privateSession": {
+    "worlds": 48,
+    "twoRealOrdersAndCompleteContainerReload": true,
+    "outputSHA256": "339badd98279c8e5e3dc6a048b7b5f54997dda652eda98a61b25b8154a0de2d3"
+  },
+  "regressions": {
+    "snapshotTile": {
+      "worlds": 122,
+      "queries": 101360,
+      "outputSHA256": "c5e1384bea2f73ff1f5bc44ab360129175c151373362b5c13f99e113af98daf6"
+    },
+    "stableIntake": {
+      "worlds": 160,
+      "accepted": 147,
+      "rejected": 13,
+      "outputSHA256": "ae8901fa5848b27379b3c21992e7543ed6586553272c87de50de29112f38bcf0"
+    },
+    "freshNutrients": {
+      "worlds": 155,
+      "accepted": 144,
+      "rejected": 11,
+      "outputSHA256": "b43a24e84e77d1a5b4fc84c246b39a02066867e11faa7d2c224bad010a5ca501"
+    },
+    "effectAliases": {
+      "fixtures": 4,
+      "pureAliasRejections": 32,
+      "adjacentValidOutputs": 16,
+      "rangeBoundaryControls": 40,
+      "worldAliasRejections": 96,
+      "disjointWorldResults": 4,
+      "allInputWorldAndRulesBytesUnchanged": true,
+      "outputSHA256": "6c74318566e46f8175e14df44e15489b6ade0f24a1956fc1c4b2b013ad5024da",
+      "native": "UNRUN"
+    }
+  },
+  "SDK": {
+    "fresh-tile-native": "d83c472553bf6576a07b8739335d647d678c020c5c3e2263b2cf9e47087eb6a7",
+    "stable-intake-native": "8d940a0f9aee84ef399759bdd466d3f90f3294ad623124fc701d414d8c0c4574",
+    "fresh-nutrients-native": "b0a731633aa4d37afc98058d0482c80dbf4c2b043a8cf5479f1e87e99018b06a",
+    "convoy-native-final": "7e5029d3efee2dcbdbcf5890d452d571850ffea55dd4f7c8a268dffbf5ddb46a",
+    "session-convoy-native": "9cb7e83925662d97a2fcd105746b9aaca3aa6f570ffa6ca546463b4c983e7649"
+  },
+  "hostAndIndependentLinux68040": "PASS local actual execution, not final-head CI",
+  "AmigaOS": "UNRUN",
+  "CI": "UNRUN on this unpublished integration",
+  "publication": "LOCAL root-review candidate only",
+  "labInteractions": 0,
+  "originalAssetsOrVectorsPublished": false,
+  "limits": [
+    "Explicit runtime edition/stage; no save-version authority inference.",
+    "Stable directed-human valid-mask/no-specialist domain only; no allocation, upkeep, general support or turns.",
+    "Owned proposals intentionally leave original actor-support writes and cache commits unapplied.",
+    "Original128 composition cases: Planet0, Manifold absent; wider project/planet leaves/bindings separately controlled.",
+    "Current original scratch page captured; convoy fields compared, not all scratch bytes independently modeled."
+  ]
+}

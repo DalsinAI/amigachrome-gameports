@@ -24,7 +24,7 @@ struct StableIntakeResult {
 /* Fresh intake proposal for an already valid directed-human worked mask:
  * exactly population+1 selected first21 tiles including centre, no specialists,
  * no automatic governor and no selected unavailable non-centre tile.
- * Selected fungus rejects pending a fresh technology-effects integration.
+ * Fungus uses complete fresh technology effects, never saved cache values.
  * This queries actual satellite counts/projects, tile yields and raw ecology;
  * never recycles saved intake/damage. Explicit transient scratch/branch facts
  * are supplied by the caller, not inferred from the saved container.

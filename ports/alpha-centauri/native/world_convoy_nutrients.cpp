@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "world_convoy_nutrients.h"
 #include "movement.h"
+#include "world_fresh_tile_yields.h"
 namespace alpha {namespace {
 bool overlap(const void*a,size_t an,const void*b,size_t bn){
  if(!a||!b||!an||!bn)return false;
@@ -26,7 +27,9 @@ StableIntakeError world_convoy_flows(const OriginalWorld&w,const Rules&t,const B
  WorldTileYieldStage ts{s.variant,s.expansion_enabled,false,s.control_upkeep,(int32_t)id,s.terraform_reduction_before,s.base_energy_before};
  // Validate the complete context even for an empty or non-convoy world.
  TileYieldContext check{};
- if(world_tile_yield_context(w,t,b,r,id,base->faction_id,base->x,base->y,ts,check)!=TileYieldError::ok)return StableIntakeError::bad_state;
+ const auto initial=world_fresh_tile_yield_context(w,t,b,r,id,base->faction_id,base->x,base->y,ts,check);
+ if(initial==TileYieldError::overflow)return StableIntakeError::overflow;
+ if(initial!=TileYieldError::ok)return StableIntakeError::bad_state;
  WorldConvoyFlows next{};next.terraform_reduction_after=s.terraform_reduction_before;next.base_energy_after=s.base_energy_before;
  for(size_t i=0;i<g.vehicle_count;++i){
   const auto*v=w.vehicle(i);size_t tile_id;
@@ -40,9 +43,8 @@ StableIntakeError world_convoy_flows(const OriginalWorld&w,const Rules&t,const B
    if((tile->items&1u)&&(tile->val2&15u)<8){if(!add(next.from[channel],1))return StableIntakeError::overflow;continue;}
    if(!add(next.harvesters,1))return StableIntakeError::overflow;
    if(channel==3){next.terraform_reduction_after=0;continue;}
-   if(tile->items&0x20u)return StableIntakeError::unsupported_stage;
    ts.terraform_reduction_before=next.terraform_reduction_after;ts.base_energy_before=next.base_energy_after;
-   TileYieldResult value{};const auto e=world_tile_yields(w,t,b,r,id,base->faction_id,v->x,v->y,ts,value);
+   TileYieldResult value{};const auto e=world_fresh_tile_yields(w,t,b,r,id,base->faction_id,v->x,v->y,ts,value);
    if(e==TileYieldError::overflow)return StableIntakeError::overflow;
    if(e!=TileYieldError::ok)return StableIntakeError::bad_state;
    const int32_t yields[]={value.nutrient,value.mineral,value.energy};
