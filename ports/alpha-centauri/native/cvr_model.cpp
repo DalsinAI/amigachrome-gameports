@@ -108,6 +108,15 @@ bool parse_object(const Chunk& c,CvrObject& o,uint32_t frames,uint32_t& total,fl
 CvrModel::CvrModel():items_(nullptr),objects_(0),frames_(0),voxels_(0){memset(palette_,0,sizeof(palette_));memset(shades_,0,sizeof(shades_));}
 CvrModel::~CvrModel(){clear();}
 void CvrModel::clear(){if(items_)for(uint32_t i=0;i<objects_;++i){free(items_[i].voxels);free(items_[i].frames);free(items_[i].groups);}free(items_);items_=nullptr;objects_=frames_=voxels_=0;}
+bool CvrModel::overlaps_storage(const void* memory,size_t bytes)const{
+ if(!bytes)return false;
+ const uintptr_t begin=(uintptr_t)memory;if(bytes>UINTPTR_MAX-begin)return true;
+ const auto overlaps=[begin,bytes](const void*p,size_t n){if(!n)return false;const uintptr_t q=(uintptr_t)p;return n>UINTPTR_MAX-q||(begin<q+n&&q<begin+bytes);};
+ if(overlaps(this,sizeof(*this))||overlaps(items_,(size_t)objects_*sizeof(CvrObject)))return true;
+ for(uint32_t i=0;i<objects_;++i){const auto&o=items_[i];uint32_t capacity=o.group_count?1:0;while(capacity<o.group_count)capacity*=2;
+  if(overlaps(o.voxels,(size_t)o.count*sizeof(CvrVoxel))||overlaps(o.frames,(size_t)frames_*sizeof(CvrFrame))||overlaps(o.groups,(size_t)capacity*sizeof(CvrGroup)))return true;
+ }return false;
+}
 const uint8_t* CvrModel::rgb(uint8_t color,unsigned shade)const{return shade<24?palette_+3*shades_[shade*256+color]:nullptr;}
 bool CvrModel::load(const void* data,size_t size){return load_at_scale(data,size,1.0f);}
 bool CvrModel::load_at_scale(const void* data,size_t size,float projected_scale){

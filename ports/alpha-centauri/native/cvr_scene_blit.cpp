@@ -8,7 +8,7 @@ bool overlaps(const void*a,size_t as,const void*b,size_t bs){const uintptr_t x=(
 }
 bool composite_cvr_scene_1x(const uint8_t* source,size_t source_size,const uint8_t* rgb,size_t rgb_size,int32_t cx,int32_t cy,const CvrSceneRect&clip,CvrSceneRgbTarget target){
  if(!source||source_size!=65536||!rgb||rgb_size!=768||!target.pixels||!target.width||!target.height||target.width>4096||target.height>4096||target.row_bytes<target.width*3||target.row_bytes>4096*3||target.capacity<(size_t)target.row_bytes*target.height||clip.left<0||clip.top<0||clip.right<clip.left||clip.bottom<clip.top||clip.right>(int32_t)target.width||clip.bottom>(int32_t)target.height)return false;
- const size_t bytes=(size_t)target.row_bytes*target.height;if(overlaps(source,65536,target.pixels,bytes)||overlaps(rgb,768,target.pixels,bytes))return false;
+ const size_t bytes=(size_t)target.row_bytes*target.height;if(overlaps(source,65536,target.pixels,bytes)||overlaps(rgb,768,target.pixels,bytes)||overlaps(&clip,sizeof(clip),target.pixels,bytes))return false;
  const int64_t left=(int64_t)cx-128,top=(int64_t)cy-128;for(unsigned y=0;y<256;++y){const int64_t dy=top+y;if(dy<clip.top||dy>=clip.bottom)continue;for(unsigned x=0;x<256;++x){const int64_t dx=left+x;if(dx<clip.left||dx>=clip.right)continue;const uint8_t index=source[y*256+x];if(index!=9)memcpy(target.pixels+(size_t)dy*target.row_bytes+(size_t)dx*3,rgb+(size_t)index*3,3);}}
  return true;
 }

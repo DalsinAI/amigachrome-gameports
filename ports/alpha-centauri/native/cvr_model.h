@@ -21,6 +21,8 @@ public:
  CvrModel();~CvrModel();
  bool load(const void* data,size_t size);
  bool load_at_scale(const void* data,size_t size,float projected_scale);
+ // Includes this descriptor and every live owned allocation (including group slack).
+ bool overlaps_storage(const void*,size_t)const;
  uint32_t object_count()const{return objects_;}
  uint32_t frame_count()const{return frames_;}
  uint32_t voxel_count()const{return voxels_;}

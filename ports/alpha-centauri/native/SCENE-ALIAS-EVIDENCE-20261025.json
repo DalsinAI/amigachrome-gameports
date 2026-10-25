@@ -1,0 +1,40 @@
+{
+  "status": "HOST EXACT / NORMAL SDK BUILD PASS / NATIVE AND BE EXECUTION UNRUN",
+  "frozenBase": "9b2649d38543f8057263e2c5725d865363e64ff5",
+  "sceneAliasRejections": 14421,
+  "adjacentFactorySuccesses": 2,
+  "blitAliasRejections": 10,
+  "sceneSuites": [
+    {
+      "mode": "default",
+      "bytes": 3145728,
+      "sha256": "40dbf43dff5208607e780317b45966a47b46d8c6cfb57afb9e7826c3ed68c0a0",
+      "exact": true,
+      "controls": "SCENE alias rejections=14421 adjacent-factory-outputs=2 PASS"
+    },
+    {
+      "mode": "provided",
+      "bytes": 3145728,
+      "sha256": "40dbf43dff5208607e780317b45966a47b46d8c6cfb57afb9e7826c3ed68c0a0",
+      "exact": true,
+      "controls": "SCENE alias rejections=14421 adjacent-factory-outputs=2 PASS"
+    }
+  ],
+  "regressions": {
+    "reader": 32,
+    "lod": 40,
+    "groupSemantic": 4,
+    "groupMalformed": 3,
+    "existingSceneInvalid": 96,
+    "independentBlit": 75
+  },
+  "nativeExecution": false,
+  "labAccess": false,
+  "viewerChanged": false,
+  "binaryHashes": {
+    "scene-host": "943345996636bd1402993dba81fb8fd393a3c23726d48dae116f2b7c971e9873",
+    "blit-host": "f20aa1e52851ae53dba51e2ac4025c8ead15544df06f0e9f4a3f907122066e87",
+    "scene-native": "b40c2dd765bde5f8202b5c10996ed1d4fff32125d45d097eaf2afe7d9195582e",
+    "blit-native": "b247e2442b390316898d013e21fb263f9e4c3ab5634350e7976169aa023fff55"
+  }
+}
