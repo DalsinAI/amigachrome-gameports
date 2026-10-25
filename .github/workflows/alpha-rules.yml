@@ -60,3 +60,15 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_exploration.py --out "$RUNNER_TEMP/exploration-host"
       - name: Big-endian empty-land movement scenario controls
         run: python3 ports/alpha-centauri/native/test_exploration.py --out "$RUNNER_TEMP/exploration-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host resource table controls
+        run: python3 ports/alpha-centauri/native/test_resources.py --out "$RUNNER_TEMP/resources-host"
+      - name: Big-endian resource table controls
+        run: python3 ports/alpha-centauri/native/test_resources.py --out "$RUNNER_TEMP/resources-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host colony resource and population controls
+        run: python3 ports/alpha-centauri/native/test_colony.py --out "$RUNNER_TEMP/colony-host"
+      - name: Big-endian colony resource and population controls
+        run: python3 ports/alpha-centauri/native/test_colony.py --out "$RUNNER_TEMP/colony-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host multi-turn colony scenario controls
+        run: python3 ports/alpha-centauri/native/test_colony_scenario.py --out "$RUNNER_TEMP/colony-scenario-host"
+      - name: Big-endian multi-turn colony scenario controls
+        run: python3 ports/alpha-centauri/native/test_colony_scenario.py --out "$RUNNER_TEMP/colony-scenario-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

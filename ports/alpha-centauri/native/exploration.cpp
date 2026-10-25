@@ -2,7 +2,7 @@
 #include "exploration.h"
 namespace alpha {
 LogicError exploration_step(const MovementMap& map,const UnitDefinitions& defs,
- const MovementContext& ctx,int32_t direction,ExplorationUnit& unit,StepResult& output) {
+ const MovementContext& ctx,int32_t direction,ExplorationUnit& unit,StepResult& output,const size_t* owned_bases,size_t base_count) {
   if(direction<0 || direction>=8 || ctx.faction<1 || ctx.xenoempathy_dome || ctx.ignore_rough)
     return LogicError::bad_state;
   PredefinedPrototype proto;
@@ -11,12 +11,18 @@ LogicError exploration_step(const MovementMap& map,const UnitDefinitions& defs,
   if(defs.chassis[proto.chassis].triad!=0 || proto.speed_points>255 ||
      unit.budget.speed!=proto.speed_points)return LogicError::bad_state;
   // Admit only known inert terrain. Any event/ownership/base bit is unsupported.
-  const uint32_t supported=4u|8u|0x20u|0x80u|0x200000u;
+  const uint32_t supported=1u|4u|8u|0x20u|0x80u|0x200000u;
   const size_t need=(size_t)(map.geometry.width/2)*(size_t)map.geometry.height;
   size_t source;
   if(!map.tiles || map.count!=need || movement_tile_index(map.geometry,unit.x,unit.y,source)!=LogicError::ok)
     return LogicError::bad_state;
-  for(size_t i=0;i<map.count;++i)if(map.tiles[i].items&~supported)return LogicError::bad_state;
+  if(base_count>map.count || (base_count && !owned_bases))return LogicError::bad_state;
+  for(size_t i=0;i<base_count;++i)if(owned_bases[i]>=map.count || !(map.tiles[owned_bases[i]].items&1u))return LogicError::bad_state;
+  for(size_t i=0;i<map.count;++i){
+    if(map.tiles[i].items&~supported)return LogicError::bad_state;
+    if(map.tiles[i].items&1u){bool owned=false;for(size_t b=0;b<base_count;++b)if(owned_bases[b]==i)owned=true;
+      if(!owned)return LogicError::bad_state;}
+  }
   if(map.tiles[source].altitude<0x60)return LogicError::bad_state;
   const int32_t dx[]={1,2,1,0,-1,-2,-1,0},dy[]={-1,0,1,2,1,0,-1,-2};
   int32_t tx;

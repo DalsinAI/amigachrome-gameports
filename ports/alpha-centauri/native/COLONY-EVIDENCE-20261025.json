@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-25",
+  "raw68040": "GCC16.2.0-open3 generated instructions RC0",
+  "controls": {
+    "costs": 12348,
+    "yields": 6912,
+    "growth": 23040,
+    "digest": "c2682205",
+    "scenarioTurns": 31,
+    "originalResourceFields": 72
+  },
+  "binarySHA256": "885ad6556ef7bfa49291eaa16458d453d78b7e83b6c2c0cebd23780d5d285871",
+  "controlSHA256": "d24e86cddc291ee045089f931c4e5e6afd29ec9d723512dd6578d0731c4a6d32",
+  "sourceSHA256": {
+    "colony_control.cpp": "26510fae0144057023e52c6a4443a0a8e5877f5bc0d10c25c658a47015def838",
+    "colony_scenario.h": "ed45b6afa8777dd3ffd17a2a85c67958eb4caec5257d6654846b8126b6abcd14",
+    "basic_fields.inc": "acce4e5e87f6968abfc5a6450a4bf2b322800413c2637c5115e62b8cecf2b0db",
+    "exploration_control.cpp": "d06d96b3b2a1d784e6ea1d7f8cf4a0c85c16d406ea22ad09a678c6d173d66e57",
+    "movement.cpp": "f420feb591cc87745a594172844750781130ec60be643586b7e010e8c101e5b8",
+    "prototype_probe.cpp": "35df60abe3d44f0d82d2e7c231699efa693b87a5b0767e6c8dcc009a28125859",
+    "logic_control.cpp": "bf6fb08424574715e0b14bef826ea7261e9b0eceaaa10b99fdbb61d4fc10f6f2",
+    "rules_text.h": "f112ace9169bfb432cb63d263385531cb5d53e1d477fec5d444a9671db4299d2",
+    "game_logic.cpp": "f5a942e7cd911645ad58dac4618524886fe99f438eac271fd936a97a24356f9e",
+    "move_budget_control.cpp": "f33e15aac577555cb60bae91689b53cd3cd8becd9c03a7b6c9df2c4e6806f8c5",
+    "exploration.h": "b809a6687a6fd8cc31935fa837c02b248526edf29e106a1b9084e51d7d3f325c",
+    "resource_probe.cpp": "280aa52b8d0237c13a031fc174c0a336cc0c7cbc9b635e2a6353f8ad65599644",
+    "prototype.cpp": "8b22a1bbdafce001920d97d048a4355fb75f14b70b7915f3fbc51f9f3eea4fe8",
+    "colony.cpp": "276fc9fe7cbba5dfefd79353155e1111129e588bc15ff54a6cc9c03918c79e3f",
+    "unit_probe.cpp": "1bb924b5cdb452f4d066d3ead0606ef49a99b7d9d24c4699fe643bdb87c0b74d",
+    "exploration.cpp": "6381db872aae2b36df5813bebfb008e930e6cfffde20cf206cd6554395769df7",
+    "social_probe.cpp": "4a32d224636a0f91bee984335d15b4bcc677e71b7cd671a2d6e88be73f70db31",
+    "exploration_window.cpp": "32a0586bd4cb7d68e7d284b19487c05f4b638979e836ffbf667b84b84f041f77",
+    "prototype.h": "3af548f5d51871249782bd0e18afd460122fbb8d466ebae12fe082de1135db22",
+    "prototype_control.cpp": "800af4a4b4fc00427c8e2da807ec37c07d1d25a2cb8f3cfd0680f24c10e3948b",
+    "world_fields.inc": "4af71c22e4392917f036b2729bf07479fcbff5381e31a78a215c5454d48432a2",
+    "movement_control.cpp": "454e4ec2830a9c0d52e5dad6ab6798fab252af7ba717860ee2a1bad108ca5a82",
+    "upstream_logic_reference.h": "208b8c83fb0b0044bb0da0378ab16d5cf9801040e2dc1c5e0e90c9a31a6e7517",
+    "movement.h": "a4cfb478355727cddff1078df9fa260e715823f19021641c22da35b90162144f",
+    "basic_probe.cpp": "5cb25d4bf23fb94d496b872041b0c9e003f9795bae5f3caf9bff6ccb9db0d12d",
+    "upstream_prototype_reference.h": "5faad77ea4155faccb82332bb5a50981ba0b70d9b80c3c26f28f7dc7731d0c52",
+    "faction_probe.cpp": "def2bd2224b0c23ac70b803c13f972cae7e6362c4e9aed675b0d095a4534100f",
+    "colony_scenario_control.cpp": "922620f6daf59780b3ed73c1c27e5cd0aa66933eedc6712c066998072a4a0900",
+    "colony_scenario.cpp": "ac7dec93aa6713d2ee12fe385d4edc368c6b4c06c7a3c1980ea75c60b29b74ec",
+    "upstream_movement_reference.h": "334e864f4cb111bec6f1f34c7c690cc3010ab2fd9f4d78480cdb792bd2e94ca3",
+    "probe_digest.h": "fb4679a81320a63b986f50b8d5d5384d181552dabf2f0373040bcbd32cd74c74",
+    "rules_text.cpp": "c99a0e83b2df73322d035266c780011da0c4ef6820e51413761dd22ec184c2fb",
+    "move_budget.h": "2656eba6bfbdb628228bcfce9d3dc3510ec5b23f131d0c40653524cdfceffdc3",
+    "rules_probe.cpp": "f124dc742479e94e83b54f9d4ddd72c5d4e73e54be3eebda8df8a5c934d13028",
+    "game_logic.h": "641a0277340f1ccf487b97a48370ecc75b440e40f4978535b5ca00b4fb9ccb35",
+    "move_budget.cpp": "274f13708d424a44641abb0fcadebd1894d2a26eb512ff69cc302b8ec431da09",
+    "colony.h": "049e9ecbbafde443b1e320a10fdb252f0ddad6cb378780f1a474de70c6bcad13"
+  },
+  "limits": [
+    "Neutral initial land colony food/growth and human costs only; no production,AI,combat,riots,facilities,research,savegame or full upkeep",
+    "Player work allocation is scenario policy; excess workers trim highest-slot first after starvation, not reconstructed governor",
+    "RESOURCEINFO source values preserved; no original assets distributed",
+    "Thinker minimum-one cost fix retained explicitly; integer math/source-backed controls, not original-executable differential proof"
+  ],
+  "nativeAmigaOS": {
+    "base": {
+      "turns": 29,
+      "scoutMovementAndExhaustion": true,
+      "mouseWorkerAllocation": true,
+      "growthToPopulation3": true,
+      "starvationBackTo1": true,
+      "exitRC": 0,
+      "activeDisplayFrames": 106,
+      "logSHA256": "e8a76f45eafa6357ac62491da5a4009d9b8c2f05bc4f9fb84a27a2c3d45a0109"
+    },
+    "expansion": {
+      "turns": 29,
+      "scoutMovementAndExhaustion": true,
+      "mouseWorkerAllocation": true,
+      "growthToPopulation3": true,
+      "starvationBackTo1": true,
+      "exitRC": 0,
+      "activeDisplayFrames": 108,
+      "logSHA256": "9c5c5c8ff25176a06349cd5fd59249b31052322b11d45c942238ff4e635e5e61"
+    }
+  },
+  "privateROM": {
+    "roms/openkick-rom4.rom": "87e1688d8f054f3332dc87f93e8b55ddc4fd2d1f51a98f92f537e8a9fdae1eaf",
+    "roms/aros-amiga-m68k-ext.bin": "8f02af8e9837b2121f95112a9fb06ba4bfb74b72a61858b30f1b8f9b4156f4ac"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "host": {
+    "resources": 34,
+    "costs": 12348,
+    "yields": 6912,
+    "growth": 23040,
+    "scenario": "31 turns, growth/starvation/removal and invalid controls; ASan/UBSan pass"
+  }
+}
