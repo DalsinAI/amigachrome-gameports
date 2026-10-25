@@ -28,9 +28,12 @@ struct MineralResult {
  * Runtime edition is explicit: orbital facility IDs34..37 in base,65..68 in
  * expansion. Nonzero tectonic counts are unsupported in base mode.
  * Original instruction checks also correct the recovered source's unsigned
- * types and combined atrocity/tectonic rounding. Only nonnegative resource/count
- * inputs and representable original signed32 arithmetic are supported.
- * Reject overflow before replacing output.
+ * types, combined atrocity/tectonic rounding and negative raw-eco SAR3.
+ * raw_eco_damage spans signed32. Intake/convoys/support, clean modifier,
+ * atrocity/tectonic/technology counts are nonnegative; satellite/planet/sea
+ * inputs retain the original clamps.
+ * Only supported inputs and representable original signed32 arithmetic are supported.
+ * Input/output ranges must be disjoint. Reject overlaps/overflow before writes.
  */
 LogicError calculate_minerals(const MineralInput&,MineralResult&);
 }

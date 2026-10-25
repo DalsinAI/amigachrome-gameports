@@ -9,8 +9,23 @@ static uint32_t word(const uint8_t* p){return (uint32_t)p[0]|((uint32_t)p[1]<<8)
 static int32_t signed_word(const uint8_t* p){uint32_t n=word(p);return n<=0x7fffffffu?(int32_t)n:-1-(int32_t)(0xffffffffu-n);}
 static void put(uint8_t* p,uint32_t n){for(unsigned i=0;i<4;++i){p[i]=(uint8_t)n;n>>=8;}}
 static bool same(const MineralResult& a,const MineralResult& b){return a.intake==b.intake && a.consumption==b.consumption && a.surplus==b.surplus && a.final_surplus==b.final_surplus && a.eco_damage==b.eco_damage && a.bonus==b.bonus && a.inefficiency==b.inefficiency;}
+static bool alias_controls(uint32_t& count){
+ struct Frame{MineralResult before;MineralInput input;MineralResult after;};
+ Frame frame;memset(&frame,0x5a,sizeof frame);MineralInput input{};memcpy(&frame.input,&input,sizeof input);
+ unsigned char saved[sizeof frame];memcpy(saved,&frame,sizeof frame);
+ for(int offset=-(int)sizeof(MineralResult)+4;offset<(int)sizeof(MineralInput);offset+=4){
+  auto& output=*reinterpret_cast<MineralResult*>(reinterpret_cast<unsigned char*>(&frame)+offsetof(Frame,input)+offset);
+  if(calculate_minerals(frame.input,output)!=LogicError::bad_state || memcmp(saved,&frame,sizeof frame))return false;
+  ++count;
+ }
+ MineralResult expected{};if(calculate_minerals(input,expected)!=LogicError::ok)return false;
+ if(calculate_minerals(frame.input,frame.before)!=LogicError::ok || !same(expected,frame.before) || memcmp(&frame.input,&input,sizeof input))return false;
+ if(calculate_minerals(frame.input,frame.after)!=LogicError::ok || !same(expected,frame.after) || memcmp(&frame.input,&input,sizeof input))return false;
+ return true;
+}
 int main(int argc,char** argv){
  if(argc!=3)return 20;
+ uint32_t alias_rejections=0;if(!alias_controls(alias_rejections))return 21;
  FILE* exists=fopen(argv[2],"rb");if(exists){fclose(exists);return 20;}
  FILE* f=fopen(argv[1],"rb");if(!f)return 20;
  uint8_t header[8];if(fread(header,1,8,f)!=8 || memcmp(header,"MNR1",4)){fclose(f);return 20;}
@@ -71,5 +86,5 @@ int main(int argc,char** argv){
  for(size_t i=0;i<(size_t)count*32;++i)digest=(digest^output[i])*16777619u;
  f=fopen(argv[2],"wb");if(!f){free(output);return 20;}
  const bool done=fwrite(output,32,count,f)==count;const bool closed=fclose(f)==0;free(output);if(!done || !closed)return 21;
- printf("mineral_cases=%lu rejected=%lu digest=%08lx rc=0\n",(unsigned long)count,(unsigned long)rejected,(unsigned long)digest);return 0;
+ printf("mineral_cases=%lu rejected=%lu aliases=%lu adjacent=2 digest=%08lx rc=0\n",(unsigned long)count,(unsigned long)rejected,(unsigned long)alias_rejections,(unsigned long)digest);return 0;
 }

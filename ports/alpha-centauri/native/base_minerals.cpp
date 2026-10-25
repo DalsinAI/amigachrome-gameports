@@ -2,10 +2,12 @@
 #include "base_minerals.h"
 namespace alpha { namespace {
 int32_t clamp(int32_t n,int32_t lo,int32_t hi){return n<lo?lo:n>hi?hi:n;}
+bool overlap(const void*a,size_t an,const void*b,size_t bn){const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;if(an>UINTPTR_MAX-x || bn>UINTPTR_MAX-y)return true;return x<=y?y-x<an:x-y<bn;}
 bool checked(int64_t n,int32_t& out){if(n<(-2147483647LL-1) || n>2147483647LL)return false;out=(int32_t)n;return true;}
 }
 LogicError calculate_minerals(const MineralInput& in,MineralResult& output){
- if(in.intake<0 || in.convoy_to<0 || in.convoy_from<0 || in.maintenance<0 || in.raw_eco_damage<0 ||
+ if(overlap(&in,sizeof in,&output,sizeof output))return LogicError::bad_state;
+ if(in.intake<0 || in.convoy_to<0 || in.convoy_from<0 || in.maintenance<0 ||
     in.population<0 || in.population>127 || in.clean_minerals_modifier<0 || in.atrocities<0 ||
     in.tectonic_detonations<0 || (!in.expansion && in.tectonic_detonations!=0) || in.tech_ranking<0 || in.transcendent_techs<0 ||
     in.transcendent_techs>in.tech_ranking || in.native_life<0 || in.native_life>2 ||
@@ -24,7 +26,9 @@ LogicError calculate_minerals(const MineralInput& in,MineralResult& output){
  next.final_surplus=next.surplus;
  int32_t clean;
  if(!checked((int64_t)in.clean_minerals_modifier+16,clean))return LogicError::overflow;
- int32_t damage=in.raw_eco_damage/8;
+ // Original SMAC4ff345/SMAX4e9e19 use arithmetic shift-right by3.
+ // Express floor division portably without negating INT32_MIN.
+ int32_t damage=in.raw_eco_damage>=0 ? in.raw_eco_damage/8 : -1-((-1-in.raw_eco_damage)/8);
  if(damage>0){const int32_t removed=damage<clean?damage:clean;damage-=removed;clean-=removed;}
  const int32_t reduction=(in.nanoreplicator || in.singularity_inductor?2:1)+in.centauri_preserve+in.temple+in.pholus_mutagen;
  int32_t pollution;
