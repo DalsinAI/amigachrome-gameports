@@ -964,3 +964,40 @@ and manual re-enable. The complete frontend exits normally. The isolated lab
 stops and restores configuration, both ROMs, SDL module and startup hashes.
 `UI-AUDIO-EVIDENCE-20261025.json` records bounded evidence; original assets,
 screenshots and PCM remain private.
+
+## Basic infantry in the original-world viewer (qualification pending)
+
+`cvr_infantry.h/cpp` composes a static frame of the owner's original VI infantry
+body and Viptr00 reactor backpack. It reuses the bounded model reader, procedural
+normal lighting and strict depth raster. Every component retains its own palette
+while sharing the depth surface; a later component cannot overwrite an equal-depth
+pixel or change a previously painted component's colours. Lazy facing/zoom RGBA
+caches preserve the caller's background and are bounded below 3 MiB. Model profiles
+are limited to 100,000 total voxels and all failures precede output writes.
+
+The actual original-world viewer uses this path only for base-format, non-alien,
+basic human infantry with chassis0, weapon0, armour0, reactor1 and no design
+abilities. Other designs retain explicit CVR labels; an infantry body is never
+substituted for the original tutorial's rover. VI.cvr and Viptr00.cvr are optional
+owner assets in the game directory. No original models or palettes are included.
+
+The camera tilt, heading convention, root component translation, base scale and
+single-pixel profile follow recovered original facts. This viewer maps that scale
+to its own 64-pixel tile basis. Tile-foot anchoring is new presentation wiring,
+not recovered original viewport placement. Only frame0 is shown. Original shadow,
+complete animation, terrain-dependent camera, full faction/ability assemblies,
+global indexed-palette remapping and original whole-scene pixel fidelity are not
+claimed. The terrain view and game interactions retain their existing limits.
+
+```sh
+python3 ports/alpha-centauri/native/test_cvr_infantry.py --out /tmp/infantry-host
+python3 ports/alpha-centauri/native/test_cvr_infantry.py --out /tmp/infantry-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_infantry.sh probe /tmp/infantry-probe
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_cvr_infantry.sh control /tmp/infantry-control
+```
+
+Public synthetic controls exercise separate component colours, equal-depth
+occlusion, hidden parts, singular transforms, size/frame/profile limits,
+16 facing/zoom combinations, transparent caching and transactional rejection.
+Native original-model/in-world qualification remains pending for this draft.
