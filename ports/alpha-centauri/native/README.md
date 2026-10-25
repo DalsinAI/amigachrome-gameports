@@ -1059,3 +1059,8 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+Original production switching has a read-only classification/loss preview bound
+to saved base facts: [scope](PRODUCTION-RETOOL.md),
+[evidence](PRODUCTION-RETOOL-EVIDENCE-20261025.json). It does not place orders;
+actual AmigaOS qualification remains pending.

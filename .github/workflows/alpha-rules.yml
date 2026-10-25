@@ -96,6 +96,14 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_unit_stats.py --out "$RUNNER_TEMP/world-unit-stats-host"
       - name: Big-endian owned-world unit dependency controls
         run: python3 ports/alpha-centauri/native/test_world_unit_stats.py --out "$RUNNER_TEMP/world-unit-stats-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original production retool controls
+        run: python3 ports/alpha-centauri/native/test_production_retool.py --out "$RUNNER_TEMP/retool-host"
+      - name: Big-endian original production retool controls
+        run: python3 ports/alpha-centauri/native/test_production_retool.py --out "$RUNNER_TEMP/retool-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host saved-world production retool controls
+        run: python3 ports/alpha-centauri/native/test_world_production_retool.py --out "$RUNNER_TEMP/world-retool-host"
+      - name: Big-endian saved-world production retool controls
+        run: python3 ports/alpha-centauri/native/test_world_production_retool.py --out "$RUNNER_TEMP/world-retool-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host saved-world movement pricing controls
         run: python3 ports/alpha-centauri/native/test_world_movement_price.py --out "$RUNNER_TEMP/world-price-host"
       - name: Big-endian saved-world movement pricing controls
