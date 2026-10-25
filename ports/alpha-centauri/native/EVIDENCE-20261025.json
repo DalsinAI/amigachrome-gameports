@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-25",
+  "program_sha256": "4406274b2a67959415531ef26d3f104919d778a7ad16e3d87e60b7610ac98c21",
+  "nativeAmigaOS": {
+    "log": "rows=89 active=77 edges=136 digest=530d869f\nBASE RULES RC 0\nrows=89 active=86 edges=152 digest=574eb5a4\nEXPANSION RULES RC 0\nrules: duplicate key\nDUPLICATE RULES RC 20\n",
+    "labROM": {
+      "aros-amiga-m68k-ext.bin": "52a01954c7c425dd712ae89eecbe75b5cf6277f47082b5bc07ff0697ed295136",
+      "openkick-rom4.rom": "c0013cbb0b66292ffb78d7e454bceb2960c84b95c35aea293780893d40ec6a07"
+    },
+    "scope": "Actual AmigaOS CLI run in restored existing lab; not live Instance-32 or full game qualification",
+    "startupUnchanged": true,
+    "labStopped": true,
+    "liveChanges": false,
+    "restoredBaselineROMAndModuleUnchanged": true
+  },
+  "results": {
+    "alpha": {
+      "rows": 89,
+      "active": 77,
+      "edges": 136,
+      "digest": "530d869f",
+      "rc": 0
+    },
+    "alphax": {
+      "rows": 89,
+      "active": 86,
+      "edges": 152,
+      "digest": "574eb5a4",
+      "rc": 0
+    },
+    "duplicate_key_rc": 20
+  },
+  "raw68040": "RC 0 on both real rulesets, all technology records fingerprinted against independent Python reference",
+  "scope": "Technology parser only, no original assets included, no complete game or original-executable differential claim"
+}

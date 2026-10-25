@@ -1,0 +1,26 @@
+name: alpha-rules
+on:
+  pull_request:
+    paths:
+      - 'ports/alpha-centauri/native/**'
+      - '.github/workflows/alpha-rules.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ports/alpha-centauri/native/**'
+      - '.github/workflows/alpha-rules.yml'
+permissions:
+  contents: read
+jobs:
+  reader:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cross control tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq g++-m68k-linux-gnu qemu-user
+      - name: Host memory and undefined-behaviour controls
+        run: python3 ports/alpha-centauri/native/test_rules.py --out "$RUNNER_TEMP/alpha-host"
+      - name: Big-endian 68040 control
+        run: python3 ports/alpha-centauri/native/test_rules.py --out "$RUNNER_TEMP/alpha-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
