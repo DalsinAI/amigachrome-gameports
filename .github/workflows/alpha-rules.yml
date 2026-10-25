@@ -44,3 +44,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_units.py --out "$RUNNER_TEMP/unit-host"
       - name: Big-endian unit definition controls
         run: python3 ports/alpha-centauri/native/test_units.py --out "$RUNNER_TEMP/unit-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host predefined prototype controls
+        run: python3 ports/alpha-centauri/native/test_prototype.py --out "$RUNNER_TEMP/prototype-host"
+      - name: Big-endian predefined prototype controls
+        run: python3 ports/alpha-centauri/native/test_prototype.py --out "$RUNNER_TEMP/prototype-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
