@@ -341,3 +341,31 @@ integer RNG cases and five invalid-state cases against an independent Python
 model. CI runs host sanitizers and big-endian 68040 controls. Native qualification
 is recorded in `MOVE-BUDGET-EVIDENCE-20261025.json`. These controls establish the
 budget stage, not original-executable fidelity or an integrated game.
+
+### Interactive native movement slice
+
+`exploration_window.cpp` opens a Workbench window using intuition/graphics. Run
+`alpha-movement base alpha.txt` or `alpha-movement expansion alphax.txt` with your
+own original rules file. Both parse qualified technology/basic/unit definitions.
+Click an adjacent land cell or use 7/8/9, 4/6, 1/2/3 for eight directions. N starts
+the next **movement-only** turn; Q or the window close gadget exits normally.
+Road, magtube, fungus, forest, rough and sea marks are placeholders, not game art.
+
+The scenario is deliberately empty: an undamaged predefined land scout, no
+faction speed/project bonuses, enemies, bases, event tiles or ownership effects.
+Unsupported tile bits fail rather than silently skip events. The dispatcher uses
+qualified coordinate/price/budget modules, rejects ocean access, relocates on
+success and preserves fractional failure and exhaustion. N resets spent movement
+as in repair_phase; it does not claim to run repair or economic upkeep.
+
+`test_exploration.py --out NEW_DIR` exercises road exhaustion, cylindrical wrap,
+ocean blocking, rough overspend, 128 fractional outcomes and invalid/overflow
+transactionality. CI covers this core on host sanitizers and big-endian 68040.
+The frontend additionally compiled with the normal private SDK and passed actual
+AmigaOS keyboard/mouse/exit checks with both original rule variants and a private
+current Instance-32 ROM pair, continuous active display polling, followed by lab
+stop and config/ROM/module/startup restoration. See
+`EXPLORATION-EVIDENCE-20261025.json`. UI evidence is bounded to that native build;
+the host CI does not compile the Amiga window. This is an interactive movement
+slice, not a complete game: bases, economy, AI, combat, savegames and campaign
+state are absent. No original assets are distributed.

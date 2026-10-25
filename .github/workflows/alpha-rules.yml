@@ -56,3 +56,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_move_budget.py --out "$RUNNER_TEMP/budget-host"
       - name: Big-endian fractional movement expenditure controls
         run: python3 ports/alpha-centauri/native/test_move_budget.py --out "$RUNNER_TEMP/budget-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host empty-land movement scenario controls
+        run: python3 ports/alpha-centauri/native/test_exploration.py --out "$RUNNER_TEMP/exploration-host"
+      - name: Big-endian empty-land movement scenario controls
+        run: python3 ports/alpha-centauri/native/test_exploration.py --out "$RUNNER_TEMP/exploration-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
