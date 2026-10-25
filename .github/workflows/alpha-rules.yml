@@ -116,6 +116,10 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_actions.py --out "$RUNNER_TEMP/world-actions-host"
       - name: Big-endian restricted owned-world action boundaries
         run: python3 ports/alpha-centauri/native/test_world_actions.py --out "$RUNNER_TEMP/world-actions-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original-container movement snapshot controls
+        run: python3 ports/alpha-centauri/native/test_movement_snapshot.py --out "$RUNNER_TEMP/movement-snapshot-host"
+      - name: Big-endian original-container movement snapshot controls
+        run: python3 ports/alpha-centauri/native/test_movement_snapshot.py --out "$RUNNER_TEMP/movement-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host named leader speech and PCM controls
         run: python3 ports/alpha-centauri/native/test_leader_speech.py --out "$RUNNER_TEMP/leader-speech-host"
       - name: Big-endian named leader speech and PCM controls
