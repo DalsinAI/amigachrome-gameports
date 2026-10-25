@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-25",
+  "scope": "Original-asset restoration menu and read-only world view, not restored campaign gameplay",
+  "native": {
+    "binarySHA256": "0613ed2c8f9347a43e4cba69ab0e164958211078ee26fd5415a98892315634c3",
+    "normalExitRC": 0,
+    "fonts": [
+      "Alpha Centauri Regular 20 from ALPHC___.TTF",
+      "Arial Narrow Regular 18 from arialn.ttf"
+    ],
+    "menuVariants": [
+      "base",
+      "alien_crossfire"
+    ],
+    "originalMusic": "opening menu.wav; PCM16LE mono22050, converted to native sample order",
+    "audioPlaying": {
+      "bytes": 696124,
+      "chunks": 38,
+      "nonzero": 343032,
+      "peak": 251
+    },
+    "audioPaused": {
+      "bytes": 353364,
+      "chunks": 19,
+      "nonzero": 0,
+      "peak": 0
+    },
+    "audioResumed": {
+      "bytes": 515908,
+      "chunks": 28,
+      "nonzero": 256372,
+      "peak": 1249
+    },
+    "controls": [
+      "A/X select game title and rules profile",
+      "M music pause/resume",
+      "E original base Explore.SC view",
+      "Q return from view to active menu",
+      "O original scenario/save file requester",
+      "Cancel returns keyboard focus to menu",
+      "Q normal menu exit"
+    ],
+    "frames": 184,
+    "logSHA256": "f7d935d35ad7dd657eba71dbf5ac0e8dc30e6cef638bddbda7358755249d5520"
+  },
+  "sourceSHA256": {
+    "original_frontend.cpp": "3c5472de838812f1287b6f6b2205f6f506fb5dab9cdd2a590d43c747a479ceab",
+    "original_map_window.cpp": "758c2b608bbaf9659354ba54535ac9ef79e1e6a0c8ae0aced8627be51f3c7996",
+    "build_original_frontend.sh": "bcc1eec2175079ae2f12bf753ad9b917b7ad00e39eb0caff13e929964e4cbb3a"
+  },
+  "screenshotSHA256": {
+    "alpha-original-title-menu.png": "b5231812880dae541642e33129e1efa86dc83a3ce8c3f17d2d7ae0b98648c67f",
+    "returned-original-title-menu.png": "9c37376b64fb52a4ebd738aa1b295e95926f3ba6a3651f12b9a9181c4ef3f82c",
+    "original-save-file-requester.png": "afeec71bcee29ddd90e8dccd18e75409584f46b4e204f59c6a1d3c90bf8dd572",
+    "alien-crossfire-original-title-menu.png": "15e04e4cd2150fdc1cc62b3f90db50249ab69e918192eb46d9d870859141d2ae",
+    "menu-opened-original-tutorial.png": "fe50c1b0d2d4bb305fd37100dcc0d8caa45ef96873db1046055d169cf5c01d12",
+    "cancelled-file-requester.png": "a3467e563c8243b3b3240e4da321a9e9c229bb9e2a65405bf99427fab9ac9052"
+  },
+  "privateTestInputs": {
+    "rom": {
+      "roms/openkick-rom4.rom": "c2341dc9434823515edee4e1fcd21b99d1a9af6f5fcbcb5c361b956229b71fec",
+      "roms/aros-amiga-m68k-ext.bin": "22ac131ff8ddef0cf01c6158f74e782b7ea1f2e63444dde22c15027ae105109c"
+    },
+    "startupSHA256": "851d540ac603f9be3ad754c888483da62e55e0f2fc64eb8584b07d21a1e4f90b",
+    "moduleSHA256": "6c2d2ef0c202b7a4f18231f5e9de11e96ab17d55a474513efe3ef4ee697c967d"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "limits": [
+    "Menu arrangement/font sizes are restoration presentation choices, not original menu layout fidelity",
+    "Original music WAV only; no AMB sequencer",
+    "Read-only original world view; no integrated original movement, turns, AI, combat or campaign saves",
+    "Expansion title selection qualified; no expansion campaign claim",
+    "RTG/cybergraphics and disk SDL2.module required; no ROM changes",
+    "Original fonts/art/music and captured screenshots stay private; no original assets uploaded"
+  ]
+}

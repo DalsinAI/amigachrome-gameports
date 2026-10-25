@@ -760,3 +760,39 @@ and palettes from10 original image sheets match independent Pillow decoding.
 interactive original Explore.SC run with selection, scrolling, both zoom levels,
 real base/native sprite display and RC0. The muted isolated lab was stopped and
 its original inputs restored. Assets and captured screens remain private.
+
+
+### Original-asset restoration menu
+
+`original_frontend.cpp` provides separate Alpha Centauri and Alien Crossfire
+selectors, their original title PCXs, original TrueType lettering, the original
+menu WAV, a base Explore tutorial shortcut and an original scenario/save file
+requester. It embeds the qualified read-only world viewer and restores keyboard
+focus when that view or the requester closes. This is a restoration preview;
+it does not offer an implemented full campaign behind a New Game button.
+
+Build with `CXX=.../m68k-amigaos-g++ sh build_original_frontend.sh OUTPUT`.
+This uses the normal SDK SDL2_ttf and SDL2 libraries. In addition to the world
+view's original data, place `openinga.pcx`, `xopeninga.pcx`, `ALPHC___.TTF`,
+`arialn.ttf` and `opening menu.wav` beside the executable. Run `alpha-restoration`
+from that directory. A/X selects the game/rules profile, E opens the base
+original tutorial or requests an expansion scenario, O opens the requester,
+M pauses/resumes music, and Q exits. Menu buttons also accept mouse clicks.
+The file requester's Cancel button returns to the menu. Missing original fonts
+or title images fail explicitly; unavailable audio leaves the menu operable.
+
+Menu labels use the supplied Alpha Centauri font at20 points; supporting text
+uses supplied Arial Narrow at18. These are original font assets, while the
+menu arrangement/sizes are current presentation choices. Glyphs are rendered
+through the SDK SDL2_ttf, converted to explicit RGBA bytes and alpha blended
+onto RGB screen pixels without packed endian-dependent casts. The stock menu
+WAV is PCM16LE/mono22050 and is converted to native sample order before the
+looping audio callback. AMB procedural music is not implemented here.
+
+`FRONTEND-EVIDENCE-20261025.json` records actual AmigaOS menu/title selection,
+original lettering, nonzero muted output PCM, pause silence, resumed output,
+original tutorial return, requester cancellation/focus and normal RC0 exit.
+The final test used a private current target ROM/module with continuous frame
+polling; the isolated lab was stopped and its original inputs restored. An
+earlier test caught the requester leaving the menu inactive; this is fixed
+and the full final sequence passed. Assets and captured screens stay private.
