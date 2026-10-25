@@ -116,3 +116,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-host"
       - name: Big-endian procedural CVR lighting controls
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host named leader speech and PCM controls
+        run: python3 ports/alpha-centauri/native/test_leader_speech.py --out "$RUNNER_TEMP/leader-speech-host"
+      - name: Big-endian named leader speech and PCM controls
+        run: python3 ports/alpha-centauri/native/test_leader_speech.py --out "$RUNNER_TEMP/leader-speech-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
