@@ -1,5 +1,5 @@
 {
-  "status": "DRAFT: host/original-helper passed, normal SDK build only; native/independent big-endian qualification pending",
+  "status": "DRAFT: edition-corrected host/both-original-helper checks passed; final-head CI and actual AmigaOS pending",
   "scope": "Read-only saved-design speed ability resolution shared by vehicle speed and land movement pricing",
   "source": {
     "project": "OpenSMACX",
@@ -13,8 +13,8 @@
   },
   "host": {
     "syntheticContexts": 462,
-    "accepted": 444,
-    "rejected": 18,
+    "accepted": 449,
+    "rejected": 13,
     "sanitizers": [
       "ASan",
       "UBSan"
@@ -65,24 +65,26 @@
     "landPriceRegressionContexts": 248
   },
   "privateOriginalHelper": {
-    "worldContexts": 444,
-    "queries": 8788,
-    "outputSHA256": "b815c7cfbe9dab3202b130e336d575a5e3ea32bab3afeb1f43a882ed9c72768f",
-    "inputSHA256": "933767e86d2585b2ca3a7edf4797c95c1061503160da15834c8bde30359ab88f",
+    "worldContexts": 449,
+    "queries": 8883,
+    "outputSHA256": "3c7be60a2a77ac8b8ad47e86bd5236d4445cf4269c0a720bd769b917cef4af59",
+    "inputSHA256": "5d42550077341154bd0d5b2600aae58e77de33f315b560a0796fa02ea964c17a",
     "rc": 0,
-    "originalHelper": "SMAX has_abil0x5bf1f0 + has_tech0x5b9f20, unchanged instructions, explicit fixture globals",
+    "originalHelper": "Original SMAC has_abil0x5d6310 or SMAX has_abil0x5bf1f0 + has_tech0x5b9f20, unchanged instructions, explicit fixture globals",
     "unchangedCodePages": {
       "tech": "7c32573c77177ff0cd507f2b6ac96304f6f6bc5ac82d6c8f5dfa708f4cea04a5",
-      "ability": "e9c8935ae9faf7e0e1d1a450c8f05c887a95d009cff8c897dd0f6dda81afb67d"
+      "ability": "e9c8935ae9faf7e0e1d1a450c8f05c887a95d009cff8c897dd0f6dda81afb67d",
+      "baseability": "a32d82c6536cfb538f6e4a92c235d213c7f0281c8e2802cabb0efa1f78643f15"
     },
     "fullGameExecution": false,
-    "scope": "Only the four speed-related query bits; no Deep Radar/Nethack ability or original base executable helper comparison"
+    "scope": "Both actual original engine ability helpers, only speed-related query bits; no Deep Radar/Nethack or full-game execution"
   },
   "native": {
     "status": "Normal private SDK build only; actual AmigaOS UNRUN",
-    "probeSHA256": "65d310ca875e6300dbd0bb273146918e416317ed8cdf7d2478e0f6a010f2aca4"
+    "probeSHA256": "27b6b6b3cb46e76b95066cb57eb2482b65d86155d4ecd190d686678465bf6692"
   },
   "limits": [
+    "Original Alpha Centauri has_abil checks raw design flags only; FREEABIL metadata is ignored in that component/engine profile. Expansion grants use design-owner technology.",
     "Design owner is prototype_id/64; vehicle owner remains separate for morale/Maritime Control Center",
     "Only speed queried bits are resolved: Slow, Antigrav, Air Superiority and expansion Fuel Nanocells; not a general Deep Radar/Nethack/other-ability API",
     "Predefined designs bypass faction grants; existing raw flags bypass their own technology requirement; owner FREEABIL grants require prerequisite technology",
@@ -90,7 +92,7 @@
     "Malformed bonus metadata and missing required technology context reject before output replacement; no unsafe original indexing emulated",
     "Original speed byte overflow handling retained; no hidden mod maximum or wrapping",
     "No world mutation, RNG consumption, legal movement exposure, turn advancement, combat or AI; clear-land action gates remain unchanged",
-    "Original helper execution uses SMAX has_abil/has_tech over controlled base and expansion fixtures; no original base-executable helper comparison or full original game execution",
-    "Previous WORLD-UNIT-STATS evidence/native hashes are historical; no claim they qualify this updated artifact"
+    "Previous WORLD-UNIT-STATS evidence/native hashes are historical; no claim they qualify this updated artifact",
+    "Both actual engine ability helpers execute privately over controlled fixtures; original base speed_proto0x5d9400 also calls its raw-only helper0x5d6310. No original full-speed/morale/turn or full-game execution claimed."
   ]
 }

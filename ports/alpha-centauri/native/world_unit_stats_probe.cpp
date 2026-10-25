@@ -66,7 +66,7 @@ int main(int argc,char** argv){
    bool dependency=false;
    const auto* owner=w.faction_definition((size_t)v.unit_id/64);
    const uint32_t queried=triad==2?(0x800420u|(definitions.ability_count>27?0x8000000u:0u)):0x800400u;
-   if(v.unit_id>=64)for(int b=0;b<owner->faction_bonus_count;++b)if(owner->faction_bonus_id[b]==15){
+   if(definitions.weapon_count==26 && v.unit_id>=64)for(int b=0;b<owner->faction_bonus_count;++b)if(owner->faction_bonus_id[b]==15){
     const int a=owner->faction_bonus_val1[b];if(a>=0 && (unsigned)a<definitions.ability_count && (queried&(1u<<a)) && !(p.ability_flags&(1u<<a)))dependency=true;
    }
    if(skip && !dependency){alpha::Rules absent{};uint32_t lazy=123;if(alpha::world_vehicle_speed(w,definitions,absent,i,basic.move_rate_roads,true,lazy)!=result || lazy!=speed)return 21;}

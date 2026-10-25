@@ -13,7 +13,8 @@ LogicError world_has_technology(const OriginalWorld& world,const Rules& technolo
 LogicError world_effective_morale(const OriginalWorld& world,const UnitDefinitions& definitions,
  const Rules& technologies,size_t vehicle,bool check_drone_riot,uint32_t& output);
 /* Resolve only the abilities queried by original speed_proto. Design owner is
- * prototype_id/64, not the vehicle faction. Already present bits and predefined
+ * prototype_id/64, not the vehicle faction. The original base-game component
+ * profile has raw flags only; faction grants belong to the expansion engine. Already present bits and predefined
  * designs retain original short-circuiting; FREEABIL requires owner technology.
  * Output preserves all raw design bits and adds qualified speed-related grants.
  * Does not answer Deep Radar/Nethack or other unrelated ability questions. */

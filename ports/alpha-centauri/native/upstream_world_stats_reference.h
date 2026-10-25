@@ -6,6 +6,7 @@
  * Map/project/facility queries use actual owned data, not canned true/false
  * callbacks. Unknown accesses are errors. No original x86 executes.
  * Expansion-only tower/spore constants are disabled in the base profile.
+ * Base has_abil is raw-only, verified in original base helper0x5d6310.
  */
 #ifndef AC_ALPHA_UPSTREAM_WORLD_STATS_REFERENCE_H
 #define AC_ALPHA_UPSTREAM_WORLD_STATS_REFERENCE_H
@@ -172,6 +173,7 @@ static int32_t ability_prerequisite[29];static unsigned ability_count;
  * Production rejects invalid indexes before this original-domain reference. */
 static inline bool has_speed_ability(unsigned prototype,unsigned ability){
  if(VehPrototypes[prototype].ability_flags&ability)return true;
+ if(ability_count==24)return false; // Original base executable tests raw flags only.
  const unsigned faction=prototype/64;if(!faction)return false;
  const auto& f=Players[faction];
  for(int i=0;i<f.faction_bonus_count;++i)if(f.faction_bonus_id[i]==15){

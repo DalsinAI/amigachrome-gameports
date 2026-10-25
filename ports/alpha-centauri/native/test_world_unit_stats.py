@@ -35,7 +35,7 @@ def original_model(rules,data,variant):
   return a!=-2 and not(b==-2 and a!=-1) and bool(owners[index]&(1<<faction))
  def effective_flags(unit,p,triad):
   raw=struct.unpack_from('<I',p,32)[0]
-  if unit<64:return raw
+  if variant=='base' or unit<64:return raw
   requested=0x800420|(0x8000000 if variant=='expansion' else 0) if triad==2 else 0x800400
   if raw&requested==requested:return raw
   rules=definitions[unit//64];count=scalar(rules,FACTION_SCHEMA['MFaction'],'faction_bonus_count')
@@ -204,11 +204,11 @@ def controls():
   b=bytearray(world_fixture(version,1));_,o,_=decode(b);owner=o['faction_definitions']+5*0x59c
   struct.pack_into('<i',b,owner+1292,2)
   for k,ability in enumerate([10,-1]):struct.pack_into('<i',b,owner+1296+4*k,15);struct.pack_into('<i',b,owner+1328+4*k,ability)
-  result.append((variant+'-grant-then-invalid-transaction',variant,rules_fixture(variant),bytes(b),False))
+  result.append((variant+'-grant-then-invalid-transaction',variant,rules_fixture(variant),bytes(b),variant=='base'))
   for count,ability in [(-1,10),(9,10),(1,-1),(1,24 if variant=='base' else 29)]:
    b=bytearray(world_fixture(version,0));_,o,_=decode(b);owner=o['faction_definitions']+5*0x59c
    struct.pack_into('<i',b,owner+1292,count);struct.pack_into('<i',b,owner+1296,15);struct.pack_into('<i',b,owner+1328,ability)
-   result.append((f'{variant}-invalid-freeabil-count{count}-ability{ability}',variant,rules_fixture(variant),bytes(b),False))
+   result.append((f'{variant}-invalid-freeabil-count{count}-ability{ability}',variant,rules_fixture(variant),bytes(b),variant=='base'))
  return result
 
 def main():

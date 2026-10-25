@@ -80,7 +80,7 @@ LogicError world_speed_ability_flags(const OriginalWorld& w,const UnitDefinition
  const auto* p=w.prototype(id);if(!p)return LogicError::bad_state;
  uint32_t ignored;auto error=saved_prototype_speed(d,*p,id,1,false,ignored);if(error!=LogicError::ok)return error;
  uint32_t flags=p->ability_flags;
- if(id<64 || (d.weapon_count==26 && id==19)){output=flags;return LogicError::ok;}
+ if(d.weapon_count==21 || id<64){output=flags;return LogicError::ok;}
  const uint32_t requested=d.chassis[p->chassis_id].triad==2?
    (0x800420u | (d.ability_count>27?0x8000000u:0u)):0x800400u;
  if((flags&requested)==requested){output=flags;return LogicError::ok;}

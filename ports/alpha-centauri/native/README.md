@@ -1063,4 +1063,4 @@ big-endian CI remains required before merge; evidence is recorded in
 
 ### Saved faction speed grants (draft, native gate pending)
 
-`world_speed_ability_flags` supplies the design owner's eligible FREEABIL speed bits to vehicle speed and land pricing. [Scope and controls](SPEED-ABILITIES.md) distinguish this change from historical native evidence and from legal player actions. [Evidence](SPEED-ABILITIES-EVIDENCE-20261025.json) records host/source/helper checks and pending native qualification.
+`world_speed_ability_flags` retains base raw-only abilities and supplies the expansion design owner's eligible FREEABIL speed bits to vehicle speed and land pricing. [Scope and controls](SPEED-ABILITIES.md) distinguish this change from historical native evidence and from legal player actions. [Evidence](SPEED-ABILITIES-EVIDENCE-20261025.json) records host/source/helper checks and pending native qualification.
