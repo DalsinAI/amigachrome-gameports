@@ -220,3 +220,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-host"
       - name: Big-endian original mineral and ecology accounting controls
         run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh owned mineral composition controls
+        run: python3 ports/alpha-centauri/native/test_world_fresh_minerals.py --out "$RUNNER_TEMP/world-fresh-minerals-host"
+      - name: Big-endian fresh owned mineral composition controls
+        run: python3 ports/alpha-centauri/native/test_world_fresh_minerals.py --out "$RUNNER_TEMP/world-fresh-minerals-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -1,0 +1,36 @@
+{
+  "scope": "Read-only fresh food/mineral proposal; no mutation/upkeep/turn/UI/player save",
+  "validation": {
+    "host-final-3": {
+      "worlds": 293,
+      "accepted": 209,
+      "rejected": 84,
+      "outputSHA256": "882c681eadb957a9c04f0518ff05e4a299033ac7191d3ae59524fa879cf22575",
+      "binarySHA256": "d172f9b07e304b0d8c0502256d0119ef2cbc3432209207a8ada76292a987e697",
+      "native": "UNRUN",
+      "scope": "Fresh read-only food/mineral proposal with actual convoy/support/project/map/faction facts; no accounting/actor/faction mutation/upkeep/turn/UI."
+    },
+    "be-final-3": {
+      "worlds": 293,
+      "accepted": 209,
+      "rejected": 84,
+      "outputSHA256": "882c681eadb957a9c04f0518ff05e4a299033ac7191d3ae59524fa879cf22575",
+      "binarySHA256": "4ab2b5771042d5bd66a7947220e8ba7464fa72e764e08d8623bd87262f162ae7",
+      "native": "UNRUN",
+      "scope": "Fresh read-only food/mineral proposal with actual convoy/support/project/map/faction facts; no accounting/actor/faction mutation/upkeep/turn/UI."
+    }
+  },
+  "originalMineralHelperContexts": {
+    "base": 128,
+    "expansion": 81,
+    "allMatch": true,
+    "limit": "Exact accepted derived facts passed to unchanged original numeric helpers, not full world upkeep"
+  },
+  "normalSDK": {
+    "SHA256": "3836a7e6f3fe5ebd342e9bc79d109af7bdd8ca6f588e327fa2af3705f98414c0",
+    "freshBuilds": 2,
+    "execution": "UNRUN"
+  },
+  "CI": "pending final-head actual logs",
+  "workflowEntries": 103
+}
