@@ -965,6 +965,18 @@ stops and restores configuration, both ROMs, SDL module and startup hashes.
 `UI-AUDIO-EVIDENCE-20261025.json` records bounded evidence; original assets,
 screenshots and PCM remain private.
 
+## Original UI face selection
+
+The recovered original font setup requests the Arial family for status/datalink
+text, including normal, italic and bold roles. Status text uses logical height10
+at800px and12 otherwise; datalink roles include12/14/18. These are Win32 logical
+heights, not a claim of identical SDL_ttf hinting or pixel metrics.
+`OriginalUiText` now prefers owner-provided `Arial.ttf` at12 and
+`Arial_Bold.ttf` at14. If the bold file is absent it uses the regular file's
+synthetic bold style; if Arial is unavailable it retains the prior original
+Arial Narrow13/title16 fallback and reports that choice. The port includes no
+font files. Menus still use their existing separate title-font profile.
+
 ## Basic infantry in the original-world viewer (qualification pending)
 
 `cvr_infantry.h/cpp` composes a static frame of the owner's original VI infantry

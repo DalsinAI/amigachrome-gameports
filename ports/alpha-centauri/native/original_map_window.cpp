@@ -92,7 +92,7 @@ static void draw_hud(struct Window* window){
   hud_text(rp,10,215,"TAB: select unit",116);hud_text(rp,10,234,"C: centre unit",116);
   const auto* t=tile(v.x,v.y);
   if(t){
-   hud_text(rp,146,88,"SELECTED TERRAIN",98,false,alpha::UiInk::label);
+   hud_text(rp,146,88,"TERRAIN",98,false,alpha::UiInk::label);
    hud_text(rp,146,109,(t->climate&0xe0u)<0x60?"Ocean":"Land",98,false,alpha::UiInk::value);
    if((t->climate&0xe0u)>=0x60){hud_text(rp,146,128,(t->val3&0xc0u)>=0x80?"Rocky":(t->val3&0xc0u)==0x40?"Rolling":"Flat",98);}
    if(t->items&0x20u)hud_text(rp,146,147,"Fungus",98);
