@@ -128,3 +128,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_technology_browser.py --out "$RUNNER_TEMP/technology-browser-host"
       - name: Big-endian technology browser graph and description controls
         run: python3 ports/alpha-centauri/native/test_technology_browser.py --out "$RUNNER_TEMP/technology-browser-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned research eligibility controls
+        run: python3 ports/alpha-centauri/native/test_research_options.py --out "$RUNNER_TEMP/research-host"
+      - name: Big-endian owned research eligibility controls
+        run: python3 ports/alpha-centauri/native/test_research_options.py --out "$RUNNER_TEMP/research-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
