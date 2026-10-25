@@ -100,3 +100,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_movement_price.py --out "$RUNNER_TEMP/world-price-host"
       - name: Big-endian saved-world movement pricing controls
         run: python3 ports/alpha-centauri/native/test_world_movement_price.py --out "$RUNNER_TEMP/world-price-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host bounded PCX image import controls
+        run: python3 ports/alpha-centauri/native/test_pcx_image.py --out "$RUNNER_TEMP/pcx-host"
+      - name: Big-endian bounded PCX image import controls
+        run: python3 ports/alpha-centauri/native/test_pcx_image.py --out "$RUNNER_TEMP/pcx-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
