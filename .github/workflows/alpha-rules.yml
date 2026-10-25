@@ -88,3 +88,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_original_world.py --out "$RUNNER_TEMP/original-world-host"
       - name: Big-endian owned original-world controls
         run: python3 ports/alpha-centauri/native/test_original_world.py --out "$RUNNER_TEMP/original-world-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host saved original-unit speed controls
+        run: python3 ports/alpha-centauri/native/test_saved_speed.py --out "$RUNNER_TEMP/saved-speed-host"
+      - name: Big-endian saved original-unit speed controls
+        run: python3 ports/alpha-centauri/native/test_saved_speed.py --out "$RUNNER_TEMP/saved-speed-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

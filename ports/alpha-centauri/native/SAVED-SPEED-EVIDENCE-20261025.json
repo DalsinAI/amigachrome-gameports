@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-25",
+  "source": "OpenSMACX veh.cpp::speed_proto/speed, Brendan Casey 2013-2021 GPL3-or-later, pin2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c",
+  "host": {
+    "sourceCases": 1492992,
+    "independentPythonVectors": 1024,
+    "invalid": 12,
+    "storageOverflowRejections": 242586,
+    "digest": "ac051c5b",
+    "sanitizers": "ASan/UBSan"
+  },
+  "native": {
+    "sourceCases": 1492992,
+    "independentPythonVectors": 1024,
+    "originalTutorials": 3,
+    "syntheticExpansionWithOriginalRules": 1,
+    "controlledOriginalDesignContexts": 384,
+    "wrongComponentProfileRC": 20,
+    "rc": 0,
+    "frames": 31,
+    "controlSHA256": "0d55a84e9e775b968ecfc1adc97932986f7105169d2f2936087a29ff725a907e",
+    "probeSHA256": "af328732eaa3fde8591d4710cec02ae38f9295bcce4672f5664fbbed7c88b60e",
+    "logSHA256": "9655855d1c546789d68e668867cf93f2aef2f7f3696255dc569d03a8b1d65145"
+  },
+  "originalExpectedValues": [
+    {
+      "name": "Build.SC",
+      "variant": "base",
+      "expected": {
+        "version": "7",
+        "vehicles": "7",
+        "speed_contexts": "112",
+        "digest": "768784c5",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "Explore.SC",
+      "variant": "base",
+      "expected": {
+        "version": "7",
+        "vehicles": "4",
+        "speed_contexts": "64",
+        "digest": "b0c9e755",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "conquer.SC",
+      "variant": "base",
+      "expected": {
+        "version": "7",
+        "vehicles": "9",
+        "speed_contexts": "144",
+        "digest": "3f5d17c5",
+        "rc": "0"
+      }
+    },
+    {
+      "name": "synthetic-expansion.SC",
+      "variant": "expansion",
+      "expected": {
+        "version": "12",
+        "vehicles": "4",
+        "speed_contexts": "64",
+        "digest": "6f1e0d8d",
+        "rc": "0"
+      }
+    }
+  ],
+  "privateTestROM": {
+    "roms/openkick-rom4.rom": "c2341dc9434823515edee4e1fcd21b99d1a9af6f5fcbcb5c361b956229b71fec",
+    "roms/aros-amiga-m68k-ext.bin": "22ac131ff8ddef0cf01c6158f74e782b7ea1f2e63444dde22c15027ae105109c"
+  },
+  "lab": {
+    "stopped": true,
+    "configROMModuleStartupRestored": true
+  },
+  "sourceSHA256": {
+    "saved_speed_control.cpp": "7e4ee779e143194cb30fd196802cfcb6ceb8396ad1ec6b50c3f153cba872dda9",
+    "upstream_saved_speed_reference.h": "49929f6bf347962875c2441a1b874dfc6c1d009cd3d901e4e7975df6e8e8cc0d",
+    "build_saved_speed_control.sh": "aae8aea96e83a423b8a4bbb9f1d063aa76df155c2677b2e81f08495ecc0ad61e",
+    "test_saved_speed.py": "139a158b87f56a9c2404dfb21266381b7212e0871de01721d41538ded4bdfce7",
+    "saved_speed.h": "2bafd73841172f33e1af66aa26d8b2371da901bb6b0ccab92144c3f778c60f21",
+    "saved_speed_probe.cpp": "f944c9bf278e86919d9baee04e7deb01c2a12db3d5745d9f8329854d25f2c3e9",
+    "build_saved_speed_probe.sh": "2930658f17d2b2bf2e3b05eefbbccd98537ee51cd8f401aea0fba871ba7aa6e5",
+    "saved_speed.cpp": "8e5ff1917a57837860197768d6ba37ece1d14e2351d03da06e437fe750229c14"
+  },
+  "limits": [
+    "Pure prototype/vehicle speed with explicitly supplied projects and resolved morale; morale_veh and actual project ownership are not executed by this API",
+    "No legal movement, map changes, turn dispatcher, AI/combat or full restored game claim",
+    "Base-profile FungalTower exception disabled explicitly; no original base-executable differential claim",
+    "Byte-expenditure capacity overflows fail rather than wrapping; no global mod movement cap silently applied",
+    "Old base and SMAX component tables must match source ID profile; diagnostic rejects unconverted cross-profile input",
+    "Three actual original tutorials are base data; expansion container is synthetic with actual original alphax rules, not an original SMAX campaign",
+    "No original executable differential fidelity claim, no original assets distributed"
+  ]
+}
