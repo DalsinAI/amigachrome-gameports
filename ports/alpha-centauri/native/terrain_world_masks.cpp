@@ -12,6 +12,7 @@ bool world_terrain_masks(const OriginalWorld&w,int x,int y,const TerrainMaskView
  if(land)for(unsigned k=0;k<8;++k){const auto*t=tile(w,x+dx[k],y+dy[k]);if(!t||(t->climate>>5)>=3)continue;const unsigned sector=k/2;if(k&1)result.coast[(sector+2)&3]|=2;else{result.coast[(sector+1)&3]|=4;result.coast[(sector+2)&3]|=1;}}
  const bool scan=land?(rough||(view.displayed_items&0x20u)||jungle):(view.displayed_items&0x20u)!=0;
  if(scan)for(unsigned k=0;k<8;++k){const unsigned d=(k+7)&7;const auto*t=tile(w,x+dx[d],y+dy[d]);if(!t)continue;const unsigned level=t->climate>>5;const uint8_t bit=(uint8_t)(1u<<k);if((t->items&0x20u)&&level>=2)result.fungus|=bit;if(!land)continue;if(jungle&&(t->landmarks&0x80000004u)==4&&level>=3)result.jungle|=bit;if(rough&&(level<3||((t->climate>>3)&3)>=rough))result.roughness|=bit;}
+ if(land&&(view.displayed_items&0x200000u))for(unsigned k=0;k<4;++k){const auto*t=tile(w,x+dx[k*2],y+dy[k*2]);if(t&&(t->items&0x200000u))result.forest|=(uint8_t)(1u<<k);}
  out=result;return true;
 }
 }

@@ -17,13 +17,14 @@ struct TerrainSceneRuntime {
  // active height/light cache. No stale/cache-null/main-window bypass is inferred.
  bool private_view_fresh_active_cache=false,source_identity_supplied=false,source_scale_supplied=false,supplied=false;
 };
-// Complete ordinary flags0 terrain path: observation/caller gate, genuine
+// Ordinary source flags0/1 terrain path (farm contexts held): observation/caller gate, genuine
 // heights/lights/material dispatch, ground then coast OR deep/primary water.
 // Source GameRules100/unexplored concealment overrides rainfall/rockiness and
-// suppresses fungus/jungle; retained ordinary height and coast topology are real.
+// suppresses fungus/jungle/forest; retained ordinary height and coast topology are real.
 // Fresh normal-scale25 zoom-5/5 cache profile only. No outline/hidden draw,
-// special heights, grid/territory/improvements/actors/OS effects. Revealed
-// jungle and land/ocean fungus use their source unlit keyed layer ordering.
+// special heights, grid/territory/farms/actors/OS effects. Revealed
+// jungle and land/ocean fungus use source unlit keyed layers; flag1 forest
+// is lit and inserted between jungle and fungus using actual neighbour bits.
 // Draw flag01000000 is a separate flat-colour polygon mode and remains held.
 // Actual source tile allocation identity, edition-bound metadata/light table,
 // and prepared owner textures are explicit inputs, never guessed authority.

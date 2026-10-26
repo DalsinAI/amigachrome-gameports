@@ -264,3 +264,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_feature_layers.py --out "$RUNNER_TEMP/terrain-feature-layers-host"
       - name: Original jungle and fungus layer independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_feature_layers.py --out "$RUNNER_TEMP/terrain-feature-layers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original shaded keyed forest quad host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_forest_quad.py --out "$RUNNER_TEMP/terrain-forest-quad-host"
+      - name: Original shaded keyed forest quad independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_forest_quad.py --out "$RUNNER_TEMP/terrain-forest-quad-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original forest source layer ordering host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_forest_layers.py --out "$RUNNER_TEMP/terrain-forest-layers-host"
+      - name: Original forest source layer ordering independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_forest_layers.py --out "$RUNNER_TEMP/terrain-forest-layers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

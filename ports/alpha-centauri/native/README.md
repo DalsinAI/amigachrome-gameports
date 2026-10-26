@@ -1465,3 +1465,29 @@ containers, not original saved campaigns. All714 supported complete-call pixel
 contexts match both architectures. No original assets/tables/code bytes are
 committed. Normal SDK probes build; native/UI, RGB palette/OS loader/screen blit,
 full-world placement and complete-game qualification remain unrun.
+
+### Source-ordered forest layer (26 October 2026)
+
+The private scene candidate now accepts ordinary source draw bit1 for the
+original shaded forest pass, between the existing unlit jungle and fungus
+layers. Four diagonal neighbours supply the 16 raw forest-bit variants; the
+prepared owner atlas provides the actual 56-pixel crops. The Gouraud quad tests
+the original raw key before adding interpolated indexed shade, with the
+source half-texel edge setup. Forest does not inherit fungus fog stripes.
+
+The same source bit also enables land farms and ocean-platform sprites. Both
+remain explicit transactional `held_features` contexts. No frontend uses this
+candidate. All earlier caller/cache/source-allocation, landmark, OS-loader and
+physical-display exclusions remain.
+
+Portable fixtures run 576 shaded quads, 2,048 layer combinations and 432
+additional World forest scenes on host sanitizers and actual independent
+big-endian 68040. All earlier 1,296 scene digests and 4,100 plant-layer controls
+remain unchanged. Private original-code controls match 576 complete shaded
+helper calls and 128 complete MapWin entry/normal returns. The latter use the
+original Explore terrain and genuine owner textures, with explicitly controlled
+forest/jungle/fungus bits covering all 16 forest masks. These are not an original
+saved forest scene. The original oracle is SMAX code with legacy base-world
+data, not a base-executable differential. Normal Amiga SDK builds exist;
+native execution, UI and deployment are UNRUN. See
+`FOREST-SCENE-EVIDENCE-20261026.json` for the exact limits and digests.

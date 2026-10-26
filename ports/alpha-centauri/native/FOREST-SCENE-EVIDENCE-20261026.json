@@ -1,0 +1,105 @@
+{
+  "scope": "Original shaded forest between jungle and fungus; no frontend enablement",
+  "parent": "19ad087e0b116f1b047f99a6ee80cb77f4afebe0",
+  "sourceFacts": {
+    "sourceFunction": "4632d0 MapWin_gen_terrain_poly",
+    "forestInstructions": "464f55..465029",
+    "drawBit": 1,
+    "forestItem": "0x200000",
+    "minimumAltitude": 3,
+    "concealmentSuppresses": true,
+    "neighbourOrder": [
+      "NE",
+      "SE",
+      "SW",
+      "NW"
+    ],
+    "neighbourRawItemBits": true,
+    "forestTextureObjectBase": "0x78a758",
+    "forestTextureCount": 16,
+    "atlas": {
+      "x": 526,
+      "y": 6,
+      "spacing": 57,
+      "columns": 4,
+      "size": 56
+    },
+    "loaderInstructions": "451c50 forest Texture_extract2 loop",
+    "layerOrder": [
+      "ground or water",
+      "jungle",
+      "forest if source bit1",
+      "fungus",
+      "coast"
+    ],
+    "rawKeyBeforeShade": true,
+    "forestFogStripes": false,
+    "sourceGouraudEdge": "61fc90 half-texel bias"
+  },
+  "publicControls": {
+    "shadedQuads": 576,
+    "shadedSHA256": "c631f66518fd664e73c429077c531fac1562ed6fa4394618f0e242393cb5850f",
+    "layerCompositions": 2048,
+    "layerSHA256": "03cb532e780883342116c28b64098a65b20eb56ae83c5933ba23db4b7e7ec6e2",
+    "forestScenes": 432,
+    "forestSHA256": "71f4c7d4aad5a8538a43550292382a47a0411075f7cf37006ab42da933297f89",
+    "priorOrdinaryConcealedFeatureScenes": 1296,
+    "unchangedPriorDigests": true,
+    "farmBranchesHeld": 2,
+    "worldMasks": 216,
+    "hostSanitizers": true,
+    "actualIndependent68040": true
+  },
+  "privateOriginal": {
+    "shadedHelperCalls": 576,
+    "shadedHelpers": [
+      "61c090",
+      "61fc90",
+      "628ad0",
+      "5e3590 RAM path"
+    ],
+    "sourceShaderSHA256": "c631f66518fd664e73c429077c531fac1562ed6fa4394618f0e242393cb5850f",
+    "completeMapWinEntryAndNormalReturns": 128,
+    "sceneSHA256": "76df4da6eab2a6ba99d292e2e53ed4712e5664e80ffe3cad0adfa2ab44290352",
+    "all16ForestMasks": true,
+    "ownerTextures": true,
+    "ownerTerrainClimateUnchanged": true,
+    "controlledForestJungleFungusItemBits": true,
+    "genuineOriginalSavedForest": false,
+    "balancedStackSEHAndBufferLocks": true,
+    "PEStartupWindowsAPIOrPhysicalBlit": false,
+    "originalLoaderExecuted": false,
+    "earlierOriginalTutorialComparisons": 618,
+    "earlierTutorialComparisonsHostAndBE": true,
+    "engine": "Exact owner GOG SMAX terranx.exe; legacy base Explore world; no base-executable differential"
+  },
+  "normalSDK": {
+    "buildOnly": true,
+    "nativeExecution": false,
+    "binaries": {
+      "final-forest-quad-amiga": "1e0b108d60fb8bd6b27c4baf6259e25d50847221fcefc747220ffd96a1a41d0e",
+      "final-forest-layers-amiga": "d5548df662b4c2fd4a6992d28547fc9e7ced33a989892aaa3ac72c5a100cb7f1",
+      "final-scene-amiga": "219e2f2cefaa57280a2db06ae892a39e8794aa4016f24594996d70a0243fa935"
+    }
+  },
+  "boundaries": [
+    "flag1 land farms and ocean platform sprites held transactionally",
+    "full-world caller and state-mutating caches not qualified",
+    "special landmark height modes and flat-colour polygons held",
+    "other improvements, territory/grid, actors and later flags held",
+    "original RGB/OS loader/physical blit/native UI not qualified",
+    "no viewer enablement, deployment or watch/lab changes",
+    "no original assets or executable bytes in public fixtures"
+  ],
+  "workflow": {
+    "parentCommands": 123,
+    "currentCommands": 127,
+    "allParentCommandsRetained": true,
+    "added": [
+      "python3 ports/alpha-centauri/native/test_terrain_forest_quad.py --out \"$RUNNER_TEMP/terrain-forest-quad-host\"",
+      "python3 ports/alpha-centauri/native/test_terrain_forest_quad.py --out \"$RUNNER_TEMP/terrain-forest-quad-m68k\" --cc m68k-linux-gnu-g++ --m68k-linux",
+      "python3 ports/alpha-centauri/native/test_terrain_forest_layers.py --out \"$RUNNER_TEMP/terrain-forest-layers-host\"",
+      "python3 ports/alpha-centauri/native/test_terrain_forest_layers.py --out \"$RUNNER_TEMP/terrain-forest-layers-m68k\" --cc m68k-linux-gnu-g++ --m68k-linux"
+    ]
+  }
+}
