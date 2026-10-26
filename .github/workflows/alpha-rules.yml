@@ -548,3 +548,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_artillery_combat.py --out "$RUNNER_TEMP/world-artillery-host"
       - name: Owned artillery combat independent68040 controls
         run: python3 ports/alpha-centauri/native/test_world_artillery_combat.py --out "$RUNNER_TEMP/world-artillery-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original psi abilities host controls
+        run: python3 ports/alpha-centauri/native/test_psi_abilities.py --out "$RUNNER_TEMP/psi-abilities-host"
+      - name: Original psi abilities independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_psi_abilities.py --out "$RUNNER_TEMP/psi-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
