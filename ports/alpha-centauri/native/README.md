@@ -1659,3 +1659,34 @@ queue/audio/notification behavior, a turn or full-game qualification.
 No live mutation, facility installation, queue commit, research award, player
 input or phase authority is added. Normal SDK binaries compile only; actual
 AmigaOS execution and final-head full CI remain unrun.
+
+### Ordinary completion tail dependencies (local only)
+
+`completion_tail` recovers two ordinary-facility tail dependencies without
+pretending that their intervening UI/monitor/reset behavior is implemented.
+Facilities13,14,31,32 increment the original clean-mineral modifier only when it
+is nonzero and clear faction player_flags0x4000. Zero stays zero. The later mod's
+optional forced increment is excluded. Signed overflow rejects before writes.
+
+The second fragment reports the original base_reset requirement: an AI faction,
+or a managing governor without an admitted queue, still needs the real reset.
+The result does not invoke a reset or supply a fake return value. An unmanaged
+human falls back to edition-correct Stockpile Energy(-38/-69) only when the
+POST-notification current item still equals the completed facility and its
+waiting queue is empty. A real user choice must be reflected before evaluation;
+a cached item from before that choice is not sufficient. Governor management
+requires both bits0x80000001. Ordinary IDs2..33/64 and queue sizes0..9 only.
+
+Host/independent68040 suites cover164,174 cases including zero/negative/overflow
+counters, partial governor flag combinations and post-choice item changes.
+Private original fragments cover1,280 SMAC and2,520 SMAX contexts, comparing the
+entire current base/selected faction and actual reset/fallback branch stops.
+The eco fragment starts after applicable monitor/interlude processing. Reset
+and redraw calls are stopped BEFORE execution; they are never stubbed. Those
+two staged observations are not execution of a combined original production
+function, its notifications, AI production choice or full turn.
+
+There is no World binding/mutation, facility-announcement acknowledgment, queue
+commit, original monitor/achievement execution, phase authority or frontend
+input. Normal SDK compilation and local controls do not qualify actual AmigaOS
+execution or final-head CI; both remain unrun.
