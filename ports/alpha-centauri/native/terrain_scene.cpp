@@ -24,19 +24,21 @@ TerrainSceneStatus render_world_ordinary_scene(const OriginalWorld&w,const Rules
  const size_t index=((size_t)y*m.width+(unsigned)x)/2;const auto*t=w.tile(index);
  // Feature layers execute independently of flags0 in the source. Do not omit
  // fungus/jungle or special landmark geometry and pretend the tile is complete.
- if((t->landmarks&0xb07u)||(observed.displayed_items&0x20u)||observed.concealed)return S::held_features;
+ if((order.path==TerrainCallerPath::land_then_coast&&(observed.rainfall>2||observed.rockiness>2))||(t->landmarks&0xb03u)||(!observed.concealed&&((t->landmarks&4u)||(observed.displayed_items&0x20u))))return S::held_features;
  const unsigned zoom=v.source_zoom==-5?1:2;
  auto*memory=(uint8_t*)malloc(used);if(!memory)return S::out_of_memory;memcpy(memory,s.pixels,used);TerrainTextureSurface stage=s;stage.pixels=memory;stage.bytes=used;
  bool ok=false;
  if(order.path==TerrainCallerPath::water){TerrainWaterPatchContext c{in.caller_x,in.caller_y,zoom,observed.visible?-1:65,order.pass_minimum_light,order.pass_maximum_light,0,true,true};ok=render_world_water_patch(w,x,y,c,ot,a,stage);}
  else {
   CvrTerrainCorners corners{};TerrainPointLights lights{};TerrainWorldMasks masks{};TerrainMaskView view{observed.displayed_items,true};
-  if(!cvr_terrain_corners(w,x,y,zoom,corners)||!world_terrain_lights(w,x,y,lights)){free(memory);return S::held_height;}
-  // Rainfall0 from unexplored observation changes the original neighbour scan.
-  // Until that centre-override path is bound, require unchanged rainfall.
-  if(observed.rainfall!=((t->climate>>3)&3)){free(memory);return S::held_observation;}
+  if(!cvr_terrain_corners(w,x,y,zoom,corners)){free(memory);return S::held_height;}
+  if(observed.visible){if(!world_terrain_lights(w,x,y,lights)){free(memory);return S::held_height;}}
+  else for(auto&light:lights.point)light=2; // Original686354; no bright-cache query.
   if(!world_terrain_masks(w,x,y,view,masks)){free(memory);return S::failed_stage;}
-  if(!observed.visible)for(auto&light:lights.point)light=2; // original686354
+  // The source concealment prelude replaces centre rainfall with zero before
+  // neighbour-mask dispatch. Coast topology still uses the real World.
+  if(observed.rainfall==0)masks.roughness=0;
+  else if(observed.rainfall!=((t->climate>>3)&3)){free(memory);return S::held_observation;}
   TerrainMeshInput mesh{};mesh.caller_x=in.caller_x;mesh.caller_y=in.caller_y;mesh.viewer_zoom=zoom;mesh.height[0]=((t->climate>>5)-3)*((v.source_zoom+16)*25/16);for(unsigned k=0;k<4;++k)mesh.height[k+1]=corners.height[k];
   TerrainDispatchContext material{in.source_map_tiles_address+(uint32_t)index*44,observed.rainfall,observed.rockiness,masks.roughness,(t->landmarks&0x40u)!=0,(observed.displayed_items&0x8000u)!=0,false,observed.visible,true};
   TerrainGroundPlateInput ground{mesh,lights,material};TerrainOceanDetails od{};TerrainOceanLights ol{};

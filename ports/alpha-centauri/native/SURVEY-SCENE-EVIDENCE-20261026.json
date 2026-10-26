@@ -1,0 +1,90 @@
+{
+  "parent": "9ae2033d1b897f018c284b263fc46e4ecf000c88",
+  "scope": "Source GameRules100 concealed ordinary terrain; revealed feature and flat-polygon modes stay held",
+  "publicHost": {
+    "cases": 432,
+    "syntheticWorlds": 6,
+    "concealedCases": 432,
+    "concealedSHA256": "2941f3cfcefa722ebbb81cce176243953f8d6a559b100c5c7c2b4cf3ebe95ce8",
+    "heldFeatureContexts": [
+      "jungle",
+      "fungus",
+      "special-height",
+      "height-seven",
+      "raw-rainfall-three",
+      "raw-rockiness-three"
+    ],
+    "pixels": 7077888,
+    "statusCounts": {
+      "0": 432
+    },
+    "rejects": 16,
+    "aliasRejects": 50,
+    "partialRejected": true,
+    "transactionalLateStageFailure": true,
+    "sourceIdentityExplicit": true,
+    "freshActiveCacheProfile": true,
+    "native": false,
+    "bigEndian": false,
+    "sha256": "98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c"
+  },
+  "independentBigEndian": {
+    "cases": 432,
+    "syntheticWorlds": 6,
+    "concealedCases": 432,
+    "concealedSHA256": "2941f3cfcefa722ebbb81cce176243953f8d6a559b100c5c7c2b4cf3ebe95ce8",
+    "heldFeatureContexts": [
+      "jungle",
+      "fungus",
+      "special-height",
+      "height-seven",
+      "raw-rainfall-three",
+      "raw-rockiness-three"
+    ],
+    "pixels": 7077888,
+    "statusCounts": {
+      "0": 432
+    },
+    "rejects": 16,
+    "aliasRejects": 50,
+    "partialRejected": true,
+    "transactionalLateStageFailure": true,
+    "sourceIdentityExplicit": true,
+    "freshActiveCacheProfile": true,
+    "native": false,
+    "bigEndian": true,
+    "sha256": "98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c"
+  },
+  "totalPublicScenesPerArchitecture": 864,
+  "ownerOriginal": {
+    "edition": "SMAX with actual alphax rules/abilities",
+    "completeUnchangedEntryAndNormalReturnCalls": 586,
+    "exactIndexedPixelMatchesPerArchitecture": 586,
+    "newConcealedFeatureCalls": 10,
+    "heldContextsInMeasuredCorpus": 0,
+    "matchedSHA256": "cbcdf6bae578a09fb47dcc76f4975aaa4a56f6af54dce7027da88e9b25d8cfc7",
+    "sourceExpansionRuntime": 0,
+    "negativeOwnerPacts": "Measured explicit bits from actual mapped realm, never inferred from empty World slots",
+    "freshActiveCacheAndAllocationIdentity": true,
+    "sourceBuffer": "Real handle-null RAM Buffer path; no Windows APIs, PE startup or original exception handler"
+  },
+  "normalSDK": {
+    "built": true,
+    "sha256": "10d51f3e29d5bfb9259f4f14ff12ea6a3748b9adb50eea20b414b8c603f64b1d",
+    "nativeRun": false
+  },
+  "workflow": {
+    "inheritedCommandsRetained": 119,
+    "newCommands": 0,
+    "extendedExistingSceneSuite": true
+  },
+  "limitations": [
+    "Revealed fungus/jungle and special landmark heights remain typed-held",
+    "Raw rainfall/rockiness3 land materials held unless source concealment really zeroes them",
+    "Draw flag01000000 is a separate flat-colour Buffer_poly mode and remains held",
+    "No frontend/native/lab/watch/deploy/publication/export actions",
+    "No whole PE/game or base-executable complete-caller differential",
+    "Prepared indexed textures; RGB global palette and OS-loader/blit fidelity still unqualified",
+    "No source World cache/global side-effect mutation; ordinary indexed surface only"
+  ]
+}

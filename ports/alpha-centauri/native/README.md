@@ -1402,3 +1402,31 @@ items/actors/labels, global RGB palette installation and original screen blits
 remain outside this contract. The original cache-bit/global side effects are
 not committed to the immutable World. Actual native/UI qualification and viewer
 integration are unrun. No lab or watch session was touched.
+
+### Concealed ordinary terrain continuation (26 October)
+
+The child scene contract now closes the original `GameRules & 0x100` unexplored
+observation branch. It retains original raw height/coast geometry while the
+observed centre rainfall/rockiness become zero. It disables the rainfall
+transition mask, uses source fog light2 without querying the brightness cache,
+and suppresses jungle/fungus only where the original concealment flag does so.
+Revealed feature layers remain held. Raw rainfall/rockiness3 are explicitly held
+for land material dispatch, while concealment's genuine zero override permits
+them. Special landmark heights remain held even when concealed.
+
+Private comparison uses the correct `alphax.txt` rules/abilities for the unchanged
+SMAX caller, with actual source expansion-runtime flag0 and observed negative
+owner pact bits supplied explicitly. All576 earlier complete-call contexts now
+match every pixel;10 additional concealed original fungus/jungle contexts also
+match on host and independent68040. The former22 observation holds included a
+probe metadata mismatch (base rules supplied to a SMAX context); no ability
+counts were fabricated to get past it. The old frozen evidence remains intact.
+
+The public suite retains432 ordinary scenes and adds432 concealed scenes in
+three more synthetic Worlds. These include raw class3 fields and concealed
+fungus/jungle, both normal zooms and clipping. Separate tests retain six revealed
+feature/height/class holds,16 invalid/context controls and50 full/partial aliases.
+Both architecture digests are fixed expectations. The source `0x01000000` draw
+flag is a different flat-colour polygon mode and is still held; it must not be
+confused with the GameRules observation branch. Native/frontend/global RGB/OS
+and complete world/game claims remain outside this proof.

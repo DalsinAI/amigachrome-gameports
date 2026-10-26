@@ -23,9 +23,21 @@ def main():
    assert result==0,(profile,q,result)
   digest.update(r.stdout);count+=len(queries)
   assert subprocess.run(command,input=b'partial',capture_output=True,env=env).returncode==20
+ concealed_digest=hashlib.sha256()
+ for profile in range(3):
+  b=fixture(profile);_,o,_=decode(b)
+  for i in range(24):
+   at=o['tiles']+i*44;b[at+4]=0
+   if i%2:b[at]=(b[at]&0xe7)|0x18;b[at+5]=(b[at+5]&0x3f)|0xc0
+   if i%3==0:struct.pack_into('<I',b,at+8,struct.unpack_from('<I',b,at+8)[0]|0x20)
+   if i%4==0:struct.pack_into('<I',b,at+12,struct.unpack_from('<I',b,at+12)[0]|4)
+  f=out/f'concealed{profile}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(out/'atlas.bin'),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin')];queries=[(i,z,1,cx,cy,0,0x100,1)for i in range(24)for z in [1,2]for cx,cy in [(-12,20),(14,38),(-80,-30)]];r=subprocess.run(command,input=b''.join(struct.pack('<8i',*q)for q in queries),capture_output=True,env=env);assert r.returncode==0,(r.returncode,r.stderr);assert len(r.stdout)==len(queries)*16388
+  for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
+  concealed_digest.update(r.stdout)
+ assert concealed_digest.hexdigest()=='2941f3cfcefa722ebbb81cce176243953f8d6a559b100c5c7c2b4cf3ebe95ce8',concealed_digest.hexdigest()
  held=[]
  base=fixture(0);_,o,_=decode(base)
- for label,offset,fmt,value,expected in [('jungle',o['tiles']+12,'I',4,4),('fungus',o['tiles']+8,'I',0x22,4),('special-height',o['tiles']+12,'I',2,4),('height-seven',o['tiles'],'B',224,5)]:
+ for label,offset,fmt,value,expected in [('jungle',o['tiles']+12,'I',4,4),('fungus',o['tiles']+8,'I',0x22,4),('special-height',o['tiles']+12,'I',2,4),('height-seven',o['tiles'],'B',224,5),('raw-rainfall-three',o['tiles'],'B',120,4),('raw-rockiness-three',o['tiles']+5,'B',192,4)]:
   b=bytearray(base);struct.pack_into('<'+fmt,b,offset,value);f=out/(label+'.SC');f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(out/'atlas.bin'),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin')];r=subprocess.run(command,input=struct.pack('<8i',0,1,-1,-12,20,0x80,0,0),capture_output=True,env=env);assert r.returncode==0,(label,r.returncode,r.stderr);assert r.stdout==struct.pack('<I',expected)+bytes([199])*16384,(label,struct.unpack_from('<I',r.stdout)[0]);held.append(label)
- h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(cases=count,syntheticWorlds=3,heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=15,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
+ h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(cases=count,syntheticWorlds=6,concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
 if __name__=='__main__':main()

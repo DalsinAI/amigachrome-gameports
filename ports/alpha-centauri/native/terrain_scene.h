@@ -19,8 +19,11 @@ struct TerrainSceneRuntime {
 };
 // Complete ordinary flags0 terrain path: observation/caller gate, genuine
 // heights/lights/material dispatch, ground then coast OR deep/primary water.
+// Source GameRules100/unexplored concealment overrides rainfall/rockiness and
+// suppresses fungus/jungle; retained ordinary height and coast topology are real.
 // Fresh normal-scale25 zoom-5/5 cache profile only. No outline/hidden draw,
-// fungus/jungle/special heights, grid/territory/items/actors/OS palette effects.
+// revealed fungus/jungle/special heights, grid/territory/items/actors/OS effects.
+// Draw flag01000000 is a separate flat-colour polygon mode and remains held.
 // Actual source tile allocation identity, edition-bound metadata/light table,
 // and prepared owner textures are explicit inputs, never guessed authority.
 // No original landmark-cache mutation, global side effects or OS palette load.
