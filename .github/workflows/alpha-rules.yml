@@ -264,3 +264,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_citizen_energy.py --out "$RUNNER_TEMP/world-citizens-host"
       - name: Big-endian current world specialist availability
         run: python3 ports/alpha-centauri/native/test_world_citizen_energy.py --out "$RUNNER_TEMP/world-citizens-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world commerce controls
+        run: python3 ports/alpha-centauri/native/test_world_commerce.py --out "$RUNNER_TEMP/world-commerce-host"
+      - name: Big-endian original world commerce controls
+        run: python3 ports/alpha-centauri/native/test_world_commerce.py --out "$RUNNER_TEMP/world-commerce-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

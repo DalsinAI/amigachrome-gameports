@@ -173,3 +173,8 @@ not yet bind technology availability or mutate the world.
 Current faction technologies can now be resolved into the seven specialist
 fact records through the local [World binding](ports/alpha-centauri/native/WORLD-CITIZEN-ENERGY.md).
 This query preserves the world and does not execute income or turns.
+
+The local Alpha [commerce proposal](ports/alpha-centauri/native/WORLD-COMMERCE.md)
+now derives original base ranking and trade amounts from world facts, with an
+explicit choice of supplied or freshly recomputed faction bonus stage. It does
+not commit income or execute a turn.
