@@ -72,14 +72,17 @@ bool pass(const TerrainForestQuadInput&in,const TerrainTextureSurface&s,bool wri
  return true;
 }
 }
-bool draw_terrain_forest_quad(const TerrainForestQuadInput&input,const TerrainTextureSurface&surface,int key){
- if(key<0||key>255)return false;
+bool draw_terrain_shaded_keyed_quad(const TerrainForestQuadInput&input,const TerrainTextureSurface&surface,int key,int fog){
+ if(key<0||key>255||fog< -1||fog>255)return false;
  if(!surface.pixels||!input.texels||!surface.width||!surface.height||surface.width>4096||surface.height>4096||surface.pitch<surface.width||surface.pitch>65536)return false;
  const size_t used=(size_t)(surface.height-1)*surface.pitch+surface.width;
  if(used>surface.bytes||!input.texture_width||!input.texture_height||input.texture_width>256||input.texture_height>256)return false;
  const size_t texused=(size_t)input.texture_width*input.texture_height;
  if(texused>input.texture_bytes||overlap(surface.pixels,used,&input,sizeof input)||overlap(surface.pixels,used,&surface,sizeof surface)||overlap(surface.pixels,used,input.texels,texused))return false;
  for(const auto&v:input.vertex)if(v.x< -4096||v.x>4096||v.y< -4096||v.y>4096||v.u<0||v.u>255||v.v<0||v.v>255||v.light< -256||v.light>256)return false;
- return pass(input,surface,false,-1,key)&&pass(input,surface,true,-1,key);
+ return pass(input,surface,false,fog,key)&&pass(input,surface,true,fog,key);
+}
+bool draw_terrain_forest_quad(const TerrainForestQuadInput&input,const TerrainTextureSurface&surface,int key){
+ return draw_terrain_shaded_keyed_quad(input,surface,key,-1);
 }
 }

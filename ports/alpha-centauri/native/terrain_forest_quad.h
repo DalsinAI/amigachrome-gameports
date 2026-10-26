@@ -7,8 +7,11 @@ struct TerrainForestVertex {int32_t x,y,u,v,light;};
 struct TerrainForestQuadInput {TerrainForestVertex vertex[4];const uint8_t*texels;size_t texture_bytes;unsigned texture_width,texture_height;};
 // Source shaded keyed quad: four edge-interpolated lights; raw key comparison
 // precedes indexed shade addition. Original Gouraud edge half-texel bias.
-// Already source-clamped light values -256..256; no invented fog or threshold.
+// Already source-clamped light values -256..256. Forest entry has no fog.
 // XY +/-4096, UV0..255; sampled UV and aliases reject transactionally.
+// Source622db0 keyed fog variant: absolute even destination rows use fog,
+// but raw-key texels remain untouched on both parities. -1 selects no fog.
+bool draw_terrain_shaded_keyed_quad(const TerrainForestQuadInput&,const TerrainTextureSurface&,int key,int fog);
 bool draw_terrain_forest_quad(const TerrainForestQuadInput&,const TerrainTextureSurface&,int key=9);
 }
 #endif

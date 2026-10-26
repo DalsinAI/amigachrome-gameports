@@ -1551,3 +1551,28 @@ remains. Corrected coordinates cover all eight road/tube directions and the
 isolated fallbacks. Earlier 826 original contexts were rechecked unchanged.
 Normal SDK builds are retained; native/UI/RGB OS qualification is UNRUN.
 See `ROAD-SCENE-EVIDENCE-20261026.json`.
+
+
+### Original river scene layer (26 October)
+
+Source draw bit `0x400` now composes the original river patch after coast and
+before the separate late exploration gate. Its four diagonal connections use
+raw neighbour river bits; centre source bit `0x200` adds mask zero a second time.
+These raw river effects are retained in fog/concealed terrain exactly as in the
+source caller. The keyed Gouraud fog shader preserves raw key 9 on both row
+parities, uses fog on even absolute destination rows and interpolated light on
+odd rows. No Windows import or sprite-scale/cache callback is substituted.
+
+Public host sanitizers and independently executed big-endian 68040 controls cover
+1,152 quad cases, 256 layer compositions, 1,296 new World scene contexts and
+864 additional caller cases. All 2,592 previous synthetic scene results and both
+previous caller prefixes remain unchanged. All 129 inherited workflow commands
+remain, plus four river commands. Private full original entry/normal-return
+comparisons match all pixels in 384 controlled owner-terrain contexts (all 16
+connection masks, source overlay, two zooms, clipping and three observation
+profiles). These deliberately modified fixtures are not original saved river
+worlds; the three original tutorials contain no raw river tiles. The original
+prepared atlas is private. SDK builds are build-only: native, watched preview,
+frontend deployment, physical RGB/OS loading and full-world qualification remain
+UNRUN. Existing sea-platform and later sprite holds are unchanged.
+See `RIVER-SCENE-EVIDENCE-20261026.json`.

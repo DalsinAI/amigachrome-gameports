@@ -1,0 +1,46 @@
+{
+  "scope": "original raw river0x400 layer after coast and before late exploration",
+  "sourceFacts": {
+    "centre": "land raw items80",
+    "neighbours": "raw items80 NE,SE,SW,NW",
+    "sourceOverlay": "raw centre200 draws mask0 after main",
+    "atlas": "280,259 fourcolumns/fourrows spacing57 size56",
+    "shader": "keyed Gouraud fog622db0 with original source half-texel edge bias"
+  },
+  "publicControls": {
+    "quad": 1152,
+    "layer": 256,
+    "newWorldScenes": 1296,
+    "parentWorldScenesUnchanged": 2592,
+    "additionalCallerCases": 864,
+    "hostASanUBSan": true,
+    "independentBigEndian68040": true,
+    "workflowParentCommands": 129,
+    "workflowCurrentCommands": 133
+  },
+  "privateOriginal": {
+    "completeEntryNormalReturns": 384,
+    "controlledWorlds": 32,
+    "allMasks": 16,
+    "observationProfiles": [
+      "visible",
+      "fog",
+      "concealed"
+    ],
+    "zooms": 2,
+    "clips": 2,
+    "pixelSHA256": "fd0ea5be8a5a14cad5ffe8fb4bf31f81caf286cda41ca7f2bf547fd59c27611a",
+    "quadSHA256": "79c7e7b0eb6c76a79c451fa629ab20284daa67a015e7f40e805eff9c89ec66d4",
+    "controlledFixturesAreNotOriginalSavedRiverWorlds": true
+  },
+  "unsupported": [
+    "sea-platform imported scaled Sprite_draw remains held",
+    "crop/yield and later improvement/landmark sprites sharing20 remain held",
+    "base terran.exe differential not executed for this layer",
+    "fullworld/native/frontend/watch/RGB OS loader/blit unrun"
+  ],
+  "nativeExecution": false,
+  "SDKBuildOnly": true,
+  "rejectedHistory": "Extending mask result to9bytes exposed a test-only alias snapshot reading9bytes from8byte view; host ASan failure retained, probe now captures actual descriptor size, final host/BE216cases retain digest459d47c4.",
+  "inheritedOriginalPixelContextsRechecked": 1134
+}

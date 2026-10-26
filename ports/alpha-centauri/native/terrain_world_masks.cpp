@@ -13,6 +13,7 @@ bool world_terrain_masks(const OriginalWorld&w,int x,int y,const TerrainMaskView
  const bool scan=land?(rough||(view.displayed_items&0x20u)||jungle):(view.displayed_items&0x20u)!=0;
  if(scan)for(unsigned k=0;k<8;++k){const unsigned d=(k+7)&7;const auto*t=tile(w,x+dx[d],y+dy[d]);if(!t)continue;const unsigned level=t->climate>>5;const uint8_t bit=(uint8_t)(1u<<k);if((t->items&0x20u)&&level>=2)result.fungus|=bit;if(!land)continue;if(jungle&&(t->landmarks&0x80000004u)==4&&level>=3)result.jungle|=bit;if(rough&&(level<3||((t->climate>>3)&3)>=rough))result.roughness|=bit;}
  if(land&&(view.displayed_items&0x200000u))for(unsigned k=0;k<4;++k){const auto*t=tile(w,x+dx[k*2],y+dy[k*2]);if(t&&(t->items&0x200000u))result.forest|=(uint8_t)(1u<<k);}
+ if(land&&(centre->items&0x80u))for(unsigned k=0;k<4;++k){const auto*t=tile(w,x+dx[k*2],y+dy[k*2]);if(t&&(t->items&0x80u))result.river|=(uint8_t)(1u<<k);}
  out=result;return true;
 }
 }

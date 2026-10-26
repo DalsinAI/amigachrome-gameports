@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""Original river masks/source overlay and raw-key fog; no owner inputs."""
+import argparse,hashlib,json,os,subprocess
+from pathlib import Path
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--cc',default='g++');p.add_argument('--m68k-linux',action='store_true');a=p.parse_args();out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=False);s=Path(__file__).resolve().parent;exe=out/'probe';flags=['-m68040','-static']if a.m68k_linux else['-g','-fsanitize=address,undefined','-fno-sanitize-recover=all'];subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*[str(s/(n+'.cpp'))for n in ['terrain_mesh','terrain_forest_quad','terrain_rivers','terrain_rivers_probe']],'-o',str(exe)],check=True);runner=['qemu-m68k','-cpu','m68040']if a.m68k_linux else[];r=subprocess.run(runner+[str(exe)],capture_output=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'));assert r.returncode==0,(r.returncode,r.stderr);assert len(r.stdout)==256*4096;h=hashlib.sha256(r.stdout).hexdigest();assert h=='9a0abc95b1ca9a4c8262e3e4343ebbc375e8a81b5aa4080d23c60ff6ff1bfd6f',h;record=dict(layerCases=256,sha256=h,aliasControls=10,invalidOrLateFailureControls=9,bigEndian=a.m68k_linux,native=False);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
+if __name__=='__main__':main()

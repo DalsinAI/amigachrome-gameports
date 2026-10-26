@@ -276,3 +276,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_roads.py --out "$RUNNER_TEMP/terrain-roads-host"
       - name: Original road and tube viewer topology and layer independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_roads.py --out "$RUNNER_TEMP/terrain-roads-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original keyed river fog host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_river_quad.py --out "$RUNNER_TEMP/terrain-river-quad-host"
+      - name: Original keyed river fog independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_river_quad.py --out "$RUNNER_TEMP/terrain-river-quad-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original river layer host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_rivers.py --out "$RUNNER_TEMP/terrain-rivers-host"
+      - name: Original river layer independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_rivers.py --out "$RUNNER_TEMP/terrain-rivers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
