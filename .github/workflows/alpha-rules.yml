@@ -336,3 +336,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_production_cost.py --out "$RUNNER_TEMP/world-production-cost-host"
       - name: Big-endian current world human production costs
         run: python3 ports/alpha-centauri/native/test_world_production_cost.py --out "$RUNNER_TEMP/world-production-cost-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original pre-production arithmetic
+        run: python3 ports/alpha-centauri/native/test_production_accrual.py --out "$RUNNER_TEMP/production-accrual-host"
+      - name: Big-endian original pre-production arithmetic
+        run: python3 ports/alpha-centauri/native/test_production_accrual.py --out "$RUNNER_TEMP/production-accrual-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host current accounting pre-production binding
+        run: python3 ports/alpha-centauri/native/test_world_production_accrual.py --out "$RUNNER_TEMP/world-production-accrual-host"
+      - name: Big-endian current accounting pre-production binding
+        run: python3 ports/alpha-centauri/native/test_world_production_accrual.py --out "$RUNNER_TEMP/world-production-accrual-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

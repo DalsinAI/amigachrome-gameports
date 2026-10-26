@@ -1458,3 +1458,29 @@ human-factor and unit-price routines are exercised sequentially with facts from
 controlled worlds and the owner's three tutorials; complete original production
 or save fixup is not executed. Normal Amiga builds do not qualify AmigaOS
 execution. Full final-head CI and native frontend integration remain unrun.
+
+
+The pre-production arithmetic prefix is a separate checked calculation. It
+clears only the production-done state bit and updates the faction's historical
+mineral peak before checking negative accumulated food. That abort preserves
+mineral stock. Otherwise nonnegative surplus accrues only without active drone
+riots and outside Stockpile Energy, whose original item differs by edition.
+Every signed intermediate is checked, including doubled surplus; failure leaves
+the result unchanged instead of exposing an unsafe partial update.
+
+The world adapter reads current base accounting and faction history. It does
+not certify that saved/current accounting is fresh and does not recompute it.
+The query preserves all owned wire and decoded records and runtime RNG; output
+aliases and edition/index errors reject. Its result is not a phase token, once
+per turn guarantee, accrual commit, production reset, threshold/completion,
+creation, queue or project effect. The frontend has no input binding for it.
+
+Independent host and big-endian controls cover the arithmetic and current-world
+binding. Private observations execute the original numeric prefix after its UI
+constructor and stop before cleanup or the next production stage, using two
+observation jumps outside the numeric window. Whole base bytes and all eight
+faction records match the independent expected state. No original full
+production or turn routine is executed. Normal Amiga SDK builds remain
+compilation evidence; actual AmigaOS execution and complete final-head CI are
+unrun. Explicit phase ownership and complete production effects are still
+required before any future mutation or End Turn control.
