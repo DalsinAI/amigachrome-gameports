@@ -540,3 +540,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_air_port_combat.py --out "$RUNNER_TEMP/world-air-port-host"
       - name: Owned air and port combat independent68040 controls
         run: python3 ports/alpha-centauri/native/test_world_air_port_combat.py --out "$RUNNER_TEMP/world-air-port-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original artillery combat host controls
+        run: python3 ports/alpha-centauri/native/test_artillery_combat.py --out "$RUNNER_TEMP/artillery-combat-host"
+      - name: Original artillery combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_artillery_combat.py --out "$RUNNER_TEMP/artillery-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

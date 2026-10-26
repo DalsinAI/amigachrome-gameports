@@ -2185,3 +2185,5 @@ Owned late defense ability binding: see [WORLD-DEFENSE-ABILITIES.md](WORLD-DEFEN
 Original air/noncombat/In Port arithmetic: see [AIR-PORT-COMBAT.md](AIR-PORT-COMBAT.md); explicit conventional numeric stage only, World/native/UI pending.
 
 Owned air/noncombat/In Port binding: see [WORLD-AIR-PORT-COMBAT.md](WORLD-AIR-PORT-COMBAT.md); current conventional facts only, native/UI pending.
+
+Original artillery numeric modifiers: see [ARTILLERY-COMBAT.md](ARTILLERY-COMBAT.md); bit0x2 inspection only, World/native/UI pending.
