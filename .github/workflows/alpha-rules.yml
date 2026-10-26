@@ -596,3 +596,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_retreat_destination.py --out "$RUNNER_TEMP/retreat-destination-host"
       - name: Original land retreat destination independent68040 controls
         run: python3 ports/alpha-centauri/native/test_retreat_destination.py --out "$RUNNER_TEMP/retreat-destination-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned conventional land engagement host controls
+        run: python3 ports/alpha-centauri/native/test_land_engagement.py --out "$RUNNER_TEMP/land-engagement-host"
+      - name: Owned conventional land engagement independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_land_engagement.py --out "$RUNNER_TEMP/land-engagement-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -65,6 +65,7 @@ class OriginalWorld {
  private:
   friend class LocalProductionSession;
   friend class WorldActions;
+  friend class LandEngagementPlan;
   void swap(OriginalWorld& other);
   uint8_t* raw_=nullptr;
   uint8_t* monuments_=nullptr;

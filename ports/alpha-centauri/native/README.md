@@ -2203,3 +2203,5 @@ Original fungus attack phase and World binding: see [FUNGUS-COMBAT.md](FUNGUS-CO
 Coherent conventional land battle numbers: see [LAND-COMBAT.md](LAND-COMBAT.md); complete-original numeric comparisons within the stated domain, no attack/native/UI qualification.
 
 Original land retreat destination inspection: see [RETREAT-DESTINATION.md](RETREAT-DESTINATION.md); source-backed selection only, no relocation or native/UI qualification.
+
+Owned conventional LAND engagement staging: see [LAND-ENGAGEMENT.md](LAND-ENGAGEMENT.md); current-frame damage/retreat through pending casualty or post-storage boundary, no player attack/commit/native qualification.
