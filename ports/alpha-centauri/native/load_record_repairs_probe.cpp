@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 static uint32_t digest(const uint8_t* p,size_t n){uint32_t h=2166136261u;for(size_t i=0;i<n;++i)h=(h^p[i])*16777619u;return h;}
-static bool same_decoded(const alpha::OriginalWorld& w){
+static bool same_decoded(const alpha::OriginalWorld& w,bool expect_raw=false){
  alpha::OriginalGameView baseline;if(alpha::read_original_game(w.original_bytes(),w.original_size(),baseline)!=alpha::GameReadError::ok)return false;const auto& v=baseline;
- auto expected_preferences=v.preferences;expected_preferences.FactionStatus[1]=w.game().preferences.FactionStatus[1];
+ auto expected_preferences=v.preferences;if(!expect_raw)expected_preferences.FactionStatus[1]=w.game().preferences.FactionStatus[1];
  const auto& actual_preferences=w.game().preferences;
 #define WIRE_SCALAR(type,name,off) if(expected_preferences.name!=actual_preferences.name)return false;
 #define WIRE_ARRAY(type,name,count,off) for(unsigned j=0;j<count;++j)if(expected_preferences.name[j]!=actual_preferences.name[j])return false;
@@ -50,7 +50,7 @@ static bool same_decoded(const alpha::OriginalWorld& w){
 #undef WIRE_ARRAY
 #undef WIRE_STRING
  }
- for(size_t i=0;i<8;++i){alpha::OriginalFactionState r;if(alpha::original_faction_state(v,i,r)!=alpha::GameReadError::ok)return false;const auto& s=*w.faction(i);r.player_flags=s.player_flags;
+ for(size_t i=0;i<8;++i){alpha::OriginalFactionState r;if(alpha::original_faction_state(v,i,r)!=alpha::GameReadError::ok)return false;const auto& s=*w.faction(i);if(!expect_raw)r.player_flags=s.player_flags;
 #define WIRE_SCALAR(type,name,off) if(s.name!=r.name)return false;
 #define WIRE_ARRAY(type,name,count,off) for(unsigned j=0;j<count;++j)if(s.name[j]!=r.name[j])return false;
 #define WIRE_STRING(name,count,off) if(memcmp(s.name,r.name,count+1))return false;
@@ -80,7 +80,7 @@ static bool same_decoded(const alpha::OriginalWorld& w){
 #undef WIRE_TEXT_MATRIX
 #undef WIRE_GOALS
  }
- for(size_t i=0;i<v.map.info.tile_count;++i){alpha::OriginalMapTile r;if(alpha::original_map_tile(v.map,i,r)!=alpha::MapReadError::ok)return false;const auto& s=*w.tile(i);r.val2=s.val2;r.items=s.items;
+ for(size_t i=0;i<v.map.info.tile_count;++i){alpha::OriginalMapTile r;if(alpha::original_map_tile(v.map,i,r)!=alpha::MapReadError::ok)return false;const auto& s=*w.tile(i);if(!expect_raw){r.val2=s.val2;r.items=s.items;}
   if(s.climate!=r.climate || s.contour!=r.contour || s.val2!=r.val2 || s.region!=r.region || s.visibility!=r.visibility || s.val3!=r.val3 || s.unknown!=r.unknown || s.owner!=r.owner || s.items!=r.items || s.landmarks!=r.landmarks)return false;
   for(unsigned j=0;j<7;++j)if(s.visible_items[j]!=r.visible_items[j])return false;
  }
@@ -98,9 +98,9 @@ int main(int argc,char**argv){
  if(mode==1)rules->count=88;
  if(mode==2)rules->technologies[88].prerequisites[1]=89;
  if(mode==3)rules->technologies[0].prerequisites[0]=-3;
- const auto e=w.load_with_record_repairs(mode==6?nullptr:prior,mode==7?n-1:n,0xabcdef01,*rules,mode==4?memory-1:memory);
+ const auto e=w.load_with_record_repairs(mode==6?nullptr:mode==5?b:prior,mode==7?n-1:n,0xabcdef01,*rules,mode==4?memory-1:memory);
  if((mode>=1 && mode<=4) || mode==6 || mode==7){
-  if(e==alpha::WorldLoadError::ok || prior!=w.original_bytes() || !same_decoded(w) || w.runtime_seed()!=0xabcdef01 || digest(w.original_bytes(),n)!=hash)return 21;
+  if(e==alpha::WorldLoadError::ok || prior!=w.original_bytes() || !same_decoded(w,true) || w.runtime_seed()!=0xabcdef01 || digest(w.original_bytes(),n)!=hash)return 21;
   printf("rejected unchanged=1 rc=0\n");delete rules;delete original_rules;free(b);free(t);return 0;
  }
  if(e!=alpha::WorldLoadError::ok || !same_decoded(w) || w.original_size()!=n || w.memory_bytes()!=memory || w.runtime_seed()!=0xabcdef01 ||
