@@ -492,3 +492,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_basic_combat.py --out "$RUNNER_TEMP/world-basic-combat-host"
       - name: Big-endian saved-world basic combat binding
         run: python3 ports/alpha-centauri/native/test_world_basic_combat.py --out "$RUNNER_TEMP/world-basic-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original terrain defence host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_defense.py --out "$RUNNER_TEMP/terrain-defense-host"
+      - name: Original terrain defence independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_defense.py --out "$RUNNER_TEMP/terrain-defense-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned terrain defence host controls
+        run: python3 ports/alpha-centauri/native/test_world_terrain_defense.py --out "$RUNNER_TEMP/world-terrain-defense-host"
+      - name: Owned terrain defence independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_terrain_defense.py --out "$RUNNER_TEMP/world-terrain-defense-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

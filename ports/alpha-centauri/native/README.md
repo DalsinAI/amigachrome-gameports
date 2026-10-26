@@ -2169,3 +2169,5 @@ passes included an OpenSMACX gameplay change and do not qualify this correction.
 Original basic combat-strength composition now connects qualified prototype,
 psi, morale and physical-base dependencies. See [BASIC-COMBAT.md](BASIC-COMBAT.md)
 for original/mod differences, supported domain and remaining real-battle gates.
+
+Original read-only terrain defence and its saved-world binding: see [TERRAIN-DEFENSE.md](TERRAIN-DEFENSE.md). Native execution remains unrun; no attack/player command is added.
