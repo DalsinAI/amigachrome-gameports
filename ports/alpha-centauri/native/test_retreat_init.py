@@ -21,6 +21,7 @@ def controls():
     at=o['vehicles']+52*i;old=struct.unpack_from('<h',b,at+10)[0];uid=320+i;p=o['prototypes']+52*uid;b[p:p+52]=b[o['prototypes']+52*old:o['prototypes']+52*(old+1)]
     x=2*(i%(width//2));y=2*(i//(width//2));struct.pack_into('<hh',b,at,x,y);struct.pack_into('<h',b,at+10,uid);struct.pack_into('<hh',b,at+48,-1,-1);b[at+14]=1;struct.pack_into('<I',b,at+4,64 if k==3 else 0);b[at+17]=2 if k==4 else 0;b[at+16]=[0,1,9,10,39,254,255][(i+k)%7];b[at+36]=3;struct.pack_into('<h',b,at+46,-1)
     b[p+36]=i%3;b[p+37]=0 if k==5 else 1;b[p+39]=[1,2,3,4][(i+k)%4];b[p+42]=[0,12,255][(i+k)%3];struct.pack_into('<I',b,p+32,[0,0x200,0x2000000,0x2000200][(i+k)%4]);tile=o['tiles']+((y*width+x)//2)*44;struct.pack_into('<I',b,tile+8,2|([0x800,0x40000,1][k-6]if 6<=k<=8 else 0))
+   if k==8:struct.pack_into('<hh',b,o['bases'],0,0)
    if k in [9,10] and n>1:
     first=o['vehicles'];second=first+52;x,y=struct.unpack_from('<hh',b,first);ox,oy=struct.unpack_from('<hh',b,second);struct.pack_into('<I',b,o['tiles']+((oy*width+ox)//2)*44+8,0);struct.pack_into('<hh',b,second,x,y)
     if k==9:struct.pack_into('<h',b,first+48,1);struct.pack_into('<h',b,second+50,0)
@@ -52,6 +53,8 @@ def expected(text,data):
    # same-coordinate fixture is refused instead of silently repaired.
    x,y=struct.unpack_from('<hh',b);ids=[q for q in range(n)if struct.unpack_from('<hh',s['vehicles'],q*52)==(x,y)];tile=struct.unpack_from('<I',s['tiles'],((y*width+x)//2)*44+8)[0]
    if len(ids)>1 and all(struct.unpack_from('<hh',s['vehicles'],q*52+48)==(-1,-1)for q in ids):out+=[1,0,0];continue
+   bs=308 if v else 304;matches=sum(struct.unpack_from('<hh',s['bases'],q*bs)==(x,y)for q in range(int(info['bases'])))
+   if tile&1 and matches!=1:out+=[1,0,0];continue
    eligible=asp<bsp and int(tab[f'weapons.{bp[37]}.offense'])!=0 and not(struct.unpack_from('<I',b,4)[0]&64)and (not(ae&0x200)or(v and be&0x2000000))and b[17]!=2 and not(tile&(1|0x40800))and len(ids)==1
    out += [0,bh,(bh+1)//2 if eligible else 0]
  out+= [value if index%3!=2 else 0 for index,value in enumerate(out)]

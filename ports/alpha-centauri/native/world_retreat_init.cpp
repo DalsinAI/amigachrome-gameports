@@ -38,7 +38,14 @@ LogicError world_land_retreat_initialization(const OriginalWorld&w,const UnitDef
  size_t root=defender,steps=0;while(w.vehicle(root)->prev_veh_id_stack>=0){if(++steps>=w.game().vehicle_count)return LogicError::bad_state;const auto*v=w.vehicle(root);const size_t prev=(size_t)v->prev_veh_id_stack;const auto*p=w.vehicle(prev);if(!p||p->next_veh_id_stack!=(int32_t)root||p->x!=b->x||p->y!=b->y)return LogicError::bad_state;root=prev;}
  size_t at=root;uint32_t count=0;for(;;){const auto*v=w.vehicle(at);if(!v||v->x!=b->x||v->y!=b->y||++count>w.game().vehicle_count)return LogicError::bad_state;const int next=v->next_veh_id_stack;if(next<0)break;const auto*n=w.vehicle((size_t)next);if(!n||n->prev_veh_id_stack!=(int32_t)at)return LogicError::bad_state;at=(size_t)next;}
  uint32_t coordinate_count=0;for(size_t i=0;i<w.game().vehicle_count;++i){const auto*v=w.vehicle(i);if(v->x==b->x&&v->y==b->y)++coordinate_count;}if(count!=coordinate_count||!(mt->items&2u))return LogicError::bad_state;
- const RetreatInitFacts c{w.game().data_version>=11,as,bs,flags,d.weapons[bp->weapon_id].offense,0,0,b->state,b->order,mt->items,count,jammer,diss,(mt->items&1u)!=0,{(uint32_t)(uint8_t)bp->plan,(uint32_t)bp->reactor_id,b->damage_taken}};
+ bool physical=false;
+ if(mt->items&1u){
+  // Original base_at enters mandatory repair/UI on a stale tile bit. This
+  // read-only stage must refuse that unresolved route, not invent a base.
+  for(size_t i=0;i<w.game().base_count;++i){const auto*base=w.base(i);if(base->x==b->x&&base->y==b->y){if(physical)return LogicError::bad_state;physical=true;}}
+  if(!physical)return LogicError::bad_state;
+ }
+ const RetreatInitFacts c{w.game().data_version>=11,as,bs,flags,d.weapons[bp->weapon_id].offense,0,0,b->state,b->order,mt->items,count,jammer,diss,physical,{(uint32_t)(uint8_t)bp->plan,(uint32_t)bp->reactor_id,b->damage_taken}};
  return retreat_initialization(c,out);
 }
 }
