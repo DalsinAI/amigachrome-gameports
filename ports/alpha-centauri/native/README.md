@@ -2205,3 +2205,5 @@ Coherent conventional land battle numbers: see [LAND-COMBAT.md](LAND-COMBAT.md);
 Original land retreat destination inspection: see [RETREAT-DESTINATION.md](RETREAT-DESTINATION.md); source-backed selection only, no relocation or native/UI qualification.
 
 Owned conventional LAND engagement staging: see [LAND-ENGAGEMENT.md](LAND-ENGAGEMENT.md); current-frame damage/retreat through pending casualty or post-storage boundary, no player attack/commit/native qualification.
+
+Checked vehicle-removal storage is documented in [VEHICLE-REMOVAL.md](VEHICLE-REMOVAL.md). It updates caller-owned dense arrays and explicit runtime references only; World/session commits, full casualty effects, native execution and player actions remain held. Synthetic controls: `python3 test_vehicle_removal.py --out /tmp/alpha-removal-host` and independent `--cc m68k-linux-gnu-g++ --m68k-linux`.
