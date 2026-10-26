@@ -20,6 +20,7 @@ class RetirementQueueProposal {
   uint16_t unit_flags()const{return unit_flags_;}
   bool changed()const{return changed_;}
  private:
+  friend class DirectRetirementProposal;
   friend RetirementQueueError retirement_queue_stage(Variant,int32_t,uint16_t,const OriginalBase*,size_t,RetirementQueueProposal&);
   void swap(RetirementQueueProposal&);
   OriginalBase* bases_=nullptr;size_t count_=0;uint16_t unit_flags_=0;bool changed_=false;
