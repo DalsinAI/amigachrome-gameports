@@ -2201,3 +2201,5 @@ Owned airdrop/faction/Planet binding: see [WORLD-COMBAT-FACTIONS.md](WORLD-COMBA
 Original fungus attack phase and World binding: see [FUNGUS-COMBAT.md](FUNGUS-COMBAT.md); explicit incoming offense, numeric inspection only, native/UI pending.
 
 Coherent conventional land battle numbers: see [LAND-COMBAT.md](LAND-COMBAT.md); complete-original numeric comparisons within the stated domain, no attack/native/UI qualification.
+
+Original land retreat destination inspection: see [RETREAT-DESTINATION.md](RETREAT-DESTINATION.md); source-backed selection only, no relocation or native/UI qualification.
