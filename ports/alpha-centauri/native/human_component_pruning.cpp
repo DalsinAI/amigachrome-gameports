@@ -5,8 +5,9 @@ namespace alpha {
 static bool overlaps(const OriginalWorld& w,const HumanPruningResult& out){using detail::effects_range_overlap;using detail::effects_array_overlap;return effects_range_overlap(&out,sizeof out,&w,sizeof w) || w.overlaps_byte_storage(&out,sizeof out) ||
  effects_array_overlap(&out,sizeof out,w.tile(0),w.game().map.info.tile_count,sizeof(OriginalMapTile)) || effects_array_overlap(&out,sizeof out,w.vehicle(0),w.game().vehicle_count,sizeof(OriginalVehicle)) || effects_array_overlap(&out,sizeof out,w.base(0),w.game().base_count,sizeof(OriginalBase)) || effects_array_overlap(&out,sizeof out,w.prototype(0),512,sizeof(OriginalPrototype)) || effects_array_overlap(&out,sizeof out,w.faction(0),8,sizeof(OriginalFactionState)) || effects_array_overlap(&out,sizeof out,w.faction_definition(0),8,sizeof(OriginalFactionDefinition));}
 static bool known(const OriginalWorld& w,const Rules& r,int32_t id,int32_t f){if(id==-1)return true;if(id<0 || id>=88)return false;const auto& t=r.technologies[id];return t.prerequisites[0]>=-1 && (t.prerequisites[1]>=-1 || t.prerequisites[0]==-1) && (w.game().preferences.TechOwners[id]&(1u<<(unsigned)f));}
-static HumanPruningError core(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime runtime,int32_t f,int32_t selected,const OriginalPrototype* candidate,HumanPruningResult& out){
+static HumanPruningError core(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime runtime,int32_t f,int32_t selected,const OriginalPrototype* candidate,const HumanPruningResult* prior,HumanPruningResult& out){
  using detail::effects_range_overlap;
+ if(prior && effects_range_overlap(&out,sizeof out,prior,sizeof *prior))return HumanPruningError::bad_state;
  if(candidate && (selected<64 || selected/64!=f || !(candidate->unit_flags&1) || effects_range_overlap(&out,sizeof out,candidate,sizeof *candidate)))return HumanPruningError::bad_state;
  auto get=[&](size_t id)->const OriginalPrototype*{return candidate && id==(size_t)selected?candidate:w.prototype(id);};
  if(effects_range_overlap(&out,sizeof out,&w,sizeof w) || effects_range_overlap(&out,sizeof out,&r,sizeof r) || effects_range_overlap(&out,sizeof out,&d,sizeof d) || !w.loaded() || f<1 || f>7 || selected<0 || selected>=512 || (v!=Variant::base && v!=Variant::alien_crossfire) || (w.game().data_version<11)!=(v==Variant::base) || overlaps(w,out))return HumanPruningError::bad_state;
@@ -17,8 +18,8 @@ static HumanPruningError core(const OriginalWorld& w,Variant v,const Rules& r,co
  for(size_t i=0;i<d.weapon_count;++i)if(d.weapons[i].offense<-128 || d.weapons[i].offense>127)return HumanPruningError::bad_state;
  for(size_t i=0;i<d.armor_count;++i)if(d.armor[i].defense<-128 || d.armor[i].defense>127)return HumanPruningError::bad_state;
  HumanPruningResult next{};
- for(size_t i=0;i<512;++i){const auto* p=get(i);if(!p)return HumanPruningError::bad_state;next.flags[i]=p->unit_flags;
-  if((p->unit_flags&1u) && ((i<64) || (i>=(size_t)f*64 && i<(size_t)(f+1)*64)) && (p->weapon_id>=d.weapon_count || p->armor_id>=d.armor_count || p->chassis_id>=9 || p->preq_tech<-2 || p->preq_tech>=89))return HumanPruningError::bad_state;
+ for(size_t i=0;i<512;++i){const auto* p=get(i);if(!p)return HumanPruningError::bad_state;next.flags[i]=prior?prior->flags[i]:p->unit_flags;if(prior && ((next.flags[i]|p->unit_flags)!=next.flags[i] || ((next.flags[i]^p->unit_flags)&~0x104u)))return HumanPruningError::bad_state;
+  if((next.flags[i]&1u) && ((i<64) || (i>=(size_t)f*64 && i<(size_t)(f+1)*64)) && (p->weapon_id>=d.weapon_count || p->armor_id>=d.armor_count || p->chassis_id>=9 || p->preq_tech<-2 || p->preq_tech>=89))return HumanPruningError::bad_state;
  }
  if(selected<64 || (next.flags[selected]&4u))for(int32_t id=f*64;id<(f+1)*64;++id){
   if(!(next.flags[id]&1u) || (next.flags[id]&4u))continue;
@@ -31,9 +32,10 @@ static HumanPruningError core(const OriginalWorld& w,Variant v,const Rules& r,co
   }
   if(weapon && armor && chassis)next.flags[id]|=0x104u;
  }
- for(size_t i=0;i<512;++i)if(next.flags[i]!=get(i)->unit_flags)++next.changed;
+ for(size_t i=0;i<512;++i)if(next.flags[i]!=(prior?prior->flags[i]:get(i)->unit_flags))++next.changed;
  out=next;return HumanPruningError::ok;
 }
-HumanPruningError world_human_component_pruning(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,nullptr,out);}
-HumanPruningError world_human_component_pruning_candidate(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,const OriginalPrototype& candidate,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,&candidate,out);}
+HumanPruningError world_human_component_pruning(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,nullptr,nullptr,out);}
+HumanPruningError world_human_component_pruning_candidate(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,const OriginalPrototype& candidate,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,&candidate,nullptr,out);}
+HumanPruningError world_human_component_pruning_after(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,const OriginalPrototype& candidate,const HumanPruningResult& prior,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,&candidate,&prior,out);}
 }

@@ -28,5 +28,11 @@ HumanPruningError world_human_component_pruning(const OriginalWorld&,Variant,con
 HumanPruningError world_human_component_pruning_candidate(const OriginalWorld&,Variant,const Rules&,
  const UnitDefinitions&,PruningRuntime,int32_t faction,int32_t selected_id,
  const OriginalPrototype& candidate,HumanPruningResult&);
+/* Repeated source pruning against already staged candidate/flags. Additional
+ * flags must be monotone original coverage additions0x104; no active/other flag
+ * edits accepted. Prior flags/output disjoint, old snapshot API unchanged. */
+HumanPruningError world_human_component_pruning_after(const OriginalWorld&,Variant,const Rules&,
+ const UnitDefinitions&,PruningRuntime,int32_t faction,int32_t selected_id,
+ const OriginalPrototype&,const HumanPruningResult& prior,HumanPruningResult&);
 }
 #endif

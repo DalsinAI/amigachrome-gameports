@@ -4,6 +4,9 @@
 #include "inactive_prototype_allocation.h"
 #include "unused_prototype_retirement.h"
 namespace alpha {
+class DiscoveryReactorPlan;
+struct DiscoveryReactorFacts;
+enum class DiscoveryReactorError;
 enum class UnreferencedAllocationError {ok,bad_state,runtime_required,existing_return_required,strength_required,no_slot,live_reference_required,naming_context_required,naming_nonreturning,overflow,out_of_memory};
 class UnreferencedAllocationPlan {
  public:
@@ -11,6 +14,9 @@ class UnreferencedAllocationPlan {
   const InactiveAllocationPlan& allocation()const{return allocation_;}
   const RetirementHistoryResult& history()const{return history_;}
  private:
+  friend class DiscoveryReactorPlan;
+  friend DiscoveryReactorError world_discovery_reactor_stage(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,int32_t,int32_t,const DiscoveryReactorFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,DiscoveryReactorPlan&);
+  void swap(UnreferencedAllocationPlan&);
   friend UnreferencedAllocationError world_unreferenced_prototype_allocation(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,const ExistingProposalRequest&,const InactiveAllocationFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,UnreferencedAllocationPlan&);
   InactiveAllocationPlan allocation_;RetirementHistoryResult history_{};bool ready_=false,retired_=false;
 };

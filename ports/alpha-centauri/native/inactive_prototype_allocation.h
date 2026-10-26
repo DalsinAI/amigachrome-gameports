@@ -19,6 +19,7 @@ class InactiveAllocationPlan {
   uint16_t flags(size_t i)const{return i<512?flags_[i]:0;}
   size_t count()const{return count_;}const OriginalBase* base(size_t i)const{return i<count_?bases_+i:nullptr;}
  private:
+  friend class UnreferencedAllocationPlan;
   friend UnreferencedAllocationError world_unreferenced_prototype_allocation(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,const ExistingProposalRequest&,const InactiveAllocationFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,UnreferencedAllocationPlan&);
   friend InactiveAllocationError world_inactive_prototype_allocation(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,const ExistingProposalRequest&,const InactiveAllocationFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,InactiveAllocationPlan&);
   void swap(InactiveAllocationPlan&);
