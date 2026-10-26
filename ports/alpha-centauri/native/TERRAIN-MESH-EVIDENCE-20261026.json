@@ -1,0 +1,58 @@
+{
+  "scope": "Original ground triangle geometry only, before texture/light/visibility dispatch. No new art, pixel raster, viewer enabling or complete world-scene claim.",
+  "parent": "e33c271164a9875dd9b5da404de53ef3bdb8b900",
+  "ownedEffect": {
+    "triangles": 4,
+    "vertices": 12,
+    "cornerSelectors": "centre,W,N; centre,N,E; centre,E,S; centre,S,W",
+    "normalRenderScale": 25,
+    "viewerZooms": [
+      1,
+      2
+    ],
+    "sourceZooms": [
+      -5,
+      5
+    ],
+    "heightInput": "Already resolved centre andW/N/E/S ordinary height-cache fields,0..96; not inferred from climate.",
+    "transaction": "All integer overflow/range checks precede output commit; input/output overlap supported."
+  },
+  "newOriginalRecovery": {
+    "records": 142,
+    "vertices": 1704,
+    "ownerHeights": "All71Explore land tiles at bothsourcezooms, including sloped/coastal sharedzeroheight contexts.",
+    "exactGeometrySHA256": "6bf44565af5bceee2285e44078ffebb1824b78768023bd2091e6d8f2d6f241e9",
+    "hostASanUBSan": "PASS",
+    "independentLinux68040": "PASS",
+    "originalObservationOutputSHA256": "ef44a7ca62047e9c9892ab9d2467e39cfadca68b3cd81a230e7597c4fc787668",
+    "observationBoundary": "Four numeric regions ofMapWin_gen_terrain_poly: metric+corneraverage4633f6..4634a2; origin463dee..463e0a; template463e92..463f91; parameterized threevertexheight4640c3..46416b. Real unchanged MapWin_get_alt executes; observer jumps stop before unexecuted visibility/texture dispatch. No fake callback return/full original function/SEH/PE/OS execution claim.",
+    "uvTables": "Original supplied defaultUV observations are private evidence only; not copied/shipped in own mesh API."
+  },
+  "publicControls": {
+    "cases": 2060,
+    "accepted": 1575,
+    "rejected": 485,
+    "aliasCases": 3,
+    "partialRecordRejected": true,
+    "hostAndIndependent68040SHA256": "e9da37bd7db4f2b9c42df603cd1e07551d6ceaade3f07a705de507b55ebe29bb",
+    "oracle": "Independent Python destination-coordinate/overflow oracle, noownerassets/originalcode."
+  },
+  "placementFinding": "Mesh centre quantises to caller+(32,16) or+(64,32), plusaveragecornerheight inY. Existing original unit anchor uses scaled50=34/65; those distinct source rules must not be replaced by silhouette-fitting.",
+  "normalSDK": {
+    "binarySHA256": "bbf1f69591f5d95a3ca58a15cc9e9d4f0c30ef8da616a37ef77452fce32c236a",
+    "execution": "UNRUN actualAmigaOS; normalSDK buildonly/nooverlay"
+  },
+  "workflow": {
+    "allParentBytesRetained": true,
+    "parentPythonCommands": 82,
+    "addedPythonCommands": 2
+  },
+  "limits": [
+    "This creates pre-texture geometry, not a painted terrain scene.",
+    "World map draw order/visibility/fog/shadows/coast texture overlays and material/UV/rainfall selectors remain unimplemented.",
+    "OriginalfullMapWin_gen_terrain_poly not executed: only stated closed numeric regions with explicit boundary inputs and real altitude helper.",
+    "OriginalTexture_draw_3, actualscreenBuffer/DirectDraw callbacks and finalOSblit are not executed by this geometry qualification.",
+    "No world or UI wiring, screenshot, native/performance/finalheadCI/deployment claim.",
+    "No source export/PR/push/connector/externalmessage; automaticapproval restriction honoured. User watch/lab untouched; no additional agents."
+  ]
+}

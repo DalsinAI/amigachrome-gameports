@@ -184,3 +184,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_ground_scene.py --out "$RUNNER_TEMP/cvr-ground-scene-host"
       - name: Source non-flat caller and complete synthetic unit scene independent big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_cvr_ground_scene.py --out "$RUNNER_TEMP/cvr-ground-scene-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original ground triangle mesh host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_mesh.py --out "$RUNNER_TEMP/terrain-mesh-host"
+      - name: Original ground triangle mesh independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_mesh.py --out "$RUNNER_TEMP/terrain-mesh-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
