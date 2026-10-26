@@ -352,3 +352,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_queue_shift.py --out "$RUNNER_TEMP/queue-shift-host"
       - name: Big-endian original queue structural shift
         run: python3 ports/alpha-centauri/native/test_queue_shift.py --out "$RUNNER_TEMP/queue-shift-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original unit availability
+        run: python3 ports/alpha-centauri/native/test_unit_availability.py --out "$RUNNER_TEMP/unit-availability-host"
+      - name: Big-endian original unit availability
+        run: python3 ports/alpha-centauri/native/test_unit_availability.py --out "$RUNNER_TEMP/unit-availability-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -1535,3 +1535,31 @@ cover21,724 cases including empty queues, counter underflow and malformed input.
 The normal SDK binary builds only; AmigaOS execution and full final-head CI remain
 unrun. Full queue advancement still requires real candidate admission and all
 source-backed completion effects.
+
+### Original unit availability (explicit facts, local only)
+
+`unit_availability` checks original unit admission from explicit qualified facts:
+active flag, faction obsolescence mask, predefined prerequisite technology,
+scenario colony-pod prohibition, coastal requirement for a sea chassis with a
+base, and faction ownership of custom design IDs. Prerequisite normalization
+retains faction0 rejection, None(-1), original ordinary technology range0..87,
+row prerequisite sentinels and technology ownership. The raw checked API accepts
+unit IDs0..511, factions0..7 and triads0..2; failure leaves output unchanged.
+
+Original SMAC has no expansion-component filtering. Original SMAX additionally
+rejects expansion armor/weapons/ability bits and predefined units14..20 whenever
+its explicit runtime expansion setting is false. That setting is not guessed
+from the executable/wire edition. Any bit in0x1f000000 rejects in that SMAX mode;
+a later source's equality-based ability formulation is not copied.
+
+Host and independent68040 suites pass31,520 cases. Complete unmodified original
+routines plus actual coast helpers/original radius offsets match14,788 SMAC and
+14,856 SMAX controlled contexts. The coast fixtures use an8x8 map, base(2,2),
+all land or one adjacent water tile, with actual map globals; this is not a full
+original World load or a general terrain qualification. An earlier additional
+set tests the full routines with no base, bypassing the coastal branch.
+
+The API has no owned World binding, authority, queue retry loop, production
+commit, completion, actor creation, turn or frontend input. Normal Amiga SDK
+builds are compilation only. Final-head CI and actual AmigaOS execution remain
+unrun; do not expose this query as restored gameplay.
