@@ -292,3 +292,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_grid.py --out "$RUNNER_TEMP/terrain-grid-host"
       - name: Original terrain grid topology and layer independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_grid.py --out "$RUNNER_TEMP/terrain-grid-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original base-work grid cursor and topology host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_base_grid.py --out "$RUNNER_TEMP/terrain-base-grid-host"
+      - name: Original base-work grid cursor and topology independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_base_grid.py --out "$RUNNER_TEMP/terrain-base-grid-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -11,6 +11,9 @@ struct TerrainSceneRuntime {
  TerrainVisibilityRuntime visibility;
  TerrainCallerRuntime caller;
  int32_t caller_x,caller_y,render_height,cache_source_zoom;
+ // Actual source cursor globals685478/68547c are required for preference200.
+ // A saved base coordinate or live cursor is never silently substituted.
+ int32_t source_cursor_x=0,source_cursor_y=0;bool source_cursor_supplied=false;
  int32_t source_scale_numerator,source_scale_denominator;
  uint32_t source_map_tiles_address,game_preferences;
  // The supported source receiver is distinct from main MapWin and has a fresh
@@ -23,10 +26,12 @@ struct TerrainSceneRuntime {
 // edges between source land neighbours; MorePreferences800000 enables sea
 // edges with colour190 when either endpoint is water, otherwise37.
 // Grid follows ground and precedes plant/coast/river layers.
+// Base-work grid preference200 follows river/late visibility and precedes roads.
+// Its using-faction val3low3/diplo8 and explicit cursor classification are real.
 // Source GameRules100/unexplored concealment overrides rainfall/rockiness and
 // suppresses fungus/jungle/forest; retained ordinary height and coast topology are real.
 // Fresh normal-scale25 zoom-5/5 cache profile only. No outline/hidden draw,
-// special heights, territory/sea-platform/actors/OS effects. Revealed
+// special heights, sea-platform/actors/OS effects. Revealed
 // jungle and land/ocean fungus use source unlit keyed layers; flag1 forest
 // is lit and inserted between jungle and fungus using actual neighbour bits.
 // Land farm textures use the source identity-selected variant, rainfall

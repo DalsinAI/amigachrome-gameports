@@ -1,0 +1,49 @@
+{
+  "scope": "Original base-work grid preference200; not politicalterritory",
+  "sourceFacts": {
+    "stage": "river -> late raw exploration gate -> base-work grid -> roads",
+    "classification": "raw val3low3 usingfaction filtered by viewer diplo8 OR explicit cursor map-range<3",
+    "neighbours": "raw NE,SE,SW,NW; sourceonewrap X; missing neighbours skip",
+    "colour": 249,
+    "cursor": "explicit globals685478/68547c; only on-map parityvalid supported; never inferred from save/currentUI"
+  },
+  "publicControls": {
+    "plans": 2624,
+    "layers": 128,
+    "newWorldScenes": 3888,
+    "parentSyntheticScenesUnchanged": 5184,
+    "cursorRejectionCases": 3,
+    "hostASanUBSan": true,
+    "independentBigEndian68040": true,
+    "workflowParentCommands": 137,
+    "workflowCurrentCommands": 139
+  },
+  "privateOriginal": {
+    "completeOriginalMapWinReturns": 6640,
+    "baseGridContexts": 5696,
+    "combinedGridContexts": 944,
+    "unchangedOriginalTutorials": true,
+    "cursorProfiles": "first saved base coordinate and controlled origin; neither claimed live currentcursor",
+    "inheritedOriginalContextsRechecked": 4078,
+    "windowsImportsOrPEStartup": false,
+    "proprietaryAssetsUploaded": false
+  },
+  "digests": {
+    "plans": "cc13766acdd40980c3774abe15d391991a7991cf7562e24653faa66556dbf9d7",
+    "layers": "fe50a2ab0e9a5243e2451722c55deffabb70ca4b0dfe64302822c478abc53075",
+    "newWorldScenes": "5bc3987c1994113c7fc300cf21131101c1bceee5c6768ee8d2d9b18909de5bc3",
+    "original5696": "d647ba6695bd452083884f2ba9cc5bb69cca4ecd53495dc0c67a3b75fa8ffe38"
+  },
+  "rejectedScaffolding": [
+    "legacy scene fixture stride20bc initially written withcurrent20cc, fixedbeforeacceptedcoverage",
+    "cursor rejection assertions moved from generic special-height context toordinaryvalidfixture, preserving earlier holdpriority",
+    "receipt-only statusCounts variable shadow corrected; pixels unchanged"
+  ],
+  "unsupported": [
+    "native/frontend/watch/deploy/publication/export/fullWorld/RGB OSloader/blit unrun or forbidden",
+    "original base terran.exe fullscene differential unrun",
+    "off-mapcursor/outline/specialheight/sprite-scale-cache routes remainheld withoutfakecallbacks"
+  ],
+  "nativeExecution": false,
+  "SDKBuildOnly": true
+}

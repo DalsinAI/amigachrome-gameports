@@ -5,6 +5,7 @@
 #include "terrain_roads.h"
 #include "terrain_rivers.h"
 #include "terrain_grid.h"
+#include "terrain_base_grid.h"
 #include <stdlib.h>
 #include <string.h>
 namespace alpha {namespace {
@@ -19,7 +20,7 @@ TerrainSceneStatus render_world_ordinary_scene(const OriginalWorld&w,const Rules
  if(used>s.bytes||au>a.bytes||world_alias(w,s.pixels,used)||overlap(s.pixels,used,&r,sizeof r)||overlap(s.pixels,used,&d,sizeof d)||overlap(s.pixels,used,&in,sizeof in)||overlap(s.pixels,used,&meta,sizeof meta)||overlap(s.pixels,used,meta.classes,meta.class_bytes)||overlap(s.pixels,used,meta.rules,meta.rule_bytes)||overlap(s.pixels,used,&coast,sizeof coast)||overlap(s.pixels,used,&ot,sizeof ot)||overlap(s.pixels,used,ot.by_detail,ot.count>80?80*sizeof(int32_t):ot.count*sizeof(int32_t))||overlap(s.pixels,used,&a,sizeof a)||overlap(s.pixels,used,a.pixels,au)||overlap(s.pixels,used,&s,sizeof s))return S::invalid_input;
  const auto&m=w.game().map.info;const auto&v=in.visibility.observation;
  if(x<0||y<0||x>=(int)m.width||y>=(int)m.height||((x+y)&1)||!in.source_map_tiles_address||(uint64_t)in.source_map_tiles_address+(uint64_t)m.tile_count*44>UINT32_MAX)return S::invalid_input;
- if(!in.private_view_fresh_active_cache||in.source_scale_numerator!=0||in.source_scale_denominator!=1||in.render_height!=25||(v.source_zoom!=-5&&v.source_zoom!=5)||in.cache_source_zoom!=v.source_zoom||(v.draw_flags&~0x04000421u)||(in.game_preferences&~0x100u))return S::held_view;
+ if(!in.private_view_fresh_active_cache||in.source_scale_numerator!=0||in.source_scale_denominator!=1||in.render_height!=25||(v.source_zoom!=-5&&v.source_zoom!=5)||in.cache_source_zoom!=v.source_zoom||(v.draw_flags&~0x04000421u)||(in.game_preferences&~0x300u))return S::held_view;
  TerrainCallerOrder order{};if(plan_world_terrain_order(w,x,y,v,in.caller,order)!=TerrainCallerStatus::resolved)return S::invalid_input;
  if(order.path!=TerrainCallerPath::land_then_coast&&order.path!=TerrainCallerPath::water)return S::held_view;
  TerrainObservation observed{};auto visible=observe_world_terrain_visibility(w,r,d,x,y,in.visibility,observed);
@@ -41,6 +42,7 @@ TerrainSceneStatus render_world_ordinary_scene(const OriginalWorld&w,const Rules
   if(status!=TerrainRoadStatus::resolved)return status==TerrainRoadStatus::held_base_repair?S::held_features:S::failed_stage;
   if(roads.source_late_layers_visible&&((observed.displayed_items&later)||(t->landmarks&0xe000u)))return S::held_features;
  }
+ TerrainBaseGridPlan base_grid{};if(in.game_preferences&0x200u){if(!in.source_cursor_supplied)return S::missing_runtime;TerrainBaseGridContext bc{v.viewer,in.source_cursor_x,in.source_cursor_y,true};if(!world_terrain_base_grid(w,x,y,bc,base_grid))return S::invalid_input;}
  TerrainGridPlan grid{};TerrainGridView gv{v.more_preferences,(v.draw_flags&0x04000000u)||(in.game_preferences&0x100u),true};if(!world_terrain_grid(w,x,y,gv,grid))return S::failed_stage;
  const unsigned zoom=v.source_zoom==-5?1:2;
  auto*memory=(uint8_t*)malloc(used);if(!memory)return S::out_of_memory;memcpy(memory,s.pixels,used);TerrainTextureSurface stage=s;stage.pixels=memory;stage.bytes=used;
@@ -66,6 +68,7 @@ TerrainSceneStatus render_world_ordinary_scene(const OriginalWorld&w,const Rules
   if(ok){TerrainCoastOverlayInput ci{};ci.mesh=mesh;ci.light=ol;for(unsigned k=0;k<4;++k)ci.shore_mask[k]=masks.coast[k];ci.map_x=x;ci.map_y=y;ci.fog_colour=observed.visible?-1:65;ci.source_coast_context_supplied=true;ok=render_terrain_coast_overlay(ci,meta,coast,a,stage);}
   if(ok&&(v.draw_flags&0x400u)){TerrainRiverInput ri{mesh,lights,masks.river,observed.visible?-1:65,(t->items&0x80u)!=0,(t->items&0x200u)!=0,true};ok=render_terrain_rivers(ri,a,stage);}
  }
+ if(ok&&(in.game_preferences&0x200u)){TerrainBaseGridInput bi{};bi.plan=base_grid;bi.mesh.caller_x=in.caller_x;bi.mesh.caller_y=in.caller_y;bi.mesh.viewer_zoom=zoom;if(order.path==TerrainCallerPath::land_then_coast){CvrTerrainCorners c{};ok=cvr_terrain_corners(w,x,y,zoom,c);bi.mesh.height[0]=((t->climate>>5)-3)*((v.source_zoom+16)*25/16);for(unsigned k=0;k<4;++k)bi.mesh.height[k+1]=c.height[k];}ok=ok&&render_terrain_base_grid(bi,stage);}
  if(ok&&(v.draw_flags&0x20u)){TerrainRoadLayerInput ri{};ri.plan=roads;ri.mesh.caller_x=in.caller_x;ri.mesh.caller_y=in.caller_y;ri.mesh.viewer_zoom=zoom;if(order.path==TerrainCallerPath::land_then_coast){CvrTerrainCorners corners{};TerrainPointLights lights{};ok=cvr_terrain_corners(w,x,y,zoom,corners);if(ok&&observed.visible)ok=world_terrain_lights(w,x,y,lights);else if(ok)for(auto&l:lights.point)l=2;ri.mesh.height[0]=((t->climate>>5)-3)*((v.source_zoom+16)*25/16);for(unsigned k=0;k<4;++k)ri.mesh.height[k+1]=corners.height[k];ri.lights=lights;}ok=ok&&render_terrain_roads(ri,a,stage);}
  if(ok)memcpy(s.pixels,memory,used);
  free(memory);return ok?S::rendered:S::failed_stage;

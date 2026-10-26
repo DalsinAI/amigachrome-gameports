@@ -1607,3 +1607,36 @@ were not weakened; both corrections follow instruction-backed branch behavior.
 Normal SDK binaries build; native/UI/RGB OS qualification remains UNRUN. Imported
 sprite/sea-platform scale and cache dependencies and other later modes stay held.
 See `GRID-SCENE-EVIDENCE-20261026.json`.
+
+
+### Original base-work grid (26 October)
+
+Original map preference `0x200` now draws the base-work boundary after rivers and
+the late raw exploration gate, before roads. It classifies raw `val3 & 7`
+(using-faction), viewer diplomacy bit 8 and source cursor map-range below three,
+then compares the four diagonal neighbours. The lines use original index 249.
+This is the base-work grid, not political territory rendering. No ownership,
+visibility or cursor authority is invented: the caller must supply the actual
+source cursor globals' coordinates. Missing or invalid cursor context rejects
+without changing pixels. This scope admits only on-map, parity-valid cursors;
+source outline and off-map-cursor contexts remain held.
+
+Public host sanitizers and independently executed 68040 controls cover 2,624
+plans against a separate raw-file model, all 16 edge masks in 128 compositions,
+3,888 new World scenes, missing/invalid cursor rejection, aliases and late
+failures. All parent 5,184 synthetic scene outputs remain unchanged. All 137
+parent workflow commands remain, plus two base-grid commands.
+
+Private complete original MapWin entry/normal-return comparisons match every
+pixel in 5,696 unchanged tutorial contexts using two explicitly controlled source
+cursor positions, plus 944 combined ordinary-grid/base-grid contexts. The
+controlled cursor values are not claimed to be the live game's cursor. Earlier
+4,078 original pixel contexts were rechecked unchanged. The production overlay
+matched the original on its first comparison. Rejected test scaffolding is
+preserved: a legacy/current faction-stride mixup, cursor assertions placed ahead
+of an intentionally earlier feature hold, and a receipt-variable shadow.
+Final controls preserve the original hold priority and exact pixel expectations.
+SDK binaries build only; no native, frontend, watched-preview, physical RGB/OS
+loading or full-world completion is claimed. Imported sprite scale/cache and
+other unsupported scene modes remain held.
+See `BASE-GRID-SCENE-EVIDENCE-20261026.json`.
