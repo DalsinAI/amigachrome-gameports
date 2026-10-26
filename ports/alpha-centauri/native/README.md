@@ -2177,3 +2177,5 @@ Original conventional base combat stage: [BASE-COMBAT.md](BASE-COMBAT.md). Read-
 Original combat sensor stages: [SENSOR-COMBAT.md](SENSOR-COMBAT.md). Read-only actual World coverage and signed percentage adjustment; complete battle/player actions/native qualification remain open.
 
 Original ground mobility/road/elevation stages: [GROUND-MODIFIERS.md](GROUND-MODIFIERS.md). Explicit incoming strengths; final battle/actions/native qualification remain open.
+
+Late Pulse/Jammer/Tracking arithmetic: see [DEFENSE-ABILITIES.md](DEFENSE-ABILITIES.md); raw stage only, World/native/UI pending.
