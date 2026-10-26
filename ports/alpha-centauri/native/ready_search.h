@@ -15,6 +15,11 @@ struct ReadySearchResult {int32_t selected,distance;uint32_t passes;uint8_t clea
  */
 LogicError world_ready_search(const OriginalWorld&,const UnitDefinitions&,const Rules&,
  int32_t human,int32_t road,const ReadySearchFacts&,ReadySearchResult&);
+/* State projection of deferred bit2 followed by the original offline search.
+ * Bitmap includes the newly deferred bit if a later pass clears it. No actual
+ * Console_ready UI/rally/audio/iteration reset is executed by this function. */
+LogicError world_wait_ready_search(const OriginalWorld&,const UnitDefinitions&,const Rules&,
+ int32_t human,int32_t road,size_t vehicle,int32_t cursor_x,int32_t cursor_y,ReadySearchResult&);
 class LocalProductionSession;
 class ReadySearchPlan {
  public:const ReadySearchResult& preview()const{return result_;}

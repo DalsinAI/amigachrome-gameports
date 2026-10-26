@@ -8,6 +8,7 @@
 #include "local_workers.h"
 #include "local_unit_skip.h"
 #include "local_unit_wake.h"
+#include "local_unit_wait.h"
 #include "world_unit_readiness.h"
 #include "ready_search.h"
 namespace alpha {
@@ -107,6 +108,8 @@ class LocalProductionSession {
   LocalOrderError prepare_ready_search(const ReadySearchFacts&,ReadySearchPlan&)const;
   LocalOrderError commit_ready_search(const ReadySearchPlan&,ReadySearchReceipt&);
   LocalOrderError unit_readiness(size_t,UnitReadiness&)const;
+  LocalOrderError prepare_wait_unit(size_t,int32_t cursor_x,int32_t cursor_y,LocalWaitCommand&)const;
+  LocalOrderError commit_wait_unit(const LocalWaitCommand&,LocalWaitReceipt&);
   LocalOrderError prepare_wake_unit(size_t,LocalWakeCommand&)const;
   LocalOrderError commit_wake_unit(const LocalWakeCommand&,LocalWakeReceipt&);
   LocalOrderError prepare_skip_unit(size_t,LocalSkipCommand&)const;

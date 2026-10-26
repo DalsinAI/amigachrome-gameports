@@ -209,3 +209,11 @@ with checked speed dependencies and revision-bound, local-owner commits.
 Its tests cover full-container export/reload and stale/suspended sessions.
 This isolated candidate adds no player controls or turn authority. Native
 execution, publication and remote CI remain held.
+
+The local [deferred selection state](ports/alpha-centauri/native/UNIT-WAIT-PROJECTION.md)
+atomically combines the original deferred-unit bit with offline re-selection.
+It preserves movement/RNG and exact buffer persistence. Full Console_wait
+rendering, rally, audio, input flushing and command-loop completion remain
+unimplemented; no new player control or End Turn authority is exposed.
+Host and independent Linux68040 controls pass. Native execution, publication
+and remote CI remain held.

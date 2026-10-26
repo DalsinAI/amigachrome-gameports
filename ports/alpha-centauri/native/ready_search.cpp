@@ -15,8 +15,8 @@ bool disjoint(const OriginalWorld&w,const void*p,size_t n){
 }
 }
 
-LogicError world_ready_search(const OriginalWorld&w,const UnitDefinitions&units,const Rules&tech,
- int32_t human,int32_t road,const ReadySearchFacts&facts,ReadySearchResult&out){
+static LogicError ready_search_internal(const OriginalWorld&w,const UnitDefinitions&units,const Rules&tech,
+ int32_t human,int32_t road,const ReadySearchFacts&facts,ReadySearchResult&out,int32_t defer_target){
  if(!w.loaded() || tech.count!=89 || road<1 || road>100 ||
     !((w.game().data_version<11 && units.weapon_count==21 && units.armor_count==10 && units.ability_count==24) ||
       (w.game().data_version>=11 && units.weapon_count==26 && units.armor_count==14 && units.ability_count==29)) || human<1 || human>7 || w.game().vehicle_count>2048 ||
@@ -37,7 +37,7 @@ LogicError world_ready_search(const OriginalWorld&w,const UnitDefinitions&units,
   next.passes=pass+1;
   for(size_t i=0;i<w.game().vehicle_count;++i){
    UnitReadiness r{};const auto e=world_unit_readiness(w,units,tech,i,human,road,r);if(e!=LogicError::ok)return e;
-   const auto*v=w.vehicle(i);const bool deferred=(v->state&2u)&&!(next.clear_deferred[i/8]&(1u<<(i%8)));
+   const auto*v=w.vehicle(i);const bool deferred=((v->state&2u)||(int32_t)i==defer_target)&&!(next.clear_deferred[i/8]&(1u<<(i%8)));
    if(!r.ready || deferred)continue;
    int64_t dx=(int64_t)x-v->x,dy=(int64_t)y-v->y;if(dx<0)dx=-dx;if(dy<0)dy=-dy;
    if(!map.flat && dx>(int64_t)map.width/2)dx=(int64_t)map.width-dx;
@@ -51,9 +51,18 @@ LogicError world_ready_search(const OriginalWorld&w,const UnitDefinitions&units,
   }
   if(next.selected>=0){out=next;return LogicError::ok;}
   for(size_t i=0;i<w.game().vehicle_count;++i)if(pass!=0 || (int32_t)i!=facts.current || !local_reference){
-   if(w.vehicle(i)->state&2u)next.clear_deferred[i/8]|=(uint8_t)(1u<<(i%8));
+   if((w.vehicle(i)->state&2u)||(int32_t)i==defer_target)next.clear_deferred[i/8]|=(uint8_t)(1u<<(i%8));
   }
  }
  out=next;return LogicError::ok;
+}
+LogicError world_ready_search(const OriginalWorld&w,const UnitDefinitions&u,const Rules&t,int32_t h,int32_t r,const ReadySearchFacts&f,ReadySearchResult&out){
+ return ready_search_internal(w,u,t,h,r,f,out,-1);
+}
+LogicError world_wait_ready_search(const OriginalWorld&w,const UnitDefinitions&u,const Rules&t,int32_t h,int32_t r,size_t id,int32_t x,int32_t y,ReadySearchResult&out){
+ if(id>INT32_MAX)return LogicError::bad_state;
+ const auto*v=w.vehicle(id);if(!v||v->faction_id!=h)return LogicError::bad_state;
+ const ReadySearchFacts facts{(int32_t)id,x,y,(int32_t)id};
+ return ready_search_internal(w,u,t,h,r,facts,out,(int32_t)id);
 }
 }

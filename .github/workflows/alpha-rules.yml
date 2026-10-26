@@ -460,3 +460,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_local_unit_wake.py --out "$RUNNER_TEMP/unit-wake-host"
       - name: Big-endian owned original unit wake and terraform contribution
         run: python3 ports/alpha-centauri/native/test_local_unit_wake.py --out "$RUNNER_TEMP/unit-wake-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned deferred selection state
+        run: python3 ports/alpha-centauri/native/test_local_unit_wait.py --out "$RUNNER_TEMP/unit-wait-host"
+      - name: Big-endian owned deferred selection state
+        run: python3 ports/alpha-centauri/native/test_local_unit_wait.py --out "$RUNNER_TEMP/unit-wait-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
