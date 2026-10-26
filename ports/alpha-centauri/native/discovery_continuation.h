@@ -24,6 +24,7 @@ class DiscoveryContinuationPlan {
   const DiscoverySharedRequest* shared_request()const{return has_shared_request()?&shared_:nullptr;}
   const char* pending_secrets_technology_name()const{return ready_ && boundary_==DiscoveryContinuationBoundary::first_secrets_presentation?secrets_name_:nullptr;}
   const DiscoveryContinuationFacts& captured()const{return captured_;}
+  int32_t map_owner()const{return map_owner_;}
   int32_t faction()const{return faction_;}int32_t technology()const{return technology_;}
  private:
   friend DiscoveryContinuationError world_discovery_continuation(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,int32_t,int32_t,const DiscoveryReactorFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,const DiscoveryReactorBoundaryFacts&,const DiscoveryContinuationFacts&,DiscoveryContinuationPlan&,size_t);
@@ -35,7 +36,7 @@ class DiscoveryContinuationPlan {
   DiscoveryReactorSequencePlan state_;
   DiscoveryContinuationFacts captured_{};DiscoverySharedRequest shared_{};
   DiscoveryContinuationBoundary boundary_=DiscoveryContinuationBoundary::first_secrets_tail;
-  int32_t faction_=0,technology_=0;char secrets_name_[128]{};bool ready_=false;
+  int32_t faction_=0,technology_=0,map_owner_=0;char secrets_name_[128]{};bool ready_=false;
 };
 /* Bounded ordinary BASE continuation in a private owning staged frame. Calls
  * the complete reactor-suspension query first; then stops before a required

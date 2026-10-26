@@ -8,7 +8,7 @@ namespace alpha {namespace {
 bool world_alias(const OriginalWorld& w,const void* p,size_t n){using detail::effects_range_overlap;using detail::effects_array_overlap;return effects_range_overlap(p,n,&w,sizeof w) || w.overlaps_byte_storage(p,n) || effects_array_overlap(p,n,w.game().bunglist.data,w.game().bunglist.size,1) || effects_array_overlap(p,n,w.tile(0),w.game().map.info.tile_count,sizeof(OriginalMapTile)) || effects_array_overlap(p,n,w.vehicle(0),w.game().vehicle_count,sizeof(OriginalVehicle)) || effects_array_overlap(p,n,w.base(0),w.game().base_count,sizeof(OriginalBase)) || effects_array_overlap(p,n,w.prototype(0),512,sizeof(OriginalPrototype)) || effects_array_overlap(p,n,w.faction(0),8,sizeof(OriginalFactionState)) || effects_array_overlap(p,n,w.faction_definition(0),8,sizeof(OriginalFactionDefinition));}
 }
 bool DiscoveryContinuationPlan::overlaps(const void* p,size_t n)const{return detail::effects_range_overlap(p,n,this,sizeof *this) || (state_.ready() && world_alias(state_.frame_,p,n));}
-void DiscoveryContinuationPlan::swap(DiscoveryContinuationPlan& p){state_.swap(p.state_);auto exchange=[](auto& a,auto& b){auto x=a;a=b;b=x;};exchange(captured_,p.captured_);exchange(shared_,p.shared_);exchange(boundary_,p.boundary_);exchange(faction_,p.faction_);exchange(technology_,p.technology_);for(unsigned i=0;i<128;++i)exchange(secrets_name_[i],p.secrets_name_[i]);exchange(ready_,p.ready_);}
+void DiscoveryContinuationPlan::swap(DiscoveryContinuationPlan& p){state_.swap(p.state_);auto exchange=[](auto& a,auto& b){auto x=a;a=b;b=x;};exchange(captured_,p.captured_);exchange(shared_,p.shared_);exchange(boundary_,p.boundary_);exchange(faction_,p.faction_);exchange(technology_,p.technology_);exchange(map_owner_,p.map_owner_);for(unsigned i=0;i<128;++i)exchange(secrets_name_[i],p.secrets_name_[i]);exchange(ready_,p.ready_);}
 DiscoveryContinuationError DiscoveryContinuationPlan::build(const OriginalWorld& w,Variant variant,const Rules& rules,const UnitDefinitions& units,int32_t f,int32_t tech,const DiscoveryReactorFacts& reactor,const PrototypeNameLabels& labels,const PrototypeNameSuffix& suffix,const DiscoveryReactorBoundaryFacts& cache,const DiscoveryContinuationFacts& runtime,size_t limit){
  if(runtime.runtime!=DiscoveryRuntimeObservation::supplied)return DiscoveryContinuationError::runtime_required;
  if(runtime.source< -2 || runtime.source>7 || runtime.share<0 || runtime.share>1 || runtime.first_ever<0 || runtime.first_ever>1)return DiscoveryContinuationError::bad_state;
@@ -16,7 +16,7 @@ DiscoveryContinuationError DiscoveryContinuationPlan::build(const OriginalWorld&
  const size_t stage_limit=limit>=overhead?limit-overhead:0;
  const auto reactor_error=world_discovery_reactor_suspension(w,variant,rules,units,f,tech,reactor,labels,suffix,cache,state_,stage_limit);
  if(reactor_error!=DiscoveryReactorError::ok)return DiscoveryContinuationError::reactor_held;
- captured_=runtime;faction_=f;technology_=tech;
+ captured_=runtime;faction_=f;technology_=tech;map_owner_=reactor.map_owner;
  if(state_.boundary()==DiscoveryReactorBoundary::reactor_presentation){boundary_=DiscoveryContinuationBoundary::reactor_presentation;ready_=true;return DiscoveryContinuationError::ok;}
  if(reactor.map_owner==f || ((uint32_t)runtime.game_state&0x80u)){boundary_=DiscoveryContinuationBoundary::generic_presentation;ready_=true;return DiscoveryContinuationError::ok;}
  auto& frame=state_.frame_;auto& faction=frame.factions_[f];const uint8_t bit=(uint8_t)(1u<<(unsigned)f);const auto& target=rules.technologies[tech];
