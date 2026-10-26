@@ -172,3 +172,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_source_scene.py --out "$RUNNER_TEMP/cvr-source-scene-host"
       - name: Source scene exact synthetic and palette cache independent big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_cvr_source_scene.py --out "$RUNNER_TEMP/cvr-source-scene-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Non-flat terrain facet and camera host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_terrain_normal.py --out "$RUNNER_TEMP/cvr-terrain-normal-host"
+      - name: Non-flat terrain facet and camera independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_terrain_normal.py --out "$RUNNER_TEMP/cvr-terrain-normal-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Ordinary and coast corner context host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_terrain_context.py --out "$RUNNER_TEMP/cvr-terrain-context-host"
+      - name: Ordinary and coast corner context independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_terrain_context.py --out "$RUNNER_TEMP/cvr-terrain-context-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

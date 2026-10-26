@@ -1,0 +1,48 @@
+{
+  "scope": "New isolated host-only non-flat terrain camera and ordinary/coast corner mathematics. No viewer/render enabling, no new image/native/deployment claim.",
+  "parent": "92cbe0c60f347fe81f8fc74968b4e5a0f04cc7c7",
+  "normalCamera": {
+    "cornerCombinations": 2401,
+    "exactOriginalBytes": 153664,
+    "sha256": "84ee2c7e293d035ce1ca2197bcbda524051fc527d277ad5e1af2e60c84180dd0",
+    "hostASanUBSan": "PASS",
+    "independentLinux68040": "PASS",
+    "invalidNullAliasAdjacencyControls": 29,
+    "originalScope": "Original facet initializer4c1b10, vector helpers and camera4bf740, all real bounded dependencies; no PE startup/import callbacks/fullgame."
+  },
+  "ordinaryCoastCorners": {
+    "publicSyntheticWorldContexts": 70,
+    "accepted": 36,
+    "rejected": 34,
+    "hostAndIndependentBE": "PASS, independent corner oracle; owned world/output alias rejection controls execute in probe",
+    "ownerExploreLandTiles": 71,
+    "nonflatCornerCombinations": 29,
+    "coastAdjacentRecords": 60,
+    "originalMinus5SHA256": "8dceac29849bc28a40d3f976f32eb913b150d607c61dea82fdcbbc965a3af534",
+    "originalPlus5SHA256": "94a837268fbef4f68e9691f61549e0252d567648ecfe05c8225f9c431223c01f",
+    "ownerHostAndBE": "All142records/568cornercodes/568cornerheights exact against unchanged original altitude/relative helpers; owner assets remain private."
+  },
+  "normalSDK": {
+    "normalProbeSHA256": "16ff470ceece086bdf3ab718de47a4b7f00893bbe553372f1c87ebfe3e8d35a9",
+    "contextProbeSHA256": "ae232d5e5d4cb9334cc133b88192214b6566959e796a06cce4a136ad08ebddab",
+    "execution": "UNRUN actualAmigaOS; normalSDK build only, no overlays"
+  },
+  "workflow": {
+    "parentPythonCommands": 76,
+    "allParentBytesPreserved": true,
+    "addedPythonCommands": 4
+  },
+  "failuresRetained": [
+    "Initial camera prototype rounded quotient to float and used simplified zero-sign matrix;986cases mismatched. Instruction-backed double division/full ordered matrix accumulation fixed all2401, no tolerance or weakened expected outputs.",
+    "Initial probe -Werror indentation and test Python conditional syntax errors fixed before execution; no failed artifact qualified."
+  ],
+  "limits": [
+    "No new world imagery or actual frontend scene support enabled by these standalone dependencies.",
+    "Corner code domain1..7, NormalRenderScale25 and existing viewer magnifications only; no feature height-table lookups, elevation7 signedcache saturation, custom map render scales.",
+    "Coast here means shared corner zero-height/relative4 rule only: original terrain/coast joins, texture topology/fog/shadows not implemented.",
+    "Original basic infantry chassis0/weapon<3 explicitly overrides terrain normal to flat; mathematical slope result is not permission to tilt that profile.",
+    "Original sloped complete model draw and terrain visibility/faction-specific fullworld caller semantics remain separate integration/reference gates.",
+    "No publication/source export; automatic approval review export restriction honoured.",
+    "No native/UI/full finalCI qualification; watch remains exclusively user owned."
+  ]
+}
