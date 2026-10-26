@@ -1192,3 +1192,25 @@ unbound. The two new tests run public synthetic fixtures on host and independent
 big-endian 68040; private original numeric/pixel controls are recorded in
 `COAST-EVIDENCE-20261026.json`. Normal SDK builds are available through the two
 new build scripts; actual AmigaOS execution and frontend integration are unrun.
+
+### Explicit original coast resources and caller UVs (26 October)
+
+`prepare_terrain_coast_resources` binds the first original coast mask crop in
+RAINFALL.PCX (raw source rectangle 2,333,56,56) and six original dynamic palette
+samples. It requires the edition's explicit 53-class/53-by-8 rule metadata;
+these owner data are not bundled, inferred from gameplay state, or replaced by
+invented colours. Source palette indices add 10 modulo 256, with the loader's
+252/253 replacement rule. The supported first mask crop contains no transparent
+pixels; otherwise preparation rejects rather than guessing an OS allocation's
+initial contents. Unknown nontransparent classes retain the source zero mapping.
+
+`prepare_terrain_coast_sector` turns the qualified ordinary ground mesh into
+W/N/E/S coast quadrilaterals with source signed midpoint flooring and 27/28 UV
+seams. It builds the dynamic 53-entry lookup, including the shore-mask-seven
+coordinate-parity exception. Outputs reject overlaps with source data and
+commit transactionally. Explicit caller inputs remain responsible for view
+state and ocean-detail lights; this does not execute the full World caller or
+restore water/coast scene composition. Host and independent big-endian controls
+use synthetic metadata and original owner data privately. The original lookup
+numeric region was separately executed; OS loader/Sprite/Buffer initialization
+and actual native execution remain unrun. See the resource evidence JSON.

@@ -1,0 +1,31 @@
+{
+  "scope": "Owner-bound coast secondary mask, dynamic palette, explicit edition metadata, ordinary ground mesh coast sectors and original UV seams",
+  "syntheticContexts": 672,
+  "ownerContexts": 672,
+  "maskPixels": 3136,
+  "dynamicPaletteSamples": 6,
+  "lookupBytesPerContext": 53,
+  "originalLookupContexts": 14,
+  "originalLookupRegion": "465377..46541e",
+  "originalLookupSHA256": "52945c75b136cadf75c4e30a97d8a071117917012ba1a65e77a822165e24187a",
+  "architectures": [
+    "ASan/UBSan host",
+    "independent Linux68040"
+  ],
+  "syntheticSHA256": "cee760b1f2b4b67991a38a5d72b3bff8a88838ddd286721f0012dd92bb9b81bc",
+  "ownerSHA256": "97a2d1fd404b6613b232ebe60a357da36c1700a6784ee91e2dcce92331cfd889",
+  "native": "UNRUN; normal SDK build only",
+  "metadata": "53 original class IDs and53x8categorical rules require explicit edition-bound owner metadata; not bundled or guessed",
+  "limits": [
+    "No World human visibility resolution, allocation seed or World gameplay RNG substitution",
+    "No ocean detail light, full world coast or water composition",
+    "No OS Buffer/Sprite extract/allocate/blit path executed",
+    "Supported owner first crop has no transparent pixels; otherwise reject rather than assume initial OS allocation contents",
+    "No frontend/native/lab/watch deployment or source export"
+  ],
+  "failuresPreserved": [
+    "First host synthetic alias test used misaligned TerrainCoastSector reference; test corrected to aligned overlapping address",
+    "Initial64-bit negative midpoint produced a real independent68040 mismatch; bounded32-bit sum/floor corrected, unchanged expected coordinates now pass on both",
+    "First private owner lookup comparison selected map-x instead of y-x parity; oracle comparison index corrected"
+  ]
+}

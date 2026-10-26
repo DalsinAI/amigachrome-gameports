@@ -220,3 +220,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_coast.py --out "$RUNNER_TEMP/terrain-coast-host"
       - name: Coast mask lookup fog and clipping independent big-endian 68040 pixel controls
         run: python3 ports/alpha-centauri/native/test_terrain_coast.py --out "$RUNNER_TEMP/terrain-coast-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Explicit original coast resources UVs lookup and mesh host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_coast_resources.py --out "$RUNNER_TEMP/terrain-coast-resources-host"
+      - name: Explicit original coast resources UVs lookup and mesh independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_coast_resources.py --out "$RUNNER_TEMP/terrain-coast-resources-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
