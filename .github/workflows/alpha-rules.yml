@@ -252,3 +252,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_visibility.py --out "$RUNNER_TEMP/terrain-visibility-host"
       - name: Owned original neighbour sensor and radar visibility independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_visibility.py --out "$RUNNER_TEMP/terrain-visibility-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned ordinary World scene host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_scene.py --out "$RUNNER_TEMP/terrain-scene-host"
+      - name: Owned ordinary World scene independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_scene.py --out "$RUNNER_TEMP/terrain-scene-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

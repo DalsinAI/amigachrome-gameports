@@ -1364,3 +1364,41 @@ special material/landmark branches and later item/actor/OS layers remain
 separate gates. No frontend or watched instance is changed. Whole-world
 stack/base validation currently runs per query; native performance and a safe
 validated-scene cache have not been qualified.
+
+### Ordinary indexed World terrain scene (private qualification, 26 October)
+
+`terrain_scene.h` joins the owned observation/visibility and numeric caller stages
+with the qualified height, lighting, allocation-seeded material/UV, ground,
+coast-mask, and deep/threshold water stages. It renders the ordinary flags0
+terrain path into a caller-owned small indexed RAM surface. The source private
+view must have a fresh active cache, normal height25, no global scale override,
+and matching source zoom-5 or5. Original tile allocation identity is mandatory;
+there is no gameplay-RNG, saved-pointer or host-pointer fallback.
+
+The complete destination update is transactional, including a late coast/water
+failure after ground has succeeded. It rejects full and one-byte partial aliases
+against World storage, rules/unit definitions, every resource and descriptor.
+The public synthetic suite exercises432 scenes in three Worlds, both normal
+zooms and clipped placements, plus feature/height holds and missing/invalid/alias
+controls on host sanitizers and independent big-endian68040.
+
+Private owner-data comparison now enters the unchanged original SMAX
+`MapWin_gen_terrain_poly` at its actual function entry and reaches its normal
+return, rather than replacing internal callbacks or jumping around the caller.
+It uses the real RAM Buffer handle-null texture path, actual original height and
+light cache helpers, and original source metadata with privately prepared owner
+textures. For Explore, Build and conquer,384 supported contexts match every
+indexed pixel on both host and independent68040. Another192 contexts are held
+transactionally (concealment/features or changed survey rainfall); their source
+outputs are retained without claiming equivalence. The source harness supplies
+real guest thread-local SEH storage; chain, stack, lock count and exit light
+bounds are checked. No Windows API, original exception handler, PE startup,
+physical display or full game ran. This source oracle uses SMAX code with the
+three original base tutorial Worlds; it is not a base-executable differential.
+
+This remains a bounded ordinary terrain compositor, not a complete map frontend.
+Outline/hidden modes, fungus, jungle, special height features, terrain overlays,
+items/actors/labels, global RGB palette installation and original screen blits
+remain outside this contract. The original cache-bit/global side effects are
+not committed to the immutable World. Actual native/UI qualification and viewer
+integration are unrun. No lab or watch session was touched.

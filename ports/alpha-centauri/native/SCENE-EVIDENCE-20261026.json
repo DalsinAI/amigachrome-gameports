@@ -1,0 +1,85 @@
+{
+  "scope": "Owned ordinary flags0 indexed World terrain composition",
+  "parent": "1200c59ed3f23b51e008885fb5bd2b0e903c59a7",
+  "publicControls": {
+    "cases": 432,
+    "syntheticWorlds": 3,
+    "heldFeatureContexts": [
+      "jungle",
+      "fungus",
+      "special-height",
+      "height-seven"
+    ],
+    "pixels": 7077888,
+    "statusCounts": {
+      "0": 432
+    },
+    "rejects": 15,
+    "aliasRejects": 50,
+    "partialRejected": true,
+    "transactionalLateStageFailure": true,
+    "sourceIdentityExplicit": true,
+    "freshActiveCacheProfile": true,
+    "native": false,
+    "bigEndian": false,
+    "sha256": "98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c"
+  },
+  "independentBigEndian": {
+    "cases": 432,
+    "syntheticWorlds": 3,
+    "heldFeatureContexts": [
+      "jungle",
+      "fungus",
+      "special-height",
+      "height-seven"
+    ],
+    "pixels": 7077888,
+    "statusCounts": {
+      "0": 432
+    },
+    "rejects": 15,
+    "aliasRejects": 50,
+    "partialRejected": true,
+    "transactionalLateStageFailure": true,
+    "sourceIdentityExplicit": true,
+    "freshActiveCacheProfile": true,
+    "native": false,
+    "bigEndian": true,
+    "sha256": "98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c"
+  },
+  "ownerOriginal": {
+    "sourceEdition": "SMAX",
+    "worlds": [
+      "Explore",
+      "Build",
+      "conquer"
+    ],
+    "completeUnchangedFunctionEntryAndNormalReturnCalls": 576,
+    "exactSupportedScenesPerArchitecture": 384,
+    "heldScenesPerArchitecture": 192,
+    "matchedIndexedPixelSHA256": "5533a1c28713ddccce64c55cba3efd52c7f6ccfea1f63985a1cdaee086cd27b7",
+    "sourceMapTilesAddress": "0xa00000 (actual controlled guest allocation, not an inferred live pointer)",
+    "privateFreshActiveCache": true,
+    "originalHeightAndLightHelpers": true,
+    "realRAMBufferHandleNull": true,
+    "guestLinuxSEHStorage": true,
+    "stackChainLockExitClampsChecked": true,
+    "negativeOwnerRuntime": "Explicit low pact bits observed from the actual mapped original context; no guessed default"
+  },
+  "normalSDK": {
+    "built": true,
+    "sha256": "51357e000f5b6dba6c85f3aafde4c9c030383fa87686dbc8ce7b1322d698e9e6",
+    "run": false
+  },
+  "unchangedInheritedWorkflowCommands": 117,
+  "newWorkflowCommands": 2,
+  "limitations": [
+    "No native or UI execution or frontend wiring",
+    "No whole PE startup, Windows APIs, original exception handler or physical display",
+    "Prepared indexed owner textures only; no global RGB palette/OS loader equivalence",
+    "No base-executable complete-caller differential",
+    "Outline/hidden modes, concealed/survey overrides, fungus/jungle/special heights held",
+    "No grid/territory/item/actor/label layers, source cache-bit/global side effects or whole game",
+    "Source identity/cache/scale/runtime metadata must be supplied with provenance"
+  ]
+}
