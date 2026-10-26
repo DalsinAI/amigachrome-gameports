@@ -1,0 +1,29 @@
+name: Alpha FS-UAE isolated Linux lab
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/alpha-fsuae-lab.yml'
+      - 'scripts/run_alpha_fsuae_lab.sh'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  emulator:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install emulator and isolated software display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fs-uae xvfb xauth xdotool imagemagick libgl1-mesa-dri mesa-utils
+      - name: Boot the actual emulator with its bundled AROS ROM
+        run: |
+          xvfb-run -a -s "-screen 0 1280x960x24 +extension GLX +render -noreset" bash scripts/run_alpha_fsuae_lab.sh "$RUNNER_TEMP/fsuae-proof"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: alpha-fsuae-emulator-proof
+          path: ${{ runner.temp }}/fsuae-proof
+          if-no-files-found: error
+          retention-days: 14
