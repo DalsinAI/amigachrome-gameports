@@ -1938,3 +1938,49 @@ builds remain unexecuted on AmigaOS. No remote CI, PR, deployment, World mutatio
 faction ODP reset, event/render delivery, session/phase authority, movement refill,
 player End Turn or persistence is provided. Owning phase admission and ordered
 production-prefix/aggregate/debt dependencies still need implementation.
+
+### Original pre-base production setup (local qualification only)
+
+`world_production_prefix` proposes the complete original production setup before
+its first base iteration. It resets the four phase aggregates, recomputes the five
+technology-effect fields from actual rules/owners/bonuses, settles loans in
+ascending creditor1..7order, clears player flag0x20, proposes the pre-base energy
+scratch, and clears social support/psych/efficiency arrays plus the three unknown
+counters, nutrient and labs totals. The selected decoded faction's other fields
+survive; other factions only propose energy-credit changes. Legacy social arrays
+start0x68c; modern0x690. Explicit faction/profile are query context, not authority.
+
+`production_loans` retains original signed arithmetic: payment is the signed
+minimum of current reserves and scheduled payment, with no modern zero clamp or
+cap to principal. Negative reserves/payments/nonzero balances follow original
+branches. Alive bits are preferences.FactionStatus[1], separate from human bits;
+self and creditor0 are excluded; recipient sanctions must be exactly zero. War
+bit0x10adds scheduled payment to debt without transferring credits. Every signed
+intermediate is checked, and errors/aliases preserve output. No unchecked wrap
+or nonnegative-domain patch is introduced.
+
+Local ASan/UBSan host and independent Linux68040 checks agree:10,852loan contexts
+(7,721accepted,4invalid,3,127overflow), and203Worlds/2,030queries
+(1,565accepted,465rejected) with3,244guards, including3owner tutorials and empty
+Worlds. All decoded/opaque World state, monuments, rules, RNG and input files stay
+unchanged. The probe's explicit field encoding is test-only and checks every
+other decoded field; no native structure dump or production save writer is added.
+
+Private actual-original observations execute SMAC0x53b7a0 and SMAX0x526e70through
+254accepted contexts each, including the real complete tech_effects helper.
+One observation jump stops at the branch before base iteration (SMAC0x53b941,
+SMAX0x527024); no fake callbacks. Complete selected-faction records, all8energy
+balances and the energy scratch match; every other byte of mapped0x90000globals
+stays unchanged. Both changed owned executables reproduce those same observations.
+Overflow inputs are excluded from original execution and remain rejection tests.
+
+Run `test_production_loans.py --out OUTPUT` and
+`test_world_production_prefix.py --out OUTPUT`; add
+`--cc m68k-linux-gnu-g++ --m68k-linux` for big-endian Linux execution. Normal Amiga
+SDK scripts are `build_production_loans_probe.sh` and
+`build_world_production_prefix_probe.sh`. Fresh matching builds remain unexecuted
+on AmigaOS. No remote CI, PR, World/credits/cache mutation, base upkeep, phase
+admission, event pump, player End Turn, discovery, AI or save claim. Post-base
+maintenance discounts, interest, first-turn free advances and sanctions events
+are outside this prefix. Real phase identity and ordered event/base execution
+remain required before exposing any turn advancement.

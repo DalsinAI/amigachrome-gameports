@@ -416,3 +416,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_repair_vehicle.py --out "$RUNNER_TEMP/world-repair-host"
       - name: Big-endian original world repair binding
         run: python3 ports/alpha-centauri/native/test_world_repair_vehicle.py --out "$RUNNER_TEMP/world-repair-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original production loan settlement
+        run: python3 ports/alpha-centauri/native/test_production_loans.py --out "$RUNNER_TEMP/production-loans-host"
+      - name: Big-endian original production loan settlement
+        run: python3 ports/alpha-centauri/native/test_production_loans.py --out "$RUNNER_TEMP/production-loans-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world production prefix
+        run: python3 ports/alpha-centauri/native/test_world_production_prefix.py --out "$RUNNER_TEMP/world-production-prefix-host"
+      - name: Big-endian original world production prefix
+        run: python3 ports/alpha-centauri/native/test_world_production_prefix.py --out "$RUNNER_TEMP/world-production-prefix-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
