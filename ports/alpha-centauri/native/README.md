@@ -1353,3 +1353,29 @@ advance a turn, or qualify an AmigaOS executable. The complete workflow and
 native execution remain unrun. Build the isolated native trace probe with
 `build_human_allocation_trace_probe.sh`; run public controls with
 `test_human_allocation_trace.py`.
+
+### Manual human allocation from an imported world
+
+`world_human_allocation` binds the original manual-human selector to the owned
+world's actual first21 tile availability, fresh technology/yields, physical
+facilities/projects, capped satellites, unit-mineral support, current production
+item and prerequisite-qualified citizen bonuses. It accepts explicit worker
+inspection/upkeep and transient scratch values. Active governor scoring, specialist
+adjustment, malformed arrangements and mismatched editions are rejected.
+
+Coherent retained arrangements preserve real governor bit31: the original exits
+before consuming priority values. Missing-worker arrangements with bit31 remain
+unsupported; no flags are cleared or priorities synthesized.
+
+The proposal replays candidate and applied/removed tile visits in their original
+order, including reversed exchanges and resource channel3 resets. It checks
+unchanged numeric yields, signed overflow, the final intake, scratch values and
+ocean-worker flags. It preflights all available tiles, so an overflowing tile
+can conservatively reject a proposal even if selection would never visit it.
+Work buffers use bounded private heap storage. All world data, tables and RNG
+remain unchanged, and failure preserves the output. No callback supplies yields
+or authority. This does not commit workers, refresh full base accounting, persist
+assignments, execute a turn or expose player input. Native execution and full
+workflow/CI remain unrun. Public wire-model controls are in
+`test_world_human_allocation.py`; the isolated normal SDK build helper is
+`build_world_human_allocation_probe.sh`.
