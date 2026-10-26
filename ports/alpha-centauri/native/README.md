@@ -1748,3 +1748,24 @@ legacy holds8 bytes, modern12. Legacy `clean_minerals_modifier` therefore starts
 at0x460, modern0x464. The existing importer already implements this correctly.
 An older private notification note claiming legacy announcement offset0x454 is
 superseded; no imported data or frozen production source was changed.
+
+
+### Original post-modal popup response (local candidate)
+
+`popup_response` proposes the original offline effects of a **confirmed** popup
+result. A checked disable-warning box takes precedence: clear the warning mask,
+mirror warnings, and require actual preferences persistence. Otherwise result0
+sets the deferred base-window request, result2 enables governor0x80000040, and
+result3 requires real nerve-stapling execution. Unknown raw signed results retain
+state. This function does not fabricate a modal result, call a fake callback,
+change production, open a base window, save preferences, staple a base, mutate
+the World or advance a turn. Network/PBEM behavior is outside its explicit owned
+offline policy. Real rendering/input/authority and dependent actions remain
+unimplemented and unqualified.
+
+`test_popup_response.py --out DIRECTORY` checks39,207 cases against an independent
+byte oracle. `--cc m68k-linux-gnu-g++ --m68k-linux` selects the independent runner.
+Private original comparisons execute only the post-modal response fragments,
+stopping before preferences-save, stapling and cleanup calls. They never execute
+or stub the modal. Amiga SDK builds have no AmigaOS execution; no final-head
+published CI or full production completion is claimed.
