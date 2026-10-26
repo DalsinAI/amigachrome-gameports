@@ -1,0 +1,78 @@
+{
+  "scope": "owned terrain observation and numeric caller gates only",
+  "native": false,
+  "frontendChanged": false,
+  "sourceEditions": [
+    "smac",
+    "smacx"
+  ],
+  "syntheticObservation": {
+    "synthetic": 6912,
+    "invalid": 13,
+    "statusCounts": {
+      "0": 6064,
+      "1": 752,
+      "2": 96,
+      "3": 0,
+      "4": 13
+    },
+    "aliasRejects": 9,
+    "missingRuntimeTransactional": true,
+    "partialRejected": true,
+    "editionProfiles": 2,
+    "bigEndian": false,
+    "sha256": "75a4f9ea317c7a54efa738d7300181229a71d4c89119d2e4e08b35275146d5c1",
+    "native": false
+  },
+  "syntheticObservationBE": {
+    "synthetic": 6912,
+    "invalid": 13,
+    "statusCounts": {
+      "0": 6064,
+      "1": 752,
+      "2": 96,
+      "3": 0,
+      "4": 13
+    },
+    "aliasRejects": 9,
+    "missingRuntimeTransactional": true,
+    "partialRejected": true,
+    "editionProfiles": 2,
+    "bigEndian": true,
+    "sha256": "75a4f9ea317c7a54efa738d7300181229a71d4c89119d2e4e08b35275146d5c1",
+    "native": false
+  },
+  "syntheticCaller": {
+    "synthetic": 8640,
+    "invalid": 14,
+    "aliasRejects": 10,
+    "missingRuntimeTransactional": true,
+    "partialRejected": true,
+    "editionProfiles": 2,
+    "bigEndian": false,
+    "sha256": "0824433c02b6662b171c4f4631665837e5f572cfd0999f79ca0c99cdc6af31e9",
+    "native": false
+  },
+  "syntheticCallerBE": {
+    "synthetic": 8640,
+    "invalid": 14,
+    "aliasRejects": 10,
+    "missingRuntimeTransactional": true,
+    "partialRejected": true,
+    "editionProfiles": 2,
+    "bigEndian": true,
+    "sha256": "0824433c02b6662b171c4f4631665837e5f572cfd0999f79ca0c99cdc6af31e9",
+    "native": false
+  },
+  "privateOriginalObservationCasesPerEdition": 1656,
+  "privateOriginalOutlineCasesPerEdition": 2592,
+  "privateOriginalExecutableRegionsOnly": true,
+  "unresolved": [
+    "neighbour/sensor/actor visibility",
+    "unsafe negative-viewer faction lookup",
+    "special draw modes",
+    "height/cache and source render identity",
+    "full world composition and OS paths",
+    "native and frontend qualification"
+  ]
+}

@@ -1275,3 +1275,42 @@ allocation, complete MapWin view resolution, full world scenes, base-Terran
 renderer differential and frontend integration remain unrun. No private render
 allocation identity or gameplay RNG is invented by this deterministic pass.
 See `WATER-EVIDENCE-20261026.json` for exact scope and counts.
+
+### Owned terrain observation and caller ordering (26 October)
+
+`terrain_observation` binds the closed original tile-observation prelude to the
+owned World. The edition, viewer, current faction, source zoom, draw flags,
+rules, more-preferences and game-state flags are explicit runtime input. They
+are not guessed from saved preferences. It preserves actual versus per-faction
+remembered items, source viewer-0 landmark access, rainfall and rockiness,
+concealment and the proposed landmark-cache bit. The World remains immutable.
+Neighbour/sensor/actor visibility and the original unsafe negative-viewer
+faction lookup return distinct held results without changing output.
+
+`terrain_caller_order` records the original outline gate and ordinary terrain
+pass ordering. The source outline argument is explicit and deliberately unnamed;
+values above 21 outline. A non-revealed tile also outlines under the original
+rules/visibility test. Land changes the light clamp to [-4,4] before observation;
+ocean inherits the supplied runtime bounds. The later normal exits restore
+[-256,256]. Source hidden-terrain mode excludes terrain. Other modes, except
+ordinary flags 0/1, are held. This describes the source gate and ordering; it
+neither calls renderer helpers nor draws an outline, terrain or a full scene.
+
+The existing dispatch API's compatibility names need care: its `rockiness`
+field takes source **rainfall** `(climate >> 3) & 3`, and its `moisture` takes
+source **rockiness** `val3 >> 6`. The existing world-mask `roughness` is a
+rainfall transition mask. Their frozen arithmetic is unchanged here.
+
+The public synthetic controls actually run 6,912 observation and 8,640 caller
+contexts on host sanitizers and independent big-endian 68040, plus malformed,
+transactional/alias and missing-runtime controls. Private unchanged source
+regions from each original executable match 1,656 observation contexts and
+2,592 outline decisions per edition on three owner tutorials. These executions
+stop before unresolved visibility and renderer helpers: no full PE, Windows,
+whole MapWin or full-world pixel claim. Normal SDK probes build; native is
+unrun. Four new workflow commands retain every inherited command.
+
+Full composition still requires source-backed neighbour visibility, active
+height/cache and render-identity context, special landmark/material branches,
+items/actors and actual OS/caller qualification. Neither this stage nor the
+existing bounded land/coast/water pixel controls enable the frontend.

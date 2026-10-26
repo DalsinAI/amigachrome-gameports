@@ -240,3 +240,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_water_patch.py --out "$RUNNER_TEMP/terrain-water-patch-host"
       - name: Owned World original ordinary water pass independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_water_patch.py --out "$RUNNER_TEMP/terrain-water-patch-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original terrain observation World host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_observation.py --out "$RUNNER_TEMP/terrain-observation-host"
+      - name: Original terrain observation World independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_observation.py --out "$RUNNER_TEMP/terrain-observation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original terrain caller ordering host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_caller_order.py --out "$RUNNER_TEMP/terrain-caller-order-host"
+      - name: Original terrain caller ordering independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_caller_order.py --out "$RUNNER_TEMP/terrain-caller-order-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
