@@ -206,6 +206,8 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_stable_intake.py --out "$RUNNER_TEMP/world-stable-intake-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host original nutrient accounting controls
         run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-host"
+      - name: Host explicit-fact original mineral accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-host"
       - name: Big-endian original nutrient accounting controls
         run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host fresh owned nutrient composition controls
