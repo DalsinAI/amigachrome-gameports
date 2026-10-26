@@ -3,7 +3,7 @@
  * facts checked against GLSMAC Consts.h at0fe9ef16; no GLSMAC code is copied.
  * Flat projection is new presentation wiring, not the original slope renderer.
  */
-#include "original_world().h"
+#include "original_world.h"
 #include "world_movement_price.h"
 #include "pcx_image.h"
 #include "original_ui_text.h"
@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 struct IntuitionBase* IntuitionBase;struct GfxBase* GfxBase;struct Library* CyberGfxBase;
 static alpha::CvrInfantry infantry;static bool infantry_available=false;
 static alpha::OriginalWorld preview_world;
@@ -32,6 +33,18 @@ static const alpha::OriginalWorld* visible_world=&preview_world;
 static const alpha::OriginalWorld& world(){return *visible_world;}
 static bool local_enabled=false;
 static char action_status[180]="";
+static char source_label[81]="Original world";
+static void set_source_label(const char* path){
+ const char* name=path;
+ for(const char* p=path;*p;++p)if(*p=='/' || *p==':' || *p=='\\')name=p+1;
+ if(!*name){snprintf(source_label,sizeof(source_label),"Original world");return;}
+ size_t length=0;
+ while(name[length] && length+1<sizeof(source_label)){
+  const unsigned char c=(unsigned char)name[length];
+  source_label[length]=(c<32 || c==127)?'?':(char)c;++length;
+ }
+ source_label[length]=0;
+}
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
 static alpha::LocalPlayer player;
 static uint8_t* player_rules;static size_t player_rules_length;
@@ -45,7 +58,7 @@ static alpha::PcxImage terrain,sprites,faction_images[8];
 static alpha::Rules technologies;static alpha::UnitDefinitions definitions;static alpha::BasicRules basic;static alpha::WorldRules world_rules;
 static const int W=928,H=480;static uint8_t* frame;static size_t selected=0;static int camera_x,camera_y,zoom=2;
 static uint8_t* read_file(const char* path,size_t& size){
- FILE* f=fopen(path,"rb");if(!f)return nullptr;if(fseek(f,0,SEEK_END)){fclose(f);return nullptr;}long n=ftell(f);rewind(f);
+ FILE* f=fopen(path,"rb");if(!f){fprintf(stderr,"Cannot open world asset %s: %s\n",path,strerror(errno));return nullptr;}if(fseek(f,0,SEEK_END)){fclose(f);return nullptr;}long n=ftell(f);rewind(f);
  if(n<=0 || n>64*1024*1024){fclose(f);return nullptr;}auto* p=(uint8_t*)malloc((size_t)n);if(!p){fclose(f);return nullptr;}
  bool ok=fread(p,1,(size_t)n,f)==(size_t)n;fclose(f);if(!ok){free(p);return nullptr;}size=(size_t)n;return p;
 }
@@ -85,6 +98,11 @@ static void base_sprite(int cx,int cy,const alpha::OriginalBase& b){
 static const int HUD_H=257,HUD_X=64,HUD_Y=554;
 static alpha::PcxImage console_image;static alpha::OriginalUiText ui_text;static uint8_t* hud_frame;
 static size_t selected_base=0;static bool base_open=false;
+static void select_local_actors(){
+ selected=selected_base=0;
+ for(size_t i=0;i<world().game().vehicle_count;++i)if(world().vehicle(i)->faction_id==world().game().player){selected=i;break;}
+ for(size_t i=0;i<world().game().base_count;++i)if(world().base(i)->faction_id==world().game().player){selected_base=i;break;}
+}
 static void hud_text(struct RastPort* rp,int x,int y,const char* s,int width=220,bool heading=false,alpha::UiInk ink=alpha::UiInk::body){ui_text.draw(rp,12+HUD_X+x,HUD_Y+y,s,width,heading,ink);}
 static void production_name(const alpha::OriginalBase& base,char* out,size_t bytes){
  if(base.queue_size<0 || base.queue_size>9){snprintf(out,bytes,"Production details unavailable");return;}
@@ -195,7 +213,7 @@ static void draw(struct Window* window){
  auto* rp=window->RPort;WritePixelArray(frame,0,0,(UWORD)(W*3),rp,12,70,W,H,RECTFMT_RGB);
  FillPixelArray(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-window->BorderLeft,64-window->BorderTop,0x00071316u);FillPixelArray(rp,window->BorderLeft,554,window->Width-window->BorderRight-window->BorderLeft,window->Height-window->BorderBottom-554,0x00071316u);
  SetAPen(rp,1);SetBPen(rp,0);SetDrMd(rp,JAM2);char line[180];
- snprintf(line,sizeof(line),"ORIGINAL TUTORIAL | Turn %ld | %lu x %lu | %lu units, %lu bases",(long)world().game().preferences.CurrentTurn,(unsigned long)world().game().map.info.width,(unsigned long)world().game().map.info.height,(unsigned long)world().game().vehicle_count,(unsigned long)world().game().base_count);text(rp,15,42,line);
+ snprintf(line,sizeof(line),"%.64s | Turn %ld | %lu x %lu | %lu units, %lu bases",source_label,(long)world().game().preferences.CurrentTurn,(unsigned long)world().game().map.info.width,(unsigned long)world().game().map.info.height,(unsigned long)world().game().vehicle_count,(unsigned long)world().game().base_count);text(rp,15,42,line);
  text(rp,15,62,local_enabled?"Local action preview | Keypad: move | P: production | V: save | R: reload | End Turn unavailable":"Read-only original world | Basic infantry CVR profile; other models pending | WASD scroll | TAB select | +/- zoom | Q quit");
  for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);int sx,sy;if(position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){snprintf(line,sizeof(line),"[Base] %.24s",b.name);ui_text.draw(rp,12+sx-24,70+sy+24,line,W-(12+sx-24),false,alpha::UiInk::map_label);}}
  for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);int sx,sy;if(!position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
@@ -234,7 +252,7 @@ static bool local_key(UWORD code){
   if(!last_checkpoint[0]){snprintf(action_status,sizeof(action_status),"No checkpoint saved in this session. Open an earlier checkpoint from the menu.");return true;}
   if(player.dirty() && discard_pending!='r'){discard_pending='r';snprintf(action_status,sizeof(action_status),"Unsaved changes. R again reloads the last checkpoint; V saves them first.");return true;}
   size_t n=0;auto* bytes=read_file(last_checkpoint,n);auto e=bytes?player.resume(bytes,n,player_rules,player_rules_length):alpha::LocalOrderError::bad_world;free(bytes);
-  if(e==alpha::LocalOrderError::ok){visible_world=player.world();base_open=false;selected=selected_base=0;discard_pending=false;}
+  if(e==alpha::LocalOrderError::ok){visible_world=player.world();base_open=false;select_local_actors();discard_pending=false;}
   snprintf(action_status,sizeof(action_status),"Reload: %s",alpha::local_order_error_name(e));return true;
  }
  discard_pending=false;
@@ -255,6 +273,7 @@ static bool local_key(UWORD code){
 #endif
 int alpha_original_view(int argc,char** argv){
  if((argc!=6 && argc!=7) || (strcmp(argv[1],"base") && strcmp(argv[1],"expansion"))){puts("Usage: alpha-original-view base|expansion RULES SCENARIO texture.pcx Units.pcx");return 20;}
+ set_source_label(argv[3]);
  local_enabled=false;visible_world=&preview_world;action_status[0]=0;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  PlayerViewScope player_scope;
@@ -281,10 +300,7 @@ int alpha_original_view(int argc,char** argv){
  if(!load_image(argv[4],terrain) || !load_image(argv[5],sprites))return 20;
  p=read_file("console.pcx",n);if(!p)return 20;ok=console_image.load(p,n);free(p);if(!ok || console_image.width()!=800 || console_image.height()!=257)return 20;
  selected=selected_base=0;base_open=false;
- if(local_enabled){
-  for(size_t i=0;i<world().game().vehicle_count;++i)if(world().vehicle(i)->faction_id==world().game().player){selected=i;break;}
-  for(size_t i=0;i<world().game().base_count;++i)if(world().base(i)->faction_id==world().game().player){selected_base=i;break;}
- }
+ if(local_enabled)select_local_actors();
  bool needed[8]{};
  for(size_t i=0;i<world().game().base_count;++i){int f=world().base(i)->faction_id;if(f<0 || f>=8)return 20;needed[f]=true;}
  for(unsigned f=0;f<8;++f)if(needed[f]){char name[32];unsigned len=0;const auto& def=*world().faction_definition(f);
@@ -302,8 +318,10 @@ int alpha_original_view(int argc,char** argv){
  if(world().game().vehicle_count){camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}else {camera_x=(int)world().game().map.info.width/2;camera_y=(int)world().game().map.info.height/2;}
  IntuitionBase=(struct IntuitionBase*)OpenLibrary((STRPTR)"intuition.library",39);GfxBase=(struct GfxBase*)OpenLibrary((STRPTR)"graphics.library",39);CyberGfxBase=OpenLibrary((STRPTR)"cybergraphics.library",41);
  struct Window* window=nullptr;
- if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(NULL,WA_Title,(ULONG)"Alpha Centauri - original tutorial data and art",WA_Width,952,WA_Height,864,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
+ char window_title[128];snprintf(window_title,sizeof(window_title),"Alpha Centauri - %s",source_label);
+ if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(NULL,WA_Title,(ULONG)window_title,WA_Width,952,WA_Height,864,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
  int rc=20;
+ if(!window)fprintf(stderr,"Cannot open world window (952x864): intuition=%d graphics=%d cybergraphics=%d\n",IntuitionBase!=nullptr,GfxBase!=nullptr,CyberGfxBase!=nullptr);
  if(window){draw(window);bool quit=false;while(!quit){WaitPort(window->UserPort);struct IntuiMessage* m;
   while((m=(struct IntuiMessage*)GetMsg(window->UserPort))){ULONG kind=m->Class;UWORD code=m->Code;WORD mouse_x=m->MouseX,mouse_y=m->MouseY;ReplyMsg((struct Message*)m);
    if(kind==IDCMP_CLOSEWINDOW){
@@ -329,7 +347,7 @@ int alpha_original_view(int argc,char** argv){
    else if(kind==IDCMP_VANILLAKEY){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
     if(code=='q' || code=='Q'){quit=leave_local();if(!quit)draw(window);continue;}
-    if(local_key(code)){draw(window);continue;}
+    if(local_key(code)){printf("LOCAL ACTION key=%u status=%s dirty=%d\n",(unsigned)code,action_status,player.dirty());fflush(stdout);draw(window);continue;}
 #endif
     switch(code){case 't':case 'T':{int rc=alpha_technology_browser(argv[2]);printf("WORLD TECHNOLOGY RC %d\n",rc);fflush(stdout);ActivateWindow(window);}break;case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world().game().base_count){selected_base=(selected_base+1)%world().game().base_count;camera_x=world().base(selected_base)->x;camera_y=world().base(selected_base)->y;}break;case 'i':if(world().game().base_count)base_open=!base_open;break;case 27:base_open=false;break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world().game().vehicle_count)selected=(selected+1)%world().game().vehicle_count;break;case 'c':if(world().game().vehicle_count){camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}break;}
     if(camera_x<0)camera_x=0;

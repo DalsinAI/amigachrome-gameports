@@ -8,8 +8,12 @@ checkpoint, reopen it and continue with the same spent movement and RNG seed.
 The ordinary frontend build retains its read-only entry points. The candidate
 is selected explicitly with `build_local_player_frontend.sh OUTPUT`. It needs
 the normal installed AmigaOS/OpenGPU SDK, original owner-supplied assets and
-68040/FPU. It has not been compiled against that SDK or run on AmigaOS here.
-Do not deploy or merge as native-qualified until those gates pass. The draft
+68040/FPU. It has now been compiled against genuine NDK/OpenGPU SDL headers
+and libraries and run under AROS m68k inside FS-UAE, with real demo art and
+the original Firaxis Boreholes scenario. See the separate FS-UAE frontend
+evidence for the exact tested actions and remaining limits. This does not
+replace AmigaOS 3.2.3 qualification. Do not deploy or merge as AmigaOS-qualified
+until that gate passes. The draft
 #113 dependency chain also retains its existing native qualification gates.
 
 ## Controls in the candidate

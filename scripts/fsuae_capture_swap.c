@@ -13,10 +13,13 @@ void SDL_GL_SwapWindow(void* window){
  static Swap real_swap;
  static Proc get_proc;
  static unsigned frames;
+ static unsigned every;
+ static int configured;
+ if(!configured){const char* value=getenv("FS_CAPTURE_EVERY");if(value)every=(unsigned)strtoul(value,NULL,10);configured=1;}
  if(!real_swap)real_swap=(Swap)dlsym(RTLD_NEXT,"SDL_GL_SwapWindow");
  if(!get_proc)get_proc=(Proc)dlsym(RTLD_NEXT,"SDL_GL_GetProcAddress");
  ++frames;
- if(get_proc && (frames==150 || frames==500 || frames==900)){
+ if(get_proc && (frames==150 || frames==500 || frames==900 || (every && frames%every==0))){
   void (*get_int)(unsigned,int*)=(void(*)(unsigned,int*))get_proc("glGetIntegerv");
   void (*read_pixels)(int,int,int,int,unsigned,unsigned,void*)=(void(*)(int,int,int,int,unsigned,unsigned,void*))get_proc("glReadPixels");
   void (*pixel_store)(unsigned,int)=(void(*)(unsigned,int))get_proc("glPixelStorei");

@@ -1,0 +1,82 @@
+{
+  "originalSHA256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+  "checkpoint": {
+    "length": 199314,
+    "payloadLength": 199286,
+    "sha256": "37193617e69433cd9afe44c6ffb1f01d71bc9f993c2de5a4dea3851b4fdc0981",
+    "payloadSHA256": "18f35b2c03a3b322d03f4dbc4f07c6d265568047f741b811d07d19cb756503d8",
+    "seed": 305419896,
+    "crcPassed": true,
+    "hostNativeResumePassed": true,
+    "changedByteCount": 12,
+    "changes": [
+      {
+        "offset": 117298,
+        "before": 47,
+        "after": 34
+      },
+      {
+        "offset": 117304,
+        "before": 128,
+        "after": 130
+      },
+      {
+        "offset": 117306,
+        "before": 0,
+        "after": 16
+      },
+      {
+        "offset": 184416,
+        "before": 21,
+        "after": 255
+      },
+      {
+        "offset": 184417,
+        "before": 0,
+        "after": 255
+      },
+      {
+        "offset": 184418,
+        "before": 18,
+        "after": 17
+      },
+      {
+        "offset": 184420,
+        "before": 34,
+        "after": 33
+      },
+      {
+        "offset": 184422,
+        "before": 16,
+        "after": 20
+      },
+      {
+        "offset": 184458,
+        "before": 0,
+        "after": 3
+      },
+      {
+        "offset": 184459,
+        "before": 2,
+        "after": 6
+      },
+      {
+        "offset": 184466,
+        "before": 20,
+        "after": 255
+      },
+      {
+        "offset": 184467,
+        "before": 0,
+        "after": 255
+      }
+    ]
+  },
+  "wholeCheckpointMatchesIndependentHost": true,
+  "independentHostAction": {
+    "unit": 21,
+    "dx": -1,
+    "dy": -1
+  },
+  "allOtherPayloadBytesPreserved": true
+}

@@ -24,7 +24,7 @@ extern struct IntuitionBase* IntuitionBase;extern struct GfxBase* GfxBase;extern
 struct Library* AslBase;
 int alpha_original_view(int argc,char** argv);
 static alpha::PcxImage base_title,expansion_title;
-static uint8_t* frame;static bool expansion=false,music_on=true;static SDL_AudioDeviceID audio_device;
+static uint8_t* frame;static bool expansion=false,expansion_available=false,tutorial_available=false,music_on=true;static SDL_AudioDeviceID audio_device;
 static bool menu_audio_ready=false;
 static uint8_t* audio_data;static Uint32 audio_length,audio_pos;
 static char status[160]="Select a game; open a tutorial, scenario or save.";
@@ -74,8 +74,8 @@ static void draw(struct Window* w){
  const auto& art=expansion?expansion_title:base_title;
  for(int y=0;y<HEIGHT;++y)for(int x=0;x<WIDTH;++x){const auto* rgb=art.rgb((uint32_t)x,(uint32_t)y);auto* p=frame+((size_t)y*WIDTH+x)*3;p[0]=rgb[0];p[1]=rgb[1];p[2]=rgb[2];}
  WritePixelArray(frame,0,0,WIDTH*3,w->RPort,10,24,WIDTH,HEIGHT,RECTFMT_RGB);
- button(w,45,78,220,"Alpha Centauri [A]",!expansion);button(w,277,78,230,"Alien Crossfire [X]",expansion);
- button(w,45,140,462,expansion?"Choose expansion scenario [E]":"Explore original tutorial [E]");
+ button(w,45,78,220,"Alpha Centauri [A]",!expansion);button(w,277,78,230,expansion_available?"Alien Crossfire [X]":"Crossfire unavailable",expansion);
+ button(w,45,140,462,expansion?"Choose expansion scenario [E]":tutorial_available?"Explore original tutorial [E]":"Choose original scenario [E]");
  button(w,45,192,462,"Open original scenario or save... [O]");
  button(w,45,244,462,audio_device?(music_on?"Original menu music: ON [M]":"Original menu music: OFF [M]"):"Original menu music unavailable");
  button(w,45,296,462,"Exit [Q]");
@@ -120,7 +120,9 @@ static void open_technologies(struct Window* w){
 static void toggle_music(struct Window* w){if(audio_device){music_on=!music_on;SDL_PauseAudioDevice(audio_device,music_on?0:1);}draw(w);}
 int main(int argc,char**){
  if(argc!=1){puts("Run alpha-restoration from the directory containing original game assets.");return 20;}
- if(!image("openinga.pcx",base_title) || !image("xopeninga.pcx",expansion_title)){puts("Original title PCXs are required.");return 20;}
+ if(!image("openinga.pcx",base_title)){puts("Original Alpha Centauri title PCX is required: openinga.pcx");return 20;}
+ expansion_available=image("xopeninga.pcx",expansion_title);
+ FILE* tutorial=fopen("Explore.SC","rb");tutorial_available=tutorial!=nullptr;if(tutorial)fclose(tutorial);
  frame=(uint8_t*)malloc((size_t)WIDTH*HEIGHT*3);if(!frame)return 20;
  if(SDL_Init(SDL_INIT_AUDIO)==0){SDL_AudioSpec spec{};
   if(SDL_LoadWAV("opening menu.wav",&spec,&audio_data,&audio_length)){
@@ -140,6 +142,7 @@ int main(int argc,char**){
  IntuitionBase=(struct IntuitionBase*)OpenLibrary((STRPTR)"intuition.library",39);GfxBase=(struct GfxBase*)OpenLibrary((STRPTR)"graphics.library",39);CyberGfxBase=OpenLibrary((STRPTR)"cybergraphics.library",41);AslBase=OpenLibrary((STRPTR)"asl.library",39);
  struct Window* w=nullptr;int rc=20;
  if(IntuitionBase && GfxBase && CyberGfxBase)w=OpenWindowTags(nullptr,WA_Title,(ULONG)"Alpha Centauri / Alien Crossfire - restoration preview",WA_Width,1044,WA_Height,800,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
+ if(!w)fprintf(stderr,"Cannot open menu window (1044x800): intuition=%d graphics=%d cybergraphics=%d\n",IntuitionBase!=nullptr,GfxBase!=nullptr,CyberGfxBase!=nullptr);
  if(w){
   auto* colors=w->WScreen->ViewPort.ColorMap;text_pen=ObtainBestPen(colors,0xeeeeeeee,0xdddddddd,0xaaaaaaaa,TAG_DONE);border_pen=ObtainBestPen(colors,0xaaaaaaaau,0x88888888u,0x44444444u,TAG_DONE);text_pen_owned=text_pen>=0;border_pen_owned=border_pen>=0;if(text_pen<0)text_pen=1;if(border_pen<0)border_pen=1;
   draw(w);bool quit=false;
@@ -156,7 +159,7 @@ int main(int argc,char**){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
     if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN && !expansion && x>=45 && x<645 && y>=490 && y<532)action=7;
 #endif
-    switch(action){case 1:expansion=false;draw(w);break;case 2:expansion=true;draw(w);break;case 3:if(expansion)choose_map(w);else open_map(w,"Explore.SC");break;case 4:choose_map(w);break;case 5:toggle_music(w);break;case 6:open_technologies(w);break;
+    switch(action){case 1:expansion=false;draw(w);break;case 2:if(expansion_available)expansion=true;else snprintf(status,sizeof(status),"Original Alien Crossfire title art is unavailable: xopeninga.pcx");draw(w);break;case 3:if(expansion || !tutorial_available)choose_map(w);else open_map(w,"Explore.SC");break;case 4:choose_map(w);break;case 5:toggle_music(w);break;case 6:open_technologies(w);break;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
     case 7:choose_map(w,true);break;
 #endif

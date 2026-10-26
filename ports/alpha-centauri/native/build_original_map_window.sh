@@ -6,6 +6,15 @@ src=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 output=$1
 shift
 mkdir -p -- "$(dirname -- "$output")"
+# Match the frontend's optional extracted OpenUp SDK selection.
+if [ -n "${OPENUP_SDK:-}" ]; then
+ for header in SDL2/SDL.h SDL2/SDL_ttf.h; do
+  if [ ! -f "$OPENUP_SDK/include/$header" ]; then
+   echo "Missing OpenUp SDK header: $OPENUP_SDK/include/$header" >&2; exit 2
+  fi
+ done
+ set -- "$@" -isystem "$OPENUP_SDK/include" "-L$OPENUP_SDK/lib"
+fi
 # Qualification candidate only. Ordinary builds retain the read-only entry path.
 local_flags=""
 if [ "${ALPHA_LOCAL_PLAYER_CANDIDATE:-0}" = 1 ]; then
