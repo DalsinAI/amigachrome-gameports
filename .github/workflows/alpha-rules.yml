@@ -364,3 +364,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_production_queue.py --out "$RUNNER_TEMP/world-production-queue-host"
       - name: Big-endian original world production queue proposal
         run: python3 ports/alpha-centauri/native/test_world_production_queue.py --out "$RUNNER_TEMP/world-production-queue-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original Node artifact effect proposal
+        run: python3 ports/alpha-centauri/native/test_node_artifacts.py --out "$RUNNER_TEMP/node-artifacts-host"
+      - name: Big-endian original Node artifact effect proposal
+        run: python3 ports/alpha-centauri/native/test_node_artifacts.py --out "$RUNNER_TEMP/node-artifacts-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

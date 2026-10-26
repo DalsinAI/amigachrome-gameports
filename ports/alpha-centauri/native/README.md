@@ -1626,3 +1626,36 @@ after admission before audio/draw; empty/exhausted paths return normally. This i
 not a full original facility queue loop or full production completion proof.
 Normal SDK compilation, local controls and bounded helper observations do not
 qualify final-head CI, actual AmigaOS execution, a full turn or playable game.
+
+### Offline Network Node artifact effect proposal (read-only, local only)
+
+`node_artifacts` describes the original post-install Node8 effect: clear base
+state bits0xc00 and set every plan12 artifact's order to0 in the actual tile
+stack. Original code has no actor-faction ownership check here; foreign artifacts
+are included. The mask includes already-order0 artifacts, while changed_orders
+reports only orders that would change. Empty stacks still clear the base flags.
+
+This requires a physically installed Node, an explicit owned offline runtime
+policy and coherent reciprocal stacks/vehicle-present map bits. Offline mode is
+not inferred from serialized flags or presented as an observation of a running
+original game. Original DirectPlay stack_fix repair and veh_at error/logging/bit
+rebuild paths remain unsupported. The proposal conservatively rejects corrupt
+stacks anywhere in the world instead of repairing or executing those paths.
+
+The result is bounded to32767 actors using a4096byte mask. Input/output aliases,
+wrong edition, network runtime, absent Node and corrupt topology/bits reject
+before any output write. Full owned/opaque World bytes and RNG remain unchanged.
+Host/independent68040 tests cover198 worlds, shuffled stacks, empty/two-location
+stacks, mixed factions, artifact/nonartifact designs and idempotent orders.
+
+Private original observations enter the actual Node branch and run real veh_at
+and stack_fix with explicit controlled offline globals and coherent8x6 fixtures.
+A single observation stop precedes draw_tile; whole current base,64 actor slots,
+512 designs and map bytes match independently expected changes in28 contexts per
+edition. Owned proposals reproduce those exact byte effects on both architectures.
+This is not the multiplayer repair branch, a complete original production action,
+queue/audio/notification behavior, a turn or full-game qualification.
+
+No live mutation, facility installation, queue commit, research award, player
+input or phase authority is added. Normal SDK binaries compile only; actual
+AmigaOS execution and final-head full CI remain unrun.
