@@ -360,3 +360,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_unit_availability.py --out "$RUNNER_TEMP/world-unit-availability-host"
       - name: Big-endian owned world unit availability
         run: python3 ports/alpha-centauri/native/test_world_unit_availability.py --out "$RUNNER_TEMP/world-unit-availability-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world production queue proposal
+        run: python3 ports/alpha-centauri/native/test_world_production_queue.py --out "$RUNNER_TEMP/world-production-queue-host"
+      - name: Big-endian original world production queue proposal
+        run: python3 ports/alpha-centauri/native/test_world_production_queue.py --out "$RUNNER_TEMP/world-production-queue-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

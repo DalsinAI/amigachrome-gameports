@@ -1595,3 +1595,34 @@ No queue mutation/retry loop, unit creation, owning session/phase authority,
 completion, save command, End Turn or frontend input is added. SDK compilation
 and local host/independent68040 checks do not qualify AmigaOS execution or full
 final-head CI, which remain unrun.
+
+### Original world production queue retry proposal (read-only, local only)
+
+`world_production_queue` composes the unchanged structural shift and actual World
+unit/facility admission predicates into the complete bounded retry portion of
+original `base_queue`. It copies the base queue and owner's512 unit counters,
+shifts, checks the new item and repeats until admission or exhaustion. Every
+removed nonnegative ID decrements its byte counter with original wraparound;
+unused tail slots remain exact. Facility admission uses original queue_count0,
+so waiting entries do not supply hypothetical prerequisite facilities. No
+callback booleans or fake original predicates are used.
+
+The proposal reports final queue/counters, iteration count, admission and whether
+the original project-initiation notification is still required. It never invokes
+or fakes audio/draw, installs a facility, creates a unit, commits queue state or
+grants session/phase authority. For post-completion use the actual World must
+already reflect completed installation/creation and its other effects; this
+query does not fabricate that state. Original saved queue sentinel-1 is rejected,
+as are faction0, invalid IDs/references and mismatched profiles. Errors preserve
+the entire output. SMAC expansion-enabled profiles reject conservatively to match
+the existing facility predicate contract.
+
+Host/independent68040 controls include mixed unit/facility queues, all queue sizes,
+exhaustion, repeated IDs and byte-counter underflow, project obligations, invalid
+future candidates, malformed references, alias guards, original tutorials and
+unchanged World/table/opaque bytes/RNG. Additional private actual-original queue
+observations execute the real unit predicate for unit-only queues, stopping only
+after admission before audio/draw; empty/exhausted paths return normally. This is
+not a full original facility queue loop or full production completion proof.
+Normal SDK compilation, local controls and bounded helper observations do not
+qualify final-head CI, actual AmigaOS execution, a full turn or playable game.
