@@ -37,7 +37,7 @@ def oracle(t,id,p,human,free):
    x+=' '+u;y+=' '+v
  return (y if parity else x),x,y
 ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--cc',default=os.environ.get('CXX','c++'));ap.add_argument('--m68k-linux',action='store_true');a=ap.parse_args();out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=False);src=Path(__file__).resolve().parent
-names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','automatic_prototype_name.cpp','automatic_prototype_name_probe.cpp'];cmd=shlex.split(a.cc)+['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie'])+[str(src/n) for n in names]+['-o',str(out/'probe')];subprocess.run(cmd,check=True);cases=[];combined=bytearray()
+names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype_prefix_context.cpp','automatic_prototype_name.cpp','automatic_prototype_name_probe.cpp'];cmd=shlex.split(a.cc)+['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie'])+[str(src/n) for n in names]+['-o',str(out/'probe')];subprocess.run(cmd,check=True);cases=[];combined=bytearray()
 for v,variant,version in [(0,'base',7),(1,'expansion',12)]:
  t=fixture(variant,count=0)
  for i,row in enumerate(t['WEAPONS']):row[2]=str([-1,1,2,8,12,99][i%6]);row[3]=str(0 if i<7 or i>=20 else [7,8,9,11][i%4])
