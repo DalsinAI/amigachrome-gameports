@@ -204,3 +204,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_lighting.py --out "$RUNNER_TEMP/terrain-lighting-host"
       - name: Original procedural terrain lighting and world point lights independent big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_terrain_lighting.py --out "$RUNNER_TEMP/terrain-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Explicit original terrain material and UV dispatch host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_dispatch.py --out "$RUNNER_TEMP/terrain-dispatch-host"
+      - name: Explicit original terrain material and UV dispatch independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_dispatch.py --out "$RUNNER_TEMP/terrain-dispatch-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Coherent indexed ordinary ground plates host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_ground_plate.py --out "$RUNNER_TEMP/terrain-ground-plate-host"
+      - name: Coherent indexed ordinary ground plates independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_ground_plate.py --out "$RUNNER_TEMP/terrain-ground-plate-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
