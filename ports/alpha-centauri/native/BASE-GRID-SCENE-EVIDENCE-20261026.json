@@ -45,5 +45,14 @@
     "off-mapcursor/outline/specialheight/sprite-scale-cache routes remainheld withoutfakecallbacks"
   ],
   "nativeExecution": false,
-  "SDKBuildOnly": true
+  "SDKBuildOnly": true,
+  "defensiveByteSpanInspection": {
+    "currentFrozenWorld": "bunglist and importedmonuments are raw-backed, so pre-existing original_bytes guard already rejects aliases; not a separate-allocation bug at thishead",
+    "explicitBunglistGuard": true,
+    "extraNoWriteCasesPerArchitecture": 40,
+    "wholeRawAndSpanCompared": true,
+    "currentRawOwnershipChecked": true,
+    "noCompatibilityAdapterOrGameplaySpineImport": true,
+    "laterCurrentMonumentsIntegrationHeld": true
+  }
 }

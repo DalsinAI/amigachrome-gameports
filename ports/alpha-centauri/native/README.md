@@ -1640,3 +1640,20 @@ SDK binaries build only; no native, frontend, watched-preview, physical RGB/OS
 loading or full-world completion is claimed. Imported sprite scale/cache and
 other unsupported scene modes remain held.
 See `BASE-GRID-SCENE-EVIDENCE-20261026.json`.
+
+
+### Base-work grid byte-span alias inspection (26 October)
+
+The frozen rendering World keeps both `game().bunglist` and imported monument
+spans inside `original_bytes()`. The existing raw-buffer guard therefore already
+rejects aliases into them; this branch does not claim a current separate-storage
+bug. An explicit bunglist-span guard now documents that additional read-only
+input contract. Forty added no-write cases per architecture cover span starts,
+interiors, ends and partial boundary overlaps, comparing every byte of each span
+and the complete raw World. They also check the stated current raw ownership.
+
+No speculative adapter or later gameplay World was imported. In particular,
+the newer separately owned `current_monuments()` allocation is absent from this
+historical World and remains a distinct, held integration requirement. Existing
+plan/layer/scene/original pixel outputs remain exact. Native/UI and watched
+preview remain untouched.
