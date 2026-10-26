@@ -1706,3 +1706,20 @@ byte oracle, plus null/overlap guards. Use `--cc m68k-linux-gnu-g++ --m68k-linux
 for an independent big-endian runner. Private bounded original-helper comparisons
 are separate from public synthetic controls. Amiga SDK builds are not AmigaOS
 execution. This candidate has no published final-head CI or native qualification.
+
+
+### Original monument presentation entry (local candidate)
+
+`monument_presentation` checks original multiplayer, SMAX alien, preference,
+scenario and final-score gates against an explicit local monument record. Manual
+entry bypasses preference/state gates. It counts events 0–14 only and reports
+whether the original count global was written and window initialization must be
+attempted. The original initializer may fail; no visible window, modal response,
+audio, acknowledgment, completion transaction or game turn is implied.
+
+`test_monument_presentation.py --out DIRECTORY` checks 4,040 synthetic cases and
+three null/overlap guards. Pass `--cc m68k-linux-gnu-g++ --m68k-linux` for the
+independent big-endian runner. Private comparisons separately execute both
+original entries to the real window initializer boundary, including a nested
+milestone-update → original monument-entry comparison. No published final-head
+CI or AmigaOS execution qualifies this candidate.
