@@ -9,7 +9,7 @@ bool aliases(const OriginalWorld&w,const void*out,size_t n){
  if(overlap(out,n,&w,sizeof w))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();
- return overlap(out,n,w.original_bytes(),w.original_size()) || overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) || overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) || overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) || overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype)) || overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState)) || overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
+ return w.overlaps_byte_storage(out,n) || overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) || overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) || overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) || overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype)) || overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState)) || overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
 }
 unsigned popcount(uint32_t n){unsigned count=0;while(n){n&=n-1;++count;}return count;}
 }

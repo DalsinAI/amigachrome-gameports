@@ -9,7 +9,7 @@ bool overlap_array(const void* out,size_t n,const void* p,size_t count,size_t si
 }
 bool sealed(const OriginalWorld& w,const UnitDefinitions& d,const Rules& r,const void* out,size_t n) {
  if (effects_range_overlap(out,n,&w,sizeof w) || effects_range_overlap(out,n,&d,sizeof d) || effects_range_overlap(out,n,&r,sizeof r) || !w.loaded()) return false;
- return !(effects_range_overlap(out,n,w.original_bytes(),w.original_size()) ||
+ return !(w.overlaps_byte_storage(out,n) ||
  overlap_array(out,n,w.tile(0),w.game().map.info.tile_count,sizeof(OriginalMapTile)) ||
  overlap_array(out,n,w.vehicle(0),w.game().vehicle_count,sizeof(OriginalVehicle)) ||
  overlap_array(out,n,w.base(0),w.game().base_count,sizeof(OriginalBase)) ||

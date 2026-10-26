@@ -12,7 +12,7 @@ bool aliases(const OriginalWorld&w,const Rules&t,const BasicRules&b,const Resour
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&t,sizeof t)||overlap(out,n,&b,sizeof b)||overlap(out,n,&r,sizeof r)||overlap(out,n,&s,sizeof s))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();
- return overlap(out,n,w.original_bytes(),w.original_size()) || overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) || overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) || overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) || overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype)) || overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState)) || overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
+ return w.overlaps_byte_storage(out,n) || overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) || overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) || overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) || overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype)) || overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState)) || overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
 }
 bool add(int32_t a,int32_t b,int32_t&out){const int64_t n=(int64_t)a+b;if(n<(-2147483647LL-1)||n>2147483647LL)return false;out=(int32_t)n;return true;}
 unsigned popcount(uint32_t n){unsigned count=0;while(n){n&=n-1;++count;}return count;}

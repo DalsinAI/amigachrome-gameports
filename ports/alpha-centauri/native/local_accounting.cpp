@@ -12,7 +12,7 @@ bool overlap(const void* a,size_t n,const void* b,size_t m){
  return x<y+m && y<x+n;
 }
 bool disjoint(const OriginalWorld& w,const void* p,size_t n){
- return !overlap(p,n,&w,sizeof(w)) && !overlap(p,n,w.original_bytes(),w.original_size()) &&
+ return !overlap(p,n,&w,sizeof(w)) && !w.overlaps_byte_storage(p,n) &&
  !overlap(p,n,w.tile(0),w.game().map.info.tile_count*sizeof(OriginalMapTile)) &&
  !overlap(p,n,w.vehicle(0),w.game().vehicle_count*sizeof(OriginalVehicle)) &&
  !overlap(p,n,w.base(0),w.game().base_count*sizeof(OriginalBase)) &&

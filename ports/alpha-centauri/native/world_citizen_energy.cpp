@@ -8,7 +8,7 @@ bool array_overlap(const WorldCitizenEnergy& out,const void* p,size_t count,size
  return detail::effects_array_overlap(&out,sizeof out,p,count,size);
 }
 bool world_overlap(const OriginalWorld& w,const WorldCitizenEnergy& out) {
- return effects_range_overlap(&out,sizeof out,w.original_bytes(),w.original_size()) ||
+ return w.overlaps_byte_storage(&out,sizeof out) ||
  array_overlap(out,w.tile(0),w.game().map.info.tile_count,sizeof(OriginalMapTile)) ||
  array_overlap(out,w.vehicle(0),w.game().vehicle_count,sizeof(OriginalVehicle)) ||
  array_overlap(out,w.base(0),w.game().base_count,sizeof(OriginalBase)) ||

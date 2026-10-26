@@ -28,7 +28,7 @@ int main(int argc,char**argv){
  REQUIRE(s.prepare_workers(view.base_count,stage,untouched)==LocalOrderError::bad_state&&!memcmp(&untouched,&before,sizeof before));
  if(prep!=LocalOrderError::ok){REQUIRE(s.revision()==rev&&!memcmp(s.world()->original_bytes(),save,ns));free(save);free(text);return emit(guards)?0:21;}
  REQUIRE(s.prepare_workers(0,stage,untouched,0)==LocalOrderError::no_memory&&!memcmp(&untouched,&before,sizeof before));
- const void* aliases[]={s.world(),s.world()->original_bytes(),s.world()->tile(0),s.world()->base(0),s.world()->vehicle(0),s.world()->prototype(0),s.world()->faction(0),s.world()->faction_definition(0),&s,&stage};
+ const void* aliases[]={s.world(),s.world()->original_bytes(),s.world()->current_monuments().data,s.world()->tile(0),s.world()->base(0),s.world()->vehicle(0),s.world()->prototype(0),s.world()->faction(0),s.world()->faction_definition(0),&s,&stage};
  for(const void* at:aliases)if(at){REQUIRE(s.prepare_workers(0,stage,*reinterpret_cast<WorkerAccountingPlan*>(const_cast<void*>(at)))==LocalOrderError::bad_state);}
  for(const void* at:aliases)if(at && at!=&stage){REQUIRE(s.commit_workers(plan,*reinterpret_cast<WorkerAccountingReceipt*>(const_cast<void*>(at)))==LocalOrderError::bad_state);}
  REQUIRE(s.commit_workers(plan,receipt_at(&plan))==LocalOrderError::bad_state);

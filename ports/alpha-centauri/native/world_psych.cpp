@@ -11,7 +11,7 @@ bool array(const void* out,size_t n,const void* p,size_t count,size_t size) {
 }
 bool sealed(const OriginalWorld& w,const Rules& r,const UnitDefinitions& u,const BasicRules& b,const WorldPsychContext& c,const WorldPsych& out) {
  const void* p=&out;const size_t n=sizeof out;
- return !(effects_range_overlap(p,n,&w,sizeof w)||effects_range_overlap(p,n,&r,sizeof r)||effects_range_overlap(p,n,&u,sizeof u)||effects_range_overlap(p,n,&b,sizeof b)||effects_range_overlap(p,n,&c,sizeof c)||effects_range_overlap(p,n,w.original_bytes(),w.original_size())||
+ return !(effects_range_overlap(p,n,&w,sizeof w)||effects_range_overlap(p,n,&r,sizeof r)||effects_range_overlap(p,n,&u,sizeof u)||effects_range_overlap(p,n,&b,sizeof b)||effects_range_overlap(p,n,&c,sizeof c)||w.overlaps_byte_storage(p,n)||
  array(p,n,w.tile(0),w.game().map.info.tile_count,sizeof(OriginalMapTile))||array(p,n,w.vehicle(0),w.game().vehicle_count,sizeof(OriginalVehicle))||array(p,n,w.base(0),w.game().base_count,sizeof(OriginalBase))||array(p,n,w.prototype(0),512,sizeof(OriginalPrototype))||array(p,n,w.faction(0),8,sizeof(OriginalFactionState))||array(p,n,w.faction_definition(0),8,sizeof(OriginalFactionDefinition)));
 }
 }

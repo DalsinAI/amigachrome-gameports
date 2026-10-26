@@ -22,6 +22,25 @@ class OriginalWorld {
   void clear();
   bool loaded()const{return raw_!=nullptr;}
   const OriginalGameView& game()const{return view_;}
+  /* Current monument bytes have separate ownership from game().monuments,
+   * which remains the immutable imported wire baseline. Read-only access does
+   * not authorize a monument award or production/turn advancement. */
+  OriginalByteSpan current_monuments()const{return {monuments_,loaded()?size_t(0x27a0):size_t(0)};}
+  /* Shared check for the two owned byte buffers. Decoded record/rule/object
+   * aliases are still checked by each API. Wrapped address ranges reject. */
+  bool overlaps_byte_storage(const void* address,size_t bytes)const{
+   if(!bytes)return false;
+   const uintptr_t x=(uintptr_t)address;
+   const uint8_t* data[2]={raw_,monuments_};
+   const size_t sizes[2]={length_,loaded()?size_t(0x27a0):size_t(0)};
+   for(unsigned i=0;i<2;++i){
+    if(!sizes[i])continue;
+    const uintptr_t y=(uintptr_t)data[i];
+    if(bytes>UINTPTR_MAX-x || sizes[i]>UINTPTR_MAX-y)return true;
+    if(x<y+sizes[i] && y<x+bytes)return true;
+   }
+   return false;
+  }
   const uint8_t* original_bytes()const{return raw_;}
   size_t original_size()const{return length_;}
   size_t memory_bytes()const{return memory_;}
@@ -37,6 +56,7 @@ class OriginalWorld {
   friend class WorldActions;
   void swap(OriginalWorld& other);
   uint8_t* raw_=nullptr;
+  uint8_t* monuments_=nullptr;
   OriginalMapTile* tiles_=nullptr;
   OriginalVehicle* vehicles_=nullptr;
   OriginalBase* bases_=nullptr;

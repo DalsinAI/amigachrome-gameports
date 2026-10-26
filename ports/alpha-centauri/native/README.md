@@ -1807,3 +1807,25 @@ pass; SDK builds are compile-only. No CI, AmigaOS or player-facing qualification
 
 Run `python3 ports/alpha-centauri/native/test_notice_stages.py --out OUTPUT`;
 use `--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
+
+
+### Owned current monument storage (local candidate)
+
+`OriginalWorld::current_monuments()` exposes a read-only span of a separately
+owned current table. `game().monuments` continues to refer to the imported wire
+baseline. Import copies every original byte, including unknown fields; failed
+load preserves the old state, reload replaces both copies and clear frees both.
+The memory budget includes the extra table. This supplies storage only: imports
+do not award monuments or grant a completion/turn capability.
+
+The five existing snapshot encoders reject changed current monument bytes until
+an explicit qualified monument encoding scope exists. Their output and receipt
+buffers, and the accounting/worker result buffers, cannot alias the new storage.
+No public monument mutator, phase, notification, persistence extension, frontend
+control or original executable save-compatibility claim is added.
+
+`test_monument_storage.py` checks whole-container identity and alias/change
+rejection across all five encoders. Controlled test-only storage corruption is
+an unsupported-change test, not a simulated award or gameplay transaction.
+Local host/independent Linux68040 execution and SDK compile-only receipts remain
+separate from unrun AmigaOS validation. No publication or remote CI is claimed.

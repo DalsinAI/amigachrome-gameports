@@ -8,7 +8,7 @@ bool array_overlap(const TechnologyEffectsResult& output,const void* p,size_t co
 }
 bool world_overlap(const OriginalWorld& world,const TechnologyEffectsResult& output){
  return effects_range_overlap(&output,sizeof(output),&world,sizeof(world)) ||
-  effects_range_overlap(&output,sizeof(output),world.original_bytes(),world.original_size()) ||
+  world.overlaps_byte_storage(&output,sizeof(output)) ||
   array_overlap(output,world.tile(0),world.game().map.info.tile_count,sizeof(OriginalMapTile)) ||
   array_overlap(output,world.vehicle(0),world.game().vehicle_count,sizeof(OriginalVehicle)) ||
   array_overlap(output,world.base(0),world.game().base_count,sizeof(OriginalBase)) ||

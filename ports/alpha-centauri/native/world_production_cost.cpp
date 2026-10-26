@@ -11,7 +11,7 @@ bool aliases(const OriginalWorld& w,const UnitDefinitions& d,const FacilityDefin
  effects_range_overlap(out,n,&f,sizeof f) || effects_range_overlap(out,n,&b,sizeof b))return true;
  if(!w.loaded())return false;
  const auto& g=w.game();
- return effects_range_overlap(out,n,w.original_bytes(),w.original_size()) ||
+ return w.overlaps_byte_storage(out,n) ||
  effects_array_overlap(out,n,w.tile(0),g.map.info.tile_count,sizeof(OriginalMapTile)) ||
  effects_array_overlap(out,n,w.vehicle(0),g.vehicle_count,sizeof(OriginalVehicle)) ||
  effects_array_overlap(out,n,w.base(0),g.base_count,sizeof(OriginalBase)) ||

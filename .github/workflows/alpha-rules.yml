@@ -396,3 +396,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_notice_stages.py --out "$RUNNER_TEMP/notice-stages-host"
       - name: Big-endian staged facility notice decisions
         run: python3 ports/alpha-centauri/native/test_notice_stages.py --out "$RUNNER_TEMP/notice-stages-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned monument storage and snapshot guards
+        run: python3 ports/alpha-centauri/native/test_monument_storage.py --out "$RUNNER_TEMP/monument-storage-host"
+      - name: Big-endian owned monument storage and snapshot guards
+        run: python3 ports/alpha-centauri/native/test_monument_storage.py --out "$RUNNER_TEMP/monument-storage-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
