@@ -8,9 +8,9 @@ static bool known(const OriginalWorld& w,const Rules& r,int32_t id,int32_t f){if
 static HumanPruningError core(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime runtime,int32_t f,int32_t selected,const OriginalPrototype* candidate,const HumanPruningResult* prior,HumanPruningResult& out){
  using detail::effects_range_overlap;
  if(prior && effects_range_overlap(&out,sizeof out,prior,sizeof *prior))return HumanPruningError::bad_state;
- if(candidate && (selected<64 || selected/64!=f || !(candidate->unit_flags&1) || effects_range_overlap(&out,sizeof out,candidate,sizeof *candidate)))return HumanPruningError::bad_state;
+ if(candidate && (selected<0 || (selected>=64 && selected/64!=f) || !(candidate->unit_flags&1) || effects_range_overlap(&out,sizeof out,candidate,sizeof *candidate)))return HumanPruningError::bad_state;
  auto get=[&](size_t id)->const OriginalPrototype*{return candidate && id==(size_t)selected?candidate:w.prototype(id);};
- if(effects_range_overlap(&out,sizeof out,&w,sizeof w) || effects_range_overlap(&out,sizeof out,&r,sizeof r) || effects_range_overlap(&out,sizeof out,&d,sizeof d) || !w.loaded() || f<1 || f>7 || selected<0 || selected>=512 || (v!=Variant::base && v!=Variant::alien_crossfire) || (w.game().data_version<11)!=(v==Variant::base) || overlaps(w,out))return HumanPruningError::bad_state;
+ if(effects_range_overlap(&out,sizeof out,&w,sizeof w) || effects_range_overlap(&out,sizeof out,&r,sizeof r) || effects_range_overlap(&out,sizeof out,&d,sizeof d) || !w.loaded() || f<1 || f>7 || selected< -1 || selected>=512 || (v!=Variant::base && v!=Variant::alien_crossfire) || (w.game().data_version<11)!=(v==Variant::base) || overlaps(w,out))return HumanPruningError::bad_state;
  if(runtime!=PruningRuntime::multiplayer_off || !(w.game().preferences.FactionStatus[0]&(1u<<(unsigned)f)) || (w.game().preferences.GameMorePreferences&0x100000))return HumanPruningError::unsupported_runtime;
  if(r.count!=technology_count || d.weapon_count!=(v==Variant::base?21u:26u) || d.armor_count!=(v==Variant::base?10u:14u))return HumanPruningError::bad_state;
  for(size_t i=0;i<technology_count;++i)for(unsigned j=0;j<2;++j)if(r.technologies[i].prerequisites[j]<-2 || r.technologies[i].prerequisites[j]>=89)return HumanPruningError::bad_state;
@@ -36,6 +36,12 @@ static HumanPruningError core(const OriginalWorld& w,Variant v,const Rules& r,co
  out=next;return HumanPruningError::ok;
 }
 HumanPruningError world_human_component_pruning(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,nullptr,nullptr,out);}
-HumanPruningError world_human_component_pruning_candidate(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,const OriginalPrototype& candidate,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,&candidate,nullptr,out);}
-HumanPruningError world_human_component_pruning_after(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,const OriginalPrototype& candidate,const HumanPruningResult& prior,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,&candidate,&prior,out);}
+HumanPruningError world_human_component_pruning_existing(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,const ExistingProposalRequest& q,HumanPruningResult& out){
+ if(detail::effects_range_overlap(&out,sizeof out,&q,sizeof q))return HumanPruningError::bad_state;
+ ExistingProposalResult result{};if(world_existing_prototype_proposal(w,v,r,d,q,result)!=ExistingProposalError::ok)return HumanPruningError::bad_state;
+ return core(w,v,r,d,rt,q.faction,result.id,result.kind==ExistingProposalKind::reused?&result.prototype:nullptr,nullptr,out);
+}
+HumanPruningError world_human_component_pruning_candidate(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,const OriginalPrototype& candidate,HumanPruningResult& out){if(id<64)return HumanPruningError::bad_state;return core(w,v,r,d,rt,f,id,&candidate,nullptr,out);}
+HumanPruningError world_human_component_pruning_prior(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,const HumanPruningResult& prior,HumanPruningResult& out){return core(w,v,r,d,rt,f,id,nullptr,&prior,out);}
+HumanPruningError world_human_component_pruning_after(const OriginalWorld& w,Variant v,const Rules& r,const UnitDefinitions& d,PruningRuntime rt,int32_t f,int32_t id,const OriginalPrototype& candidate,const HumanPruningResult& prior,HumanPruningResult& out){if(id<64)return HumanPruningError::bad_state;return core(w,v,r,d,rt,f,id,&candidate,&prior,out);}
 }

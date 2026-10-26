@@ -4,6 +4,7 @@
 #define ALPHA_HUMAN_COMPONENT_PRUNING_H
 #include "original_world.h"
 #include "rules_text.h"
+#include "existing_prototype_reuse.h"
 namespace alpha {
 enum class PruningRuntime {unknown,multiplayer_off,multiplayer_on};
 enum class HumanPruningError {ok,bad_state,unsupported_runtime};
@@ -19,18 +20,29 @@ struct HumanPruningResult {uint16_t flags[512];size_t changed;};
  * Other human/AI/network/dialog pruning paths reject BEFORE writes. No World
  * commit, name/design allocation, prune callback, full proposal or award.
  * Full input/output overlap rejects and all errors preserve output.
+ * Genuine proposer refusal selected=-1 takes signed<64 without UNIT[-1].
  */
 HumanPruningError world_human_component_pruning(const OriginalWorld&,Variant,const Rules&,
  const UnitDefinitions&,PruningRuntime,int32_t faction,int32_t selected_id,HumanPruningResult&);
 /* Same complete restricted human domain, virtualizing the genuine selected
  * postconstruction/name-store record before ordered coverage. No World write.
  * The selected candidate must be own/custom/active; all aliases reject. */
+/* Re-evaluate the genuine existing proposer result, then apply caller pruning
+ * to the returned ID and exact reuse record. Allocation-required/unknown/runtime
+ * contexts reject; this query supplies no authority or World commit. */
+HumanPruningError world_human_component_pruning_existing(const OriginalWorld&,Variant,const Rules&,
+ const UnitDefinitions&,PruningRuntime,const ExistingProposalRequest&,HumanPruningResult&);
 HumanPruningError world_human_component_pruning_candidate(const OriginalWorld&,Variant,const Rules&,
  const UnitDefinitions&,PruningRuntime,int32_t faction,int32_t selected_id,
  const OriginalPrototype& candidate,HumanPruningResult&);
 /* Repeated source pruning against already staged candidate/flags. Additional
  * flags must be monotone original coverage additions0x104; no active/other flag
  * edits accepted. Prior flags/output disjoint, old snapshot API unchanged. */
+/* Same restricted original branch with staged monotone coverage flags only;
+ * accepts genuine selected=-1/stock returns without constructing a candidate. */
+HumanPruningError world_human_component_pruning_prior(const OriginalWorld&,Variant,const Rules&,
+ const UnitDefinitions&,PruningRuntime,int32_t faction,int32_t selected_id,
+ const HumanPruningResult& prior,HumanPruningResult&);
 HumanPruningError world_human_component_pruning_after(const OriginalWorld&,Variant,const Rules&,
  const UnitDefinitions&,PruningRuntime,int32_t faction,int32_t selected_id,
  const OriginalPrototype&,const HumanPruningResult& prior,HumanPruningResult&);
