@@ -516,3 +516,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_sensor_combat.py --out "$RUNNER_TEMP/world-sensor-combat-host"
       - name: Owned combat sensor coverage independent68040 controls
         run: python3 ports/alpha-centauri/native/test_world_sensor_combat.py --out "$RUNNER_TEMP/world-sensor-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original ground combat modifier host controls
+        run: python3 ports/alpha-centauri/native/test_ground_modifiers.py --out "$RUNNER_TEMP/ground-modifiers-host"
+      - name: Original ground combat modifier independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_ground_modifiers.py --out "$RUNNER_TEMP/ground-modifiers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned ground combat modifier host controls
+        run: python3 ports/alpha-centauri/native/test_world_ground_modifiers.py --out "$RUNNER_TEMP/world-ground-modifiers-host"
+      - name: Owned ground combat modifier independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_ground_modifiers.py --out "$RUNNER_TEMP/world-ground-modifiers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

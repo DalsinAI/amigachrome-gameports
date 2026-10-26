@@ -2175,3 +2175,5 @@ Original read-only terrain defence and its saved-world binding: see [TERRAIN-DEF
 Original conventional base combat stage: [BASE-COMBAT.md](BASE-COMBAT.md). Read-only incoming-strength adjustment; final battle/damage/actions and native execution remain incomplete.
 
 Original combat sensor stages: [SENSOR-COMBAT.md](SENSOR-COMBAT.md). Read-only actual World coverage and signed percentage adjustment; complete battle/player actions/native qualification remain open.
+
+Original ground mobility/road/elevation stages: [GROUND-MODIFIERS.md](GROUND-MODIFIERS.md). Explicit incoming strengths; final battle/actions/native qualification remain open.
