@@ -372,3 +372,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_completion_tail.py --out "$RUNNER_TEMP/completion-tail-host"
       - name: Big-endian original ordinary completion tail fragments
         run: python3 ports/alpha-centauri/native/test_completion_tail.py --out "$RUNNER_TEMP/completion-tail-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original facility and Preserve monument state
+        run: python3 ports/alpha-centauri/native/test_monument_effects.py --out "$RUNNER_TEMP/monument-effects-host"
+      - name: Big-endian original facility and Preserve monument state
+        run: python3 ports/alpha-centauri/native/test_monument_effects.py --out "$RUNNER_TEMP/monument-effects-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -1690,3 +1690,19 @@ There is no World binding/mutation, facility-announcement acknowledgment, queue
 commit, original monitor/achievement execution, phase authority or frontend
 input. Normal SDK compilation and local controls do not qualify actual AmigaOS
 execution or final-head CI; both remain unrun.
+
+
+### Original facility and Preserve monument state (local candidate)
+
+`monument_effects` proposes event 4 or 12 in the original eight-record monument
+wire table. It preserves all unrelated bytes, handles nonzero legacy markers,
+copies the facility's base name with original 24-byte padding, and retains the
+SMAX alien exclusion absent from SMAC. The result reports the original local
+presentation-call obligation. It does not open/acknowledge a window, mutate the
+World, encode a player save, complete production or advance a turn.
+
+`test_monument_effects.py --out DIRECTORY` checks 2,064 cases against an independent
+byte oracle, plus null/overlap guards. Use `--cc m68k-linux-gnu-g++ --m68k-linux`
+for an independent big-endian runner. Private bounded original-helper comparisons
+are separate from public synthetic controls. Amiga SDK builds are not AmigaOS
+execution. This candidate has no published final-head CI or native qualification.
