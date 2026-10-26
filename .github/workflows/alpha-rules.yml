@@ -576,3 +576,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_land_combat.py --out "$RUNNER_TEMP/land-combat-host"
       - name: Coherent land combat independent68040 controls
         run: python3 ports/alpha-centauri/native/test_land_combat.py --out "$RUNNER_TEMP/land-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Combat round host controls
+        run: python3 ports/alpha-centauri/native/test_combat_round.py --out "$RUNNER_TEMP/combat-round-host"
+      - name: Combat round independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_combat_round.py --out "$RUNNER_TEMP/combat-round-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
