@@ -193,3 +193,9 @@ pacifism and an ordered validated garrison. Spending and stage remain explicit;
 this proposes happiness/social results without committing accounting or turns.
 Host and independent Linux68040 controls passed locally. AmigaOS execution,
 CI, publication, full fresh-world energy and player turn execution remain held.
+
+The local [fresh world energy proposal](ports/alpha-centauri/native/WORLD-ENERGY.md)
+connects actual resources, convoys, mineral support, commerce, owner specialist
+rules and happiness. It currently requires the inherited stable directed-human
+worker allocation and proposes results without committing an economy or turn.
+Native execution and CI remain unrun; this local candidate is unpublished.

@@ -9,4 +9,4 @@ src=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 mkdir -p -- "$(dirname -- "$1")"
 "${CXX:-m68k-amigaos-g++}" -m68040 -m68881 -std=c++17 -O2 -Wall -Wextra -Werror \
   -fno-exceptions -fno-rtti -fno-builtin -fno-tree-loop-distribute-patterns \
-  "$src/rules_text.cpp" "$src/original_map.cpp" "$src/original_game.cpp" "$src/original_faction.cpp" "$src/original_world.cpp" "$src/prototype.cpp" "$src/movement.cpp" "$src/saved_speed.cpp" "$src/world_unit_stats.cpp" "$src/world_police.cpp" "$src/world_pacifism.cpp" "$src/base_psych.cpp" "$src/world_psych.cpp" "$src/world_psych_probe.cpp" -o "$1"
+  "$src/rules_text.cpp" "$src/original_map.cpp" "$src/original_game.cpp" "$src/original_faction.cpp" "$src/original_world.cpp" "$src/prototype.cpp" "$src/movement.cpp" "$src/saved_speed.cpp" "$src/world_unit_stats.cpp" "$src/world_police.cpp" "$src/world_pacifism.cpp" "$src/base_psych.cpp" "$src/world_psych_internal.cpp" "$src/world_psych.cpp" "$src/world_psych_probe.cpp" -o "$1"

@@ -10,7 +10,7 @@ from test_original_faction import SCHEMA
 from test_world_unit_stats import scalar
 from test_base_psych import expected
 HERE=Path(__file__).resolve().parent
-SOURCES=police.SOURCES[:-1]+['world_pacifism.cpp','base_psych.cpp','world_psych.cpp','world_psych_probe.cpp']
+SOURCES=police.SOURCES[:-1]+['world_pacifism.cpp','base_psych.cpp','world_psych_internal.cpp','world_psych.cpp','world_psych_probe.cpp']
 def rules(profile,c):
  t=police.sections(police.rules(profile,c));f=json.loads((HERE/'basic_fixture.json').read_text());t['RULES']=f['rules_rows'][:-2] if profile=='base' else f['rules_rows'];t['WORLDBUILDER']=f['world_rows'];t['RULES'][11][0]=str(c%101);return police.material(t)
 def fixture(v,c):
@@ -35,7 +35,7 @@ def fixture(v,c):
    f=b[p+4];field=next(x for x in schema['fields'] if x['name']=='SE_effic_pending');struct.pack_into('<i',b,off['factions']+f*fs+field['offset'],0x7fffffff)
  for i in range(33 if v<11 else 64):struct.pack_into('<i',b,pf+0x84+4*i,r.choice([-1,0,1]) if int(info['bases']) else -1)
  return bytes(b)
-def model(text,data,profile):
+def model(text,data,profile,fact_output=None):
  info,_,sp=decode(data);v=int(info['version']);bases=int(info['bases']);bs=308 if v>=11 else 304;fs=0x20cc if v>=11 else 0x20bc;schema=SCHEMA['Faction' if v>=11 else 'LegacyFactionV10'];pref=sp['preferences'] if v>=11 else sp['legacy'];projects=struct.unpack_from('<'+('64i' if v>=11 else '33i'),pref,0x84)
  po,*_=police.model(text,data,profile);pos=512*8;pa,*_=pacifism.model(text,data,profile);result=bytearray();ok=bad=overflow=0
  for base in range(min(8,bases)):
@@ -59,9 +59,13 @@ def model(text,data,profile):
   social=[get('saved_queue_items',78),get('saved_queue_items',79)]+[get('social_support',i) for i in range(8)]+[get('social_psych',i) for i in range(72)]
   factor=math.isqrt(int(info['width'])//2*int(info['height']))
   for stage in range(2):
-   if ge or pe or not valid:e=1;vals=[]
+   if ge or pe or not valid:
+    e=1;vals=[]
+    if fact_output is not None:fact_output.append(None)
    else:
     row=[int(v>=11),int(bool(pref[0x58]&(1<<owner))),stage,struct.unpack_from('<b',b,6)[0],struct.unpack_from('<i',b,0x7c)[0],b[7],get('diff_level'),get('SE_effic_pending'),factor,base,get('base_count'),dg('rule_drone'),dg('rule_talent'),hasno,nodrone,get('SE_talent_pending'),get('SE_police_pending'),pac,base*13+stage*7,max(0,min(100,int(police.sections(text)['RULES'][11][0]))),get('SE_Economics_pending'),b[8],*struct.unpack_from('<2I',b,0x8c),mask,int(bool(dg('rule_flags')&0x40)),count,*social,*units]
+
+    if fact_output is not None:fact_output.append(row)
     calculated=expected(row);e=calculated[0];vals=[int(v>=11),base,factor,pac,count,*calculated[1:]]
    if e:result+=struct.pack('<106I',e,*([0x5a5a5a5a]*105));bad+=e==1;overflow+=e==3
    else:result+=struct.pack('<106I',0,*[n&0xffffffff for n in vals]);ok+=1

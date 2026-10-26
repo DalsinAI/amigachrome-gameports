@@ -34,8 +34,10 @@ def corpus():
  return rows
 
 def expected(row):
+ return expected_parts(row[:149],row[149:175],[row[175+5*i:180+5*i] for i in range(7)],row[210:])
+
+def expected_parts(p,a,c,x):
  fail=lambda e:[e]+[0x5a5a5a5a]*120
- p=row[:149];a=row[149:175];c=[row[175+5*i:180+5*i] for i in range(7)];x=row[210:]
  threshold,packed0,packed1,here,rule,nodes,gridowned,alien,enabled,sanction,pa,ss,qualified,extra,projectcount,policy,item,previous,minerals=x
  if p[26]>2048:return fail(1)
  if any(p[i] not in [0,1] for i in [0,1,2,13,25]) or not 0<=p[3]<=127 or not 0<=p[4]<=p[3] or not 0<=p[5]<=255 or not 0<=p[6]<=5 or p[8]<0 or not 0<=p[9]<=511 or not 0<=p[10]<=512 or p[11]<0 or p[12]<0 or p[17]<0 or not 0<=p[21]<=255:return fail(1)

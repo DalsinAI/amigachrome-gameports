@@ -280,3 +280,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_psych.py --out "$RUNNER_TEMP/world-psych-host"
       - name: Big-endian current world psych binding
         run: python3 ports/alpha-centauri/native/test_world_psych.py --out "$RUNNER_TEMP/world-psych-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh complete world energy controls
+        run: python3 ports/alpha-centauri/native/test_world_energy.py --out "$RUNNER_TEMP/world-energy-host"
+      - name: Big-endian fresh complete world energy controls
+        run: python3 ports/alpha-centauri/native/test_world_energy.py --out "$RUNNER_TEMP/world-energy-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original headquarters scan controls
+        run: python3 ports/alpha-centauri/native/test_world_energy_hq.py --out "$RUNNER_TEMP/world-energy-hq-host"
+      - name: Big-endian original headquarters scan controls
+        run: python3 ports/alpha-centauri/native/test_world_energy_hq.py --out "$RUNNER_TEMP/world-energy-hq-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

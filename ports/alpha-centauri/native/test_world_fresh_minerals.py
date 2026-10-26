@@ -39,9 +39,9 @@ def fungus_fixture(variant,version,case):
  dest=o['faction_definitions']+0x59c;src=source['faction_definitions']+0x59c
  b[dest+0x504:dest+0x550]=raw[src+0x504:src+0x550]
  return text,bytes(b)
-def model(variant,text,data,mode=0):
+def model(variant,text,data,mode=0,food_override=None):
  fail=lambda e:[e]+[0x5a5a5a5a]*130
- food=convoy.model(variant,text,data)
+ food=convoy.model(variant,text,data) if food_override is None else food_override
  if food[0]:return fail(food[0])
  info,o,s=convoy.intake.decode(data);version=int(info['version']);legacy=version<11;fs=0x20bc if legacy else 0x20cc;bs=304 if legacy else 308;b=s['bases'];owner=b[4];schema=convoy.intake.FACTIONS['LegacyFactionV10' if legacy else 'Faction'];pref=s['legacy'] if legacy else s['preferences'];tables=convoy.intake.sections(text)
  def state(name):return convoy.intake.scalar(s['factions'][owner*fs:(owner+1)*fs],schema,name)

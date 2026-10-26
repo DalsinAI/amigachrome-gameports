@@ -46,7 +46,7 @@ def fixture(variant,version,case):
   p=off['tiles']+44*i;b[p:p+44]=bytes(44);b[p]=0x60;b[p+2]=1 if i==52 else 9;b[p+4]=2;b[p+7]=1;struct.pack_into('<I',b,p+8,1 if i==52 else terrain)
  struct.pack_into('<I',b,off['metadata']+8,0);struct.pack_into('<I',b,off['metadata']+28,0)
  return bytes(b)
-def model(variant,text,data,mode=0):
+def model(variant,text,data,mode=0,expansion_enabled=False,reduction_before=None,energy_before=None):
  fail=lambda code:[code]+[0x5a5a5a5a]*78
  info,off,spans=decode(data);legacy=int(info['version'])<11;pf=spans['legacy'] if legacy else spans['preferences'];fs=0x20bc if legacy else 0x20cc;bs=304 if legacy else 308;nb=int(info['bases']);w,h=int(info['width']),int(info['height']);tables=sections(text)
  def pref(name,index=0):
@@ -73,7 +73,7 @@ def model(variant,text,data,mode=0):
  counts=[state(n) for n in ['satellites_nutrient','satellites_mineral','satellites_energy']]
  if any(n<0 for n in counts):return fail(1)
  if not full and 2147483647 in counts:return fail(7)
- satellites=[min(pop,n if full else (n+1)//2) for n in counts];totals=satellites+[0];tiles=[0,0,0];values=[[0,0,0] for _ in range(21)];energy=-123456 if mode>=2 else 0;flags=struct.unpack_from('<I',b,0x30)[0]&~0x8100;flat=struct.unpack_from('<I',spans['metadata'],28)[0]
+ satellites=[min(pop,n if full else (n+1)//2) for n in counts];totals=satellites+[0];tiles=[0,0,0];values=[[0,0,0] for _ in range(21)];energy=(energy_before if energy_before is not None else -123456 if mode>=2 else 0);flags=struct.unpack_from('<I',b,0x30)[0]&~0x8100;flat=struct.unpack_from('<I',spans['metadata'],28)[0]
  keys={r[1].lower():i for i,r in enumerate(tables['TECHNOLOGY'])};keys.update(none=-1,disable=-2)
  def basic(name):
   row,col,limits=ROW[name];v=tables['RULES'][row][col];return keys[v.lower()] if limits is None else max(limits[0],min(limits[1],int(v)))
@@ -91,7 +91,7 @@ def model(variant,text,data,mode=0):
   if not(0<=xx<w and 0<=yy<h):return fail(4)
   sq=tile(xx,yy);items,lm=struct.unpack_from('<II',sq,8)
   if sq[0]&0xe0<0x60:flags|=0x8000
-  row=[0]*59;row[0]=int(variant=='expansion');row[1:7]=[sq[0],sq[2],sq[5],items,lm,bonus_model(struct.unpack_from('<I',spans['metadata'],8)[0],xx,yy,pref('GameRules'),sq[0],items)];row[9]=state('SE_planet_pending');row[10]=state('SE_economy_pending');row[11:14]=fresh_effects[1:4];row[14]=state('base_count');row[15]=int(bool(struct.unpack_from('<I',b,0x30)[0]&4));row[18],row[19]=struct.unpack_from('<II',b,0x8c)
+  row=[0]*59;row[0]=int(variant=='expansion');row[7]=int(expansion_enabled);row[1:7]=[sq[0],sq[2],sq[5],items,lm,bonus_model(struct.unpack_from('<I',spans['metadata'],8)[0],xx,yy,pref('GameRules'),sq[0],items)];row[9]=state('SE_planet_pending');row[10]=state('SE_economy_pending');row[11:14]=fresh_effects[1:4];row[14]=state('base_count');row[15]=int(bool(struct.unpack_from('<I',b,0x30)[0]&4));row[18],row[19]=struct.unpack_from('<II',b,0x8c)
   if row[14]<0:return fail(1)
   try:row[16]=int(variant=='expansion' and project(33))
   except ValueError:return fail(1)
@@ -99,7 +99,7 @@ def model(variant,text,data,mode=0):
   for j,n in enumerate(['tech_three_nutrients_sqr','tech_three_minerals_sqr','tech_three_energy_sqr','tech_mining_platform_bonus']):row[20]|=int(technology(basic(n)))<<j
   merchant=pref('SecretProjects',3)
   if merchant>=nb:return fail(1)
-  row[21]=int(pref('GovernorFaction')==faction);row[22]=int(merchant==0);row[23]=int(pref('DustCloudDuration')!=0);row[24]=pref('SolarFlaresEvent')&0xffffffff;row[25]=mode&1;row[30]=(-2 if mode==2 else 2147483647 if mode==3 else 0) if i==0 else 0;row[27]=basic('tgl_nutrient_effect_with_mine');row[28]=basic('limit_mineral_mine_sans_road');row[29]=struct.unpack_from('<I',b,0x34)[0];row[31]=energy
+  row[21]=int(pref('GovernorFaction')==faction);row[22]=int(merchant==0);row[23]=int(pref('DustCloudDuration')!=0);row[24]=pref('SolarFlaresEvent')&0xffffffff;row[25]=mode&1;row[30]=(reduction_before if reduction_before is not None else -2 if mode==2 else 2147483647 if mode==3 else 0) if i==0 else 0;row[27]=basic('tgl_nutrient_effect_with_mine');row[28]=basic('limit_mineral_mine_sans_road');row[29]=struct.unpack_from('<I',b,0x34)[0];row[31]=energy
   for j,res in enumerate(tables['RESOURCEINFO']):row[32+3*j:35+3*j]=[0 if v=='*' else int(v) for v in res[1:4]]
   mirrors=not(items&1 and sq[2]&15<8) and not items&(0x2000|0x1000000) and not(items&0x20 and sq[0]&0xe0>0x3f) and sq[0]&0xe0>=0x60 and not items&0x200000 and bool(items&0x40)
   if mirrors:
