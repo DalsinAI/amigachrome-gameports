@@ -2199,3 +2199,5 @@ Original airdrop/fanatic/faction/Planet combat phases: see [COMBAT-FACTIONS.md](
 Owned airdrop/faction/Planet binding: see [WORLD-COMBAT-FACTIONS.md](WORLD-COMBAT-FACTIONS.md); actual current actor/faction/design-owner technology facts, explicit phase strengths, native/UI pending.
 
 Original fungus attack phase and World binding: see [FUNGUS-COMBAT.md](FUNGUS-COMBAT.md); explicit incoming offense, numeric inspection only, native/UI pending.
+
+Coherent conventional land battle numbers: see [LAND-COMBAT.md](LAND-COMBAT.md); complete-original numeric comparisons within the stated domain, no attack/native/UI qualification.

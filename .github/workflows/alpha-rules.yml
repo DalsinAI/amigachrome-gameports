@@ -572,3 +572,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_fungus_combat.py --out "$RUNNER_TEMP/world-fungus-combat-host"
       - name: Owned fungus combat independent68040 controls
         run: python3 ports/alpha-centauri/native/test_world_fungus_combat.py --out "$RUNNER_TEMP/world-fungus-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Coherent land combat host controls
+        run: python3 ports/alpha-centauri/native/test_land_combat.py --out "$RUNNER_TEMP/land-combat-host"
+      - name: Coherent land combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_land_combat.py --out "$RUNNER_TEMP/land-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
