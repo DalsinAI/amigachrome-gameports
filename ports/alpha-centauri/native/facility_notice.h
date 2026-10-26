@@ -7,6 +7,28 @@
 #include "game_logic.h"
 namespace alpha {
 enum class FacilityNoticeRoute {none,foreign,local_regular,local_first,subspace_special};
+/* Stage-local pure decisions, not lifecycle capabilities. These functions cannot
+ * authorize construction, delivery, playback, response or World mutation. A
+ * future owning controller must call them only at the corresponding real stage.
+ * No function accepts snapshots belonging to a later stage. Errors preserve out.
+ */
+struct FacilityNoticeEntryInput {
+ Variant variant;int32_t facility,faction,local_faction;
+ uint32_t game_state,warnings;uint8_t announced[12];
+};
+struct FacilityNoticeConstructionInput {
+ Variant variant;int32_t facility;uint32_t warnings;uint8_t announced[12];
+};
+struct FacilityNoticeConstructionResult {uint8_t announced[12];bool blurb_requested;};
+struct FacilityNoticeVoiceInput {int32_t faction;uint32_t preferences,human_mask;};
+LogicError facility_notice_entry(const FacilityNoticeEntryInput&,FacilityNoticeRoute&);
+/* First-path post-construction decision only. Use the current announced vector,
+ * not a retained entry snapshot that could erase intervening owned changes.
+ * SMAX40 is not an ordinary construction stage and is rejected.
+ */
+LogicError facility_notice_construction(const FacilityNoticeConstructionInput&,FacilityNoticeConstructionResult&);
+LogicError facility_notice_voice(const FacilityNoticeVoiceInput&,bool& requested);
+bool facility_notice_fade(uint32_t current_preferences);
 struct FacilityNoticeInput {
  Variant variant;int32_t facility,faction,local_faction;
  uint32_t game_state,warnings_entry,warnings_after_construction;

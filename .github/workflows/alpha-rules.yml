@@ -392,3 +392,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_notice_labels.py --out "$RUNNER_TEMP/notice-labels-host"
       - name: Big-endian original local facility notice arguments
         run: python3 ports/alpha-centauri/native/test_notice_labels.py --out "$RUNNER_TEMP/notice-labels-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host staged facility notice decisions
+        run: python3 ports/alpha-centauri/native/test_notice_stages.py --out "$RUNNER_TEMP/notice-stages-host"
+      - name: Big-endian staged facility notice decisions
+        run: python3 ports/alpha-centauri/native/test_notice_stages.py --out "$RUNNER_TEMP/notice-stages-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

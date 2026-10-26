@@ -1787,3 +1787,23 @@ Private original comparisons execute real literal/string/parse-number helpers,
 stop before popb, and compare whole bases/all ten numeric slots. They do not
 execute or replace a modal callback. SDK builds have no AmigaOS execution;
 no final-head published CI or playable completion flow is claimed.
+
+
+### Staged facility notice decisions (local candidate)
+
+`facility_notice_entry`, `facility_notice_construction`, `facility_notice_voice`
+and `facility_notice_fade` accept only the facts needed at their respective
+original stages. Construction preserves the supplied current announcement vector,
+including intervening changes. Audio preferences and the human mask are read at
+voice selection; fade uses its own later preferences and has no human recheck.
+The combined diagnostic remains a composition of these functions for regression
+comparison. It must not be used to precompute future settings for a real window.
+
+The stage functions are pure proposals, not delivery capabilities or an owning
+notification controller. No constructor, renderer, modal response, audio playback,
+World mutation, completion or turn is supplied. SMAX40 remains a separate
+unsupported obligation. Local host sanitizer and independent Linux68040 controls
+pass; SDK builds are compile-only. No CI, AmigaOS or player-facing qualification.
+
+Run `python3 ports/alpha-centauri/native/test_notice_stages.py --out OUTPUT`;
+use `--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
