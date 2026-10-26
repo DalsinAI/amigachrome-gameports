@@ -2165,3 +2165,7 @@ battle/command/native gates.
 The original riot-morale ordering is restored in this candidate; see
 [RIOT-MORALE-CORRECTION.md](RIOT-MORALE-CORRECTION.md). Earlier source-reference
 passes included an OpenSMACX gameplay change and do not qualify this correction.
+
+Original basic combat-strength composition now connects qualified prototype,
+psi, morale and physical-base dependencies. See [BASIC-COMBAT.md](BASIC-COMBAT.md)
+for original/mod differences, supported domain and remaining real-battle gates.

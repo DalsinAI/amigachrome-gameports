@@ -484,3 +484,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_riot_morale.py --out "$RUNNER_TEMP/riot-morale-host"
       - name: Big-endian original riot morale ordering and dependent speed
         run: python3 ports/alpha-centauri/native/test_riot_morale.py --out "$RUNNER_TEMP/riot-morale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original basic combat strength composition
+        run: python3 ports/alpha-centauri/native/test_basic_combat.py --out "$RUNNER_TEMP/basic-combat-host"
+      - name: Big-endian original basic combat strength composition
+        run: python3 ports/alpha-centauri/native/test_basic_combat.py --out "$RUNNER_TEMP/basic-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host saved-world basic combat binding
+        run: python3 ports/alpha-centauri/native/test_world_basic_combat.py --out "$RUNNER_TEMP/world-basic-combat-host"
+      - name: Big-endian saved-world basic combat binding
+        run: python3 ports/alpha-centauri/native/test_world_basic_combat.py --out "$RUNNER_TEMP/world-basic-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
