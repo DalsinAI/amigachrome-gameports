@@ -1,0 +1,53 @@
+{
+  "scope": "Combined existing ordinary road/tube overlay ordering; production implementation unchanged",
+  "date": "2026-10-26",
+  "frozenParent": "1c102e19132b7d5e1c602f308ab6fc78c9ad9b4d",
+  "original": {
+    "entry": "SMAX MapWin 0x4632d0",
+    "completeNormalReturns": 2048,
+    "controlledWorlds": 128,
+    "distinctPixelOutputs": 975,
+    "profiles": [
+      "roads plus jungle/forest/fungus",
+      "roads plus river/source",
+      "roads plus plants and river",
+      "roads plus plants/river and controlled water neighbours"
+    ],
+    "pixelSHA256": "92f75d039f16614a41b839500e928205f976e8d0771de9326585c683bc0af1c0",
+    "privateOwnerData": true,
+    "sourceZooms": [
+      -5,
+      5
+    ],
+    "sourceRenderIdentity": "0xa00000",
+    "explicitCursor": [
+      20,
+      20
+    ],
+    "heightCacheProfile": 25,
+    "drawflags": "0x04000421",
+    "preferences": "0x300",
+    "fullPeStartup": false
+  },
+  "publicControls": {
+    "additionalCombinedScenes": 1296,
+    "totalSceneContexts": 10368,
+    "sha256": "21443b66071eb08e77e5cefee871b84aa1939da0711f73578734cf506381a384",
+    "syntheticTexturesOnly": true,
+    "hostAsanUbsanPassed": true,
+    "independentLinux68040Passed": true
+  },
+  "normalSdk": {
+    "buildOnly": true,
+    "sha256": "8be8ce1619d1f370d90e22ff4e1395e39f56eddfa4abcd7ba5b5534e741487cf",
+    "identicalToParent": true
+  },
+  "limits": [
+    "No frontend/viewer/native/watch changes or full-world completion claim",
+    "Original owner assets remain private; synthetic texture patterns are test controls only",
+    "Imported sprite/scale/cache/OS paths remain held",
+    "Source runtime render identity, cache profile, observation and cursor are explicit controlled inputs, not recovered current UI authority",
+    "Later unsupported improvements, special heights, raw rainfall/rockiness3 and sea-platform imported sprites remain held",
+    "Original base-terran full-MapWin differential is unrun"
+  ]
+}

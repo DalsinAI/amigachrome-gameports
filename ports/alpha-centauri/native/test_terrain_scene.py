@@ -114,6 +114,28 @@ def main():
    for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
    base_grid_digest.update(r.stdout)
  assert base_grid_digest.hexdigest()=='5bc3987c1994113c7fc300cf21131101c1bceee5c6768ee8d2d9b18909de5bc3',base_grid_digest.hexdigest()
+ # Combined overlays exercise ordering rather than isolated stage calls.
+ # These procedural test textures are controls, not replacement game art.
+ composition_digest=hashlib.sha256()
+ for profile in range(3):
+  b=fixture(0);_,o,_=decode(b)
+  for i in range(24):
+   at=o['tiles']+44*i;b[at+4]=0x22 if(i+profile)%2 else 0;b[at+5]=(b[at+5]&0xf8)|((i+profile)%8)
+   flags=struct.unpack_from('<I',b,at+8)[0]&3
+   if i%3:flags|=4
+   if(i+profile)%4==0:flags|=8
+   if(i+profile)%2:flags|=0x200000
+   if i%4:flags|=0x20
+   if(i+profile)%3:flags|=0x80
+   if i%5==0:flags|=0x200
+   struct.pack_into('<I',b,at+8,flags);struct.pack_into('<I',b,at+12,4 if i%3 else 0)
+   for viewer in range(7):struct.pack_into('<I',b,at+16+4*viewer,flags)
+  for viewer in range(8):
+   for other in range(8):struct.pack_into('<I',b,o['factions']+viewer*0x20bc+0x18+other*4,8 if(viewer+other+profile)%3==0 else 0)
+  f=out/f'composition{profile}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','67109921','768','4','2'];queries=[(i,z,viewer,cx,cy,state,0x100,0)for i in range(24)for z in[1,2]for cx,cy in[(-12,20),(14,38),(-80,-30)]for viewer,state in[(-1,0x80),(1,0x80),(1,0)]];r=subprocess.run(command,input=b''.join(struct.pack('<8i',*q)for q in queries),capture_output=True,env=env);assert r.returncode==0,(profile,r.returncode,r.stderr);assert len(r.stdout)==len(queries)*16388
+  for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
+  composition_digest.update(r.stdout)
+ assert composition_digest.hexdigest()=='21443b66071eb08e77e5cefee871b84aa1939da0711f73578734cf506381a384',composition_digest.hexdigest()
  # Cursor rejection is tested on an ordinary valid fixture; special-height
  # and feature holds retain their earlier priority in the general API.
  cursor_file=out/'cursor-controls.SC';cursor_file.write_bytes(fixture(0));cursor_command=runner+[str(exe),str(cursor_file),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','0','512'];packed=struct.pack('<8i',0,1,-1,-12,20,0x80,0,0)
@@ -132,5 +154,5 @@ def main():
  for visibility,expected in[(0,0),(2,4)]:
   b=fixture(0);_,o,_=decode(b);b[o['tiles']+4]=visibility;struct.pack_into('<I',b,o['tiles']+8,0x8004);struct.pack_into('<I',b,o['tiles']+16,0x8004);f=out/f'late-item-{visibility}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','32'];r=subprocess.run(command,input=struct.pack('<8i',0,1,1,-12,20,0x80,0x100,0),capture_output=True,env=env);assert r.returncode==0 and struct.unpack_from('<I',r.stdout)[0]==expected,(visibility,r.returncode,r.stdout[:4],r.stderr)
   if expected:assert r.stdout[4:]==bytes([199])*16384
- h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(cursorMissingAndInvalidTransactionalCases=3,baseGridCases=3888,baseGridSHA256=base_grid_digest.hexdigest(),gridCases=1296,gridPreferenceEquivalentCases=1296,gridSHA256=grid_digest.hexdigest(),riverCases=1296,riverSHA256=river_digest.hexdigest(),lateExplorationAndItemHoldCases=2,roadCases=432,roadSHA256=road_digest.hexdigest(),farmCases=432,farmSHA256=farm_digest.hexdigest(),forestCases=432,forestSHA256=forest_digest.hexdigest(),heldFarmBranches=1,cases=count,syntheticWorlds=27,totalSceneCases=9072,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
+ h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(composedOverlayCases=1296,composedOverlaySHA256=composition_digest.hexdigest(),cursorMissingAndInvalidTransactionalCases=3,baseGridCases=3888,baseGridSHA256=base_grid_digest.hexdigest(),gridCases=1296,gridPreferenceEquivalentCases=1296,gridSHA256=grid_digest.hexdigest(),riverCases=1296,riverSHA256=river_digest.hexdigest(),lateExplorationAndItemHoldCases=2,roadCases=432,roadSHA256=road_digest.hexdigest(),farmCases=432,farmSHA256=farm_digest.hexdigest(),forestCases=432,forestSHA256=forest_digest.hexdigest(),heldFarmBranches=1,cases=count,syntheticWorlds=27,totalSceneCases=10368,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
 if __name__=='__main__':main()

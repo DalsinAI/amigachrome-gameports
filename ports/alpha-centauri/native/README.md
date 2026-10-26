@@ -1657,3 +1657,19 @@ the newer separately owned `current_monuments()` allocation is absent from this
 historical World and remains a distinct, held integration requirement. Existing
 plan/layer/scene/original pixel outputs remain exact. Native/UI and watched
 preview remain untouched.
+
+### Combined road and ordinary overlay ordering (26 October)
+
+The road/tube implementation is unchanged. New combined controls cover its
+composition with jungle, forest, fungus, rivers/source, coast, ordinary grid and
+base-work outlines rather than only isolated layers. On 128 explicitly modified
+owner Worlds, 2,048 complete unchanged original SMAX MapWin returns match every
+owned pixel on host and independent big-endian 68040. These cover two source
+zooms, clipped placements and distinct visibility/fog profiles. The render
+identity, height-cache profile and cursor are supplied controlled source facts.
+
+The existing scene test command also runs 1,296 additional combined synthetic
+contexts, retaining all earlier output fingerprints and rejection checks. The
+normal SDK probe is byte-identical to its frozen parent. This does not enable
+a viewer or close imported sprite/scaling/cache/OS paths; later unsupported
+features remain held. See `ROAD-COMPOSITION-EVIDENCE-20261026.json`.
