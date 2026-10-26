@@ -2025,3 +2025,6 @@ builds remain unexecuted on AmigaOS. No remote CI or PR is provided. This is a
 persistence prerequisite only: it does not implement an owning phase controller,
 commit social/repair/upkeep, admit a turn from a save, or enable player End Turn.
 A future controlling engine must block exports while real events are pending.
+
+Explicit decoded loader repairs are documented in [LOAD-REPAIRS.md](LOAD-REPAIRS.md).
+They preserve raw import behavior and grant no turn authority or frontend action.

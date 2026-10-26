@@ -3,6 +3,7 @@
 #define AC_ALPHA_ORIGINAL_WORLD_H
 #include "original_faction.h"
 namespace alpha {
+struct Rules;
 enum class WorldLoadError { ok,bad_format,memory_limit,out_of_memory,bad_reference };
 /* Owns the original container AND decoded native records. No caller-buffer or
  * serialized PC pointer survives import. Opaque blocks stay in owned bytes for
@@ -19,6 +20,16 @@ class OriginalWorld {
   OriginalWorld& operator=(const OriginalWorld&)=delete;
   WorldLoadError load(const uint8_t* bytes,size_t length,uint32_t runtime_seed,
                       size_t memory_limit=64u*1024u*1024u);
+  /* Explicit decoded-record repairs from original load_daemon: revealed-map
+   * flags1..7, alive bits1..7, then vehicle/base occupancy and first-record
+   * tile faction. Original bytes stay baseline. Raw load() is unchanged.
+   * Same-input parsed89-row technology table required; malformed table returns
+   * bad_format. Failure preserves this whole World. No original path/contour/
+   * cursor/UI setup, RNG recovery, offline runtime or turn authority implied.
+   * The buffer encoders do not yet support all resulting preference deltas.
+   */
+  WorldLoadError load_with_record_repairs(const uint8_t*,size_t,uint32_t,
+    const Rules&,size_t memory_limit=64u*1024u*1024u);
   void clear();
   bool loaded()const{return raw_!=nullptr;}
   const OriginalGameView& game()const{return view_;}
