@@ -2125,3 +2125,34 @@ python3 ports/alpha-centauri/native/test_unit_readiness.py --out /tmp/ready-host
 python3 ports/alpha-centauri/native/test_unit_readiness.py --out /tmp/ready-be --cc m68k-linux-gnu-g++ --m68k-linux
 CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_unit_readiness_probe.sh /tmp/ready-native
 ```
+
+### Original offline ready-unit search transaction
+
+`world_ready_search` follows the offline branch of original
+`Console_ready_search`: up to three passes over original readiness, nearest
+unit by the original wrapped range metric, and current-unit preference on ties.
+Reference/current indices and cursor coordinates are spatial facts only. A local
+reference supplies its position; a foreign reference uses the supplied cursor.
+When no candidate is found, state bit2 is cleared across **all** actors. The
+first pass preserves current's bit2 when the reference is local, the second
+clears all, and the third may then find current. Neither movement spent nor
+orders, RNG or turn counters are reset. Online priority behavior is excluded.
+
+`prepare_ready_search`/`commit_ready_search` bind that proposal to the owning
+session's lifetime/revision and sole human. Commit re-evaluates the full result
+before atomically clearing only the proposed state bits. Any unsafe reference
+or unsupported readiness dependency aborts the whole proposal without partial
+clears. Original callback-free offline search is implemented here; original
+rendering, input/modal/audio and online Console paths are not substituted.
+Returned selection is for a future UI caller; no Console/UI cursor is changed.
+
+Whole-world buffer persistence retains these bit clears and all existing
+supported commands. Reload and repeat-search controls preserve the resulting
+bytes. No player input, End Turn, phase admission, command-completion signal,
+real event delivery, native execution, filesystem save or playable-game claim.
+
+```
+python3 ports/alpha-centauri/native/test_ready_search.py --out /tmp/search-host
+python3 ports/alpha-centauri/native/test_ready_search.py --out /tmp/search-be --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_ready_search_probe.sh /tmp/search-native
+```

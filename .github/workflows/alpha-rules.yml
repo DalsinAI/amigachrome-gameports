@@ -452,3 +452,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_unit_readiness.py --out "$RUNNER_TEMP/readiness-host"
       - name: Big-endian original unit readiness and boarding
         run: python3 ports/alpha-centauri/native/test_unit_readiness.py --out "$RUNNER_TEMP/readiness-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned original offline ready search
+        run: python3 ports/alpha-centauri/native/test_ready_search.py --out "$RUNNER_TEMP/ready-search-host"
+      - name: Big-endian owned original offline ready search
+        run: python3 ports/alpha-centauri/native/test_ready_search.py --out "$RUNNER_TEMP/ready-search-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
