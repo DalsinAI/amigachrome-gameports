@@ -106,6 +106,11 @@ LogicError world_has_clean_reactor(const OriginalWorld& w,const UnitDefinitions&
  if(error!=LogicError::ok)return error;
  output=(flags&0x10000u)!=0;return LogicError::ok;
 }
+LogicError world_has_super_former(const OriginalWorld& w,const UnitDefinitions& d,const Rules& tech,size_t id,bool& output){
+ uint32_t flags;const auto error=requested_ability_flags(w,d,tech,id,1u,flags);
+ if(error!=LogicError::ok)return error;
+ output=(flags&1u)!=0;return LogicError::ok;
+}
 LogicError world_vehicle_speed(const OriginalWorld& w,const UnitDefinitions& d,const Rules& tech,size_t index,int32_t road,bool skip_morale,uint32_t& output){
  if(!profile(w,d))return LogicError::bad_state;
  const auto* v=w.vehicle(index);if(!v || v->unit_id<0)return LogicError::bad_state;const auto* p=w.prototype((size_t)v->unit_id);if(!p)return LogicError::bad_state;

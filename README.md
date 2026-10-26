@@ -199,3 +199,13 @@ connects actual resources, convoys, mineral support, commerce, owner specialist
 rules and happiness. It currently requires the inherited stable directed-human
 worker allocation and proposes results without committing an economy or turn.
 Native execution and CI remain unrun; this local candidate is unpublished.
+
+The local [owned unit wake command](ports/alpha-centauri/native/UNIT-WAKE.md) recovers the original order cancellation,
+terraforming-work reduction and alert exception. Super Former uses mask1,
+with original edition-specific design-owner grants; project indices2 and8
+select Weather Paradigm and Xenoempathy Dome. Alert uses original byte11.
+The command preserves the original signed order boundary and state mask,
+with checked speed dependencies and revision-bound, local-owner commits.
+Its tests cover full-container export/reload and stale/suspended sessions.
+This isolated candidate adds no player controls or turn authority. Native
+execution, publication and remote CI remain held.

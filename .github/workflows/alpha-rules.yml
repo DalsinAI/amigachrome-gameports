@@ -456,3 +456,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_ready_search.py --out "$RUNNER_TEMP/ready-search-host"
       - name: Big-endian owned original offline ready search
         run: python3 ports/alpha-centauri/native/test_ready_search.py --out "$RUNNER_TEMP/ready-search-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned original unit wake and terraform contribution
+        run: python3 ports/alpha-centauri/native/test_local_unit_wake.py --out "$RUNNER_TEMP/unit-wake-host"
+      - name: Big-endian owned original unit wake and terraform contribution
+        run: python3 ports/alpha-centauri/native/test_local_unit_wake.py --out "$RUNNER_TEMP/unit-wake-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
