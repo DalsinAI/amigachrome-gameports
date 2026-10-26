@@ -2183,3 +2183,5 @@ Late Pulse/Jammer/Tracking arithmetic: see [DEFENSE-ABILITIES.md](DEFENSE-ABILIT
 Owned late defense ability binding: see [WORLD-DEFENSE-ABILITIES.md](WORLD-DEFENSE-ABILITIES.md); read-only current facts, native/UI pending.
 
 Original air/noncombat/In Port arithmetic: see [AIR-PORT-COMBAT.md](AIR-PORT-COMBAT.md); explicit conventional numeric stage only, World/native/UI pending.
+
+Owned air/noncombat/In Port binding: see [WORLD-AIR-PORT-COMBAT.md](WORLD-AIR-PORT-COMBAT.md); current conventional facts only, native/UI pending.
