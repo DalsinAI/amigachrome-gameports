@@ -608,3 +608,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_vehicle_removal.py --out "$RUNNER_TEMP/world-vehicle-removal-host"
       - name: Big-endian owned current-world removal frame controls
         run: python3 ports/alpha-centauri/native/test_world_vehicle_removal.py --out "$RUNNER_TEMP/world-vehicle-removal-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned casualty frame and caller-pool controls
+        run: python3 ports/alpha-centauri/native/test_world_casualty.py --out "$RUNNER_TEMP/world-casualty-host"
+      - name: Big-endian owned casualty frame and caller-pool controls
+        run: python3 ports/alpha-centauri/native/test_world_casualty.py --out "$RUNNER_TEMP/world-casualty-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

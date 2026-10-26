@@ -1,0 +1,53 @@
+{
+  "parent": "0020392d1f790f3cd4dd3d969ad27cc1fbe587b2",
+  "scope": "Owned current ordinary/native deletion route plus copied caller pools; artifact/interlude held",
+  "host": {
+    "cases": 2220,
+    "guards": 48840,
+    "outputSHA256": "e5699e275a9dbd9a8cfa9c846421fc646c74e29c3df24160dffaabd5af07f032",
+    "binarySHA256": "f08958205e73597e672e32a591d960efb22e16fb7688986176ee33024fb6c7af",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "cases": 2220,
+    "guards": 48840,
+    "outputSHA256": "e5699e275a9dbd9a8cfa9c846421fc646c74e29c3df24160dffaabd5af07f032",
+    "binarySHA256": "069804f358493474b5c7f5c071b1f53ab6257903b8a5c12246398ce4afc21b5e",
+    "native": "UNRUN"
+  },
+  "parentHost": {
+    "cases": 1158,
+    "noWriteGuards": 23160,
+    "outputSHA256": "e6254ae5ac6b17653b0a0351135107740ac24aff2e0c91086cb66825a3c40742",
+    "binarySHA256": "de99a118ef43c53cab1de7df69928ff7fda74e84ac19fe59726df60040fc0455",
+    "scope": "Current-record clone/removal/count, unchanged caller/runtime/movementRNG/immutable baseline, all other decoded records/current monuments/history preserved; independent second removal and replacement; survives source destruction."
+  },
+  "parent68040": {
+    "cases": 1158,
+    "noWriteGuards": 23160,
+    "outputSHA256": "e6254ae5ac6b17653b0a0351135107740ac24aff2e0c91086cb66825a3c40742",
+    "binarySHA256": "998e53628fe64859f6afb7fdcffeb4fea3405035453ae26a545010ad1e8bb134",
+    "scope": "Current-record clone/removal/count, unchanged caller/runtime/movementRNG/immutable baseline, all other decoded records/current monuments/history preserved; independent second removal and replacement; survives source destruction."
+  },
+  "sdkSHA256": "0ed1e201f056e1ad48a3ce69b01115a39a874899399669c4ab886c1055b51a16",
+  "sdkFreshBuildsByteIdentical": true,
+  "originalReferenceContractSHA256": "02ebc6df7c91e6f9337795592e2f88d643e72514bc2ee5fb9b96943f549a1ce8",
+  "originalReferenceContexts": 2592,
+  "originalReferenceScope": "Separate complete source-route executions, not full game or identical owned test corpus",
+  "native": "UNRUN",
+  "remoteCI": "UNRUN; local unpublished source-export gate remains",
+  "failureHistory": {
+    "host1": "Rejected first input: ordinary fixture accidentally faction0 without counterpart. No production change; fixture corrected.",
+    "host2": "Same invalid fixture failure, fast wire-parser generation rather than unrelated digest calculation.",
+    "host3": "UBSan rejected probe-only unaligned typed alias reference before API entry. Alias addresses rounded to type alignment, production unchanged.",
+    "authoritative": "host4 + be1; added explicit CURRENT state/flags/fungus variation and turn boundaries; full prior failures retained."
+  },
+  "identity": {
+    "parent": "0020392d1f790f3cd4dd3d969ad27cc1fbe587b2",
+    "unchangedParentCppCount": 295,
+    "parentWorkflowCommands": 295,
+    "candidateWorkflowCommands": 297,
+    "changesToParentHeaders": "Friend CasualtyPlan only in OriginalWorld and VehicleRemovalPlan",
+    "workflowCountMethod": "run steps; entire parent workflow remains byte-identical prefix"
+  }
+}

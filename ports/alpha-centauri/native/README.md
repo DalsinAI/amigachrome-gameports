@@ -2209,3 +2209,5 @@ Owned conventional LAND engagement staging: see [LAND-ENGAGEMENT.md](LAND-ENGAGE
 Checked vehicle-removal storage is documented in [VEHICLE-REMOVAL.md](VEHICLE-REMOVAL.md). It updates caller-owned dense arrays and explicit runtime references only; World/session commits, full casualty effects, native execution and player actions remain held. Synthetic controls: `python3 test_vehicle_removal.py --out /tmp/alpha-removal-host` and independent `--cc m68k-linux-gnu-g++ --m68k-linux`.
 
 [WORLD-VEHICLE-REMOVAL.md](WORLD-VEHICLE-REMOVAL.md) documents current-frame ownership around checked removal. Caller/session commits, full casualty effects and variable-length persistence remain held. Controls: `python3 test_world_vehicle_removal.py --out /tmp/alpha-world-removal-host` and independent `--cc m68k-linux-gnu-g++ --m68k-linux`.
+
+[WORLD-CASUALTY.md](WORLD-CASUALTY.md) documents owned ordinary/native casualty deletion and copied caller pools. Artifact/interlude and caller/session/native/full-game gates remain held.
