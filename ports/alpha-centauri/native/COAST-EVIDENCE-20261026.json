@@ -1,0 +1,40 @@
+{
+  "scope": "Bounded owned World transition masks and caller-supplied coast pixel effect; not a complete world renderer.",
+  "worldMasks": {
+    "publicContexts": 216,
+    "originalTutorialContexts": 6912,
+    "valuesPerContext": 7,
+    "architectures": [
+      "ASan/UBSan host",
+      "independent Linux68040"
+    ],
+    "explicitDisplayedItemsRequired": true,
+    "sha256": "459d47c4b20bb94c59281512a722c649e85dc61041363edc260a8e10f85047a8"
+  },
+  "coast": {
+    "contexts": 90,
+    "pixels": 368640,
+    "aliasesOrBoundaries": 13,
+    "sha256": "625dbefa6752d69459cd4dc441d04bcc55f8457d37a3aa45e49b20f0f5494a67",
+    "originalHelpers": [
+      "0x61ead0",
+      "0x623f80"
+    ],
+    "architectures": [
+      "ASan/UBSan host",
+      "independent Linux68040"
+    ]
+  },
+  "native": "UNRUN; normal SDK compilation only",
+  "limits": [
+    "World visible-items resolution remains caller-supplied, not restored fog policy",
+    "Actual coast lookup palette, UV and secondary mask preparation are unbound",
+    "No coherent water/coast scene or frontend enabling",
+    "No physical OS buffer/helper import execution",
+    "No runtime allocation seed substituted"
+  ],
+  "failureHistory": [
+    "Initial masks roughness comparison reversed; corrected to neighbour roughness >= centre, then all original contexts matched",
+    "First public synthetic oracle wrote/read items at offset4 rather than8; corrected test data, host/BE final controls pass"
+  ]
+}

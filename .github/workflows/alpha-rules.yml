@@ -212,3 +212,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_ground_plate.py --out "$RUNNER_TEMP/terrain-ground-plate-host"
       - name: Coherent indexed ordinary ground plates independent big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_terrain_ground_plate.py --out "$RUNNER_TEMP/terrain-ground-plate-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original World neighbour masks host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_world_masks.py --out "$RUNNER_TEMP/terrain-world-masks-host"
+      - name: Original World neighbour masks independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_world_masks.py --out "$RUNNER_TEMP/terrain-world-masks-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Coast mask lookup fog and clipping host pixel controls
+        run: python3 ports/alpha-centauri/native/test_terrain_coast.py --out "$RUNNER_TEMP/terrain-coast-host"
+      - name: Coast mask lookup fog and clipping independent big-endian 68040 pixel controls
+        run: python3 ports/alpha-centauri/native/test_terrain_coast.py --out "$RUNNER_TEMP/terrain-coast-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

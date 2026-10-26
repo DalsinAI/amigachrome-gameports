@@ -1172,3 +1172,23 @@ toolchain overlays. Native CLI execution and integrated Explore UI validation
 are still pending while the user's live watch session owns the lab. This is
 not yet a verified visible/native colour fix, and does not restore original
 shadows, custom gamma, alternate system palettes, or additional unit profiles.
+
+### World transition masks and coast pixel stage (26 October)
+
+`world_terrain_masks` computes four three-bit coast sectors and eight-neighbour
+roughness/fungus/jungle masks from owned map records. The view supplies displayed
+centre items explicitly; missing context rejects transactionally. This is not a
+complete human-visibility/fog resolver. Roughness includes neighbours at least as
+rough as the centre, with original ocean and disabled-landmark rules.
+
+`draw_terrain_coast` draws four vertices using supplied primary/mask textures and
+lookup: zero preserves destination, one selects sampled texture plus signed
+light, and other values select a constant palette index. Fog stripes affect only
+nonzero lookup pixels. Unlike the ordinary triangle kernel, original coast light
+is not clamped to -4..4. Validation rejects source/output overlap and invalid
+sampled indices before writes. Caller ordering, palette/lookup generation,
+secondary coast material loading and complete water/coast scene assembly remain
+unbound. The two new tests run public synthetic fixtures on host and independent
+big-endian 68040; private original numeric/pixel controls are recorded in
+`COAST-EVIDENCE-20261026.json`. Normal SDK builds are available through the two
+new build scripts; actual AmigaOS execution and frontend integration are unrun.
