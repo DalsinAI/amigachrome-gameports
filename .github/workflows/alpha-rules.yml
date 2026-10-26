@@ -500,3 +500,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_terrain_defense.py --out "$RUNNER_TEMP/world-terrain-defense-host"
       - name: Owned terrain defence independent68040 controls
         run: python3 ports/alpha-centauri/native/test_world_terrain_defense.py --out "$RUNNER_TEMP/world-terrain-defense-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original base combat stage host controls
+        run: python3 ports/alpha-centauri/native/test_base_combat.py --out "$RUNNER_TEMP/base-combat-host"
+      - name: Original base combat stage independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_base_combat.py --out "$RUNNER_TEMP/base-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned base combat stage host controls
+        run: python3 ports/alpha-centauri/native/test_world_base_combat.py --out "$RUNNER_TEMP/world-base-combat-host"
+      - name: Owned base combat stage independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_base_combat.py --out "$RUNNER_TEMP/world-base-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

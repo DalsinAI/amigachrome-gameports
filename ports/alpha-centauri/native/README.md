@@ -2171,3 +2171,5 @@ psi, morale and physical-base dependencies. See [BASIC-COMBAT.md](BASIC-COMBAT.m
 for original/mod differences, supported domain and remaining real-battle gates.
 
 Original read-only terrain defence and its saved-world binding: see [TERRAIN-DEFENSE.md](TERRAIN-DEFENSE.md). Native execution remains unrun; no attack/player command is added.
+
+Original conventional base combat stage: [BASE-COMBAT.md](BASE-COMBAT.md). Read-only incoming-strength adjustment; final battle/damage/actions and native execution remain incomplete.
