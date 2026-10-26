@@ -2098,3 +2098,30 @@ python3 ports/alpha-centauri/native/test_local_unit_skip.py --out /tmp/skip-host
 python3 ports/alpha-centauri/native/test_local_unit_skip.py --out /tmp/skip-be --cc m68k-linux-gnu-g++ --m68k-linux
 CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_local_unit_skip_probe.sh /tmp/skip-native
 ```
+
+### Original unit readiness and boarding inspection
+
+`world_unit_readiness` implements the original `veh_ready` short circuits and
+`veh_jail` boarding restriction. The const session binding uses its file-derived
+human and privately parsed tables; production-only sessions cannot inspect this
+capability. Both flag40 and flag400 together block readiness. Standing orders1,
+2 or3 block it unless state200 or4000 permits evaluation. A ground unit ordered
+aboard an air carrier is jailed unless its tile has a physical base with low
+faction nibble1..7 or a physical airbase. Planet0 bases remain unsafe in the
+original; no co-location, carrier-ownership or territory filter is invented.
+Invalid carrier indices reject before access. Movement remaining is evaluated
+only after these gates: readiness requires checked current speed > moves_spent.
+
+The result explicitly marks whether speed was evaluated. The API is immutable;
+errors preserve output, and outputs cannot alias world/session/owned tables.
+It accepts only the inherited checked speed domain0..255 and parity-valid map
+coordinates. A ready result is not a command-completion acknowledgement, genuine
+readiness confirmation, End Turn permission, event delivery or phase authority.
+No player input or preview control is added. Actual rendering/audio/modal loops,
+AI/upkeep/turns, native execution and remote CI remain unqualified.
+
+```
+python3 ports/alpha-centauri/native/test_unit_readiness.py --out /tmp/ready-host
+python3 ports/alpha-centauri/native/test_unit_readiness.py --out /tmp/ready-be --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_unit_readiness_probe.sh /tmp/ready-native
+```

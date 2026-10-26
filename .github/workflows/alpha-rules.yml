@@ -448,3 +448,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_local_unit_skip.py --out "$RUNNER_TEMP/unit-skip-host"
       - name: Big-endian owned original unit skip
         run: python3 ports/alpha-centauri/native/test_local_unit_skip.py --out "$RUNNER_TEMP/unit-skip-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original unit readiness and boarding
+        run: python3 ports/alpha-centauri/native/test_unit_readiness.py --out "$RUNNER_TEMP/readiness-host"
+      - name: Big-endian original unit readiness and boarding
+        run: python3 ports/alpha-centauri/native/test_unit_readiness.py --out "$RUNNER_TEMP/readiness-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

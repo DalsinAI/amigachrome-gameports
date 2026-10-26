@@ -7,6 +7,7 @@
 #include "local_accounting.h"
 #include "local_workers.h"
 #include "local_unit_skip.h"
+#include "world_unit_readiness.h"
 namespace alpha {
 class LocalProductionSession;
 enum class LocalOrderError {ok,bad_state,bad_rules,bad_world,no_memory,not_human,not_owner,unavailable,
@@ -101,6 +102,7 @@ class LocalProductionSession {
   // means evaluated; StepResult may explicitly reject the move without writes.
   LocalOrderError prepare_clear_land_step(size_t vehicle,int32_t x,int32_t y,LocalStepCommand&)const;
   LocalOrderError commit_clear_land_step(const LocalStepCommand&,LocalStepReceipt&);
+  LocalOrderError unit_readiness(size_t,UnitReadiness&)const;
   LocalOrderError prepare_skip_unit(size_t,LocalSkipCommand&)const;
   LocalOrderError commit_skip_unit(const LocalSkipCommand&,LocalSkipReceipt&);
   void close();
