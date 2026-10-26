@@ -2193,3 +2193,5 @@ Owned artillery modifiers: see [WORLD-ARTILLERY-COMBAT.md](WORLD-ARTILLERY-COMBA
 Original psi ability phases: see [PSI-ABILITIES.md](PSI-ABILITIES.md); explicit early-offense/late-defense inputs, World/native/UI pending.
 
 Owned psi ability phases: see [WORLD-PSI-ABILITIES.md](WORLD-PSI-ABILITIES.md); actual component/grant/missile facts, separate early/late strengths, native/UI pending.
+
+Original airdrop/fanatic/faction/Planet combat phases: see [COMBAT-FACTIONS.md](COMBAT-FACTIONS.md); separate explicit numeric phase inputs, World/native/UI pending.
