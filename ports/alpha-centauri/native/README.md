@@ -1513,3 +1513,25 @@ record. The arithmetic prefix still computes max(supplied current accumulator,
 current base output); its future phase owner must perform that reset once, along
 with the other original faction-level initializations and effects. Earlier
 “historical peak” wording described the supplied accumulator too broadly.
+
+### Structural production queue iteration (local, unqualified on AmigaOS)
+
+`queue_shift` reproduces one original structural iteration before either real
+availability predicate. The saved `queue_size` counts waiting entries after the
+current item: supported sizes0..9 address ten stored slots. Size0 is unchanged.
+For positive size the old nonnegative unit ID's uint8 queue counter decrements
+with wraparound, items1..size move left, and size decrements. Remaining tail slots
+are preserved exactly. Old positive IDs outside0..511 and invalid sizes reject
+without changing output; negative IDs remain opaque and are never negated.
+
+This does not determine eligibility, retry unavailable candidates, invoke project
+speech/drawing, complete production or mutate an owned session/World. No player
+input invokes it. Actual original-code observations enter each queue routine and
+stop before the first availability branch for nonempty queues; empty queues use
+the actual normal return. Full current-base and all eight faction records match
+independent expected bytes in330 contexts per edition. Owned results match those
+observations on both host and independent68040 builds. Synthetic control suites
+cover21,724 cases including empty queues, counter underflow and malformed input.
+The normal SDK binary builds only; AmigaOS execution and full final-head CI remain
+unrun. Full queue advancement still requires real candidate admission and all
+source-backed completion effects.

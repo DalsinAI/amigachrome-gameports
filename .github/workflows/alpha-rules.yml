@@ -348,3 +348,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_facility_install_prefix.py --out "$RUNNER_TEMP/facility-install-prefix-host"
       - name: Big-endian ordinary facility install prefix
         run: python3 ports/alpha-centauri/native/test_facility_install_prefix.py --out "$RUNNER_TEMP/facility-install-prefix-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original queue structural shift
+        run: python3 ports/alpha-centauri/native/test_queue_shift.py --out "$RUNNER_TEMP/queue-shift-host"
+      - name: Big-endian original queue structural shift
+        run: python3 ports/alpha-centauri/native/test_queue_shift.py --out "$RUNNER_TEMP/queue-shift-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
