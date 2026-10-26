@@ -1893,3 +1893,48 @@ use `--cxx m68k-linux-gnu-g++ --runner qemu-m68k -cpu m68040` for independent
 big-endian execution. `build_repair_vehicle_probe.sh` builds with the normal Amiga
 SDK. Neither object compilation nor host/Linux execution qualifies AmigaOS. The
 candidate has no remote CI, PR, native execution or player input wiring.
+
+### Read-only owned-World repair binding (local qualification only)
+
+`world_repair_vehicle` derives the repair proposal from decoded current actors,
+designs, component tables, map tiles, bases, facilities, projects and technology
+owners. Its explicit phase and local faction arguments are query context, not
+turn authority; imported CurrentTurn only supplies the periodic flag arithmetic.
+Foreign actors preserve their complete record without evaluating unused design
+facts. Outputs cannot overlap the World, its owned buffers/records, or rule tables.
+
+The friendly-territory predicate is exactly positive owner==phase for the original
+`whose_territory(phase,x,y,null,0)` return test. The physical tile-base predicate
+remains distinct from `base_at`: a set base bit requires an actual matching base
+when healing reaches that lookup. Breed bonuses use the base OWNER and original
+physical facilities9/30/31/32 plus project indices8/16/31/17. Non-native physical
+repair facilities short-circuit the repair-project lookup as in the original.
+Negative project locations mean absent; inspected positive out-of-world locations
+reject. Cargo nonzero is equivalent to declared capacity nonzero even in native
+morale-expanded cargo cases. No occupancy approximation is used.
+
+When repair inspects a stack, links must be reciprocal, acyclic and coordinate
+consistent, and include every colocated actor. Broken stacks reject without fixup.
+Repair Bay0x200000 uses raw bits in SMAC and predefined designs. SMAX custom
+missing bits resolve FREEABIL21 through design-owner technology and the actual
+ability prerequisite. Raw-present bits retain their short-circuit. These helpers
+remain scoped to repair; this does not generalize unrelated ability queries.
+
+Local final host ASan/UBSan and independent Linux68040 checks pass293worlds,
+22,974queries (21,150accepted/1,824rejected),1,446healing attempts and6,442guards,
+including all3owner tutorials. Full decoded/opaque World state, current monument
+storage, rules, RNG and input files remain unchanged. Final output agrees across
+architectures. Additional private comparisons load384World fixtures reconstructed
+from archived actual original first-pass observations (192per edition); complete
+selected actor records match on both architectures. The irrelevant home-base
+field is normalized to-1 in both fixture/expected to satisfy World import bounds.
+Original helpers were not reexecuted for those binding comparisons. The archived
+observations stop before rendering; they do not qualify a complete repair phase.
+
+Run `python3 ports/alpha-centauri/native/test_world_repair_vehicle.py --out OUTPUT`;
+add `--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
+`build_world_repair_vehicle_probe.sh` uses the normal Amiga SDK. Fresh identical
+builds remain unexecuted on AmigaOS. No remote CI, PR, deployment, World mutation,
+faction ODP reset, event/render delivery, session/phase authority, movement refill,
+player End Turn or persistence is provided. Owning phase admission and ordered
+production-prefix/aggregate/debt dependencies still need implementation.
