@@ -22,5 +22,11 @@ struct HumanPruningResult {uint16_t flags[512];size_t changed;};
  */
 HumanPruningError world_human_component_pruning(const OriginalWorld&,Variant,const Rules&,
  const UnitDefinitions&,PruningRuntime,int32_t faction,int32_t selected_id,HumanPruningResult&);
+/* Same complete restricted human domain, virtualizing the genuine selected
+ * postconstruction/name-store record before ordered coverage. No World write.
+ * The selected candidate must be own/custom/active; all aliases reject. */
+HumanPruningError world_human_component_pruning_candidate(const OriginalWorld&,Variant,const Rules&,
+ const UnitDefinitions&,PruningRuntime,int32_t faction,int32_t selected_id,
+ const OriginalPrototype& candidate,HumanPruningResult&);
 }
 #endif
