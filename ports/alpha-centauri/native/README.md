@@ -1432,3 +1432,29 @@ and bitmask helpers, matched 5,120 base and 4,579 expansion contexts. Original
 executable bytes and all private reference material remain outside this tree.
 Normal Amiga SDK builds are compilation evidence only; AmigaOS execution and
 complete final-head CI remain unrun. No new frontend controls are exposed.
+
+
+The current-world human production cost query binds the separate pricing
+calculation to the owned save records. The producing base owner's pending
+Industry and saved human mask determine the original human mineral factor;
+planet size comes from the saved map settings. Unfinished custom prototypes use
+the design owner's difficulty and FREEPROTO flag, the no-abilities component
+base price, and the producing base's physical Skunkworks. Expansion predefined
+native prices use the producing base's physical Brood Pit. Already prototyped
+custom designs retain the original short circuit past unused component fields.
+
+Both original editions and SC/SAV versions7..12 are supported within this human
+pricing scope. Facility IDs, current rule costs and signed overflow are checked;
+negative facility costs are unsupported. Zero original mineral factors remain
+zero. AI cost factors and runtime edition conversion remain unsupported. Output
+overlapping the world or input tables rejects, and failures preserve output,
+world records, opaque bytes and runtime RNG. This query grants no build
+eligibility and performs no accrual, spending, creation, completion or turn.
+
+The exact original human-factor source and its controls are imported unchanged
+from the frozen factor candidate. Independent host and big-endian controls cover
+current-world prices and malformed/unused fields. Private bounded original
+human-factor and unit-price routines are exercised sequentially with facts from
+controlled worlds and the owner's three tutorials; complete original production
+or save fixup is not executed. Normal Amiga builds do not qualify AmigaOS
+execution. Full final-head CI and native frontend integration remain unrun.
