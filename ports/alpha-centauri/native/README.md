@@ -2028,3 +2028,7 @@ A future controlling engine must block exports while real events are pending.
 
 Explicit decoded loader repairs are documented in [LOAD-REPAIRS.md](LOAD-REPAIRS.md).
 They preserve raw import behavior and grant no turn authority or frontend action.
+
+The complete original deficit-energy convoy cancellation proposal is documented
+in [ENERGY-CONVOY-ORDERS.md](ENERGY-CONVOY-ORDERS.md). Its current-stage input
+and immutable output do not establish turn authority or a player action.
