@@ -424,3 +424,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_production_prefix.py --out "$RUNNER_TEMP/world-production-prefix-host"
       - name: Big-endian original world production prefix
         run: python3 ports/alpha-centauri/native/test_world_production_prefix.py --out "$RUNNER_TEMP/world-production-prefix-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host phase-field snapshot extension
+        run: python3 ports/alpha-centauri/native/test_phase_snapshot.py --out "$RUNNER_TEMP/phase-snapshot-host"
+      - name: Big-endian phase-field snapshot extension
+        run: python3 ports/alpha-centauri/native/test_phase_snapshot.py --out "$RUNNER_TEMP/phase-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -1984,3 +1984,44 @@ admission, event pump, player End Turn, discovery, AI or save claim. Post-base
 maintenance discounts, interest, first-turn free advances and sanctions events
 are outside this prefix. Real phase identity and ordered event/base execution
 remain required before exposing any turn advancement.
+
+### Phase-field persistence prerequisite (local qualification only)
+
+`encode_phase_snapshot` extends the frozen worker/action/accounting buffer codec
+with explicit social-upkeep, ODP and pre-base production faction fields. The
+allowlist is in `phase_faction_fields.inc`: current4social choices, paid upheaval,
+pending/active/temporary11effect arrays, credits/loan balances,5technology caches,
+ODP deployed, phase aggregates and social/nutrient/labs accumulators. Player
+flag0x20may clear; setting it or changing other player flags rejects. Pending
+social choices, base social modifiers, loan schedules, diplomacy, tech owners,
+prototypes, definitions, monuments and all metadata remain sealed. The previous
+full map/actor storage and worker/action/accounting structural scope is retained;
+serialization does not establish movement legality or phase authority.
+
+The encoder uses a private owned World projection to retain the entire frozen
+union validator. Only that local allocation is modified; caller state stays
+unchanged. Additional allocation is explicitly bounded by `max_clone_bytes`.
+Validation and allocation finish before caller output writes. Legacy faction
+fields at/after0x464shift4bytes (social arrays0x68cvs modern0x690); earlier fields
+including ODP0x364retain their offsets. All patches are explicit little-endian.
+Complete original opaque bytes/footer survive; runtime RNG remains a separate
+receipt. No native structure dump, filesystem protocol, atomic-file assumption,
+player save UI or original executable compatibility is claimed.
+
+Final host ASan/UBSan and independent Linux68040 tests agree across11Worlds,
+395controls:107exports,288rejections and31continued exports after reload. They
+include all3owner tutorials, versions7..12, empty Worlds, complete independent
+Python byte comparisons, reload/idempotence, inherited union composition,
+clear/set flag boundaries, output/receipt/storage/wrap aliases, short buffers,
+clone exact-budget success and one-byte-short failure. Frozen workers encoding
+still rejects the newly allowed faction deltas. The independent wire oracle is
+an explicit offset list, not generated from the C++ allowlist. Historical flag
+oracle failure is retained privately; corrected final host3/BE3 are authoritative.
+
+Run `test_phase_snapshot.py --out OUTPUT`; add
+`--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
+`build_phase_snapshot.sh` builds with the normal Amiga SDK; two fresh identical
+builds remain unexecuted on AmigaOS. No remote CI or PR is provided. This is a
+persistence prerequisite only: it does not implement an owning phase controller,
+commit social/repair/upkeep, admit a turn from a save, or enable player End Turn.
+A future controlling engine must block exports while real events are pending.
