@@ -30,5 +30,18 @@ struct HumanAllocationResult {
  * Every source signed32 intermediate is checked; failure/alias preserves output.
  */
 WorkerAllocationError human_worker_allocation(const HumanAllocationFacts&,HumanAllocationResult&);
+/* Ordered original leaf-call boundary for later owned-world replay. Candidate
+ * visits call nutrient/mineral/energy directly. Add/remove visits call resource
+ * channels0..3, including the channel3 scratch reset. A rejected swap emits
+ * remove-new/add-old too: restored intake does not erase those side effects.
+ * At most21 initial visits,21 scans of20 candidates,20 additions and4 swap
+ * visits fit512 entries. This records calls; it does not execute yield leaves.
+ * Failure preserves BOTH outputs. All three objects must be disjoint. */
+enum class AllocationVisitKind:uint32_t {candidate=0,add=1,remove=2};
+struct AllocationVisit {AllocationVisitKind kind;uint32_t tile;};
+constexpr size_t allocation_visit_capacity=512;
+struct HumanAllocationTrace {uint32_t count;AllocationVisit visits[allocation_visit_capacity];};
+WorkerAllocationError human_worker_allocation_traced(const HumanAllocationFacts&,
+ HumanAllocationResult&,HumanAllocationTrace&);
 }
 #endif

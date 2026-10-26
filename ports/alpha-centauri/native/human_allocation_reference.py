@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Independent integer model of the original directed-human selection branch."""
-def expected(row):
+def expected(row,visits=None):
+ if visits is None:visits=[]
  fail=lambda e:[e]+[0x5a5a5a5a]*10
  edition,profile,pop,req,support,item,special,worked,unavailable=row[:9];sat=row[9:12];packed=row[12:14];minimum=row[14];citizens=[row[15+4*i:19+4*i] for i in range(7)];tiles=[row[43+3*i:46+3*i] for i in range(21)]
  if profile:return fail(4)
@@ -13,6 +14,7 @@ def expected(row):
  try:
   remaining=pop+1;mask=0;total=sat[:];swapped=0
   def add(tile,sign=1):
+   visits.append((1 if sign==1 else 2,tile))
    for k in range(3):total[k]=check(total[k]+sign*tiles[tile][k])
   for tile in range(21):
    if tile==0 or worked&(~unavailable|1)&(1<<tile):
@@ -38,7 +40,7 @@ def expected(row):
     complete=remaining<=special;choices=[];current=[]
     for tile in range(1,21):
      if unavailable&(1<<tile) or (not complete and mask&(1<<tile)):continue
-     s=value(tile)
+     visits.append((0,tile));s=value(tile)
      if mask&(1<<tile):current.append((s,tile))
      else:choices.append((s,tile))
     best=max(choices,key=lambda v:(v[0],-v[1]),default=(0,0));best=best if best[0]>0 else (0,0)
@@ -46,7 +48,8 @@ def expected(row):
     if complete:
      if best[1]>0 and worst[1]>0 and worst[0]<best[0]:
       previous=total[:];add(worst[1],-1);add(best[1])
-      if total[0]<check((pop+1)*req):total[:]=previous
+      if total[0]<check((pop+1)*req):
+       visits.extend([(2,best[1]),(1,worst[1])]);total[:]=previous
       else:mask=(mask&~(1<<worst[1]))|(1<<best[1]);swapped=1
      break
     if not best[1]:break

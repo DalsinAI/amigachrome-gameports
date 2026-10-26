@@ -1331,3 +1331,25 @@ helpers. Those observations do not independently qualify the transient current
 scratch page or a full original energy/psych/turn pipeline. No World/session
 allocation commit, worker persistence extension, player input, full governor,
 upkeep/AI/game or actual AmigaOS execution is supplied by this component.
+
+### Human worker yield-call sequence (local qualification)
+
+`human_worker_allocation_traced` returns the same selection proposal plus a
+bounded ordered record of candidate/add/remove tile visits. Candidate visits
+represent direct nutrient/mineral/energy calls; add/remove visits represent
+resource channels 0 through 3, including the scratch reset. Rejected exchanges
+retain the remove-new/add-old visits even though their intake change is reversed.
+Both outputs remain unchanged on invalid facts, overflow or overlapping storage.
+The original untraced API keeps its existing behavior.
+
+The trace controls execute 2,424 synthetic cases on the host and independent
+Linux m68040, including 162 rejected exchanges. Private complete original helper
+runs also compare externally logged yield-function entry order and final scratch
+words. Function order is observed directly; tile ordinals and add/remove direction
+are checked against the independent selector model and final state, without
+claiming that original stack arguments were observed. This boundary does not yet
+bind world facts, execute yield leaves, change workers, persist assignments,
+advance a turn, or qualify an AmigaOS executable. The complete workflow and
+native execution remain unrun. Build the isolated native trace probe with
+`build_human_allocation_trace_probe.sh`; run public controls with
+`test_human_allocation_trace.py`.

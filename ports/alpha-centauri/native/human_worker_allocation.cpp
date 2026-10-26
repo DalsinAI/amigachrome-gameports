@@ -32,7 +32,7 @@ int32_t score(const HumanAllocationFacts& f,const int32_t totals[3],int32_t rema
  return a.add(a.add(ns,ms),es);
 }
 }
-WorkerAllocationError human_worker_allocation(const HumanAllocationFacts& f,HumanAllocationResult& output){
+static WorkerAllocationError allocate(const HumanAllocationFacts& f,HumanAllocationResult& output,HumanAllocationTrace* trace){
  if(overlap(&f,sizeof f,&output,sizeof output))return WorkerAllocationError::bad_buffer;
  if(f.profile!=HumanAllocationProfile::directed_no_governor_priorities)return WorkerAllocationError::unsupported;
  if((f.variant!=Variant::base&&f.variant!=Variant::alien_crossfire)||f.population<0||f.population>127||f.requirement<1||f.requirement>99||
@@ -40,17 +40,18 @@ WorkerAllocationError human_worker_allocation(const HumanAllocationFacts& f,Huma
     bits(f.worked)+(unsigned)f.specialists>(unsigned)f.population+1||f.minimum_specialist_size<0)return WorkerAllocationError::bad_state;
  for(auto x:f.satellites)if(x<0||x>f.population)return WorkerAllocationError::bad_state;
  for(const auto&c:f.citizens)if(c.available>1)return WorkerAllocationError::bad_state;
- Arithmetic a;HumanAllocationResult next{};for(unsigned k=0;k<3;++k)next.intake[k]=f.satellites[k];
+ Arithmetic a;HumanAllocationResult next{};
+ auto visit=[&](AllocationVisitKind kind,unsigned tile){if(trace){if(trace->count>=allocation_visit_capacity){a.ok=false;return;}trace->visits[trace->count++]={kind,tile};}};for(unsigned k=0;k<3;++k)next.intake[k]=f.satellites[k];
  next.specialist_types[0]=f.specialist_types[0];next.specialist_types[1]=f.specialist_types[1];
  const uint32_t initial=f.worked&(~f.unavailable|1u);int32_t remaining=f.population+1;
- auto apply=[&](unsigned at,bool remove){for(unsigned k=0;k<3;++k)next.intake[k]=remove?a.sub(next.intake[k],f.yields[at][k]):a.add(next.intake[k],f.yields[at][k]);};
+ auto apply=[&](unsigned at,bool remove){visit(remove?AllocationVisitKind::remove:AllocationVisitKind::add,at);for(unsigned k=0;k<3;++k)next.intake[k]=remove?a.sub(next.intake[k],f.yields[at][k]):a.add(next.intake[k],f.yields[at][k]);};
  for(unsigned i=0;i<21;++i)if(!i||(initial&(1u<<i))){next.worked|=1u<<i;apply(i,false);if(--remaining==0)break;}
  if(remaining!=f.specialists){
   do {
    const bool complete=remaining<=f.specialists;int32_t best=0,worst=9999;unsigned best_id=0;int32_t worst_id=-1;
    const uint32_t excluded=complete?0:next.worked;
    for(unsigned i=1;i<21;++i)if(!((excluded|f.unavailable)&(1u<<i))){
-    const int32_t value=score(f,next.intake,remaining,i,a);
+    visit(AllocationVisitKind::candidate,i);const int32_t value=score(f,next.intake,remaining,i,a);
     if(!(next.worked&(1u<<i))){if(value>best){best=value;best_id=i;}}
     else if(value<worst){worst=value;worst_id=(int32_t)i;}
    }
@@ -59,7 +60,7 @@ WorkerAllocationError human_worker_allocation(const HumanAllocationFacts& f,Huma
     if(best_id&&worst_id>0&&worst<best){
      const int32_t before[3]={next.intake[0],next.intake[1],next.intake[2]};
      apply((unsigned)worst_id,true);apply(best_id,false);
-     if(next.intake[0]<a.mul(f.population+1,f.requirement)){for(unsigned k=0;k<3;++k)next.intake[k]=before[k];}
+     if(next.intake[0]<a.mul(f.population+1,f.requirement)){visit(AllocationVisitKind::remove,best_id);visit(AllocationVisitKind::add,(unsigned)worst_id);for(unsigned k=0;k<3;++k)next.intake[k]=before[k];}
      else{next.worked=(next.worked&~(1u<<(unsigned)worst_id))|(1u<<best_id);next.exchanged=true;}
     }break;
    }
@@ -79,5 +80,12 @@ WorkerAllocationError human_worker_allocation(const HumanAllocationFacts& f,Huma
  next.specialists=remaining;next.adjustment=0;next.food_deficit=next.intake[0]<a.mul(f.population,f.requirement);
  if(!a.ok)return WorkerAllocationError::overflow;
  output=next;return WorkerAllocationError::ok;
+}
+WorkerAllocationError human_worker_allocation(const HumanAllocationFacts& f,HumanAllocationResult& output){return allocate(f,output,nullptr);}
+WorkerAllocationError human_worker_allocation_traced(const HumanAllocationFacts& f,HumanAllocationResult& output,HumanAllocationTrace& trace){
+ if(overlap(&f,sizeof f,&output,sizeof output)||overlap(&f,sizeof f,&trace,sizeof trace)||overlap(&output,sizeof output,&trace,sizeof trace))return WorkerAllocationError::bad_buffer;
+ HumanAllocationResult result{};HumanAllocationTrace visits{};
+ const auto error=allocate(f,result,&visits);if(error!=WorkerAllocationError::ok)return error;
+ output=result;trace=visits;return WorkerAllocationError::ok;
 }
 }

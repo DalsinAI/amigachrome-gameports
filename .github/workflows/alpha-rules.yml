@@ -304,3 +304,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_human_worker_allocation.py --out "$RUNNER_TEMP/human-worker-allocation-host"
       - name: Big-endian original human worker allocation controls
         run: python3 ports/alpha-centauri/native/test_human_worker_allocation.py --out "$RUNNER_TEMP/human-worker-allocation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Human worker leaf sequence host
+        run: python3 ports/alpha-centauri/native/test_human_allocation_trace.py --out "$RUNNER_TEMP/human-allocation-trace-host"
+      - name: Human worker leaf sequence m68040
+        run: python3 ports/alpha-centauri/native/test_human_allocation_trace.py --out "$RUNNER_TEMP/human-allocation-trace-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
