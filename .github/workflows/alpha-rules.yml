@@ -240,3 +240,5 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_base_accounting.py --out "$RUNNER_TEMP/world-base-accounting-host"
       - name: Original world-derived nutrient and mineral cost factors
         run: python3 ports/alpha-centauri/native/test_cost_factor.py --out "$RUNNER_TEMP/cost-factor-host"
+      - name: Fresh support and cost factors into staged construction
+        run: python3 ports/alpha-centauri/native/test_fresh_facility_materials.py --out "$RUNNER_TEMP/fresh-facility-materials-host"

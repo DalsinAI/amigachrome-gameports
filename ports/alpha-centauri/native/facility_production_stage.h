@@ -5,6 +5,7 @@
 #include "original_world.h"
 #include "rules_text.h"
 namespace alpha {
+struct StableIntakeStage;
 struct FreshFacilityMinerals {int32_t intake,surplus,cost_factor;};
 struct FacilityStageReceipt {
  int32_t base,facility,before;
@@ -30,6 +31,18 @@ class FacilityProductionStage {
   FacilityProductionStage(const FacilityProductionStage&)=delete;
   FacilityProductionStage& operator=(const FacilityProductionStage&)=delete;
   FacilityProductionError apply(size_t base,const FreshFacilityMinerals&,FacilityStageReceipt&);
+  /* Closes only the mineral-material freshness boundary: derive current unit
+   * support, convoys/worked-tile mineral output and the actual world cost factor
+   * immediately before applying this stage to its borrowed live world. Never
+   * reads saved intake/surplus as fresh material input or accepts caller-supplied
+   * mineral totals/factor. Qualified matching definitions/rules and the explicit
+   * inspection-stage context remain required. Projected support flags are not
+   * applied. This does not establish fresh starvation/riot state, persistent
+   * upkeep/turn authority or a live player action. Original factor0 rejects as
+   * unsupported here, without substituting another cost.
+   */
+  FacilityProductionError apply_fresh_materials(size_t base,const UnitDefinitions&,
+   const WorldRules&,const ResourceInfo&,const StableIntakeStage&,FacilityStageReceipt&);
  private:
   OriginalWorld& world_;
   const Rules& technologies_;

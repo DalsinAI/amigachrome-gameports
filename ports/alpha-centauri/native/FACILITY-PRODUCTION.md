@@ -8,6 +8,9 @@ Thinker `base.cpp::mod_base_production`, pinned at
 complete queue/set-facility routines informed the boundary, but do not supply
 a recovered complete original production routine.
 
+For a world-derived material budget and cost factor, use the separate
+`apply_fresh_materials` bridge described in `FRESH-FACILITY-MATERIALS.md`.
+
 `FacilityProductionStage` accepts only base-game Creche2 and Recycling Tanks3.
 It retains the existing current-human, base-owner, actual technology/facility
 availability and single-slot queue gates. Active governors, network-locked
