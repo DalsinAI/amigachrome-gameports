@@ -26,7 +26,8 @@ struct WorldEnergyResult {
  * explicitly use current first energy fields and fresh all-faction technology
  * bonuses, preserving original stage ordering instead of recomputing all ranks.
  * Upkeep projection/snapshot/transient inputs/alien scratch policy are explicit.
- * Inherited fresh resources currently reject specialists, governor allocation,
+ * Fresh resources retain coherent current human specialists with adjustment0;
+ * they reject required reassignment, governor allocation,
  * unavailable workers and unsupported stages; no replacement/fallback occurs.
  * All tables must be qualified from one same-edition rules input. Proposal
  * only: no authority, mutation, accounting commit, turn, UI or persistence.

@@ -62,7 +62,8 @@ def model(variant,text,data,mode=0,expansion_enabled=False,reduction_before=None
  if not nb:return fail(1)
  b=spans['bases'][:bs];x,y=struct.unpack_from('<hh',b);faction=owner(0);pop=struct.unpack_from('<b',b,6)[0];worked=struct.unpack_from('<I',b,0x78)[0];gov=struct.unpack_from('<I',b,0x38)[0]
  if not pref('FactionStatus')&(1<<faction) or gov&0x80000040==0x80000040:return fail(3)
- if struct.unpack_from('<i',b,0x7c)[0] or not worked&1 or worked&~0x1fffff or worked.bit_count()!=pop+1:return fail(4)
+ specialists,adjust=struct.unpack_from('<ii',b,0x7c)
+ if not 0<=specialists<=pop or (specialists and adjust) or not worked&1 or worked&~0x1fffff or worked.bit_count()+specialists!=pop+1:return fail(4)
  radius=radius_expected(data)
  if radius[0]:return fail(5 if radius[0]==3 else 1)
  if worked&radius[1]&~1:return fail(4)

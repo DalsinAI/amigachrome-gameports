@@ -22,13 +22,15 @@ struct StableIntakeResult {
  int32_t tile_yields[21][3];
 };
 /* Fresh intake proposal for an already valid directed-human worked mask:
- * exactly population+1 selected first21 tiles including centre, no specialists,
+ * exactly population+1-specialist_total selected first21 tiles including centre,
+ * with coherent existing specialists (0..population, positive count requires
+ * adjustment0),
  * no automatic governor and no selected unavailable non-centre tile.
  * Fungus uses complete fresh technology effects, never saved cache values.
  * This queries actual satellite counts/projects, tile yields and raw ecology;
  * never recycles saved intake/damage. Explicit transient scratch/branch facts
  * are supplied by the caller, not inferred from the saved container.
- * No world/authority/worker reassignment/upkeep/turn/persistence/UI mutation.
+ * No specialist selection/worker reassignment, world/authority/upkeep/turn/persistence/UI mutation.
  * All inputs/output must be disjoint; failure leaves output unchanged.
  */
 StableIntakeError world_stable_intake(const OriginalWorld&,const Rules&,

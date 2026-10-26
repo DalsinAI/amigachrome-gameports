@@ -296,3 +296,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_local_accounting_snapshot.py --out "$RUNNER_TEMP/accounting-snapshot-host"
       - name: Big-endian accounting union snapshot controls
         run: python3 ports/alpha-centauri/native/test_local_accounting_snapshot.py --out "$RUNNER_TEMP/accounting-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host stable specialist accounting transactions
+        run: python3 ports/alpha-centauri/native/test_stable_specialist_accounting.py --out "$RUNNER_TEMP/specialist-accounting-host"
+      - name: Big-endian stable specialist accounting transactions
+        run: python3 ports/alpha-centauri/native/test_stable_specialist_accounting.py --out "$RUNNER_TEMP/specialist-accounting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

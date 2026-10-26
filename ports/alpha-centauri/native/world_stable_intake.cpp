@@ -25,7 +25,12 @@ StableIntakeError world_stable_intake(const OriginalWorld&w,const Rules&t,const 
  const auto&g=w.game();const int32_t faction=base->faction_id;
  if(!(g.preferences.FactionStatus[0]&(1u<<(unsigned)faction)) || (((uint32_t)base->governor_flags&0x80000040u)==0x80000040u))return StableIntakeError::unsupported_stage;
  const uint32_t worked=(uint32_t)base->worked_tiles;
- if(base->specialist_total!=0 || !(worked&1u) || (worked&~0x1fffffu) || popcount(worked)!=(unsigned)base->pop_size+1)return StableIntakeError::needs_allocation;
+ // Directed-human original path preserves a coherent existing specialist
+ // arrangement. Nonzero adjustment requires separate prefix/state handling.
+ const int32_t specialists=base->specialist_total;
+ if(specialists<0 || specialists>base->pop_size || (specialists && base->specialist_adjust!=0) ||
+    !(worked&1u) || (worked&~0x1fffffu) ||
+    popcount(worked)+(unsigned)specialists!=(unsigned)base->pop_size+1)return StableIntakeError::needs_allocation;
  WorkerRadiusResult radius{};const auto availability=world_worker_radius(w,id,stage.worker,radius);
  if(availability==WorkerRadiusError::bad_stack)return StableIntakeError::bad_stack;
  if(availability==WorkerRadiusError::out_of_memory)return StableIntakeError::out_of_memory;

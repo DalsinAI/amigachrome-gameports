@@ -1262,7 +1262,8 @@ fields, food sign normalization, ecological damage and happiness, while preservi
 first intake fields used by the explicitly selected commerce phase. It does not
 apply faction turn totals, projections, support actor flags, worker reassignment,
 production completion, growth, research awards or turn progression. The inherited
-stable worker domain still rejects specialists and governor allocation. An explicit
+stable worker domain accepts coherent existing human specialists with adjustment0,
+and still rejects arrangements needing reassignment and automatic governors. An explicit
 alien scratch policy remains required; the default rejects undefined original
 paths, with no implicit zero-initialization policy selected by this session.
 
@@ -1275,3 +1276,24 @@ Runtime RNG is returned separately from the unchanged footer tick. This supplies
 neither a filesystem save protocol nor evidence that the original executable can
 resume the encoded container. Changed binaries still require actual AmigaOS
 execution and normal exit before deployment or any native qualification claim.
+
+
+### Existing directed-human specialists (local candidate, native held)
+
+Fresh intake now accepts the original stable arrangement when selected first21
+worker tiles include the centre, all selected non-centre tiles are available,
+and worker count plus specialist count equals population plus one. Specialist
+count must be within0..population; a positive count requires adjustment0. This
+preserves an existing arrangement and does not choose workers or turn governor
+allocation into a successful fallback.
+
+Private unchanged full original base_yield execution in both editions confirms
+this path, including populations through127, centre-only arrangements, up to21
+workers, and positive specialists above16. Every seeded global and base byte is
+compared against the independent intake model; packed specialist types remain
+unchanged. The owned full energy path separately validates and computes actual
+specialist spending/obsolete replacement, and the existing session snapshot
+persists its packed fields. The dedicated specialist transaction controls cover
+fresh resources through income/happiness, stale-plan gates and full-container
+reload against the independent wire models. Actual AmigaOS execution remains
+unrun. Automatic worker reassignment, AI and complete turns remain unfinished.
