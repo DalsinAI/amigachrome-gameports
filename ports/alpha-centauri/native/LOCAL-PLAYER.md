@@ -27,6 +27,10 @@ until that gate passes. The draft
 - **B** selects a base; **P** opens/cycles eligible facility proposals. The modal
   shows the target and minerals before/after including switching loss.
   **ENTER** commits the bound proposal; **ESC** cancels it.
+- **F** opens a fresh base resource forecast from current worked tiles and
+  supported units; **ESC** closes it. Food and mineral figures include their
+  current consumption. Energy is explicitly before trade. The forecast does
+  not add resources, change unit flags or mark the session dirty.
 - **V** creates a fresh `PROGDIR:AlphaLocal-...` directory and writes
   `session.aclocal`. **R** reopens the last successful save in this view.
   To reopen a checkpoint after restarting, use **L** and select that file.

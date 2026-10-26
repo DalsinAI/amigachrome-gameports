@@ -11,6 +11,7 @@
 #include "cvr_infantry.h"
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
 #include "local_player.h"
+#include "world_base_accounting.h"
 #include <proto/dos.h>
 #include <dos/dos.h>
 #endif
@@ -50,8 +51,12 @@ static alpha::LocalPlayer player;
 static uint8_t* player_rules;static size_t player_rules_length;
 static char last_checkpoint[256];static char discard_pending=0;
 static alpha::FacilityDefinitions facility_labels;
+static alpha::ResourceInfo forecast_resources;
+static alpha::WorldAccountingResult forecast;
+static bool forecast_resources_ready=false,forecast_open=false;
+static size_t forecast_base=0;
 struct PlayerViewScope {
- ~PlayerViewScope(){player.close();visible_world=&preview_world;local_enabled=false;free(player_rules);player_rules=nullptr;player_rules_length=0;}
+ ~PlayerViewScope(){forecast_open=false;forecast_resources_ready=false;player.close();visible_world=&preview_world;local_enabled=false;free(player_rules);player_rules=nullptr;player_rules_length=0;}
 };
 #endif
 static alpha::PcxImage terrain,sprites,faction_images[8];
@@ -179,6 +184,53 @@ static void draw_base_details(struct Window* window){
  printf("BASE SNAPSHOT index=%lu pop=%d nutrients=%ld minerals=%ld intake=%ld,%ld,%ld surplus=%ld,%ld,%ld\n",(unsigned long)selected_base,b.pop_size,(long)b.nutrients_accumulated,(long)b.minerals_accumulated,(long)b.nutrient_intake,(long)b.mineral_intake,(long)b.energy_intake,(long)b.nutrient_surplus,(long)b.mineral_surplus,(long)b.energy_surplus);fflush(stdout);
 }
 
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+static void open_forecast(){
+ forecast_open=false;
+ if(player.proposal()){snprintf(action_status,sizeof(action_status),"Confirm or cancel the facility order before opening the forecast.");return;}
+ const auto* current=player.world();
+ const auto* base=current?current->base(selected_base):nullptr;
+ if(!current || !base || base->faction_id!=current->game().player){snprintf(action_status,sizeof(action_status),"Choose one of your bases to see its forecast.");return;}
+ if(!forecast_resources_ready){snprintf(action_status,sizeof(action_status),"The original resource rules could not be read.");return;}
+ const size_t count=current->game().vehicle_count;
+ if(count>SIZE_MAX/sizeof(uint32_t)){snprintf(action_status,sizeof(action_status),"This world is too large for the resource forecast.");return;}
+ auto* states=count?(uint32_t*)malloc(count*sizeof(uint32_t)):nullptr;
+ if(count && !states){snprintf(action_status,sizeof(action_status),"Not enough memory for the resource forecast.");return;}
+ const alpha::WorldAccountingStage stage{{alpha::Variant::base,false,false,{0,false},0,0},0,0};
+ alpha::WorldAccountingResult next{};const bool was_dirty=player.dirty();
+ const auto error=alpha::world_base_accounting(*current,technologies,definitions,basic,world_rules,forecast_resources,selected_base,stage,next,states,count);
+ free(states);
+ if(error!=alpha::StableIntakeError::ok){
+  const char* message="Forecast unavailable for this base.";
+  if(error==alpha::StableIntakeError::needs_allocation)message="This base needs worker reassignment before its resources can be forecast.";
+  else if(error==alpha::StableIntakeError::unsupported_stage)message="Forecast unavailable for this base's current management.";
+  else if(error==alpha::StableIntakeError::out_of_memory)message="Not enough memory for the resource forecast.";
+  else if(error==alpha::StableIntakeError::overflow)message="Forecast values exceed the supported range.";
+  snprintf(action_status,sizeof(action_status),"%s",message);
+  printf("RESOURCE FORECAST base=%lu error=%u dirty_before=%d dirty_after=%d\n",(unsigned long)selected_base,(unsigned)error,was_dirty,player.dirty());fflush(stdout);return;
+ }
+ forecast=next;forecast_base=selected_base;forecast_open=true;base_open=false;
+ snprintf(action_status,sizeof(action_status),"Base resource forecast. F recalculates; ESC closes. Resources have not been added.");
+ printf("RESOURCE FORECAST base=%lu support=%ld food=%ld,%ld minerals=%ld,%ld energy_before_trade=%ld dirty_before=%d dirty_after=%d\n",
+  (unsigned long)forecast_base,(long)forecast.support.mineral_cost,(long)forecast.nutrient.intake,(long)forecast.nutrient.surplus,
+  (long)forecast.mineral.minerals.intake,(long)forecast.mineral.minerals.surplus,(long)forecast.energy.accounting.surplus,was_dirty,player.dirty());fflush(stdout);
+}
+static void draw_forecast(struct Window* window){
+ if(!local_enabled || !forecast_open || forecast_base!=selected_base)return;
+ const auto* current=player.world();const auto* base=current?current->base(forecast_base):nullptr;if(!base)return;
+ auto* rp=window->RPort;FillPixelArray(rp,104,120,744,398,0x00071316u);char line[180];
+ ui_text.draw(rp,128,160,"BASE RESOURCE FORECAST",660,true,alpha::UiInk::title);
+ ui_text.draw(rp,128,192,base->name,660,true,alpha::UiInk::value);
+ ui_text.draw(rp,128,220,"Calculated from current worked tiles and units.",660);
+ snprintf(line,sizeof(line),"Food: intake %ld   |   used %ld   |   net %+ld",(long)forecast.nutrient.intake,(long)forecast.nutrient.consumption,(long)forecast.nutrient.surplus);ui_text.draw(rp,128,264,line,660);
+ snprintf(line,sizeof(line),"Minerals: gross %ld   |   unit upkeep %ld   |   net %+ld",(long)forecast.mineral.minerals.intake,(long)forecast.support.mineral_cost,(long)forecast.mineral.minerals.surplus);ui_text.draw(rp,128,304,line,660);
+ snprintf(line,sizeof(line),"Energy before trade: net %+ld",(long)forecast.energy.accounting.surplus);ui_text.draw(rp,128,352,line,660,false,alpha::UiInk::value);
+ snprintf(line,sizeof(line),"Energy intake %ld   |   loss %ld   |   exports %ld",(long)forecast.energy.accounting.intake,(long)forecast.energy.accounting.inefficiency,(long)forecast.energy.accounting.consumption);ui_text.draw(rp,128,380,line,660);
+ if(forecast.mineral.convoys.from[1]){snprintf(line,sizeof(line),"Mineral exports: %ld",(long)forecast.mineral.convoys.from[1]);ui_text.draw(rp,128,412,line,660);}
+ ui_text.draw(rp,128,446,"Forecast only; resources have not been added.",660);
+ ui_text.draw(rp,128,482,"ESC: close   |   F: recalculate",660);
+}
+#endif
 static void text(struct RastPort* rp,int x,int y,const char* s){if(x>=0 && x<W)ui_text.draw(rp,x,y,s,W-x);}
 static void draw(struct Window* window){
  for(size_t i=0;i<(size_t)W*H;++i){frame[3*i]=6;frame[3*i+1]=15;frame[3*i+2]=24;}
@@ -214,7 +266,7 @@ static void draw(struct Window* window){
  FillPixelArray(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-window->BorderLeft,64-window->BorderTop,0x00071316u);FillPixelArray(rp,window->BorderLeft,554,window->Width-window->BorderRight-window->BorderLeft,window->Height-window->BorderBottom-554,0x00071316u);
  SetAPen(rp,1);SetBPen(rp,0);SetDrMd(rp,JAM2);char line[180];
  snprintf(line,sizeof(line),"%.64s | Turn %ld | %lu x %lu | %lu units, %lu bases",source_label,(long)world().game().preferences.CurrentTurn,(unsigned long)world().game().map.info.width,(unsigned long)world().game().map.info.height,(unsigned long)world().game().vehicle_count,(unsigned long)world().game().base_count);text(rp,15,42,line);
- text(rp,15,62,local_enabled?"Local action preview | Keypad: move | P: production | V: save | R: reload | End Turn unavailable":"Read-only original world | Basic infantry CVR profile; other models pending | WASD scroll | TAB select | +/- zoom | Q quit");
+ text(rp,15,62,local_enabled?"Local actions | Keypad: move | P: production | F: forecast | V: save | R: reload | No End Turn":"Read-only original world | Basic infantry CVR profile; other models pending | WASD scroll | TAB select | +/- zoom | Q quit");
  for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);int sx,sy;if(position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){snprintf(line,sizeof(line),"[Base] %.24s",b.name);ui_text.draw(rp,12+sx-24,70+sy+24,line,W-(12+sx-24),false,alpha::UiInk::map_label);}}
  for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);int sx,sy;if(!position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
   const auto& p=*world().prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || infantry_profile(v);
@@ -222,6 +274,9 @@ static void draw(struct Window* window){
   if(i==selected){Move(rp,12+sx,70+sy-14);Draw(rp,12+sx+29,70+sy);Draw(rp,12+sx,70+sy+14);Draw(rp,12+sx-29,70+sy);Draw(rp,12+sx,70+sy-14);}
  }
  draw_hud(window);draw_base_details(window);
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+ draw_forecast(window);
+#endif
  printf("DRAW selected=%lu camera=%d,%d zoom=%d\n",(unsigned long)selected,camera_x,camera_y,zoom);fflush(stdout);
 }
 
@@ -247,6 +302,9 @@ static void save_local(){
 }
 static bool local_key(UWORD code){
  if(!local_enabled)return false;
+ if(code=='f' || code=='F'){discard_pending=0;open_forecast();return true;}
+ if(code==27 && forecast_open){forecast_open=false;snprintf(action_status,sizeof(action_status),"Resource forecast closed. F opens it again.");return true;}
+ forecast_open=false;
  if(code=='v' || code=='V'){save_local();return true;}
  if(code=='r' || code=='R'){
   if(!last_checkpoint[0]){snprintf(action_status,sizeof(action_status),"No checkpoint saved in this session. Open an earlier checkpoint from the menu.");return true;}
@@ -277,6 +335,7 @@ int alpha_original_view(int argc,char** argv){
  local_enabled=false;visible_world=&preview_world;action_status[0]=0;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  PlayerViewScope player_scope;
+ forecast_open=false;forecast_resources_ready=false;
  player.close();free(player_rules);player_rules=nullptr;player_rules_length=0;last_checkpoint[0]=0;discard_pending=false;
  if(argc==7){
   if(strcmp(argv[6],"--local") || strcmp(argv[1],"base"))return 20;
@@ -286,13 +345,17 @@ int alpha_original_view(int argc,char** argv){
   free(save);
   if(e!=alpha::LocalOrderError::ok){printf("LOCAL LOAD %s\n",alpha::local_order_error_name(e));free(rules);return 20;}
   player_rules=rules;player_rules_length=rn;local_enabled=true;visible_world=player.world();
-  snprintf(action_status,sizeof(action_status),"Local actions: keypad moves; P facility; ENTER confirm; V save; R reload last save.");
+  snprintf(action_status,sizeof(action_status),"Local actions: keypad moves; P facility; ENTER confirm; F forecast; V save; R reload last save.");
  }
 #else
  if(argc==7)return 20;
 #endif
  size_t n;auto* p=read_file(argv[2],n);if(!p)return 20;auto variant=strcmp(argv[1],"base")==0?alpha::Variant::base:alpha::Variant::alien_crossfire;
- bool ok=alpha::read_technologies(p,n,technologies)==alpha::Error::ok && alpha::read_unit_definitions(p,n,technologies,variant,definitions)==alpha::Error::ok && alpha::read_basic_rules(p,n,technologies,variant,basic,world_rules)==alpha::Error::ok;free(p);if(!ok)return 20;
+ bool ok=alpha::read_technologies(p,n,technologies)==alpha::Error::ok && alpha::read_unit_definitions(p,n,technologies,variant,definitions)==alpha::Error::ok && alpha::read_basic_rules(p,n,technologies,variant,basic,world_rules)==alpha::Error::ok;
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+ if(local_enabled)forecast_resources_ready=alpha::read_resource_info(p,n,forecast_resources)==alpha::Error::ok;
+#endif
+ free(p);if(!ok)return 20;
  if(!local_enabled){p=read_file(argv[3],n);if(!p)return 20;ok=preview_world.load(p,n,0x12345678u)==alpha::WorldLoadError::ok;free(p);if(!ok || (world().game().data_version<11)!=(variant==alpha::Variant::base))return 20;}
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  if(local_enabled && alpha::read_facility_definitions(player_rules,player_rules_length,technologies,alpha::Variant::base,facility_labels)!=alpha::Error::ok)return 20;
@@ -334,7 +397,7 @@ int alpha_original_view(int argc,char** argv){
    else if(kind==IDCMP_REFRESHWINDOW){BeginRefresh(window);draw(window);EndRefresh(window,TRUE);}
    else if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
-    discard_pending=0;
+    discard_pending=0;forecast_open=false;
 #endif
     if(mouse_x>=12+HUD_X+563 && mouse_x<12+HUD_X+787 && mouse_y>=HUD_Y+52 && mouse_y<HUD_Y+226){camera_x=(int)((uint32_t)(mouse_x-12-HUD_X-563)*world().game().map.info.width/224);camera_y=(int)((uint32_t)(mouse_y-HUD_Y-52)*world().game().map.info.height/174);}
     else for(size_t i=0;i<world().game().base_count;++i){int x,y;const auto&b=*world().base(i);if(position(b.x,b.y,x,y) && abs(mouse_x-12-x)<24*zoom && abs(mouse_y-70-y)<24*zoom){selected_base=i;base_open=true;

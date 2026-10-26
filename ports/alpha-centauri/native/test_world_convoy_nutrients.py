@@ -45,9 +45,12 @@ def flow_model(variant,text,data,mode=0):
    if items&1 and sq[2]&15<8:fr[channel]+=1;continue
    harvesters+=1
    if channel==3:reduction=0;continue
-   if items&0x20:return 3,None
    # Independently reconstruct the controlled plain/forest fixture leaf facts.
    row=[0]*59;row[0]=int(variant=='expansion');row[1]=sq[0];row[2]=sq[2];row[4]=items;row[11:14]=[1,1,1];row[14]=2;row[18],row[19]=struct.unpack_from('<II',b,0x8c);row[20]=15;row[25]=mode&1;row[28]=mine_limit;row[30]=reduction;row[31]=energy
+   if items&0x20:
+    error,values=intake.fresh_effects(text,data,faction)
+    if error:return (7 if error==3 else 1),None
+    row[11:14]=values[:3]
    for k,resource in enumerate(tables['RESOURCEINFO']):row[32+3*k:35+3*k]=[0 if x=='*' else int(x) for x in resource[1:4]]
    result=intake.leaf_expected(row)
    if result[0]:return (7 if result[0]==2 else 1),None
@@ -69,7 +72,7 @@ def model(variant,text,data,mode=0):
  return [0,*flows,*fresh[1:],*result[1:]]
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--cc',default='c++');ap.add_argument('--m68k-linux',action='store_true');ap.add_argument('--binary',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','vehicle_stack.cpp','tile_yields.cpp','world_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','base_nutrients.cpp','world_fresh_nutrients.cpp','world_convoy_nutrients.cpp','world_convoy_nutrients_probe.cpp']
+ names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','vehicle_stack.cpp','tile_yields.cpp','world_technology_effects.cpp','world_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','base_nutrients.cpp','world_fresh_nutrients.cpp','world_convoy_nutrients.cpp','world_convoy_nutrients_probe.cpp']
  exe=a.binary if a.binary else a.out/'world-convoy-nutrients';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[] if a.binary else [a.cc,*flags,*[str(HERE/n) for n in names],'-o',str(exe)]
  if cmd:subprocess.run(cmd,check=True)
  runner=['qemu-m68k','-cpu','m68040'] if a.m68k_linux else []
@@ -80,6 +83,8 @@ def main():
   version=7+n%6;variant='base' if version<11 else 'expansion';cases.append((f'v{version}-'+ '-'.join(map(str,actor)),variant,fixture(variant,version,32,[actor]),0))
  for version in range(7,13):
   variant='base' if version<11 else 'expansion';cases.append((f'empty-v{version}',variant,fixture(variant,version,32,[]),0))
+ for variant,version in [('base',7),('expansion',12)]:
+  for overflow in [False,True]:cases.append((f'fresh-fungus-harvest-{variant}-{overflow}',variant,intake.fresh_fungus_fixture(fixture(variant,version,32),0,overflow),0))
  seed=fixture('expansion',12,32);_,o,_=intake.decode(seed)
  for name,offset,fmt,value in [('bad-channel',o['vehicles']+38,'B',4),('bad-channel255',o['vehicles']+38,'B',255),('harvest-fungus',o['tiles']+8,'I',0x22),('bad-stack',o['vehicles']+48,'h',0),('specialists',o['bases']+0x7c,'i',1)]:
   b=bytearray(seed);struct.pack_into('<'+fmt,b,offset,value);cases.append((name,'expansion',bytes(b),0))

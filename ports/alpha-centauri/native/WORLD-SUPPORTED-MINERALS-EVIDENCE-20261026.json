@@ -1,0 +1,41 @@
+{
+  "environment": "FS-UAE3.2.35 / AROS20261023 / 68040-FPU; separate folder disks",
+  "native_rc": 0,
+  "native_report_bytes": 714,
+  "native_report_sha256": "66515cea7d217fe95494daac2a6551d52f09c3aec5538b0c9f1d4864a4e59582",
+  "native_binary_sha256": "ff652e04ebe0c8e8ff4305c017474a1fc7dc6f304050f3b26cacd6b8fc38beca",
+  "alpha_txt_sha256": "38399e1d0b967455a9146b1c468b9ec9decda43dd168afd8c3c23e0f46e357d4",
+  "borehole_sc_sha256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+  "fresh_results": [
+    {
+      "base": 9,
+      "supported": 4,
+      "paid": 2,
+      "support_minerals": 2,
+      "pacifism": 0,
+      "intake": 6,
+      "consumption": 2,
+      "surplus": 4,
+      "eco_damage": 0
+    },
+    {
+      "base": 10,
+      "supported": 3,
+      "paid": 1,
+      "support_minerals": 1,
+      "pacifism": 0,
+      "intake": 7,
+      "consumption": 1,
+      "surplus": 6,
+      "eco_damage": 0
+    }
+  ],
+  "limits": [
+    "Thinker default support adaptation; original support parity unproven",
+    "Read-only support\u2192mineral composition; no actor/faction/turn mutation",
+    "Human base-game stable-worker supported subset; other bases explicitly rejected"
+  ],
+  "host_oracle_cases": 33,
+  "synthetic_cases_with_nonzero_support": 16,
+  "host_checks": "Strict warnings, ASan/UBSan, independent byte-level support and mineral models"
+}

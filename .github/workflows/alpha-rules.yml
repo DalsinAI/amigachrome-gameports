@@ -206,6 +206,8 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_stable_intake.py --out "$RUNNER_TEMP/world-stable-intake-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host original nutrient accounting controls
         run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-host"
+      - name: Host explicit-fact original mineral accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-host"
       - name: Big-endian original nutrient accounting controls
         run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host fresh owned nutrient composition controls
@@ -216,3 +218,25 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_convoy_nutrients.py --out "$RUNNER_TEMP/world-convoy-nutrients-host"
       - name: Big-endian owned convoy-derived nutrient composition
         run: python3 ports/alpha-centauri/native/test_world_convoy_nutrients.py --out "$RUNNER_TEMP/world-convoy-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Fresh technology effects and stale-cache controls
+        run: python3 ports/alpha-centauri/native/test_world_technology_effects.py --out "$RUNNER_TEMP/technology-effects-host"
+      - name: Fresh support restoration policy and owned-world controls
+        run: python3 ports/alpha-centauri/native/test_base_support.py --out "$RUNNER_TEMP/base-support-host"
+      - name: Owned-world mineral accounting controls
+        run: python3 ports/alpha-centauri/native/test_world_base_minerals.py --out "$RUNNER_TEMP/world-minerals-host"
+      - name: Fresh support into mineral accounting controls
+        run: python3 ports/alpha-centauri/native/test_world_supported_minerals.py --out "$RUNNER_TEMP/supported-minerals-host"
+      - name: Original energy loss and fresh subtotal controls
+        run: python3 ports/alpha-centauri/native/test_base_energy.py --out "$RUNNER_TEMP/base-energy-host"
+      - name: Owned-world fresh energy controls
+        run: python3 ports/alpha-centauri/native/test_world_energy.py --out "$RUNNER_TEMP/world-energy-host"
+      - name: Original facility maintenance ledger controls
+        run: python3 ports/alpha-centauri/native/test_facility_upkeep.py --out "$RUNNER_TEMP/facility-upkeep-host"
+      - name: Owned-world facility maintenance controls
+        run: python3 ports/alpha-centauri/native/test_world_facility_upkeep.py --out "$RUNNER_TEMP/world-facility-upkeep-host"
+      - name: Staged facility construction and persistence controls
+        run: python3 ports/alpha-centauri/native/test_facility_production.py --out "$RUNNER_TEMP/facility-production-host"
+      - name: Atomic connected base resource forecast controls
+        run: python3 ports/alpha-centauri/native/test_world_base_accounting.py --out "$RUNNER_TEMP/world-base-accounting-host"
+      - name: Original world-derived nutrient and mineral cost factors
+        run: python3 ports/alpha-centauri/native/test_cost_factor.py --out "$RUNNER_TEMP/cost-factor-host"

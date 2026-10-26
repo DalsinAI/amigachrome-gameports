@@ -35,6 +35,7 @@ class OriginalWorld {
  private:
   friend class LocalProductionSession;
   friend class WorldActions;
+  friend class FacilityProductionStage;
   void swap(OriginalWorld& other);
   uint8_t* raw_=nullptr;
   OriginalMapTile* tiles_=nullptr;

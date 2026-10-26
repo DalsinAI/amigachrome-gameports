@@ -12,11 +12,13 @@ an already valid assignment of population plus one first-21 radius tiles,
 including the centre, with no specialists or automatic governor. The original
 availability query must accept every selected non-centre tile. The centre must
 contain a base marker for the actual owner. Missing assignments, specialist
-handling, selected fungus and stages requiring allocation reject explicitly.
+handling and stages requiring allocation reject explicitly. Selected fungus
+now uses the complete fresh technology-effects calculation, rather than saved
+fungus production totals; see `TECHNOLOGY-EFFECTS.md`.
 The caller supplies the runtime edition, expansion switch, worker inspection
 stage, ControlUpkeep branch and incoming scratch values. They are not inferred
 from saved flags or treated as live authority. Only normal worker inspection is
-supported. Current technology-dependent fungus caches are not assumed fresh.
+supported. Saved technology-dependent fungus caches are never assumed fresh.
 
 Satellite counts are capped by population. Physical Aerospace Complex 29 or an
 owned Space Elevator project 27 enables full counts; SMAX additionally checks

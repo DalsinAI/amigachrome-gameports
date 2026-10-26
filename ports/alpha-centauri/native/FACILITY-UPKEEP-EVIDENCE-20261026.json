@@ -1,0 +1,530 @@
+{
+  "schema": 1,
+  "date": "2026-10-26",
+  "scope": "Read-only original facility upkeep proposals; no world mutation or turn authority",
+  "sourceCommit": "5b32217",
+  "originalReference": "b-casey/OpenSMACX@2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c",
+  "host": {
+    "sanitizers": "ASan+UBSan",
+    "arithmeticCases": 4956,
+    "accepted": 4913,
+    "invalid": 41,
+    "overflow": 2,
+    "connectedWorldCases": 72,
+    "worldVersions": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "allAlignedPartialAliasesRejectedWithoutWrites": true,
+    "arithmeticOutputSHA256": "3fde92468fb4b14024cb3a6cae8353cd939a39ac6c2b25438343b45aa171e529"
+  },
+  "native": {
+    "environment": "FS-UAE3.2.35/AROS20261023/A1200/68040FPU",
+    "runtimeCompatibility": "Isolated documented libnix AFF_FPU40patch",
+    "compiler": "OpenAmigaGCC16.2.0-open3",
+    "leafBinarySHA256": "500a6f0cd77d2b2beaac799ac94e25c71f46c6997ce5a2865029047d85d26b4b",
+    "worldBinarySHA256": "c42fb3e90d804f0ebde30596910dcf63916d1a3fac0c2d667f9b1c145e0effab",
+    "leafReturnCode": 0,
+    "leafCases": 4956,
+    "leafFullOutputMatchesIndependentOracle": true,
+    "leafOutputSHA256": "3fde92468fb4b14024cb3a6cae8353cd939a39ac6c2b25438343b45aa171e529",
+    "connectedWorldCases": 72,
+    "connectedWorldAllReturnCode0": true,
+    "connectedWorldAllIndependentOraclePassed": true,
+    "actualScenario": {
+      "name": "Official Firaxis Boreholes",
+      "base": 9,
+      "baseName": "The Hive",
+      "explicitInputLedger": {
+        "credits": 100,
+        "maintenanceTotal": 7,
+        "mineralCostFactor": 10,
+        "playerFlags": 512
+      },
+      "outputLedger": {
+        "credits": 93,
+        "maintenanceTotal": 14,
+        "playerFlags": 512
+      },
+      "charged": [
+        {
+          "facility": 6,
+          "charge": 1
+        },
+        {
+          "facility": 7,
+          "charge": 1
+        },
+        {
+          "facility": 8,
+          "charge": 1
+        },
+        {
+          "facility": 11,
+          "charge": 3
+        },
+        {
+          "facility": 27,
+          "charge": 1
+        }
+      ],
+      "scrappedFacilityCount": 0,
+      "shortageCount": 0,
+      "actualHunkReturnCode": 0,
+      "completeOutputMatchesHost": true,
+      "outputSHA256": "e3cb3c11fe4e1f72993d935a04d8c9c6057229db024b732262dade9881b6b33d"
+    },
+    "cases": [
+      {
+        "name": "v7-0",
+        "returnCode": 0,
+        "outputSHA256": "8648fd6d4189852fb1142d758f231b3a95593ec627d32a6499ad806b9ffc8fc8",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-1",
+        "returnCode": 0,
+        "outputSHA256": "01b94ad8de55a1ac35cf6f96c61edb7535fb63ceafce8a7503fdfb1aa780b017",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-2",
+        "returnCode": 0,
+        "outputSHA256": "c2ede4201563dbeef0efeb19b27eb1fc84db5a3debe403b0800877e0c0f02d63",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-3",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-4",
+        "returnCode": 0,
+        "outputSHA256": "d4d37c3448a39e68be3b57949a946dfd36c2282aa8b352d8a6d7ff733ca4be84",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-5",
+        "returnCode": 0,
+        "outputSHA256": "c0f6503e04c78addbe4e95539b7206e1f0ec141250a8cbfb2731efe75a16ad6b",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-6",
+        "returnCode": 0,
+        "outputSHA256": "d890ee86b2fac9821e0c220199ac7961bb3a34a3b66aefae87cefce0d25eeb06",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-7",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-8",
+        "returnCode": 0,
+        "outputSHA256": "d0df02e24ebd287790d66a89d029b3a100e3b3e2901ec5d80bc37f30ca1fb57f",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-9",
+        "returnCode": 0,
+        "outputSHA256": "01b94ad8de55a1ac35cf6f96c61edb7535fb63ceafce8a7503fdfb1aa780b017",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-10",
+        "returnCode": 0,
+        "outputSHA256": "c2ede4201563dbeef0efeb19b27eb1fc84db5a3debe403b0800877e0c0f02d63",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-11",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-0",
+        "returnCode": 0,
+        "outputSHA256": "8648fd6d4189852fb1142d758f231b3a95593ec627d32a6499ad806b9ffc8fc8",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-1",
+        "returnCode": 0,
+        "outputSHA256": "01b94ad8de55a1ac35cf6f96c61edb7535fb63ceafce8a7503fdfb1aa780b017",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-2",
+        "returnCode": 0,
+        "outputSHA256": "c2ede4201563dbeef0efeb19b27eb1fc84db5a3debe403b0800877e0c0f02d63",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-3",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-4",
+        "returnCode": 0,
+        "outputSHA256": "d4d37c3448a39e68be3b57949a946dfd36c2282aa8b352d8a6d7ff733ca4be84",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-5",
+        "returnCode": 0,
+        "outputSHA256": "c0f6503e04c78addbe4e95539b7206e1f0ec141250a8cbfb2731efe75a16ad6b",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-6",
+        "returnCode": 0,
+        "outputSHA256": "d890ee86b2fac9821e0c220199ac7961bb3a34a3b66aefae87cefce0d25eeb06",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-7",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-8",
+        "returnCode": 0,
+        "outputSHA256": "d0df02e24ebd287790d66a89d029b3a100e3b3e2901ec5d80bc37f30ca1fb57f",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-9",
+        "returnCode": 0,
+        "outputSHA256": "01b94ad8de55a1ac35cf6f96c61edb7535fb63ceafce8a7503fdfb1aa780b017",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-10",
+        "returnCode": 0,
+        "outputSHA256": "c2ede4201563dbeef0efeb19b27eb1fc84db5a3debe403b0800877e0c0f02d63",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-11",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-0",
+        "returnCode": 0,
+        "outputSHA256": "8648fd6d4189852fb1142d758f231b3a95593ec627d32a6499ad806b9ffc8fc8",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-1",
+        "returnCode": 0,
+        "outputSHA256": "01b94ad8de55a1ac35cf6f96c61edb7535fb63ceafce8a7503fdfb1aa780b017",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-2",
+        "returnCode": 0,
+        "outputSHA256": "c2ede4201563dbeef0efeb19b27eb1fc84db5a3debe403b0800877e0c0f02d63",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-3",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-4",
+        "returnCode": 0,
+        "outputSHA256": "d4d37c3448a39e68be3b57949a946dfd36c2282aa8b352d8a6d7ff733ca4be84",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-5",
+        "returnCode": 0,
+        "outputSHA256": "c0f6503e04c78addbe4e95539b7206e1f0ec141250a8cbfb2731efe75a16ad6b",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-6",
+        "returnCode": 0,
+        "outputSHA256": "d890ee86b2fac9821e0c220199ac7961bb3a34a3b66aefae87cefce0d25eeb06",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-7",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-8",
+        "returnCode": 0,
+        "outputSHA256": "d0df02e24ebd287790d66a89d029b3a100e3b3e2901ec5d80bc37f30ca1fb57f",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-9",
+        "returnCode": 0,
+        "outputSHA256": "01b94ad8de55a1ac35cf6f96c61edb7535fb63ceafce8a7503fdfb1aa780b017",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-10",
+        "returnCode": 0,
+        "outputSHA256": "c2ede4201563dbeef0efeb19b27eb1fc84db5a3debe403b0800877e0c0f02d63",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-11",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-0",
+        "returnCode": 0,
+        "outputSHA256": "8648fd6d4189852fb1142d758f231b3a95593ec627d32a6499ad806b9ffc8fc8",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-1",
+        "returnCode": 0,
+        "outputSHA256": "01b94ad8de55a1ac35cf6f96c61edb7535fb63ceafce8a7503fdfb1aa780b017",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-2",
+        "returnCode": 0,
+        "outputSHA256": "c2ede4201563dbeef0efeb19b27eb1fc84db5a3debe403b0800877e0c0f02d63",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-3",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-4",
+        "returnCode": 0,
+        "outputSHA256": "d4d37c3448a39e68be3b57949a946dfd36c2282aa8b352d8a6d7ff733ca4be84",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-5",
+        "returnCode": 0,
+        "outputSHA256": "c0f6503e04c78addbe4e95539b7206e1f0ec141250a8cbfb2731efe75a16ad6b",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-6",
+        "returnCode": 0,
+        "outputSHA256": "d890ee86b2fac9821e0c220199ac7961bb3a34a3b66aefae87cefce0d25eeb06",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-7",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-8",
+        "returnCode": 0,
+        "outputSHA256": "d0df02e24ebd287790d66a89d029b3a100e3b3e2901ec5d80bc37f30ca1fb57f",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-9",
+        "returnCode": 0,
+        "outputSHA256": "01b94ad8de55a1ac35cf6f96c61edb7535fb63ceafce8a7503fdfb1aa780b017",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-10",
+        "returnCode": 0,
+        "outputSHA256": "c2ede4201563dbeef0efeb19b27eb1fc84db5a3debe403b0800877e0c0f02d63",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-11",
+        "returnCode": 0,
+        "outputSHA256": "243213c64554eb9ffbbcd4140eda9a3ca4542c5c305a94eaef800b6288433550",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-0",
+        "returnCode": 0,
+        "outputSHA256": "af861dfc6d7f343c09f27f0a09730be6ce3e59af98378d61eae8964a881f7d45",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-1",
+        "returnCode": 0,
+        "outputSHA256": "83f660444cfa9f5667f91eb8579ccaf118e2de264d17b53a5cfac17b5e09b347",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-2",
+        "returnCode": 0,
+        "outputSHA256": "10052e937df5db7807d9e1a79dafa010621eeeef441b8dc6d91eb9e73f08b7bc",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-3",
+        "returnCode": 0,
+        "outputSHA256": "7c933508de41d59a7e797119995cb916d4b3670ace90e0fea90e669830e7be0d",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-4",
+        "returnCode": 0,
+        "outputSHA256": "d2525368e1354fea16c76c0db0d977a9763d9fe49104e960dee56ae464e02cbb",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-5",
+        "returnCode": 0,
+        "outputSHA256": "54036d3cb678f0cca79b2465557618c58ab7ecd07cf32aa4c1843717957f5ee7",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-6",
+        "returnCode": 0,
+        "outputSHA256": "ea0b599e7add5777c3445bd563fc40a0763a09e16104c589da7b6b3a0b1dd189",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-7",
+        "returnCode": 0,
+        "outputSHA256": "7c933508de41d59a7e797119995cb916d4b3670ace90e0fea90e669830e7be0d",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-8",
+        "returnCode": 0,
+        "outputSHA256": "77c38bac436e4deafd046aa5bada742e4113b976788c1db78f3c15c1f0c978d3",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-9",
+        "returnCode": 0,
+        "outputSHA256": "83f660444cfa9f5667f91eb8579ccaf118e2de264d17b53a5cfac17b5e09b347",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-10",
+        "returnCode": 0,
+        "outputSHA256": "10052e937df5db7807d9e1a79dafa010621eeeef441b8dc6d91eb9e73f08b7bc",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-11",
+        "returnCode": 0,
+        "outputSHA256": "7c933508de41d59a7e797119995cb916d4b3670ace90e0fea90e669830e7be0d",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-0",
+        "returnCode": 0,
+        "outputSHA256": "af861dfc6d7f343c09f27f0a09730be6ce3e59af98378d61eae8964a881f7d45",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-1",
+        "returnCode": 0,
+        "outputSHA256": "83f660444cfa9f5667f91eb8579ccaf118e2de264d17b53a5cfac17b5e09b347",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-2",
+        "returnCode": 0,
+        "outputSHA256": "10052e937df5db7807d9e1a79dafa010621eeeef441b8dc6d91eb9e73f08b7bc",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-3",
+        "returnCode": 0,
+        "outputSHA256": "7c933508de41d59a7e797119995cb916d4b3670ace90e0fea90e669830e7be0d",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-4",
+        "returnCode": 0,
+        "outputSHA256": "d2525368e1354fea16c76c0db0d977a9763d9fe49104e960dee56ae464e02cbb",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-5",
+        "returnCode": 0,
+        "outputSHA256": "54036d3cb678f0cca79b2465557618c58ab7ecd07cf32aa4c1843717957f5ee7",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-6",
+        "returnCode": 0,
+        "outputSHA256": "ea0b599e7add5777c3445bd563fc40a0763a09e16104c589da7b6b3a0b1dd189",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-7",
+        "returnCode": 0,
+        "outputSHA256": "7c933508de41d59a7e797119995cb916d4b3670ace90e0fea90e669830e7be0d",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-8",
+        "returnCode": 0,
+        "outputSHA256": "77c38bac436e4deafd046aa5bada742e4113b976788c1db78f3c15c1f0c978d3",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-9",
+        "returnCode": 0,
+        "outputSHA256": "83f660444cfa9f5667f91eb8579ccaf118e2de264d17b53a5cfac17b5e09b347",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-10",
+        "returnCode": 0,
+        "outputSHA256": "10052e937df5db7807d9e1a79dafa010621eeeef441b8dc6d91eb9e73f08b7bc",
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-11",
+        "returnCode": 0,
+        "outputSHA256": "7c933508de41d59a7e797119995cb916d4b3670ace90e0fea90e669830e7be0d",
+        "independentWireOraclePassed": true
+      }
+    ]
+  },
+  "preservedOriginalDetails": [
+    "CommandCenter dynamic best-reactor cost before freefacility bonus checks",
+    "SAC fractional carry flag0x20 across ordinal charges",
+    "Original novice/queued shortage protection",
+    "Scrap reserve replacement rather than additive refund",
+    "Repeatable facilities rejected by original built predicate"
+  ],
+  "limits": [
+    "Explicit ledger values are a test-stage fixture, not fresh income calculation",
+    "No original x86 executable maintenance comparison performed",
+    "AROS compatibility is not AmigaOS3.2qualification",
+    "Negative maintenance/income mods excluded",
+    "No maintenance proposal applied to owned world or saved-game wire"
+  ]
+}

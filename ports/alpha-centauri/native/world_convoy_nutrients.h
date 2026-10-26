@@ -12,7 +12,7 @@ struct ConvoyNutrientResult {WorldConvoyFlows convoys;FreshNutrientResult fresh;
  * order3, home/faction/coordinates/channel and physical map base markers.
  * Harvests call fresh tile leaves; never saved intake. Channel3 contributes
  * zero harvest/reset scratch, but retains original unit-count transfers.
- * Fungus harvests reject pending refreshed technology-cache integration.
+ * Fungus harvests use freshly recomputed technology/faction effects.
  * Current-base/upkeep/control/scratch are explicit engine-stage facts.
  * No support/pacifism/actor-state/accounting/authority/upkeep/turn mutation.
  * Leaf safe domain is conservative: overflow in an unused tile resource also

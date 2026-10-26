@@ -15,6 +15,7 @@ from test_world_terraform_ecology import wire_expected as ecology_expected
 from worker_radius_reference import DX,DY
 from test_tile_yields import expected as leaf_expected
 from tile_bonus_reference import bonus_model
+from technology_effects_reference import effects as fresh_effects
 HERE=Path(__file__).resolve().parent
 def rules(variant):
  t=sections(rules_fixture(variant));t['RESOURCEINFO']=[[f'R{i}','2','1','1','0'] for i in range(9)]
@@ -40,6 +41,20 @@ def fixture(variant,version,case):
  for i in range(96):
   p=off['tiles']+44*i;b[p:p+44]=bytes(44);b[p]=0x60;b[p+2]=1 if i==52 else 9;b[p+4]=2;b[p+7]=1;struct.pack_into('<I',b,p+8,1 if i==52 else terrain)
  struct.pack_into('<I',b,off['metadata']+8,0);struct.pack_into('<I',b,off['metadata']+28,0)
+ return bytes(b)
+def fresh_fungus_fixture(data,tile_index,overflow=False):
+ b=bytearray(data);info,off,_=decode(b);legacy=int(info['version'])<11
+ ds=FACTIONS['MFaction'];fs=FACTIONS['LegacyFactionV10' if legacy else 'Faction']
+ def put(start,schema,name,value,index=0):
+  field=next(f for f in schema['fields'] if f['name']==name);fmt=FORMATS[field['type']]
+  struct.pack_into('<'+fmt,b,start+field['offset']+index*struct.calcsize(fmt),value)
+ definition=off['faction_definitions']+0x59c;state=off['factions']+(0x20bc if legacy else 0x20cc)
+ put(definition,ds,'faction_bonus_count',3);put(definition,ds,'rule_commerce',2147483647 if overflow else 0)
+ for i,value in enumerate([2,-1,3]):
+  put(definition,ds,'faction_bonus_id',7+i,i);put(definition,ds,'faction_bonus_val1',value,i)
+ for name in ['tech_fungus_nutrient','tech_fungus_mineral','tech_fungus_energy']:put(state,fs,name,-123456789)
+ put(state,fs,'SE_economy_pending',5 if overflow else 0)
+ at=off['tiles']+44*tile_index;items=struct.unpack_from('<I',b,at+8)[0];struct.pack_into('<I',b,at+8,items|0x20)
  return bytes(b)
 def model(variant,text,data,mode=0):
  fail=lambda code:[code]+[0x5a5a5a5a]*78
@@ -83,9 +98,13 @@ def model(variant,text,data,mode=0):
   if not flat:xx=xx+w if xx<0 else xx-w if xx>=w else xx
   if not(0<=xx<w and 0<=yy<h):return fail(4)
   sq=tile(xx,yy);items,lm=struct.unpack_from('<II',sq,8)
-  if items&0x20:return fail(3)
+  fungus=None
+  if items&0x20:
+   effect_error,effect_values=fresh_effects(text,data,faction)
+   if effect_error:return fail(7 if effect_error==3 else 1)
+   fungus=effect_values[:3]
   if sq[0]&0xe0<0x60:flags|=0x8000
-  row=[0]*59;row[0]=int(variant=='expansion');row[1:7]=[sq[0],sq[2],sq[5],items,lm,bonus_model(struct.unpack_from('<I',spans['metadata'],8)[0],xx,yy,pref('GameRules'),sq[0],items)];row[9]=state('SE_planet_pending');row[10]=state('SE_economy_pending');row[11:14]=[state(n) for n in ['tech_fungus_nutrient','tech_fungus_mineral','tech_fungus_energy']];row[14]=state('base_count');row[15]=int(bool(struct.unpack_from('<I',b,0x30)[0]&4));row[18],row[19]=struct.unpack_from('<II',b,0x8c)
+  row=[0]*59;row[0]=int(variant=='expansion');row[1:7]=[sq[0],sq[2],sq[5],items,lm,bonus_model(struct.unpack_from('<I',spans['metadata'],8)[0],xx,yy,pref('GameRules'),sq[0],items)];row[9]=state('SE_planet_pending');row[10]=state('SE_economy_pending');row[11:14]=fungus if fungus is not None else [state(n) for n in ['tech_fungus_nutrient','tech_fungus_mineral','tech_fungus_energy']];row[14]=state('base_count');row[15]=int(bool(struct.unpack_from('<I',b,0x30)[0]&4));row[18],row[19]=struct.unpack_from('<II',b,0x8c)
   if row[14]<0:return fail(1)
   try:row[16]=int(variant=='expansion' and project(33))
   except ValueError:return fail(1)
@@ -113,9 +132,11 @@ def model(variant,text,data,mode=0):
  return [0,*satellites,*tiles,*totals,worked,flags,eco[1],0,energy,*[v for row in values for v in row]]
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--cc',default='c++');ap.add_argument('--m68k-linux',action='store_true');ap.add_argument('--original-control',type=Path);ap.add_argument('--original',type=Path,action='append',default=[]);ap.add_argument('--original-rules',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- sources=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','vehicle_stack.cpp','tile_yields.cpp','world_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','world_stable_intake_probe.cpp'];exe=a.out/'world-stable-intake-probe';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[a.cc,*flags,*[str(HERE/n) for n in sources],'-o',str(exe)];subprocess.run(cmd,check=True);runner=['qemu-m68k','-cpu','m68040'] if a.m68k_linux else [];cases=[];texts={v:rules(v) for v in ['base','expansion']}
+ sources=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','vehicle_stack.cpp','tile_yields.cpp','world_technology_effects.cpp','world_tile_yields.cpp','world_worker_radius.cpp','world_terraform_ecology.cpp','world_stable_intake.cpp','world_stable_intake_probe.cpp'];exe=a.out/'world-stable-intake-probe';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[a.cc,*flags,*[str(HERE/n) for n in sources],'-o',str(exe)];subprocess.run(cmd,check=True);runner=['qemu-m68k','-cpu','m68040'] if a.m68k_linux else [];cases=[];texts={v:rules(v) for v in ['base','expansion']}
  for variant in ['base','expansion']:
   for case in range(1,65):cases.append((f'{variant}-{case}',variant,fixture(variant,7+case%4 if variant=='base' else 11+case%2,case),case))
+ for variant,version in [('base',7),('expansion',12)]:
+  for overflow in [False,True]:cases.append((f'fresh-fungus-{variant}-{overflow}',variant,fresh_fungus_fixture(fixture(variant,version,1),44,overflow),None))
  for version in range(7,13):
   for variant in ['base','expansion']:cases.append((f'cross-v{version}-{variant}',variant,fixture(variant,version,31),None))
  seed=fixture('expansion',12,64);_,off,_=decode(seed)

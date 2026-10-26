@@ -40,9 +40,8 @@ StableIntakeError world_convoy_flows(const OriginalWorld&w,const Rules&t,const B
    if((tile->items&1u)&&(tile->val2&15u)<8){if(!add(next.from[channel],1))return StableIntakeError::overflow;continue;}
    if(!add(next.harvesters,1))return StableIntakeError::overflow;
    if(channel==3){next.terraform_reduction_after=0;continue;}
-   if(tile->items&0x20u)return StableIntakeError::unsupported_stage;
    ts.terraform_reduction_before=next.terraform_reduction_after;ts.base_energy_before=next.base_energy_after;
-   TileYieldResult value{};const auto e=world_tile_yields(w,t,b,r,id,base->faction_id,v->x,v->y,ts,value);
+   TileYieldResult value{};const auto e=(tile->items&0x20u)?world_fresh_tile_yields(w,t,b,r,id,base->faction_id,v->x,v->y,ts,value):world_tile_yields(w,t,b,r,id,base->faction_id,v->x,v->y,ts,value);
    if(e==TileYieldError::overflow)return StableIntakeError::overflow;
    if(e!=TileYieldError::ok)return StableIntakeError::bad_state;
    const int32_t yields[]={value.nutrient,value.mineral,value.energy};
