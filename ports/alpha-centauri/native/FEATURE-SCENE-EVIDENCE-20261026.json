@@ -1,0 +1,157 @@
+{
+  "parent": "c6fb7ba26e75b68087c3165e3389fd61705f3843",
+  "scope": "Original revealed jungle and land/ocean fungus in ordinary indexed World scene",
+  "hostControls": {
+    "keyedQuad": {
+      "cases": 288,
+      "pixels": 1179648,
+      "rejections": 9,
+      "partialRejected": true,
+      "originalUnlitKeyBeforeFog": true,
+      "bigEndian": false,
+      "native": false,
+      "sha256": "0453cd9aafbb24652b772cc4ac88103b36a325f0b60fdb77e3c80f4d722a6a98"
+    },
+    "layers": {
+      "cases": 4100,
+      "rawNeighbourMasks": 256,
+      "pixels": 16793600,
+      "rejections": 8,
+      "aliasRejects": 10,
+      "lateLayerFailureTransactional": true,
+      "concealmentSkips": 4,
+      "bigEndian": false,
+      "native": false,
+      "sha256": "a1cfa471f36baf9ec88e1c0d4312d75c6a691451a16b871a7712337240be9788"
+    },
+    "worldScenes": {
+      "cases": 432,
+      "syntheticWorlds": 9,
+      "featureCases": 432,
+      "featureSHA256": "99321540305bd9d67eadd57518b31ba44457da25ed75bde211064857c37fb76b",
+      "concealedCases": 432,
+      "concealedSHA256": "2941f3cfcefa722ebbb81cce176243953f8d6a559b100c5c7c2b4cf3ebe95ce8",
+      "heldFeatureContexts": [
+        "special-height",
+        "height-seven",
+        "raw-rainfall-three",
+        "raw-rockiness-three"
+      ],
+      "pixels": 7077888,
+      "statusCounts": {
+        "0": 432
+      },
+      "rejects": 16,
+      "aliasRejects": 50,
+      "partialRejected": true,
+      "transactionalLateStageFailure": true,
+      "sourceIdentityExplicit": true,
+      "freshActiveCacheProfile": true,
+      "native": false,
+      "bigEndian": false,
+      "sha256": "98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c"
+    },
+    "totalWorldScenes": 1296
+  },
+  "independentBigEndian": {
+    "keyedQuad": {
+      "cases": 288,
+      "pixels": 1179648,
+      "rejections": 9,
+      "partialRejected": true,
+      "originalUnlitKeyBeforeFog": true,
+      "bigEndian": true,
+      "native": false,
+      "sha256": "0453cd9aafbb24652b772cc4ac88103b36a325f0b60fdb77e3c80f4d722a6a98"
+    },
+    "layers": {
+      "cases": 4100,
+      "rawNeighbourMasks": 256,
+      "pixels": 16793600,
+      "rejections": 8,
+      "aliasRejects": 10,
+      "lateLayerFailureTransactional": true,
+      "concealmentSkips": 4,
+      "bigEndian": true,
+      "native": false,
+      "sha256": "a1cfa471f36baf9ec88e1c0d4312d75c6a691451a16b871a7712337240be9788"
+    },
+    "worldScenes": {
+      "cases": 432,
+      "syntheticWorlds": 9,
+      "featureCases": 432,
+      "featureSHA256": "99321540305bd9d67eadd57518b31ba44457da25ed75bde211064857c37fb76b",
+      "concealedCases": 432,
+      "concealedSHA256": "2941f3cfcefa722ebbb81cce176243953f8d6a559b100c5c7c2b4cf3ebe95ce8",
+      "heldFeatureContexts": [
+        "special-height",
+        "height-seven",
+        "raw-rainfall-three",
+        "raw-rockiness-three"
+      ],
+      "pixels": 7077888,
+      "statusCounts": {
+        "0": 432
+      },
+      "rejects": 16,
+      "aliasRejects": 50,
+      "partialRejected": true,
+      "transactionalLateStageFailure": true,
+      "sourceIdentityExplicit": true,
+      "freshActiveCacheProfile": true,
+      "native": false,
+      "bigEndian": true,
+      "sha256": "98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c"
+    }
+  },
+  "unchangedOriginal": {
+    "keyedQuadCases": 288,
+    "layerCompositions": 4100,
+    "helperCalls": 5120,
+    "allRawTransitionMasks": 256,
+    "layerSHA256": "a1cfa471f36baf9ec88e1c0d4312d75c6a691451a16b871a7712337240be9788",
+    "wholeMapWinCalls": 714,
+    "naturalTutorialContexts": 618,
+    "controlledActorlessOriginalMapContexts": 96,
+    "controlledOriginalMapTilesUnchanged": true,
+    "tutorialMatchedSHA256": "abc65170ef185cfbdaeac36a46033d6192841f4eff81706a8e8a1e520ffd67e2",
+    "controlledOriginalMapMatchedSHA256": "249f740937effd9de1a976e4e060c4422c07debc657dba45e4e8272230d2d508",
+    "sourceSEHStackLockAndClampChecks": true,
+    "noWindowsAPIsOrPEStartup": true
+  },
+  "normalSDK": {
+    "keyed": {
+      "built": true,
+      "sha256": "da261c09da0c57417049ce711509bf78d963d1a7b7dca1fe877c2aea0e64eb6b",
+      "nativeRun": false
+    },
+    "layers": {
+      "built": true,
+      "sha256": "5d18b31ae0ff3180ecc70e5381c9e0b40fecca5aa34db9c7ad936c66db4f8e99",
+      "nativeRun": false
+    },
+    "scene": {
+      "built": true,
+      "sha256": "93915613b7e714f118d6b833df55f5164f1adf98bcda82bcb6025c561180d271",
+      "nativeRun": false
+    }
+  },
+  "workflow": {
+    "inheritedCommandsRetained": 119,
+    "newCommands": 4
+  },
+  "sourceFacts": [
+    "Unlit keyed quad has zero edge texel bias; lit half-texel reuse was rejected",
+    "Key equality precedes fog; jungle has no fog stripes, fungus respects source fog",
+    "Source crop jungle526,259,landfungus280,516,oceanfungus508,516;57-grid15 roles",
+    "Flags0 ordering ground/water\u2192jungle\u2192fungus\u2192coast; concealment suppresses plant layers"
+  ],
+  "limitations": [
+    "Source draw flag1 forest/improvements remain held; forest belongs between jungle and fungus",
+    "Special heights, raw material class3, outline/hidden/flat-polygon modes held",
+    "No frontend/native/watch/lab/deployment/export/publication actions",
+    "Controlled original MP terrain proof uses synthetic actorless containers, not original saved campaigns",
+    "Prepared indexed textures only; global RGB palette/OS loader/screen blit and full-world placement remain unqualified",
+    "No base-executable complete-caller or whole-game qualification"
+  ]
+}

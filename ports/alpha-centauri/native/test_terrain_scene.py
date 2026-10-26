@@ -4,7 +4,7 @@ import argparse,hashlib,json,os,struct,subprocess
 from pathlib import Path
 from test_terrain_visibility import fixture as visibility_fixture
 from test_original_game import decode
-NAMES=['original_map','original_game','original_faction','original_world','rules_text','vehicle_stack','terrain_observation','terrain_visibility','terrain_caller_order','cvr_terrain_context','terrain_lighting','terrain_mesh','terrain_dispatch','terrain_texture','terrain_ground_plate','terrain_world_masks','terrain_coast','terrain_coast_resources','terrain_coast_overlay','terrain_ocean_detail','terrain_water_texture','terrain_water_patch','terrain_scene','terrain_scene_probe']
+NAMES=['original_map','original_game','original_faction','original_world','rules_text','vehicle_stack','terrain_observation','terrain_visibility','terrain_caller_order','cvr_terrain_context','terrain_lighting','terrain_mesh','terrain_dispatch','terrain_texture','terrain_ground_plate','terrain_world_masks','terrain_coast','terrain_coast_resources','terrain_coast_overlay','terrain_ocean_detail','terrain_water_texture','terrain_water_patch','terrain_keyed_quad','terrain_feature_layers','terrain_scene','terrain_scene_probe']
 def fixture(profile):
  b=visibility_fixture(0);_,o,_=decode(b)
  for i in range(24):
@@ -35,9 +35,20 @@ def main():
   for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
   concealed_digest.update(r.stdout)
  assert concealed_digest.hexdigest()=='2941f3cfcefa722ebbb81cce176243953f8d6a559b100c5c7c2b4cf3ebe95ce8',concealed_digest.hexdigest()
+ feature_digest=hashlib.sha256();feature_atlas=out/'feature-atlas.bin';feature_atlas.write_bytes(bytes(9 if x%7==0 or y%11==0 else (x*17+y*31)%236+10 for y in range(768)for x in range(1024)))
+ for profile in range(3):
+  b=fixture(profile);_,o,_=decode(b)
+  for i in range(24):
+   at=o['tiles']+i*44
+   if (i*7+profile)%11<6:struct.pack_into('<I',b,at+8,struct.unpack_from('<I',b,at+8)[0]|0x20)
+   if (i*5+1)%7<4:struct.pack_into('<I',b,at+12,struct.unpack_from('<I',b,at+12)[0]|4)
+  f=out/f'features{profile}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin')];queries=[(i,z,-1,cx,cy,0x80,0,0)for i in range(24)for z in[1,2]for cx,cy in[(-12,20),(14,38),(-80,-30)]];r=subprocess.run(command,input=b''.join(struct.pack('<8i',*q)for q in queries),capture_output=True,env=env);assert r.returncode==0,(r.returncode,r.stderr);assert len(r.stdout)==len(queries)*16388
+  for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
+  feature_digest.update(r.stdout)
+ assert feature_digest.hexdigest()=='99321540305bd9d67eadd57518b31ba44457da25ed75bde211064857c37fb76b',feature_digest.hexdigest()
  held=[]
  base=fixture(0);_,o,_=decode(base)
- for label,offset,fmt,value,expected in [('jungle',o['tiles']+12,'I',4,4),('fungus',o['tiles']+8,'I',0x22,4),('special-height',o['tiles']+12,'I',2,4),('height-seven',o['tiles'],'B',224,5),('raw-rainfall-three',o['tiles'],'B',120,4),('raw-rockiness-three',o['tiles']+5,'B',192,4)]:
-  b=bytearray(base);struct.pack_into('<'+fmt,b,offset,value);f=out/(label+'.SC');f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(out/'atlas.bin'),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin')];r=subprocess.run(command,input=struct.pack('<8i',0,1,-1,-12,20,0x80,0,0),capture_output=True,env=env);assert r.returncode==0,(label,r.returncode,r.stderr);assert r.stdout==struct.pack('<I',expected)+bytes([199])*16384,(label,struct.unpack_from('<I',r.stdout)[0]);held.append(label)
- h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(cases=count,syntheticWorlds=6,concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
+ for label,offset,fmt,value,expected in [('jungle',o['tiles']+12,'I',4,0),('fungus',o['tiles']+8,'I',0x22,0),('special-height',o['tiles']+12,'I',2,4),('height-seven',o['tiles'],'B',224,5),('raw-rainfall-three',o['tiles'],'B',120,4),('raw-rockiness-three',o['tiles']+5,'B',192,4)]:
+  b=bytearray(base);struct.pack_into('<'+fmt,b,offset,value);f=out/(label+'.SC');f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(out/'atlas.bin'),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin')];r=subprocess.run(command,input=struct.pack('<8i',0,1,-1,-12,20,0x80,0,0),capture_output=True,env=env);assert r.returncode==0,(label,r.returncode,r.stderr);assert struct.unpack_from('<I',r.stdout)[0]==expected,(label,struct.unpack_from('<I',r.stdout)[0]);assert (r.stdout[4:]==bytes([199])*16384)if expected else len(r.stdout)==16388;held.append(label)if expected else None
+ h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(cases=count,syntheticWorlds=9,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
 if __name__=='__main__':main()

@@ -1430,3 +1430,38 @@ Both architecture digests are fixed expectations. The source `0x01000000` draw
 flag is a different flat-colour polygon mode and is still held; it must not be
 confused with the GameRules observation branch. Native/frontend/global RGB/OS
 and complete world/game claims remain outside this proof.
+
+### Revealed jungle and fungus (26 October)
+
+`terrain_keyed_quad` closes the original unlit keyed quad used by jungle and
+fungus. It tests the raw indexed key before writing; fog affects only non-key
+pixels on even absolute rows. It has no light addition. Importantly, its edge
+UVs do not use the lit texture path's half-texel bias. The initially reused bias
+was rejected against unchanged original helpers and is preserved privately.
+
+`terrain_feature_layers` uses the instruction-backed original 15-role blob
+selector, original UV rotation and genuine prepared texture atlas crops. The
+ordinary flags0 order is ground/water, jungle, land/ocean fungus, then coast.
+Jungle is unlit without fog stripes; fungus uses the source fog parameter.
+Concealment suppresses both and ocean fungus starts at altitude2. Special
+landmark heights, raw land material class3 and other source modes remain held.
+A later forest implementation must respect its source position between jungle
+and fungus; it cannot simply be appended after this flags0 combined layer.
+
+Public checks now run288 keyed quad cases,4100 layer compositions covering all256
+raw neighbour masks, and1296 ordinary/concealed/feature World scenes on host
+sanitizers and independent big-endian68040. Transactional invalid/alias checks
+include a failure in the second layer after the first layer has drawn. The
+existing ordinary and concealment pixel fingerprints are unchanged.
+
+Private unchanged original helper execution independently matches all4100 layer
+compositions using actual source class/rotation metadata and5120 original helper
+calls. This uses explicit synthetic numeric textures/flat caller vertices and is
+not a whole MapWin claim. Separately, the complete unchanged original MapWin
+entry/normal-return comparisons now cover618 original tutorial contexts,
+including32 revealed fungus cases, and96 jungle contexts from unchanged owner
+planet/planetx MP terrain. The latter use explicitly synthetic actorless
+containers, not original saved campaigns. All714 supported complete-call pixel
+contexts match both architectures. No original assets/tables/code bytes are
+committed. Normal SDK probes build; native/UI, RGB palette/OS loader/screen blit,
+full-world placement and complete-game qualification remain unrun.

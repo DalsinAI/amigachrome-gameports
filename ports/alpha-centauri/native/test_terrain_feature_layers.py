@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""All256 blob masks for jungle, land/ocean fungus and their source ordering."""
+import argparse,hashlib,json,os,struct,subprocess
+from pathlib import Path
+
+def cases():
+ return [[-12 if mask&1 else 0,8,*([0]*5),zoom,mask,(mask*37)%256,alt,jungle,fungus,0,visible]for mask in range(256)for zoom in[1,2]for alt,jungle,fungus in[(3,1,0),(3,0,1),(2,0,1),(3,1,1)]for visible in[0,1]]+[[0,8,*([0]*5),z,255,255,alt,1,1,1,0]for z in[1,2]for alt in[2,3]]
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--cc',default='g++');p.add_argument('--m68k-linux',action='store_true');a=p.parse_args();out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=False);s=Path(__file__).resolve().parent;exe=out/'probe';flags=['-m68040','-static']if a.m68k_linux else['-g','-fsanitize=address,undefined','-fno-sanitize-recover=all'];subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*[str(s/(n+'.cpp'))for n in['terrain_mesh','terrain_keyed_quad','terrain_feature_layers','terrain_feature_layers_probe']],'-o',str(exe)],check=True);runner=['qemu-m68k','-cpu','m68040']if a.m68k_linux else[];env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0');qs=cases();packed=b''.join(struct.pack('<15i',*q)for q in qs);r=subprocess.run(runner+[str(exe)],input=packed,capture_output=True,env=env);assert r.returncode==0,(r.returncode,r.stderr);assert len(r.stdout)==len(qs)*4096;h=hashlib.sha256(r.stdout).hexdigest();assert h=='a1cfa471f36baf9ec88e1c0d4312d75c6a691451a16b871a7712337240be9788',h;assert subprocess.run(runner+[str(exe)],input=b'partial',capture_output=True,env=env).returncode==20;assert r.stdout[-4*4096:]==bytes([199])*(4*4096);record=dict(cases=len(qs),rawNeighbourMasks=256,pixels=len(r.stdout),rejections=8,aliasRejects=10,lateLayerFailureTransactional=True,concealmentSkips=4,bigEndian=a.m68k_linux,native=False,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
+if __name__=='__main__':main()

@@ -22,7 +22,8 @@ struct TerrainSceneRuntime {
 // Source GameRules100/unexplored concealment overrides rainfall/rockiness and
 // suppresses fungus/jungle; retained ordinary height and coast topology are real.
 // Fresh normal-scale25 zoom-5/5 cache profile only. No outline/hidden draw,
-// revealed fungus/jungle/special heights, grid/territory/items/actors/OS effects.
+// special heights, grid/territory/improvements/actors/OS effects. Revealed
+// jungle and land/ocean fungus use their source unlit keyed layer ordering.
 // Draw flag01000000 is a separate flat-colour polygon mode and remains held.
 // Actual source tile allocation identity, edition-bound metadata/light table,
 // and prepared owner textures are explicit inputs, never guessed authority.
