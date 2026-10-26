@@ -288,3 +288,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_energy_hq.py --out "$RUNNER_TEMP/world-energy-hq-host"
       - name: Big-endian original headquarters scan controls
         run: python3 ports/alpha-centauri/native/test_world_energy_hq.py --out "$RUNNER_TEMP/world-energy-hq-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned base accounting transactions
+        run: python3 ports/alpha-centauri/native/test_local_accounting.py --out "$RUNNER_TEMP/local-accounting-host"
+      - name: Big-endian owned base accounting transactions
+        run: python3 ports/alpha-centauri/native/test_local_accounting.py --out "$RUNNER_TEMP/local-accounting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host accounting union snapshot controls
+        run: python3 ports/alpha-centauri/native/test_local_accounting_snapshot.py --out "$RUNNER_TEMP/accounting-snapshot-host"
+      - name: Big-endian accounting union snapshot controls
+        run: python3 ports/alpha-centauri/native/test_local_accounting_snapshot.py --out "$RUNNER_TEMP/accounting-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

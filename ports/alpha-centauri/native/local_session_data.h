@@ -4,12 +4,14 @@
 #include "local_production_session.h"
 #include <stdlib.h>
 namespace alpha {
+struct LocalAccountingTables;
 struct LocalProductionSession::Data {
  OriginalWorld world;
  Rules technology;
  FacilityDefinitions facilities;
  UnitDefinitions* units=nullptr;
- ~Data(){free(units);}
+ LocalAccountingTables* accounting=nullptr;
+ ~Data(){free(units);free(accounting);}
  BasicRules rules;
  WorldRules world_rules;
  Variant profile;

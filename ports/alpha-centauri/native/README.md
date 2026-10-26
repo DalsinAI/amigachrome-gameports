@@ -1239,3 +1239,39 @@ Fresh mineral composition is documented in [WORLD-FRESH-MINERALS.md](WORLD-FRESH
 The separate checked [energy inefficiency component](ENERGY-INEFFICIENCY.md) returns numeric loss/diagnostic proposals from explicit facts. Full owned energy accounting, CI and native qualification remain pending.
 
 [Plain energy allocation](ENERGY-ALLOCATION.md) preserves both original loss calculations and pre-commerce faction accumulation as explicit numeric proposals. World commerce/bonus/psych binding and all accounting commits remain pending; native qualification is UNRUN.
+
+
+### Owned offline base accounting refresh (local candidate, native held)
+
+`load_local_accounting` explicitly imports a new offline local session with its
+own unit, resource and citizen definitions parsed from the same rules text.
+Production-only imports do not gain accounting capability, and accounting imports
+do not enable movement. Admission retains the existing edition, selected human,
+active saved faction and rules validation. A failed import preserves the previous
+session. The capability is not wired to player input.
+
+`prepare_accounting` binds a selected owned base and complete resource context to
+the session lifetime and revision. `commit_accounting` recomputes the result and
+atomically updates the 23 declared base values in `local_accounting_fields.inc`.
+Suspension, successful reload, another changing command or address reuse makes
+an old plan unusable. Unsupported allocation and arithmetic failures reject
+without a partial patch. An unchanged repeated refresh preserves the revision.
+
+This refresh accepts only projection stage0. It updates second intake/accounting
+fields, food sign normalization, ecological damage and happiness, while preserving
+first intake fields used by the explicitly selected commerce phase. It does not
+apply faction turn totals, projections, support actor flags, worker reassignment,
+production completion, growth, research awards or turn progression. The inherited
+stable worker domain still rejects specialists and governor allocation. An explicit
+alien scratch policy remains required; the default rejects undefined original
+paths, with no implicit zero-initialization policy selected by this session.
+
+`encode_local_accounting_snapshot` is a separate buffer encoder. It preserves the
+whole supported original container and combines the existing bounded movement /
+production wire scope with the explicit base accounting fields. Legacy BASE
+fields at modern offset0x98 and later shift by four bytes. All other decoded base
+and faction data are sealed; every validation precedes the first output write.
+Runtime RNG is returned separately from the unchanged footer tick. This supplies
+neither a filesystem save protocol nor evidence that the original executable can
+resume the encoded container. Changed binaries still require actual AmigaOS
+execution and normal exit before deployment or any native qualification claim.

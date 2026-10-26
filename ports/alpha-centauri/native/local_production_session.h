@@ -4,6 +4,7 @@
 #include "world_facility_options.h"
 #include "world_production_retool.h"
 #include "world_actions.h"
+#include "local_accounting.h"
 namespace alpha {
 class LocalProductionSession;
 enum class LocalOrderError {ok,bad_state,bad_rules,bad_world,no_memory,not_human,not_owner,unavailable,
@@ -65,6 +66,13 @@ class LocalProductionSession {
    Variant profile,bool expansion_enabled,int32_t local_human,uint32_t runtime_seed,
    size_t memory_limit=64u*1024u*1024u);
   bool land_actions_enabled()const;
+  // Explicit table-owning, offline accounting capability. No movement is
+  // enabled by this import. Failure preserves the previous session entirely.
+  LocalOrderError load_local_accounting(const uint8_t*,size_t,const uint8_t*,size_t,
+   Variant,bool,int32_t,uint32_t,size_t memory_limit=64u*1024u*1024u);
+  bool accounting_enabled()const;
+  LocalOrderError prepare_accounting(size_t,const WorldEnergyStage&,BaseAccountingPlan&)const;
+  LocalOrderError commit_accounting(const BaseAccountingPlan&,BaseAccountingReceipt&);
   // Preparation binds an intent to this session lifetime/revision; it does
   // not certify a legal move or quote a price. LocalOrderError::ok from commit
   // means evaluated; StepResult may explicitly reject the move without writes.
