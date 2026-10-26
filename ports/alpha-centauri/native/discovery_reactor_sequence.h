@@ -8,6 +8,10 @@ namespace alpha {
 struct DiscoveryReactorEvent {
  int32_t source,reactor,returned,kind,retired,history_cursor,last_created,source_flags;
 };
+enum class DiscoveryReactorBoundary {post_reactor,reactor_presentation};
+/* Explicit observations of the two original UI cache words. Data only: neither
+ * these words nor MapOwner establish permission to execute or resume a dialog. */
+struct DiscoveryReactorBoundaryFacts {DiscoveryRuntimeObservation runtime;int32_t first_ui_cache,second_ui_cache;};
 class DiscoveryReactorSequencePlan {
  public:
   DiscoveryReactorSequencePlan()=default;
@@ -29,18 +33,24 @@ class DiscoveryReactorSequencePlan {
   OriginalByteSpan wire_baseline()const{return {frame_.original_bytes(),frame_.original_size()};}
   size_t base_count()const{return frame_.game().base_count;}
   OriginalByteSpan history()const{return {history_,ready_?size_t(4096):size_t(0)};}
-  int32_t last_created()const{return -1;}int32_t upgrade_scratch()const{return upgrade_;}
-  int32_t first_ui_cache()const{return -1;}int32_t second_ui_cache()const{return -1;}
+  int32_t last_created()const{return last_;}int32_t upgrade_scratch()const{return upgrade_;}
+  int32_t first_ui_cache()const{return cache_a_;}int32_t second_ui_cache()const{return cache_b_;}
+  DiscoveryReactorBoundary boundary()const{return boundary_;}
+  int32_t pending_reactor()const{return reactor_;}
+  const char* pending_reactor_name()const{return ready_ && boundary_==DiscoveryReactorBoundary::reactor_presentation?reactor_name_:nullptr;}
   size_t memory_bytes()const{return frame_.memory_bytes()+sizeof(*this)-sizeof(OriginalWorld);}
  private:
   friend DiscoveryReactorError world_discovery_reactor_sequence(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,int32_t,int32_t,const DiscoveryReactorFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,DiscoveryReactorSequencePlan&,size_t);
+  friend DiscoveryReactorError discovery_reactor_sequence_impl(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,int32_t,int32_t,const DiscoveryReactorFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,const DiscoveryReactorBoundaryFacts*,DiscoveryReactorSequencePlan&,size_t);
   DiscoveryReactorError capture(const OriginalWorld&,size_t);
   DiscoveryReactorError apply_allocation(const UnreferencedAllocationPlan&,int32_t);
   void apply_existing(const ExistingProposalResult&);
   void apply_flags(const HumanPruningResult&);
   void swap(DiscoveryReactorSequencePlan&);
   OriginalWorld frame_;uint8_t history_[4096]{};DiscoveryReactorEvent events_[192]{};
-  size_t count_=0;int32_t upgrade_=0;bool ready_=false;
+  size_t count_=0;int32_t upgrade_=0,last_=-1,cache_a_=-1,cache_b_=-1,reactor_=0;
+  DiscoveryReactorBoundary boundary_=DiscoveryReactorBoundary::post_reactor;
+  char reactor_name_[128]{};bool ready_=false;
 };
 /* Read-only full current decoded working frame for ordered base reactor calls.
  * Preserves original proposal/retirement/history/name/prune/queue order. All
@@ -59,5 +69,21 @@ DiscoveryReactorError world_discovery_reactor_sequence(const OriginalWorld&,Vari
  const UnitDefinitions&,int32_t,int32_t,const DiscoveryReactorFacts&,
  const PrototypeNameLabels&,const PrototypeNameSuffix&,DiscoveryReactorSequencePlan&,
  size_t clone_limit=64u*1024u*1024u);
+/* Additive suspension query. Runs the same complete checked sequence, then
+ * retains its privately owned intermediate frame at the actual local reactor
+ * parse_say boundary instead of inventing a modal return. The request name is
+ * owned, reactor is the last eligible target even if its proposer returned -1,
+ * and original runtime caches/last-created/scratch are preserved before reset.
+ * Local no-pair and nonlocal paths reach post_reactor with final resets.
+ * There is deliberately NO resume, acknowledgment, nested-award, World commit,
+ * UI execution or session-authority API. Later generic presentation, Secrets,
+ * reveal, effects, sharing and first-Secrets notification are NOT executed.
+ * Boundary facts must be supplied; complete input/output alias checks and
+ * transactional failure behavior match the original sequence query.
+ */
+DiscoveryReactorError world_discovery_reactor_suspension(const OriginalWorld&,Variant,const Rules&,
+ const UnitDefinitions&,int32_t,int32_t,const DiscoveryReactorFacts&,
+ const PrototypeNameLabels&,const PrototypeNameSuffix&,const DiscoveryReactorBoundaryFacts&,
+ DiscoveryReactorSequencePlan&,size_t clone_limit=64u*1024u*1024u);
 }
 #endif
