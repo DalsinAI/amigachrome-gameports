@@ -188,3 +188,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_mesh.py --out "$RUNNER_TEMP/terrain-mesh-host"
       - name: Original ground triangle mesh independent big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_terrain_mesh.py --out "$RUNNER_TEMP/terrain-mesh-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Indexed terrain triangle host pixel controls
+        run: python3 ports/alpha-centauri/native/test_terrain_texture.py --out "$RUNNER_TEMP/terrain-texture-host"
+      - name: Indexed terrain triangle independent big-endian 68040 pixel controls
+        run: python3 ports/alpha-centauri/native/test_terrain_texture.py --out "$RUNNER_TEMP/terrain-texture-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
