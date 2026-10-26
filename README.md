@@ -178,3 +178,7 @@ The local Alpha [commerce proposal](ports/alpha-centauri/native/WORLD-COMMERCE.m
 now derives original base ranking and trade amounts from world facts, with an
 explicit choice of supplied or freshly recomputed faction bonus stage. It does
 not commit income or execute a turn.
+
+The local [police snapshot](ports/alpha-centauri/native/WORLD-POLICE.md) supplies
+ordered garrison and edition-correct double-police facts without repairing or
+mutating units. It is a dependency for later happiness and income composition.
