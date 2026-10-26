@@ -2181,3 +2181,5 @@ Original ground mobility/road/elevation stages: [GROUND-MODIFIERS.md](GROUND-MOD
 Late Pulse/Jammer/Tracking arithmetic: see [DEFENSE-ABILITIES.md](DEFENSE-ABILITIES.md); raw stage only, World/native/UI pending.
 
 Owned late defense ability binding: see [WORLD-DEFENSE-ABILITIES.md](WORLD-DEFENSE-ABILITIES.md); read-only current facts, native/UI pending.
+
+Original air/noncombat/In Port arithmetic: see [AIR-PORT-COMBAT.md](AIR-PORT-COMBAT.md); explicit conventional numeric stage only, World/native/UI pending.
