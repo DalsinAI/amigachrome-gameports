@@ -580,3 +580,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_combat_round.py --out "$RUNNER_TEMP/combat-round-host"
       - name: Combat round independent68040 controls
         run: python3 ports/alpha-centauri/native/test_combat_round.py --out "$RUNNER_TEMP/combat-round-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned retreat initialization host controls
+        run: python3 ports/alpha-centauri/native/test_retreat_init.py --out "$RUNNER_TEMP/retreat-init-host"
+      - name: Owned retreat initialization independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_retreat_init.py --out "$RUNNER_TEMP/retreat-init-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
