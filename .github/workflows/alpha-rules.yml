@@ -224,3 +224,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_coast_resources.py --out "$RUNNER_TEMP/terrain-coast-resources-host"
       - name: Explicit original coast resources UVs lookup and mesh independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_coast_resources.py --out "$RUNNER_TEMP/terrain-coast-resources-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original ocean contour detail and explicit light-table host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_ocean_detail.py --out "$RUNNER_TEMP/terrain-ocean-detail-host"
+      - name: Original ocean contour detail and explicit light-table independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_ocean_detail.py --out "$RUNNER_TEMP/terrain-ocean-detail-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original ordinary coast overlay composition host pixel controls
+        run: python3 ports/alpha-centauri/native/test_terrain_coast_overlay.py --out "$RUNNER_TEMP/terrain-coast-overlay-host"
+      - name: Original ordinary coast overlay composition independent big-endian pixel controls
+        run: python3 ports/alpha-centauri/native/test_terrain_coast_overlay.py --out "$RUNNER_TEMP/terrain-coast-overlay-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

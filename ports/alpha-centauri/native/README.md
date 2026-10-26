@@ -1214,3 +1214,31 @@ restore water/coast scene composition. Host and independent big-endian controls
 use synthetic metadata and original owner data privately. The original lookup
 numeric region was separately executed; OS loader/Sprite/Buffer initialization
 and actual native execution remain unrun. See the resource evidence JSON.
+
+### Original ocean detail and bounded coast overlay (26 October)
+
+`world_ocean_details` restores all sixteen original sector/vertex contour detail
+queries: source contour clamping, fixed-four-neighbour corner means, map wrap
+and edge zeros, +/-7/3 land adjustments, and the 57/67 coast-side exceptions.
+The complete original numeric helper was run against all three tutorial maps;
+55,296 contexts match on host and independent 68040. The public synthetic suite
+checks 6,144 further contexts, invalid queries and transactional alias rejection.
+`light_ocean_details` requires the actual edition's explicit 80-entry renderer
+light table. It does not invent a colour gradient or obtain it from gameplay
+RNG, save pointers, or a guessed allocation identity.
+
+`render_terrain_coast_overlay` connects the qualified mesh, supplied World shore
+masks, ocean lights and owner coast resources. It crops the original prepared
+primary material at (280,79,56,56), prepares source sector UV/lookup, and draws
+active sectors in original order over existing ground pixels. Supported input
+must explicitly establish an ordinary land coast context and fog -1/65. The
+small indexed destination is staged so any invalid later sector leaves the
+entire destination unchanged; input/material/descriptor overlaps reject.
+
+Forty-eight synthetic and forty-eight owner-material/World-shore-light patches
+match the actual unchanged original coast pixel helper on both architectures.
+Patch geometry remains an explicitly supplied, qualified mathematical mesh
+profile: this is not a full World caller execution, view/fog resolver, actual OS
+loader or complete sea/water scene. Original owner class/rule/light tables and
+assets remain private. Normal SDK builds pass; native execution, frontend
+integration and remote CI are unrun. See `OCEAN-COAST-EVIDENCE-20261026.json`.

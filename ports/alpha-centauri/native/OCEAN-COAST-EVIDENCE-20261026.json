@@ -1,0 +1,41 @@
+{
+  "scope": "Owned original ocean-detail numeric queries and bounded transactional ordinary-land coast overlays",
+  "details": {
+    "originalFunction": "462190",
+    "originalTutorialContexts": 55296,
+    "syntheticContexts": 6144,
+    "syntheticSHA256": "7c73964417c1b89db11fd84815c50450f62f8c90a267215491e8e09ae1a4dfe8",
+    "originalLightTable": "6861f0 supplied explicitly,80entries, no table bytes committed",
+    "invalidQueries": 64,
+    "lightRejections": 7,
+    "worldAliasChecksPerFixture": 16
+  },
+  "overlay": {
+    "syntheticPatches": 48,
+    "ownerMaterialWorldShoreLightPatches": 48,
+    "pixelsPerCorpus": 786432,
+    "sourcePixelFunctions": [
+      "623f80",
+      "61ead0",
+      "edge/gradient helpers",
+      "actual RAM Buffer handle-null functions"
+    ],
+    "syntheticSHA256": "8a69ce892b08251b1a59d0258646c7c55f1c24269bbaa9385959c29f84f0f4b3",
+    "ownerSHA256": "dcb3814ae0edb696d60ec836a9b0e9e215be37b714862b26236b1d283930f60c",
+    "rejections": 16,
+    "geometry": "Explicit frozen qualified mathematical mesh profiles; not original full World caller"
+  },
+  "architectures": [
+    "ASan/UBSan host",
+    "independent Linux68040"
+  ],
+  "native": "UNRUN; normal private SDK compilation only",
+  "limits": [
+    "Owner renderer light/class/rule metadata required explicitly, not embedded or guessed",
+    "No full World view/fog/visibility resolution or caller scene execution",
+    "No sea/water plate assembly, complete shoreline world scene or OS loader/blit qualification",
+    "No frontend/watch/lab input, deployment, export/publication",
+    "Original source render identity preserved, no gameplay RNG/allocation seed/save pointer substitution"
+  ],
+  "failedHistory": "Initial compile rejected misleading indentation in new light-table validator; formatting corrected before all comparisons. No numerical failures in final host/BE controls. Frozen parent failures retained untouched."
+}
