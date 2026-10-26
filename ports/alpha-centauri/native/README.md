@@ -2211,3 +2211,5 @@ Checked vehicle-removal storage is documented in [VEHICLE-REMOVAL.md](VEHICLE-RE
 [WORLD-VEHICLE-REMOVAL.md](WORLD-VEHICLE-REMOVAL.md) documents current-frame ownership around checked removal. Caller/session commits, full casualty effects and variable-length persistence remain held. Controls: `python3 test_world_vehicle_removal.py --out /tmp/alpha-world-removal-host` and independent `--cc m68k-linux-gnu-g++ --m68k-linux`.
 
 [WORLD-CASUALTY.md](WORLD-CASUALTY.md) documents owned ordinary/native casualty deletion and copied caller pools. Artifact/interlude and caller/session/native/full-game gates remain held.
+
+[ARTIFACT-CAPTURE.md](ARTIFACT-CAPTURE.md) documents owned LAND artifact transfer and its captured caller pool, before the interlude gate. Legal battle/session/delivery/native/full-game gates remain held.

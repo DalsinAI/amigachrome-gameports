@@ -19,6 +19,7 @@ class VehicleRemovalPlan {
   const OriginalVehicle*removed()const{return ready_?&removed_:nullptr;}
  private:
   friend class CasualtyPlan;
+  friend class ArtifactCapturePlan;
   friend RemovalError stage_vehicle_removal(const OriginalWorld&,size_t,const RemovalRuntime&,VehicleRemovalPlan&,size_t);
   RemovalError capture(const OriginalWorld&,size_t);
   RemovalError apply(size_t,const RemovalRuntime&);
