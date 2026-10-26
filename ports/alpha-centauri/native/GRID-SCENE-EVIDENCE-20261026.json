@@ -1,0 +1,55 @@
+{
+  "scope": "original ordinary grid04000000 / grid preference100",
+  "sourceFacts": {
+    "order": "ground -> two shared NW/NE edges -> plants -> coast -> rivers -> late layers",
+    "topology": "raw north neighbours, one source X wrap, pole/outside skip",
+    "waterFlag": "MorePreferences800000; not GameState",
+    "colour": "37 only both endpointsland;190 ifwater enabled and eitherendpointwater",
+    "raster": "strict positive-error integer line, inclusive endpoints, degenerate point no-op",
+    "buffer": "genuine handle-null RAM; full-surface clip and DIB dimensions agree"
+  },
+  "publicControls": {
+    "line": 1313,
+    "plans": 400,
+    "layers": 72,
+    "newWorldContexts": 1296,
+    "preferenceEquivalentCalls": 1296,
+    "parentSyntheticContextsUnchanged": 3888,
+    "newCallerContexts": 864,
+    "hostASanUBSan": true,
+    "independentBigEndian68040": true,
+    "workflowParentCommands": 133,
+    "workflowCurrentCommands": 137
+  },
+  "privateOriginal": {
+    "completeMapWinReturns": 2560,
+    "worldsUnchanged": [
+      "Explore",
+      "Build",
+      "conquer"
+    ],
+    "lineHelperCompleteReturns": 1313,
+    "inheritedOriginalContextsRechecked": 1518,
+    "windowsImportsOrPEStartup": false,
+    "rawOwnerAssetsUploaded": false
+  },
+  "digests": {
+    "line": "be375131be6f8c61560dbc3abba98596fc44ec08e03209b640ad23a70240b480",
+    "plans": "922bc26389585dbbdb252046600fd72df0cf63874ba2c67fdd865a66b38d7995",
+    "layers": "e35147c70414b6738a3c00260154763d85cbdeb365813a721188a7315afa7995",
+    "newScenes": "338965b3aa86884064bd5c9f822dad6a65e9a4ef1033c2657a0bd984becb7bff",
+    "caller": "b2c71681b7dd118035614a0437c4bf6af8b07c3bf92243ece1e3f4ece2a5d2f9"
+  },
+  "rejectedHistory": [
+    "initial sea flag incorrectly bound to GameState; original full-call mismatches retained",
+    "initial land-centre-only colour failed land/water edge comparisons; source464c62 correction and failure retained"
+  ],
+  "unsupported": [
+    "physicalRGB/OS loader/blit/native/frontend/watch/fullWorld unrun",
+    "original baseengine fullMapWin differential unrun for this layer",
+    "sea-platform imported scale/extraction/cache route held, nofakecallbacks",
+    "territory preference200, outline/specialheight/later sprite modes remain held"
+  ],
+  "SDKBuildOnly": true,
+  "nativeExecution": false
+}

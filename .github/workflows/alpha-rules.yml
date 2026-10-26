@@ -284,3 +284,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_rivers.py --out "$RUNNER_TEMP/terrain-rivers-host"
       - name: Original river layer independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_rivers.py --out "$RUNNER_TEMP/terrain-rivers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original RAM grid line host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_line.py --out "$RUNNER_TEMP/terrain-line-host"
+      - name: Original RAM grid line independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_line.py --out "$RUNNER_TEMP/terrain-line-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original terrain grid topology and layer host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_grid.py --out "$RUNNER_TEMP/terrain-grid-host"
+      - name: Original terrain grid topology and layer independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_grid.py --out "$RUNNER_TEMP/terrain-grid-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

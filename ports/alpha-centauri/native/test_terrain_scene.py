@@ -4,7 +4,7 @@ import argparse,hashlib,json,os,struct,subprocess
 from pathlib import Path
 from test_terrain_visibility import fixture as visibility_fixture
 from test_original_game import decode
-NAMES=['original_map','original_game','original_faction','original_world','rules_text','vehicle_stack','terrain_observation','terrain_visibility','terrain_caller_order','cvr_terrain_context','terrain_lighting','terrain_mesh','terrain_dispatch','terrain_texture','terrain_ground_plate','terrain_world_masks','terrain_coast','terrain_coast_resources','terrain_coast_overlay','terrain_ocean_detail','terrain_water_texture','terrain_water_patch','terrain_keyed_quad','terrain_feature_layers','terrain_forest_quad','terrain_roads','terrain_rivers','terrain_scene','terrain_scene_probe']
+NAMES=['original_map','original_game','original_faction','original_world','rules_text','vehicle_stack','terrain_observation','terrain_visibility','terrain_caller_order','cvr_terrain_context','terrain_lighting','terrain_mesh','terrain_dispatch','terrain_texture','terrain_ground_plate','terrain_world_masks','terrain_coast','terrain_coast_resources','terrain_coast_overlay','terrain_ocean_detail','terrain_water_texture','terrain_water_patch','terrain_keyed_quad','terrain_feature_layers','terrain_forest_quad','terrain_roads','terrain_rivers','terrain_line','terrain_grid','terrain_scene','terrain_scene_probe']
 def fixture(profile):
  b=visibility_fixture(0);_,o,_=decode(b)
  for i in range(24):
@@ -93,6 +93,13 @@ def main():
   for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
   river_digest.update(r.stdout)
  assert river_digest.hexdigest()=='ab9c4cde26a4c23c22fa3b8b73b217971a609b544f693d50b07faa02c94a134f',river_digest.hexdigest()
+ grid_digest=hashlib.sha256()
+ for profile in range(3):
+  f=out/f'grid{profile}.SC';f.write_bytes(fixture(profile));command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','67108864'];queries=[(i,z,viewer,cx,cy,0x80,0x100,prefs)for i in range(24)for z in[1,2]for cx,cy in[(-12,20),(14,38),(-80,-30)]for viewer,prefs in[(-1,0),(1,0),(1,0x800000)]];packed=b''.join(struct.pack('<8i',*q)for q in queries);r=subprocess.run(command,input=packed,capture_output=True,env=env);assert r.returncode==0,(r.returncode,r.stderr);assert len(r.stdout)==len(queries)*16388
+  for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
+  equivalent=command[:-1]+['0','256'];same=subprocess.run(equivalent,input=packed,capture_output=True,env=env);assert same.returncode==0 and same.stdout==r.stdout,(same.returncode,same.stderr)
+  grid_digest.update(r.stdout)
+ assert grid_digest.hexdigest()=='338965b3aa86884064bd5c9f822dad6a65e9a4ef1033c2657a0bd984becb7bff',grid_digest.hexdigest()
  held=[]
  base=fixture(0);_,o,_=decode(base)
  for label,offset,fmt,value,expected in [('jungle',o['tiles']+12,'I',4,0),('fungus',o['tiles']+8,'I',0x22,0),('special-height',o['tiles']+12,'I',2,4),('height-seven',o['tiles'],'B',224,5),('raw-rainfall-three',o['tiles'],'B',120,4),('raw-rockiness-three',o['tiles']+5,'B',192,4)]:
@@ -106,5 +113,5 @@ def main():
  for visibility,expected in[(0,0),(2,4)]:
   b=fixture(0);_,o,_=decode(b);b[o['tiles']+4]=visibility;struct.pack_into('<I',b,o['tiles']+8,0x8004);struct.pack_into('<I',b,o['tiles']+16,0x8004);f=out/f'late-item-{visibility}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','32'];r=subprocess.run(command,input=struct.pack('<8i',0,1,1,-12,20,0x80,0x100,0),capture_output=True,env=env);assert r.returncode==0 and struct.unpack_from('<I',r.stdout)[0]==expected,(visibility,r.returncode,r.stdout[:4],r.stderr)
   if expected:assert r.stdout[4:]==bytes([199])*16384
- h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(riverCases=1296,riverSHA256=river_digest.hexdigest(),lateExplorationAndItemHoldCases=2,roadCases=432,roadSHA256=road_digest.hexdigest(),farmCases=432,farmSHA256=farm_digest.hexdigest(),forestCases=432,forestSHA256=forest_digest.hexdigest(),heldFarmBranches=1,cases=count,syntheticWorlds=21,totalSceneCases=3888,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
+ h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(gridCases=1296,gridPreferenceEquivalentCases=1296,gridSHA256=grid_digest.hexdigest(),riverCases=1296,riverSHA256=river_digest.hexdigest(),lateExplorationAndItemHoldCases=2,roadCases=432,roadSHA256=road_digest.hexdigest(),farmCases=432,farmSHA256=farm_digest.hexdigest(),forestCases=432,forestSHA256=forest_digest.hexdigest(),heldFarmBranches=1,cases=count,syntheticWorlds=24,totalSceneCases=5184,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
 if __name__=='__main__':main()

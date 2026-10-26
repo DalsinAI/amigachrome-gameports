@@ -17,12 +17,16 @@ struct TerrainSceneRuntime {
  // active height/light cache. No stale/cache-null/main-window bypass is inferred.
  bool private_view_fresh_active_cache=false,source_identity_supplied=false,source_scale_supplied=false,supplied=false;
 };
-// Ordinary source flags0/1/0x20/0x21 plus independent river bit0x400 terrain path (sea-platform contexts held): observation/caller gate, genuine
+// Ordinary source flags0/1/0x20/0x21 plus independent river0x400/grid0x04000000 bits terrain path (sea-platform contexts held): observation/caller gate, genuine
 // heights/lights/material dispatch, ground then coast OR deep/primary water.
+// Grid preference100 or explicit drawbit04000000 draws only shared NW/NE
+// edges between source land neighbours; MorePreferences800000 enables sea
+// edges with colour190 when either endpoint is water, otherwise37.
+// Grid follows ground and precedes plant/coast/river layers.
 // Source GameRules100/unexplored concealment overrides rainfall/rockiness and
 // suppresses fungus/jungle/forest; retained ordinary height and coast topology are real.
 // Fresh normal-scale25 zoom-5/5 cache profile only. No outline/hidden draw,
-// special heights, grid/territory/sea-platform/actors/OS effects. Revealed
+// special heights, territory/sea-platform/actors/OS effects. Revealed
 // jungle and land/ocean fungus use source unlit keyed layers; flag1 forest
 // is lit and inserted between jungle and fungus using actual neighbour bits.
 // Land farm textures use the source identity-selected variant, rainfall

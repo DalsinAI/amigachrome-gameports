@@ -1576,3 +1576,34 @@ prepared atlas is private. SDK builds are build-only: native, watched preview,
 frontend deployment, physical RGB/OS loading and full-world qualification remain
 UNRUN. Existing sea-platform and later sprite holds are unchanged.
 See `RIVER-SCENE-EVIDENCE-20261026.json`.
+
+
+### Original terrain grid (26 October)
+
+The ordinary RAM scene accepts original draw bit `0x04000000` and grid preference
+`0x100`. It draws only each tile's two shared north edges, after ground and before
+plants/coast/rivers. Both raw endpoints must be land for indexed colour 37.
+Explicit **MorePreferences** `0x800000` enables water edges, which use colour 190
+when either endpoint is water; this flag is not GameState. Pole/outside neighbours
+skip and cylindrical X wrapping follows the source once. There is no inferred
+visibility or palette authority.
+
+The owned integer line raster matches 1,313 complete original RAM helper returns,
+including reversed lines, clipping, strict positive-error ties, horizontal and
+vertical endpoints, and degenerate points. RAM clip and DIB dimensions agree;
+physical display and imported surface paths are not executed. Public host
+sanitizers and independently executed 68040 controls cover 400 plans against a
+separate raw-file model, 72 compositions, descriptor/partial-alias rejection,
+1,296 additional scene contexts and 1,296 preference-equivalence calls. Parent
+3,888 synthetic scenes and all prior caller prefixes retain their exact outputs.
+All 133 parent workflow commands remain, plus four grid commands.
+
+Private full MapWin entry/normal-return comparisons match every pixel in 2,560
+unchanged tutorial contexts across grid flag/preference, sea-grid, visible/fog/
+concealed profiles, both zooms and clipping. Earlier 1,518 original pixel contexts
+were rechecked unchanged. Two rejected implementations are retained: the initial
+sea flag bound to GameState, and a land-centre-only edge colour. Original results
+were not weakened; both corrections follow instruction-backed branch behavior.
+Normal SDK binaries build; native/UI/RGB OS qualification remains UNRUN. Imported
+sprite/sea-platform scale and cache dependencies and other later modes stay held.
+See `GRID-SCENE-EVIDENCE-20261026.json`.
