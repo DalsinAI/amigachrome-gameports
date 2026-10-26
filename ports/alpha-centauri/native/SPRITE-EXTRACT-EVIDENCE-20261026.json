@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-26",
+  "scope": "Acquired indexed RAM crop/trim/extraction; initially empty Sprite and explicit existing bounded pool oracle",
+  "original": {
+    "entry": "0x5e39a0 Sprite_extract2",
+    "wholeFunctionEntryExecuted": true,
+    "realBufferAcquireGetData2Release": true,
+    "realSound": "0x5fd2b0 is original xor eax,eax;ret",
+    "realArenaDispatch": "0x6353c0",
+    "realArenaBumpAllocator": "0x5d4680",
+    "realMemcpy": "0x645930",
+    "suppliedExistingPoolBytes": 65536,
+    "initialSpriteAllZero": true,
+    "realMallocFallbackExecuted": false,
+    "poolConstructorExecuted": false,
+    "originalPcxLoaderExecuted": false,
+    "importsExecuted": false,
+    "fullPeStartup": false
+  },
+  "validation": {
+    "syntheticCases": 216,
+    "ownerPcxCrops": 5,
+    "syntheticNonempty": 171,
+    "syntheticEmpty": 45,
+    "ownerNonempty": 3,
+    "ownerEmpty": 2,
+    "hostAsanUbsan": true,
+    "actualIndependent68040": true,
+    "syntheticDescriptorAndPixelsSHA256": "a8b54ee77206fc0060fa9fa610500b7fafcb595868d81eceeefa48b688b16a3b",
+    "ownerDescriptorAndPixelsSHA256": "237ff2e8394b461a3ef4442e4a4dc3175e4a4afaa0e2669bdd8f4f4ff01afb7e",
+    "boundaryControls": 40,
+    "transactionalRejections": 38,
+    "positiveAndEmptyControls": 2,
+    "normalSdkBuildOnly": true,
+    "normalSdkProbeSHA256": "05315fb7ec29f3f435d895a4fcf51a348c2b387f803a3cdc98d6294b27d0bc20",
+    "normalSdkControlSHA256": "c4f3538401fd6d1cd0ed8a80d4703f4f1ad18e2086109544bff6248c315fb7e9",
+    "nativeExecution": false
+  },
+  "copierInput": {
+    "originalOwnerCrop": [
+      607,
+      190,
+      100,
+      62
+    ],
+    "actualOriginalTrim": [
+      72,
+      40
+    ],
+    "offset": [
+      14,
+      4
+    ],
+    "pitch": 72,
+    "key": 9,
+    "pixelSHA256": "049ab4ee332aa2ae9cb7136e9717da9df3090de12e988c0ecb2e31649b82d438",
+    "matchesFrozenParentCopierOwnerPixelsExactly": true
+  },
+  "contract": {
+    "sourceAlreadyDecodedAndIndexPrepared": true,
+    "callerOwnsOutputStorage": true,
+    "keyIsByteComparison": true,
+    "emptyReturnsOriginalZeroTrimDescriptor": true,
+    "nonemptyCopiesCompactRows": true,
+    "invalidAliasesOrStorageLeaveOutputsUntouched": true,
+    "bounds": {
+      "maxCropAxis": 16384,
+      "maxCropPixels": 67108864
+    }
+  },
+  "limits": [
+    "Complete original observation is restricted to valid nonempty/empty crops with initially empty Sprite, acquired handle-null RAM image and sufficiently large existing pool",
+    "Pool construction, backing malloc fallback, prior Sprite replacement/free and cache ownership lifecycle remain held",
+    "Original physical PCX loader is not executed; owner bytes use separately documented +10/reserved-key preparation facts",
+    "Strict owned invalid-input/alias/insufficient-storage transaction differs from unqualified legacy failure mutations; no whole-function failure-fidelity claim",
+    "Full USER32 Sprite_draw3 prefix/intersection, full scene sprite integration and physical/RGB display remain held",
+    "No frontend/native/watch/lab/deploy/export/publication/full-game completion claim"
+  ]
+}

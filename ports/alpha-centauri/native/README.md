@@ -1720,3 +1720,31 @@ The nonempty full RAM wrapper still needs genuine USER32 `IntersectRect`, while
 original extraction, cache/minimum-size and full caller integration remain held.
 This branch enables no imported improvement sprites or frontend. See
 `SPRITE-PIXELS-EVIDENCE-20261026.json`.
+
+### Acquired-RAM sprite extraction (26 October)
+
+`sprite_extract` accepts an already decoded indexed RAM image, explicit crop and
+byte key. It reports compact pitch/dimensions, original full crop dimensions and
+trim offsets, copying compact rows into caller-owned storage. Valid empty crops
+produce the original empty descriptor without touching pixel storage. Invalid
+ranges, aliases and insufficient storage are strict transactional rejections;
+legacy invalid/failure mutation fidelity is not claimed.
+
+This now has a whole-entry original observation, rather than only a suffix:
+actual `Sprite_extract2` at 5e39a0 executed all real handle-null RAM acquire/release
+operations, its genuine no-op `do_sound`, original arena dispatch/bump allocation
+and original memcpy. The test supplies a sufficiently large existing pool and an
+initially empty Sprite; it executes no pool constructor, backing malloc fallback,
+old-Sprite free or OS image loader. No import or callback was replaced. These
+facts narrowly supersede older blanket extraction/sound holds for this profile.
+
+All descriptor and compact-pixel bytes agree on host ASan/UBSan and actual
+independent 68040 across 216 synthetic cases and five private owner-PCX crops,
+including empty crops. The owner's 100x62 sea-platform crop is now confirmed by
+the whole original extractor as 72x40, pitch72, offset(14,4), key9; its bytes
+exactly match the previously frozen copier input. Forty additional controls cover
+transactional errors, partial aliases, output bounds and empty/nonempty success.
+All 143 inherited workflow commands remain plus two new extraction commands.
+The normal SDK builds are native-execution-unrun. Full USER32 sprite drawing,
+physical loader/cache lifecycle and whole-scene integration remain held. See
+`SPRITE-EXTRACT-EVIDENCE-20261026.json`.
