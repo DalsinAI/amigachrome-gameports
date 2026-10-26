@@ -20,6 +20,10 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq g++-m68k-linux-gnu qemu-user
+      - name: Host local player checkpoint and confirmation controls
+        run: python3 ports/alpha-centauri/native/test_local_player.py --out "$RUNNER_TEMP/local-player-host"
+      - name: Big-endian local player checkpoint and confirmation controls
+        run: python3 ports/alpha-centauri/native/test_local_player.py --out "$RUNNER_TEMP/local-player-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host original owned worker-radius controls
         run: python3 ports/alpha-centauri/native/test_world_worker_radius.py --out "$RUNNER_TEMP/worker-radius-host"
       - name: Big-endian original owned worker-radius controls
