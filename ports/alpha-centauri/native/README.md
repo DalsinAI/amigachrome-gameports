@@ -2070,3 +2070,31 @@ python3 ports/alpha-centauri/native/test_resumed_commands.py --out /tmp/resumed-
 python3 ports/alpha-centauri/native/test_resumed_commands.py --out /tmp/resumed-be --cc m68k-linux-gnu-g++ --m68k-linux
 CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_resumed_commands_probe.sh /tmp/resumed-native
 ```
+
+### Owned original unit skip command
+
+`prepare_skip_unit`/`commit_skip_unit` bind the original `veh_skip` assignment
+to an existing session lifetime/revision and locally owned actor. They use the
+session's own action or accounting unit tables and recovered original speed
+calculation. Production-only imports have no such capability. A successful
+changed commit writes only `moves_spent`, invalidates earlier plans, and reports
+repaint/persistence obligations. Repeating it is a no-op; suspend/reload and
+address reuse cannot revive old commands. Rendering is not performed here.
+
+The original function assigns speed rather than `max(old,speed)`, so an old
+larger spent byte can decrease to the computed maximum. It does not change
+orders, working/skip flags, actor state, position, RNG or advance a turn. The
+checked speed domain remains 0..255; original overflowing low-byte wraps are
+explicitly rejected before mutation. Thinker's additional skipped-unit flags,
+former working flags and monolith actions are not part of this original leaf.
+
+Existing whole-world worker/action buffer encoding preserves this single-byte
+command and the repaired resume baseline. The command is backend only, with no
+player input, real renderer/audio delivery, readiness confirmation, End Turn,
+upkeep, filesystem player save, native execution or full-game qualification.
+
+```
+python3 ports/alpha-centauri/native/test_local_unit_skip.py --out /tmp/skip-host
+python3 ports/alpha-centauri/native/test_local_unit_skip.py --out /tmp/skip-be --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_local_unit_skip_probe.sh /tmp/skip-native
+```
