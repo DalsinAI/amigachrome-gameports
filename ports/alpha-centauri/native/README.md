@@ -1695,3 +1695,28 @@ The full nonempty `Sprite_draw3` RAM wrapper still calls actual USER32
 loader/extraction, cache/minimum-size and scaled pixel-copy/caller dependencies
 remain held. No improvement sprites are enabled by this numeric module. See
 `SPRITE-SCALE-EVIDENCE-20261026.json`.
+
+### Scaled sprite pixel-copy boundary (26 October)
+
+`sprite_pixels` consumes explicit prepared axis plans and indexed RAM pixels.
+It copies non-key texels using the original shrink advances or clipped expansion
+replication counts. The private oracle starts at original instructions after
+the OS rectangle boundary, executes the actual clipping helpers and raster
+suffix, then the genuine handle-null `Buffer_free_data` and normal suffix
+epilogue. It does not execute the complete `Sprite_draw3` entry or replace its
+Windows import. Supplied acquired-buffer and intersection facts are explicit.
+
+Every output pixel matches unchanged original suffix instructions for 248
+synthetic contexts and 71 private owner sea-platform numeric-trim contexts on
+host and actual independent big-endian 68040. Ratios include source 11/16 and
+21/16 plus controlled shrink and 2x/3x/4x expansion, clipped edges and padded
+pitches. These are bounded indexed-copy results, not complete sprite loader,
+physical display, palette or game-scene qualification. Thirty-five transactional
+rejections and one positive control cover descriptors, source buffers, partial
+aliases, bounds and source pixel-step limits. All parent workflow commands remain
+and two commands run the new controls. Normal SDK builds are execution-unrun.
+
+The nonempty full RAM wrapper still needs genuine USER32 `IntersectRect`, while
+original extraction, cache/minimum-size and full caller integration remain held.
+This branch enables no imported improvement sprites or frontend. See
+`SPRITE-PIXELS-EVIDENCE-20261026.json`.

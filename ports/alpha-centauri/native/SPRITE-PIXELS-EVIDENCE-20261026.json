@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-26",
+  "scope": "Owned clipped scaled sprite index-copy stage, after an explicit valid intersection",
+  "originalBoundary": {
+    "shrinkEntry": "0x5e501a",
+    "expandEntry": "0x5e5222",
+    "realClippedAxisHelpers": true,
+    "realOriginalRasterSuffix": true,
+    "realRamBufferFreeData": "0x5e34a3",
+    "normalOriginalSuffixEpilogue": true,
+    "returnAndLockAndDataPointerAllZero": true,
+    "fullSpriteDraw3EntryExecuted": false,
+    "user32IntersectionExecuted": false,
+    "fullPeStartup": false
+  },
+  "contract": {
+    "explicitSourceAndDestinationRam": true,
+    "alreadyIntersectedRectsRequired": true,
+    "preparedAxisPlansRequired": true,
+    "byteTransparencyKey": true,
+    "expandReplicationRange": [
+      1,
+      4
+    ],
+    "shrinkVerticalAdvanceRange": [
+      1,
+      255
+    ],
+    "shrinkHorizontalAdvanceRange": [
+      1,
+      1024
+    ],
+    "sourceSpanIncludesPostFinalAdvance": true,
+    "allValidationBeforeAnyWrite": true,
+    "inputDescriptorsPlansAndSourceOverlapRejected": true
+  },
+  "validation": {
+    "syntheticCases": 248,
+    "privateOwnerSeaPlatformCases": 71,
+    "hostAsanUbsan": true,
+    "actualIndependent68040": true,
+    "originalSyntheticPixelSHA256": "155a707d11fa170c74d6ff83e470b56dcbacbe66713e311c10f52279a1a02615",
+    "originalOwnerPixelSHA256": "08ad29a23d806fa736d4f71eec4caa666b6159914c5d2ee3b55e5aa7e2144e4f",
+    "publicOutputSHA256": "9d45fa68c0b3671eef67b5009e980748fe4f43b9a7c487740e0e3f0d43146630",
+    "boundaryCases": 36,
+    "rejectionNoWriteCases": 35,
+    "positiveControlCases": 1,
+    "normalSdkBuildOnly": true,
+    "normalSdkProbeSHA256": "2d7aefdc089335b029ed15bae7463db047ced941b642c55bd30e189b0f4022a2",
+    "normalSdkControlSHA256": "1e4e9a0e1e974d2f9543dcb4fae189bac74c7d0e820c8ec7796272a89366bc20",
+    "nativeExecution": false
+  },
+  "limits": [
+    "Full Sprite_draw3 still depends on genuine USER32.IntersectRect; no replaced imports or callbacks",
+    "Test caller supplies actual acquired handle-null RAM buffer and already intersected integer rectangles; original wrapper acquisition/intersection and scaling-position prefix are unexecuted",
+    "Owner sea-platform pixels use earlier mathematical crop/trim preparation, not qualified original Sprite_extract/loader execution",
+    "Original scale cache/minimum-size lifecycle, whole MapWin imported sprites, physical display/RGB and native frontend remain held",
+    "No generated replacement art, owner assets or proprietary bytes accompany this module",
+    "No watched preview/lab/native/deployment/publication/export changes or full-world claim"
+  ]
+}

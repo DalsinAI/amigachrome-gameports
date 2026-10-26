@@ -300,3 +300,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_sprite_scale.py --out "$RUNNER_TEMP/sprite-scale-host"
       - name: Original sprite scale and clipped-axis preparation independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_sprite_scale.py --out "$RUNNER_TEMP/sprite-scale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original scaled sprite pixel-copy host controls
+        run: python3 ports/alpha-centauri/native/test_sprite_pixels.py --out "$RUNNER_TEMP/sprite-pixels-host"
+      - name: Original scaled sprite pixel-copy independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_sprite_pixels.py --out "$RUNNER_TEMP/sprite-pixels-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
