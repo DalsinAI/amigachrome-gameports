@@ -252,3 +252,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-host"
       - name: Big-endian original five-phase base psych controls
         run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host complete explicit base energy controls
+        run: python3 ports/alpha-centauri/native/test_base_energy.py --out "$RUNNER_TEMP/base-energy-host"
+      - name: Big-endian complete explicit base energy controls
+        run: python3 ports/alpha-centauri/native/test_base_energy.py --out "$RUNNER_TEMP/base-energy-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

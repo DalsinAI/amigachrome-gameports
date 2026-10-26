@@ -1,5 +1,11 @@
 # Alpha Centauri native rules-reader prototype
 
+The [complete explicit energy composer](BASE-ENERGY.md) now combines both loss
+calculations, specialist output, bonuses, penalties, stockpiling and psych.
+Commerce, technologies and current-world facts still require caller bindings;
+no player accounting mutation or turn is added. Full CI and AmigaOS execution
+remain pending.
+
 The separate [five-phase psych proposal](BASE-PSYCH.md) now has host and
 independent68040 controls plus private original-code comparisons. It remains
 unconnected to player input, World accounting mutation and turn processing;
