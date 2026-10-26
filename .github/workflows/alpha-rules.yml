@@ -200,3 +200,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_material.py --out "$RUNNER_TEMP/terrain-material-host"
       - name: Original terrain palette preparation independent big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_terrain_material.py --out "$RUNNER_TEMP/terrain-material-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original procedural terrain lighting and world point lights host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_lighting.py --out "$RUNNER_TEMP/terrain-lighting-host"
+      - name: Original procedural terrain lighting and world point lights independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_lighting.py --out "$RUNNER_TEMP/terrain-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
