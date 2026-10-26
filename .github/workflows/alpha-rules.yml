@@ -564,3 +564,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_combat_factions.py --out "$RUNNER_TEMP/world-combat-factions-host"
       - name: Owned combat faction independent68040 controls
         run: python3 ports/alpha-centauri/native/test_world_combat_factions.py --out "$RUNNER_TEMP/world-combat-factions-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original fungus combat host controls
+        run: python3 ports/alpha-centauri/native/test_fungus_combat.py --out "$RUNNER_TEMP/fungus-combat-host"
+      - name: Original fungus combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_fungus_combat.py --out "$RUNNER_TEMP/fungus-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned fungus combat host controls
+        run: python3 ports/alpha-centauri/native/test_world_fungus_combat.py --out "$RUNNER_TEMP/world-fungus-combat-host"
+      - name: Owned fungus combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_fungus_combat.py --out "$RUNNER_TEMP/world-fungus-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

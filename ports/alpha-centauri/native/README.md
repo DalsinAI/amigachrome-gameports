@@ -2197,3 +2197,5 @@ Owned psi ability phases: see [WORLD-PSI-ABILITIES.md](WORLD-PSI-ABILITIES.md); 
 Original airdrop/fanatic/faction/Planet combat phases: see [COMBAT-FACTIONS.md](COMBAT-FACTIONS.md); separate explicit numeric phase inputs, World/native/UI pending.
 
 Owned airdrop/faction/Planet binding: see [WORLD-COMBAT-FACTIONS.md](WORLD-COMBAT-FACTIONS.md); actual current actor/faction/design-owner technology facts, explicit phase strengths, native/UI pending.
+
+Original fungus attack phase and World binding: see [FUNGUS-COMBAT.md](FUNGUS-COMBAT.md); explicit incoming offense, numeric inspection only, native/UI pending.
