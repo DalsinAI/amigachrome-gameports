@@ -1,0 +1,60 @@
+{
+  "scope": "Pinned original SMAX bounded ordinary-water caller region46452c..464720 and actual dependencies",
+  "sourceExecutableSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf",
+  "kernel": {
+    "source": [
+      "624670 thresholdfog",
+      "61ac60 threshold",
+      "6233c0 primaryfog",
+      "61b1f0 primary",
+      "actual edge/gradient/RAMBuffer helpers"
+    ],
+    "contexts": 192,
+    "pixels": 786432,
+    "sha256": "742c4e5bf6ecf8bd5127dd8b3fa94486486836db53bf5d0424faa0ef7ac00dd5",
+    "rejections": 10,
+    "partialRejected": true,
+    "controlPrimaryBounds": [
+      -4,
+      4
+    ]
+  },
+  "worldWater": {
+    "originalOwnerPatches": 24,
+    "originalSyntheticMaterialPatches": 24,
+    "publicSyntheticWorldPatches": 24,
+    "pixelsPerCorpus": 393216,
+    "ownerResetSHA256": "772e5ef79170f1310b5cba9ddb23b72743dc1f2af3b31069193472d02d181821",
+    "syntheticMaterialResetSHA256": "ec9599bd0ee5295c48e2096253fb7ef913df0dab587e596dec217ce1a8258df7",
+    "publicSyntheticWorldSHA256": "5fb3ed84ab4fd00084f4ccfc21caa81d499dfffc2846f9a8974aa83489cb68e8",
+    "planRejects": 9,
+    "planAliases": 11,
+    "renderRejects": 2,
+    "renderAliases": 14,
+    "partialRejected": true
+  },
+  "architectures": [
+    "ASan/UBSan host",
+    "independent Linux68040"
+  ],
+  "sourceRuntimeBounds": {
+    "initialAndFunctionEndReset": [
+      -256,
+      256
+    ],
+    "landOnlySet": [
+      -4,
+      4
+    ],
+    "explicitlyRequired": true
+  },
+  "qualification": "normal private SDK builds; native/UI/remote CI UNRUN",
+  "limits": [
+    "Exact pinned SMAX source region, not full MapWin/PE/OS or base-Terran renderer",
+    "Human visibility/fog/caller/normal scale and flags remain explicit supplied context",
+    "Actual owner light table and prepared atlas required; original bytes/assets not bundled",
+    "No terrain items, units, full map scene, viewport/OS blit or frontend enabling",
+    "No guessed source allocation/private LCG or gameplay RNG substitution"
+  ],
+  "history": "First bounded water oracle explicitly used clamp4. It is preserved separately; source initial/reset clamp256 recovered before freezing, API made explicit, both profiles pass unchanged original pixel comparisons."
+}

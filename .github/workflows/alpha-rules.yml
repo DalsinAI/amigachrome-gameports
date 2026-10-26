@@ -232,3 +232,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_coast_overlay.py --out "$RUNNER_TEMP/terrain-coast-overlay-host"
       - name: Original ordinary coast overlay composition independent big-endian pixel controls
         run: python3 ports/alpha-centauri/native/test_terrain_coast_overlay.py --out "$RUNNER_TEMP/terrain-coast-overlay-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original water quad primary and threshold host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_water_texture.py --out "$RUNNER_TEMP/terrain-water-texture-host"
+      - name: Original water quad primary and threshold independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_water_texture.py --out "$RUNNER_TEMP/terrain-water-texture-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned World original ordinary water pass host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_water_patch.py --out "$RUNNER_TEMP/terrain-water-patch-host"
+      - name: Owned World original ordinary water pass independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_water_patch.py --out "$RUNNER_TEMP/terrain-water-patch-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

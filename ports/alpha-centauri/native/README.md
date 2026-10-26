@@ -1242,3 +1242,36 @@ profile: this is not a full World caller execution, view/fog resolver, actual OS
 loader or complete sea/water scene. Original owner class/rule/light tables and
 assets remain private. Normal SDK builds pass; native execution, frontend
 integration and remote CI are unrun. See `OCEAN-COAST-EVIDENCE-20261026.json`.
+
+### Source water primary/threshold pass (26 October)
+
+`build_world_water_plan` and `render_world_water_patch` restore the bounded
+ordinary ocean pass at original SMAX 46452c..464720. The unchanged original
+region computes its World contour detail, sector XY/UVs, renderer lights and
+both pixel layers; the private oracle executes those actual dependencies and
+RAM Buffer calls. The owned plan matches the source's asymmetric water UVs
+(which differ from coast UVs), flat ocean geometry, deep-base condition (any
+pointlight >=16), then threshold-16 primary order. Materials are the prepared
+TEXTURE atlas crops (280,136,56,56) and (280,79,56,56). The independent host and
+big-endian comparisons include all three original tutorial maps.
+
+An important runtime boundary is explicit: only land sets primary-light clamp
+bounds to -4..4. Original initial data and function-end reset are -256..256;
+ocean inherits the actual global bounds. The new primary quad kernel and World
+adapter require supplied bounds, without silently selecting the land profile.
+Both profiles were separately executed and compared. The first oracle's -4..4
+profile is preserved as a control, not claimed as normal ocean-reset proof.
+Threshold drawing is unclamped and compares signed interpolated shade against
+16. Its fog rows fill only after the all-vertices-at-or-above-threshold early
+skip. Primary fog retains the original odd-row texture prefetch lag.
+
+Source context must establish normal Scale25, zoom1/2, ocean classification,
+source draw flags excluding 82000000, fog -1/65, actual caller coordinates and
+runtime light bounds. The renderer's edition-bound 80-entry light table remains
+explicit private owner metadata. The adapter stages the small indexed surface
+and rejects World/input/material/descriptor aliases transactionally. Public
+synthetic checks run without original assets or executable bytes. Native/OS
+allocation, complete MapWin view resolution, full world scenes, base-Terran
+renderer differential and frontend integration remain unrun. No private render
+allocation identity or gameplay RNG is invented by this deterministic pass.
+See `WATER-EVIDENCE-20261026.json` for exact scope and counts.
