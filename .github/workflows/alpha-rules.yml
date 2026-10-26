@@ -588,3 +588,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_zoc.py --out "$RUNNER_TEMP/world-zoc-host"
       - name: Original World ZOC independent68040 controls
         run: python3 ports/alpha-centauri/native/test_world_zoc.py --out "$RUNNER_TEMP/world-zoc-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original supply pods host controls
+        run: python3 ports/alpha-centauri/native/test_supply_pods.py --out "$RUNNER_TEMP/supply-pods-host"
+      - name: Original supply pods independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_supply_pods.py --out "$RUNNER_TEMP/supply-pods-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
