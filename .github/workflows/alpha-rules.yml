@@ -604,3 +604,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_vehicle_removal.py --out "$RUNNER_TEMP/vehicle-removal-host"
       - name: Big-endian checked vehicle-removal storage controls
         run: python3 ports/alpha-centauri/native/test_vehicle_removal.py --out "$RUNNER_TEMP/vehicle-removal-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned current-world removal frame controls
+        run: python3 ports/alpha-centauri/native/test_world_vehicle_removal.py --out "$RUNNER_TEMP/world-vehicle-removal-host"
+      - name: Big-endian owned current-world removal frame controls
+        run: python3 ports/alpha-centauri/native/test_world_vehicle_removal.py --out "$RUNNER_TEMP/world-vehicle-removal-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
