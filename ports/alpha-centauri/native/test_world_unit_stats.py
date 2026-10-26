@@ -78,7 +78,7 @@ def original_model(rules,data,variant):
   if not(-2147483648<=n<=2147483647):raise ValueError('morale overflow')
   immune=bool(scalar(rules,FACTION_SCHEMA['MFaction'],'rule_flags')&0x8000)
   if immune:n=max(0,n)
-  if riots and home>=0 and (struct.unpack_from('<I',bases[home],48)[0]&2) and not immune:n-=1
+  if riots and home>=0 and (struct.unpack_from('<I',bases[home],48)[0]&2) and not immune:n=clamp(n-1,0,6)
   n+=raw
   if not(-2147483648<=n<=2147483647):raise ValueError('morale overflow')
   return clamp(n,0,6)

@@ -480,3 +480,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_native_combat_morale.py --out "$RUNNER_TEMP/world-native-combat-morale-host"
       - name: Big-endian saved-world native combat morale
         run: python3 ports/alpha-centauri/native/test_world_native_combat_morale.py --out "$RUNNER_TEMP/world-native-combat-morale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original riot morale ordering and dependent speed
+        run: python3 ports/alpha-centauri/native/test_riot_morale.py --out "$RUNNER_TEMP/riot-morale-host"
+      - name: Big-endian original riot morale ordering and dependent speed
+        run: python3 ports/alpha-centauri/native/test_riot_morale.py --out "$RUNNER_TEMP/riot-morale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

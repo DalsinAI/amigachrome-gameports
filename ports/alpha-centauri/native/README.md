@@ -2161,3 +2161,7 @@ Original opponent-specific native morale is available as a checked read-only
 leaf and saved-world query. See [NATIVE-COMBAT-MORALE.md](NATIVE-COMBAT-MORALE.md)
 for edition differences, absent version11 runtime rejection and remaining
 battle/command/native gates.
+
+The original riot-morale ordering is restored in this candidate; see
+[RIOT-MORALE-CORRECTION.md](RIOT-MORALE-CORRECTION.md). Earlier source-reference
+passes included an OpenSMACX gameplay change and do not qualify this correction.

@@ -71,7 +71,7 @@ LogicError world_effective_morale(const OriginalWorld& w,const UnitDefinitions& 
  if(rules->rule_morale>0)modifier+=rules->rule_morale;
  if(!signed_word(modifier))return LogicError::overflow;
  const bool immune=(rules->rule_flags&0x8000u)!=0;if(immune && modifier<0)modifier=0;
- if(riots && v->home_base_id>=0){const auto* base=w.base((size_t)v->home_base_id);if(!base)return LogicError::bad_state;if((base->state_flags&2u) && !immune)--modifier;}
+ if(riots && v->home_base_id>=0){const auto* base=w.base((size_t)v->home_base_id);if(!base)return LogicError::bad_state;if((base->state_flags&2u) && !immune){--modifier;if(modifier<0)modifier=0;else if(modifier>6)modifier=6;}}
  const int64_t total=modifier+v->morale;if(!signed_word(total))return LogicError::overflow;
  output=(uint32_t)clamp((int32_t)total,0,6);return LogicError::ok;
 }
