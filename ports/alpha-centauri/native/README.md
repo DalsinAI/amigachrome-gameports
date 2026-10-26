@@ -2156,3 +2156,8 @@ python3 ports/alpha-centauri/native/test_ready_search.py --out /tmp/search-host
 python3 ports/alpha-centauri/native/test_ready_search.py --out /tmp/search-be --cc m68k-linux-gnu-g++ --m68k-linux
 CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_ready_search_probe.sh /tmp/search-native
 ```
+
+Original opponent-specific native morale is available as a checked read-only
+leaf and saved-world query. See [NATIVE-COMBAT-MORALE.md](NATIVE-COMBAT-MORALE.md)
+for edition differences, absent version11 runtime rejection and remaining
+battle/command/native gates.

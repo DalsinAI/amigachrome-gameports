@@ -472,3 +472,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_combat_prototype.py --out "$RUNNER_TEMP/world-combat-prototype-host"
       - name: Big-endian saved-world combat prototype binding
         run: python3 ports/alpha-centauri/native/test_world_combat_prototype.py --out "$RUNNER_TEMP/world-combat-prototype-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original opponent native morale
+        run: python3 ports/alpha-centauri/native/test_native_combat_morale.py --out "$RUNNER_TEMP/native-combat-morale-host"
+      - name: Big-endian original opponent native morale
+        run: python3 ports/alpha-centauri/native/test_native_combat_morale.py --out "$RUNNER_TEMP/native-combat-morale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host saved-world native combat morale
+        run: python3 ports/alpha-centauri/native/test_world_native_combat_morale.py --out "$RUNNER_TEMP/world-native-combat-morale-host"
+      - name: Big-endian saved-world native combat morale
+        run: python3 ports/alpha-centauri/native/test_world_native_combat_morale.py --out "$RUNNER_TEMP/world-native-combat-morale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
