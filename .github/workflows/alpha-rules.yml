@@ -356,3 +356,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_unit_availability.py --out "$RUNNER_TEMP/unit-availability-host"
       - name: Big-endian original unit availability
         run: python3 ports/alpha-centauri/native/test_unit_availability.py --out "$RUNNER_TEMP/unit-availability-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned world unit availability
+        run: python3 ports/alpha-centauri/native/test_world_unit_availability.py --out "$RUNNER_TEMP/world-unit-availability-host"
+      - name: Big-endian owned world unit availability
+        run: python3 ports/alpha-centauri/native/test_world_unit_availability.py --out "$RUNNER_TEMP/world-unit-availability-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

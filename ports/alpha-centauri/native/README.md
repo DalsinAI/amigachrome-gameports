@@ -1563,3 +1563,35 @@ The API has no owned World binding, authority, queue retry loop, production
 commit, completion, actor creation, turn or frontend input. Normal Amiga SDK
 builds are compilation only. Final-head CI and actual AmigaOS execution remain
 unrun; do not expose this query as restored gameplay.
+
+### Owned-world unit admission (read-only, local only)
+
+`world_unit_availability` binds the checked original leaf to the owned saved
+world's512 prototypes, active/obsolete flags, plan/component bytes, raw abilities,
+scenario rules and technology owners. Parsed technology prerequisites and chassis
+triads are used directly. Sea units with a base derive adjacent ocean access from
+actual tile climate bytes and the eight original neighbors, with horizontal wrap,
+flat-map bounds and vertical bounds. Base=-1 skips chassis/coast lookup as the
+original global query does. Invalid chassis references conservatively reject a
+base-present query, even if an earlier availability gate could have rejected it.
+
+Runtime edition must match the loaded wire edition and definition table profile.
+ExpansionEnabled remains explicit, including SMAX with expansion mode disabled;
+original SMAC ignores that flag. Factions0..7 and cross-owner base queries retain
+the original predicate semantics and grant no action authority. Aliases into the
+World object, owned decoded arrays, original container, rules or definitions
+reject before writes. Failure leaves the output unchanged. Full decoded/opaque
+World bytes, definition tables and runtime RNG stay unchanged through the suites.
+
+The corpus covers wire versions7..12, all512 designs/factions, global and base
+queries, both explicit expansion states, invalid inputs, inactive/obsolete/custom
+ownership, prerequisite sentinels, corrupt unused chassis and map edges under
+flat/wrapped geometry. Private runs also include the owner's three tutorials.
+The original routines/coast-helper differential evidence belongs to the unchanged
+parent leaf; this binding is tested against an independent wire-based model and
+is not execution of an original saved-world load or production turn.
+
+No queue mutation/retry loop, unit creation, owning session/phase authority,
+completion, save command, End Turn or frontend input is added. SDK compilation
+and local host/independent68040 checks do not qualify AmigaOS execution or full
+final-head CI, which remain unrun.
