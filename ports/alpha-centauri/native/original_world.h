@@ -64,6 +64,8 @@ class OriginalWorld {
   const OriginalFactionDefinition* faction_definition(size_t i)const{return loaded() && i<8?definitions_+i:nullptr;}
  private:
   friend class LocalProductionSession;
+  // Private read-only discovery working snapshot; no public World mutator.
+  friend class DiscoveryReactorSequencePlan;
   friend class WorldActions;
   void swap(OriginalWorld& other);
   uint8_t* raw_=nullptr;
