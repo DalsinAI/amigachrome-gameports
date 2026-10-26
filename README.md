@@ -182,3 +182,7 @@ not commit income or execute a turn.
 The local [police snapshot](ports/alpha-centauri/native/WORLD-POLICE.md) supplies
 ordered garrison and edition-correct double-police facts without repairing or
 mutating units. It is a dependency for later happiness and income composition.
+
+The local [pacifism dependency](ports/alpha-centauri/native/WORLD-PACIFISM.md)
+now derives the original counter from actual home units, plans, components and
+location. It does not commit happiness or execute upkeep.
