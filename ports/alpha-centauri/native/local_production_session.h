@@ -5,6 +5,7 @@
 #include "world_production_retool.h"
 #include "world_actions.h"
 #include "local_accounting.h"
+#include "local_workers.h"
 namespace alpha {
 class LocalProductionSession;
 enum class LocalOrderError {ok,bad_state,bad_rules,bad_world,no_memory,not_human,not_owner,unavailable,
@@ -71,8 +72,18 @@ class LocalProductionSession {
   LocalOrderError load_local_accounting(const uint8_t*,size_t,const uint8_t*,size_t,
    Variant,bool,int32_t,uint32_t,size_t memory_limit=64u*1024u*1024u);
   bool accounting_enabled()const;
+  // Explicit combined base-game import, owning both same-input action and
+  // accounting tables. Existing accounting-only imports never gain movement.
+  LocalOrderError load_local_worker_actions(const uint8_t*,size_t,const uint8_t*,size_t,
+   Variant,bool,int32_t,uint32_t,size_t memory_limit=64u*1024u*1024u);
   LocalOrderError prepare_accounting(size_t,const WorldEnergyStage&,BaseAccountingPlan&)const;
   LocalOrderError commit_accounting(const BaseAccountingPlan&,BaseAccountingReceipt&);
+  // Offline accounting imports also own the tables for worker allocation.
+  // work_limit bounds current wire + decoded clone + private plan workspace;
+  // called yield/accounting components retain their own bounded scratch.
+  LocalOrderError prepare_workers(size_t,const WorldEnergyStage&,WorkerAccountingPlan&,
+   size_t work_limit=64u*1024u*1024u)const;
+  LocalOrderError commit_workers(const WorkerAccountingPlan&,WorkerAccountingReceipt&);
   // Preparation binds an intent to this session lifetime/revision; it does
   // not certify a legal move or quote a price. LocalOrderError::ok from commit
   // means evaluated; StepResult may explicitly reject the move without writes.

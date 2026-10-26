@@ -1379,3 +1379,34 @@ assignments, execute a turn or expose player input. Native execution and full
 workflow/CI remain unrun. Public wire-model controls are in
 `test_world_human_allocation.py`; the isolated normal SDK build helper is
 `build_world_human_allocation_probe.sh`.
+
+### Owned worker and accounting transactions (local qualification)
+
+Accounting-enabled offline sessions can prepare and commit a
+`WorkerAccountingPlan`. Preparation allocates a private copy of the current
+movement/order/accounting union, computes actual worker selection and fresh
+first intake, then evaluates complete stage0 base accounting on that coherent
+copy. Commit recomputes the private plan against the same session identity and
+revision before applying one base patch. Failed calculations preserve the live
+world and output; suspension, reload, address reuse and changes by another action
+invalidate prior plans. An unchanged refresh keeps the revision unchanged.
+Temporary wire/decoded-world/plan allocations have an explicit work budget;
+called components retain their bounded internal scratch allocations.
+
+`load_local_worker_actions` explicitly imports the combined base-game bounded
+land-action and accounting capability from the same private rule tables. Existing
+accounting-only imports still disable movement. Expansion movement remains
+unsupported. The combined controls perform two bounded moves, three facility
+orders, worker/accounting commits, export/reload and continued exhausted-movement
+checks against an independently patched complete container. No turn refill is
+performed. The frontend does not instantiate these capabilities.
+
+`encode_local_workers_snapshot` separately encodes the existing movement/order/
+accounting union plus worked mask, specialist count/adjustment, first intake,
+unused intake and worker state bits. It seals all other decoded fields and all
+state bits outside 0x8100; changed worker counts must remain coherent. Explicit
+little-endian writes preserve opaque original bytes and the footer; runtime RNG
+is returned separately. Frozen accounting/action codecs remain sealed to their
+original field sets. These are buffer transactions, not a qualified filesystem
+save, original-executable compatibility claim, full upkeep or playable game.
+AmigaOS execution and complete final-head CI remain unrun.

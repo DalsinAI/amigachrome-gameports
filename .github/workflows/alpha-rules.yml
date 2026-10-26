@@ -312,3 +312,15 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_human_allocation.py --out "$RUNNER_TEMP/world-human-allocation-host"
       - name: Big-endian original world human allocation and leaf replay
         run: python3 ports/alpha-centauri/native/test_world_human_allocation.py --out "$RUNNER_TEMP/world-human-allocation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned worker accounting transactions
+        run: python3 ports/alpha-centauri/native/test_local_workers.py --out "$RUNNER_TEMP/local-workers-host"
+      - name: Big-endian owned worker accounting transactions
+        run: python3 ports/alpha-centauri/native/test_local_workers.py --out "$RUNNER_TEMP/local-workers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host worker union snapshot controls
+        run: python3 ports/alpha-centauri/native/test_local_workers_snapshot.py --out "$RUNNER_TEMP/worker-snapshot-host"
+      - name: Big-endian worker union snapshot controls
+        run: python3 ports/alpha-centauri/native/test_local_workers_snapshot.py --out "$RUNNER_TEMP/worker-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host movement production worker accounting composition
+        run: python3 ports/alpha-centauri/native/test_local_worker_actions.py --out "$RUNNER_TEMP/worker-actions-host"
+      - name: Big-endian movement production worker accounting composition
+        run: python3 ports/alpha-centauri/native/test_local_worker_actions.py --out "$RUNNER_TEMP/worker-actions-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -1,9 +1,9 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "local_session_data.h"
+#include "local_accounting_tables.h"
 #include <new>
 #include <limits.h>
 namespace alpha {
-struct LocalAccountingTables {UnitDefinitions units;ResourceInfo resources;CitizenDefinitions citizens;};
 namespace {
 bool overlap(const void* a,size_t n,const void* b,size_t m){
  if(!n || !m)return false;
