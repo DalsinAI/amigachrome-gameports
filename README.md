@@ -164,3 +164,8 @@ Copyright (c) 2026 AmigaChrome Team.
 ## Contributors
 
 AmigaChrome Game Ports is created and maintained by [SacredTrees](https://github.com/SacredTrees) with The AmigaChrome Team, copyright AmigaChrome Team. Everyone whose work it includes is credited in [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
+
+The local Alpha citizen-definition reader is documented in
+[the native boundary](ports/alpha-centauri/native/CITIZEN-DEFINITIONS.md).
+It supplies original specialist data for subsequent energy integration; it does
+not yet bind technology availability or mutate the world.
