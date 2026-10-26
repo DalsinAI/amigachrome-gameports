@@ -192,3 +192,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_texture.py --out "$RUNNER_TEMP/terrain-texture-host"
       - name: Indexed terrain triangle independent big-endian 68040 pixel controls
         run: python3 ports/alpha-centauri/native/test_terrain_texture.py --out "$RUNNER_TEMP/terrain-texture-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original fog and keyed terrain composition host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_composition.py --out "$RUNNER_TEMP/terrain-composition-host"
+      - name: Original fog and keyed terrain composition independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_composition.py --out "$RUNNER_TEMP/terrain-composition-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original terrain palette preparation host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_material.py --out "$RUNNER_TEMP/terrain-material-host"
+      - name: Original terrain palette preparation independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_material.py --out "$RUNNER_TEMP/terrain-material-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -20,5 +20,10 @@ struct TerrainTextureSurface {
 // are emulated with integers without changing the caller's floating state.
 // Invalid sampled coordinates/aliases fail before any destination writes.
 bool draw_terrain_texture(const TerrainTextureInput&,const TerrainTextureSurface&);
+// Original draw_3 opaque fog stripe: even absolute surface rows use colour,
+// odd rows repeat the first visible texel before advancing the original texture. -1 selects ordinary drawing.
+bool draw_terrain_fog_texture(const TerrainTextureInput&,const TerrainTextureSurface&,int colour);
+// Indexed key is tested before signed-light addition, including fog rows.
+bool draw_terrain_masked_texture(const TerrainTextureInput&,const TerrainTextureSurface&,int key,int fog_colour=-1);
 }
 #endif

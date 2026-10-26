@@ -41,7 +41,7 @@ bool edge_at(const TerrainTextureVertex*v,unsigned top,int direction,int y,Edge&
  }
  return false;
 }
-bool pass(const TerrainTextureInput&in,const TerrainTextureSurface&s,bool write){
+bool pass(const TerrainTextureInput&in,const TerrainTextureSurface&s,bool write,int fog,int key){
  unsigned top=0;int bottom=in.vertex[0].y;
  for(unsigned i=1;i<3;++i){if(in.vertex[i].y<in.vertex[top].y)top=i;if(in.vertex[i].y>bottom)bottom=in.vertex[i].y;}
  const int first=in.vertex[top].y<0?0:in.vertex[top].y;
@@ -55,19 +55,28 @@ bool pass(const TerrainTextureInput&in,const TerrainTextureSurface&s,bool write)
   const int64_t dl=gradient(r.l-l.l,width,8);
   const int start=l.x<0?0:(int)l.x,finish=r.x>(int)s.width?(int)s.width:(int)r.x;
   for(int x=start;x<finish;++x){
+   if(fog>=0&&key<0&&(y&1)==0){if(write)s.pixels[(size_t)y*s.pitch+x]=(uint8_t)fog;continue;}
    const int64_t t=x-l.x;
-   const int64_t u=floor_div(l.u+du*t,65536),v=floor_div(l.v+dv*t,65536);
+   // The original fog path prefetches before advancing its texture pointer:
+   // first visible texel repeats, while shade advances for every pixel.
+   const int64_t sample=fog>=0&&key<0&&x>start?t-1:t;
+   const int64_t u=floor_div(l.u+du*sample,65536),v=floor_div(l.v+dv*sample,65536);
    if(u<0||v<0||u>=in.texture_width||v>=in.texture_height)return false;
    if(write){
+    const uint8_t texel=in.texels[(size_t)v*in.texture_width+u];
+    if(texel==key)continue;
+    if(fog>=0&&(y&1)==0){s.pixels[(size_t)y*s.pitch+x]=(uint8_t)fog;continue;}
     const uint16_t shade=(uint16_t)(floor_div(l.l,256)+dl*t);
-    s.pixels[(size_t)y*s.pitch+x]=(uint8_t)(in.texels[(size_t)v*in.texture_width+u]+(shade>>8));
+    s.pixels[(size_t)y*s.pitch+x]=(uint8_t)(texel+(shade>>8));
    }
   }
  }
  return true;
 }
 }
-bool draw_terrain_texture(const TerrainTextureInput&input,const TerrainTextureSurface&surface){
+bool draw_terrain_masked_texture(const TerrainTextureInput&input,const TerrainTextureSurface&surface,int key,int fog){
+ if(key< -1||key>255)return false;
+ if(fog< -1||fog>255)return false;
  if(!surface.pixels||!input.texels||!surface.width||!surface.height||surface.width>4096||surface.height>4096||surface.pitch<surface.width||surface.pitch>65536)return false;
  const size_t used=(size_t)(surface.height-1)*surface.pitch+surface.width;
  if(used>surface.bytes||!input.texture_width||!input.texture_height||input.texture_width>256||input.texture_height>256)return false;
@@ -75,6 +84,8 @@ bool draw_terrain_texture(const TerrainTextureInput&input,const TerrainTextureSu
  if(texused>input.texture_bytes||overlap(surface.pixels,used,&input,sizeof input)||overlap(surface.pixels,used,&surface,sizeof surface)||overlap(surface.pixels,used,input.texels,texused))return false;
  TerrainTextureInput in=input;
  for(auto&v:in.vertex){if(v.x< -4096||v.x>4096||v.y< -4096||v.y>4096||v.u<0||v.u>255||v.v<0||v.v>255)return false;if(v.light< -4)v.light=-4;if(v.light>4)v.light=4;}
- return pass(in,surface,false)&&pass(in,surface,true);
+ return pass(in,surface,false,fog,key)&&pass(in,surface,true,fog,key);
 }
+bool draw_terrain_fog_texture(const TerrainTextureInput&input,const TerrainTextureSurface&surface,int fog){return draw_terrain_masked_texture(input,surface,-1,fog);}
+bool draw_terrain_texture(const TerrainTextureInput&input,const TerrainTextureSurface&surface){return draw_terrain_fog_texture(input,surface,-1);}
 }
