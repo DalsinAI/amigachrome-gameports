@@ -44,7 +44,8 @@ struct FacilityOrderReceipt {bool changed,repaint_required,persistence_required;
  * instantiate it. One owning engine thread is required. This is not the
  * original turn/AI/network/modal runtime. A separate explicit base-only import
  * enables the bounded clear-land action under the same revision authority.
- * Both saved map owner and active turn faction must match the explicit human.
+ * Raw imports require saved map owner and active faction to match the human.
+ * The explicit repaired resume entry instead derives and selects MapWin owner.
  * Caller explicitly selects the saved current human faction and runtime
  * edition. Orders are limited to a local owned base with a single queue slot.
  * No unit-production eligibility, completion, upkeep, turn or UI implementation.
@@ -65,6 +66,16 @@ class LocalProductionSession {
   // gains movement capability from a separate caller-supplied rules object.
   LocalOrderError load_local_land_actions(const uint8_t* save,size_t save_length,const uint8_t* rules,size_t rules_length,
    Variant profile,bool expansion_enabled,int32_t local_human,uint32_t runtime_seed,
+   size_t memory_limit=64u*1024u*1024u);
+  // Original record repairs + offline single-human resume to MapWin owner.
+  // Derives the owner from the file; rejects multiple humans/dead owner.
+  // base_actions enables only the existing base-game bounded commands.
+  // The owned immutable wire becomes the repaired, owner-selected command
+  // baseline; external input stays unchanged. No phase/end-turn authority.
+  // memory_limit bounds each stage plus its live private staging allocations,
+  // excluding the prior session, input, and inherited validator scratch.
+  LocalOrderError load_resumed_commands(const uint8_t*,size_t,const uint8_t*,size_t,
+   Variant,bool expansion_enabled,bool base_actions,uint32_t runtime_seed,
    size_t memory_limit=64u*1024u*1024u);
   bool land_actions_enabled()const;
   // Explicit table-owning, offline accounting capability. No movement is

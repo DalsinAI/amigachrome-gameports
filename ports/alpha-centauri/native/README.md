@@ -2036,3 +2036,37 @@ and immutable output do not establish turn authority or a player action.
 Exact original load-record repairs can be retained in a snapshot buffer through
 [INITIALIZED-SNAPSHOT.md](INITIALIZED-SNAPSHOT.md). This remains a structural
 persistence boundary, with no new engine/player action or filesystem save API.
+
+### Explicit repaired offline command resume
+
+`LocalProductionSession::load_resumed_commands` derives the sole local human
+from the saved MapWin owner and human mask, applies the verified original record
+repairs, requires that owner to survive those repairs, then selects that owner
+as CurrentFaction and clears the original PBEM-restart rule bit40 in a private
+normalized command baseline. Every other rule bit is preserved. This is the original
+offline resume selection; it does not refill movement or authorize upkeep.
+Raw `load_local*` imports retain their previous saved-current-faction requirement.
+The new import owns all accounting tables; its explicit base-actions option also
+owns the existing bounded base-game movement tables. Expansion movement remains
+unsupported. Existing private lifetime/revision command checks continue to apply.
+
+The external input stays unchanged. `world()->original_bytes()` now refers to the
+**repaired, owner-selected command baseline**, not the unmodified external source.
+Existing worker/action snapshot encoding preserves this baseline and subsequent
+supported commands; no filesystem save protocol or original executable acceptance
+is claimed. Private repair/normalization and session loading must all succeed
+before replacement; failed loads preserve the previous session and its revision.
+The memory limit covers each operation plus its live private staging allocations,
+excluding the old session, caller input and inherited validator scratch. The
+private rule table/repair World are destroyed before command-session loading.
+
+This remains backend integration only: no frontend controls, path/contour/cursor
+initialization, real modal/audio/render event delivery, phase admission, end turn,
+AI, combat or diplomacy. RuntimeMove zero, imported CurrentFaction and refreshed
+accounting never confer phase authority. Native execution and remote CI are unrun.
+
+```
+python3 ports/alpha-centauri/native/test_resumed_commands.py --out /tmp/resumed-host
+python3 ports/alpha-centauri/native/test_resumed_commands.py --out /tmp/resumed-be --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_resumed_commands_probe.sh /tmp/resumed-native
+```
