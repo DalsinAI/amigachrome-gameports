@@ -272,3 +272,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_forest_layers.py --out "$RUNNER_TEMP/terrain-forest-layers-host"
       - name: Original forest source layer ordering independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_forest_layers.py --out "$RUNNER_TEMP/terrain-forest-layers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original road and tube viewer topology and layer host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_roads.py --out "$RUNNER_TEMP/terrain-roads-host"
+      - name: Original road and tube viewer topology and layer independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_roads.py --out "$RUNNER_TEMP/terrain-roads-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

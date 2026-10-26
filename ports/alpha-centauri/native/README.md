@@ -1518,3 +1518,36 @@ are private numeric observations, not an enabled or validated sea draw.
 
 A normal Amiga SDK scene build is retained; native execution, UI and
 deployment remain UNRUN. See `FARM-SCENE-EVIDENCE-20261026.json`.
+
+### Original road/magtube scene layer (26 October 2026)
+
+Ordinary source flags0/1/0x20/0x21 now admit roads/magtubes after the
+plant/coast passes. The owned plan preserves raw source base bits, the first
+matching base record, base visibility, viewer-specific neighbour snapshots,
+eight-direction order and isolated road/tube fallback. It draws the genuine
+prepared owner texture crops through the qualified shaded keyed quad.
+
+The original caller has a separate later exploration gate: terrain reveal
+does not grant roads/improvements on unexplored tiles. The first original
+comparison exposed 12 such mismatches; the failed source/binary/receipt remain
+private, and the source-backed gate now matches. Stale base bits stay held
+instead of executing or pretending source repair/log/OS callbacks. Visible
+crop-yield and improvement/landmark sprites sharing bit0x20 remain explicit
+transactional holds, as does the sea platform. No frontend is enabled.
+
+Public controls run 4,340 plans against an independent raw-file reader, 1,024
+layer compositions and 432 new World road scenes, plus late-gate/alias/failure
+controls, on host sanitizers and actual independent 68040. All earlier scene
+digests remain unchanged. The numeric caller retains its prior digest and
+adds 432 road-flag cases. All 127 parent workflow commands remain, plus two
+new road-control commands.
+
+Private complete unchanged MapWin entry/normal-return comparisons match all
+pixels in 180 unchanged tutorial contexts and 128 controlled connection contexts
+using owner textures. The latter explicitly alter terrain/item bits; they are
+not original saved road worlds. A first fixture edited the wrong neighbour
+location and was rejected as coverage despite matching pixels; its history
+remains. Corrected coordinates cover all eight road/tube directions and the
+isolated fallbacks. Earlier 826 original contexts were rechecked unchanged.
+Normal SDK builds are retained; native/UI/RGB OS qualification is UNRUN.
+See `ROAD-SCENE-EVIDENCE-20261026.json`.

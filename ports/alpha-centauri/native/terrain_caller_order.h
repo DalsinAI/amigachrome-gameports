@@ -20,7 +20,7 @@ struct TerrainCallerOrder {
 // Source eventual normal exits reset [-256,256]. No global/World mutation.
 // Resolved ordering is NOT pixel rendering or visibility resolution: land
 // ground precedes coast, ocean deep/threshold water precedes later item layers.
-// Only ordinary flags0/1 are enabled; other modes remain held unless the
+// Only ordinary flags0/1/0x20/0x21 are admitted to this numeric gate; other modes remain held unless the
 // source outline/terrain-hidden gate already excludes terrain. Output transactionally
 // rejects input/World aliases. No source helper, actor, cache or OS callback.
 TerrainCallerStatus plan_world_terrain_order(const OriginalWorld&,int x,int y,const TerrainObservationRuntime&,const TerrainCallerRuntime&,TerrainCallerOrder&);

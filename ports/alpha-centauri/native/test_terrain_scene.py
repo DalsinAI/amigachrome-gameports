@@ -4,7 +4,7 @@ import argparse,hashlib,json,os,struct,subprocess
 from pathlib import Path
 from test_terrain_visibility import fixture as visibility_fixture
 from test_original_game import decode
-NAMES=['original_map','original_game','original_faction','original_world','rules_text','vehicle_stack','terrain_observation','terrain_visibility','terrain_caller_order','cvr_terrain_context','terrain_lighting','terrain_mesh','terrain_dispatch','terrain_texture','terrain_ground_plate','terrain_world_masks','terrain_coast','terrain_coast_resources','terrain_coast_overlay','terrain_ocean_detail','terrain_water_texture','terrain_water_patch','terrain_keyed_quad','terrain_feature_layers','terrain_forest_quad','terrain_scene','terrain_scene_probe']
+NAMES=['original_map','original_game','original_faction','original_world','rules_text','vehicle_stack','terrain_observation','terrain_visibility','terrain_caller_order','cvr_terrain_context','terrain_lighting','terrain_mesh','terrain_dispatch','terrain_texture','terrain_ground_plate','terrain_world_masks','terrain_coast','terrain_coast_resources','terrain_coast_overlay','terrain_ocean_detail','terrain_water_texture','terrain_water_patch','terrain_keyed_quad','terrain_feature_layers','terrain_forest_quad','terrain_roads','terrain_scene','terrain_scene_probe']
 def fixture(profile):
  b=visibility_fixture(0);_,o,_=decode(b)
  for i in range(24):
@@ -68,6 +68,18 @@ def main():
   for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
   farm_digest.update(r.stdout)
  assert farm_digest.hexdigest()=='34130376172239728de66a0e641ef6cdf2129b8576d412d0e8d5c68fae97bcfc',farm_digest.hexdigest()
+ road_digest=hashlib.sha256()
+ for profile in range(3):
+  b=fixture(profile);_,o,_=decode(b)
+  for i in range(24):
+   at=o['tiles']+i*44;flags=struct.unpack_from('<I',b,at+8)[0]&3
+   if i%3!=0:flags|=4
+   if (i+profile)%4==0:flags|=8
+   struct.pack_into('<I',b,at+8,flags)
+  f=out/f'roads{profile}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','32'];queries=[(i,z,-1,cx,cy,0x80,0,0)for i in range(24)for z in[1,2]for cx,cy in[(-12,20),(14,38),(-80,-30)]];r=subprocess.run(command,input=b''.join(struct.pack('<8i',*q)for q in queries),capture_output=True,env=env);assert r.returncode==0,(r.returncode,r.stderr);assert len(r.stdout)==len(queries)*16388
+  for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
+  road_digest.update(r.stdout)
+ assert road_digest.hexdigest()=='38955e840caa5e997443ee1c8392179cbe68af82ae3e613580830c92784a7cf0',road_digest.hexdigest()
  held=[]
  base=fixture(0);_,o,_=decode(base)
  for label,offset,fmt,value,expected in [('jungle',o['tiles']+12,'I',4,0),('fungus',o['tiles']+8,'I',0x22,0),('special-height',o['tiles']+12,'I',2,4),('height-seven',o['tiles'],'B',224,5),('raw-rainfall-three',o['tiles'],'B',120,4),('raw-rockiness-three',o['tiles']+5,'B',192,4)]:
@@ -76,5 +88,10 @@ def main():
  # The land texture path is qualified; keep the sea sprite held byte-identically.
  for altitude in[2]:
   b=fixture(0);_,o,_=decode(b);b[o['tiles']]=altitude<<5;struct.pack_into('<I',b,o['tiles']+8,0x8000);f=out/f'held-farm-{altitude}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','1'];r=subprocess.run(command,input=struct.pack('<8i',0,1,-1,-12,20,0x80,0,0),capture_output=True,env=env);assert r.returncode==0 and struct.unpack_from('<I',r.stdout)[0]==4 and r.stdout[4:]==bytes([199])*16384,(altitude,r.returncode,r.stdout[:4],r.stderr)
- h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(farmCases=432,farmSHA256=farm_digest.hexdigest(),forestCases=432,forestSHA256=forest_digest.hexdigest(),heldFarmBranches=1,cases=count,syntheticWorlds=15,totalSceneCases=2160,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
+ # Later exploration is separate from terrain reveal: hidden later items
+ # skip, while the identical explored crop context stays explicitly held.
+ for visibility,expected in[(0,0),(2,4)]:
+  b=fixture(0);_,o,_=decode(b);b[o['tiles']+4]=visibility;struct.pack_into('<I',b,o['tiles']+8,0x8004);struct.pack_into('<I',b,o['tiles']+16,0x8004);f=out/f'late-item-{visibility}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','32'];r=subprocess.run(command,input=struct.pack('<8i',0,1,1,-12,20,0x80,0x100,0),capture_output=True,env=env);assert r.returncode==0 and struct.unpack_from('<I',r.stdout)[0]==expected,(visibility,r.returncode,r.stdout[:4],r.stderr)
+  if expected:assert r.stdout[4:]==bytes([199])*16384
+ h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(lateExplorationAndItemHoldCases=2,roadCases=432,roadSHA256=road_digest.hexdigest(),farmCases=432,farmSHA256=farm_digest.hexdigest(),forestCases=432,forestSHA256=forest_digest.hexdigest(),heldFarmBranches=1,cases=count,syntheticWorlds=18,totalSceneCases=2592,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
 if __name__=='__main__':main()

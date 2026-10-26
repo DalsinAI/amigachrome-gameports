@@ -10,7 +10,7 @@ TerrainCallerStatus plan_world_terrain_order(const OriginalWorld&w,int x,int y,c
  const bool outline=c.outline_parameter>21||(!(v.game_rules&0x100u)&&v.viewer>=0&&!(w.faction(v.viewer)->player_flags&0x200u)&&!(t->visibility&(1u<<v.viewer)));
  if(outline)result.path=TerrainCallerPath::outline_only;
  else if(v.draw_flags&0x10000000u)result.path=TerrainCallerPath::terrain_hidden;
- else if(v.draw_flags&~uint32_t(1))return S::held_draw_mode;
+ else if(v.draw_flags&~uint32_t(33))return S::held_draw_mode;
  else result.path=land?TerrainCallerPath::land_then_coast:TerrainCallerPath::water;
  out=result;return S::resolved;
 }

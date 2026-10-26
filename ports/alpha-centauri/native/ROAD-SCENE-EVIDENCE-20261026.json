@@ -1,0 +1,108 @@
+{
+  "scope": "Source roads/magtubes after plant/coast layers; other effects sharing drawbit0x20 held",
+  "parent": "a06541c23ed9a142db17aeed6a31fb0e3282ce27",
+  "sourceFacts": {
+    "sourceFunction": "4632d0",
+    "lateGateInstructions": "465649..46569d",
+    "roadInstructions": "465a9c..465da9",
+    "lateGate": "viewer<0 or player_flags&0x200 or raw tile.visibility&viewerbit; independent of terrain GameState reveal",
+    "centreBaseAndNeighbours": "source base_at4e3a50 raw bit1 then first matching record; visible only own or base visibility bit",
+    "neighbourOrder": [
+      "NE",
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N"
+    ],
+    "neighbourItems": "viewer<0 raw items; viewer0 raw landmarks; viewer1..7 raw stored snapshot, without centre reveal override",
+    "kind": "tube only when centre and neighbour have tube bit8 or visible base; source order and isolated fallback retained",
+    "textureAtlas": {
+      "road": [
+        775,
+        395
+      ],
+      "tube": [
+        775,
+        566
+      ],
+      "columns": 3,
+      "rows": 3,
+      "spacing": 57,
+      "size": 56,
+      "role": "isolated0; direction(k+2)%8+1"
+    },
+    "pixelStage": "qualified shaded keyed quad61c090/61fc90; source-key9 and land-clamped lights"
+  },
+  "publicControls": {
+    "planCases": 4340,
+    "planSHA256": "d3e9e7ecc79b3468a553dd85b388ba1a4334a9350353425e8d92852f061f5bc6",
+    "layerCases": 1024,
+    "layerSHA256": "c177b5dae3297f4216f7433fad0e0025391a6a09bf8438c1ad3fd8ebe70496ea",
+    "additionalWorldRoadCases": 432,
+    "worldRoadSHA256": "38955e840caa5e997443ee1c8392179cbe68af82ae3e613580830c92784a7cf0",
+    "allPublicWorldSceneCases": 2592,
+    "lateExplorationAndHeldItemCases": 2,
+    "worldAliasControls": 24,
+    "layerAliasControls": 10,
+    "invalidAndLateFailureLayerControls": 9,
+    "callerCases": 9086,
+    "newCallerCases": 432,
+    "callerLegacyDigestUnchanged": true,
+    "callerSHA256": "323db1377b98ecffe9efe28c1d50f77a2a831702e1b9ba09e7aaa0d59bacc145",
+    "hostASanUBSan": true,
+    "actualIndependent68040": true
+  },
+  "privateOriginal": {
+    "engine": "Exact owner GOG SMAX; legacy base worlds, no base-executable differential",
+    "genuineUnchangedTutorialCases": 180,
+    "genuinePixelSHA256": "cf8ba97de906b2ffd9861875ceecb0518f95f27b068d9a536eeb2c1e676b780e",
+    "controlledConnectionCases": 128,
+    "controlledWorlds": 32,
+    "controlledPixelSHA256": "ad2c50858e9fcb30e0d00dfdc526c088c810e49e69cf19c55183b6354366f8b3",
+    "controlledCentre": [
+      24,
+      20
+    ],
+    "controlledTerrainAndItemChangesExplicit": true,
+    "allEightRoadAndTubeConnectionsAndIsolatedFallbacksCovered": true,
+    "completeOriginalFunctionEntryNormalReturns": 308,
+    "realBaseAtAndRAMQuadCalls": true,
+    "balancedStackSEHAndBufferLocks": true,
+    "hostAndActual68040AllPixelsExact": true,
+    "previous826OriginalCallContextsReexecutedAndExact": true,
+    "physicalOSOrPEStartup": false,
+    "controlledDistinctFourContextOutputs": 29
+  },
+  "normalSDK": {
+    "buildOnly": true,
+    "nativeExecution": false,
+    "binaries": {
+      "roads-amiga": "1821fb358e6e10b80bc0553bcad6ad64116e0a871fe6481b95cfa4546c52239c",
+      "scene-amiga": "49a8789fcbf62a53875276926d36e0fd4630b51378bcf5be3d861dd4b4bf27b7"
+    }
+  },
+  "rejectedHistories": [
+    "initial owned path missed late-exploration gate,12genuine pixel mismatches preserved with source/binary",
+    "first controlled neighbour fixture used x0 instead of actual tile492 x24; numeric matches rejected as coverage, fixtures/binaries retained; corrected derived coordinates cover29distinct blocks",
+    "initial probe compile rejected memset on default-initialized nontrivial plan; changed to field initialization before any execution"
+  ],
+  "holds": [
+    "sea platform import/extraction/scale/cache as before",
+    "source base-bit repair/log/OS side effects; no fake repair",
+    "visible crop-yield and improvement/landmark sprite contexts sharing bit20",
+    "inherited height/outline/runtime identity and later draw flags",
+    "RGB OS loader/physical blit/native/frontend/watch/deployment/export/publication"
+  ],
+  "workflow": {
+    "parentCommands": 127,
+    "currentCommands": 129,
+    "allParentCommandsRetained": true,
+    "added": [
+      "python3 ports/alpha-centauri/native/test_terrain_roads.py --out \"$RUNNER_TEMP/terrain-roads-host\"",
+      "python3 ports/alpha-centauri/native/test_terrain_roads.py --out \"$RUNNER_TEMP/terrain-roads-m68k\" --cc m68k-linux-gnu-g++ --m68k-linux"
+    ]
+  }
+}
