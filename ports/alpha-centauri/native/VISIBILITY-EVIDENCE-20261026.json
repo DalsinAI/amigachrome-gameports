@@ -1,0 +1,179 @@
+{
+  "scope": "Original neighbour visibility result only; no full scene",
+  "host": {
+    "profiles": [
+      {
+        "profile": 0,
+        "cases": 3456
+      },
+      {
+        "profile": 1,
+        "cases": 3456
+      },
+      {
+        "profile": 2,
+        "cases": 3456
+      },
+      {
+        "profile": 3,
+        "cases": 3456
+      },
+      {
+        "profile": 4,
+        "cases": 3456
+      },
+      {
+        "profile": 5,
+        "cases": 3456
+      },
+      {
+        "profile": 6,
+        "cases": 3456
+      },
+      {
+        "profile": 7,
+        "cases": 3456
+      },
+      {
+        "profile": 8,
+        "cases": 3456
+      },
+      {
+        "profile": 9,
+        "cases": 3456
+      },
+      {
+        "profile": 10,
+        "cases": 3456
+      }
+    ],
+    "cases": 38016,
+    "invalid": 9,
+    "heldGeometry": 1,
+    "aliasRejects": 14,
+    "partialRejected": true,
+    "missingRuntimeTransactional": true,
+    "statusCounts": {
+      "0": 34254,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 2112,
+      "6": 1650,
+      "7": 0,
+      "8": 0
+    },
+    "bigEndian": false,
+    "sha256": "038fbd83bd5ca3ce6dcabb59dcde8a06c83c2ad56827a6378dc63f199dc23ac5",
+    "native": false
+  },
+  "independent68040": {
+    "profiles": [
+      {
+        "profile": 0,
+        "cases": 3456
+      },
+      {
+        "profile": 1,
+        "cases": 3456
+      },
+      {
+        "profile": 2,
+        "cases": 3456
+      },
+      {
+        "profile": 3,
+        "cases": 3456
+      },
+      {
+        "profile": 4,
+        "cases": 3456
+      },
+      {
+        "profile": 5,
+        "cases": 3456
+      },
+      {
+        "profile": 6,
+        "cases": 3456
+      },
+      {
+        "profile": 7,
+        "cases": 3456
+      },
+      {
+        "profile": 8,
+        "cases": 3456
+      },
+      {
+        "profile": 9,
+        "cases": 3456
+      },
+      {
+        "profile": 10,
+        "cases": 3456
+      }
+    ],
+    "cases": 38016,
+    "invalid": 9,
+    "heldGeometry": 1,
+    "aliasRejects": 14,
+    "partialRejected": true,
+    "missingRuntimeTransactional": true,
+    "statusCounts": {
+      "0": 34254,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 2112,
+      "6": 1650,
+      "7": 0,
+      "8": 0
+    },
+    "bigEndian": true,
+    "sha256": "038fbd83bd5ca3ce6dcabb59dcde8a06c83c2ad56827a6378dc63f199dc23ac5",
+    "native": false
+  },
+  "originalComparison": {
+    "contexts": 57232,
+    "owner": 51072,
+    "synthetic": 6160,
+    "editions": [
+      "smac",
+      "smacx"
+    ],
+    "actualHelpers": true,
+    "fullRenderer": false,
+    "combinedSHA256": "320a31d443bbd1c6b39181b736d38b3b8921108279d9ff218a3e8958e9730b97",
+    "sourceEditionDifferenceContexts": {
+      "synthetic0": 0,
+      "synthetic1": 0,
+      "synthetic2": 0,
+      "synthetic3": 0,
+      "synthetic4": 4,
+      "synthetic5": 10,
+      "synthetic6": 0,
+      "synthetic7": 87,
+      "synthetic8": 0,
+      "synthetic9": 6,
+      "synthetic10": 0
+    }
+  },
+  "normalSDKBuilt": true,
+  "native": false,
+  "frontendChanged": false,
+  "missingDependencies": [
+    "negative-owner reverse runtime bits when not supplied",
+    "negative-viewer faction lookup",
+    "mismatched actual runtime geometry",
+    "active height/cache and original render identity for composition",
+    "later material/item/actor/OS layers"
+  ],
+  "originalDiagnosticGlobalSideEffectsNotImplemented": [
+    "BaseFindDist"
+  ],
+  "unchangedParent": "dd68332d68e86792b0cac8ebb863d78f822af263",
+  "sourceGeometryRuntimeFlagsExplicit": true
+}

@@ -1314,3 +1314,53 @@ Full composition still requires source-backed neighbour visibility, active
 height/cache and render-identity context, special landmark/material branches,
 items/actors and actual OS/caller qualification. Neither this stage nor the
 existing bounded land/coast/water pixel controls enable the frontend.
+
+### Source-backed neighbour, sensor and radar visibility (26 October)
+
+`terrain_visibility` completes the neighbour decision when the closed
+observation prelude needs it. Moving actor coordinates/id, expansion-enabled
+state and actual runtime map flags are supplied explicitly. A map-flag geometry
+mismatch is held. It uses valid reciprocal stacks and base-present bits, the
+original 25-neighbour order and one-step longitude wrap, diplomatic stack
+searches, sensor ownership, matching land/sea/air radar and the expansion base
+facility radius. Corrupt topology/base bits are rejected before queries; no
+original bit-repair, log or OS path is substituted.
+
+Base terran and SMAX differ. Base radar tests the raw prototype bit only and its
+sensor test uses the raw tile item. SMAX also resolves design-owner alien radar
+and technology-gated free ability 1; its sensor query uses the closest base
+(last equal-distance base wins) and Geosynchronous Survey Pod facility 41. The
+additional expansion radius is separately controlled by the explicit runtime
+expansion-enabled flag. Owner and design-owner are not conflated.
+
+The original reverse diplomatic check can address faction[-1] when a tile has
+no occupant. The owned query never reads before an allocation or presumes those
+bytes are zero. It takes eight explicitly observed low pact bits for that
+runtime memory and returns a distinct held result if the check is reached
+without them. A source negative-viewer faction lookup also remains held. Valid
+short-circuit visibility returns before an unneeded held dependency.
+
+Public controls cover 38,016 contexts on eleven independent synthetic worlds,
+including both editions, moving actors, raw/alien/free radar, technology absent,
+present and disabled, sensors and base facilities. Actual host ASan/UBSan and
+independent big-endian 68040 agree exactly, with nine invalid-domain controls,
+fourteen full/partial alias checks, missing-runtime, held-geometry and partial
+input controls. The normal SDK probe builds; native remains unrun.
+
+Private bounded unchanged original code, including the real helper
+implementations, agrees with the owned host and independent big-endian outputs
+in 57,232 contexts: 51,072 on the three owner tutorial Worlds and 6,160 on
+synthetic inputs. Both original executables are exercised separately. These
+runs stop at the observation boundary; no Windows callback, bit-repair path,
+whole MapWin, original PE startup or full game executes. Oracle setup failures
+were retained and corrected against actual instructions, not hidden by changing
+expected outputs.
+
+The query commits only its owned observation result. It proposes rather than
+mutates the landmark cache bit, and does not reproduce the diagnostic global
+BaseFindDist write made by the original nearest-base helper. This still is not
+full caller composition: active height/cache provenance, source render identity,
+special material/landmark branches and later item/actor/OS layers remain
+separate gates. No frontend or watched instance is changed. Whole-world
+stack/base validation currently runs per query; native performance and a safe
+validated-scene cache have not been qualified.
