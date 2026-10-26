@@ -1769,3 +1769,21 @@ Private original comparisons execute only the post-modal response fragments,
 stopping before preferences-save, stapling and cleanup calls. They never execute
 or stub the modal. Amiga SDK builds have no AmigaOS execution; no final-head
 published CI or full production completion is claimed.
+
+
+### Original local facility notice arguments (local candidate)
+
+`notice_labels` returns ordinary local first/regular notification labels, queue
+count substitution, warning mask and human/alien facility icon selection. Queue Q
+precedes managing-governor G; managing requires both0x80000000 and0x1. It preserves
+the existing numeric substitution without an admitted queue. Ordinary IDs2..33/
+2..41 only, excluding special expansion Subspace40; queue_size0..9. The caller
+must supply actual current local route/queue facts. No popup, audio, modal
+response, World/global mutation, completion, phase or turn is performed.
+
+`test_notice_labels.py --out DIRECTORY` checks10,766 controls against an independent
+byte oracle. `--cc m68k-linux-gnu-g++ --m68k-linux` selects the independent runner.
+Private original comparisons execute real literal/string/parse-number helpers,
+stop before popb, and compare whole bases/all ten numeric slots. They do not
+execute or replace a modal callback. SDK builds have no AmigaOS execution;
+no final-head published CI or playable completion flow is claimed.

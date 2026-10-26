@@ -388,3 +388,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_popup_response.py --out "$RUNNER_TEMP/popup-response-host"
       - name: Big-endian original popup post-modal response fragments
         run: python3 ports/alpha-centauri/native/test_popup_response.py --out "$RUNNER_TEMP/popup-response-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original local facility notice arguments
+        run: python3 ports/alpha-centauri/native/test_notice_labels.py --out "$RUNNER_TEMP/notice-labels-host"
+      - name: Big-endian original local facility notice arguments
+        run: python3 ports/alpha-centauri/native/test_notice_labels.py --out "$RUNNER_TEMP/notice-labels-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
