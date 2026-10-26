@@ -1723,3 +1723,28 @@ independent big-endian runner. Private comparisons separately execute both
 original entries to the real window initializer boundary, including a nested
 milestone-update → original monument-entry comparison. No published final-head
 CI or AmigaOS execution qualifies this candidate.
+
+
+### Original facility announcement fragments (local candidate)
+
+`facility_notice` proposes original outer/first-announcement routing, the staged
+announced-bit write, voice-load and post-popup-fade obligations. Later-stage
+warning/preferences are explicit snapshots; calling this query does not simulate
+constructors, popups, user acknowledgment or audio. The original base-edition
+foreign threshold33 and expansion threshold40 differ. Expansion facility40 reports
+a separate Subspace-generator obligation whose interlude/generator path is not
+implemented here. Input is limited to IDs2..33/2..41; unused expansion slots and
+satellite/project production are outside scope. No World mutation, production
+completion, phase, player-save persistence or turn is added.
+
+`test_facility_notice.py --out DIRECTORY` checks 36,877 cases against an independent
+byte oracle; `--cc m68k-linux-gnu-g++ --m68k-linux` selects the independent runner.
+Private bounded original comparisons separately stage notification fragments and
+stop before actual GUI/audio calls. These are not combined original popup runs.
+Amiga SDK builds have no AmigaOS execution or published final-head CI yet.
+
+Announcement wire correction: both editions start `facility_announced` at0x458;
+legacy holds8 bytes, modern12. Legacy `clean_minerals_modifier` therefore starts
+at0x460, modern0x464. The existing importer already implements this correctly.
+An older private notification note claiming legacy announcement offset0x454 is
+superseded; no imported data or frozen production source was changed.
