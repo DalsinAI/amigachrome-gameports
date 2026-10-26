@@ -2195,3 +2195,5 @@ Original psi ability phases: see [PSI-ABILITIES.md](PSI-ABILITIES.md); explicit 
 Owned psi ability phases: see [WORLD-PSI-ABILITIES.md](WORLD-PSI-ABILITIES.md); actual component/grant/missile facts, separate early/late strengths, native/UI pending.
 
 Original airdrop/fanatic/faction/Planet combat phases: see [COMBAT-FACTIONS.md](COMBAT-FACTIONS.md); separate explicit numeric phase inputs, World/native/UI pending.
+
+Owned airdrop/faction/Planet binding: see [WORLD-COMBAT-FACTIONS.md](WORLD-COMBAT-FACTIONS.md); actual current actor/faction/design-owner technology facts, explicit phase strengths, native/UI pending.
