@@ -63,6 +63,7 @@ class OriginalWorld {
   const OriginalFactionState* faction(size_t i)const{return loaded() && i<8?factions_+i:nullptr;}
   const OriginalFactionDefinition* faction_definition(size_t i)const{return loaded() && i<8?definitions_+i:nullptr;}
  private:
+  friend class DiscoveryContinuationPlan;
   friend class LocalProductionSession;
   // Private read-only discovery working snapshot; no public World mutator.
   friend class DiscoveryReactorSequencePlan;

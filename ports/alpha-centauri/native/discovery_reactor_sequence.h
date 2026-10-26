@@ -40,6 +40,7 @@ class DiscoveryReactorSequencePlan {
   const char* pending_reactor_name()const{return ready_ && boundary_==DiscoveryReactorBoundary::reactor_presentation?reactor_name_:nullptr;}
   size_t memory_bytes()const{return frame_.memory_bytes()+sizeof(*this)-sizeof(OriginalWorld);}
  private:
+  friend class DiscoveryContinuationPlan;
   friend DiscoveryReactorError world_discovery_reactor_sequence(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,int32_t,int32_t,const DiscoveryReactorFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,DiscoveryReactorSequencePlan&,size_t);
   friend DiscoveryReactorError discovery_reactor_sequence_impl(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,int32_t,int32_t,const DiscoveryReactorFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,const DiscoveryReactorBoundaryFacts*,DiscoveryReactorSequencePlan&,size_t);
   DiscoveryReactorError capture(const OriginalWorld&,size_t);
