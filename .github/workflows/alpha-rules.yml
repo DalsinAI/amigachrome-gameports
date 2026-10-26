@@ -300,3 +300,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_stable_specialist_accounting.py --out "$RUNNER_TEMP/specialist-accounting-host"
       - name: Big-endian stable specialist accounting transactions
         run: python3 ports/alpha-centauri/native/test_stable_specialist_accounting.py --out "$RUNNER_TEMP/specialist-accounting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original human worker allocation controls
+        run: python3 ports/alpha-centauri/native/test_human_worker_allocation.py --out "$RUNNER_TEMP/human-worker-allocation-host"
+      - name: Big-endian original human worker allocation controls
+        run: python3 ports/alpha-centauri/native/test_human_worker_allocation.py --out "$RUNNER_TEMP/human-worker-allocation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

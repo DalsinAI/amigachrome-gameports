@@ -1297,3 +1297,37 @@ persists its packed fields. The dedicated specialist transaction controls cover
 fresh resources through income/happiness, stale-plan gates and full-container
 reload against the independent wire models. Actual AmigaOS execution remains
 unrun. Automatic worker reassignment, AI and complete turns remain unfinished.
+
+
+### Original human worker selection core (local candidate, native held)
+
+`human_worker_allocation` reconstructs the original directed-human branch with
+no governor priority weights. It takes explicit current yields for the ordinal
+21 tiles, unavailable mask, satellite contributions, population, requirement,
+mineral maintenance, queue item, existing workers/specialists, packed specialist
+types and actual prerequisite availability/spending of seven citizen rows.
+It returns a selection proposal. It does not call fake source callbacks, infer
+live authority from a save or mutate an owned world.
+
+The core retains existing available workers, fills missing slots using the
+original score and strict first-best ties, and preserves the original9999 worst
+sentinel. If the original starvation condition reaches the exchange branch, it
+attempts one swap and retains it only with the original population+1 food
+margin. Missing useful tiles become specialists with the original prerequisite-
+only fallback and packed first16 fields. Original project-weight thresholds
+are edition specific: strictly below-39 for SMAC and below-70 for SMAX.
+
+Population is checked within0..127, resource requirement1..99, satellite values
+within0..population and initial counts within the population budget. Active
+governor/AI priorities, damaged/overfull arrangements and specialist adjustment
+need separate original binding/fixup contracts. All source signed32 intermediate
+operations are checked. Failure and input/output overlap preserve the result.
+
+Synthetic controls compare the raw core with an independent integer model on
+host and independent68040. Private complete original base_yield observations
+also compare selected masks, counts, packed types and intakes, plus the seeded
+0x940000..0x9e0000 globals/base region, using real original farm/yield/technology
+helpers. Those observations do not independently qualify the transient current
+scratch page or a full original energy/psych/turn pipeline. No World/session
+allocation commit, worker persistence extension, player input, full governor,
+upkeep/AI/game or actual AmigaOS execution is supplied by this component.
