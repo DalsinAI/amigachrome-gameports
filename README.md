@@ -169,3 +169,7 @@ The local Alpha citizen-definition reader is documented in
 [the native boundary](ports/alpha-centauri/native/CITIZEN-DEFINITIONS.md).
 It supplies original specialist data for subsequent energy integration; it does
 not yet bind technology availability or mutate the world.
+
+Current faction technologies can now be resolved into the seven specialist
+fact records through the local [World binding](ports/alpha-centauri/native/WORLD-CITIZEN-ENERGY.md).
+This query preserves the world and does not execute income or turns.
