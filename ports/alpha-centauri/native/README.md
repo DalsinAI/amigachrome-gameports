@@ -1855,3 +1855,41 @@ from AmigaOS validation, which remains unrun. No remote CI or publication claim.
 Run `test_social_upkeep.py` and `test_world_social_upkeep.py` with `--out OUTPUT`;
 the latter accepts optional private `--original RULES SAVE` pairs. Both accept
 `--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
+
+### Original repair actor prerequisite (local qualification only)
+
+`repair_vehicle` proposes the first-pass transition for one actor using explicit
+current facts. It retains SMAC/SMAX differences for Battle Ogres, Fungal Towers
+and air repair projects; timer decrement wraps as the original signed16 storage;
+periodic flag clearing uses faction-turn plus actor index. Healing includes
+terrain/territory/base/breed/repair facility and project/repair-bay/Nano Factory
+conditions and the original damage floor. Xenoempathy Dome is project index8;
+Pholus Mutagen is index16 and is not the fungus healing bonus here. Cargo means
+`veh_cargo` capacity, not occupied transport slots. Base breed uses base ownership.
+All unrelated vehicle fields are preserved. Invalid profile inputs and complete
+input/output overlap reject before writes; foreign actors preserve their record
+without inspecting unused design facts.
+
+The API does not bind a World, inspect stacks, reset faction ODP, render, deliver
+an event, advance a phase, refill player movement or authorize an end turn. Its
+`draw_requested` describes the later predicate, not a rendering acknowledgment.
+The caller must derive actual current facts and coherent stacks. SMAX FREEABIL
+resolution belongs to the qualified ability dependency, not a raw-only assumption.
+
+Local checks: 27,665 public cases (27,648 accepted,17 rejected), ASan/UBSan host
+and independent static Linux68040 output identical. Private owner observations
+execute the actual complete original actor first pass in8,192 contexts per edition,
+including real territory/base_at/breed_mod/bitmask/veh_cargo/has_abil helpers, two
+coherently linked actors, three controlled bases and one2x1tile. Every byte of both
+actor records and the faction ODP reset agrees; all other bytes of the mapped
+0x90000global region remain unchanged. One instrumented observation jump stops
+before the second rendering loop. The original routine does not return normally
+in these observations. These are bounded helper observations, not whole-game or
+complete repair-phase execution. Raw ability paths are observed; FREEABIL grants
+are not exercised here. Original owner inputs remain private.
+
+Run `python3 ports/alpha-centauri/native/test_repair_vehicle.py --out OUTPUT`;
+use `--cxx m68k-linux-gnu-g++ --runner qemu-m68k -cpu m68040` for independent
+big-endian execution. `build_repair_vehicle_probe.sh` builds with the normal Amiga
+SDK. Neither object compilation nor host/Linux execution qualifies AmigaOS. The
+candidate has no remote CI, PR, native execution or player input wiring.

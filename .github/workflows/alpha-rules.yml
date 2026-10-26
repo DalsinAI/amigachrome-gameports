@@ -408,3 +408,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_social_upkeep.py --out "$RUNNER_TEMP/world-social-upkeep-host"
       - name: Big-endian original world social upkeep binding
         run: python3 ports/alpha-centauri/native/test_world_social_upkeep.py --out "$RUNNER_TEMP/world-social-upkeep-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original repair actor proposals
+        run: python3 ports/alpha-centauri/native/test_repair_vehicle.py --out "$RUNNER_TEMP/repair-vehicle-host"
+      - name: Big-endian original repair actor proposals
+        run: python3 ports/alpha-centauri/native/test_repair_vehicle.py --out "$RUNNER_TEMP/repair-vehicle-m68k" --cxx m68k-linux-gnu-g++ --runner qemu-m68k -cpu m68040
