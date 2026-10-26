@@ -552,3 +552,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_psi_abilities.py --out "$RUNNER_TEMP/psi-abilities-host"
       - name: Original psi abilities independent68040 controls
         run: python3 ports/alpha-centauri/native/test_psi_abilities.py --out "$RUNNER_TEMP/psi-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned psi abilities host controls
+        run: python3 ports/alpha-centauri/native/test_world_psi_abilities.py --out "$RUNNER_TEMP/world-psi-abilities-host"
+      - name: Owned psi abilities independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_psi_abilities.py --out "$RUNNER_TEMP/world-psi-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
