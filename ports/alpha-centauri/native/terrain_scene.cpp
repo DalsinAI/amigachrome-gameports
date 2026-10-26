@@ -26,9 +26,9 @@ TerrainSceneStatus render_world_ordinary_scene(const OriginalWorld&w,const Rules
  // Ordinary plant layers run after ground/water and before coast below.
  // Special landmark heights and unsupported raw material classes remain held.
  if((order.path==TerrainCallerPath::land_then_coast&&(observed.rainfall>2||observed.rockiness>2))||(t->landmarks&0xb03u))return S::held_features;
- // Draw bit1 also enables land farms and sea-platform sprites. They remain
- // held until their genuine dispatch is closed; never silently omit them.
- if((v.draw_flags&1u)&&(observed.displayed_items&0x8000u))return S::held_features;
+ // Sea farms use a later Sprite_draw3 path with OS rectangle/scale inputs.
+ // Keep that dependency held; the closed land farm texture path is below.
+ if(order.path==TerrainCallerPath::water&&(v.draw_flags&1u)&&(observed.displayed_items&0x8000u))return S::held_features;
  const unsigned zoom=v.source_zoom==-5?1:2;
  auto*memory=(uint8_t*)malloc(used);if(!memory)return S::out_of_memory;memcpy(memory,s.pixels,used);TerrainTextureSurface stage=s;stage.pixels=memory;stage.bytes=used;
  bool ok=false;
@@ -44,7 +44,7 @@ TerrainSceneStatus render_world_ordinary_scene(const OriginalWorld&w,const Rules
   if(observed.rainfall==0)masks.roughness=0;
   else if(observed.rainfall!=((t->climate>>3)&3)){free(memory);return S::held_observation;}
   TerrainMeshInput mesh{};mesh.caller_x=in.caller_x;mesh.caller_y=in.caller_y;mesh.viewer_zoom=zoom;mesh.height[0]=((t->climate>>5)-3)*((v.source_zoom+16)*25/16);for(unsigned k=0;k<4;++k)mesh.height[k+1]=corners.height[k];
-  TerrainDispatchContext material{in.source_map_tiles_address+(uint32_t)index*44,observed.rainfall,observed.rockiness,masks.roughness,(t->landmarks&0x40u)!=0,(observed.displayed_items&0x8000u)!=0,false,observed.visible,true};
+  TerrainDispatchContext material{in.source_map_tiles_address+(uint32_t)index*44,observed.rainfall,observed.rockiness,masks.roughness,(t->landmarks&0x40u)!=0,(observed.displayed_items&0x8000u)!=0,(v.draw_flags&1u)!=0,observed.visible,true};
   TerrainGroundPlateInput ground{mesh,lights,material};TerrainOceanDetails od{};TerrainOceanLights ol{};
   TerrainFeatureInput fi{mesh,masks,(unsigned)(t->climate>>5),(t->landmarks&0x80000004u)==4,(observed.displayed_items&0x20u)!=0,observed.concealed,observed.visible,true};
   fi.forest=(v.draw_flags&1u)&&(observed.displayed_items&0x200000u);fi.lights=lights;

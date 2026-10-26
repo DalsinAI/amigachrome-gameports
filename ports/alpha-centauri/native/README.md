@@ -1491,3 +1491,30 @@ saved forest scene. The original oracle is SMAX code with legacy base-world
 data, not a base-executable differential. Normal Amiga SDK builds exist;
 native execution, UI and deployment are UNRUN. See
 `FOREST-SCENE-EVIDENCE-20261026.json` for the exact limits and digests.
+
+### Land farms and sea-platform boundary (26 October 2026)
+
+This child supersedes the forest checkpoint's land-farm hold. Source draw bit1
+now selects the original farm primary texture, preserving its source-address
+variation, unrotated UVs, rainfall overlay, geometry/light and plant/coast order.
+The sea-platform sprite remains explicitly `held_features` and leaves the
+destination unchanged. No frontend has been enabled.
+
+The unchanged Conquer tutorial contains a real farm at tile 587. Its eight
+complete original MapWin calls match all pixels on host sanitizers and actual
+independent big-endian 68040. Another 72 complete calls cover 18 controlled
+material profiles using original terrain and owner textures, with rainfall and
+rockiness overrides and both source-identity variants explicitly recorded.
+Portable fixtures add 432 farm scenes; all earlier scene digests and the 127
+inherited workflow commands remain. The previous 618 tutorial and 128 controlled
+forest original-call comparisons were rechecked on the new production source.
+
+Sea platforms use the original TER1.PCX crop 607,190 of 100x62 pixels, rather
+than a ground quad. The recovered source path trims it and draws with source
+scale/cache state. Its nonempty RAM sprite branches unconditionally require
+the imported Windows IntersectRect function. No substitute callback was used;
+complete extraction and sprite execution remain unqualified. Crop/trim facts
+are private numeric observations, not an enabled or validated sea draw.
+
+A normal Amiga SDK scene build is retained; native execution, UI and
+deployment remain UNRUN. See `FARM-SCENE-EVIDENCE-20261026.json`.

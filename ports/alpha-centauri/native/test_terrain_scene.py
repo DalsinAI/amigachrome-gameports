@@ -58,13 +58,23 @@ def main():
   for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
   forest_digest.update(r.stdout)
  assert forest_digest.hexdigest()=='71f4c7d4aad5a8538a43550292382a47a0411075f7cf37006ab42da933297f89',forest_digest.hexdigest()
+ farm_digest=hashlib.sha256()
+ for profile in range(3):
+  b=fixture(0);_,o,_=decode(b)
+  for i in range(24):
+   at=o['tiles']+i*44;b[at]=((3+(i+profile)%2)<<5)|((i%3)<<3);b[at+5]=((i//3)%3)<<6
+   struct.pack_into('<I',b,at+8,(struct.unpack_from('<I',b,at+8)[0]&3)|0x8000|(0x200000 if i%2 else 0)|(0x20 if i%3==0 else 0))
+  f=out/f'farm{profile}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','1'];queries=[(i,z,-1,cx,cy,0x80,0,0)for i in range(24)for z in[1,2]for cx,cy in[(-12,20),(14,38),(-80,-30)]];r=subprocess.run(command,input=b''.join(struct.pack('<8i',*q)for q in queries),capture_output=True,env=env);assert r.returncode==0,(r.returncode,r.stderr);assert len(r.stdout)==len(queries)*16388
+  for j,q in enumerate(queries):assert struct.unpack_from('<I',r.stdout,j*16388)[0]==0,(profile,q,struct.unpack_from('<I',r.stdout,j*16388)[0])
+  farm_digest.update(r.stdout)
+ assert farm_digest.hexdigest()=='34130376172239728de66a0e641ef6cdf2129b8576d412d0e8d5c68fae97bcfc',farm_digest.hexdigest()
  held=[]
  base=fixture(0);_,o,_=decode(base)
  for label,offset,fmt,value,expected in [('jungle',o['tiles']+12,'I',4,0),('fungus',o['tiles']+8,'I',0x22,0),('special-height',o['tiles']+12,'I',2,4),('height-seven',o['tiles'],'B',224,5),('raw-rainfall-three',o['tiles'],'B',120,4),('raw-rockiness-three',o['tiles']+5,'B',192,4)]:
   b=bytearray(base);struct.pack_into('<'+fmt,b,offset,value);f=out/(label+'.SC');f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(out/'atlas.bin'),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin')];r=subprocess.run(command,input=struct.pack('<8i',0,1,-1,-12,20,0x80,0,0),capture_output=True,env=env);assert r.returncode==0,(label,r.returncode,r.stderr);assert struct.unpack_from('<I',r.stdout)[0]==expected,(label,struct.unpack_from('<I',r.stdout)[0]);assert (r.stdout[4:]==bytes([199])*16384)if expected else len(r.stdout)==16388;held.append(label)if expected else None
  # The same source bit enables farm ground and ocean platform sprite effects.
- # Keep both contexts explicitly held and byte-identical to input.
- for altitude in[2,3]:
+ # The land texture path is qualified; keep the sea sprite held byte-identically.
+ for altitude in[2]:
   b=fixture(0);_,o,_=decode(b);b[o['tiles']]=altitude<<5;struct.pack_into('<I',b,o['tiles']+8,0x8000);f=out/f'held-farm-{altitude}.SC';f.write_bytes(b);command=runner+[str(exe),str(f),'--synthetic',str(feature_atlas),str(out/'light.bin'),str(out/'metadata.bin'),str(out/'resources.bin'),'0','1'];r=subprocess.run(command,input=struct.pack('<8i',0,1,-1,-12,20,0x80,0,0),capture_output=True,env=env);assert r.returncode==0 and struct.unpack_from('<I',r.stdout)[0]==4 and r.stdout[4:]==bytes([199])*16384,(altitude,r.returncode,r.stdout[:4],r.stderr)
- h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(forestCases=432,forestSHA256=forest_digest.hexdigest(),heldFarmBranches=2,cases=count,syntheticWorlds=9,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
+ h=digest.hexdigest();assert h=='98415f1a7ee4d47282602719eaf86acc409a95cc084cbee281fd4104dd8f662c',h;record=dict(farmCases=432,farmSHA256=farm_digest.hexdigest(),forestCases=432,forestSHA256=forest_digest.hexdigest(),heldFarmBranches=1,cases=count,syntheticWorlds=15,totalSceneCases=2160,featureCases=432,featureSHA256=feature_digest.hexdigest(),concealedCases=432,concealedSHA256=concealed_digest.hexdigest(),heldFeatureContexts=held,pixels=count*16384,statusCounts=status,rejects=16,aliasRejects=50,partialRejected=True,transactionalLateStageFailure=True,sourceIdentityExplicit=True,freshActiveCacheProfile=True,native=False,bigEndian=a.m68k_linux,sha256=h);(out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');print(record)
 if __name__=='__main__':main()

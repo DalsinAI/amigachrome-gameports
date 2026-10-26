@@ -1,0 +1,106 @@
+{
+  "scope": "Enable source land-farm material branch in ordinary scene; preserve sea-platform typed hold",
+  "parent": "fe75a3cd38ffd5304bde1e23387cfcca5e48ce47",
+  "sourceFacts": {
+    "entry": "4632d0",
+    "landFarmPrimary": "4641b4..464353",
+    "sharedDrawBit": 1,
+    "farmItem": "0x8000",
+    "sourceIdentitySelectedVariation": true,
+    "farmAtlas": {
+      "x": "775+57*rawRainfall",
+      "y": "219+57*variation",
+      "size": 56
+    },
+    "farmUVRotation": 0,
+    "rainfallOverlayRetained": true,
+    "layerOrderUnchanged": [
+      "ground farm and keyed rainfall overlay",
+      "jungle",
+      "forest",
+      "fungus",
+      "coast"
+    ]
+  },
+  "controls": {
+    "hostASanUBSan": true,
+    "actualIndependent68040": true,
+    "additionalFarmWorldCases": 432,
+    "syntheticWorldProfiles": 15,
+    "totalSyntheticSceneCases": 2160,
+    "farmSHA256": "34130376172239728de66a0e641ef6cdf2129b8576d412d0e8d5c68fae97bcfc",
+    "earlierOrdinaryConcealedFeatureAndForestDigestsUnchanged": true,
+    "missingRuntimeAliasAndTransactionalControlsRetained": true,
+    "seaPlatformContextHeldTransactionally": true
+  },
+  "privateOriginal": {
+    "engine": "Exact owner GOG SMAX code with legacy base-world data; base-executable differential UNRUN",
+    "unchangedOriginalFunctionEntryAndNormalReturns": 80,
+    "genuineConquerFarmTile": 587,
+    "genuineUnchangedWorldCases": 8,
+    "genuineWorldSHA256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45",
+    "genuinePixelSHA256": "7342201ca452c2d238223f97987339f011779c0f688622e33f4d0f61424297df",
+    "controlledMaterialCases": 72,
+    "controlledMaterialWorlds": 18,
+    "controlledBothSourceIdentityVariations": true,
+    "controlledPixelSHA256": "a6eec8d0a5d384973d34785d4d2b45eeda10f747a2669c645ce7503781d451ca",
+    "controlledOverridesExplicit": true,
+    "hostAndActual68040Exact": true,
+    "previous618OriginalTutorialAnd128ControlledForestComparisonsReexecutedAndExact": true,
+    "actualOriginalLoaderOrWindowsAPIsExecuted": false,
+    "controlledRainfallRockinessClasses": [
+      0,
+      1,
+      2
+    ]
+  },
+  "seaBoundary": {
+    "status": "held_features",
+    "caller": "465a5f..465a94",
+    "receiver": "7a6860",
+    "asset": "TER1.PCX",
+    "sourceCrop": [
+      607,
+      190,
+      100,
+      62
+    ],
+    "loaderRecolour": "raw6/7 to9 after existing +10 indexed load contract",
+    "numericTrimOnly": [
+      14,
+      4,
+      86,
+      44
+    ],
+    "sourceRatio": "(source_zoom+16)/16 unless explicit positive scale override",
+    "currentRatios": [
+      "11/16",
+      "21/16"
+    ],
+    "genuineNonemptyRAMSpriteDependency": "USER32.IntersectRect import; not substituted",
+    "otherUnclosedDependencies": [
+      "Sprite_extract2 do_sound/mem_get",
+      "original scaled clipped X/Y tables and min-size state"
+    ],
+    "originalFullSpriteAndExtractionExecuted": false,
+    "productionSpriteDrawEnabled": false
+  },
+  "normalSDK": {
+    "buildOnly": true,
+    "nativeExecution": false,
+    "sceneSHA256": "eaf0fa20f2c8d028bf9018f2e12cd28ba7a433c9106d0d58d2d15630d52604f9"
+  },
+  "workflow": {
+    "parentCommands": 127,
+    "currentCommands": 127,
+    "allParentCommandsRetained": true,
+    "workflowSHA256": "8e03ad2948ae8ba1e975e3d43ee99aa0ae32e7a881d5d0be683823a973a81385"
+  },
+  "limits": [
+    "No frontend enablement or RGB OS/native/display authority",
+    "No new game mechanics, watch/lab/deployment/publication/export changes",
+    "Inherited unsupported height, outline, runtime identity and later feature modes remain held",
+    "No fabricated allocation seed, runtime visibility or source callbacks",
+    "No original assets, executable bytes or private scene outputs shipped"
+  ]
+}
