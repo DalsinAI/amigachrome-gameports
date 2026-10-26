@@ -1781,3 +1781,29 @@ ones. Normal SDK builds are native-execution-unrun, including stack/performance
 qualification. Live MapWin sprite anchors, cache/minimum-size authority, original
 loader/Windows wrapper and full scene/frontend integration remain held. See
 `SPRITE-DRAW-EVIDENCE-20261026.json`.
+
+
+### Explicit sea-platform RAM late layer
+
+`terrain_sea_platform` binds the qualified fixed owner trim (72x40, full100x62,
+offset14,4, key9) to the owned sprite drawing composition. It accepts explicit
+resolved observation, late visibility, normal source path, scale-cache and minimum
+size facts. It does not infer those runtime facts from a saved World. Existing
+ordinary scene/frontend behavior is unchanged, including its typed sea hold.
+
+Twelve unchanged original MapWin entry observations actually reach the genuine
+sprite prefix and stop at its untouched unresolved USER32 import. These correct
+an earlier source-reading mistake: normal textured terrain **restores the original
+caller coordinates** before the sea call; its temporary polygon half-width/height
+translation must not be added. Raw ocean `MapWin_get_alt` returns zero before
+reading a cache. The call follows river/base-work grid and precedes roads.
+
+Nine separately executed original pixel suffix returns with explicit owned
+intersections match every owner pixel on host and independent 68040. These are
+separate prefix/suffix observations, never full original wrapper returns or fake
+`IntersectRect` results. All360 public cases and31 no-write/alias/boundary controls
+pass host ASan/UBSan and actual independent 68040. All147 parent workflow commands
+remain plus two. Normal SDK builds are native-unrun. Source minimum-size globals
+remain explicit, as do prepared owner pixel/cache authority. Shared drawbit20
+sea-farm contexts remain held because later crop-yield callbacks are unresolved.
+See `SEA-PLATFORM-EVIDENCE-20261026.json`.

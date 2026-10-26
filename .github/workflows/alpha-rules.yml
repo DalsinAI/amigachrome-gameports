@@ -312,3 +312,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_sprite_draw.py --out "$RUNNER_TEMP/sprite-draw-host"
       - name: Original sprite placement and owned draw composition independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_sprite_draw.py --out "$RUNNER_TEMP/sprite-draw-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original sea-platform acquired-RAM late layer host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_sea_platform.py --out "$RUNNER_TEMP/terrain-sea-platform-host"
+      - name: Original sea-platform acquired-RAM late layer independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_sea_platform.py --out "$RUNNER_TEMP/terrain-sea-platform-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -1,0 +1,30 @@
+{
+  "scope": "Explicit acquired-RAM sea-platform late layer only; existing ordinary scene hold unchanged",
+  "cases": 360,
+  "boundaryControls": 31,
+  "publicSHA256": "04f12d65430f9db0a1af08944fa747fb14c0b65801c2afa3b94dd3ea09d6fda2",
+  "hostSanitizers": true,
+  "independentBigEndian68040": true,
+  "originalMapWinPrefixObservations": 12,
+  "separateOriginalPixelSuffixCases": 9,
+  "ownerPixelsSHA256": "381fdc5f48a767e015462a4d57ef05c4c29249b7f4fd32b37788372b563e98b3",
+  "sdkBuild": {
+    "normalSDK": true,
+    "nativeExecution": false,
+    "binaries": {
+      "sea-platform-probe-amiga": "3adc837c8284a096fc41fa8596a654bbfe6c54d4cd032ba3f8242a49e9452a0d",
+      "sea-platform-control-amiga": "7d0c224e239a78a4c6cfb41dc46a0e394966ceb1aa6dc0b57d2a983eafee272e"
+    }
+  },
+  "native": false,
+  "fullOriginalWindowsWrapper": false,
+  "frontendEnabled": false,
+  "limitations": [
+    "World observation and late gate supplied explicitly; new layer does not bind savedWorld itself",
+    "normal sourceZoom-5/5 only, no override/special/outline/main-window cache profile",
+    "drawbit20+visibleSeaFarm held because crop_yield later callbacks are unresolved",
+    "actualSprite cache/minimum globals and prepared source pixel authority supplied explicitly",
+    "original USER32.IntersectRect not implemented/executed and full Sprite_draw3/MapWin normalreturn not claimed",
+    "no original physicalPCXload/OSRGB/native/frontend integration"
+  ]
+}
