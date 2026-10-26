@@ -344,3 +344,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_production_accrual.py --out "$RUNNER_TEMP/world-production-accrual-host"
       - name: Big-endian current accounting pre-production binding
         run: python3 ports/alpha-centauri/native/test_world_production_accrual.py --out "$RUNNER_TEMP/world-production-accrual-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host ordinary facility install prefix
+        run: python3 ports/alpha-centauri/native/test_facility_install_prefix.py --out "$RUNNER_TEMP/facility-install-prefix-host"
+      - name: Big-endian ordinary facility install prefix
+        run: python3 ports/alpha-centauri/native/test_facility_install_prefix.py --out "$RUNNER_TEMP/facility-install-prefix-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -1461,14 +1461,14 @@ execution. Full final-head CI and native frontend integration remain unrun.
 
 
 The pre-production arithmetic prefix is a separate checked calculation. It
-clears only the production-done state bit and updates the faction's historical
+clears only the production-done state bit and updates the faction's current phase
 mineral peak before checking negative accumulated food. That abort preserves
 mineral stock. Otherwise nonnegative surplus accrues only without active drone
 riots and outside Stockpile Energy, whose original item differs by edition.
 Every signed intermediate is checked, including doubled surplus; failure leaves
 the result unchanged instead of exposing an unsafe partial update.
 
-The world adapter reads current base accounting and faction history. It does
+The world adapter reads current base accounting and the current faction phase accumulator. It does
 not certify that saved/current accounting is fresh and does not recompute it.
 The query preserves all owned wire and decoded records and runtime RNG; output
 aliases and edition/index errors reject. Its result is not a phase token, once
@@ -1484,3 +1484,32 @@ production or turn routine is executed. Normal Amiga SDK builds remain
 compilation evidence; actual AmigaOS execution and complete final-head CI are
 unrun. Explicit phase ownership and complete production effects are still
 required before any future mutation or End Turn control.
+
+
+The ordinary-facility settlement/install prefix is a checked pure dependency.
+For IDs2..33 in the base edition and2..64 in the expansion, it requires absent
+physical ownership of that facility and a nonnegative mineral requirement no
+greater than the current stock. It pays that requirement, caps human excess
+using the original surplus/retool limit, snapshots the remaining stock, updates
+the original production flags and installs the physical bit. Other bitmap bytes
+and state bits remain unchanged. Headquarters, satellites and projects are
+outside this API. An already-present bit or unsupported input rejects without
+changing the result.
+
+This is a prefix, not full facility completion. Network Node8 still requires its
+artifact-linked state and actor-order effects. Queue advancement/eligibility,
+notifications/audio, choice/reset, the surrounding upkeep sequence and all
+remaining effects must be implemented before a completion or turn commit. No
+live World mutation, player control or runtime phase authority invokes this
+calculation. Bounded original observations stop before those later effects and
+compare every current-base byte with an independent model. The owned host and
+big-endian results reproduce those byte patches. Amiga SDK builds remain
+compilation evidence; native execution and full final-head CI are unrun.
+
+
+The original outer production phase resets `best_mineral_output` to zero before
+iterating that faction's bases. This field is a per-phase maximum, not a lifetime
+record. The arithmetic prefix still computes max(supplied current accumulator,
+current base output); its future phase owner must perform that reset once, along
+with the other original faction-level initializations and effects. Earlier
+“historical peak” wording described the supplied accumulator too broadly.

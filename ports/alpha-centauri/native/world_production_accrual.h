@@ -5,7 +5,7 @@
 #include "production_accrual.h"
 namespace alpha {
 /* Read-only binding of the actual CURRENT base accounting fields and faction
- * historical mineral peak to the original arithmetic prefix. Saved accounting
+ * current phase mineral peak to the original arithmetic prefix. Saved accounting
  * is not certified fresh here and no fields are recomputed. This is NOT a
  * production phase/turn authority, accrual commit, or completion API. It may
  * inspect faction0..7 just as the original prefix does. Exact edition required;

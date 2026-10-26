@@ -18,7 +18,7 @@ struct ProductionAccrualResult {
  bool negative_food_abort,accrual_branch;
 };
 /* Pure pre-production dependency, NOT a turn/phase authority or World mutation.
- * Clears production-done0x800000 and updates historical mineral peak BEFORE the
+ * Clears production-done0x800000 and updates the current phase mineral peak BEFORE the
  * negative-food abort. Nonnegative surplus accrues only without riot bit2 and
  * outside the edition's stockpile-energy item (-38 SMAC/-69 SMAX).
  * Each original signed intermediate, including doubled surplus, must fit int32.
