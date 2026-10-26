@@ -528,3 +528,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_defense_abilities.py --out "$RUNNER_TEMP/defense-abilities-host"
       - name: Original late defense abilities independent68040 controls
         run: python3 ports/alpha-centauri/native/test_defense_abilities.py --out "$RUNNER_TEMP/defense-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned late defense abilities host controls
+        run: python3 ports/alpha-centauri/native/test_world_defense_abilities.py --out "$RUNNER_TEMP/world-defense-abilities-host"
+      - name: Owned late defense abilities independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_defense_abilities.py --out "$RUNNER_TEMP/world-defense-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
