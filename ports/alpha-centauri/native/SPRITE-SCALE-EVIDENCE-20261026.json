@@ -1,0 +1,63 @@
+{
+  "scope": "Owned numeric sprite scaling/clipped-axis preparation; no sprite wrapper or viewer enabling",
+  "date": "2026-10-26",
+  "source": {
+    "engine": "exact supported SMAX",
+    "helperAddresses": [
+      "0x5eb20f",
+      "0x5eab0f",
+      "0x5eabbf",
+      "0x5eac6f",
+      "0x5eacff"
+    ],
+    "completeOriginalHelpersActuallyExecuted": true,
+    "importsExecuted": false,
+    "fullPEStartup": false
+  },
+  "contract": {
+    "tableEntries": 800,
+    "numeratorAndDenominatorRange": [
+      1,
+      1024
+    ],
+    "callerSuppliesAlreadyIntersectedRect": true,
+    "zeroLengthRejectedWithoutWrites": true,
+    "tableOutputAliasRejected": true,
+    "allFailuresTransactional": true,
+    "expandSteps": "destination replication counts per source pixel; clipped first/last counts retained",
+    "shrinkSteps": "source advances per destination pixel",
+    "scaleOrientation": "same high/low table, selected by explicit expand/shrink context",
+    "unsupportedCapacityOrRangesRejected": true
+  },
+  "validation": {
+    "originalCases": 1152,
+    "preparedOwnerDimensionAxisCases": 48,
+    "ownerDimensions": [
+      72,
+      40
+    ],
+    "ownerScales": [
+      "11/16",
+      "21/16"
+    ],
+    "allOriginalBytesEqualHostAndIndependent68040": true,
+    "originalSHA256": "1bbb9434fecc766e877ad5326506edfc7af556d960ef68c888d2c7dcc5eacc16",
+    "ownerAxisSHA256": "b2e623ca6065d1575901593471d01699425a1bed538579de878d92998ae2256e",
+    "noWriteBoundaryControls": 32,
+    "hostAsanUbsan": true,
+    "actualIndependent68040": true,
+    "normalSDKBuildOnly": true,
+    "nativeUnrun": true,
+    "partialInputRejects": 27,
+    "normalSDKProbeSHA256": "8cc4ca19828af35436ff5fa2adb29dc96ef6bd5f8b8bc0f3aa77078a669e4e41",
+    "normalSDKControlSHA256": "d54fc2067c8c1aa8d686f9c39f45335af90cde11b530c03b372e3524ba4216f1"
+  },
+  "limits": [
+    "No physical OS sprite/PCX loader/extraction or full Sprite_draw3 execution",
+    "Every nonempty RAM Sprite_draw3 path still requires real USER32.IntersectRect; no replacement or forced-success import supplied",
+    "Original min-size/cache/loader/scaled pixel-copy and full caller remain unqualified",
+    "Owner72x40trim is prior numeric data preparation, not original Sprite_extract execution; supplied axis rectangles do not assert live placement authority",
+    "Source math does not choose render RNG/identity, gameplay RNG, visibility or sprite assets",
+    "No native/frontend/watch/lab/deploy/export/publication/full-world completion claim"
+  ]
+}

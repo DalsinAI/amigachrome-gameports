@@ -296,3 +296,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_base_grid.py --out "$RUNNER_TEMP/terrain-base-grid-host"
       - name: Original base-work grid cursor and topology independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_base_grid.py --out "$RUNNER_TEMP/terrain-base-grid-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original sprite scale and clipped-axis preparation host controls
+        run: python3 ports/alpha-centauri/native/test_sprite_scale.py --out "$RUNNER_TEMP/sprite-scale-host"
+      - name: Original sprite scale and clipped-axis preparation independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_sprite_scale.py --out "$RUNNER_TEMP/sprite-scale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -1673,3 +1673,25 @@ contexts, retaining all earlier output fingerprints and rejection checks. The
 normal SDK probe is byte-identical to its frozen parent. This does not enable
 a viewer or close imported sprite/scaling/cache/OS paths; later unsupported
 features remain held. See `ROAD-COMPOSITION-EVIDENCE-20261026.json`.
+
+### Sprite scaling and clipping preparation (26 October)
+
+`sprite_scale` owns the 800-entry reciprocal scale table and bounded clipped-axis
+plans used by the original RAM sprite path. Complete unchanged original scaling
+and X/Y expansion/shrink preparation helpers match every output byte across
+1,152 numeric cases on host and independent big-endian 68040. Another 48 axis
+contexts use the private sea-platform numeric trim dimensions at the source
+11/16 and 21/16 scale profiles, with explicit supplied intersections. These do
+not claim original sprite extraction, live placement or complete drawing.
+
+Expansion plans retain clipped replication counts; shrink plans retain source
+advances. Invalid/empty ranges, exhausted tables and input/output overlap fail
+without writes. Thirty-two boundary/no-write controls run on both architectures.
+All 139 inherited workflow commands remain, plus two new scale-control commands.
+The normal SDK probe/control compile; native execution is unrun.
+
+The full nonempty `Sprite_draw3` RAM wrapper still calls actual USER32
+`IntersectRect`. That import has not been replaced or forced to succeed. Original
+loader/extraction, cache/minimum-size and scaled pixel-copy/caller dependencies
+remain held. No improvement sprites are enabled by this numeric module. See
+`SPRITE-SCALE-EVIDENCE-20261026.json`.
