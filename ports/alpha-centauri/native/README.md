@@ -1410,3 +1410,25 @@ is returned separately. Frozen accounting/action codecs remain sealed to their
 original field sets. These are buffer transactions, not a qualified filesystem
 save, original-executable compatibility claim, full upkeep or playable game.
 AmigaOS execution and complete final-head CI remain unrun.
+
+
+Original unit production pricing is a separate checked dependency. Its explicit
+facts distinguish stored design cost from the no-abilities component base cost,
+and use the design owner's difficulty and FREEPROTO flag. Prototype history and
+physical Skunkworks determine the surcharge; Skunkworks clears it only after the
+original intermediate calculation. Expansion-only Brood Pit pricing applies to
+predefined native designs; the base edition has no such discount. A producing
+base raises zero-cost colony designs to one before adding the surcharge.
+
+The pure API accepts current facts; it does not infer them from a saved world.
+`production_mineral_requirement` multiplies an already-qualified nonnegative
+unit/facility price and mineral factor, preserving original zero factors and
+rejecting signed overflow. Neither API grants build eligibility, advances
+minerals, creates a unit, completes a facility, refills movement or runs a turn.
+29,076 independent controls passed on the host with address/undefined-behavior
+checking and on independent big-endian 68040 Linux. Bounded executions of both
+original complete unit pricing routines, including their actual component-cost
+and bitmask helpers, matched 5,120 base and 4,579 expansion contexts. Original
+executable bytes and all private reference material remain outside this tree.
+Normal Amiga SDK builds are compilation evidence only; AmigaOS execution and
+complete final-head CI remain unrun. No new frontend controls are exposed.

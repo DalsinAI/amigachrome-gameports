@@ -324,3 +324,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_local_worker_actions.py --out "$RUNNER_TEMP/worker-actions-host"
       - name: Big-endian movement production worker accounting composition
         run: python3 ports/alpha-centauri/native/test_local_worker_actions.py --out "$RUNNER_TEMP/worker-actions-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original unit production costs and mineral requirements
+        run: python3 ports/alpha-centauri/native/test_production_cost.py --out "$RUNNER_TEMP/production-cost-host"
+      - name: Big-endian original unit production costs and mineral requirements
+        run: python3 ports/alpha-centauri/native/test_production_cost.py --out "$RUNNER_TEMP/production-cost-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
