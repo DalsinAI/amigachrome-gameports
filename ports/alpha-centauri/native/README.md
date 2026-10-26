@@ -2032,3 +2032,7 @@ They preserve raw import behavior and grant no turn authority or frontend action
 The complete original deficit-energy convoy cancellation proposal is documented
 in [ENERGY-CONVOY-ORDERS.md](ENERGY-CONVOY-ORDERS.md). Its current-stage input
 and immutable output do not establish turn authority or a player action.
+
+Exact original load-record repairs can be retained in a snapshot buffer through
+[INITIALIZED-SNAPSHOT.md](INITIALIZED-SNAPSHOT.md). This remains a structural
+persistence boundary, with no new engine/player action or filesystem save API.

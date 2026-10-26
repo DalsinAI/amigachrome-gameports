@@ -436,3 +436,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_energy_convoy_orders.py --out "$RUNNER_TEMP/energy-convoy-orders-host"
       - name: Big-endian original deficit energy convoy orders
         run: python3 ports/alpha-centauri/native/test_energy_convoy_orders.py --out "$RUNNER_TEMP/energy-convoy-orders-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host load repaired world snapshot
+        run: python3 ports/alpha-centauri/native/test_initialized_snapshot.py --out "$RUNNER_TEMP/initialized-snapshot-host"
+      - name: Big-endian load repaired world snapshot
+        run: python3 ports/alpha-centauri/native/test_initialized_snapshot.py --out "$RUNNER_TEMP/initialized-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
