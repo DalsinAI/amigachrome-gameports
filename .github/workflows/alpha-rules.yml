@@ -308,3 +308,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_sprite_extract.py --out "$RUNNER_TEMP/sprite-extract-host"
       - name: Original acquired-RAM sprite extraction independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_sprite_extract.py --out "$RUNNER_TEMP/sprite-extract-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original sprite placement and owned draw composition host controls
+        run: python3 ports/alpha-centauri/native/test_sprite_draw.py --out "$RUNNER_TEMP/sprite-draw-host"
+      - name: Original sprite placement and owned draw composition independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_sprite_draw.py --out "$RUNNER_TEMP/sprite-draw-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

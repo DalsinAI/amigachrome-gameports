@@ -1748,3 +1748,36 @@ All 143 inherited workflow commands remain plus two new extraction commands.
 The normal SDK builds are native-execution-unrun. Full USER32 sprite drawing,
 physical loader/cache lifecycle and whole-scene integration remain held. See
 `SPRITE-EXTRACT-EVIDENCE-20261026.json`.
+
+### Owned sprite placement and draw composition (26 October)
+
+`sprite_draw` joins explicit original caller coordinates, qualified trim metadata,
+scale/minimum-size context, owned mathematical rectangle intersection and the
+qualified RAM copier. Scaled placement truncates only **after** adding the caller
+coordinate; splitting that operation changes positions crossing zero. Missing
+source context is typed-held, not replaced with live cache/minimum-size defaults.
+Caller coordinates are bounded and original nearest/double numeric scope is
+explicit. Inspection results use our typed statuses, not original return codes.
+
+The unmodified original `Sprite_draw3` prefix was actually observed for 60 fresh
+or coherent-cache cases. Each process faults at the untouched unresolved
+on-disk USER32 import target; a Linux observer captures its original stack and
+register state then exits, never returning an API result to original code. All
+computed rectangles match on host and actual independent 68040, including eight
+cross-zero cases. This is an interrupted prefix observation, not a normal
+whole-wrapper return or physical Windows call.
+
+A separate original minimum-size suffix gives 40 genuine normal no-draw returns
+and 40 observations stopped at its second unresolved import. Using explicitly
+supplied owned intersections, 54 original unscaled/shrink/expand pixel suffix
+returns match the owned composition's private owner-image output exactly. The
+source prefix and suffix observations remain separate: no fake `IntersectRect`
+was installed or forced to succeed. The private pixels are exactly the trim
+confirmed by the earlier whole-entry acquired-RAM extraction.
+
+All 432 public synthetic contexts and 46 boundary controls pass host ASan/UBSan
+and independent 68040; all 145 inherited workflow commands remain plus two new
+ones. Normal SDK builds are native-execution-unrun, including stack/performance
+qualification. Live MapWin sprite anchors, cache/minimum-size authority, original
+loader/Windows wrapper and full scene/frontend integration remain held. See
+`SPRITE-DRAW-EVIDENCE-20261026.json`.

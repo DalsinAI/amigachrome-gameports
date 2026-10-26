@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-26",
+  "scope": "Owned explicit-context sprite geometry, mathematical rectangle intersection and qualified RAM-copy composition",
+  "originalObservations": {
+    "prefixEntry": "0x5e4b9a",
+    "prefixCases": 60,
+    "freshAndCoherentCacheProfiles": true,
+    "unmodifiedIatSlot": "0x669338",
+    "unresolvedOnDiskImportNameRva": "0x60af54",
+    "faultObserverExitsWithoutResumingOriginal": true,
+    "originalWrapperNormalReturn": false,
+    "user32Executed": false,
+    "prefixGeometrySHA256": "3663a8ef85a3f31711bfc2cf1aec97bc82f68457127de2e0b65e2f4b874a39d1",
+    "crossZeroCasesRequiringPostAdditionTruncation": 8,
+    "minimumSuffixEntry": "0x5e4fd8",
+    "minimumSuffixCases": 80,
+    "minimumNormalOriginalNoDrawReturns": 40,
+    "minimumPassCasesInterruptedBeforeSecondImport": 40,
+    "ownerPixelSuffixCases": 54,
+    "unscaledSuffix": "0x5e4d88",
+    "shrinkSuffix": "0x5e501a",
+    "expandSuffix": "0x5e5222",
+    "ownerPixelSHA256": "e3b2bc8ce55660d2b15692c85e92a29765096d11236f753f2b9a138cee7abb89",
+    "wholeOriginalWrapperExecuted": false
+  },
+  "contract": {
+    "extractionMetadataAndKeyRequired": true,
+    "alreadyOriginalSpriteCallerScreenArguments": true,
+    "freshOrCoherentSourceScaleCacheProfileRequired": true,
+    "explicitMinimumDimensionsRequired": true,
+    "sourceFpProfile": "nearest/double; original oracleCW027f",
+    "callerCoordinateBounds": [
+      -524287,
+      524287
+    ],
+    "scaleRatioIntegers": [
+      1,
+      1024
+    ],
+    "maximumExpansion": 4,
+    "scaleTableCapacity": 800,
+    "ownedIntersectionNotUser32Qualification": true,
+    "typedMissingContext": true,
+    "aliasesAndUnsupportedInputsRejectWithoutWrites": true
+  },
+  "validation": {
+    "publicCases": 432,
+    "publicSHA256": "bf4a4d96c35dfd053d1f1726b0f605594046d570dbc69b2a74564231a4f3c007",
+    "boundaryControls": 46,
+    "hostAsanUbsan": true,
+    "actualIndependent68040": true,
+    "normalSdkBuildOnly": true,
+    "normalSdkProbeSHA256": "02dee31db005bdaac8244a136e887236947dfeb227134815734e102f198a7c01",
+    "normalSdkControlSHA256": "9a49bd39eb360b58d8a7df722f768993c4c33ab6793c1364de02e87d8a6fe3ac",
+    "nativeExecution": false
+  },
+  "limits": [
+    "No fake IntersectRect function or forced-success import: the prefix process stops at an actual fault on its untouched unresolved on-disk IAT target",
+    "Original prefix interruption and independent suffix normal returns are separate observations; joining them through owned mathematical intersection does not execute or qualify the complete original Sprite_draw3 wrapper",
+    "Live MapWin/tile sprite caller anchor, minimum dimensions and cache/runtime provenance are not supplied by an owned save snapshot; missing context remains held",
+    "Original physical PCX/pool construction/cache lifecycle/Windows API/OS display and native stack/performance remain held",
+    "Only nonempty qualified trim metadata and matching transparency key are supported; source-free loader and other caller key variants are not enabled",
+    "No frontend/scene enabling/native/watch/lab/deploy/export/publication/full-game completion claim"
+  ]
+}
