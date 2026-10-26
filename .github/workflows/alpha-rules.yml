@@ -276,3 +276,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_pacifism.py --out "$RUNNER_TEMP/world-pacifism-host"
       - name: Big-endian fresh original pacifism controls
         run: python3 ports/alpha-centauri/native/test_world_pacifism.py --out "$RUNNER_TEMP/world-pacifism-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host current world psych binding
+        run: python3 ports/alpha-centauri/native/test_world_psych.py --out "$RUNNER_TEMP/world-psych-host"
+      - name: Big-endian current world psych binding
+        run: python3 ports/alpha-centauri/native/test_world_psych.py --out "$RUNNER_TEMP/world-psych-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

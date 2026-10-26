@@ -186,3 +186,10 @@ mutating units. It is a dependency for later happiness and income composition.
 The local [pacifism dependency](ports/alpha-centauri/native/WORLD-PACIFISM.md)
 now derives the original counter from actual home units, plans, components and
 location. It does not commit happiness or execute upkeep.
+
+The local [world psych binding](ports/alpha-centauri/native/WORLD-PSYCH.md)
+combines saved population and pending social facts with current home-unit
+pacifism and an ordered validated garrison. Spending and stage remain explicit;
+this proposes happiness/social results without committing accounting or turns.
+Host and independent Linux68040 controls passed locally. AmigaOS execution,
+CI, publication, full fresh-world energy and player turn execution remain held.
