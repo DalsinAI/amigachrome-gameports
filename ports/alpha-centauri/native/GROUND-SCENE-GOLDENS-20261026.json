@@ -1,0 +1,50 @@
+[
+  {
+    "context": 0,
+    "zoom": -5,
+    "cases": 16,
+    "sceneSHA256": "5fe012ea49a332f3f1e0225d788d152714d8341f6f084d0b1099a2086e4a027a"
+  },
+  {
+    "context": 0,
+    "zoom": 5,
+    "cases": 16,
+    "sceneSHA256": "a48e9682c137f58a5fa185f29a1ee7a7382a2a5fc23c71e551e9fbc8506ddfe0"
+  },
+  {
+    "context": 1,
+    "zoom": -5,
+    "cases": 16,
+    "sceneSHA256": "43ff5d0d66f9c73f3c56ccdb3ac6471c989855d3cf5cadead50cf522471b0d16"
+  },
+  {
+    "context": 1,
+    "zoom": 5,
+    "cases": 16,
+    "sceneSHA256": "39cebd1fc1d1c53c68660e2ce7577b9c8e637e889d987dba848660b2b48ea491"
+  },
+  {
+    "context": 2,
+    "zoom": -5,
+    "cases": 16,
+    "sceneSHA256": "1323e15a555d0b5245d04f54b5f46161cb751f04674b9f7dc915bb553d97f38a"
+  },
+  {
+    "context": 2,
+    "zoom": 5,
+    "cases": 16,
+    "sceneSHA256": "18ac35b62115c37410b940727aa5fdbb51819365544f449fdf7aaa627cb5640a"
+  },
+  {
+    "context": 3,
+    "zoom": -5,
+    "cases": 16,
+    "sceneSHA256": "165922ff506bc5015e7cc630028c7003981eb66819f31f7cb12193cbdc72d579"
+  },
+  {
+    "context": 3,
+    "zoom": 5,
+    "cases": 16,
+    "sceneSHA256": "32ec92049c7cb2398d71d78e4a0783bf59ebab2f81b873c61f40d2e0e889ab8f"
+  }
+]

@@ -1,0 +1,84 @@
+{
+  "scope": "New explicit non-flat unit caller preparation and complete controlled no-shadow unit scene composition; no frontend enabling or terrain-mesh/fog restoration.",
+  "frozenParent": "9adb3da10c837440c296762178ea7158ce12a0a2",
+  "factory": {
+    "states": 19208,
+    "cornerCombinations": 2401,
+    "facings": 8,
+    "bytes": 1920800,
+    "originalHostAndIndependent68040SHA256": "a94acef41edf4a22efb3e6b05b94aa399467ce0e728a94f24d487cef18c02edc",
+    "invalidTransactionalControls": 13,
+    "numericOutputs": "camera9, cameraPosition3, model9, worldLight3, magnification1",
+    "originalScope": "Unchanged original camera4bf740/inverse627f50/Euler627d00/vector6280e0 helpers; actual source normal domain. Caller setup harness follows instruction-backed arithmetic, not execution of complete vehdraw_draw/Win32/PE startup."
+  },
+  "completeScenes": {
+    "originalOwnerModelScenes": 128,
+    "syntheticAssetFreeScenes": 128,
+    "host": "PASS, ASan/UBSan",
+    "independentLinux68040": "PASS, actual qemu-m68k -cpu m68040",
+    "ownerIndexedAndDepthBytes": 25165824,
+    "ownerOriginalHostAndBESHA256": "156de8b4f1b8b92eedac162281a6038c6897505cf0c39c5c5cecd7c981ec18ae",
+    "profiles": [
+      "basic infantry VI+Viptr00 staticframe0 at sourceappend(-400,200,0); original flat-normal override retained",
+      "basic ten-part rover, staticframe0, source-facing minus terrain heading"
+    ],
+    "terrainCorners": [
+      [
+        4,
+        4,
+        4,
+        5
+      ],
+      [
+        2,
+        1,
+        2,
+        5
+      ],
+      [
+        1,
+        2,
+        5,
+        2
+      ],
+      [
+        5,
+        5,
+        2,
+        2
+      ]
+    ],
+    "sourceZooms": [
+      -5,
+      5
+    ],
+    "facings": 8,
+    "paletteBoundary": "Explicitly supplied model/faction shade tables. No complete original loader/OS/system palette/scene metadata inference.",
+    "rendererAliasControls": "Existing owned renderer protected-allocation partial-alias/adjacent-output controls executed for every16-scene suite;14421 rejections perowner suite.",
+    "originalRenderBoundary": "Original no-shadow639e60 and real geometry/fixed/shade/raster dependencies executed. Original final17230 USER32-backed screen copy and full unit caller were not executed."
+  },
+  "newNumericDefectRecovered": {
+    "problem": "Uniform wide inverse or uniformly float-rounded cofactors differ from original on non-flat cameras. Earlier prototype failed1040/19208 states; failures retained.",
+    "correction": "First minor and reciprocal spill to float; seven output minors are float-rounded, but two remain wide. Model Euler signed-zero terms and unrounded facing multiplication before heading subtraction are preserved.",
+    "notAToleranceChange": true
+  },
+  "normalSDK": {
+    "factoryBinarySHA256": "2f01c79cb24811657428c0f5206505a4a031d5f5295e2baa7d4a97daae1969ea",
+    "renderBinarySHA256": "2092a2359fbe0dcf0078f64bd588c557c6dc879ce13ec120cc975c4567a52988",
+    "actualAmigaOS": "UNRUN; buildonly, normal private SDK/no overlay"
+  },
+  "workflow": {
+    "allParentBytesRetained": true,
+    "parentPythonCommands": 80,
+    "newPairedCommands": 2
+  },
+  "limits": [
+    "No new image, originalworld viewer integration, deployment, native UI/performance/final-head CI claim.",
+    "19208 factory coefficient controls do NOT qualify full scene output at all2401corner combinations: complete pixel/depth proof is exactly the four listed corner profiles.",
+    "Original terrain mesh/coast texture joins/elevation presentation/fog/visibility/shadows and animated model stages remain unresolved.",
+    "Only supported basic assembly recipes/staticframe0, explicit palettes; no other abilities/reactors/female variants or original complete caller state inferred.",
+    "Original source append(-400,200,0) preserved; no fitted foot placement/enlargement/generated replacement art.",
+    "Historical9adb3da/92cbe0c/ceb7cc9 branches, original renderer and current preview untouched.",
+    "No PR/push/connector/source export; automatic approval export restriction honoured. User retains exclusive watch lab; no lab/native access."
+  ]
+}

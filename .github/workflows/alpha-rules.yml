@@ -180,3 +180,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_terrain_context.py --out "$RUNNER_TEMP/cvr-terrain-context-host"
       - name: Ordinary and coast corner context independent big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_cvr_terrain_context.py --out "$RUNNER_TEMP/cvr-terrain-context-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Source non-flat caller and complete synthetic unit scene host controls
+        run: python3 ports/alpha-centauri/native/test_cvr_ground_scene.py --out "$RUNNER_TEMP/cvr-ground-scene-host"
+      - name: Source non-flat caller and complete synthetic unit scene independent big-endian 68040 controls
+        run: python3 ports/alpha-centauri/native/test_cvr_ground_scene.py --out "$RUNNER_TEMP/cvr-ground-scene-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
