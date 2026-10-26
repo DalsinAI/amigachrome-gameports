@@ -508,3 +508,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_base_combat.py --out "$RUNNER_TEMP/world-base-combat-host"
       - name: Owned base combat stage independent68040 controls
         run: python3 ports/alpha-centauri/native/test_world_base_combat.py --out "$RUNNER_TEMP/world-base-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original combat sensor percentage host controls
+        run: python3 ports/alpha-centauri/native/test_sensor_combat.py --out "$RUNNER_TEMP/sensor-combat-host"
+      - name: Original combat sensor percentage independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_sensor_combat.py --out "$RUNNER_TEMP/sensor-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned combat sensor coverage host controls
+        run: python3 ports/alpha-centauri/native/test_world_sensor_combat.py --out "$RUNNER_TEMP/world-sensor-combat-host"
+      - name: Owned combat sensor coverage independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_sensor_combat.py --out "$RUNNER_TEMP/world-sensor-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
