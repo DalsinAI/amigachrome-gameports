@@ -464,3 +464,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_local_unit_wait.py --out "$RUNNER_TEMP/unit-wait-host"
       - name: Big-endian owned deferred selection state
         run: python3 ports/alpha-centauri/native/test_local_unit_wait.py --out "$RUNNER_TEMP/unit-wait-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original combat prototype and psi factors
+        run: python3 ports/alpha-centauri/native/test_combat_prototype.py --out "$RUNNER_TEMP/combat-prototype-host"
+      - name: Big-endian original combat prototype and psi factors
+        run: python3 ports/alpha-centauri/native/test_combat_prototype.py --out "$RUNNER_TEMP/combat-prototype-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host saved-world combat prototype binding
+        run: python3 ports/alpha-centauri/native/test_world_combat_prototype.py --out "$RUNNER_TEMP/world-combat-prototype-host"
+      - name: Big-endian saved-world combat prototype binding
+        run: python3 ports/alpha-centauri/native/test_world_combat_prototype.py --out "$RUNNER_TEMP/world-combat-prototype-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

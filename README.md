@@ -217,3 +217,10 @@ rendering, rally, audio, input flushing and command-loop completion remain
 unimplemented; no new player control or End Turn authority is exposed.
 Host and independent Linux68040 controls pass. Native execution, publication
 and remote CI remain held.
+
+The local [combat prototype strengths](ports/alpha-centauri/native/COMBAT-PROTOTYPE.md)
+restore original conventional/psi rating leaves and saved-world faction/project
+bindings, including edition-specific Spore/Tower rules. Host and independent
+Linux68040 match the original closed helpers; full battle modifiers, RNG damage,
+kills, attack legality and player combat remain unimplemented. Normal SDK builds
+are compile-only; native execution, publication and remote CI remain held.
