@@ -5,6 +5,7 @@
 #ifndef ALPHA_AUTOMATIC_PROTOTYPE_NAME_H
 #define ALPHA_AUTOMATIC_PROTOTYPE_NAME_H
 #include "custom_prototype_construction.h"
+#include "retirement_history.h"
 namespace alpha {
 struct PrototypeNameLabels {char scout[128],recon[128],sea[128],amphibious1[128],amphibious2[128],artillery1[128],artillery2[128];};
 static_assert(sizeof(PrototypeNameLabels)==896 && offsetof(PrototypeNameLabels,sea)==256 && offsetof(PrototypeNameLabels,amphibious1)==384 && offsetof(PrototypeNameLabels,artillery1)==640,"original label positions preserved");
@@ -33,5 +34,10 @@ PrototypeNameError world_resolve_automatic_prototype_name(const OriginalWorld&,V
 PrototypeNameError world_resolve_automatic_prototype_logical_name(const OriginalWorld&,Variant,const Rules&,
  const UnitDefinitions&,const PrototypeNameLabels&,const PrototypeNameSuffix&,int32_t id,
  const OriginalPrototype&,PrototypeLogicalName&);
+/* Same complete base logical resolver with actual owned post-retirement history.
+ * Explicit table/result is data, not provenance/authority. SMAX still held. */
+PrototypeNameError world_resolve_automatic_prototype_logical_name_history(const OriginalWorld&,Variant,const Rules&,
+ const UnitDefinitions&,const PrototypeNameLabels&,const PrototypeNameSuffix&,int32_t id,
+ const OriginalPrototype&,const RetirementHistoryResult&,PrototypeLogicalName&);
 }
 #endif

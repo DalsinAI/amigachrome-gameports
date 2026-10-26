@@ -19,5 +19,10 @@ struct CustomPrototypeRequest {int32_t id,chassis,weapon,armor,reactor;uint32_t 
  */
 LogicError world_construct_custom_prototype(const OriginalWorld&,Variant,const Rules&,
  const UnitDefinitions&,const CustomPrototypeRequest&,OriginalPrototype&);
+/* Same source construction against the genuine selected post-retirement record.
+ * retired must equal current chosen record with only active bit cleared; output
+ * disjoint. This does NOT execute/authorize retirement or its other effects. */
+LogicError world_construct_custom_prototype_after_retirement(const OriginalWorld&,Variant,const Rules&,
+ const UnitDefinitions&,const CustomPrototypeRequest&,const OriginalPrototype& retired,OriginalPrototype&);
 }
 #endif

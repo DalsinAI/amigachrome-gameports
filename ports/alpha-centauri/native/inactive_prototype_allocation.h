@@ -5,6 +5,8 @@
 #include "human_component_pruning.h"
 #include "proposer_record_stages.h"
 namespace alpha {
+class UnreferencedAllocationPlan;
+enum class UnreferencedAllocationError;
 enum class AllocationCursorObservation {unknown,supplied};
 struct InactiveAllocationFacts {PruningRuntime multiplayer;AllocationCursorObservation cursor;int32_t last_created;int32_t difficulty;};
 enum class InactiveAllocationError {ok,bad_state,runtime_required,existing_return_required,strength_required,no_slot,retirement_required,live_reference_required,naming_context_required,naming_nonreturning,overflow,out_of_memory};
@@ -17,6 +19,7 @@ class InactiveAllocationPlan {
   uint16_t flags(size_t i)const{return i<512?flags_[i]:0;}
   size_t count()const{return count_;}const OriginalBase* base(size_t i)const{return i<count_?bases_+i:nullptr;}
  private:
+  friend UnreferencedAllocationError world_unreferenced_prototype_allocation(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,const ExistingProposalRequest&,const InactiveAllocationFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,UnreferencedAllocationPlan&);
   friend InactiveAllocationError world_inactive_prototype_allocation(const OriginalWorld&,Variant,const Rules&,const UnitDefinitions&,const ExistingProposalRequest&,const InactiveAllocationFacts&,const PrototypeNameLabels&,const PrototypeNameSuffix&,InactiveAllocationPlan&);
   void swap(InactiveAllocationPlan&);
   OriginalPrototype selected_{};uint16_t flags_[512]{};OriginalBase* bases_=nullptr;size_t count_=0;int32_t id_=-1,last_=-1;bool ready_=false;
