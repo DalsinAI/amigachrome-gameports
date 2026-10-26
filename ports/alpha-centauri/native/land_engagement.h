@@ -23,6 +23,7 @@ class LandEngagementPlan {
   const OriginalWorld* frame()const{return ready_?&frame_:nullptr;}
   const EngagementSummary* summary()const{return ready_?&summary_:nullptr;}
  private:
+  friend class LandResolutionPlan;
   friend EngagementError stage_land_engagement(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const EngagementFacts&,LandEngagementPlan&,size_t);
   EngagementError capture(const OriginalWorld&,size_t);
   void swap(LandEngagementPlan&);

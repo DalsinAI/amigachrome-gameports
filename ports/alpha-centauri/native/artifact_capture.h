@@ -20,6 +20,7 @@ class ArtifactCapturePlan {
   const CasualtyInputs*accumulators()const{return ready()?&inputs_:nullptr;}
   const ArtifactCapturePreview*preview()const{return ready()?&preview_:nullptr;}
  private:
+  friend class LandResolutionPlan;
   friend RemovalError stage_artifact_capture(const OriginalWorld&,size_t,const RemovalRuntime&,const UnitDefinitions&,const Rules&,int32_t,const CasualtyInputs&,ArtifactCapturePlan&,size_t);
   RemovalError prepare(const OriginalWorld&,size_t,const RemovalRuntime&,const UnitDefinitions&,const Rules&,int32_t,const CasualtyInputs&,size_t);
   void swap(ArtifactCapturePlan&);
