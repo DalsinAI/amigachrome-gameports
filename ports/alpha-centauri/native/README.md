@@ -1829,3 +1829,29 @@ rejection across all five encoders. Controlled test-only storage corruption is
 an unsupported-change test, not a simulated award or gameplay transaction.
 Local host/independent Linux68040 execution and SDK compile-only receipts remain
 separate from unrun AmigaOS validation. No publication or remote CI is claimed.
+
+
+### Original social-upkeep dependency (local candidate)
+
+`social_upkeep` proposes the original pending-to-active choice copy, three full
+social effect calculations and paid-upheaval reset. Its explicit current base
+modifiers remain authoritative; this operation does not recompute them from
+SOCIAL bonuses. The third original calculation changes an unused argument,
+not the quick-calculation flag. SMAX alone adds alien temple research.
+
+`world_social_upkeep` binds current pending choices/base modifiers/ordered
+bonuses from decoded faction records, project indices21/24/13/23 through actual
+base owners, and the original temple landmark/visibility/owner condition across
+the decoded map. Same-edition SOCIO rules are required. Output is disjoint from
+all World allocations, including separate current monument bytes. Neither API
+mutates World or authorizes a social, repair, production or turn phase.
+
+Local host sanitizer and independent Linux68040 controls pass. Private complete
+original social_upkeep executions include all three real social_calc calls,
+real has_temple/whose_territory and normal returns; the entire selected faction
+record is compared. Those bounded original helper observations are separate
+from AmigaOS validation, which remains unrun. No remote CI or publication claim.
+
+Run `test_social_upkeep.py` and `test_world_social_upkeep.py` with `--out OUTPUT`;
+the latter accepts optional private `--original RULES SAVE` pairs. Both accept
+`--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.

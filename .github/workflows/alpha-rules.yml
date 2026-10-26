@@ -400,3 +400,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_monument_storage.py --out "$RUNNER_TEMP/monument-storage-host"
       - name: Big-endian owned monument storage and snapshot guards
         run: python3 ports/alpha-centauri/native/test_monument_storage.py --out "$RUNNER_TEMP/monument-storage-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original social upkeep proposals
+        run: python3 ports/alpha-centauri/native/test_social_upkeep.py --out "$RUNNER_TEMP/social-upkeep-host"
+      - name: Big-endian original social upkeep proposals
+        run: python3 ports/alpha-centauri/native/test_social_upkeep.py --out "$RUNNER_TEMP/social-upkeep-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world social upkeep binding
+        run: python3 ports/alpha-centauri/native/test_world_social_upkeep.py --out "$RUNNER_TEMP/world-social-upkeep-host"
+      - name: Big-endian original world social upkeep binding
+        run: python3 ports/alpha-centauri/native/test_world_social_upkeep.py --out "$RUNNER_TEMP/world-social-upkeep-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
