@@ -672,3 +672,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_battle_entry.py --output "$RUNNER_TEMP/battle-entry-host"
       - name: Original battle entry calculations independent 68040
         run: python3 ports/alpha-centauri/native/test_battle_entry.py --output "$RUNNER_TEMP/battle-entry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned World battle entry inspection host
+        run: python3 ports/alpha-centauri/native/test_world_battle_entry.py --out "$RUNNER_TEMP/world-battle-entry-host"
+      - name: Owned World battle entry inspection independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_battle_entry.py --out "$RUNNER_TEMP/world-battle-entry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
