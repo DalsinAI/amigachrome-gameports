@@ -1,0 +1,1376 @@
+{
+  "scope": "GenuineAROS68040/FPU nativeconnectedcommerce",
+  "supersededPendingQualificationFix": false,
+  "binarySHA256": "215b75f5b841d92fe8cb86690f41333c395758868e485c9a6388791656693645",
+  "cases": [
+    {
+      "index": 0,
+      "source": "v7-0.SC",
+      "bytes": 82,
+      "sha256": "586f2951ebf576698cc522e6163f65731125b195c07905f5d682ed9434ffc623",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 1,
+      "source": "v7-1.SC",
+      "bytes": 82,
+      "sha256": "7c33152976ade081abc284d3eccbae772ff2515af15e66be871510bb55144432",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 2,
+      "source": "v7-2.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 3,
+      "source": "v7-3.SC",
+      "bytes": 82,
+      "sha256": "e929ba4f86d571071dcddb503ba3360504635f6e820745ff1aa29c21b94fb1bc",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 4,
+      "source": "v7-4.SC",
+      "bytes": 82,
+      "sha256": "248bfb3da2101f6065bb479a54b365997f02c3e7cc8ad2fd951b619cbecba275",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 5,
+      "source": "v7-5.SC",
+      "bytes": 82,
+      "sha256": "4d218b6be6293f6bedc59cbdc053b3401e5ce875dbe61d264272027783a4c72f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 6,
+      "source": "v7-6.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 7,
+      "source": "v7-7.SC",
+      "bytes": 82,
+      "sha256": "a89ebdea89a581976c64f59544efdfd7f231ec58298109f823d2da6e5ce996ef",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 8,
+      "source": "v7-8.SC",
+      "bytes": 82,
+      "sha256": "382102337450227cefb9eb2147d6f1f3ec3ecaff1a2f197680652641848c68a0",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 9,
+      "source": "v7-9.SC",
+      "bytes": 83,
+      "sha256": "3617d72a1254b212460953d5927a0eac12418d160aac03224599c8c51a737d80",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 10,
+      "source": "v7-10.SC",
+      "bytes": 81,
+      "sha256": "916067a5d61cbf2e667a831f50577c70c1e1163248946174abebe7cebc60d295",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 11,
+      "source": "v7-11.SC",
+      "bytes": 85,
+      "sha256": "245f719b9e8f8795e9ad7d358ee62b652030338767110302c599a144bea9c492",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 12,
+      "source": "v7-12.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 13,
+      "source": "v7-13.SC",
+      "bytes": 86,
+      "sha256": "ce918553e2927e583ace5c851d718221c308c33c60c2fdc06892a0caa6a4409f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 14,
+      "source": "v7-14.SC",
+      "bytes": 83,
+      "sha256": "cd8cd0a864b440a92a45702c16cd1f42c436aba3a16b25cdf5ab3f19cbdcacb1",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 15,
+      "source": "v7-15.SC",
+      "bytes": 81,
+      "sha256": "596f794a350487c11f5616b1b4560dac6e5bf29d71b8f6110feef78f05b1fc94",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 16,
+      "source": "v7-16.SC",
+      "bytes": 82,
+      "sha256": "6e7e8da6ed116b9ca9816b4d5877389362267b40d87ec1135b26df0bd8c9803d",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 17,
+      "source": "v7-17.SC",
+      "bytes": 82,
+      "sha256": "401e2579ccd14d6797696cec9244d9acddc1fb8219fcd9a01ad7814c26ec90e2",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 18,
+      "source": "v7-18.SC",
+      "bytes": 84,
+      "sha256": "4df5647ccc9fdb46a444cd3460e690ee8bdf03d99d85f55da3ebf3766ac83817",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 19,
+      "source": "v7-19.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 20,
+      "source": "v7-20.SC",
+      "bytes": 82,
+      "sha256": "e00f8f2b9420708983543e12becc1d4f2de0d39650612b0071d546d654398b1f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 21,
+      "source": "v7-21.SC",
+      "bytes": 82,
+      "sha256": "d252bfb40dd0e8c2c284ebbe821191f557000116d29ab9c0bddbc1ab2fb8efb8",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 22,
+      "source": "v7-22.SC",
+      "bytes": 82,
+      "sha256": "75dd3e7fc1250ea6d23d6d66bb6a4b1a3995ec775983b3bb426f4e1375ad58a8",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 23,
+      "source": "v7-23.SC",
+      "bytes": 82,
+      "sha256": "e1c1a42ba3e1148b0a3249c0ff7c9b29d9cc5ad168326faf61f40b679e28bb6a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 24,
+      "source": "v7-24.SC",
+      "bytes": 82,
+      "sha256": "47028bdb585dd198f517e1fb735e30fc6a1fda0bb506093ade9bd1df3cdf59f9",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 25,
+      "source": "v7-25.SC",
+      "bytes": 81,
+      "sha256": "5bd5530d82357f4b8b044f98e2845219b84df88664963681a4eb64d3cd028897",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 26,
+      "source": "v7-26.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 27,
+      "source": "v7-27.SC",
+      "bytes": 81,
+      "sha256": "c2e9633170f4be3396d0452ee3963318b7faabbd41ef298e1f7f4337f24a8212",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 28,
+      "source": "v7-28.SC",
+      "bytes": 82,
+      "sha256": "cdf16ea97a962427fd2dc704e9f3bcb9fca504dd04af3b94f6e8a25675d884a2",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 29,
+      "source": "v7-29.SC",
+      "bytes": 82,
+      "sha256": "75a83a6e5e92362f20740b57c0cfb9f24b2a0d8087c13bd93bbd5651a5b933ee",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 30,
+      "source": "v7-30.SC",
+      "bytes": 83,
+      "sha256": "aa486d3ecd3dfd5fe7894ac12d1e34bc39e30088b31ed7fba3030d6df3919231",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 31,
+      "source": "v7-31.SC",
+      "bytes": 83,
+      "sha256": "82c3fdf70dfa51d6593d577bd2c69ce8ae721921b7c6ace4d5c291f0d8b25736",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 32,
+      "source": "v7-32.SC",
+      "bytes": 81,
+      "sha256": "596f794a350487c11f5616b1b4560dac6e5bf29d71b8f6110feef78f05b1fc94",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 33,
+      "source": "v7-33.SC",
+      "bytes": 82,
+      "sha256": "ea3ccdc1afcee60b0ec27a49daec623d534b28e8f26c4032e87aebbf92780c08",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 34,
+      "source": "v7-34.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 35,
+      "source": "v7-35.SC",
+      "bytes": 387,
+      "sha256": "3a228d9c4d0550c1ea02c4d976bed694bfcb996ad68b328398c7ac2b9a7f0e12",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 36,
+      "source": "v7-36.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 37,
+      "source": "v7-37.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 38,
+      "source": "v7-38.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 39,
+      "source": "v7-39.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 40,
+      "source": "v7-40.SC",
+      "bytes": 91,
+      "sha256": "7e3f5d44305fed9c46bff6dd7a995f7cd2005dbf110be47e97b8d6b8df261276",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 41,
+      "source": "v8-0.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 42,
+      "source": "v8-1.SC",
+      "bytes": 82,
+      "sha256": "4384c838848ae879fcbb965fa7ac16dac5f45feb45022e3d6e95b15cd508ce1e",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 43,
+      "source": "v8-2.SC",
+      "bytes": 82,
+      "sha256": "8c69c6e2a7eaaf227977dcea0286c4a8a34d9067efad3a5c338c47f542a5241c",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 44,
+      "source": "v8-3.SC",
+      "bytes": 82,
+      "sha256": "0314a1aab1a428f55b5a885269027e4fe932a318ffdfb5d19662e9bafef07d8e",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 45,
+      "source": "v8-4.SC",
+      "bytes": 82,
+      "sha256": "a5c96b034d49ba4163e4fbdb5724377e9ee75c9a54eca3db1d71f1696cf800a3",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 46,
+      "source": "v8-5.SC",
+      "bytes": 82,
+      "sha256": "25459d4a3a4249fde581b1ad20aef95c535263becf992bb5abc2ee21875b0473",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 47,
+      "source": "v8-6.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 48,
+      "source": "v8-7.SC",
+      "bytes": 82,
+      "sha256": "98a86e2646238cbd84ec655fd3d5e270db94d2f612afe1e62f8c07c944b5f27c",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 49,
+      "source": "v8-8.SC",
+      "bytes": 83,
+      "sha256": "92e5794810aba8d55b97398a69da6fc7e733d173f68e3b43142ed093ab4749c5",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 50,
+      "source": "v8-9.SC",
+      "bytes": 83,
+      "sha256": "c1a1c78a98d71bc354d7c87663d24b99040c7e1eb851d5d0eaecb456bcf8268f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 51,
+      "source": "v8-10.SC",
+      "bytes": 82,
+      "sha256": "488c37e732adbf681ecf3dd58e018e26e295a9e4fae223a0a4a18fff5e73b3af",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 52,
+      "source": "v8-11.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 53,
+      "source": "v8-12.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 54,
+      "source": "v8-13.SC",
+      "bytes": 83,
+      "sha256": "eb6eda2e4a48500cd410451f6c340ec13eee1141ac749ec836c4d768234daf95",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 55,
+      "source": "v8-14.SC",
+      "bytes": 82,
+      "sha256": "2bfef615ac6f93a5b7caaa4216d33278d6ba408c5eaa6be6ffd08186fb297ec3",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 56,
+      "source": "v8-15.SC",
+      "bytes": 82,
+      "sha256": "3e58cc21e1d3c21c25e3006d83ae3964076b5e63cdf546dc3f90fd20ae4e33dc",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 57,
+      "source": "v8-16.SC",
+      "bytes": 83,
+      "sha256": "f9f6f82060c7a183df577be29750a262727885be2280a3df13d5332c8718c210",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 58,
+      "source": "v8-17.SC",
+      "bytes": 82,
+      "sha256": "c4acceefdf46238f5fb0d124ece162050227da21417bff3001638f3404bf2868",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 59,
+      "source": "v8-18.SC",
+      "bytes": 82,
+      "sha256": "eee089b8edbc5c0611f63f63b5ee0cad5599041c4b4e807a23771049a08bb4e9",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 60,
+      "source": "v8-19.SC",
+      "bytes": 82,
+      "sha256": "42a202894fbd5c7ec0065bcd6e37669cf6af61ff33ab380193824c94c98c17c8",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 61,
+      "source": "v8-20.SC",
+      "bytes": 81,
+      "sha256": "fe0770a1344b605854cf6f79de4dc90b106c5f690f36f15edc8987ff3ad592cf",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 62,
+      "source": "v8-21.SC",
+      "bytes": 82,
+      "sha256": "11644b7dcd867599ebc58fd60a1098066a8fae008c2c6b06d88422b95e6aae23",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 63,
+      "source": "v8-22.SC",
+      "bytes": 82,
+      "sha256": "0a53318b3ca9c7a0bbf59e0ed189b5d59213bbe3add333bfe2c2ed19a1f757df",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 64,
+      "source": "v8-23.SC",
+      "bytes": 82,
+      "sha256": "4cb8115630566f4274ee70952929713858feb00815135b472ebe29f48cb15768",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 65,
+      "source": "v8-24.SC",
+      "bytes": 81,
+      "sha256": "3054c9ce4ff6abce3ee53ad91fdb127400a2b74efafc668ad833f90e437ade18",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 66,
+      "source": "v8-25.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 67,
+      "source": "v8-26.SC",
+      "bytes": 82,
+      "sha256": "a94f422b09ad8b402afba34eb43572109682323e75ae32fee308c99bf9aac2d3",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 68,
+      "source": "v8-27.SC",
+      "bytes": 82,
+      "sha256": "b9810ed1ebe173664012db2eb5ebdf96419f8c69b43b7b81ad38175bbb8e7e81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 69,
+      "source": "v8-28.SC",
+      "bytes": 82,
+      "sha256": "93a4e66a12bcfe8f971ee7a2048e533c89ad5bc64f7c211e0b8e6789bd1d1662",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 70,
+      "source": "v8-29.SC",
+      "bytes": 83,
+      "sha256": "ea740449957b4253f81a4a0ff3a5074a6780777e6f51e5aa83ebf9ebe3e379f9",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 71,
+      "source": "v8-30.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 72,
+      "source": "v8-31.SC",
+      "bytes": 82,
+      "sha256": "b2a36a5d2e5b404090c39b7096b28268f77dc5aa6c25053e2bad01bad32ad35c",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 73,
+      "source": "v8-32.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 74,
+      "source": "v8-33.SC",
+      "bytes": 81,
+      "sha256": "0bf18342811c70bcef852fa907915564afefa97144a9b22b666da504a38d1961",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 75,
+      "source": "v8-34.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 76,
+      "source": "v8-35.SC",
+      "bytes": 387,
+      "sha256": "3a228d9c4d0550c1ea02c4d976bed694bfcb996ad68b328398c7ac2b9a7f0e12",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 77,
+      "source": "v8-36.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 78,
+      "source": "v8-37.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 79,
+      "source": "v8-38.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 80,
+      "source": "v8-39.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 81,
+      "source": "v8-40.SC",
+      "bytes": 86,
+      "sha256": "f58eb97f9b701cd264c70fa339de544f9a6a89cedfb6deeb60f68ed4826663a0",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 82,
+      "source": "v9-0.SC",
+      "bytes": 82,
+      "sha256": "7a465387bfbccecc4cc0c3df41f36abfd8bb8dfed7ede998ba176658e488c93a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 83,
+      "source": "v9-1.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 84,
+      "source": "v9-2.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 85,
+      "source": "v9-3.SC",
+      "bytes": 82,
+      "sha256": "2fa212039f0dc52b02963379b811472c80663df0b1096113688bb1efc1c9a982",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 86,
+      "source": "v9-4.SC",
+      "bytes": 82,
+      "sha256": "f87b9c40ffcb3a3153f682a667fe587cd47ef07028b072b2972e0eceee0c7e90",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 87,
+      "source": "v9-5.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 88,
+      "source": "v9-6.SC",
+      "bytes": 82,
+      "sha256": "2e1d5e65bd696afed6ac512cbc16050bc204410a540fb259743cfd2510c58d14",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 89,
+      "source": "v9-7.SC",
+      "bytes": 82,
+      "sha256": "261d8bf28a9eb76daa46af333582b319b36aca5c09f32f86b4ec82d57db3b9ca",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 90,
+      "source": "v9-8.SC",
+      "bytes": 82,
+      "sha256": "cb1d33cce34c6c518b800f8b3b20f358159510f3d764952eddc8c40fdeaf7551",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 91,
+      "source": "v9-9.SC",
+      "bytes": 83,
+      "sha256": "51d61db4b4ac72b5936ef7befcbe8b50d87887ce80f31cf74f5a35e1a33d23ae",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 92,
+      "source": "v9-10.SC",
+      "bytes": 82,
+      "sha256": "9d9a1b5db5b708a26df3179740d7886d14a7aba53b387f6989a22e4de55e9a81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 93,
+      "source": "v9-11.SC",
+      "bytes": 82,
+      "sha256": "c5695e7b01120fb754f3460e006aa57b44e3526341c045dfeda155ea549efc86",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 94,
+      "source": "v9-12.SC",
+      "bytes": 83,
+      "sha256": "3eda733e200d0efad757b65d6d8f613c08390ba9271588991b29a4fd65beebd5",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 95,
+      "source": "v9-13.SC",
+      "bytes": 82,
+      "sha256": "3956fe8af2f16e552bc6406722723853ffc61c21d75493192346714a7ce52153",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 96,
+      "source": "v9-14.SC",
+      "bytes": 81,
+      "sha256": "596f794a350487c11f5616b1b4560dac6e5bf29d71b8f6110feef78f05b1fc94",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 97,
+      "source": "v9-15.SC",
+      "bytes": 83,
+      "sha256": "7973a8071615aa24faaf201d16199cb51cd7620e043f299b4fc7b334254bf273",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 98,
+      "source": "v9-16.SC",
+      "bytes": 84,
+      "sha256": "936938799a155857b6ee86e29c4495df85e59108f2a6a2a7ea8b4661582c746a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 99,
+      "source": "v9-17.SC",
+      "bytes": 84,
+      "sha256": "9fc4bf6fbf1a2a3278ee936266f6d2b89858e0787a9373ba81d1c16a8436b7e2",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 100,
+      "source": "v9-18.SC",
+      "bytes": 82,
+      "sha256": "3d1fc32b270b8d5b79d014ae8e9620b44c4c215ad4b86985d5a819da02cc5b24",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 101,
+      "source": "v9-19.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 102,
+      "source": "v9-20.SC",
+      "bytes": 82,
+      "sha256": "9da38223bf352fa5c88fe5cf011623df8d4f5dd7d1d57502417bb995cf4c3626",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 103,
+      "source": "v9-21.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 104,
+      "source": "v9-22.SC",
+      "bytes": 82,
+      "sha256": "024dd0dfa92cfc065d3c1633709e4d355fbdf5ee095bbedbcc91efe420169a94",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 105,
+      "source": "v9-23.SC",
+      "bytes": 83,
+      "sha256": "fe3fce1af129a66636ea5fc87cd82e53e64dd8ae8f712b80bfba96941892325f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 106,
+      "source": "v9-24.SC",
+      "bytes": 81,
+      "sha256": "108f7c2146be0d5c415afd667e958897759ead7e3961621d05cb7741382b375d",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 107,
+      "source": "v9-25.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 108,
+      "source": "v9-26.SC",
+      "bytes": 81,
+      "sha256": "b891b5b71519b858b1af8a7173fccb7dcb8f1d41733bbd92261a1eb9fcde9859",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 109,
+      "source": "v9-27.SC",
+      "bytes": 82,
+      "sha256": "b9810ed1ebe173664012db2eb5ebdf96419f8c69b43b7b81ad38175bbb8e7e81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 110,
+      "source": "v9-28.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 111,
+      "source": "v9-29.SC",
+      "bytes": 82,
+      "sha256": "59033f98062496ef6922cd1e9877ead3e827907828862e53666e6b27c1d8d5c1",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 112,
+      "source": "v9-30.SC",
+      "bytes": 85,
+      "sha256": "16a57c11aaa6be0fb2c1fdf0897ecac5914073db1f659e8efb4be3c5e1c05c44",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 113,
+      "source": "v9-31.SC",
+      "bytes": 82,
+      "sha256": "20661253f2d1c8e0aeaaba294848e4d1cf748ef90e71aceca38b00470b0c4206",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 114,
+      "source": "v9-32.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 115,
+      "source": "v9-33.SC",
+      "bytes": 81,
+      "sha256": "3c563a12d5adb94d79fc05a9341172f322eb22dab9d589f106000220e51f7007",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 116,
+      "source": "v9-34.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 117,
+      "source": "v9-35.SC",
+      "bytes": 387,
+      "sha256": "3a228d9c4d0550c1ea02c4d976bed694bfcb996ad68b328398c7ac2b9a7f0e12",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 118,
+      "source": "v9-36.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 119,
+      "source": "v9-37.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 120,
+      "source": "v9-38.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 121,
+      "source": "v9-39.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 122,
+      "source": "v9-40.SC",
+      "bytes": 82,
+      "sha256": "6dbccb67e762a6b42375f3e5af768431a1235433e56bac6dddf923fb17264c66",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 123,
+      "source": "v10-0.SC",
+      "bytes": 81,
+      "sha256": "5be67eab649429bcf6258513fbb94d2a791ebe2fe80991ee10f7fa958195a718",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 124,
+      "source": "v10-1.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 125,
+      "source": "v10-2.SC",
+      "bytes": 82,
+      "sha256": "7a5f66572a691122677134a0dd57e6e5d6432f24b95aea3beaf240480d1e3b72",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 126,
+      "source": "v10-3.SC",
+      "bytes": 82,
+      "sha256": "9831e41a59b12c483a4e9685c31eb5e1d8f825ed7734423684f4093502373852",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 127,
+      "source": "v10-4.SC",
+      "bytes": 82,
+      "sha256": "40bdc8e11644d2bea2de713acb96580260c7c76fc086260fd973063e68577965",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 128,
+      "source": "v10-5.SC",
+      "bytes": 83,
+      "sha256": "fcdd15dcd04cfa0dd6bbed76ec39cc569790e705ab7bf626522bb5f4fe559891",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 129,
+      "source": "v10-6.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 130,
+      "source": "v10-7.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 131,
+      "source": "v10-8.SC",
+      "bytes": 82,
+      "sha256": "02629c838994671742810b30886dc1cad796d3dbae487d41dd18ea5f74eebc86",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 132,
+      "source": "v10-9.SC",
+      "bytes": 82,
+      "sha256": "44ec9a657a9f7d0955479401e0087cd0aee610a0b28ed22588cb338fcb01a879",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 133,
+      "source": "v10-10.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 134,
+      "source": "v10-11.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 135,
+      "source": "v10-12.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 136,
+      "source": "v10-13.SC",
+      "bytes": 83,
+      "sha256": "2f936db179c87e9514febea9425fa0823f9d5cf08a5450a286b18e692312db28",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 137,
+      "source": "v10-14.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 138,
+      "source": "v10-15.SC",
+      "bytes": 83,
+      "sha256": "8085d4b2e7466bb965bc5f31f9aa779551ebc7263afe2d974f32f916292786a8",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 139,
+      "source": "v10-16.SC",
+      "bytes": 82,
+      "sha256": "31220b02034e14e87fce7511db919dc6f7593ba2302c91cb98249a0c16747e8f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 140,
+      "source": "v10-17.SC",
+      "bytes": 81,
+      "sha256": "596f794a350487c11f5616b1b4560dac6e5bf29d71b8f6110feef78f05b1fc94",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 141,
+      "source": "v10-18.SC",
+      "bytes": 83,
+      "sha256": "9050eaa7546cd6d7ea9312442e0e228df20a8ad91a30ba34b062abe1992e1925",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 142,
+      "source": "v10-19.SC",
+      "bytes": 82,
+      "sha256": "07a97505ad3dc7bbdca982d38324dad79ebaea55be6917debc3def4934660031",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 143,
+      "source": "v10-20.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 144,
+      "source": "v10-21.SC",
+      "bytes": 82,
+      "sha256": "a4d695bd747b0f7efd28c86ec4453e6b8e45d4296e235f61667bc9f50bea979d",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 145,
+      "source": "v10-22.SC",
+      "bytes": 81,
+      "sha256": "f42b0f6659ed7e9134efdf0242a0a954eeafac321fd0ba3d6dd59f9c6f960244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 146,
+      "source": "v10-23.SC",
+      "bytes": 82,
+      "sha256": "60ee6dfcf1deae847054092274eba289135c528ab69bad6ee01a621a2274cbb2",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 147,
+      "source": "v10-24.SC",
+      "bytes": 82,
+      "sha256": "03e7d7214fa7b19679c18e145c0b3396dc0c76b963f4d7b4ceb5184cbe9ac81a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 148,
+      "source": "v10-25.SC",
+      "bytes": 81,
+      "sha256": "ee9428039e5d9b3fcb76eca49c61fd6d5e65a7f35f99aa68813896665ca94b81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 149,
+      "source": "v10-26.SC",
+      "bytes": 82,
+      "sha256": "a96f4b103004811077fd961ec937cc3edaa9f1a40c183840717ebe5e42da6b99",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 150,
+      "source": "v10-27.SC",
+      "bytes": 83,
+      "sha256": "c12d708755c4386ef39e9e2d42e2beca343acb61875b8aa3dde89d977fa57f2f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 151,
+      "source": "v10-28.SC",
+      "bytes": 83,
+      "sha256": "15da0e33b5c4958cf754e0034c6def6ca3288a53a9a56d4d58637d4eb2765901",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 152,
+      "source": "v10-29.SC",
+      "bytes": 82,
+      "sha256": "ece465c82916e56633067f896c016e3e928b37ca92cefcd051e29ebe97a04605",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 153,
+      "source": "v10-30.SC",
+      "bytes": 83,
+      "sha256": "a4252d7672b957b843969eefde1add79b4dfba872d40da5de93477665d3bbcbf",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 154,
+      "source": "v10-31.SC",
+      "bytes": 83,
+      "sha256": "d85167667789b4ca0d432df474d09be7535d0600b567f4d6348b1a048fa7edc7",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 155,
+      "source": "v10-32.SC",
+      "bytes": 82,
+      "sha256": "010a0a29cecb6f4d58bce3d9cb4a714b8ff7149de121136353efb41214cd84ee",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 156,
+      "source": "v10-33.SC",
+      "bytes": 84,
+      "sha256": "fc9384ab431c3d8f6fa30f61d5838e2206c5b39a8c0e3f367b65f45dfd690a38",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 157,
+      "source": "v10-34.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 158,
+      "source": "v10-35.SC",
+      "bytes": 387,
+      "sha256": "3a228d9c4d0550c1ea02c4d976bed694bfcb996ad68b328398c7ac2b9a7f0e12",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 159,
+      "source": "v10-36.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 160,
+      "source": "v10-37.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 161,
+      "source": "v10-38.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 162,
+      "source": "v10-39.SC",
+      "bytes": 387,
+      "sha256": "d13db72654861b9254bcee9f6bc716e628c8a3d3e9ace702d164f1cb9eb3d476",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 163,
+      "source": "v10-40.SC",
+      "bytes": 87,
+      "sha256": "e5320375b05fe676e7f47a73bce307b993c9c400b409cf57551b608b0801831d",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 164,
+      "source": "v11-0.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 165,
+      "source": "v11-1.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 166,
+      "source": "v11-2.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 167,
+      "source": "v12-0.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 168,
+      "source": "v12-1.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 169,
+      "source": "v12-2.SC",
+      "bytes": 387,
+      "sha256": "d27226df128546988c4670824a99ebd18e02a441c5798e172051c731c98073de",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    }
+  ],
+  "count": 170,
+  "aggregateBytes": 23103,
+  "aggregateSHA256": "018e2d5e007ddde7adbe9c73cd026e3c6d354171c858b27f1891a14be8b18036",
+  "status": "LEAF_RC 0\nCOMMERCE_0_RC 0\nCOMMERCE_1_RC 0\nCOMMERCE_2_RC 0\nCOMMERCE_3_RC 0\nCOMMERCE_4_RC 0\nCOMMERCE_5_RC 0\nCOMMERCE_6_RC 0\nCOMMERCE_7_RC 0\nCOMMERCE_8_RC 0\nCOMMERCE_9_RC 0\nCOMMERCE_10_RC 0\nCOMMERCE_11_RC 0\nCOMMERCE_12_RC 0\nCOMMERCE_13_RC 0\nCOMMERCE_14_RC 0\nCOMMERCE_15_RC 0\nCOMMERCE_16_RC 0\nCOMMERCE_17_RC 0\nCOMMERCE_18_RC 0\nCOMMERCE_19_RC 0\nCOMMERCE_20_RC 0\nCOMMERCE_21_RC 0\nCOMMERCE_22_RC 0\nCOMMERCE_23_RC 0\nCOMMERCE_24_RC 0\nCOMMERCE_25_RC 0\nCOMMERCE_26_RC 0\nCOMMERCE_27_RC 0\nCOMMERCE_28_RC 0\nCOMMERCE_29_RC 0\nCOMMERCE_30_RC 0\nCOMMERCE_31_RC 0\nCOMMERCE_32_RC 0\nCOMMERCE_33_RC 0\nCOMMERCE_34_RC 0\nCOMMERCE_35_RC 0\nCOMMERCE_36_RC 0\nCOMMERCE_37_RC 0\nCOMMERCE_38_RC 0\nCOMMERCE_39_RC 0\nCOMMERCE_40_RC 0\nCOMMERCE_41_RC 0\nCOMMERCE_42_RC 0\nCOMMERCE_43_RC 0\nCOMMERCE_44_RC 0\nCOMMERCE_45_RC 0\nCOMMERCE_46_RC 0\nCOMMERCE_47_RC 0\nCOMMERCE_48_RC 0\nCOMMERCE_49_RC 0\nCOMMERCE_50_RC 0\nCOMMERCE_51_RC 0\nCOMMERCE_52_RC 0\nCOMMERCE_53_RC 0\nCOMMERCE_54_RC 0\nCOMMERCE_55_RC 0\nCOMMERCE_56_RC 0\nCOMMERCE_57_RC 0\nCOMMERCE_58_RC 0\nCOMMERCE_59_RC 0\nCOMMERCE_60_RC 0\nCOMMERCE_61_RC 0\nCOMMERCE_62_RC 0\nCOMMERCE_63_RC 0\nCOMMERCE_64_RC 0\nCOMMERCE_65_RC 0\nCOMMERCE_66_RC 0\nCOMMERCE_67_RC 0\nCOMMERCE_68_RC 0\nCOMMERCE_69_RC 0\nCOMMERCE_70_RC 0\nCOMMERCE_71_RC 0\nCOMMERCE_72_RC 0\nCOMMERCE_73_RC 0\nCOMMERCE_74_RC 0\nCOMMERCE_75_RC 0\nCOMMERCE_76_RC 0\nCOMMERCE_77_RC 0\nCOMMERCE_78_RC 0\nCOMMERCE_79_RC 0\nCOMMERCE_80_RC 0\nCOMMERCE_81_RC 0\nCOMMERCE_82_RC 0\nCOMMERCE_83_RC 0\nCOMMERCE_84_RC 0\nCOMMERCE_85_RC 0\nCOMMERCE_86_RC 0\nCOMMERCE_87_RC 0\nCOMMERCE_88_RC 0\nCOMMERCE_89_RC 0\nCOMMERCE_90_RC 0\nCOMMERCE_91_RC 0\nCOMMERCE_92_RC 0\nCOMMERCE_93_RC 0\nCOMMERCE_94_RC 0\nCOMMERCE_95_RC 0\nCOMMERCE_96_RC 0\nCOMMERCE_97_RC 0\nCOMMERCE_98_RC 0\nCOMMERCE_99_RC 0\nCOMMERCE_100_RC 0\nCOMMERCE_101_RC 0\nCOMMERCE_102_RC 0\nCOMMERCE_103_RC 0\nCOMMERCE_104_RC 0\nCOMMERCE_105_RC 0\nCOMMERCE_106_RC 0\nCOMMERCE_107_RC 0\nCOMMERCE_108_RC 0\nCOMMERCE_109_RC 0\nCOMMERCE_110_RC 0\nCOMMERCE_111_RC 0\nCOMMERCE_112_RC 0\nCOMMERCE_113_RC 0\nCOMMERCE_114_RC 0\nCOMMERCE_115_RC 0\nCOMMERCE_116_RC 0\nCOMMERCE_117_RC 0\nCOMMERCE_118_RC 0\nCOMMERCE_119_RC 0\nCOMMERCE_120_RC 0\nCOMMERCE_121_RC 0\nCOMMERCE_122_RC 0\nCOMMERCE_123_RC 0\nCOMMERCE_124_RC 0\nCOMMERCE_125_RC 0\nCOMMERCE_126_RC 0\nCOMMERCE_127_RC 0\nCOMMERCE_128_RC 0\nCOMMERCE_129_RC 0\nCOMMERCE_130_RC 0\nCOMMERCE_131_RC 0\nCOMMERCE_132_RC 0\nCOMMERCE_133_RC 0\nCOMMERCE_134_RC 0\nCOMMERCE_135_RC 0\nCOMMERCE_136_RC 0\nCOMMERCE_137_RC 0\nCOMMERCE_138_RC 0\nCOMMERCE_139_RC 0\nCOMMERCE_140_RC 0\nCOMMERCE_141_RC 0\nCOMMERCE_142_RC 0\nCOMMERCE_143_RC 0\nCOMMERCE_144_RC 0\nCOMMERCE_145_RC 0\nCOMMERCE_146_RC 0\nCOMMERCE_147_RC 0\nCOMMERCE_148_RC 0\nCOMMERCE_149_RC 0\nCOMMERCE_150_RC 0\nCOMMERCE_151_RC 0\nCOMMERCE_152_RC 0\nCOMMERCE_153_RC 0\nCOMMERCE_154_RC 0\nCOMMERCE_155_RC 0\nCOMMERCE_156_RC 0\nCOMMERCE_157_RC 0\nCOMMERCE_158_RC 0\nCOMMERCE_159_RC 0\nCOMMERCE_160_RC 0\nCOMMERCE_161_RC 0\nCOMMERCE_162_RC 0\nCOMMERCE_163_RC 0\nCOMMERCE_164_RC 0\nCOMMERCE_165_RC 0\nCOMMERCE_166_RC 0\nCOMMERCE_167_RC 0\nCOMMERCE_168_RC 0\nCOMMERCE_169_RC 0\nBATCH_DONE\n",
+  "process": {
+    "batchComplete": true,
+    "emulatorReturnCode": 0,
+    "timedOut": false
+  }
+}

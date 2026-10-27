@@ -73,9 +73,16 @@ asymmetric treaties. Both input preservation and output sentinels/aliases are
 checked; direct use of decoded saved-energy memory as the vector is rejected.
 
 Strict HUNK builds use `build_commerce_probe.sh leaf|world OUTPUT`, 68040/FPU,
-warnings as errors, no exceptions/RTTI and the released OpenAmigaGCC. Native
-execution receipts are added separately after actual AROS guest runs; a build
-alone is not execution proof.
+warnings as errors, no exceptions/RTTI and the released OpenAmigaGCC. All **7,132
+leaf cases** also pass genuine FS-UAE/AROS execution with guest return code 0
+and the complete 114,112-byte output matching the independent oracle. All
+**170 connected world cases** pass actual guest execution with individual return
+code 0 and whole text outputs matching the wire oracle. Aggregate world output
+is 23,103 bytes, SHA-256
+`018e2d5e007ddde7adbe9c73cd026e3c6d354171c858b27f1891a14be8b18036`.
+Scoped receipts under `evidence/alpha-base-commerce-20261027` record the binaries
+and every result. These arithmetic/world proofs do not establish foreign AI
+worker intake or full-turn execution.
 
 ```
 python3 test_base_commerce.py --out /tmp/alpha-commerce-leaf
