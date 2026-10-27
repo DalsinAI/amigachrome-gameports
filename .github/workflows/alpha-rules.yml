@@ -636,3 +636,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_combat_alias_order.py --out "$RUNNER_TEMP/combat-alias-host"
       - name: Big-endian combat alias rejection before input reads
         run: python3 ports/alpha-centauri/native/test_combat_alias_order.py --out "$RUNNER_TEMP/combat-alias-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned nonrandom promotion frame controls
+        run: python3 ports/alpha-centauri/native/test_world_promotion.py --out "$RUNNER_TEMP/world-promotion-host"
+      - name: Big-endian owned nonrandom promotion frame controls
+        run: python3 ports/alpha-centauri/native/test_world_promotion.py --out "$RUNNER_TEMP/world-promotion-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

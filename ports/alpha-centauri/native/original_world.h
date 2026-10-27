@@ -63,6 +63,7 @@ class OriginalWorld {
   const OriginalFactionState* faction(size_t i)const{return loaded() && i<8?factions_+i:nullptr;}
   const OriginalFactionDefinition* faction_definition(size_t i)const{return loaded() && i<8?definitions_+i:nullptr;}
  private:
+  friend class WorldPromotionPlan;
   friend class LocalProductionSession;
   friend class WorldActions;
   friend class LandEngagementPlan;
