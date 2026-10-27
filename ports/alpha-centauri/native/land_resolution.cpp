@@ -43,7 +43,8 @@ void LandResolutionPlan::swap(LandResolutionPlan&p){engagement_.swap(p.engagemen
 EngagementError stage_land_resolution(const OriginalWorld&w,const UnitDefinitions&units,const Rules&tech,const BasicRules&basic,size_t a,size_t b,const LandResolutionFacts&facts,LandResolutionPlan&out,size_t limit){
  using detail::effects_range_overlap;const void*inputs[]={&units,&tech,&basic,&facts};const size_t sizes[]={sizeof units,sizeof tech,sizeof basic,sizeof facts};
  if(!w.loaded()||w.game().vehicle_count>2048||w.game().preferences.VehCount!=(int32_t)w.game().vehicle_count||a==b||!w.vehicle(a)||!w.vehicle(b)||alias(w,&out,sizeof out))return EngagementError::bad_state;
- for(unsigned j=0;j<4;++j){if(alias(w,inputs[j],sizes[j])||effects_range_overlap(&out,sizeof out,inputs[j],sizes[j])||(out.frame()&&alias(*out.frame(),inputs[j],sizes[j])))return EngagementError::bad_state;for(unsigned k=0;k<j;++k)if(effects_range_overlap(inputs[j],sizes[j],inputs[k],sizes[k]))return EngagementError::bad_state;}
+ for(unsigned j=0;j<4;++j){if(alias(w,inputs[j],sizes[j])||effects_range_overlap(&out,sizeof out,inputs[j],sizes[j]))return EngagementError::bad_state;for(unsigned k=0;k<j;++k)if(effects_range_overlap(inputs[j],sizes[j],inputs[k],sizes[k]))return EngagementError::bad_state;}
+ if(const auto*owned=out.frame())for(unsigned j=0;j<4;++j)if(alias(*owned,inputs[j],sizes[j]))return EngagementError::bad_state;
  LandResolutionPlan next;const auto e=next.prepare(w,units,tech,basic,a,b,facts,limit);if(e==EngagementError::ok)out.swap(next);return e;
 }
 }

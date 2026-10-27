@@ -30,8 +30,10 @@ void LandEngagementPlan::swap(LandEngagementPlan&p){frame_.swap(p.frame_);for(un
 EngagementError stage_land_engagement(const OriginalWorld&w,const UnitDefinitions&d,const Rules&r,const BasicRules&basic,size_t attacker,size_t defender,const EngagementFacts&facts,LandEngagementPlan&out,size_t limit){
  using detail::effects_range_overlap;
  const void*inputs[]={&d,&r,&basic,&facts};const size_t sizes[]={sizeof d,sizeof r,sizeof basic,sizeof facts};
- if(!w.loaded()||attacker==defender||facts.observation!=EngagementObservation::supplied||facts.incoming_direction>7||alias(w,&out,sizeof out))return EngagementError::bad_state;
- for(unsigned i=0;i<4;++i)if(effects_range_overlap(&out,sizeof out,inputs[i],sizes[i])||alias(out.frame_,inputs[i],sizes[i]))return EngagementError::bad_state;
+ if(!w.loaded()||attacker==defender||alias(w,&out,sizeof out))return EngagementError::bad_state;
+ for(unsigned i=0;i<4;++i){if(alias(w,inputs[i],sizes[i])||effects_range_overlap(&out,sizeof out,inputs[i],sizes[i]))return EngagementError::bad_state;for(unsigned j=0;j<i;++j)if(effects_range_overlap(inputs[i],sizes[i],inputs[j],sizes[j]))return EngagementError::bad_state;}
+ for(unsigned i=0;i<4;++i)if(alias(out.frame_,inputs[i],sizes[i]))return EngagementError::bad_state;
+ if(facts.observation!=EngagementObservation::supplied||facts.incoming_direction>7)return EngagementError::bad_state;
  const auto*a=w.vehicle(attacker);const auto*b=w.vehicle(defender);if(!a||!b||a->unit_id<0||a->unit_id>=512||b->unit_id<0||b->unit_id>=512)return EngagementError::bad_state;
  const auto*ap=w.prototype((size_t)a->unit_id);const auto*bp=w.prototype((size_t)b->unit_id);
  // Real component reactors are1..4. Wider wire values remain supported by the

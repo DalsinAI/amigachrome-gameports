@@ -47,7 +47,8 @@ RemovalError stage_artifact_capture(const OriginalWorld&w,size_t id,const Remova
  using detail::effects_range_overlap;
  const void*inputs[]={&r,&units,&tech,&in};const size_t sizes[]={sizeof r,sizeof units,sizeof tech,sizeof in};
  if(!w.loaded()||id>=w.game().vehicle_count||w.game().vehicle_count>2048||w.game().preferences.VehCount!=(int32_t)w.game().vehicle_count||alias(w,&out,sizeof out))return RemovalError::bad_state;
- for(unsigned j=0;j<4;++j){if(alias(w,inputs[j],sizes[j])||effects_range_overlap(&out,sizeof out,inputs[j],sizes[j])||(out.frame()&&alias(*out.frame(),inputs[j],sizes[j])))return RemovalError::bad_state;for(unsigned k=0;k<j;++k)if(effects_range_overlap(inputs[j],sizes[j],inputs[k],sizes[k]))return RemovalError::bad_state;}
+ for(unsigned j=0;j<4;++j){if(alias(w,inputs[j],sizes[j])||effects_range_overlap(&out,sizeof out,inputs[j],sizes[j]))return RemovalError::bad_state;for(unsigned k=0;k<j;++k)if(effects_range_overlap(inputs[j],sizes[j],inputs[k],sizes[k]))return RemovalError::bad_state;}
+ if(const auto*owned=out.frame())for(unsigned j=0;j<4;++j)if(alias(*owned,inputs[j],sizes[j]))return RemovalError::bad_state;
  if(r.observation!=RemovalObservation::supplied)return RemovalError::bad_state;
  if(r.multiplayer_active||r.logging_enabled||r.base_window_visible)return RemovalError::unsupported;
  ArtifactCapturePlan next;const auto error=next.prepare(w,id,r,units,tech,road,in,limit);if(error==RemovalError::ok)out.swap(next);return error;

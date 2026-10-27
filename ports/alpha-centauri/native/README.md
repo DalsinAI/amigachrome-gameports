@@ -2221,3 +2221,11 @@ Ordered caller-field dependency: [battle bookkeeping](BATTLE-BOOKKEEPING.md), wi
 [Owned current-world battle bookkeeping](WORLD-BATTLE-BOOKKEEPING.md) binds selected current faction/monument fields and explicit runtime statistics to a separate clone, with UI/profile holds. No attack/session/save commit.
 
 [Owned LAND body-state and bookkeeping composition](BATTLE-AFTERMATH.md) preserves pre-cleanup faction identity, with explicit runtime and held caller paths. No player attack/session/save commit.
+
+### Combat overlap validation order (local candidate, 27 October 2026)
+
+Direct engagement, resolution and artifact-capture APIs now check every known input/output and pairwise input range before reading input facts or existing output ownership. This prevents an overlapping later input from being interpreted as an output plan before rejection. Frozen parent branches remain unchanged.
+
+The regression uses live aligned input objects, poisons their bytes under host ASan and requires rejection without reads or writes at all four input positions for each API in save versions 7 and 12. The independent 68040 run checks rejection and unchanged bytes without ASan poisoning. The original parent reproduces an ASan premature-read failure; that diagnostic is not a passing result. Existing body, capture, engagement and aftermath suites qualify the changed dependency composition separately.
+
+This is a boundary correction only. Native execution, remote CI, frontend attack controls, promotions, final full-caller random state, persistence and complete turns remain unqualified. The battle summary random state covers numeric rounds; original caller promotion can consume additional draws before cleanup and bookkeeping.
