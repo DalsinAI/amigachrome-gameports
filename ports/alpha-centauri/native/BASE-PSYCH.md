@@ -50,8 +50,14 @@ The connected independent-wire suite passes 82 worlds, 79 accepted, covering
 poisoned saved psych/drone/base-count caches, fresh sliders and faction bonuses,
 physical facilities/projects, strongest police ordering, sea/air/Recon cases,
 actual foreign-unit behavior, sphere immunity, distinct difficulty sources,
-proposed specialists, large psych and error/SMAX rejection. Native connected
-validation is recorded separately after execution, not inferred from a build.
+proposed specialists, large psych and error/SMAX rejection. Every one of these
+82 worlds also passed genuine native execution with per-case RC0 and complete
+16,447-byte aggregate output identical to the independent oracle, SHA-256
+`d33153be6e90c8ca3767170160809b53a3e6c85b81549c9b9a76f57e020a310a`.
+Four additional native reruns verify corrected pre-v11 wire offsets for the
+poisoned saved psych/talent/drone fields; all outputs remain identical and the
+receipt records the changed source-world hashes. This supplements rather than
+overwrites the original 82-world evidence.
 
 Host checks are `test_base_psych.py` and `test_world_base_psych.py`. Native
 builds are `build_base_psych_probe.sh` and `build_world_base_psych_probe.sh`.

@@ -23,7 +23,7 @@ def fixture(case,version=9):
  p=off['bases'];pop=case*7%32;b[p+6]=pop;b[p+7]=case*7%100;b[p+8]=4 if case%13==0 else 0
  for i,facility in enumerate([6,8,11,12,17,18,22,23]):
   at=p+0x8c+facility//8;bit=1<<(facility%8);b[at]=(b[at]|bit) if case&(1<<i) else (b[at]&~bit)
- for delta in [0x104,0x118,0x11c,0x120]:struct.pack_into('<i',b,p+delta,-123456789)
+ for delta in [0x104,0x118,0x11c,0x120]:struct.pack_into('<i',b,p+delta-(4 if legacy else 0),-123456789)
  # Deliberately preserve malformed saved base_count and psych/drone aggregates:
  # the adapter must derive live owned base count and all fresh counts instead.
  return bytes(b)
