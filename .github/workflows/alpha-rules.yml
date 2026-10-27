@@ -696,3 +696,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_combat_difficulty.py --out "$RUNNER_TEMP/combat-difficulty-host"
       - name: Original post-hasty nonnative combat difficulty independent 68040
         run: python3 ports/alpha-centauri/native/test_combat_difficulty.py --out "$RUNNER_TEMP/combat-difficulty-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Current World observed combat difficulty host
+        run: python3 ports/alpha-centauri/native/test_world_combat_difficulty.py --out "$RUNNER_TEMP/world-combat-difficulty-host"
+      - name: Current World observed combat difficulty independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_combat_difficulty.py --out "$RUNNER_TEMP/world-combat-difficulty-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
