@@ -63,8 +63,12 @@ and late energy overflow. The complete host aggregate SHA-256 is
 `f5fe224ca414fe00f4f19a2f001644c0adff1e70bfe0cd0b743891d0db67f718`.
 The mineral binder preserves all 141 prior imported-world cases with output
 SHA-256 `ac131e5c48f487e3fc4bde63ed804d9053f1b048578fd902ad6bc726cf75325d`.
-Native execution is recorded separately after genuine guest runs; a HUNK build
-alone is not counted as native runtime proof.
+All 27 worlds also passed genuine 68040/FPU HUNK execution in FS-UAE/AROS, each
+guest RC0 and every complete output identical to the independent oracle. The
+native aggregate is 8,996 bytes with the same SHA-256 above; the native binary
+is `62205a6078bf0cc05c531aa7fd54d2d47e596a98fa3dfd949093805362a834b2`.
+The native receipt identifies each case separately. This does not qualify the
+separate real AmigaOS3.2.3 gate or a complete campaign turn.
 
 Use `test_world_worker_resolution.py` and
 `build_world_worker_resolution_probe.sh`. The public result header is
