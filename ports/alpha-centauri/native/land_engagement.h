@@ -25,6 +25,7 @@ class LandEngagementPlan {
  private:
   friend class PromotedLandResolutionPlan;
   friend class WorldPromotionPlan;
+  friend class WorldTerritorialCombatPlan;
   friend class LandResolutionPlan;
   friend EngagementError stage_land_engagement(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const EngagementFacts&,LandEngagementPlan&,size_t);
   EngagementError capture(const OriginalWorld&,size_t);

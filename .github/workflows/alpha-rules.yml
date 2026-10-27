@@ -656,3 +656,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_territorial_combat.py --out "$RUNNER_TEMP/territorial-combat-host"
       - name: Original territorial combat prefix independent 68040
         run: python3 ports/alpha-centauri/native/test_territorial_combat.py --out "$RUNNER_TEMP/territorial-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned territorial combat World host
+        run: python3 ports/alpha-centauri/native/test_world_territorial_combat.py --out "$RUNNER_TEMP/world-territorial-host"
+      - name: Owned territorial combat World independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_territorial_combat.py --out "$RUNNER_TEMP/world-territorial-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
