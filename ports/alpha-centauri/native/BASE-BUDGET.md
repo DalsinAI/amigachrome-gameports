@@ -81,3 +81,5 @@ Outputs/support states are atomic on failure. Complete ordered output SHA256:
 `56a3059a6bc4b9aac55a701b2914fc28d6662e9bb5641d8bc127dac50f86e3cd`.
 The budget probe accepts an optional final energy-vector file for these checks;
 existing seven-argument budget controls retain their output format.
+All25 controls also pass in the real native AROS runtime: every return code is0
+and all8,164 output bytes match the complete independent oracle and hash above.
