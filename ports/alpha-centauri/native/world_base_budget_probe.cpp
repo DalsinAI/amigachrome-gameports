@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "world_base_budget.h"
+#include "world_traded_budget.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,8 +20,9 @@ static uint8_t* read(const char* path,size_t& n){
 }
 static void put(uint32_t x){for(unsigned i=0;i<4;++i){putchar((int)(x&255u));x>>=8;}}
 static uint32_t hash(const void*p,size_t n){const auto*b=(const uint8_t*)p;uint32_t h=2166136261u;while(n--)h=(h^*b++)*16777619u;return h;}
+static uint32_t get(const uint8_t*p){return (uint32_t)p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);}
 int main(int argc,char**argv){
- if(argc!=8)return 20;
+ if(argc!=8&&argc!=9)return 20;
  size_t rn=0,n=0;auto*text=read(argv[1],rn);auto*data=read(argv[2],n);if(!text||!data)return 20;
  if(read_technologies(text,rn,tech)!=Error::ok||read_unit_definitions(text,rn,tech,Variant::base,units)!=Error::ok||
  read_basic_rules(text,rn,tech,Variant::base,basic,wr)!=Error::ok||read_resource_info(text,rn,resources)!=Error::ok||
@@ -32,6 +34,14 @@ int main(int argc,char**argv){
  if(mode==1)stage.resources.intake.worker.upkeep_state=1;
  if(mode==2)stage.resources.energy_grid=1;
  if(mode==3)stage.resources.commerce=INT32_MAX;
+ int32_t*energies=nullptr;size_t energy_count=0;
+ if(argc==9){
+  size_t length=0;auto*input=read(argv[8],length);if(!input||length<4)return 20;
+  energy_count=get(input);if(energy_count>512||length!=4+energy_count*4)return 20;
+  energies=(int32_t*)malloc((energy_count+1)*sizeof(int32_t));if(!energies)return 20;
+  for(size_t i=0;i<energy_count;++i){const uint32_t v=get(input+4+4*i);energies[i]=v<=INT32_MAX?(int32_t)v:-1-(int32_t)~v;}
+  free(input);stage.resources.commerce=0;
+ }
  const size_t count=world.game().vehicle_count;
  auto*states=(uint32_t*)malloc((count+2)*sizeof(uint32_t));if(!states)return 20;
  for(size_t i=0;i<count+2;++i)states[i]=0x5a5a5a5au;
@@ -46,14 +56,26 @@ int main(int argc,char**argv){
  }
  if(world_base_budget(world,tech,units,basic,wr,resources,citizens,facilities,id,stage,result,(uint32_t*)&result,count)!=BudgetError::bad_buffer)return 21;
  if(count&&world_base_budget(world,tech,units,basic,wr,resources,citizens,facilities,id,stage,result,states,count-1)!=BudgetError::bad_buffer)return 21;
- const auto error=world_base_budget(world,tech,units,basic,wr,resources,citizens,facilities,id,stage,result,states,count);
+ TradedBudgetResult traded;memset(&traded,0x5a,sizeof traded);const uint32_t traded_before=hash(&traded,sizeof traded);
+ if(argc==9){
+  for(unsigned i=0;i<8;++i){
+   const uint32_t before=hash(sources[i],sizes[i]);auto*alias=(TradedBudgetResult*)const_cast<void*>(sources[i]);
+   if(world_traded_budget(world,tech,units,basic,wr,resources,citizens,facilities,id,energies,energy_count,stage,*alias,states,count)!=BudgetError::bad_buffer||hash(sources[i],sizes[i])!=before)return 21;
+  }
+  if(world_traded_budget(world,tech,units,basic,wr,resources,citizens,facilities,id,energies,energy_count,stage,traded,(uint32_t*)&traded,count)!=BudgetError::bad_buffer||
+   world_traded_budget(world,tech,units,basic,wr,resources,citizens,facilities,id,energies,energy_count,stage,traded,(uint32_t*)energies,count)!=BudgetError::bad_buffer)return 21;
+ }
+ const auto error=argc==9?world_traded_budget(world,tech,units,basic,wr,resources,citizens,facilities,id,energies,energy_count,stage,traded,states,count):
+  world_base_budget(world,tech,units,basic,wr,resources,citizens,facilities,id,stage,result,states,count);
+ if(argc==9&&error==BudgetError::ok)result=traded.budget;
  if(error!=BudgetError::ok){
-  if(hash(&result,sizeof result)!=output_before)return 21;
+  if(hash(&result,sizeof result)!=output_before||hash(&traded,sizeof traded)!=traded_before)return 21;
   for(size_t i=0;i<count;++i)if(states[i]!=0x5a5a5a5au)return 21;
  }
  if(hash(world.original_bytes(),n)!=world_before||states[count]!=0x5a5a5a5au||states[count+1]!=0x5a5a5a5au)return 21;
  put((uint32_t)error);
  if(error==BudgetError::ok){
+  if(argc==9){put((uint32_t)traded.trade.total);put((uint32_t)traded.trade.rank);put((uint32_t)traded.trade.technology_count);}
   const auto&a=result.allocation.allocation;const auto&m=result.maintenance;
   for(int32_t v:{result.resources.energy.accounting.surplus,a.economy,a.psych,a.labs,result.credits_after_income,result.mineral_cost_factor,(int32_t)result.maintenance_applied,m.credits_after,m.maintenance_after})put((uint32_t)v);
   put(m.player_flags_after);
@@ -63,5 +85,5 @@ int main(int argc,char**argv){
   for(unsigned i=0;i<70;++i)put((uint32_t)m.charged[i]);
   for(size_t i=0;i<count;++i)put(states[i]);
  }
- free(text);free(data);free(states);return 0;
+ free(text);free(data);free(states);free(energies);return 0;
 }

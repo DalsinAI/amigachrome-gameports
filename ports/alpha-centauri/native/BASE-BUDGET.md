@@ -54,3 +54,30 @@ outputs on every rejection. The complete ordered binary output SHA256 is
 The existing72 connected maintenance controls pass after exposing optional
 ledger arguments in their independent Python model. Native execution is
 recorded separately under `evidence/alpha-budget-20261027`.
+
+All56 cases also execute in the genuine AROS68040/FPU runtime, returning0 and
+matching all23,840 output bytes and the same aggregate hash. The native F popup
+shows The Hive economy5, research5, psych0, upkeep7 and balance-2 before trade;
+it exits0 with dirty state unchanged. The current native player's movement,
+save and reload retain the exact original whole-checkpoint oracle:199,314bytes,
+SHA256 `37193617e69433cd9afe44c6ffb1f01d71bc9f993c2de5a4dea3851b4fdc0981`.
+
+## Generated Trade Connection
+
+`world_traded_budget` invokes current-world rank/treaty/sanction/technology
+commerce generation, then recomputes energy distribution and maintenance with
+that generated income. Caller-supplied commerce and alien grid are rejected.
+The required full pre-convoy energy vector is an explicit fresh-stage input;
+the selected base's entry must match a fresh resource recomputation. Other
+bases' entries remain the owning faction scheduler's freshness prerequisite.
+No saved energy or commerce is substituted to fill the vector.
+
+`test_world_traded_budget.py` compares25 connected controls against independent
+trade/resource/allocation/maintenance oracles:16 accepted,15 with positive
+generated trade. Cases include pact/governor/global-trade bonuses, sanctions,
+asymmetric treaties, zero reserves, a stale selected-base vector entry,
+negative/overflowing/short vectors, unsupported stages and late ledger overflow.
+Outputs/support states are atomic on failure. Complete ordered output SHA256:
+`56a3059a6bc4b9aac55a701b2914fc28d6662e9bb5641d8bc127dac50f86e3cd`.
+The budget probe accepts an optional final energy-vector file for these checks;
+existing seven-argument budget controls retain their output format.

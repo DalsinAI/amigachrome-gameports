@@ -258,3 +258,25 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_combat_rounds.py --out "$RUNNER_TEMP/combat-rounds-host"
       - name: Current world conventional infantry combat proposal
         run: python3 ports/alpha-centauri/native/test_world_field_combat.py --out "$RUNNER_TEMP/world-field-combat-host"
+      - name: Human worker candidate scoring
+        run: python3 ports/alpha-centauri/native/test_worker_allocation.py --out "$RUNNER_TEMP/worker-allocation-host"
+      - name: Fresh human upkeep worker assignments
+        run: python3 ports/alpha-centauri/native/test_world_worker_upkeep.py --out "$RUNNER_TEMP/world-worker-upkeep-host"
+      - name: Fresh psych stages and riot predicates
+        run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-host"
+      - name: Current world psych and police
+        run: python3 ports/alpha-centauri/native/test_world_base_psych.py --out "$RUNNER_TEMP/world-base-psych-host"
+      - name: Source commerce arithmetic
+        run: python3 ports/alpha-centauri/native/test_base_commerce.py --out "$RUNNER_TEMP/base-commerce-host"
+      - name: Commerce from fresh all-base energy and current diplomacy
+        run: python3 ports/alpha-centauri/native/test_world_base_commerce.py --out "$RUNNER_TEMP/world-base-commerce-host"
+      - name: Generated trade into fresh income and maintenance
+        run: python3 ports/alpha-centauri/native/test_world_traded_budget.py --out "$RUNNER_TEMP/world-traded-budget-host"
+      - name: Nearby sensors and Geosync defense
+        run: python3 ports/alpha-centauri/native/test_world_combat_sensors.py --out "$RUNNER_TEMP/world-combat-sensors-host"
+      - name: Separate combat CRT state and seeded rounds
+        run: python3 ports/alpha-centauri/native/test_combat_crt.py --out "$RUNNER_TEMP/combat-crt-host"
+      - name: Seeded current world infantry combat
+        run: python3 ports/alpha-centauri/native/test_world_field_combat.py --seeded --out "$RUNNER_TEMP/world-field-combat-seeded-host"
+      - name: Owned human population transaction and checkpoint replay
+        run: python3 ports/alpha-centauri/native/test_human_upkeep_transaction.py --out "$RUNNER_TEMP/human-upkeep-transaction-host"

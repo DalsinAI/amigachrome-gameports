@@ -18,7 +18,7 @@ from test_facility_definitions import tables
 
 HERE = Path(__file__).resolve().parent
 NAMES = list(dict.fromkeys([name for name in accounting.SOURCES if name != 'world_base_accounting_probe'] +
-    'energy_allocation world_energy_allocation facility_upkeep world_facility_upkeep cost_factor world_cost_factor world_base_budget world_base_budget_probe'.split()))
+    'energy_allocation world_energy_allocation facility_upkeep world_facility_upkeep cost_factor world_cost_factor world_base_budget base_commerce world_base_commerce world_traded_budget world_base_budget_probe'.split()))
 
 def rules():
     rows = sections(allocation.rules())
@@ -54,7 +54,7 @@ def fixture(case, version=10):
             struct.pack_into('<i', data, pref + 0x84 + project * 4, 0)
     return bytes(data)
 
-def model(text, data, base, credits, maintenance, flags, mode):
+def model(text, data, base, credits, maintenance, flags, mode, commerce=3):
     if min(credits, maintenance) < 0:
         return [1]
     info, offsets, spans = accounting.intake.decode(data)
@@ -62,13 +62,13 @@ def model(text, data, base, credits, maintenance, flags, mode):
         return [3]
     if mode == 1:
         return [3]
-    fresh = accounting.model('base', text, data, base, 2147483647 if mode == 3 else 3, 0,
+    fresh = accounting.model('base', text, data, base, 2147483647 if mode == 3 else commerce, 0,
                              1 if mode == 1 else None)
     status = fresh['BASE', base][0]
     if status:
         return [{1: 1, 2: 2, 3: 3, 4: 4, 6: 6, 7: 5}.get(status, 1)]
     surplus = fresh['ENERGY', base][6]
-    energy = allocation.model(text, data, base, surplus, 3)
+    energy = allocation.model(text, data, base, surplus, commerce)
     if energy[0]:
         return [{1: 1, 2: 2, 3: 5}[energy[0]]]
     after_income = credits + energy[2]
