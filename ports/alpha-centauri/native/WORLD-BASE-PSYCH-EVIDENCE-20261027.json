@@ -1,0 +1,585 @@
+{
+  "worlds": 82,
+  "accepted": 79,
+  "outputSHA256": "d33153be6e90c8ca3767170160809b53a3e6c85b81549c9b9a76f57e020a310a",
+  "allInputsAndOutputUnchangedOnFailure": true,
+  "allAliasRegionsChecked": true,
+  "command": [],
+  "records": [
+    {
+      "name": "base-1",
+      "specialists": 1,
+      "psych": 3,
+      "accepted": true,
+      "outputSHA256": "e1ac7985b83d695fb33c10f43422ceb589be93562d9651fd9f841810c08ff897"
+    },
+    {
+      "name": "base-2",
+      "specialists": 2,
+      "psych": 6,
+      "accepted": true,
+      "outputSHA256": "12ebb7abec5174b7069c85b72258a32774a176c6009d53401a180754e739d175"
+    },
+    {
+      "name": "base-3",
+      "specialists": 3,
+      "psych": 9,
+      "accepted": true,
+      "outputSHA256": "c84cf3d86a048dd8be924008be92c0ff1845efe835e11af1b110db41048c6a18"
+    },
+    {
+      "name": "base-4",
+      "specialists": 4,
+      "psych": 12,
+      "accepted": true,
+      "outputSHA256": "2f114bfeac92dee810064ce8aa2db996c1e366242fbbc92d542787e7bf90d239"
+    },
+    {
+      "name": "base-5",
+      "specialists": 1,
+      "psych": 15,
+      "accepted": true,
+      "outputSHA256": "925381bf6f57599a9366eebe0e2aa630d5c9e3a7d21cc951b8963a46ac834bf5"
+    },
+    {
+      "name": "base-6",
+      "specialists": 6,
+      "psych": 18,
+      "accepted": true,
+      "outputSHA256": "73d60f10cfc77289694ffbf11ebf2b90e005cbdc84f418138b90544ac23e5cfb"
+    },
+    {
+      "name": "base-7",
+      "specialists": 7,
+      "psych": 21,
+      "accepted": true,
+      "outputSHA256": "47521bb7b631c28bf223d243fe748ea7ff77627b43339a951aea73ecc3d534a7"
+    },
+    {
+      "name": "base-8",
+      "specialists": 8,
+      "psych": 24,
+      "accepted": true,
+      "outputSHA256": "ecbb2dfa65052b58ca242f0c23f3a8f94d38efb53fa031629d760aa08a22ecef"
+    },
+    {
+      "name": "base-9",
+      "specialists": 9,
+      "psych": 27,
+      "accepted": true,
+      "outputSHA256": "17d9158a3f9e92707c96b4ee829c9e3df625c706da8f2bdbac3092ee4e0ab9f9"
+    },
+    {
+      "name": "base-10",
+      "specialists": 3,
+      "psych": 30,
+      "accepted": true,
+      "outputSHA256": "e48905ca5ef57287656b1e7fcc1461010d8f3e3a93403ee22936e0bab2b3dca7"
+    },
+    {
+      "name": "base-11",
+      "specialists": 11,
+      "psych": 33,
+      "accepted": true,
+      "outputSHA256": "d171b2abe30696583dca642955a1463d1e996fc33c010310ceb9559092ecf3d1"
+    },
+    {
+      "name": "base-12",
+      "specialists": 12,
+      "psych": 36,
+      "accepted": true,
+      "outputSHA256": "ddaf89abefe6174cf65487421b22f81b552fdcb213bb107ff07499893018e44f"
+    },
+    {
+      "name": "base-13",
+      "specialists": 13,
+      "psych": 39,
+      "accepted": true,
+      "outputSHA256": "f5a9cd1f7086c43d70229efc95f0bd0066b7f75dd3f7f26b28636f37108e5218"
+    },
+    {
+      "name": "base-14",
+      "specialists": 2,
+      "psych": 42,
+      "accepted": true,
+      "outputSHA256": "87dc9e0315886f58f9db9ecb6844a26b78fa066f4cac59677e6a186a91e69128"
+    },
+    {
+      "name": "base-15",
+      "specialists": 5,
+      "psych": 45,
+      "accepted": true,
+      "outputSHA256": "1f7495588c5714fe79c154c22a686b446e86f507c2a0c9174234d024788d2c52"
+    },
+    {
+      "name": "base-16",
+      "specialists": 16,
+      "psych": 48,
+      "accepted": true,
+      "outputSHA256": "f8123cb46285d9c7ef897ccb1656498953e011e3104cb13d48cef6ef3d52dd01"
+    },
+    {
+      "name": "base-17",
+      "specialists": 17,
+      "psych": 51,
+      "accepted": true,
+      "outputSHA256": "22f308cbbc91424a594a463f2bd7a68b15ee2298fd30b512a6099e09eb35fcf7"
+    },
+    {
+      "name": "base-18",
+      "specialists": 18,
+      "psych": 54,
+      "accepted": true,
+      "outputSHA256": "76cc31add89f154c975234c5c8d44d544fc46866d94f0328b035bb0e496f0ac0"
+    },
+    {
+      "name": "base-19",
+      "specialists": 1,
+      "psych": 57,
+      "accepted": true,
+      "outputSHA256": "651cd9535863f4c0385dfdedaf60cf6193f35b90420f3f45fb0f5d6b2de87e6d"
+    },
+    {
+      "name": "base-20",
+      "specialists": 7,
+      "psych": 60,
+      "accepted": true,
+      "outputSHA256": "aaea87fce4cca985ab78f41ad4275beb2901b0c15de3a80db48dcafa1d977c51"
+    },
+    {
+      "name": "base-21",
+      "specialists": 1,
+      "psych": 63,
+      "accepted": true,
+      "outputSHA256": "42c5dd12bf0e0cd082782fd6103a86d7454ea5bc5fc2b6adff0ed244a4b2df5c"
+    },
+    {
+      "name": "base-22",
+      "specialists": 22,
+      "psych": 66,
+      "accepted": true,
+      "outputSHA256": "2a1df836201f79e9ed0c7b890492bd6a12a18fcf2ad406abf7a709ea32d23bc1"
+    },
+    {
+      "name": "base-23",
+      "specialists": 1,
+      "psych": 69,
+      "accepted": true,
+      "outputSHA256": "cc044d9acd53e7b99bb4e02f43bc9b338b7ff5e4ff17e8d773584e4cfcba037a"
+    },
+    {
+      "name": "base-24",
+      "specialists": 6,
+      "psych": 72,
+      "accepted": true,
+      "outputSHA256": "244983d940f89d9794e89e8fd03fdaf8abe71efb65554ad6b6c5bb0f93343410"
+    },
+    {
+      "name": "base-25",
+      "specialists": 9,
+      "psych": 75,
+      "accepted": true,
+      "outputSHA256": "84c1a411b07730170ddda8a7dc0f74191090328d9ec1b0465e51741ff5f7bace"
+    },
+    {
+      "name": "base-26",
+      "specialists": 3,
+      "psych": 78,
+      "accepted": true,
+      "outputSHA256": "e3b5b437291785e4a1fd12f710424bbc0665defb3dbdac2403f6ce23d10ea6ee"
+    },
+    {
+      "name": "base-27",
+      "specialists": 27,
+      "psych": 81,
+      "accepted": true,
+      "outputSHA256": "5c6a1d3c461254633100c068a6ba4d5b4cbbb876d7c977836c86a7fd1c575c06"
+    },
+    {
+      "name": "base-28",
+      "specialists": 3,
+      "psych": 84,
+      "accepted": true,
+      "outputSHA256": "d6c8172d1cef9362da712283006b337017d1687fe4090553942c465d975cc12f"
+    },
+    {
+      "name": "base-29",
+      "specialists": 5,
+      "psych": 87,
+      "accepted": true,
+      "outputSHA256": "e897f06eff606823a14f3f7ea1d4f645676c2c39795ac43a158194e9e0720a90"
+    },
+    {
+      "name": "base-30",
+      "specialists": 11,
+      "psych": 90,
+      "accepted": true,
+      "outputSHA256": "6c9fc930af06c7ef19f83d78b2ffb45d59677437fbed1bf4a371e69e8c3255ed"
+    },
+    {
+      "name": "base-31",
+      "specialists": 5,
+      "psych": 93,
+      "accepted": true,
+      "outputSHA256": "645cfc68cecc2a758da81591c919e2ecb9e47919fcb62d46973f92f8d9848dd3"
+    },
+    {
+      "name": "base-32",
+      "specialists": 0,
+      "psych": 96,
+      "accepted": true,
+      "outputSHA256": "22a08f4c91e9225389f6812059f6a987b77c1ec24cd3af97aa3e08df8252c747"
+    },
+    {
+      "name": "base-33",
+      "specialists": 1,
+      "psych": 99,
+      "accepted": true,
+      "outputSHA256": "b9ff323c828c870e5d88d4d2fbed8d2510f5722074486190f261a3161d4b93f0"
+    },
+    {
+      "name": "base-34",
+      "specialists": 4,
+      "psych": 102,
+      "accepted": true,
+      "outputSHA256": "ea46f36067b36557d416576052a0cdb306579375299cb789e5e02ec71fb68564"
+    },
+    {
+      "name": "base-35",
+      "specialists": 13,
+      "psych": 105,
+      "accepted": true,
+      "outputSHA256": "4aae95ef2ac13bf8296f0093882d6d23b8807f50017534a179f33222121eb589"
+    },
+    {
+      "name": "base-36",
+      "specialists": 7,
+      "psych": 108,
+      "accepted": true,
+      "outputSHA256": "22c43b57f6c741e91448a60764fd58f3d8aab0dfa2f4ef17420de9a36a0581e9"
+    },
+    {
+      "name": "base-37",
+      "specialists": 1,
+      "psych": 111,
+      "accepted": true,
+      "outputSHA256": "70fe67a07174d72643b52818ad17acfb14dd4bd14b0bd4aabef8b4610a2a2718"
+    },
+    {
+      "name": "base-38",
+      "specialists": 5,
+      "psych": 114,
+      "accepted": true,
+      "outputSHA256": "6ba91856a42228186bdc77948ef95da86bd90cc2f079290793792d0b8e26a356"
+    },
+    {
+      "name": "base-39",
+      "specialists": 3,
+      "psych": 117,
+      "accepted": true,
+      "outputSHA256": "3948bc1c37185be09d60683184f116236278e05a8f287ec43449b0c62f82b0ca"
+    },
+    {
+      "name": "base-40",
+      "specialists": 15,
+      "psych": 120,
+      "accepted": true,
+      "outputSHA256": "b054ebf4757423157f58a5c3a974efcbb6a9450860504feeeebe49215bb2248d"
+    },
+    {
+      "name": "base-41",
+      "specialists": 9,
+      "psych": 123,
+      "accepted": true,
+      "outputSHA256": "92207abaf19ecf69038bdcab9ee4be89b23634f2e2e500c4650a2e89979edced"
+    },
+    {
+      "name": "base-42",
+      "specialists": 0,
+      "psych": 126,
+      "accepted": true,
+      "outputSHA256": "9aaf99e437c8d0bb0973f60f741d7a382b502129c0428d98d1b81ccd37ec70ad"
+    },
+    {
+      "name": "base-43",
+      "specialists": 1,
+      "psych": 129,
+      "accepted": true,
+      "outputSHA256": "c4cb3c6bcc4f741810f6e9196c2c5a57bce5d70f7a2b86baad6ebfc31584f1a6"
+    },
+    {
+      "name": "base-44",
+      "specialists": 2,
+      "psych": 132,
+      "accepted": true,
+      "outputSHA256": "ec25af6f68bf41f86d3fd1052d0e6ad4a9a990daf5b83e4899a698b3f051ad48"
+    },
+    {
+      "name": "base-45",
+      "specialists": 17,
+      "psych": 135,
+      "accepted": true,
+      "outputSHA256": "6c66045a68d20c53b3e4ed68596b3c77a581406d0c336f7d9c42709687f059f1"
+    },
+    {
+      "name": "base-46",
+      "specialists": 1,
+      "psych": 138,
+      "accepted": true,
+      "outputSHA256": "d456a592b47bbef52232932b82f391bd5f9a84a4a001d3d00919350434a695fe"
+    },
+    {
+      "name": "base-47",
+      "specialists": 7,
+      "psych": 141,
+      "accepted": true,
+      "outputSHA256": "7926e59e288f4f9c4d38aca4bf3ee351bce3c55edb674559074df68da7a79854"
+    },
+    {
+      "name": "base-48",
+      "specialists": 14,
+      "psych": 144,
+      "accepted": true,
+      "outputSHA256": "c13b0cb969953c49f9578a700661fe940b163e40515adad7c0e1fba2260bf449"
+    },
+    {
+      "name": "base-49",
+      "specialists": 1,
+      "psych": 147,
+      "accepted": true,
+      "outputSHA256": "25579f91d4bb62ca28c1001aede588c6c5d2d591c80a8bb49ada7db9e05812d1"
+    },
+    {
+      "name": "base-50",
+      "specialists": 19,
+      "psych": 150,
+      "accepted": true,
+      "outputSHA256": "baa22b35c38cf02c6c14dc891652b5bd7b02e24c82777a298757f704ad51cebd"
+    },
+    {
+      "name": "base-51",
+      "specialists": 3,
+      "psych": 153,
+      "accepted": true,
+      "outputSHA256": "bf636e1bbd4d869b1622f00edf609df0c200fa1311ea5702cabdae20142f84b4"
+    },
+    {
+      "name": "base-52",
+      "specialists": 0,
+      "psych": 156,
+      "accepted": true,
+      "outputSHA256": "1359104d34ae554a7c2ce208cf946bb9e17ac479377dad2275f5e0a063d34c49"
+    },
+    {
+      "name": "base-53",
+      "specialists": 13,
+      "psych": 159,
+      "accepted": true,
+      "outputSHA256": "b320c339c23f43591e0166d6e76f9f756d98ffa94188793a5946d4e774a5d162"
+    },
+    {
+      "name": "base-54",
+      "specialists": 0,
+      "psych": 162,
+      "accepted": true,
+      "outputSHA256": "c2c3a805e9ece2540a48b4f2cab966cec62652315b9e08e95279d65c23409876"
+    },
+    {
+      "name": "base-55",
+      "specialists": 1,
+      "psych": 165,
+      "accepted": true,
+      "outputSHA256": "87d07eb043893bc41d507773165430fa98da7d622e5fb35a50a046bd4c640512"
+    },
+    {
+      "name": "base-56",
+      "specialists": 2,
+      "psych": 168,
+      "accepted": true,
+      "outputSHA256": "ecbd95c32e8df1df900ab57f94993d78f0b780ff611142e3c763ad1850656570"
+    },
+    {
+      "name": "base-57",
+      "specialists": 9,
+      "psych": 171,
+      "accepted": true,
+      "outputSHA256": "9f2b4dc26e7f1fd05e41801785687e50e20c732992b2f68810d038119ef48f81"
+    },
+    {
+      "name": "base-58",
+      "specialists": 12,
+      "psych": 174,
+      "accepted": true,
+      "outputSHA256": "3c7d68ad8e4ea9415b73926a5b65de4f14f6019a59103a35078b416cf335612d"
+    },
+    {
+      "name": "base-59",
+      "specialists": 29,
+      "psych": 177,
+      "accepted": true,
+      "outputSHA256": "0c89878ee9d9fba242697a5a71689a5c1281f04fbd4ef5ce4eb8f9e4a01579db"
+    },
+    {
+      "name": "base-60",
+      "specialists": 0,
+      "psych": 180,
+      "accepted": true,
+      "outputSHA256": "aabc5c6dce492139030c730c7aeea1cc1a3a15a6888a1e531ff9a8bcfe8412b8"
+    },
+    {
+      "name": "base-61",
+      "specialists": 1,
+      "psych": 183,
+      "accepted": true,
+      "outputSHA256": "841975a5e4f754bfb18b4b85020d7063f6a6c8d3359805cac5aa2d2810572f71"
+    },
+    {
+      "name": "base-62",
+      "specialists": 5,
+      "psych": 186,
+      "accepted": true,
+      "outputSHA256": "9e70461192cf9ae9fd8955887f1f1b2540af183f4495f22c4cbb215371832893"
+    },
+    {
+      "name": "base-63",
+      "specialists": 11,
+      "psych": 189,
+      "accepted": true,
+      "outputSHA256": "e5dd21841be59276cbb0be0c61521c9b7dd6235bba687ba72407c6c91af6cf30"
+    },
+    {
+      "name": "base-64",
+      "specialists": 0,
+      "psych": 192,
+      "accepted": true,
+      "outputSHA256": "5108154ed5350591f55c87207d8333ef14b9d84fe7bd0f0a611d2371d42f42a3"
+    },
+    {
+      "name": "psych-0",
+      "specialists": 0,
+      "psych": 0,
+      "accepted": true,
+      "outputSHA256": "cbd2e2832d9560b34b5110098e83bb10937375ee099a1d9d5983dfd4dca8dc95"
+    },
+    {
+      "name": "psych-1",
+      "specialists": 0,
+      "psych": 1,
+      "accepted": true,
+      "outputSHA256": "2dbb3c67ef20152446c98751a1788c6ccc920471f7f9326843ff192b03578a2c"
+    },
+    {
+      "name": "psych-2",
+      "specialists": 0,
+      "psych": 2,
+      "accepted": true,
+      "outputSHA256": "f7beaaed09d131c067b8e632d3eb22bfb76e0f065401debad0ab6752bb4859d6"
+    },
+    {
+      "name": "psych-3",
+      "specialists": 0,
+      "psych": 3,
+      "accepted": true,
+      "outputSHA256": "0779e970a051e1436a0ba21bf91c6da438471c3377ca702456897c231002e01d"
+    },
+    {
+      "name": "psych-4",
+      "specialists": 0,
+      "psych": 4,
+      "accepted": true,
+      "outputSHA256": "46ecebf6cf88b276fbcbc0e5f1ff634e4e587c03d6b275eb1cdb61024457b9e7"
+    },
+    {
+      "name": "psych-20",
+      "specialists": 0,
+      "psych": 20,
+      "accepted": true,
+      "outputSHA256": "3264bcdee49738c36d974ade9fb9b94cd8a9b961651d2ca4a0781ee4ad2946cb"
+    },
+    {
+      "name": "psych-99",
+      "specialists": 0,
+      "psych": 99,
+      "accepted": true,
+      "outputSHA256": "1b4c1f9d0d5d7c7e9827dac97c828a85b60263e6d2ec2ca13a4a05d24b7fb2e8"
+    },
+    {
+      "name": "psych-2147483647",
+      "specialists": 0,
+      "psych": 2147483647,
+      "accepted": true,
+      "outputSHA256": "aecdd240de725c4ba6422b350269ae4ad6d88fa121fea79abb00e043e05f0411"
+    },
+    {
+      "name": "psych--1",
+      "specialists": 0,
+      "psych": -1,
+      "accepted": false,
+      "outputSHA256": "7d4ca9ad44d44cdcad8ad5111d921e9ff88e0095c55bd15d04c01d47ca795701"
+    },
+    {
+      "name": "bad-special",
+      "specialists": 127,
+      "psych": 20,
+      "accepted": false,
+      "outputSHA256": "7d4ca9ad44d44cdcad8ad5111d921e9ff88e0095c55bd15d04c01d47ca795701"
+    },
+    {
+      "name": "SMAX",
+      "specialists": 0,
+      "psych": 20,
+      "accepted": false,
+      "outputSHA256": "de04a4c1275b7563b3746c08d399b3692cb2599c5a9415216f4d76dce0df96e4"
+    },
+    {
+      "name": "strongest-police-including-foreign",
+      "specialists": 0,
+      "psych": 0,
+      "accepted": true,
+      "outputSHA256": "2ba1c30408c28a9ba1f4fd103281f9fa4564aefee7c29536944029021a374239"
+    },
+    {
+      "name": "sea-excluded",
+      "specialists": 0,
+      "psych": 0,
+      "accepted": true,
+      "outputSHA256": "500aa5bfc544d41e10f0b7c582304e24c13c8ca3900012cf184f6a92c5874f2a"
+    },
+    {
+      "name": "air-police",
+      "specialists": 0,
+      "psych": 0,
+      "accepted": true,
+      "outputSHA256": "68c2ca82a1ef4da7f3ad56c14e6a5493e37674dc15aa3133497160a0fbf4dc26"
+    },
+    {
+      "name": "recon-police",
+      "specialists": 0,
+      "psych": 0,
+      "accepted": true,
+      "outputSHA256": "2ba1c30408c28a9ba1f4fd103281f9fa4564aefee7c29536944029021a374239"
+    },
+    {
+      "name": "noncombat-plan-excluded",
+      "specialists": 0,
+      "psych": 0,
+      "accepted": true,
+      "outputSHA256": "500aa5bfc544d41e10f0b7c582304e24c13c8ca3900012cf184f6a92c5874f2a"
+    },
+    {
+      "name": "punishment-sphere",
+      "specialists": 0,
+      "psych": 0,
+      "accepted": true,
+      "outputSHA256": "67c8f7a356a74f40e356ad95ce05ac3439943c92baaa6787afb2bdce2ccdc3e3"
+    },
+    {
+      "name": "content-global-difficulty",
+      "specialists": 0,
+      "psych": 0,
+      "accepted": true,
+      "outputSHA256": "ed3ef100bc7e06ba882393b488fde576d38d2d465dac20684d9a88b3ad648e56"
+    }
+  ],
+  "native": "UNRUN"
+}
