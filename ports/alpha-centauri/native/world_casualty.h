@@ -23,6 +23,7 @@ class CasualtyPlan {
   const OriginalVehicle*removed()const{return removal_.removed();}
   const CasualtyInputs*accumulators()const{return ready()?&inputs_:nullptr;}
  private:
+  friend class PromotedLandResolutionPlan;
   friend class LandResolutionPlan;
   friend RemovalError stage_casualty(const OriginalWorld&,size_t,const RemovalRuntime&,const CasualtyInputs&,CasualtyPlan&,size_t);
   RemovalError prepare(const OriginalWorld&,size_t,const RemovalRuntime&,const CasualtyInputs&,size_t);

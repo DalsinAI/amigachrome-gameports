@@ -644,3 +644,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_promotion_selection.py --out "$RUNNER_TEMP/promotion-selection-host"
       - name: Big-endian original promotion caller selection controls
         run: python3 ports/alpha-centauri/native/test_promotion_selection.py --out "$RUNNER_TEMP/promotion-selection-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host promotion-before-casualty LAND body controls
+        run: python3 ports/alpha-centauri/native/test_promoted_land_body.py --out "$RUNNER_TEMP/promoted-land-body-host"
+      - name: Big-endian promotion-before-casualty LAND body controls
+        run: python3 ports/alpha-centauri/native/test_promoted_land_body.py --out "$RUNNER_TEMP/promoted-land-body-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
