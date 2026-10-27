@@ -37,7 +37,141 @@
     "cases": 118,
     "accepted": 105,
     "outputSHA256": "fe2c363245b769088b966a9e408b347d3ff752aba71a95f5dc4a8cbec5878cdf",
-    "native": "UNRUN",
+    "native": {
+      "scope": "GenuineAROS68040/FPU readonlycurrentworldCRTseededfieldcombatproposal,notlivecombatcommit",
+      "binarySHA256": "3db83d6ab9aba4139b7349a536afd140a47348eb7e3b236ba14a6cefa8625041",
+      "cases": [
+        {
+          "case": 0,
+          "bytes": 193,
+          "sha256": "d8568d90d65aa12f39d70600cc4abbbb30f0ede10b39dda6f05495f3e003d2a1",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 1,
+          "bytes": 195,
+          "sha256": "10943329a8ee51c750ec177a3d745a6aef43fa97368cdbf39e97a95305afa2ae",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 2,
+          "bytes": 195,
+          "sha256": "a903cd0a4f5c226df909f8f583607aeb8d6522551cf184690022925f07ce3a8d",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 32,
+          "bytes": 193,
+          "sha256": "919f8ee8057b5d68e626a25f9b922faf1fe5fad9d5a1a638fa85a68756de608f",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 95,
+          "bytes": 195,
+          "sha256": "d78e64ea320b787130fd33f75759787f62565ec7aeea5d169ca8e1680e6ac5b5",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 96,
+          "bytes": 59,
+          "sha256": "14757e8a3a333880384e5823042e66d334b8572c9050aa8ffed3d8ebaf39eff3",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 100,
+          "bytes": 57,
+          "sha256": "465be11e69fa273c2c2b964e707e35e35124f2a9afb90c56ac2bfbd2abcf24fe",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 108,
+          "bytes": 59,
+          "sha256": "14757e8a3a333880384e5823042e66d334b8572c9050aa8ffed3d8ebaf39eff3",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 109,
+          "bytes": 193,
+          "sha256": "d8568d90d65aa12f39d70600cc4abbbb30f0ede10b39dda6f05495f3e003d2a1",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 110,
+          "bytes": 194,
+          "sha256": "44a16247498d891d7deab700b1e3269250716e15f4e4f66d46766eb9290f78e3",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 111,
+          "bytes": 194,
+          "sha256": "44a16247498d891d7deab700b1e3269250716e15f4e4f66d46766eb9290f78e3",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 112,
+          "bytes": 193,
+          "sha256": "d8568d90d65aa12f39d70600cc4abbbb30f0ede10b39dda6f05495f3e003d2a1",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 113,
+          "bytes": 193,
+          "sha256": "d8568d90d65aa12f39d70600cc4abbbb30f0ede10b39dda6f05495f3e003d2a1",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 114,
+          "bytes": 193,
+          "sha256": "d8568d90d65aa12f39d70600cc4abbbb30f0ede10b39dda6f05495f3e003d2a1",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 115,
+          "bytes": 194,
+          "sha256": "44a16247498d891d7deab700b1e3269250716e15f4e4f66d46766eb9290f78e3",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 116,
+          "bytes": 194,
+          "sha256": "e4345261566b16406c252b8d497384d93f9e127acc9418a24692583d6c0089d8",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 117,
+          "bytes": 194,
+          "sha256": "44a16247498d891d7deab700b1e3269250716e15f4e4f66d46766eb9290f78e3",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        }
+      ],
+      "count": 17,
+      "aggregateBytes": 2888,
+      "aggregateSHA256": "e2cd9d67023343d1060082c00a066bec1d9afaeb519040d47f6e84dd0c2d2a48",
+      "status": "FIELD_0_RC 0\nFIELD_1_RC 0\nFIELD_2_RC 0\nFIELD_32_RC 0\nFIELD_95_RC 0\nFIELD_96_RC 0\nFIELD_100_RC 0\nFIELD_108_RC 0\nFIELD_109_RC 0\nFIELD_110_RC 0\nFIELD_111_RC 0\nFIELD_112_RC 0\nFIELD_113_RC 0\nFIELD_114_RC 0\nFIELD_115_RC 0\nFIELD_116_RC 0\nFIELD_117_RC 0\nBATCH_DONE\n",
+      "process": {
+        "batchComplete": true,
+        "emulatorReturnCode": 0,
+        "timedOut": false,
+        "aborted": false
+      }
+    },
     "originalExecutable": "UNRUN",
     "rng": "Separate explicit CRT state"
   }
