@@ -290,3 +290,9 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_research.py --out "$RUNNER_TEMP/world-research-host"
       - name: Encoded field attacks and casualty reference compaction
         run: python3 ports/alpha-centauri/native/test_field_attack.py --out "$RUNNER_TEMP/field-attack-host"
+      - name: Fresh riot and Golden Age event transitions
+        run: python3 ports/alpha-centauri/native/test_drone_transition.py --out "$RUNNER_TEMP/drone-transition-host"
+      - name: Internally fresh research from resolved upkeep
+        run: python3 ports/alpha-centauri/native/test_world_upkeep_research.py --out "$RUNNER_TEMP/world-upkeep-research-host"
+      - name: Explicit empty-sea capability and checkpoint preservation
+        run: python3 ports/alpha-centauri/native/test_surface_actions.py --out "$RUNNER_TEMP/surface-actions-host"
