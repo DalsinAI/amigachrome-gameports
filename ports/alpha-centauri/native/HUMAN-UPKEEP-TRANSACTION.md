@@ -111,3 +111,12 @@ leave the full output buffer and receipt untouched.
 `build_human_upkeep_transaction_probe.sh OUTPUT` builds the same controls as a
 strict 68040/FPU HUNK. Native execution receipts distinguish genuine AROS68k/
 FS-UAE proof from host tests; neither qualifies real AmigaOS3.2 or full turns.
+
+All 20 controls also executed as the strict native HUNK under genuine AROS68k
+in FS-UAE 68040/FPU, each guest return code 0, with complete stdout and output
+bytes matching the independent host oracle. Ten outputs are transaction
+checkpoints and ten are narrow-encoder/control buffers; the latter include
+intentionally unchanged sentinel buffers on rejection. Combined output length
+is 4,460,980 bytes, SHA-256
+`b9d20cf2c2687f0ad8a0feca54db28ee655029c6b88e765ee6e41a8810fd7723`.
+See `HUMAN-UPKEEP-TRANSACTION-NATIVE-EVIDENCE.json` for per-case hashes and scope.
