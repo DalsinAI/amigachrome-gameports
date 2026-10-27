@@ -65,3 +65,14 @@ probe RULES WORLD.SC BASE_ID COMMERCE ENERGY_GRID [inspection|editor|control]
 `ALPHA_RESOLUTION_SOURCE_ROOT` (build) and `--source-root` (host test) optionally
 select an isolated integration checkout; ordinary use takes all dependencies
 from the same source directory. Original copyrighted assets are not committed.
+
+The 57-world host corpus passed with ASan/UBSan: 38 accepted proposals, three
+actual worker trims and one preserved pending-riot event. The final m68k HUNK
+ran all 57 cases in genuine FS-UAE/AROS with process RC0 and complete oracle
+output matches (25,096 bytes, aggregate SHA256
+`05e5699a2330946d6b90bc0938b4a226c2ede2bc517e675efa697dd2215f4c9f`).
+This includes the actual Boreholes human bases 9 and 10. The Hive yields mineral
+surplus 4, food surplus 2, pre-allocation energy 6, economy 5 and labs 5; these
+remain stage proposals. A standalone integration checkout rebuilt the native
+executable byte-for-byte identically and its fresh host binary repeated all 57
+complete output comparisons. AROS evidence does not qualify AmigaOS 3.2.3.

@@ -697,7 +697,7 @@
       "outputSHA256": "6fabb8d644988b17c060e624fe655cdd3c86bf3beafb66e0c5b15af56edbabd5"
     }
   ],
-  "native": "UNRUN",
+  "native": "All57 genuine guest processRC0, every complete output independently matches, total25096bytes aggregateSHA05e5699a2330946d6b90bc0938b4a226c2ede2bc517e675efa697dd2215f4c9f; see native evidence.",
   "sourceReferences": {
     "resolver": "Thinker default restoration policy dabe62f2d1abba03de40f3dd3048494843f6a9af; source dependency3152bdd+ee7b301",
     "mineralsNutrientsEnergyShortfall": "Recovered original OpenSMACX2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c"
@@ -711,7 +711,7 @@
   "nativeBuild": {
     "bytes": 187856,
     "SHA256": "757c3b58f5154c0c9bfdf2be796b446724d7044c524af3dfafdda1cddb1b2db2",
-    "execution": "PENDING"
+    "execution": "PASS actual guest, all57 cases, complete independent oracle output match"
   },
   "sourceSHA256": {
     "world_upkeep_accounting.h": "7939bcfefeed9ef1c7c63ee98139d1d7f338cadf33b8d8c026688b1375c4ca39",
@@ -721,5 +721,14 @@
     "world_base_minerals.cpp": "bc5854ef894afa88fc9ffe99808ff63a25c301ad0880880c04203888b322297a",
     "world_worker_upkeep.cpp": "00f95601499b6d9a393935ef7c568c8ad0793b10d8b6a7c8a0f991e7e5ae070b"
   },
-  "originalScenarioSHA256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d"
+  "originalScenarioSHA256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+  "standaloneIntegrationRebuild": {
+    "cases": 57,
+    "completeIndependentOracleOutputMatch": true,
+    "ASanUBSan": true,
+    "aggregateOutputSHA256": "05e5699a2330946d6b90bc0938b4a226c2ede2bc517e675efa697dd2215f4c9f",
+    "hostBinarySHA256": "42da8494df4766fb59978e4d90936ee90f8c141dbe7802f53b6f3a04015d724f",
+    "nativeRebuildSHA256": "757c3b58f5154c0c9bfdf2be796b446724d7044c524af3dfafdda1cddb1b2db2",
+    "nativeRebuildExact": true
+  }
 }
