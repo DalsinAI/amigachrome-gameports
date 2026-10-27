@@ -2424,3 +2424,34 @@ model failed on invalid-current versus same-faction error precedence in Explore;
 only the model was corrected. Production code was unchanged for passing reruns.
 SDK build only; actual AmigaOS and remote CI remain UNRUN. No World mutation,
 legal attack, event completion, turns or playable-game qualification is claimed.
+
+### Original pre-round third-party treaty and friction
+
+`prebattle_territory.{h,cpp}` proposes the original third-party effects after
+ordinary aggression and before nerve-gas, difficulty, display and round setup.
+This differs from the post-combat territorial gift/friction prefix. The signed
+map owner selects at most one of original candidates 1..7. A qualifying weaker
+third party receives a two-way `0x2000` treaty marker; its subsequent status
+**toward the defender** selects friction applied **from defender toward owner**.
+The explicit ordered active negotiation pair also controls the wrapped runtime
+accumulator. Current viewer, relations, military values and negotiation state
+are supplied facts. An existing treaty marker does not suppress friction.
+
+Private execution matches 2,048 original contexts per edition with the actual
+unchanged caller loop, whole treaty helper and whole friction helper. Only one
+final observation jump is inserted before later display stages. Every byte of
+the 1,114,112-byte global image is compared, with map bytes and input frame words
+unchanged and stack/scratch checked. Each edition executes 340 treaty updates,
+184 friction updates and 75 matching negotiation updates. This supplied-entry
+proof excludes preceding aggression/notifications and the remainder of combat.
+The original harness first had a Python syntax error before execution; later
+passes strengthened the correct UI canary/map/input checks and existing-marker
+coverage. Historical attempts remain private. No owner code bytes are included.
+
+Final host ASan/UBSan and independent static 68040 controls pass 12,963 joined
+cases (12,944 accepted, 19 held), including all 4,096 original observations;
+1,056 treaty, 705 friction and 459 negotiation updates match the wire model.
+The public subset passes 8,867 controls on both processors. All input aliases and
+failure outputs are preserved. SDK build only; AmigaOS and remote final-head CI
+remain UNRUN. No World mutation, event completion, action authority, input,
+turns or playable-game qualification is claimed.
