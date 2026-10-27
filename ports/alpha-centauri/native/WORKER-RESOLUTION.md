@@ -50,6 +50,9 @@ old-mask ecology seam. The original ecology query delegates with its original
 mask semantics; 527 existing independent-world regressions remain byte-exact.
 A new controlled candidate starts from a centre-only mask on improved terrain
 and proves that the proposed mask's raw ecology differs from the old mask.
+That controlled change also passes genuine native execution, guest RC0, all
+838 output bytes identical to its independent oracle (SHA-256
+`247029f0140a49ec2ad6e82dfe5f46b6ddf2f6cb8de34d2d4ee3b71bc1711fbd`).
 
 Validation: strict C++ builds and ASan/UBSan pass 27 independent wire/component
 world cases, with 22 accepted and seven actual worker trims. Cases include
