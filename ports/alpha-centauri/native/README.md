@@ -1932,3 +1932,30 @@ suffix waves. This is source-ordered joined RAM proof, not a whole returned
 MapWin/USER32/import/cache call chain. All155 inherited workflow commands remain
 plus two. The normal SDK probe builds; native execution and frontend enabling
 remain unrun/held. See `WORLD-WATER-ITEM-SCENE-EVIDENCE-20261027.json`.
+
+
+### Graphics crop(-1) runtime recovery: hold retained
+
+The original normal water caller passes the resolved graphics faction, base-1,
+mapXY and flag0. The crop gate sees displayed/snapshot farm bits, while the leaf
+rereads raw actual tile data. A negative viewer resolves to raw using-faction
+when nonzero, otherwise explicit CurrentFaction; territory-overlay modes remain
+excluded because they can overwrite that working faction.
+
+A substantive SMAX dependency remains: its ocean-kelp branch tests facility36
+without guarding the negative base index. With base-1 the unchanged instruction
+reads byte97cf9c (immediately before Bases, physically Factions[7]+2028) bit10.
+This is not base0 facility state, and constructed owner realms do not establish
+live-runtime authority for that byte. Seven source-entry profiles are sensitive
+to this byte; the returned yield can stay2 while the scratch effect changes.
+
+The leaf accumulates BaseTerraformReduce without resetting it.672 controlled
+complete original crop returns, using112 genuinely observed graphics-entry
+argument profiles, match explicit nutrient/technology/runtime/alias contexts.
+Another672 paired calls confirm repeated accumulation. Real original bonus,
+bitmask and technology helpers execute; no callback/import result is fabricated.
+Nonzero CurrentBase/id, ControlUpkeep and energy-scratch canaries stay unchanged
+on this profile. These are separate numeric helper returns, not a resumed
+MapWin callback chain. There is no portable evaluator, renderer crop-hold removal,
+base-edition or native qualification here. All prior sources remain unchanged.
+See `GRAPHICS-CROP-CONTEXT-20261027.json` for the exact contract and limits.

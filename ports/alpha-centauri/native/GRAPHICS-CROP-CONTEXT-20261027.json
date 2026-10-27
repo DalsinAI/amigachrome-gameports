@@ -1,0 +1,66 @@
+{
+  "scope": "Inspection/recovery contract only: graphics crop_yield(faction,-1,x,y,0); no owned evaluator or crop hold removal",
+  "edition": "Exact owner GOG SMAX helper4e6e50; base terran profile remains separate/unqualified here",
+  "caller": {
+    "entry": "4632d0",
+    "cropCallReturn": "465ddb",
+    "arguments": [
+      "resolved graphics faction",
+      "-1",
+      "mapX",
+      "mapY",
+      "0"
+    ],
+    "resolvedFaction": "nonnegative viewer directly; negative viewer uses raw tile val3&7 when nonzero, otherwise explicit CurrentFaction",
+    "normalProfile": "Existing normal water flags04001421; territory-overlay flag10000 excluded because it can overwrite working faction via whose_territory",
+    "gate": "actual source late visibility and ((bit20 && displayed farm8000 && zoom>-8) || forced crop1000)",
+    "displayVsRead": "Gate uses displayed/snapshot items; crop itself rereads actual raw tile items/altitude/landmarks; never substitute display snapshot as leaf terrain"
+  },
+  "requiredReads": [
+    "explicit parsed resource nutrient rows and nutrient-effect-mine rule",
+    "matched tech limit key/prerequisites and actual faction technology ownership; faction0 has_tech false",
+    "actual raw tile and coordinate/stride/map-bonus seed/GameRules via unchanged bonus_at",
+    "runtime ExpansionEnabled (not inferred from save schema)",
+    "incoming BaseTerraformReduce and outgoing accumulated reduction, even when sea ignores return",
+    "original physical pre-base facility alias byte97cf9c bit10 on sea-kelp branch with base=-1"
+  ],
+  "facilityAlias": {
+    "address": "97d0cc + (-1)*308 + 4 = 97cf9c",
+    "mask": "10",
+    "instruction": "4e7162 reads without negative-base guard; contrast base-square early return/forest guards/final events",
+    "adjacentLayout": "physically Factions[7]+2028 for this exact SMAX executable; not base0 and not evidence of live allocation authority",
+    "meaning": "unresolved original adjacent-memory dependency; explicit controlled-byte experiments do not authorize assuming live zero or mapping an arbitrary owned field"
+  },
+  "scratch": {
+    "address": "90e998 BaseTerraformReduce",
+    "behavior": "incoming value is NOT reset; branch adds uncapped_value-2 when ordinary limit applies, then returned yield becomes2; repeated draw calls accumulate again",
+    "otherState": "CurrentBase pointer/id, ControlUpkeepA and BaseTerraformEnergy are not direct dependencies on qualified crop profile; nonzero canaries stay unchanged",
+    "transaction": "Future renderer may not silently skip scratch effects or commit them on failed composition; incoming/outgoing authority and sequencing must be explicit"
+  },
+  "observations": {
+    "priorGenuineGraphicsEntries": 112,
+    "controlledSingleCallCases": 672,
+    "controlledDoubleCallCases": 672,
+    "totalUnchangedWholeCropCalls": 2016,
+    "aliasSensitiveSourceEntries": 7,
+    "scratchMutationContexts": 42,
+    "singleSHA256": "be062e85e7ba366f7d852b93e73c239561d917cdf2681bffa8bfb7c3f799bac1",
+    "doubleSHA256": "72bcdd1a2fecf829bce9fb8935b4783390d3df8b822c75f876b91b2127a8256c",
+    "dependencies": "Real unchanged bonus_at592030/bitmask50ba00/has_tech5b9f20; no callback/import substitutions",
+    "boundary": "Prior MapWin prefixes stop at actual crop entry; these complete crop calls execute separately with those observed arguments and explicit controlled resource/runtime/adjacent bytes. MapWin never resumed with invented result."
+  },
+  "holds": [
+    "live render callback ordering and scratch provenance",
+    "negative-base physical prearray alias authority",
+    "other land/fungus/monolith/project contexts not exercised here",
+    "base-terran edition differential",
+    "original full MapWin/Windows/import/cache completion",
+    "owned evaluator/BE implementation/native/frontend integration"
+  ],
+  "productionChanged": false,
+  "cropHoldRemoved": false,
+  "frontendOrWatchTouched": false,
+  "independent68040": "Not run: no new portable implementation",
+  "normalSDK": "Not built: source contract/evidence only",
+  "native": "UNRUN"
+}
