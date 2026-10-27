@@ -688,3 +688,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_combat_labels.py --out "$RUNNER_TEMP/combat-labels-host"
       - name: Original combat labels and report text independent 68040
         run: python3 ports/alpha-centauri/native/test_combat_labels.py --out "$RUNNER_TEMP/combat-labels-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Current World combat calculations and original report text host
+        run: python3 ports/alpha-centauri/native/test_world_combat_text.py --out "$RUNNER_TEMP/world-combat-text-host"
+      - name: Current World combat calculations and original report text independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_combat_text.py --out "$RUNNER_TEMP/world-combat-text-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
