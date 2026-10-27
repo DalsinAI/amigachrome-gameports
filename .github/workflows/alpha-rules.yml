@@ -320,3 +320,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_sea_scene.py --out "$RUNNER_TEMP/terrain-sea-scene-host"
       - name: Original acquired-RAM sea-platform scene composition independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_sea_scene.py --out "$RUNNER_TEMP/terrain-sea-scene-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original sea-farm crop and later sprite intent host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_sea_late.py --out "$RUNNER_TEMP/terrain-sea-late-host"
+      - name: Original sea-farm crop and later sprite intent independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_sea_late.py --out "$RUNNER_TEMP/terrain-sea-late-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

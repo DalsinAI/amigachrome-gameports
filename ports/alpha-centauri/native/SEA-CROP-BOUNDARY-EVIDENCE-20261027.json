@@ -1,0 +1,33 @@
+{
+  "scope": "Inspection-only ordered sea-farm crop/sprite caller intent; rendering holds unchanged",
+  "publicCases": 25926,
+  "controls": 24,
+  "publicSHA256": "e40c7d43b8ff30ac87baeb0ea5b690fa89d02e623c710980538c5710aa7040b2",
+  "hostASanUBSan": true,
+  "independentBigEndian68040": true,
+  "originalPrefixes": 600,
+  "sourceCropEntryStops": 112,
+  "sourceSpriteEntryStops": 117,
+  "noEventNormalReturns": 371,
+  "originalFirstEventAndArgsComparisonSHA256": "84e3a501208cd5337253faabaaf83f2621e64f0afcc5ee19c07c3991d5aebdd7",
+  "futurePlanOrder": "independent source-instruction interpretation, not later callee execution",
+  "sdkBuildOnly": {
+    "normalSDK": true,
+    "native": false,
+    "binaries": {
+      "sea-late-probe-amiga": "011ff864539d58e986734dedc477997698370a1f0a593a46e73b1a02ad51dd85",
+      "sea-late-control-amiga": "d8f2643197ef6038667c169e0ae60e2b961281f2a883c72cc2c45c66c1c57909"
+    }
+  },
+  "sourceCropEvaluated": false,
+  "fakeCallbackResults": false,
+  "native": false,
+  "frontend": false,
+  "holds": [
+    "All required crop calls still hold rendering until genuine matching gameplay/transient authority exists",
+    "No fake yield return or substitute base0/zero scratch from controlledleaf reference",
+    "Later Sprite pixels/loaders/cache/USER32 unqualified; prefix proves invocation/selection only",
+    "Landmark2000/4000/8000 and bonus/goody flags200 kept held",
+    "No scene/frontend/view/native/watch/lab/deploy/export/publication changes"
+  ]
+}

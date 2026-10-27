@@ -1840,3 +1840,38 @@ on both architectures. This is joined explicit-RAM evidence, NOT a full original
 MapWin/Sprite_draw3 return, USER32 execution, original loader or physical OS scene.
 All149 parent workflow commands remain plus two. Normal SDK builds are native
 execution-unrun. See `SEA-SCENE-EVIDENCE-20261027.json`.
+
+
+### Sea-farm crop-call and remaining sprite intent
+
+`inspect_sea_late` is an inspection-only intent plan, not a yield evaluator or
+renderer. It preserves the actual required source crop call and orders the
+supported later water item sprites. It never removes the scene's sea-farm bit20
+hold. Caller supplies actual observation/late gate, CurrentFaction, using-faction
+and runtime ExpansionEnabled. Land, special modes and landmark/bonus/goody paths
+remain held.
+
+The original sea-platform bit1 draw precedes the road boundary and the crop
+call. Crop is called when bit20+displayed farm8000+sourceZoom>-8, or flag1000
+forces it regardless of zoom; both remain behind the late exploration gate.
+Its actual arguments are `(resolved faction,-1,mapX,mapY,0)`. A negative viewer
+uses raw using-faction or actual CurrentFaction; a nonnegative viewer uses itself.
+At sea the return is not used for land farm icons, but the real call and scratch
+side effects cannot be silently skipped or replaced with zero. No real scene
+CurrentBase/ControlUpkeep/yield-scratch authority is inferred from a controlled
+leaf harness or substituted base0.
+
+Six hundred unchanged original MapWin prefixes confirm first call/arguments and
+source sprite selection:112 stop before crop execution,88 before Sprite_draw3,
+29 before Sprite_draw_dest, and371 genuine no-event normal returns preserve
+stack/SEH/RAM-buffer state. Deliberately unmapped actual callee entries trigger an
+observer that exits without returning any fabricated result. Later sprite assets
+are unacquired and no callee pixels, USER32 or original crop result is claimed.
+Future ordering after a required crop remains source-instruction intent, not an
+executed callback chain.
+
+All25926 public plans and24 no-write/alias/mode controls pass host ASan/UBSan and
+actual independent68040. The600 matching first-event/crop-argument plans also
+agree on both. All151 parent workflow commands remain plus two. Normal SDK probe
+and controls build only; native execution unrun. See
+`SEA-CROP-BOUNDARY-EVIDENCE-20261027.json`.
