@@ -1,0 +1,39 @@
+{
+  "cases": 15356,
+  "bytes": 1474176,
+  "outputSHA256": "b4b15a9bed57ce4c1ba130c9fcece87f9bc4a3e6175d1d6407effa7eb8ce6b16",
+  "accepted": 14755,
+  "allFiveStageRowsCompared": true,
+  "sourceAndOutputTransactionChecked": true,
+  "hostSanitizers": true,
+  "policy": "Thinker default restoration policy dabe62f2d1abba03de40f3dd3048494843f6a9af",
+  "native": "UNRUN",
+  "command": [
+    "c++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "-fno-sanitize-recover=all",
+    "-no-pie",
+    "-I",
+    "/workspace/scratch/3fb17fb3c5da/alpha-worker-next/ports/alpha-centauri/native",
+    "/workspace/scratch/3fb17fb3c5da/alpha-worker-next/ports/alpha-centauri/native/base_psych.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-population-next/ports/alpha-centauri/native/base_psych_probe.cpp",
+    "-o",
+    "/tmp/alpha-psych-pure-1/base-psych-probe"
+  ],
+  "sourceSHA256": {
+    "base_psych.h": "3bbb42501f6831286ebf61e5e4a1b558847155602af695fd021a7b67d14da83f",
+    "base_psych.cpp": "021ac6f060a9fac251728834e48efc2c5ffb17a44fd0552ce6a840a35a7f8857"
+  },
+  "nativeBuild": {
+    "bytes": 19188,
+    "SHA256": "cdcf02e4c7fd5ea3cdc644324cc909bbc8c400ed5ce0b57bbb950e37e926dedc",
+    "execution": "PENDING"
+  },
+  "scope": "Default pinned Thinker psych restoration policy, not recovered original base_psych. Full population0..127, 8192 facility/project/suppression flag combinations, police/pacifism boundaries, 2000 deterministic random cases, input/alias/overflow rejection. All five stage rows and fresh can/will riot counts independently modeled."
+}
