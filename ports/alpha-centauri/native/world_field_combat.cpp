@@ -4,6 +4,7 @@
  */
 #include "world_field_combat.h"
 #include "movement.h"
+#include "world_combat_sensors.h"
 namespace alpha {namespace {
 bool overlap(const void*a,size_t an,const void*b,size_t bn){if(!a||!b||!an||!bn)return false;const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;if(an>UINTPTR_MAX-x||bn>UINTPTR_MAX-y)return true;return x<=y?y-x<an:x-y<bn;}
 bool alias(const OriginalWorld&w,const UnitDefinitions&d,const Rules&t,const BasicRules&r,const void*out,size_t n){
@@ -48,11 +49,8 @@ CombatError world_field_combat(const OriginalWorld&w,const UnitDefinitions&d,con
  const auto*as=w.tile(at);const auto*bs=w.tile(bt);if(!as||!bs)return CombatError::bad_state;
  if(!(as->items&2u)||!(bs->items&2u)||(as->val2&15u)!=a->faction_id||(bs->val2&15u)!=b->faction_id)return CombatError::unsupported;
  if((as->climate&0xe0u)<0x60u||(bs->climate&0xe0u)<0x60u||(as->items&(1u|0x20u|0x800u))||(bs->items&(1u|0x20u|0x800u))||!(bs->visibility&(1u<<a->faction_id))||!(b->visibility&(1u<<a->faction_id)))return CombatError::unsupported;
- // Conservatively reject all sensor/GSP worlds until exact nearby sensor and
- // nearest-base territory resolution is connected. Never silently omit bonus.
- for(size_t i=0;i<m.tile_count;++i)if(w.tile(i)->items&0x80000000u)return CombatError::unsupported;
  for(size_t i=0;i<w.game().base_count;++i){const auto*base=w.base(i);
-  if((base->x==a->x&&base->y==a->y)||(base->x==b->x&&base->y==b->y)||(base->facilities_built[5]&2u))return CombatError::unsupported;
+  if((base->x==a->x&&base->y==a->y)||(base->x==b->x&&base->y==b->y))return CombatError::unsupported;
  }
  size_t ac=0,bc=0;for(size_t i=0;i<w.game().vehicle_count;++i){const auto*v=w.vehicle(i);ac+=v->x==a->x&&v->y==a->y;bc+=v->x==b->x&&v->y==b->y;}
  if(ac!=1||bc!=1)return CombatError::unsupported;
@@ -76,6 +74,10 @@ CombatError world_field_combat(const OriginalWorld&w,const UnitDefinitions&d,con
  if(aa>ba&&!scale(offense,100LL+r.combat_pct_atk_higher_elev))return CombatError::overflow;
  next.terrain_defense=((bs->val3&0xc0u)>0x40u||(bs->items&0x200000u))?3:2;
  if(!scale(defense,2*next.terrain_defense,1))return CombatError::overflow;
+ uint32_t sensors=0;const auto sensor_error=world_combat_sensor_mask(w,b->faction_id,b->x,b->y,sensors);
+ if(sensor_error!=CombatError::ok)return sensor_error;
+ if((sensors&1u)&&!scale(defense,100LL+r.combat_pct_def_range_sensor))return CombatError::overflow;
+ if((sensors&2u)&&!scale(defense,100LL+r.combat_pct_def_range_sensor))return CombatError::overflow;
  const int left=next.attacker_moves_left<r.move_rate_roads?next.attacker_moves_left:r.move_rate_roads;
  if(!scale(offense,left,r.move_rate_roads))return CombatError::overflow;
  const bool bhuman=(w.game().preferences.FactionStatus[0]&(1u<<b->faction_id))!=0;

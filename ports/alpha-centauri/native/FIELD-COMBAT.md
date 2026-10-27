@@ -63,9 +63,21 @@ Supported branch:
 
 Base tiles, bunkers, fungus, native units, sea/air/mobile units, noncombat units,
 abilities, stacked units and unqualified attacker states reject explicitly.
-Until nearby sensor/nearest-base rules are connected, **any sensor or Geosync
-Survey Pod anywhere in the world conservatively rejects** the proposal. This
-is a support boundary, not a claim that such original engagements are illegal.
+Sensor and Geosync Survey Pod defense are now derived from the current world;
+their presence elsewhere does not globally reject an unrelated engagement.
+These are support boundaries, not claims that excluded original engagements
+are illegal.
+
+`world_combat_sensor_mask` implements pinned Thinker default
+`sensor_defense_ocean=0`: original25-tile radius, wrap/polar bounds, raw sensor
+priority over GSP on the same square, nearest **global** base by source vector
+distance with the highest base index winning ties. Land sensor squares qualify
+on neutral/defender territory. Ocean sensor squares qualify only when the
+nearest global base belongs to the defender; the search does not skip a closer
+foreign base to find a friendly one. GSP status uses that nearest base's built
+facility41 and absolute wrapped x-offset0/2 and y-offset0/2. Ordinary sensor
+bonus and additional GSP bonus each apply once, preserving sequential integer
+rounding. The helper is read-only and output aliases reject before writes.
 
 No world records, raw container, movement, diplomacy, RNG authority, kill/removal,
 promotion, stack collateral damage, capture, base occupation, UI or persistence
@@ -83,17 +95,27 @@ equal the independent oracle. SHA256:
 `6af480b471ad59e791e900c53b183d434cba6a7bc76b3595fd3e00dfd09a9b25`.
 
 `test_world_field_combat.py` builds a strict ASan/UBSan imported-world probe,
-derives expectations independently from raw fixture fields, and checks96
-qualified engagements plus14 rejected branches. Every probe checks raw and
+derives expectations independently from raw fixture fields, and checks105
+qualified engagements plus13 rejected branches, including near/far sensors,
+hostile territory, ocean nearest-base tie ownership, GSP and raw-sensor priority.
+Every probe checks raw and
 decoded world immutability and output/cursor alias rejection. World native
 execution is recorded separately in the evidence receipt; no original Windows
 executable or AmigaOS3.2.3 comparison is claimed.
 
+`test_world_combat_sensors.py` separately checks12264 complete mask queries over
+49 imported worlds against an independent raw-container model, including base
+versions7/9 and SMAX12, cylindrical/flat and larger maps, zero/multiple bases,
+nearest-base ties, mixed land/ocean and faction territories, edge coordinates,
+GSP and raw-sensor priority. Its outputs are independent of caller percentages.
+
 ```
 python3 test_combat_rounds.py --out /tmp/alpha-combat-rounds
 python3 test_world_field_combat.py --out /tmp/alpha-field-combat
+python3 test_world_combat_sensors.py --out /tmp/alpha-combat-sensors
 CXX=m68k-amigaos-g++ sh build_combat_rounds_probe.sh /tmp/CombatRounds
 CXX=m68k-amigaos-g++ sh build_world_field_combat_probe.sh /tmp/FieldCombat
+CXX=m68k-amigaos-g++ sh build_world_combat_sensors_probe.sh /tmp/CombatSensors
 ```
 
 The leaf HUNK reads352-byte LE control records from stdin and writes44-byte LE

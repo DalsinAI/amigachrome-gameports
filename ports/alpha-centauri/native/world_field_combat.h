@@ -12,8 +12,9 @@ struct FieldCombatFacts {
 /* Read-only, bounded base-game human field engagement proposal. Uses CURRENT
  * world records and recovered effective morale, not saved displayed strength.
  * Infantry only; ordinary conventional combat designs with no abilities;
- * exactly one unit on each tile, adjacent land, no bases/bunkers/fungus/sensors
- * or unqualified projects. Human active attacker, mutual vendetta; ordinary
+ * exactly one unit on each tile, adjacent land, no bases/bunkers/fungus.
+ * Nearby sensor/GSP defense is derived with source-default territory and
+ * nearest-global-base rules. Human active attacker, mutual vendetta; ordinary
  * faction-owned defenders may be human or AI. Native faction0 is excluded.
  * Equal infantry speeds preclude retreat. Derives hasty/terrain/elevation/road
  * and fanatic/faction offense/defense effects under documented Thinker default

@@ -215,5 +215,364 @@
     },
     "originalExecutable": "UNRUN"
   },
-  "scope": "Pinned Thinker default restoration policy; proposals only; explicit recorded CRT draws; no full attack, AI controller or original-executable parity"
+  "scope": "Pinned Thinker default restoration policy; proposals only; explicit recorded CRT draws; no full attack, AI controller or original-executable parity",
+  "sensorMasks": {
+    "worlds": 49,
+    "queries": 12264,
+    "outputSHA256": "3357dfb82c2cff3ed6cc16b2afc365d76c09ac5d65308bdbe8872801febbd008",
+    "cases": [
+      {
+        "case": 0,
+        "name": "random-0",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "ed48765976b9d3c6fea86c759a15829d8c1067ca4672aece19bc0b710f8798ac"
+      },
+      {
+        "case": 1,
+        "name": "random-1",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "91164bf991007226c73ae2eecd6665912261dffd49668e7415c21bf4cf32359d"
+      },
+      {
+        "case": 2,
+        "name": "random-2",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "8c054a6fe0dbb3ea7d8f3a0230fcfd5707b17599bd69c37b04cc294d18251900"
+      },
+      {
+        "case": 3,
+        "name": "random-3",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "5d97e9fa0ee774c00cf875cc6a0d02c65e0bfa4557dfcac1bd1e41a0364a4e06"
+      },
+      {
+        "case": 4,
+        "name": "random-4",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "276b0218d9d98d3cc8e765b7db510307b4a695ef91989d1cc19d072c1abc7091"
+      },
+      {
+        "case": 5,
+        "name": "random-5",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "e1db7cfec2a226e06b067d7e433934c761ebddbeb679fd38d8bc71bae4a8f7ae"
+      },
+      {
+        "case": 6,
+        "name": "random-6",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "aba434e244f4673abaf2a768f2c084c98795ed077e739fcdbf33f9f8be21f69f"
+      },
+      {
+        "case": 7,
+        "name": "random-7",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "c9cd2657ad1ebd372dee6ea162d4597bad99b35a44ae2bd53e51dbca5742b395"
+      },
+      {
+        "case": 8,
+        "name": "random-8",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "5834b7149a90b739aeb083b3239a6ef08e5f72fba0e53c5f9323c0e392bf18ad"
+      },
+      {
+        "case": 9,
+        "name": "random-9",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "f8fd2c7ab6834173d47bcb9e220bf9b7d9b63f8c3bfc79721a75ecc1ad9bece8"
+      },
+      {
+        "case": 10,
+        "name": "random-10",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "86a1846d800b9e7162170a04f54fafc56a87f9e4a81554e8535c00b1a97ba8e0"
+      },
+      {
+        "case": 11,
+        "name": "random-11",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "fd068e2884749efa8fa9fd52bf0945d7159ff71a05c456ee9d094ed50c059151"
+      },
+      {
+        "case": 12,
+        "name": "random-12",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "43f684172a99ee7f14694694ae7a12179f7787868feada28187244c7ca7ac1d0"
+      },
+      {
+        "case": 13,
+        "name": "random-13",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "812b8ef4510ca7b5489a4b21b95a427e156bbc6e907c8cc69026e698bdbbef70"
+      },
+      {
+        "case": 14,
+        "name": "random-14",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "fbfd0fa33b73c9c2ca88c40fa30149ec88f0b882ccda980dadc73246bf123a9f"
+      },
+      {
+        "case": 15,
+        "name": "random-15",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "d30f396c8489926ceb300ed752737a6cec4eef09eeca1e66c387dd329725a027"
+      },
+      {
+        "case": 16,
+        "name": "random-16",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "e8fec8dfde8291f74391db7e882d0e7a0bf7866797b75209ca70702d6936fd7a"
+      },
+      {
+        "case": 17,
+        "name": "random-17",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "8f57bea8b0f2b5de2f1e222acc1a6cc4044985056b026bdc78affe15262809a5"
+      },
+      {
+        "case": 18,
+        "name": "random-18",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "f6d44c1acc68659b465fbddac25388496797047fdbccfcb09ac44200dbd94337"
+      },
+      {
+        "case": 19,
+        "name": "random-19",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "103956f43f498bece6ad1492d17957a72c28a3013272b0eb1e49adbf04eb4810"
+      },
+      {
+        "case": 20,
+        "name": "random-20",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+      },
+      {
+        "case": 21,
+        "name": "random-21",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "1f5ea75deedac6452f08127463750421083e2bddda0b091400b43357e205d9a5"
+      },
+      {
+        "case": 22,
+        "name": "random-22",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "d9be7123294557d086678a277e51241298edaa64691b5e6fe777a42135d79e14"
+      },
+      {
+        "case": 23,
+        "name": "random-23",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "3f51364cea25c80a8191a27b7227e4abae7708ab73ea88eee6a7a4ac9fb2320f"
+      },
+      {
+        "case": 24,
+        "name": "random-24",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+      },
+      {
+        "case": 25,
+        "name": "random-25",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "d5c0fdd12cc64ccefd7d4973b48a5914fe2a38af35e981990d3307e1016d62f4"
+      },
+      {
+        "case": 26,
+        "name": "random-26",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "5c0607dab2746a9336a517c9273968de4d899046cf7d8aa5b2009a79dbdeec9c"
+      },
+      {
+        "case": 27,
+        "name": "random-27",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "af36b827fdd5a0909aa523a9519307d225608816f35fc97f669ecb7a267f7d3a"
+      },
+      {
+        "case": 28,
+        "name": "random-28",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "864c79eb29ed019ec52211f8ab988f99702879407b8f9b97c1f389a1c3d7e209"
+      },
+      {
+        "case": 29,
+        "name": "random-29",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "57369b84818f7e3f9b3737297d813042e7bc2bbf05d96a4ae8311d3901faa538"
+      },
+      {
+        "case": 30,
+        "name": "random-30",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "64a1ab3cb5071ecbf7a7baf60ba4dd4a88e9a57f7be34705f40cd9f08660dbd4"
+      },
+      {
+        "case": 31,
+        "name": "random-31",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "2a978d56739cd7ef40bb252f42bac51d62489d454004b1196240ab92b5084859"
+      },
+      {
+        "case": 32,
+        "name": "random-32",
+        "queries": 672,
+        "bytes": 5376,
+        "sha256": "6d3dc27fd50591345cfd7c35975971730a41617c3970ad4b7e02c7fc73e21c3a"
+      },
+      {
+        "case": 33,
+        "name": "random-33",
+        "queries": 672,
+        "bytes": 5376,
+        "sha256": "8bee6e9e66af9d44d817c953d1a3a4c2885f63709720944c3972df9be6d968d1"
+      },
+      {
+        "case": 34,
+        "name": "random-34",
+        "queries": 672,
+        "bytes": 5376,
+        "sha256": "9c0871ba56baa535dc67904b5bc5bf9e5b8f20b9775b9e999af484354b4c107a"
+      },
+      {
+        "case": 35,
+        "name": "random-35",
+        "queries": 672,
+        "bytes": 5376,
+        "sha256": "da618771bdaba99f58f3bb6024abd0ef41cbe2e523242b5c96a02fcaf1d6c8f6"
+      },
+      {
+        "case": 36,
+        "name": "random-36",
+        "queries": 672,
+        "bytes": 5376,
+        "sha256": "db9c81044dd3d925582f92b82ae172da1fa25080d044fd02679aac3aea344db1"
+      },
+      {
+        "case": 37,
+        "name": "random-37",
+        "queries": 672,
+        "bytes": 5376,
+        "sha256": "e3cb5597c00ec429a78955ad1f3a3b473c0f4459213bf0683af404a27393a82e"
+      },
+      {
+        "case": 38,
+        "name": "random-38",
+        "queries": 672,
+        "bytes": 5376,
+        "sha256": "bad75bb3d8b18e3da3c74b16f2fa86a938d49420a9b076f55f40f33b402f1efb"
+      },
+      {
+        "case": 39,
+        "name": "random-39",
+        "queries": 672,
+        "bytes": 5376,
+        "sha256": "55a97d3d5b8c8e479770bee7898a6657c24d50f39ed228acbd17c2ce2e9c58f9"
+      },
+      {
+        "case": 40,
+        "name": "raw-only",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "a4149678f68bfb342a36fc4e7f009a81743338740ffda7121e586f4fbd07bb9e"
+      },
+      {
+        "case": 41,
+        "name": "raw-foreign",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "42ce649443f2cf8e32a725bb78f38044ce9e9327d10168fa3eba377fa78eba6b"
+      },
+      {
+        "case": 42,
+        "name": "ocean-no-base",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+      },
+      {
+        "case": 43,
+        "name": "gsp-neutral-land",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "9c908287cea200aedf08a1573ce6812f3b3a5968e9f299cafaa6b8361c5905f8"
+      },
+      {
+        "case": 44,
+        "name": "raw-overrides-gsp",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "a4149678f68bfb342a36fc4e7f009a81743338740ffda7121e586f4fbd07bb9e"
+      },
+      {
+        "case": 45,
+        "name": "tie-last-gsp",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "bd5b75091eb8cbf4fdea2612df11523648590aaf839f3dadcd43a3acbcca3f3d"
+      },
+      {
+        "case": 46,
+        "name": "tie-last-no-gsp",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "817521538a89d574dbc5885e2b09074d7b87529b44699c31dbe4ee2624ae2b4c"
+      },
+      {
+        "case": 47,
+        "name": "sea-last-base-owner",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "c9d6c54055f391a11575384622deb5cfa33411448c3ffe08bbee4881776f6fea"
+      },
+      {
+        "case": 48,
+        "name": "cylinder-seam-gsp",
+        "queries": 168,
+        "bytes": 1344,
+        "sha256": "bd5b75091eb8cbf4fdea2612df11523648590aaf839f3dadcd43a3acbcca3f3d"
+      }
+    ],
+    "native": "UNRUN",
+    "originalExecutable": "UNRUN"
+  },
+  "connectedSensors": {
+    "cases": 118,
+    "accepted": 105,
+    "outputSHA256": "e8d2a6e026621d862cbc5ad1a655ca012bb2415bd2af14ed36d4386cfeef1e60",
+    "native": "UNRUN",
+    "originalExecutable": "UNRUN"
+  }
 }
