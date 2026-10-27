@@ -69,6 +69,7 @@ class OriginalWorld {
   friend class VehicleRemovalPlan;
   friend class CasualtyPlan;
   friend class ArtifactCapturePlan;
+  friend class WorldBattleBookkeepingPlan;
   void swap(OriginalWorld& other);
   uint8_t* raw_=nullptr;
   uint8_t* monuments_=nullptr;

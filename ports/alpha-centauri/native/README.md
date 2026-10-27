@@ -2217,3 +2217,5 @@ Checked vehicle-removal storage is documented in [VEHICLE-REMOVAL.md](VEHICLE-RE
 [LAND-RESOLUTION.md](LAND-RESOLUTION.md) documents the owned solitary conventional engagement/casualty/capture composition. Caller argument6 is explicit per branch; retreat has no RemovalRuntime claim. Full caller/event/session/persistence/native/gameplay gates remain held.
 
 Ordered caller-field dependency: [battle bookkeeping](BATTLE-BOOKKEEPING.md), with explicit offline runtime and an active-player monument UI hold. No World/session commit.
+
+[Owned current-world battle bookkeeping](WORLD-BATTLE-BOOKKEEPING.md) binds selected current faction/monument fields and explicit runtime statistics to a separate clone, with UI/profile holds. No attack/session/save commit.
