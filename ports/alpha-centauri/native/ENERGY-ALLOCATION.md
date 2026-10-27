@@ -78,6 +78,12 @@ output matching the independent oracle. `evidence/alpha-energy-allocation-202610
 records the binary and full output hashes. A successful build alone is not
 runtime validation.
 
+All **328 connected world cases** also pass in the real AROS guest, each with
+return code 0 and complete text output matching the independent wire oracle.
+The aggregate output is 21,047 bytes, SHA-256
+`aa4ef8962b223d929ffd9dae9b2e506d6c046b7f14e2bb072b06cdd1278b3b65`;
+`evidence/alpha-energy-allocation-20261027/world-native.json` records every case.
+
 ## Proposed Worker Assignments
 
 `world_energy_allocation_for_assignment` takes a `ProposedCitizenAssignment`
