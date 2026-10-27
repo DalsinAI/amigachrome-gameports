@@ -2481,3 +2481,45 @@ A later extension adds actual design-plan exclusions and reruns all final tests.
 SDK build only; AmigaOS and final-head remote CI remain UNRUN. This query writes
 no World state and grants no event acknowledgment, legal attack or round/turn
 advancement. Full games remain incomplete.
+
+### Owned original prebattle prefix frame
+
+`PrebattlePrefixPlan` owns a current World clone for the supported ordinary
+nonbase/nonnative ground prefix. It resolves source-order modifier/hasty report
+text, then stages actor state and move expenditure, callback-free observer or
+silent contact, actual observer aggression/status/counter effects and the
+attacker-origin third-party treaty/friction proposal. The later territory query
+reads the updated clone. Explicit viewer/human/flags/turn/negotiation facts remain
+caller observations. No active state is inferred from a save or guessed zeros.
+Notification, double-cross and participant audio/redraw paths return held errors.
+
+The immutable source World and prior ready output survive errors, held events,
+source/owned-frame/borrowed-label aliases and insufficient memory budget. Ready
+frames and copied report text own their storage after source destruction. The
+prefix stops before the remaining nerve-gas/tutorial/display/stack/input/retreat
+and round boundaries; it does not grant a legal attack, acknowledge a GUI event,
+run a round, draw random values, commit a session or implement filesystem saves.
+The returned offense must not be replaced by a later initial-strength recompute.
+
+The comparison probe emits full original containers with only the allowed actor
+and faction fields encoded; an independent Python model compares every byte and
+the complete numeric/text/diplomacy summary. The probe also compares every other
+decoded field/record and source RNG, tests prior-output preservation, tiny memory
+budgets, container/label aliases and owned source lifetime. Initial ASan execution
+caught a borrowed-label output-alias guard reading the output plan too early;
+the borrowed span check now precedes that read. Failed history remains private.
+No owner media/code bytes are in this checkout. AmigaOS and remote final-head CI
+remain UNRUN; the full games remain incomplete.
+
+Final host ASan/UBSan and independent static68040 comparisons pass 1,728 attempts
+across 36 world/label profiles: 48 complete owned prefix snapshots, 252 held
+notifications, 96 double-cross holds and 96 participant UI holds. The remaining
+attempts reject invalid or unsupported inputs. There are 768 tiny-budget/alias
+guards and source-lifetime checks on every profile. All 48 snapshots match every
+original-container byte, with original owner label text copied in its explicit
+edition profile. The single supplied owner labels file is not evidence of two
+distinct edition assets. Public controls pass 864 attempts/24 snapshots/384 guards
+on both processors. The second harness version matched every compared byte but
+failed final coverage because its selected pairs missed double-cross; version3
+fixes that fixture and is authoritative. These are owned prefix compositions,
+not a complete original-caller execution or playable combat qualification.
