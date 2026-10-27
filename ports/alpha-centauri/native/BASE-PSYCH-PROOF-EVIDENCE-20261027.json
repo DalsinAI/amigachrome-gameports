@@ -7,7 +7,7 @@
   "sourceAndOutputTransactionChecked": true,
   "hostSanitizers": true,
   "policy": "Thinker default restoration policy dabe62f2d1abba03de40f3dd3048494843f6a9af",
-  "native": "UNRUN",
+  "native": "All15356 leaf cases ran in genuine FS-UAE/AROS68040/FPU, guestRC0, complete1474176bytes match independent model; see separate native proof receipt.",
   "command": [
     "c++",
     "-std=c++17",
@@ -33,7 +33,7 @@
   "nativeBuild": {
     "bytes": 19188,
     "SHA256": "cdcf02e4c7fd5ea3cdc644324cc909bbc8c400ed5ce0b57bbb950e37e926dedc",
-    "execution": "PENDING"
+    "execution": "PASS actual guest, complete output bytes match independent model"
   },
   "scope": "Default pinned Thinker psych restoration policy, not recovered original base_psych. Full population0..127, 8192 facility/project/suppression flag combinations, police/pacifism boundaries, 2000 deterministic random cases, input/alias/overflow rejection. All five stage rows and fresh can/will riot counts independently modeled."
 }
