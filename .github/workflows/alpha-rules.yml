@@ -700,3 +700,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_combat_difficulty.py --out "$RUNNER_TEMP/world-combat-difficulty-host"
       - name: Current World observed combat difficulty independent 68040
         run: python3 ports/alpha-centauri/native/test_world_combat_difficulty.py --out "$RUNNER_TEMP/world-combat-difficulty-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original observer prebattle aggression host
+        run: python3 ports/alpha-centauri/native/test_prebattle_aggression.py --out "$RUNNER_TEMP/prebattle-aggression-host"
+      - name: Original observer prebattle aggression independent 68040
+        run: python3 ports/alpha-centauri/native/test_prebattle_aggression.py --out "$RUNNER_TEMP/prebattle-aggression-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
