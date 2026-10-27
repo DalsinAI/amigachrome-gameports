@@ -648,3 +648,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_promoted_land_body.py --out "$RUNNER_TEMP/promoted-land-body-host"
       - name: Big-endian promotion-before-casualty LAND body controls
         run: python3 ports/alpha-centauri/native/test_promoted_land_body.py --out "$RUNNER_TEMP/promoted-land-body-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Promoted battle aftermath host
+        run: python3 ports/alpha-centauri/native/test_promoted_aftermath.py --out "$RUNNER_TEMP/promoted-aftermath-host"
+      - name: Promoted battle aftermath independent 68040
+        run: python3 ports/alpha-centauri/native/test_promoted_aftermath.py --out "$RUNNER_TEMP/promoted-aftermath-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

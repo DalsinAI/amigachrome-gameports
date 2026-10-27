@@ -27,6 +27,7 @@ class PromotedLandResolutionPlan {
   const ResolutionPools*accumulators()const{return ready_?&pools_:nullptr;}
   const PromotedBodySummary*summary()const{return ready_?&summary_:nullptr;}
  private:
+  friend class PromotedBattleAftermathPlan;
   friend PromotedBodyError stage_promoted_land_body(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const LandResolutionFacts&,const PromotionRuntime&,PromotedLandResolutionPlan&,size_t);
   PromotedBodyError prepare(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const LandResolutionFacts&,const PromotionRuntime&,size_t);
   void swap(PromotedLandResolutionPlan&);
