@@ -328,3 +328,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_terrain_water_sprites.py --out "$RUNNER_TEMP/terrain-water-sprites-host"
       - name: Original acquired-RAM later water sprites independent big-endian controls
         run: python3 ports/alpha-centauri/native/test_terrain_water_sprites.py --out "$RUNNER_TEMP/terrain-water-sprites-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original owned-World no-crop water-item scene host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_water_item_scene.py --out "$RUNNER_TEMP/terrain-water-item-scene-host"
+      - name: Original owned-World no-crop water-item scene independent big-endian controls
+        run: python3 ports/alpha-centauri/native/test_terrain_water_item_scene.py --out "$RUNNER_TEMP/terrain-water-item-scene-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

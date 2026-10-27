@@ -1,0 +1,48 @@
+{
+  "scope": "Owned-World normal acquired-RAM terrain, sea-platform and NO-CROP later-water composition",
+  "publicCases": 2304,
+  "paddedSurfaceCases": 192,
+  "newAliasControls": 18,
+  "lateFailureAndHeldNoWrite": 5,
+  "publicSHA256": "5c5209eda1711fd90cafc96d94ca9b1f9a1dd190cb23e64b412461186f22a228",
+  "paddedSHA256": "d1153c5d14916ef7390cb69de2fccd55f2f94560556bc5c3d26ab91354e1ed42",
+  "hostASanUBSan": true,
+  "independentBigEndian68040": true,
+  "statusCounts": {
+    "rendered": 2048,
+    "cropOrHighbitHeld": 256
+  },
+  "ownerWorldContexts": 48,
+  "ownerPixelsSHA256": "89a759e5b42e326329b4e0e6c9d91c0e70a1f68c13bf7f544213a5b376d65fae",
+  "originalObservationBoundary": "48 frozen actual MapWin prefixes plus 96 separately observed original Draw3 prefixes and separate real raster suffix waves, joined in instruction-backed source order; NOT a returned original wrapper chain",
+  "sourceOrder": [
+    "qualified ordinary terrain/coast/water/features/river/grid/base-grid",
+    "bit1 sea-platform",
+    "bit20 original base-query/repair boundary: no water road pixels",
+    "later Draw3 item10",
+    "item40",
+    "item400000",
+    "item800000",
+    "item1000000 default or landmark alternate"
+  ],
+  "holds": [
+    "EVERY crop_yield call even unused water return",
+    "highbit Sprite_draw_dest/cache",
+    "unsupported raw landmarks/modes/later operations",
+    "stale base repair query, missing or contradictory runtime/resources",
+    "original whole MapWin/USER32/import/cache wrappers and physical loader",
+    "frontend/native/world runtime enabling"
+  ],
+  "all155ParentWorkflowCommandsRetained": true,
+  "workflowCommands": 157,
+  "SDKBuildOnly": {
+    "normalSDK": true,
+    "native": false,
+    "sources": 40,
+    "binaries": {
+      "water-item-scene-probe-amiga": "f28b4c82cd2cc2f255d250046148976ded6fe4b1f4f5d4dde8d2efd14bca2f7a"
+    }
+  },
+  "native": false,
+  "frontendEnabled": false
+}

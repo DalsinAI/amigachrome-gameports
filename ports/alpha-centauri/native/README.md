@@ -1904,3 +1904,31 @@ joined RAM evidence, NOT a complete original callback/USER32/MapWin wrapper run;
 no original wrapper is resumed with a fabricated result. All153 parent workflow
 commands remain plus two. Normal SDK builds are native-unrun. See
 `WATER-ITEM-SPRITES-EVIDENCE-20261027.json`.
+
+
+### Owned-World no-crop water-item scene composition
+
+`render_world_water_item_scene` joins the qualified ordinary terrain and sea-
+platform prefix with the six acquired-RAM later water sprites, in original
+source order. It resolves displayed items, raw landmarks, altitude, using-faction
+and the separate late visibility gate from the owned World. CurrentFaction,
+ExpansionEnabled, original render identity/cache/height/scale and all resource/
+clip/minimum authority remain explicit runtime inputs. There are no defaults
+pretending to supply original runtime provenance.
+
+Every required crop call and highbit DrawDest operation still holds before any
+writes. Even water invokes the original bit20 base query before its land-only
+road draw guard: stale-base repair therefore stays held. Only after validating
+that boundary is bit20 split from the qualified water prefix; bit1 sea-platform
+pixels precede later items. Land delegates unchanged to the parent scene. All
+input/resource aliases are rejected against the original destination before
+full-pitch private staging. Failures roll back all layers and preserve padding.
+
+All2304 public cases,192 padded cases,18 extra alias controls and5 explicit
+late-failure/hold controls pass host ASan/UBSan and independent68040. Forty-eight
+controlled owner-World contexts match every pixel of frozen genuine original
+MapWin-prefix buffers plus separately observed Draw3 prefixes and real raster
+suffix waves. This is source-ordered joined RAM proof, not a whole returned
+MapWin/USER32/import/cache call chain. All155 inherited workflow commands remain
+plus two. The normal SDK probe builds; native execution and frontend enabling
+remain unrun/held. See `WORLD-WATER-ITEM-SCENE-EVIDENCE-20261027.json`.
