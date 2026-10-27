@@ -2375,3 +2375,29 @@ Private execution of both complete original aggression and treaty helpers return
 Host ASan/UBSan and independent Linux68040 pass12310 cases including4096 joins to those actual observations:12288 accepted,22 held/rejected,9043 counter resets and12288 idempotence checks. The public corpus has8214 cases. Known and poisoned aliases preserve inputs/outputs. Both original oracle executions and all owned control builds/runs passed on their first actual attempts. Normal SDK builds are identical and compile-only. All362 parent CPP files and341 workflow commands remain unchanged/retained, with two commands added.
 
 This proposes directional records only and does not mutate a World or acknowledge an event. The preceding SURPRISE parse/message and spoke-turn effects, observer display selection, full double-cross and participant UI paths, subsequent pre-round third-party territory/friction effects, nerve handling and original display/stack/input boundaries remain unfinished. Existing war must not be treated as a blanket no-op for the original caller. The frozen post-combat territory stage does not cover this distinct pre-round loop. Actor/movement staging, adjusted offense before rounds, full selection/legal/session/random/persistence/turn/AI/diplomacy gameplay, required remote CI, actual AmigaOS execution and publication remain held.
+
+### Bounded original prebattle notification selector
+
+`prebattle_notification.{h,cpp}` proposes the ordinary-plan surprise/observer
+selection from explicit current faction, human mask, popup/game flags, turn,
+prior local warning, prior diplomatic contact turn and full directional status
+matrix. It preserves prior contact on current-defender and remote-popup routes:
+notification completion is still required before the original later timestamp.
+Only the silent route proposes the immediate timestamp. No callbacks, World
+writes, stage acknowledgment, aggression, rounds, input or native qualification.
+
+Private owner-code comparisons executed 2,048 bounded contexts per edition,
+stopping before notifications, after the real silent timestamp, or before
+aggression. Copied original instructions were unchanged. Every faction and entry
+frame byte was compared, with five runtime words unchanged. This proves only
+those supplied-entry selector fragments, not the preceding outer plan/hasty
+stages or complete caller. The initial observation stub did not link; the fixed
+five-byte jump stubs passed on the second attempt. Both failed and passed
+harness histories remain private. No owner bytes are included here.
+
+Host ASan/UBSan and independent static 68040 tests pass 16,399 public controls
+(16,384 accepted, 15 held); the private joined suite passes 20,495 controls,
+including all 4,096 original observations. Both outputs match. SDK build only;
+actual AmigaOS and remote final-head CI remain UNRUN. The full game remains
+incomplete. `test_prebattle_notification.py` also checks immutable inputs,
+preserved failure output and every wholly overlapping four-byte output offset.

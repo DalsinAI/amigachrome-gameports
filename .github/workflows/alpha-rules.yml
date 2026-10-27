@@ -704,3 +704,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_prebattle_aggression.py --out "$RUNNER_TEMP/prebattle-aggression-host"
       - name: Original observer prebattle aggression independent 68040
         run: python3 ports/alpha-centauri/native/test_prebattle_aggression.py --out "$RUNNER_TEMP/prebattle-aggression-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original prebattle notification selector host
+        run: python3 ports/alpha-centauri/native/test_prebattle_notification.py --out "$RUNNER_TEMP/prebattle-notification-host"
+      - name: Original prebattle notification selector independent 68040
+        run: python3 ports/alpha-centauri/native/test_prebattle_notification.py --out "$RUNNER_TEMP/prebattle-notification-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
