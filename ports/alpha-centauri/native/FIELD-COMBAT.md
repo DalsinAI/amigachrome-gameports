@@ -122,3 +122,7 @@ The leaf HUNK reads352-byte LE control records from stdin and writes44-byte LE
 results. The field HUNK CLI is `FieldCombat RULESFILE WORLDFILE`; it evaluates
 vehicles0/1 using a fixed deterministic test draw stream and writes a complete
 text receipt. Neither CLI runs the game campaign.
+
+The separate `field_attack_snapshot` stage now composes these facts and seeded
+rounds into a complete count-changing AFTER container for a qualified infantry
+battle. Its scope, authority boundary and native proofs are in `FIELD-ATTACK.md`.

@@ -23,6 +23,7 @@ original combat routine. Source inventory:
 | `faction.cpp::act_of_aggression/treaty_on`, lines703/285 | Mutual vendetta status masks and exclusion-bit cleanup |
 | `monument.cpp::mon_enemy_destroyed`, line249, `game.cpp::game_year`, line181 | First-kill achievement, source first-achiever scan and pinned default-policy calendar |
 | `savegame.cpp`, lines402–410 | Saved UI word1 is MapWin vehicle ID, not an opaque coordinate |
+| `veh_action.cpp`, lines2490–2507 | After a surviving attack, outer movement resets its target to the attacker's origin |
 
 The existing field facts and separate CRT generator retain their qualification
 and original instruction checks in `FIELD-COMBAT.md` and `COMBAT-CRT.md`.
@@ -91,11 +92,13 @@ the receipt's final CRT state. `promoted` reports a raw morale increment. Owning
 presentation code can recompute effective morale before deciding a popup.
 
 The source battle routine leaves a surviving attacker on its **source tile**.
-Advancing into a vacated target belongs to outer movement-command continuation;
-this stage does not invent an advance or charge a second move. The receipt gives
+The outer movement routine explicitly resets its target to that origin after
+survival. There is no automatic advance into the vacated defender tile and no
+second movement charge to add. The receipt gives
 the removed old index and remapped surviving index. Owning runtime code must
 repair any additional nonserialized UI/current-actor references, invalidate
-support/AI caches, process presentation events and decide movement continuation.
+support/AI caches, process presentation events and finish any remaining movement
+command postprocessing (such as source `spot_all` at the unchanged origin).
 `recompute_required`, `selection_remap_required` and `presentation_required` make
 those obligations explicit; they do not falsely report that UI/AI ran.
 

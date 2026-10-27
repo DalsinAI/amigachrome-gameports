@@ -1623,6 +1623,139 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
   ],
-  "native": "UNRUN",
+  "native": {
+    "binarySHA256": "52ea97ba4d9e14516e5177c69c2444c39b0ab514179068f8bf92916dab5e14ff",
+    "count": 14,
+    "cases": [
+      {
+        "index": 0,
+        "name": "field-0-0",
+        "bytes": 145402,
+        "sha256": "af3fd5d25d7d8eb1f3b991a710b141eca1bd37d00f3d6bd552073a86f3064811",
+        "summary": "error=ok bytes=145402 seed=1218146458 loser=0 winner=0 wf=6 lf=5 selected=-1 promoted=1 promotion_draws=0 rounds=17 draws=34 ad=10 dd=7 wins=107 losses=26 movement_seed=2882400001 monument=0 first=0 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 1,
+        "name": "field-0-1",
+        "bytes": 145402,
+        "sha256": "fbdaf82f972f86d5928ffaf10ca801c8093e7c83eb480d38debbf0c1b10a83ff",
+        "summary": "error=ok bytes=145402 seed=1218146458 loser=1 winner=0 wf=6 lf=5 selected=-1 promoted=1 promotion_draws=0 rounds=17 draws=34 ad=10 dd=7 wins=107 losses=26 movement_seed=2882400001 monument=0 first=0 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 11,
+        "name": "field-3-2",
+        "bytes": 145402,
+        "sha256": "2f532738763d19f1d3edfbb4bb90f65592f106b3ebed7c6455fc798c6cd9bb7a",
+        "summary": "error=ok bytes=145402 seed=2948422303 loser=4 winner=2 wf=5 lf=6 selected=4 promoted=1 promotion_draws=0 rounds=16 draws=32 ad=10 dd=10 wins=106 losses=27 movement_seed=2882400001 monument=0 first=0 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 35,
+        "name": "field-11-2",
+        "bytes": 145402,
+        "sha256": "6ae8a5eaf24754b34ac4dbe1669b5b66f63da4d80cdcd2bd24d35c04355ce481",
+        "summary": "error=ok bytes=145402 seed=4222780204 loser=4 winner=2 wf=5 lf=6 selected=4 promoted=0 promotion_draws=1 rounds=31 draws=62 ad=11 dd=30 wins=106 losses=27 movement_seed=2882400001 monument=0 first=0 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 36,
+        "name": "short",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "summary": "error=bad_buffer unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 38,
+        "name": "unsealed",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "summary": "error=bad_snapshot unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 39,
+        "name": "first-kill-monument-[]",
+        "bytes": 145402,
+        "sha256": "4af498f2f545725abcb372b673e87161e1f8ff506db3763ea04d33c04842733e",
+        "summary": "error=ok bytes=145402 seed=4120522691 loser=0 winner=0 wf=6 lf=5 selected=0 promoted=1 promotion_draws=0 rounds=33 draws=66 ad=30 dd=6 wins=107 losses=26 movement_seed=2882400001 monument=1 first=6 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 40,
+        "name": "first-kill-monument-[(1, 1)]",
+        "bytes": 145402,
+        "sha256": "ba0e11e8b1e0648d630c34b0c52278ab1a5301d34dc79b386e27d32ddfd2dfdb",
+        "summary": "error=ok bytes=145402 seed=4120522691 loser=0 winner=0 wf=6 lf=5 selected=0 promoted=1 promotion_draws=0 rounds=33 draws=66 ad=30 dd=6 wins=107 losses=26 movement_seed=2882400001 monument=1 first=1 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 41,
+        "name": "first-kill-monument-[(1, 1), (7, 1)]",
+        "bytes": 145402,
+        "sha256": "62599a7e7f16a037c5b9812d1f032163bcfb0e526facbb0614483f9e2aba5730",
+        "summary": "error=ok bytes=145402 seed=4120522691 loser=0 winner=0 wf=6 lf=5 selected=0 promoted=1 promotion_draws=0 rounds=33 draws=66 ad=30 dd=6 wins=107 losses=26 movement_seed=2882400001 monument=1 first=7 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 42,
+        "name": "first-kill-monument-[(1, 0), (7, 0)]",
+        "bytes": 145402,
+        "sha256": "65d8a338d74944e243ca45e8f805461b5977d1e0364cf4d035309e69990e9e46",
+        "summary": "error=ok bytes=145402 seed=4120522691 loser=0 winner=0 wf=6 lf=5 selected=0 promoted=1 promotion_draws=0 rounds=33 draws=66 ad=30 dd=6 wins=107 losses=26 movement_seed=2882400001 monument=1 first=5 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 43,
+        "name": "alien-monument-noop",
+        "bytes": 145402,
+        "sha256": "ef9d71772af357279e41648460375858da66467cffb4696c91a0916b41b3b974",
+        "summary": "error=ok bytes=145402 seed=4120522691 loser=0 winner=0 wf=6 lf=5 selected=0 promoted=1 promotion_draws=0 rounds=33 draws=66 ad=30 dd=6 wins=107 losses=26 movement_seed=2882400001 monument=0 first=0 year=96 unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 44,
+        "name": "monument-year-overflow",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "summary": "error=overflow unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 54,
+        "name": "winning-counter-overflow-396",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "summary": "error=overflow unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "index": 55,
+        "name": "winning-counter-overflow-428",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "summary": "error=overflow unchanged=1 rc=0\n",
+        "wholeAfterWorldOracleMatch": true,
+        "guestReturnCode": 0
+      }
+    ],
+    "aggregateAfterBytes": 1308618,
+    "aggregateAfterSHA256": "9ab9dbfa6489885f50a5b64e971b1a01790646de6f0ab11e7ffe87c374371513"
+  },
   "originalFullCombat": "UNRUN"
 }

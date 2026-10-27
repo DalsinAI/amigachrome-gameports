@@ -80,7 +80,7 @@ neither. Native `CombatCRT` reads32-byte LE controls and writes44-byte results.
 The connected probe CLI adds literal `seeded` after the rules/world paths and
 uses an explicit test seed `0x12345678`, never a campaign default.
 
-## Casualty Integration Still Required
+## Casualty Integration
 
 Pinned Thinker `veh.cpp::veh_kill` (lines696–767), `move.cpp::veh_kill_lift`
 (line485), `veh.cpp::battle_kill` (line799) are the available restoration-policy
@@ -89,6 +89,10 @@ actor-array compaction, every affected stack reference and boarded transport
 vehicle reference remapped, plus runtime/UI actor references and combat aftermath.
 It changes container record count and offsets. The existing fixed-count move/
 production encoder cannot qualify such a mutation by merely dropping a record.
-Persistent attack scheduling, dynamic container encoding, winner advance,
-promotions/collateral/capture and replay authority must be connected before an
-attack command is exposed. The source inventory does not claim those tasks done.
+`field_attack_snapshot` now supplies a qualified dynamic AFTER-world encoder for
+the bounded stackless infantry battle phase, including real casualty removal,
+reference/counter repairs, promotions and first-kill monuments. See
+`FIELD-ATTACK.md` for exact scope and whole-container/native evidence.
+Owning attack scheduling, movement-command postprocessing, presentation/caches and
+replay authority still need integration before a live player attack is exposed.
+Broader collateral/capture/base/air/naval/native combat branches remain separate.

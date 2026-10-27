@@ -34,8 +34,9 @@ struct FieldAttackReceipt {
  * and reject other unencoded live changes rather than reverting to raw save.
  * No UI/LocalPlayer or persistent command authority is installed. Owning engine
  * must atomically install AFTERbytes + next ledger under its revision authority.
- * Attacker does not advance into the defender tile in source battle_fight;
- * movement command continuation remains a separate phase, not fabricated here.
+ * Attacker stays on its source tile: the outer source movement routine resets
+ * the target to that origin after battle. Do not relocate or charge another
+ * move. Remaining movement-command postprocessing is a separate caller phase.
  * Objectives/assistant events, third-party terrain
  * diplomacy and other unqualified branches reject (see FIELD-ATTACK.md).
  */
