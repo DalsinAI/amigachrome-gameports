@@ -33,22 +33,25 @@ class LocalStepCommand {
  private:
   friend class LocalProductionSession;
   uint64_t owner_identity_=0,revision_=0;
+  bool surface_=false;
   LocalStepIntent intent_{};
 };
 struct LocalStepReceipt {bool changed,repaint_required,persistence_required;uint64_t revision;StepResult result;};
 struct FacilityOrderReceipt {bool changed,repaint_required,persistence_required;uint64_t revision;FacilityOrderPreview applied;};
 /* Explicit new offline-local planning controller. Owns its imported world and
- * parsed rules; exposes const inspection only. The current frontend does not
- * instantiate it. One owning engine thread is required. This is not the
+ * parsed rules; exposes const inspection only. LocalPlayer is the frontend
+ * adapter. One owning engine thread is required. This is not the
  * original turn/AI/network/modal runtime. A separate explicit base-only import
- * enables the bounded clear-land action under the same revision authority.
+ * enables the bounded clear-land action under the same revision authority;
+ * a separate explicit surface import additionally enables empty sea travel.
  * Both saved map owner and active turn faction must match the explicit human.
  * Caller explicitly selects the saved current human faction and runtime
  * edition. Orders are limited to a local owned base with a single queue slot.
- * No unit-production eligibility, completion, upkeep, turn or UI implementation.
+ * No unit-production eligibility, completion, upkeep or turn implementation.
  * Decoded records mutate atomically; the owned original wire remains baseline.
  * Existing movement-only encoding rejects these base/faction changes; production
- * persistence must be qualified separately before exposing a player save.
+ * persistence is the separately qualified complete-container action union
+ * used by LocalPlayer's ACLOCAL1 checkpoints.
  */
 class LocalProductionSession {
  public:
@@ -65,11 +68,18 @@ class LocalProductionSession {
    Variant profile,bool expansion_enabled,int32_t local_human,uint32_t runtime_seed,
    size_t memory_limit=64u*1024u*1024u);
   bool land_actions_enabled()const;
+  // Explicit superset capability. The older land-only loader never grants
+  // this, even when it imports a world containing sea vehicles.
+  LocalOrderError load_local_surface_actions(const uint8_t*,size_t,const uint8_t*,size_t,
+   Variant,bool,int32_t,uint32_t,size_t memory_limit=64u*1024u*1024u);
+  bool surface_actions_enabled()const;
   // Preparation binds an intent to this session lifetime/revision; it does
   // not certify a legal move or quote a price. LocalOrderError::ok from commit
   // means evaluated; StepResult may explicitly reject the move without writes.
   LocalOrderError prepare_clear_land_step(size_t vehicle,int32_t x,int32_t y,LocalStepCommand&)const;
   LocalOrderError commit_clear_land_step(const LocalStepCommand&,LocalStepReceipt&);
+  LocalOrderError prepare_surface_step(size_t vehicle,int32_t x,int32_t y,LocalStepCommand&)const;
+  LocalOrderError commit_surface_step(const LocalStepCommand&,LocalStepReceipt&);
   void close();
   const OriginalWorld* world()const;
   uint64_t revision()const{return revision_;}
@@ -79,7 +89,7 @@ class LocalProductionSession {
   LocalOrderError prepare_facility(int32_t base,int32_t facility,FacilityOrderPlan& output)const;
   LocalOrderError commit(const FacilityOrderPlan&,FacilityOrderReceipt& output);
  private:
-  LocalOrderError load_impl(const uint8_t*,size_t,const uint8_t*,size_t,Variant,bool,int32_t,uint32_t,size_t,bool);
+  LocalOrderError load_impl(const uint8_t*,size_t,const uint8_t*,size_t,Variant,bool,int32_t,uint32_t,size_t,bool,bool);
   struct Data;
   Data* data_=nullptr;
   uint64_t identity_=0,revision_=0;

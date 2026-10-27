@@ -15,6 +15,7 @@ struct LocalProductionSession::Data {
  Variant profile;
  bool expansion_enabled;
  int32_t local_human;
+ bool surface_actions=false;
 };
 }
 #endif

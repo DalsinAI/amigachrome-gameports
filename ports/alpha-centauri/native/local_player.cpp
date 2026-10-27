@@ -27,7 +27,7 @@ bool aliases(const OriginalWorld& w,const void* p,size_t n){
 LocalOrderError LocalPlayer::load(const uint8_t* bytes,size_t length,const uint8_t* rules,size_t rules_length,uint32_t seed){
  OriginalGameView view{};
  if(read_original_game(bytes,length,view)!=GameReadError::ok)return LocalOrderError::bad_world;
- auto e=session_.load_local_land_actions(bytes,length,rules,rules_length,Variant::base,false,view.player,seed);
+ auto e=session_.load_local_surface_actions(bytes,length,rules,rules_length,Variant::base,false,view.player,seed);
  if(e==LocalOrderError::ok){pending_=false;dirty_=false;rules_crc_=crc(rules,rules_length);}return e;
 }
 LocalOrderError LocalPlayer::resume(const uint8_t* bytes,size_t length,const uint8_t* rules,size_t rules_length){
@@ -47,8 +47,8 @@ LocalOrderError LocalPlayer::step(size_t id,int32_t dx,int32_t dy,LocalStepRecei
  if(!diagonal && !axial)return LocalOrderError::bad_state;
  int32_t x=v->x+dx,y=v->y+dy;const int32_t width=(int32_t)w->game().map.info.width;
  if(!w->game().map.info.flat){if(x<0)x+=width;else if(x>=width)x-=width;}
- LocalStepCommand command;auto e=session_.prepare_clear_land_step(id,x,y,command);
- if(e==LocalOrderError::ok)e=session_.commit_clear_land_step(command,out);
+ LocalStepCommand command;auto e=session_.prepare_surface_step(id,x,y,command);
+ if(e==LocalOrderError::ok)e=session_.commit_surface_step(command,out);
  if(e==LocalOrderError::ok && out.changed){dirty_=true;pending_=false;}return e;
 }
 LocalOrderError LocalPlayer::next_facility(int32_t base){
