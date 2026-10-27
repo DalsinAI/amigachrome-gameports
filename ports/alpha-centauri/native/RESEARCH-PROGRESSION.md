@@ -84,15 +84,21 @@ all startup boundaries, difficulty/RESEARCH combinations, fractional carry,
 Sphere, exact thresholds/excess loss, zero points, disabled research, custom
 costs, map sizes, historical factors, malformed domains and late overflows.
 
-`test_world_research.py` passes **326** ASan/UBSan connected wire cases, spanning
+`test_world_research.py` passes **350** ASan/UBSan connected wire cases, spanning
 all supported import versions, real selected-target/prerequisite/ownership
-gates, cost-history fields, no-tech/tutorial starts, bonus-secret gates,
+gates, cost-history fields, no-tech/tutorial starts, blind-mode progression, pending current-target Secrets bonuses, extra-selection events,
 acquisition/effects proposals, unsupported contexts and late counter/effect
 overflows. Persisted lab/cost/accumulation/remainder fields are deliberately
 poisoned. Probes check byte preservation of every wire/decoded/rule/stage region,
 output sentinels on every rejection and aliases at multiple offsets.
 
-Strict native builds use `build_research_probe.sh leaf|world OUTPUT`, 68040/FPU,
+All **8,142 leaf cases** also pass genuine FS-UAE/AROS execution with guest
+return code 0, including the compiled complete original-cost reference. Full
+521,088-byte output SHA-256 is
+`7a74deea772489c3dc60353096076401ca3633e57a0b9cb13b06b964dba4b9ea`;
+the scoped native receipt is `evidence/alpha-research-20261027/leaf-native.json`.
+
+Strict native builds use `build_research_probe.sh leaf|world|upkeep OUTPUT`, 68040/FPU,
 warnings as errors and no exceptions/RTTI. Actual native execution is recorded
 separately after guest runs; build success alone is not native runtime proof.
 
