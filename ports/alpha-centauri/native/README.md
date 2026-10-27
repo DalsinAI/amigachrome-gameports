@@ -2429,8 +2429,8 @@ legal attack, event completion, turns or playable-game qualification is claimed.
 
 `prebattle_territory.{h,cpp}` proposes the original third-party effects after
 ordinary aggression and before nerve-gas, difficulty, display and round setup.
-This differs from the post-combat territorial gift/friction prefix. The signed
-map owner selects at most one of original candidates 1..7. A qualifying weaker
+This differs from the post-combat territorial gift/friction prefix. The original caller uses the attacker's starting coordinates, not the defender's
+tile, for this signed map owner. It selects at most one of candidates 1..7. A qualifying weaker
 third party receives a two-way `0x2000` treaty marker; its subsequent status
 **toward the defender** selects friction applied **from defender toward owner**.
 The explicit ordered active negotiation pair also controls the wrapped runtime
