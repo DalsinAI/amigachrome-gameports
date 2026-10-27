@@ -76,6 +76,37 @@ design/upgrades, free facilities, map reveal, sharing/datalinks, bonus discovery
 notifications and further research selection are not silently applied or
 declared complete. Nothing mutates the world, ledger, ownership, queues or turn.
 
+## Internally Fresh Upkeep Composition
+
+`world_upkeep_research` calls the complete current worker/specialist/resource /
+energy/psych accounting resolver internally. It takes the final allocation's
+labs itself and accepts no caller result or lab scalar as freshness authority.
+The supplied research ledger is the explicit running faction state. Production
+and growth must already be represented by the current owned world; commerce /
+grid remain explicit upstream fresh facts. An unresolved riot returns
+`needs_riot_resolution` before any research proposal is committed.
+
+The complete output and projected support actor-state buffer commit together
+only after cost, target, ledger, acquisition and effect checks all succeed.
+Buffer tails, source records and outputs on late failure remain unchanged.
+There is no live mutation, persistent scheduler authority or implicit completion
+of acquisition events.
+
+The joined independent oracle passes **49 host ASan/UBSan cases, 38 accepted**,
+covering late target/cost/ledger failure, unresolved riots, alias/short-buffer /
+null-buffer/tail checks, existing workers, overassignment, more than16 specialists
+and both unchanged genuine Boreholes owned bases. No scenario rules or flags
+are cleared. Hive9 derives 5 labs and 5 points; Hive10 derives 2 labs and 2 points.
+The original vanilla cost is 382 for both. Hive has an actual pending Secrets
+bonus, so these independent queries propose acquiring selected technology12
+below cost, preserve 5/2 accumulated points and request automatic next selection
+under its actual Blind Research rule. They query the same original world
+independently; they are **not** a sequential applied faction turn. A scheduler
+must resolve the first acquisition/selection before processing another base.
+
+The clean combined validation tree uses worker commit `ec932ee`, accounting
+`ace98e0` and this research module. `upkeep-host.json` records all results.
+
 ## Verification
 
 `test_research_progress.py` passes **8,142** ASan/UBSan cases against independent
@@ -107,4 +138,6 @@ python3 test_research_progress.py --out /tmp/alpha-research-leaf
 python3 test_world_research.py --out /tmp/alpha-research-world
 CXX=m68k-amigaos-g++ ./build_research_probe.sh leaf /tmp/research
 CXX=m68k-amigaos-g++ ./build_research_probe.sh world /tmp/world-research
+python3 test_world_upkeep_research.py --out /tmp/alpha-upkeep-research
+CXX=m68k-amigaos-g++ ./build_research_probe.sh upkeep /tmp/upkeep-research
 ```

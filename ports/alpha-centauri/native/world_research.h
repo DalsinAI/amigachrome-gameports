@@ -7,6 +7,8 @@ namespace alpha {
 struct WorldResearchCost {OriginalResearchCostFacts facts;OriginalResearchCostResult result;};
 ResearchError world_original_research_cost(const OriginalWorld&,const BasicRules&,int32_t faction,WorldResearchCost&);
 struct WorldResearchStage {int32_t fresh_labs;ResearchLedger before;};
+/* Cost is valid when cost_computed. Acquisition owner/effect/event fields are
+ * proposals for acquisition_required, never unconditional world replacements. */
 struct WorldResearchResult {
  ResearchContributionResult contribution;
  WorldResearchCost cost;
@@ -16,7 +18,7 @@ struct WorldResearchResult {
  bool cost_computed,acquisition_required,next_choice_required,first_secrets_required;
  bool blind_research,next_selection_automatic,bonus_current_target,bonus_next_target_required;
 };
-/* Current-player/current-faction human base-game directed research proposal.
+/* Current-player/current-faction human base-game selected-target research proposal.
  * fresh_labs and the running ledger must be supplied by the current authoritative
  * stage; this low-level boundary does not infer freshness from a copied scalar.
  * Current selected target/prerequisites/ownership, rules, historical cost facts
