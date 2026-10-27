@@ -92,3 +92,25 @@ all completed with return code 0. This checks restoration with cached inputs;
 it is not a second independent clean build. A successful compile does
 not qualify the game UI or AmigaOS 3.2.3 runtime. Record actual execution and
 screenshots separately in the FS-UAE lab evidence.
+
+## Fresh restoration on 27 October 2026
+
+The compiler and matching source release were downloaded and hash checked
+again into a fresh workspace. The real SDK recipe completed with return code
+zero; all three output hashes above matched the earlier build exactly. The
+genuine AROS archive was hash checked and 23,579 files extracted. A rebuilt
+native local-player controller executed in FS-UAE with 145 checks and guest
+return code zero. Its complete 144,918-byte checkpoint matched the independent
+host oracle, SHA256
+`843665734047b513c4900a2fae0dc3acc714d3ad135ca3b55537c30e1793661a`.
+
+The public scenario mirror returned HTTP403 to urllib's default User-Agent.
+`stage_alpha_demo_assets.py` now identifies itself as `Alpha-native-lab/1.0`;
+a fresh scenario download then matched the pinned digest and all 572 original
+demo/scenario files were staged. The archive digest gates remain unchanged.
+
+The native-world runner now observes the guest shell's `WORLD_RC` completion
+marker and stops its own emulator child promptly. The hard execution deadline
+still applies when the guest does not finish. Neither the input helper nor
+the game executable is changed by this process-control adjustment. Recorded
+receipts distinguish a completed guest from an emulator timeout.

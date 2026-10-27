@@ -1,0 +1,219 @@
+{
+  "rounds": {
+    "cases": 6605,
+    "outcomes": {
+      "0": 5605,
+      "5": 250,
+      "1": 714,
+      "2": 36
+    },
+    "outputSHA256": "6af480b471ad59e791e900c53b183d434cba6a7bc76b3595fd3e00dfd09a9b25",
+    "aliasControls": "stream, result and roll input overlaps reject; cursor/output preserve on failures",
+    "native": {
+      "name": "combat",
+      "cases": 6605,
+      "bytes": 290620,
+      "sha256": "6af480b471ad59e791e900c53b183d434cba6a7bc76b3595fd3e00dfd09a9b25",
+      "binarySHA256": "26172a6aac07f80e9cde13e3e4e6a9d69d94ce1bf205c24f64988f6ebc70c0cd",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    "originalExecutable": "UNRUN",
+    "rng": "explicit recorded 15-bit CRT draws; engine seed generator not claimed"
+  },
+  "world": {
+    "cases": 110,
+    "accepted": 96,
+    "outputSHA256": "02eae885283ee5d9516c10d799762ab5e8333545d3a75c0c4d4c503df451cea2",
+    "native": {
+      "binarySHA256": "98a78df941f3b5450b20b8bd847832001f84210aef20b184d2126016b08dce58",
+      "cases": [
+        {
+          "case": 0,
+          "bytes": 178,
+          "sha256": "57496ebc3aa441ef8f412161223633b7e38fd83c0956aadb90c6a8bd1645733d",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 1,
+          "bytes": 179,
+          "sha256": "ee25cf7b382b0761974af8b6b10a81a12ba15fbb43101cdb6ddf81125b7480b5",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 2,
+          "bytes": 179,
+          "sha256": "fa85fee9bd4b707f04cd978cb5ab61fc5287e53f10dd285e07d485e3af4c4027",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 3,
+          "bytes": 181,
+          "sha256": "761c27e3eb040a37262205f30d33087e153705043093f3bd7ed88b2761abb8a9",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 4,
+          "bytes": 179,
+          "sha256": "90235ec5d40875e191b54efd91288c2d1c5234540387ea2a575e66d95f475571",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 8,
+          "bytes": 178,
+          "sha256": "4573d369665a278caddb3653291f87962fd480905c36edc3d9b7af7972f1074f",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 16,
+          "bytes": 177,
+          "sha256": "75ae301e11a3c0cb949f9259b0836373ffc7b978d486baed560977ad5c199748",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 24,
+          "bytes": 180,
+          "sha256": "39dc879d6b97c8777079d4de42adf5e73ef1ed5038cc14f703a218503f7d0416",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 32,
+          "bytes": 177,
+          "sha256": "8e2b37f229d273f593b5e7d22c74b8e3854f36af3edc1dad74cba070fcfc06f6",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 48,
+          "bytes": 179,
+          "sha256": "9ebbdd90d9c7b069b2d8cb521d8abeb2d44e392038e59da3241d65b0152b08c9",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 64,
+          "bytes": 177,
+          "sha256": "367ca9a194eec11790531c75b77554cbe2ae23a3f3905c959000cc2bcca53278",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 95,
+          "bytes": 180,
+          "sha256": "6bc2f8d9dba2515a5cf6fd880aead69902329de40b8643ef44c4210fb7902f58",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 96,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 97,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 98,
+          "bytes": 42,
+          "sha256": "695708c07bf04cd8c1dc1216caf74f748aacacdb28603dd6c6ac504637008282",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 99,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 100,
+          "bytes": 42,
+          "sha256": "695708c07bf04cd8c1dc1216caf74f748aacacdb28603dd6c6ac504637008282",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 101,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 102,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 103,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 104,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 105,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 106,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 107,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 108,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        },
+        {
+          "case": 109,
+          "bytes": 44,
+          "sha256": "2e14bf398886abedff98c04dc32233c8fc2f28dbf52802a73ee00c8f26043d60",
+          "completeOracleMatch": true,
+          "guestReturnCode": 0
+        }
+      ],
+      "scope": "Genuine AROS68040/FPU connectedworld fieldcombat proposals only; no liveattack or fullturn"
+    },
+    "originalExecutable": "UNRUN"
+  },
+  "scope": "Pinned Thinker default restoration policy; proposals only; explicit recorded CRT draws; no full attack, AI controller or original-executable parity"
+}

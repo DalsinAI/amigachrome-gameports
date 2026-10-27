@@ -242,3 +242,19 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cost_factor.py --out "$RUNNER_TEMP/cost-factor-host"
       - name: Fresh support and cost factors into staged construction
         run: python3 ports/alpha-centauri/native/test_fresh_facility_materials.py --out "$RUNNER_TEMP/fresh-facility-materials-host"
+      - name: Fresh energy distribution and specialist policy
+        run: python3 ports/alpha-centauri/native/test_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-host"
+      - name: Current world energy allocation and citizen parsing
+        run: python3 ports/alpha-centauri/native/test_world_energy_allocation.py --out "$RUNNER_TEMP/world-energy-allocation-host"
+      - name: Energy from proposed citizen assignments
+        run: python3 ports/alpha-centauri/native/test_proposed_energy_allocation.py --out "$RUNNER_TEMP/proposed-energy-host"
+      - name: Fresh economy income into facility maintenance
+        run: python3 ports/alpha-centauri/native/test_world_base_budget.py --out "$RUNNER_TEMP/base-budget-host"
+      - name: Durable construction processing across checkpoint resume
+        run: python3 ports/alpha-centauri/native/test_facility_upkeep_session.py --out "$RUNNER_TEMP/facility-upkeep-session-host"
+      - name: Population transitions and fresh post-growth food
+        run: python3 ports/alpha-centauri/native/test_world_population.py --out "$RUNNER_TEMP/world-population-host"
+      - name: Deterministic conventional combat rounds
+        run: python3 ports/alpha-centauri/native/test_combat_rounds.py --out "$RUNNER_TEMP/combat-rounds-host"
+      - name: Current world conventional infantry combat proposal
+        run: python3 ports/alpha-centauri/native/test_world_field_combat.py --out "$RUNNER_TEMP/world-field-combat-host"

@@ -24,7 +24,7 @@ def fixture(variant,version,case):
  for i in range(4):b[pf+0x1e0-(0x7c if legacy else 0)+i]=2 if case>>i&1 else 0
  fd=off['faction_definitions']+0x59c;struct.pack_into('<i',b,fd+0x50c,3);struct.pack_into('<3i',b,fd+0x510,2,12,12);struct.pack_into('<3i',b,fd+0x530,6,8,27)
  return bytes(b)
-def model(variant,text,data,mode):
+def model(variant,text,data,mode,*,credits_before=None,maintenance_before=7,mineral_cost_factor=10,player_flags_before=None):
  info,o,spans=intake.decode(data);version=int(info['version']);base=version<11;bs=304 if base else 308;fs=0x20bc if base else 0x20cc;pref=spans['legacy']if base else spans['preferences'];bp=spans['bases'][:bs];owner=bp[4];f=spans['factions'][owner*fs:(owner+1)*fs];fd=spans['faction_definitions'][owner*0x59c:(owner+1)*0x59c];schema=intake.FACTIONS['LegacyFactionV10'if base else 'Faction'];field=lambda n:next(x['offset']for x in schema['fields']if x['name']==n);t=sections(text);tech=t['TECHNOLOGY'];keys={r[1].lower():i for i,r in enumerate(tech)};keys.update(none=-1,disable=-2)
  def known(token):
   id=keys[token.lower()]
@@ -37,7 +37,7 @@ def model(variant,text,data,mode):
   for j in range(count):
    bonus=struct.unpack_from('<i',fd,0x510+4*j)[0];value=struct.unpack_from('<i',fd,0x530+4*j)[0]
    if value==id and(bonus==2 or bonus==12 and known(row[3])):free|=1<<id
- diff=struct.unpack_from('<i',f,field('diff_level'))[0];queue=struct.unpack_from('<i',bp,0x50)[0];v=[first,diff,reactor,100 if mode&1 else 0,7,10,queue,0x200|(32 if mode&2 else 0),sac,*[(bits>>(32*i))&0xffffffff for bits in [built,free]for i in range(3)],*cost,*maint];return expected(v)
+ diff=struct.unpack_from('<i',f,field('diff_level'))[0];queue=struct.unpack_from('<i',bp,0x50)[0];v=[first,diff,reactor,(100 if mode&1 else 0)if credits_before is None else credits_before,maintenance_before,mineral_cost_factor,queue,(0x200|(32 if mode&2 else 0))if player_flags_before is None else player_flags_before,sac,*[(bits>>(32*i))&0xffffffff for bits in [built,free]for i in range(3)],*cost,*maint];return expected(v)
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--cc',default='c++');a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False);exe=a.out/'world-facility-upkeep-probe';cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',*[str(HERE/(n+'.cpp'))for n in NAMES],'-o',str(exe)];subprocess.run(cmd,check=True);records=[]
  for version in range(7,13):

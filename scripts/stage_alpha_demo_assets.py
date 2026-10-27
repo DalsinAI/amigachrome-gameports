@@ -58,7 +58,10 @@ def main():
     for name, (url, expected) in SOURCES.items():
         cached = args.cache / name
         if not cached.exists():
-            with urllib.request.urlopen(url, timeout=90) as response:
+            # Identify the restoration client: the scenario mirror rejects Python
+            # urllib's default agent with HTTP403 despite serving this public file.
+            request = urllib.request.Request(url, headers={"User-Agent": "Alpha-native-lab/1.0"})
+            with urllib.request.urlopen(request, timeout=90) as response:
                 downloaded = response.read(64 * 1024 * 1024 + 1)
             if digest(downloaded) != expected:
                 raise ValueError("Unexpected download digest: " + name)

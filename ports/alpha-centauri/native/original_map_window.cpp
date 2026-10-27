@@ -12,6 +12,7 @@
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
 #include "local_player.h"
 #include "world_base_accounting.h"
+#include "world_base_budget.h"
 #include <proto/dos.h>
 #include <dos/dos.h>
 #endif
@@ -53,6 +54,9 @@ static char last_checkpoint[256];static char discard_pending=0;
 static alpha::FacilityDefinitions facility_labels;
 static alpha::ResourceInfo forecast_resources;
 static alpha::WorldAccountingResult forecast;
+static alpha::CitizenDefinitions forecast_citizens;
+static alpha::BaseBudgetResult forecast_budget;
+static bool forecast_citizens_ready=false,forecast_budget_ready=false;
 static bool forecast_resources_ready=false,forecast_open=false;
 static size_t forecast_base=0;
 struct PlayerViewScope {
@@ -186,7 +190,7 @@ static void draw_base_details(struct Window* window){
 
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
 static void open_forecast(){
- forecast_open=false;
+ forecast_open=false;forecast_budget_ready=false;
  if(player.proposal()){snprintf(action_status,sizeof(action_status),"Confirm or cancel the facility order before opening the forecast.");return;}
  const auto* current=player.world();
  const auto* base=current?current->base(selected_base):nullptr;
@@ -199,6 +203,12 @@ static void open_forecast(){
  const alpha::WorldAccountingStage stage{{alpha::Variant::base,false,false,{0,false},0,0},0,0};
  alpha::WorldAccountingResult next{};const bool was_dirty=player.dirty();
  const auto error=alpha::world_base_accounting(*current,technologies,definitions,basic,world_rules,forecast_resources,selected_base,stage,next,states,count);
+ if(error==alpha::StableIntakeError::ok && forecast_citizens_ready){
+  const auto* owner=current->faction((size_t)base->faction_id);
+  const alpha::BaseBudgetStage budget_stage{stage,owner->energy_credits,0,owner->player_flags};
+  forecast_budget_ready=alpha::world_base_budget(*current,technologies,definitions,basic,world_rules,forecast_resources,
+   forecast_citizens,facility_labels,selected_base,budget_stage,forecast_budget,states,count)==alpha::BudgetError::ok;
+ }
  free(states);
  if(error!=alpha::StableIntakeError::ok){
   const char* message="Forecast unavailable for this base.";
@@ -214,11 +224,17 @@ static void open_forecast(){
  printf("RESOURCE FORECAST base=%lu support=%ld food=%ld,%ld minerals=%ld,%ld energy_before_trade=%ld dirty_before=%d dirty_after=%d\n",
   (unsigned long)forecast_base,(long)forecast.support.mineral_cost,(long)forecast.nutrient.intake,(long)forecast.nutrient.surplus,
   (long)forecast.mineral.minerals.intake,(long)forecast.mineral.minerals.surplus,(long)forecast.energy.accounting.surplus,was_dirty,player.dirty());fflush(stdout);
+ if(forecast_budget_ready){
+  printf("BUDGET FORECAST base=%lu economy=%ld labs=%ld psych=%ld upkeep=%ld credits_after_income=%ld reserves_after_this_base=%ld dirty_before=%d dirty_after=%d\n",
+   (unsigned long)forecast_base,(long)forecast_budget.allocation.allocation.economy,(long)forecast_budget.allocation.allocation.labs,
+   (long)forecast_budget.allocation.allocation.psych,(long)forecast_budget.maintenance.maintenance_after,
+   (long)forecast_budget.credits_after_income,(long)forecast_budget.maintenance.credits_after,was_dirty,player.dirty());fflush(stdout);
+ }
 }
 static void draw_forecast(struct Window* window){
  if(!local_enabled || !forecast_open || forecast_base!=selected_base)return;
  const auto* current=player.world();const auto* base=current?current->base(forecast_base):nullptr;if(!base)return;
- auto* rp=window->RPort;FillPixelArray(rp,104,120,744,398,0x00071316u);char line[180];
+ auto* rp=window->RPort;FillPixelArray(rp,104,120,744,506,0x00071316u);char line[180];
  ui_text.draw(rp,128,160,"BASE RESOURCE FORECAST",660,true,alpha::UiInk::title);
  ui_text.draw(rp,128,192,base->name,660,true,alpha::UiInk::value);
  ui_text.draw(rp,128,220,"Calculated from current worked tiles and units.",660);
@@ -226,9 +242,15 @@ static void draw_forecast(struct Window* window){
  snprintf(line,sizeof(line),"Minerals: gross %ld   |   unit upkeep %ld   |   net %+ld",(long)forecast.mineral.minerals.intake,(long)forecast.support.mineral_cost,(long)forecast.mineral.minerals.surplus);ui_text.draw(rp,128,304,line,660);
  snprintf(line,sizeof(line),"Energy before trade: net %+ld",(long)forecast.energy.accounting.surplus);ui_text.draw(rp,128,352,line,660,false,alpha::UiInk::value);
  snprintf(line,sizeof(line),"Energy intake %ld   |   loss %ld   |   exports %ld",(long)forecast.energy.accounting.intake,(long)forecast.energy.accounting.inefficiency,(long)forecast.energy.accounting.consumption);ui_text.draw(rp,128,380,line,660);
- if(forecast.mineral.convoys.from[1]){snprintf(line,sizeof(line),"Mineral exports: %ld",(long)forecast.mineral.convoys.from[1]);ui_text.draw(rp,128,412,line,660);}
- ui_text.draw(rp,128,446,"Forecast only; resources have not been added.",660);
- ui_text.draw(rp,128,482,"ESC: close   |   F: recalculate",660);
+ if(forecast_budget_ready){
+  const auto& a=forecast_budget.allocation.allocation;
+  snprintf(line,sizeof(line),"Economy %ld   |   Research %ld   |   Psych %ld",(long)a.economy,(long)a.labs,(long)a.psych);ui_text.draw(rp,128,426,line,660,false,alpha::UiInk::value);
+  snprintf(line,sizeof(line),"Facility upkeep: %ld   |   balance before trade: %+ld",(long)forecast_budget.maintenance.maintenance_after,
+   (long)(a.economy-forecast_budget.maintenance.maintenance_after));ui_text.draw(rp,128,458,line,660);
+  ui_text.draw(rp,128,494,"Uses current energy settings; excludes stockpile production.",660);
+ }else ui_text.draw(rp,128,442,"Energy allocation forecast is unavailable for this base.",660);
+ ui_text.draw(rp,128,550,"Forecast only; growth and drone effects remain unresolved.",660);
+ ui_text.draw(rp,128,586,"ESC: close   |   F: recalculate",660);
 }
 #endif
 static void text(struct RastPort* rp,int x,int y,const char* s){if(x>=0 && x<W)ui_text.draw(rp,x,y,s,W-x);}
@@ -335,7 +357,7 @@ int alpha_original_view(int argc,char** argv){
  local_enabled=false;visible_world=&preview_world;action_status[0]=0;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  PlayerViewScope player_scope;
- forecast_open=false;forecast_resources_ready=false;
+ forecast_open=false;forecast_resources_ready=false;forecast_citizens_ready=false;forecast_budget_ready=false;
  player.close();free(player_rules);player_rules=nullptr;player_rules_length=0;last_checkpoint[0]=0;discard_pending=false;
  if(argc==7){
   if(strcmp(argv[6],"--local") || strcmp(argv[1],"base"))return 20;
@@ -354,6 +376,7 @@ int alpha_original_view(int argc,char** argv){
  bool ok=alpha::read_technologies(p,n,technologies)==alpha::Error::ok && alpha::read_unit_definitions(p,n,technologies,variant,definitions)==alpha::Error::ok && alpha::read_basic_rules(p,n,technologies,variant,basic,world_rules)==alpha::Error::ok;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  if(local_enabled)forecast_resources_ready=alpha::read_resource_info(p,n,forecast_resources)==alpha::Error::ok;
+ if(local_enabled)forecast_citizens_ready=alpha::read_citizens(p,n,technologies,forecast_citizens)==alpha::Error::ok;
 #endif
  free(p);if(!ok)return 20;
  if(!local_enabled){p=read_file(argv[3],n);if(!p)return 20;ok=preview_world.load(p,n,0x12345678u)==alpha::WorldLoadError::ok;free(p);if(!ok || (world().game().data_version<11)!=(variant==alpha::Variant::base))return 20;}
