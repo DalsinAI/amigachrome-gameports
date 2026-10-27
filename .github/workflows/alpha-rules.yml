@@ -676,3 +676,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_battle_entry.py --out "$RUNNER_TEMP/world-battle-entry-host"
       - name: Owned World battle entry inspection independent 68040
         run: python3 ports/alpha-centauri/native/test_world_battle_entry.py --out "$RUNNER_TEMP/world-battle-entry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original attacker modifier ledger host
+        run: python3 ports/alpha-centauri/native/test_attack_modifier_ledger.py --out "$RUNNER_TEMP/attack-ledger-host"
+      - name: Original attacker modifier ledger independent 68040
+        run: python3 ports/alpha-centauri/native/test_attack_modifier_ledger.py --out "$RUNNER_TEMP/attack-ledger-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
