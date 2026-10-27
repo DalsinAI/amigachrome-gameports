@@ -18,6 +18,7 @@ class WorldTerritorialCombatPlan {
   const WorldTerritorySummary*summary()const{return ready_?&summary_:nullptr;}
   const TerritoryRuntime*runtime()const{return ready_?&runtime_:nullptr;}
  private:
+  friend class TerritorialPromotedLandPlan;
   friend WorldTerritoryError stage_world_territorial_combat(const OriginalWorld&,size_t,size_t,const TerritoryRuntime&,WorldTerritorialCombatPlan&,size_t);
   WorldTerritoryError prepare(const OriginalWorld&,size_t,size_t,const TerritoryRuntime&,size_t);
   void swap(WorldTerritorialCombatPlan&);

@@ -20,6 +20,7 @@ class WorldPromotionPlan {
   const OriginalWorld*frame()const{return ready_?&storage_.frame_:nullptr;}
   const PromotionSummary*summary()const{return ready_?&summary_:nullptr;}
  private:
+  friend class TerritorialPromotedLandPlan;
   friend class PromotedLandResolutionPlan;
   friend PromotionError stage_world_promotion(const OriginalWorld&,const UnitDefinitions&,const Rules&,size_t,const PromotionRuntime&,WorldPromotionPlan&,size_t);
   PromotionError prepare(const OriginalWorld&,const UnitDefinitions&,const Rules&,size_t,const PromotionRuntime&,size_t);

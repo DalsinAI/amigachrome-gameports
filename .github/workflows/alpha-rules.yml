@@ -660,3 +660,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_territorial_combat.py --out "$RUNNER_TEMP/world-territorial-host"
       - name: Owned territorial combat World independent 68040
         run: python3 ports/alpha-centauri/native/test_world_territorial_combat.py --out "$RUNNER_TEMP/world-territorial-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Territorial promotion casualty aftermath host
+        run: python3 ports/alpha-centauri/native/test_territorial_aftermath.py --out "$RUNNER_TEMP/territorial-aftermath-host"
+      - name: Territorial promotion casualty aftermath independent 68040
+        run: python3 ports/alpha-centauri/native/test_territorial_aftermath.py --out "$RUNNER_TEMP/territorial-aftermath-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

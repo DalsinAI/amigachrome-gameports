@@ -28,6 +28,7 @@ class WorldBattleBookkeepingPlan {
   const OriginalWorld*frame()const{return ready_?&frame_:nullptr;}
   const BattleBookkeepingResult*bookkeeping()const{return ready_?&result_:nullptr;}
  private:
+  friend class TerritorialBattleAftermathPlan;
   friend class PromotedBattleAftermathPlan;
   friend class BattleAftermathPlan;
   friend WorldBookkeepingError stage_world_battle_bookkeeping(const OriginalWorld&,const WorldBookkeepingFacts&,WorldBattleBookkeepingPlan&,size_t);

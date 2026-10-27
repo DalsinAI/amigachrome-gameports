@@ -23,6 +23,7 @@ class LandEngagementPlan {
   const OriginalWorld* frame()const{return ready_?&frame_:nullptr;}
   const EngagementSummary* summary()const{return ready_?&summary_:nullptr;}
  private:
+  friend class TerritorialPromotedLandPlan;
   friend class PromotedLandResolutionPlan;
   friend class WorldPromotionPlan;
   friend class WorldTerritorialCombatPlan;
