@@ -9,7 +9,7 @@
 #define ALPHA_RESEARCH_PROGRESS_H
 #include <stdint.h>
 namespace alpha {
-enum class ResearchError {ok,bad_state,bad_buffer,overflow,unsupported,needs_target,needs_riot_resolution,out_of_memory};
+enum class ResearchError {ok,bad_state,bad_buffer,overflow,unsupported,needs_target,needs_riot_resolution,out_of_memory,needs_allocation};
 struct OriginalResearchCostFacts {
  int32_t faction,difficulty,current_turn,discovery_rate_pct,rule_techcost,research_base,map_tiles;
  int32_t ranking[8],deferred_techs[8],ranking_debt;
