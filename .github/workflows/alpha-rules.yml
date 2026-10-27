@@ -280,3 +280,13 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_field_combat.py --seeded --out "$RUNNER_TEMP/world-field-combat-seeded-host"
       - name: Owned human population transaction and checkpoint replay
         run: python3 ports/alpha-centauri/native/test_human_upkeep_transaction.py --out "$RUNNER_TEMP/human-upkeep-transaction-host"
+      - name: Iterative workers specialists and fresh resource resolution
+        run: python3 ports/alpha-centauri/native/test_world_worker_resolution.py --out "$RUNNER_TEMP/world-worker-resolution-host"
+      - name: Joined stage1 accounting and atomic actor proposals
+        run: python3 ports/alpha-centauri/native/test_world_upkeep_accounting.py --out "$RUNNER_TEMP/world-upkeep-accounting-host"
+      - name: Original research cost and contribution arithmetic
+        run: python3 ports/alpha-centauri/native/test_research_progress.py --out "$RUNNER_TEMP/research-progress-host"
+      - name: Current world research costs and directed progression
+        run: python3 ports/alpha-centauri/native/test_world_research.py --out "$RUNNER_TEMP/world-research-host"
+      - name: Encoded field attacks and casualty reference compaction
+        run: python3 ports/alpha-centauri/native/test_field_attack.py --out "$RUNNER_TEMP/field-attack-host"
