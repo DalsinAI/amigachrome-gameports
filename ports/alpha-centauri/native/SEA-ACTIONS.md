@@ -7,6 +7,10 @@ one route cannot be committed through the other. Ordinary production-only
 sessions do not gain movement permission. A failed import preserves the old
 session and its capabilities.
 
+The local frontend prefers an owned idle ordinary surface design when opening
+or reloading a world, falling back to the first owned unit. This changes only
+selection. Every attempted move still evaluates current eligibility and cargo.
+
 ## Source Inventory
 
 The implementation composes already qualified original speed, terrain-price,
@@ -84,3 +88,28 @@ The genuine Boreholes scenario contains an empty Transport Foil at vehicle19,
 position `(18,36)`, capacity2, with no order or linked passengers. Its
 `(19,35)` ocean neighbor is a qualified full-cost move. Vehicle2, initially
 selected by the frontend, is an ordered Plasma Garrison, not that ship.
+
+## Native UI Proof
+
+The strict native candidate selected the unchanged Boreholes Transport Foil19
+and moved it from `(18,36)` to `(19,35)` for cost3. The recovered current speed
+is9 movement points; spent movement changed from0 to3. Saving into new slots,
+reloading and quitting all completed with guest return code0 in genuine
+AROS/FS-UAE68040/FPU. The held NE key also repeated against a plain land tile;
+that subsequent attempt was refused without another world change.
+
+Both fresh checkpoints contained199314 bytes and matched the independent
+complete-container oracle, SHA256
+`4689daefa34471171b29fd3fc80a0a66f34a79a884ef6666a04a2758f425e90d`.
+Exactly8 original-payload bytes changed; the other199278 were preserved. The
+original scenario remained unchanged. A real1280x1024 framebuffer after reload
+shows Transport Foil, Position19,35, Ocean, Moves6/9, and Reload:ok. Its PNG
+SHA256 is `8083035251bd6c7d36a9c9b8b2e85d1831c49bae909983a7fe4336daf93ff161`.
+The map renderer and ship artwork coverage are unchanged by this movement work.
+
+The ordinary frontend, candidate menu and candidate standalone world all built
+with strict project warnings. Source, binary hashes, actual input sequence,
+guest log, frame hashes and oracle details are in
+`evidence/surface-actions-ui.json`; no original assets or screenshots are
+bundled with that receipt. Existing145player checks,46clear-land cases and
+43local action cases passed again after the controller changes.

@@ -110,6 +110,14 @@ static size_t selected_base=0;static bool base_open=false;
 static void select_local_actors(){
  selected=selected_base=0;
  for(size_t i=0;i<world().game().vehicle_count;++i)if(world().vehicle(i)->faction_id==world().game().player){selected=i;break;}
+ // Prefer an idle ordinary surface design to an ordered garrison. Selection
+ // is advisory: the live command still checks cargo, terrain and all gates.
+ for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);const auto* p=v.unit_id>=0?world().prototype((size_t)v.unit_id):nullptr;
+  if(v.faction_id!=world().game().player || v.order || v.waypoint_count || (v.state&0x0b004201u) ||
+     !p || p->ability_flags || p->chassis_id>=9 || p->weapon_id>=definitions.weapon_count || definitions.weapons[p->weapon_id].offense<0)continue;
+  const int triad=definitions.chassis[p->chassis_id].triad;
+  if((triad==0 && p->plan>=0 && p->plan<=3) || (triad==1 && ((p->plan>=0 && p->plan<=3) || p->plan==7))){selected=i;break;}
+ }
  for(size_t i=0;i<world().game().base_count;++i)if(world().base(i)->faction_id==world().game().player){selected_base=i;break;}
 }
 static void hud_text(struct RastPort* rp,int x,int y,const char* s,int width=220,bool heading=false,alpha::UiInk ink=alpha::UiInk::body){ui_text.draw(rp,12+HUD_X+x,HUD_Y+y,s,width,heading,ink);}
