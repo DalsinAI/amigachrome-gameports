@@ -14,7 +14,9 @@ def proposed_fixture(version,case):
  return bytes(data)
 def proposal(data,case):
  _,_,spans=world.intake.decode(data);pop=struct.unpack_from('<b',spans['bases'],6)[0];rng=random.Random(0xC1712E+case);workers=1+case%min(21,pop+1);count=pop+1-workers;bits=(1<<workers)-1;types=[0,0]
- for i in range(min(count,16)):types[i//8]|=rng.randrange(7)<<(4*(i%8))
+ for i in range(min(count,16)):
+  kind=2 if case%3==0 and pop>=5 else 0 if case%5==0 and pop>=5 else rng.randrange(7)
+  types[i//8]|=kind<<(4*(i%8))
  p=[pop,bits,count,*types]
  if case%17==1:p[0]=pop+1
  if case%17==2:p[1]&=~1
@@ -30,7 +32,15 @@ def model(text,data,base,surplus,commerce,p):
  pop,worked,count,t0,t1=p
  if pop!=words[4]or not 0<=pop<=127 or not 0<=count<=pop or not worked&1 or worked&~0x1fffff or worked.bit_count()+count!=pop+1:return fail()
  if any(((p[3+i//8]>>(4*(i%8)))&15)>6 for i in range(min(count,16))):return fail()
- words[5]=count;words[7:9]=[t0,t1];return expected(words)
+ words[5]=count;words[7:9]=[t0,t1];result=expected(words)
+ if result[0]:return result
+ pre=words[9:16];obsolete=words[16:23];citizens=[words[i:i+5]for i in range(24,59,5)];minimum=words[6]
+ valid=lambda kind:pre[kind]and not obsolete[kind]and(citizens[kind][3]>=2 or pop>=minimum)
+ for i in range(min(count,16)):
+  kind=(result[9+i//8]>>(4*(i%8)))&15
+  if not valid(kind):return fail()
+ if count>16 and not any(valid(kind)for kind in range(7)):return fail()
+ return result
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--cc',default='c++');ap.add_argument('--binary',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False);exe=a.binary or a.out/'proposed-energy-allocation-probe';cmd=[]
  if not a.binary:

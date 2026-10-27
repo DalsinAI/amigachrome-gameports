@@ -33,7 +33,15 @@ static EnergyError allocate_world(const OriginalWorld&w,const Rules&t,const Basi
  for(unsigned j=0;j<6;++j){const int32_t location=w.game().preferences.SecretProjects[indices[j]];if(location< -2)return EnergyError::bad_state;if(location>=0){const auto*p=w.base((size_t)location);if(!p||p->faction_id<1||p->faction_id>7)return EnergyError::bad_state;ours[j]=p->faction_id==faction;here[j]=(size_t)location==id;}}
  facts.hologram_theatre=facts.hologram_theatre||(ours[0]&&facts.network_node);facts.supercollider=here[1];facts.longevity_free_market=here[2]&&f->SE_Economics_pending==1;facts.theory_everything=here[3];facts.network_backbone=here[4];facts.space_elevator=here[5];
  for(size_t i=0;i<w.game().base_count;++i){const auto*p=w.base(i);if(!p)return EnergyError::bad_state;if(built(*p,8))++facts.global_network_nodes;}
- const auto error=allocate_energy(facts,next.allocation);if(error!=EnergyError::ok)return error;out=next;return EnergyError::ok;
+ const auto error=allocate_energy(facts,next.allocation);if(error!=EnergyError::ok)return error;
+ if(proposal){
+  // A new assignment cannot grant unavailable specialist output. Original
+  // saved-slot arithmetic above remains unchanged; verify the proposed effective
+  // types after its original first-dominating obsolete upgrade has resolved.
+  for(int i=0;i<proposal->specialist_count&&i<16;++i){const unsigned kind=(next.allocation.specialist_types[i/8]>>(4*(i&7)))&15u;const auto&citizen=facts.citizens.specialists[kind];if(!facts.prerequisite_known[kind]||facts.obsolete_known[kind]||(citizen.psych<2&&facts.population<facts.min_specialist_population))return EnergyError::bad_state;}
+  if(proposal->specialist_count>16){bool available=false;for(unsigned kind=0;kind<7;++kind)if(facts.prerequisite_known[kind]&&!facts.obsolete_known[kind]&&(facts.citizens.specialists[kind].psych>=2||facts.population>=facts.min_specialist_population))available=true;if(!available)return EnergyError::bad_state;}
+ }
+ out=next;return EnergyError::ok;
 }
 EnergyError world_energy_allocation(const OriginalWorld&w,const Rules&t,const BasicRules&b,const CitizenDefinitions&c,size_t id,int32_t surplus,int32_t commerce,WorldAllocationResult&out){return allocate_world(w,t,b,c,id,nullptr,surplus,commerce,out);}
 EnergyError world_energy_allocation_for_assignment(const OriginalWorld&w,const Rules&t,const BasicRules&b,const CitizenDefinitions&c,size_t id,const ProposedCitizenAssignment&proposal,int32_t surplus,int32_t commerce,WorldAllocationResult&out){return allocate_world(w,t,b,c,id,&proposal,surplus,commerce,out);}

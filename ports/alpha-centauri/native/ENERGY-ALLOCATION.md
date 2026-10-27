@@ -95,7 +95,10 @@ records have changed.
 The proposed population must equal the current world population, the centre
 must remain worked, only the first 21 mask bits may be selected, and worked
 tile count plus specialists must equal population plus one. Every active
-encoded specialist slot must be 0–6; unused nibbles remain opaque. Physical
+encoded specialist slot must be 0–6; unused nibbles remain opaque.
+Effective types after obsolete upgrades must have their prerequisite, lack
+their obsolete technology and satisfy minimum population unless psych is at
+least two. A proposal cannot grant unavailable specialist output. Physical
 tile availability and allocation priorities are still the worker stage's
 prerequisite. Population growth must update/recompute its genuine population
 before using this API. Upgraded specialist nibbles are returned as proposals.

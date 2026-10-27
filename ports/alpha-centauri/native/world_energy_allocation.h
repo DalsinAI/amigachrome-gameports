@@ -20,7 +20,9 @@ EnergyError world_energy_allocation(const OriginalWorld&,const Rules&,
  int32_t commerce,WorldAllocationResult&);
 /* Same current population, with a freshly qualified worker-stage proposal.
  * Requires centre, first21 mask, every citizen assigned, and valid active
- * specialist nibble IDs. This verifies population/count/encoding consistency;
+ * specialist nibble IDs. Effective types after obsolete upgrades must be
+ * available, nonobsolete and meet the minimum-population/psych qualification.
+ * This verifies population/count/encoding and specialist consistency;
  * physical tile availability and allocation priority remain the worker stage's
  * prerequisite. It never edits a const world or reuses its obsolete specialist
  * count. Growth must commit/recompute its real population before this call.
