@@ -2215,3 +2215,5 @@ Checked vehicle-removal storage is documented in [VEHICLE-REMOVAL.md](VEHICLE-RE
 [ARTIFACT-CAPTURE.md](ARTIFACT-CAPTURE.md) documents owned LAND artifact transfer and its captured caller pool, before the interlude gate. Legal battle/session/delivery/native/full-game gates remain held.
 
 [LAND-RESOLUTION.md](LAND-RESOLUTION.md) documents the owned solitary conventional engagement/casualty/capture composition. Caller argument6 is explicit per branch; retreat has no RemovalRuntime claim. Full caller/event/session/persistence/native/gameplay gates remain held.
+
+Ordered caller-field dependency: [battle bookkeeping](BATTLE-BOOKKEEPING.md), with explicit offline runtime and an active-player monument UI hold. No World/session commit.

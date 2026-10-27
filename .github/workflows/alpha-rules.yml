@@ -620,3 +620,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_land_resolution.py --out "$RUNNER_TEMP/land-resolution-host"
       - name: Big-endian owned LAND engagement casualty composition controls
         run: python3 ports/alpha-centauri/native/test_land_resolution.py --out "$RUNNER_TEMP/land-resolution-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original ordered battle bookkeeping controls
+        run: python3 ports/alpha-centauri/native/test_battle_bookkeeping.py --out "$RUNNER_TEMP/battle-bookkeeping-host"
+      - name: Big-endian original ordered battle bookkeeping controls
+        run: python3 ports/alpha-centauri/native/test_battle_bookkeeping.py --out "$RUNNER_TEMP/battle-bookkeeping-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
