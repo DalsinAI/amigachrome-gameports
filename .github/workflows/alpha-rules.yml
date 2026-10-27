@@ -716,3 +716,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_prebattle_territory.py --out "$RUNNER_TEMP/prebattle-territory-host"
       - name: Original pre-round third-party treaty and friction independent 68040
         run: python3 ports/alpha-centauri/native/test_prebattle_territory.py --out "$RUNNER_TEMP/prebattle-territory-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Current World attacker-origin prebattle territory host
+        run: python3 ports/alpha-centauri/native/test_world_prebattle_territory.py --out "$RUNNER_TEMP/world-prebattle-territory-host"
+      - name: Current World attacker-origin prebattle territory independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_prebattle_territory.py --out "$RUNNER_TEMP/world-prebattle-territory-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

@@ -2455,3 +2455,29 @@ The public subset passes 8,867 controls on both processors. All input aliases an
 failure outputs are preserved. SDK build only; AmigaOS and remote final-head CI
 remain UNRUN. No World mutation, event completion, action authority, input,
 turns or playable-game qualification is claimed.
+
+### Current World attacker-origin prebattle territory
+
+`world_prebattle_territory.{h,cpp}` resolves the PRE-round effect from a supplied
+current pre-movement frame. It reads the attacker's starting tile owner, both
+participant factions, directional diplomacy, signed military strength and
+friction directly from the owned World, including legacy military offset
+`0x105c` versus modern `0x1060`. Current viewer and active negotiation state
+remain explicit runtime observations. It holds the original attacker-plan11 and
+defender-plan12 exclusions, invalid/native pairs and negative/out-of-domain
+owners before indexing. Owner0 and participant-owned tiles produce identity
+proposals from their actual records. No fabricated unused owner facts enter the
+leaf. The query cannot reconstruct an origin after relocation or establish that
+earlier notifications/aggression actually completed.
+
+Host ASan/UBSan and independent static 68040 joined controls cover 52 worlds,
+including three unchanged owner tutorials. They compare the complete proposal
+against an independent wire model, contrasting attacker/defender owners, both
+plan exclusions and their asymmetric allowed counterparts, no-ops, signed rank
+and friction boundaries, wrapped negotiation values, failure preservation,
+source/output aliases and unchanged whole World object/storage/records/RNG.
+The first host build stopped on harness indentation; only formatting changed.
+A later extension adds actual design-plan exclusions and reruns all final tests.
+SDK build only; AmigaOS and final-head remote CI remain UNRUN. This query writes
+no World state and grants no event acknowledgment, legal attack or round/turn
+advancement. Full games remain incomplete.
