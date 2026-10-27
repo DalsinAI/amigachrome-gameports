@@ -21,6 +21,7 @@ original combat routine. Source inventory:
 | `veh.cpp::veh_kill`, lines696–767 | Active/combat counts,52-byte record compaction, stack and boarded-transport vehicle references, runtime/UI references |
 | `move.cpp::veh_kill_lift`, line485, and `veh.cpp::veh_lift` | Unique casualty tile occupancy cleared; old owner nibble remains |
 | `faction.cpp::act_of_aggression/treaty_on`, lines703/285 | Mutual vendetta status masks and exclusion-bit cleanup |
+| `monument.cpp::mon_enemy_destroyed`, line249, `game.cpp::game_year`, line181 | First-kill achievement, source first-achiever scan and pinned default-policy calendar |
 | `savegame.cpp`, lines402–410 | Saved UI word1 is MapWin vehicle ID, not an opaque coordinate |
 
 The existing field facts and separate CRT generator retain their qualification
@@ -69,11 +70,18 @@ branches or pending attacker orders. Sensors/GSP and human-versus-AI difficulty
 modifiers are connected. Unrelated valid stacks and bounded vehicle references
 elsewhere in the world are retained and remapped.
 
-The source first-kill monument routine needs calendar and global first-achiever
-handling. This stage currently requires the eventual winner's enemy-destroyed
-monument already achieved, which makes that routine a source no-op. First-kill
-creation rejects explicitly. Objective units, assistant-worm events, in-transport
-combat actors and third-party terrain diplomacy also reject. There is no native
+First-kill monument creation is implemented by `world_battle_monument`. It scans
+all8 source event records, preserves highest-index first-achiever tie behavior
+and source enemy fallback, patches only the appropriate enemy-destroyed event
+and latest-event ID, and leaves alien/already-achieved cases unchanged. The year
+uses **pinned Thinker default policy**: qualified `normal_starting_year` plus
+current turn, with signed overflow rejection. OpenSMACX instead names an original
+runtime `StartingMissionYear` global; that global is not silently inferred from
+the saved displayed year. This policy distinction remains explicit. The receipt
+carries the monument event for later owning UI presentation; no popup ran here.
+
+Objective units, assistant-worm events, in-transport combat actors and third-party
+terrain diplomacy reject. There is no native
 credit income, artifact capture, collateral damage, base capture/elimination or
 retreat branch in this qualified two-infantry engagement.
 
@@ -101,12 +109,16 @@ operation. The original input world remains available until that atomic install.
 raw-file oracle. Qualified fixtures cover both outcomes, multiple casualty/actor
 index orders, current live movement/base orders, promotion draws, faction counts,
 stack-link and board-reference repairs, selected-vehicle remapping and every
-opaque following section. Rejections cover first-kill monument, objectives,
+opaque following section. First-ever, later, tied first-achiever, enemy fallback
+and alien monument no-op cases compare whole output bytes. Rejections cover
+calendar overflow, objectives,
 third-party territory, short buffers, invalid references, unencoded live upkeep,
 counter consistency and arithmetic overflow. Every probe checks immutable source
 wire/decoded state, input ledger, output bounds and alias rejection.
 
-Host/native case counts and full-byte hashes are in `FIELD-ATTACK-EVIDENCE.json`.
+The initial51-case host/native batch is in `FIELD-ATTACK-EVIDENCE.json`.
+The expanded56-case first-kill follow-up and its native status are in
+`BATTLE-MONUMENT-EVIDENCE.json`.
 No full original Windows battle execution or AmigaOS3.2.3 qualification is claimed.
 
 ```

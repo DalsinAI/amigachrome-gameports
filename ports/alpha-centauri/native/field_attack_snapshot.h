@@ -5,6 +5,7 @@
 #ifndef ALPHA_FIELD_ATTACK_SNAPSHOT_H
 #define ALPHA_FIELD_ATTACK_SNAPSHOT_H
 #include "world_combat_crt.h"
+#include "world_battle_monument.h"
 namespace alpha {
 enum class FieldAttackError {ok,bad_state,bad_buffer,unsupported,overflow,out_of_memory,bad_snapshot,bad_reference};
 struct FieldAttackStage {
@@ -17,6 +18,7 @@ struct FieldAttackReceipt {
  FieldAttackStage next;
  FieldCombatFacts facts;
  CombatResult combat;
+ BattleMonumentUpdate monument;
  int32_t attacker_before,defender_before,removed_before,winner_after;
  int32_t winner_faction,loser_faction,selected_vehicle_after;
  uint32_t promotion_draws;
@@ -34,7 +36,7 @@ struct FieldAttackReceipt {
  * must atomically install AFTERbytes + next ledger under its revision authority.
  * Attacker does not advance into the defender tile in source battle_fight;
  * movement command continuation remains a separate phase, not fabricated here.
- * First-kill monument creation, objectives/assistant events, third-party terrain
+ * Objectives/assistant events, third-party terrain
  * diplomacy and other unqualified branches reject (see FIELD-ATTACK.md).
  */
 size_t field_attack_snapshot_size(const OriginalWorld&);

@@ -10,5 +10,5 @@ mkdir -p -- "$(dirname -- "$1")"
  "$src/original_world.cpp" "$src/prototype.cpp" "$src/movement.cpp" "$src/saved_speed.cpp" \
  "$src/world_unit_stats.cpp" "$src/vehicle_stack.cpp" "$src/facility_production_snapshot.cpp" \
  "$src/combat_rounds.cpp" "$src/combat_crt.cpp" "$src/world_combat_sensors.cpp" \
- "$src/world_field_combat.cpp" "$src/world_combat_crt.cpp" "$src/field_attack_snapshot.cpp" \
+ "$src/world_field_combat.cpp" "$src/world_combat_crt.cpp" "$src/world_battle_monument.cpp" "$src/field_attack_snapshot.cpp" \
  "$src/field_attack_probe.cpp" -o "$1"

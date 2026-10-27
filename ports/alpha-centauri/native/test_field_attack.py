@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Independent whole-container casualty compaction and source field battle oracle."""
-import argparse,hashlib,json,os,struct,subprocess
+import argparse,hashlib,json,os,re,struct,subprocess
 from pathlib import Path
 from test_world_field_combat import fixture as field_fixture,rules_fixture,model as strength_model,put_field
 from test_original_game import decode
@@ -9,6 +9,8 @@ from test_original_faction import SCHEMA
 from test_combat_crt import draws
 from test_combat_rounds import expected as duel_model
 HERE=Path(__file__).resolve().parent
+RULE_FIELDS=re.findall(r'^RULE_(?:ROW|TECH)\(([^,)]+)',(HERE/'basic_fields.inc').read_text(),re.M)
+DEFAULT_START_YEAR=int(json.loads((HERE/'basic_fixture.json').read_text())['rules_rows'][RULE_FIELDS.index('normal_starting_year')][0])
 
 def fixture(case,permutation=0):
  data,m=field_fixture(case,2);data=bytearray(data);_,o,_=decode(data);p=o['vehicles']+104;data[p:p]=bytes(208);struct.pack_into('<I',data,12+0x38,6);_,o,_=decode(data)
@@ -66,6 +68,15 @@ def expected(data,m,seed,attacker,defender,mode='normal'):
   pos=o['factions']+faction*0x20bc+0x18+4*other;struct.pack_into('<I',b,pos,(struct.unpack_from('<I',b,pos)[0]&~excluded)|0x80008118)
  for actor,other in[(attacker,df),(defender,af)]:
   unit=struct.unpack_from('<h',data,o['vehicles']+52*actor+10)[0];b[o['prototypes']+52*unit+0x2d]|=1<<other
+ year=m.get('starting_year',DEFAULT_START_YEAR)+struct.unpack_from('<i',data,12+0x44)[0]
+ event=o['monuments']+wf*0x4f4+6*0x38;fdef=o['faction_definitions']+wf*0x59c;flagfield=next(f for f in SCHEMA['MFaction']['fields']if f['name']=='rule_flags');alien=bool(struct.unpack_from('<I',data,fdef+flagfield['offset'])[0]&0x80)
+ created=not alien and not struct.unpack_from('<i',data,event+0x10)[0];first=0
+ if created:
+  previous=[i for i in range(8)if i!=wf and struct.unpack_from('<i',data,o['monuments']+i*0x4f4+6*0x38+0x10)[0]]
+  first=lf if previous else wf
+  for i in previous:
+   if struct.unpack_from('<i',data,o['monuments']+i*0x4f4+6*0x38+0x14)[0]:first=i
+  struct.pack_into('<i',b,event,year);struct.pack_into('<4i',b,event+8,lf,first,1,int(not previous));struct.pack_into('<i',b,o['monuments']+wf*0x4f4+0x498,6)
  for actor in range(6):
   if actor==loser:continue
   pos=o['vehicles']+52*actor
@@ -79,7 +90,7 @@ def expected(data,m,seed,attacker,defender,mode='normal'):
  ui=len(b)-248+4;selected=struct.unpack_from('<i',b,ui)[0];selected=-1 if selected==loser else selected-1 if selected>loser else selected;struct.pack_into('<i',b,ui,selected)
  struct.pack_into('<i',b,12+0x38,5);del b[o['vehicles']+52*loser:o['vehicles']+52*(loser+1)]
  info,_,_=decode(b);assert info['vehicles']=='5'
- summary=dict(error='ok',bytes=str(len(b)),seed=str(next_seed),loser=str(loser),winner=str(winner-1 if winner>loser else winner),wf=str(wf),lf=str(lf),selected=str(selected),promoted=str(int(promoted)),promotion_draws=str(promdraws),rounds=str(r[6]),draws=str(r[9]),ad=str(r[2]),dd=str(r[3]),wins=str(101+wf),losses=str(21+lf),movement_seed=str(0xabcdef01),unchanged='1',rc='0')
+ summary=dict(error='ok',bytes=str(len(b)),seed=str(next_seed),loser=str(loser),winner=str(winner-1 if winner>loser else winner),wf=str(wf),lf=str(lf),selected=str(selected),promoted=str(int(promoted)),promotion_draws=str(promdraws),rounds=str(r[6]),draws=str(r[9]),ad=str(r[2]),dd=str(r[3]),wins=str(101+wf),losses=str(21+lf),movement_seed=str(0xabcdef01),monument=str(int(created)),first=str(first),year=str(year),unchanged='1',rc='0')
  return summary,bytes(b)
 
 def controls():
@@ -93,7 +104,15 @@ def controls():
  def bad(name,pos,fmt,value,error):
   b=bytearray(data);struct.pack_into('<'+fmt,b,pos,value);rows.append((name,bytes(b),rules,1,aid,did,'normal',dict(error=error,unchanged='1',rc='0'),b''))
  summary,_=expected(data,m,1,aid,did);winner_faction=int(summary['wf']);loser_faction=int(summary['lf']);loser_id=int(summary['loser']);loser_unit=struct.unpack_from('<h',data,o['vehicles']+52*loser_id+10)[0]
- bad('first-kill-monument',o['monuments']+winner_faction*0x4f4+6*0x38+0x10,'i',0,'unsupported')
+ for previous in[[],[(1,1)],[(1,1),(7,1)],[(1,0),(7,0)]]:
+  b=bytearray(data)
+  for faction in range(8):
+   ep=o['monuments']+faction*0x4f4+6*0x38;struct.pack_into('<ii',b,ep+0x10,0,0)
+  for faction,first_claim in previous:struct.pack_into('<ii',b,o['monuments']+faction*0x4f4+6*0x38+0x10,1,first_claim)
+  rows.append((f'first-kill-monument-{previous}',bytes(b),rules,1,aid,did,'normal',*expected(bytes(b),m,1,aid,did)))
+ b=bytearray(data);struct.pack_into('<i',b,o['monuments']+winner_faction*0x4f4+6*0x38+0x10,0);field=next(f for f in SCHEMA['MFaction']['fields']if f['name']=='rule_flags');struct.pack_into('<I',b,o['faction_definitions']+winner_faction*0x59c+field['offset'],0x80)
+ rows.append(('alien-monument-noop',bytes(b),rules,1,aid,did,'normal',*expected(bytes(b),m,1,aid,did)))
+ bad('monument-year-overflow',12+0x44,'i',2147483647,'overflow')
  bad('third-party-territory',o['tiles']+44*((8*2+2)//2)+7,'b',7,'unsupported')
  bad('objective-attacker',o['vehicles']+52*aid+8,'H',0x20,'unsupported')
  bad('invalid-ui-vehicle-ref',len(data)-248+4,'i',6,'bad_reference')
@@ -108,7 +127,7 @@ def controls():
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--cc',default='c++');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- sources='rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats vehicle_stack facility_production_snapshot combat_rounds combat_crt world_combat_sensors world_field_combat world_combat_crt field_attack_snapshot field_attack_probe'.split();exe=a.out/'field-attack-probe';cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',*[str(HERE/(s+'.cpp'))for s in sources],'-o',str(exe)];subprocess.run(cmd,check=True)
+ sources='rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats vehicle_stack facility_production_snapshot combat_rounds combat_crt world_combat_sensors world_field_combat world_combat_crt world_battle_monument field_attack_snapshot field_attack_probe'.split();exe=a.out/'field-attack-probe';cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',*[str(HERE/(s+'.cpp'))for s in sources],'-o',str(exe)];subprocess.run(cmd,check=True)
  records=[];aggregate=b''
  for i,(name,data,rules,seed,aid,did,mode,want,after)in enumerate(controls()):
   wp=a.out/f'{i}.SC';rp=a.out/f'{i}.txt';ap=a.out/f'{i}.after';wp.write_bytes(data);rp.write_bytes(rules);(a.out/f'{i}.expected').write_bytes(after)

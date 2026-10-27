@@ -13,7 +13,6 @@ bool aliases(const OriginalWorld&w,const UnitDefinitions&d,const Rules&t,const B
  if(!w.loaded())return false;
  const auto&g=w.game();return overlap(out,n,w.original_bytes(),w.original_size())||overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile))||overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase))||overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle))||overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype))||overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState))||overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
 }
-uint32_t u32(const uint8_t*p){return (uint32_t)p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);}
 void put(uint8_t*p,uint32_t n,size_t bytes){for(size_t i=0;i<bytes;++i)p[i]=(uint8_t)(n>>(8*i));}
 bool offset(const uint8_t*raw,size_t n,const void*p,size_t bytes,size_t&out){const uintptr_t a=(uintptr_t)raw,b=(uintptr_t)p;if(b<a||b-a>n||bytes>n-(size_t)(b-a))return false;out=(size_t)(b-a);return true;}
 FieldAttackError convert(CombatError e){switch(e){case CombatError::ok:return FieldAttackError::ok;case CombatError::bad_buffer:return FieldAttackError::bad_buffer;case CombatError::overflow:return FieldAttackError::overflow;case CombatError::unsupported:return FieldAttackError::unsupported;default:return FieldAttackError::bad_state;}}
@@ -70,9 +69,8 @@ FieldAttackError encode_field_attack_snapshot(const OriginalWorld&w,const UnitDe
  uint32_t active=0,total=0;
  for(size_t i=0;i<g.vehicle_count;++i){const auto*v=w.vehicle(i);if(v->faction_id!=lost->faction_id)continue;const auto*p=w.prototype((size_t)v->unit_id);if(!p)return FieldAttackError::bad_state;if(v->unit_id==lost->unit_id)++active;if(p->plan<=7)++total;}
  if(active!=lf->units_active[lost->unit_id]||total!=(uint32_t)lf->total_combat_units||wf->diplo_combat_total[lost->faction_id]<0||wf->diplo_combat_count[lost->faction_id]<0)return FieldAttackError::bad_state;
- // Monument creation depends on game_year and global first-achiever state.
- // Already achieved is a source no-op, qualified explicitly for this stage.
- if(g.monuments.size!=0x27a0u||u32(g.monuments.data+(size_t)won->faction_id*0x4f4u+6u*0x38u+0x10u)!=1u)return FieldAttackError::unsupported;
+ const auto monument_error=world_battle_monument(w,r,won->faction_id,lost->faction_id,next.monument);
+ if(monument_error!=CombatError::ok)return convert(monument_error);
  if(a->moves_spent>255-r.move_rate_roads)return FieldAttackError::overflow;
  if(stage.combat_wins[won->faction_id]==2147483647||stage.combat_losses[lost->faction_id]==2147483647||wf->diplo_combat_total[lost->faction_id]==2147483647||wf->diplo_combat_count[lost->faction_id]==2147483647)return FieldAttackError::overflow;
  if(lf->units_lost[lost->unit_id]==65535u)return FieldAttackError::overflow;
@@ -85,8 +83,8 @@ FieldAttackError encode_field_attack_snapshot(const OriginalWorld&w,const UnitDe
  LocalSnapshotReceipt baseline_receipt{};const auto saved=encode_facility_production_snapshot(w,scratch.p,w.original_size(),baseline_receipt);
  if(saved!=LocalSnapshotError::ok)return saved==LocalSnapshotError::out_of_memory?FieldAttackError::out_of_memory:FieldAttackError::bad_snapshot;
  OriginalGameView before{};if(read_original_game(scratch.p,w.original_size(),before)!=GameReadError::ok)return FieldAttackError::bad_snapshot;
- size_t vehicle_offset,tile_offset,faction_offset,prototype_offset,ui_offset;
- if(!offset(scratch.p,w.original_size(),before.vehicles.data,before.vehicles.size,vehicle_offset)||!offset(scratch.p,w.original_size(),before.map.tiles,g.map.info.tile_count*44u,tile_offset)||!offset(scratch.p,w.original_size(),before.factions.data,before.factions.size,faction_offset)||!offset(scratch.p,w.original_size(),before.prototypes.data,before.prototypes.size,prototype_offset))return FieldAttackError::bad_snapshot;
+ size_t vehicle_offset,tile_offset,faction_offset,prototype_offset,monument_offset,ui_offset;
+ if(!offset(scratch.p,w.original_size(),before.vehicles.data,before.vehicles.size,vehicle_offset)||!offset(scratch.p,w.original_size(),before.map.tiles,g.map.info.tile_count*44u,tile_offset)||!offset(scratch.p,w.original_size(),before.factions.data,before.factions.size,faction_offset)||!offset(scratch.p,w.original_size(),before.prototypes.data,before.prototypes.size,prototype_offset)||!offset(scratch.p,w.original_size(),before.monuments.data,before.monuments.size,monument_offset))return FieldAttackError::bad_snapshot;
  ui_offset=w.original_size()-248u;
  auto*wire=scratch.p;
  for(unsigned side=0;side<2;++side){const auto*v=side?b:a;const size_t id=side?defender:attacker;auto*p=wire+vehicle_offset+52u*id;
@@ -104,6 +102,7 @@ FieldAttackError encode_field_attack_snapshot(const OriginalWorld&w,const UnitDe
  const uint32_t exclude=0x4000000u|0x1000000u|0x100000u|0x10000u|0x800u|0x400u|0x80u|7u|0x800000u;
  for(unsigned side=0;side<2;++side){const auto*v=side?b:a;const auto*other=side?a:b;const uint32_t old=w.faction(v->faction_id)->diplo_status[other->faction_id];put(wire+faction_offset+(size_t)v->faction_id*fstride+0x18u+4u*other->faction_id,(old&~exclude)|0x80008118u,4);}
  wire[prototype_offset+52u*(size_t)a->unit_id+0x2du]|=(uint8_t)(1u<<b->faction_id);wire[prototype_offset+52u*(size_t)b->unit_id+0x2du]|=(uint8_t)(1u<<a->faction_id);
+ if(next.monument.changed){auto*event=wire+monument_offset+(size_t)won->faction_id*0x4f4u+6u*0x38u;put(event,(uint32_t)next.monument.year,4);put(event+8,(uint32_t)lost->faction_id,4);put(event+0xc,(uint32_t)next.monument.first_faction,4);put(event+0x10,1,4);put(event+0x14,(uint32_t)next.monument.first_achiever,4);put(wire+monument_offset+(size_t)won->faction_id*0x4f4u+0x498u,6,4);}
  for(size_t i=0;i<g.vehicle_count;++i)if((int32_t)i!=loser){const auto*v=w.vehicle(i);auto*p=wire+vehicle_offset+52u*i;
   if(v->prev_veh_id_stack>loser)put(p+50,(uint32_t)(v->prev_veh_id_stack-1),2);
   if(v->next_veh_id_stack>loser)put(p+48,(uint32_t)(v->next_veh_id_stack-1),2);
