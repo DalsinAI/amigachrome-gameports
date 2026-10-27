@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "world_field_combat.h"
+#include "world_combat_crt.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,11 +34,14 @@ static bool alias_controls(const alpha::OriginalWorld&w){
  if(alpha::world_field_combat(w,definitions,technologies,basic,0,1,*reinterpret_cast<alpha::FieldCombatFacts*>(const_cast<alpha::OriginalPrototype*>(w.prototype(0))))!=alpha::CombatError::bad_buffer)return false;
  if(alpha::world_resolve_field_combat(w,definitions,technologies,basic,0,1,rng,facts,*reinterpret_cast<alpha::CombatResult*>(&facts))!=alpha::CombatError::bad_buffer)return false;
  if(alpha::world_resolve_field_combat(w,definitions,technologies,basic,0,1,rng,*reinterpret_cast<alpha::FieldCombatFacts*>(rolls),result)!=alpha::CombatError::bad_buffer)return false;
+ alpha::CombatRandomState seed{0x12345678u};
+ if(alpha::world_resolve_seeded_field_combat(w,definitions,technologies,basic,0,1,seed,facts,*reinterpret_cast<alpha::CombatResult*>(&facts))!=alpha::CombatError::bad_buffer||seed.state!=0x12345678u)return false;
  return !memcmp(&before,&facts,sizeof facts)&&!memcmp(&saved,&result,sizeof result)&&!rng.cursor;
 }
 #pragma GCC diagnostic pop
 int main(int argc,char**argv){
- if(argc!=3)return 20;
+ if(argc!=3&&(argc!=4||strcmp(argv[3],"seeded")))return 20;
+ const bool seeded=argc==4;
  size_t n=0;auto*bytes=read_file(argv[1],n,1048576);if(!bytes)return 20;
  const bool good=alpha::read_technologies(bytes,n,technologies)==alpha::Error::ok&&alpha::read_unit_definitions(bytes,n,technologies,alpha::Variant::base,definitions)==alpha::Error::ok&&alpha::read_basic_rules(bytes,n,technologies,alpha::Variant::base,basic,world_rules)==alpha::Error::ok;
  free(bytes);if(!good)return 20;
@@ -47,10 +51,12 @@ int main(int argc,char**argv){
  uint16_t rolls[160];for(unsigned i=0;i<160;++i)rolls[i]=(uint16_t)((i*7919u+17u)&32767u);
  alpha::CombatRollStream rng{rolls,160,0};alpha::FieldCombatFacts facts;memset(&facts,0x5a,sizeof facts);const auto saved=facts;
  alpha::CombatResult result;memset(&result,0x5a,sizeof result);const auto result_before=result;
- const auto e=alpha::world_resolve_field_combat(w,definitions,technologies,basic,0,1,rng,facts,result);
+ alpha::CombatRandomState seed{0x12345678u};
+ const auto e=seeded?alpha::world_resolve_seeded_field_combat(w,definitions,technologies,basic,0,1,seed,facts,result):alpha::world_resolve_field_combat(w,definitions,technologies,basic,0,1,rng,facts,result);
  if(digest(w)!=before)return 21;
- if(e!=alpha::CombatError::ok&&(rng.cursor||memcmp(&facts,&saved,sizeof facts)||memcmp(&result,&result_before,sizeof result)))return 21;
- printf("error=%s cursor=%lu",alpha::combat_error_name(e),(unsigned long)rng.cursor);
+ if(e!=alpha::CombatError::ok&&(rng.cursor||seed.state!=0x12345678u||memcmp(&facts,&saved,sizeof facts)||memcmp(&result,&result_before,sizeof result)))return 21;
+ printf("error=%s cursor=%lu",alpha::combat_error_name(e),(unsigned long)(seeded&&e==alpha::CombatError::ok?result.random_draws:rng.cursor));
+ if(seeded)printf(" seed=%lu",(unsigned long)seed.state);
  if(e==alpha::CombatError::ok)printf(" offense=%ld defense=%ld ar=%ld dr=%ld ad=%ld dd=%ld am=%lu dm=%lu terrain=%ld left=%ld after_ad=%ld after_dd=%ld ahp=%ld dhp=%ld rounds=%lu ah=%lu dh=%lu draws=%lu win=%d",(long)facts.duel.offense,(long)facts.duel.defense,(long)facts.duel.attacker_reactor,(long)facts.duel.defender_reactor,(long)facts.duel.attacker_damage,(long)facts.duel.defender_damage,(unsigned long)facts.attacker_morale,(unsigned long)facts.defender_morale,(long)facts.terrain_defense,(long)facts.attacker_moves_left,(long)result.attacker_damage,(long)result.defender_damage,(long)result.attacker_hp,(long)result.defender_hp,(unsigned long)result.rounds,(unsigned long)result.attacker_hits,(unsigned long)result.defender_hits,(unsigned long)result.random_draws,(int)result.attacker_won);
  puts(" unchanged=1 rc=0");return 0;
 }

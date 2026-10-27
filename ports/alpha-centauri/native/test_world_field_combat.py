@@ -8,6 +8,7 @@ from test_original_game import decode, FORMATS
 from test_original_faction import SCHEMA
 from test_units import fixture as unit_fixture,material
 from test_combat_rounds import expected as round_model
+from test_combat_crt import draws as crt_draws
 HERE=Path(__file__).resolve().parent
 
 def rules_fixture(case):
@@ -108,14 +109,19 @@ def controls():
  return rows
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--cc',default='c++');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- sources='rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats combat_rounds world_combat_sensors world_field_combat world_field_combat_probe'.split()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--cc',default='c++');p.add_argument('--seeded',action='store_true');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
+ sources='rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats combat_rounds combat_crt world_combat_sensors world_field_combat world_combat_crt world_field_combat_probe'.split()
  exe=a.out/'world-field-combat-probe';cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',*[str(HERE/(n+'.cpp'))for n in sources],'-o',str(exe)];subprocess.run(cmd,check=True)
  records=[];aggregate=b''
  for i,(name,data,rules,want)in enumerate(controls()):
+  if a.seeded:
+   seed=0x12345678;want=dict(want,seed=str(seed))
+   if want['error']=='ok':
+    _,values=crt_draws(seed,160);duel=[int(want[key])for key in ['offense','defense','ar','dr','ad','dd']];r=round_model([*duel,160,0],values)
+    want.update(cursor=str(r[1]),seed=str(crt_draws(seed,r[9])[0]),after_ad=str(r[2]),after_dd=str(r[3]),ahp=str(r[4]),dhp=str(r[5]),rounds=str(r[6]),ah=str(r[7]),dh=str(r[8]),draws=str(r[9]),win=str(r[10]))
   wp=a.out/f'{i}.SC';rp=a.out/f'{i}.txt';wp.write_bytes(data);rp.write_bytes(rules)
-  run=subprocess.run([str(exe),str(rp),str(wp)],capture_output=True,text=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'),check=True,timeout=30)
+  run=subprocess.run([str(exe),str(rp),str(wp)]+(['seeded']if a.seeded else[]),capture_output=True,text=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'),check=True,timeout=30)
   got=dict(x.split('=')for x in run.stdout.split());assert got==want,(i,name,got,want)
   records.append(dict(case=i,name=name,worldSHA256=hashlib.sha256(data).hexdigest(),result=got));aggregate+=run.stdout.encode();(a.out/f'{i}.expected').write_text(run.stdout)
- report=dict(cases=len(records),accepted=sum(r['result']['error']=='ok'for r in records),outputSHA256=hashlib.sha256(aggregate).hexdigest(),casesDetail=records,native='UNRUN',originalExecutable='UNRUN');(a.out/'receipt.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items()if k!='casesDetail'}))
+ report=dict(cases=len(records),accepted=sum(r['result']['error']=='ok'for r in records),outputSHA256=hashlib.sha256(aggregate).hexdigest(),casesDetail=records,native='UNRUN',originalExecutable='UNRUN',rng='Separate explicit CRT state'if a.seeded else'Recorded CRT draws');(a.out/'receipt.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items()if k!='casesDetail'}))
 if __name__=='__main__':main()

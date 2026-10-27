@@ -1,0 +1,44 @@
+{
+  "cases": 8074,
+  "generatorCases": 2070,
+  "seededDuelCases": 6004,
+  "bytes": 355256,
+  "outputSHA256": "539af31ba94d1b0814f33ef621fda51244834d503629526c216dcde14448c2eb",
+  "native": {
+    "scope": "GenuineAROS68040/FPU nativeCRT-seededcombatleaf,notlivecombatcommit",
+    "cases": 8074,
+    "bytes": 355256,
+    "sha256": "539af31ba94d1b0814f33ef621fda51244834d503629526c216dcde14448c2eb",
+    "binarySHA256": "10b4a9efcd17a3ae429583e1a5524437eb3031b85f4feb31c04384ba4669c2fe",
+    "completeOracleMatch": true,
+    "guestReturnCode": 0
+  },
+  "originalCRT": {
+    "executableSHA256": "28608395dc4184b0ac972ea0886a8becd57d91a07bbabaef6f798fc5ca94e6b6",
+    "entry": "0x63724d",
+    "threadStateOffset": "PTD+0x14",
+    "calls": 8512,
+    "bytes": 68096,
+    "outputSHA256": "1231fe0559196da2dcc259f9375e57284f78e2a5c5bc0e71f16ea2ba36fbd4a2",
+    "roundDecision": {
+      "entry": "0x4ffd8d",
+      "attackerDraw": "0x4ffd9b",
+      "defenderDraw": "0x4ffdb6",
+      "compare": "0x4ffdc1",
+      "cases": 1152,
+      "bytes": 18432,
+      "outputSHA256": "792b16a7fe9c8a1a9177cb4f3a5a5512742b0b87a472769932580326e5bc9543"
+    },
+    "emulator": "Unicorn 2.1.4",
+    "scope": "Actual private original demo x86 rand arithmetic and round decision instructions executed; only getptd TLS lookup supplies controlled thread-state pointer. Round strength locals are controlled, execution stops before damage branches. No full game/combat loop execution claim; no original bytes committed."
+  },
+  "fullOriginalCombat": "UNRUN",
+  "connectedWorld": {
+    "cases": 118,
+    "accepted": 105,
+    "outputSHA256": "fe2c363245b769088b966a9e408b347d3ff752aba71a95f5dc4a8cbec5878cdf",
+    "native": "UNRUN",
+    "originalExecutable": "UNRUN",
+    "rng": "Separate explicit CRT state"
+  }
+}

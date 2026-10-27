@@ -8,5 +8,5 @@ mkdir -p -- "$(dirname -- "$1")"
  -fno-exceptions -fno-rtti -fno-builtin -fno-tree-loop-distribute-patterns \
  "$src/rules_text.cpp" "$src/original_map.cpp" "$src/original_game.cpp" "$src/original_faction.cpp" \
  "$src/original_world.cpp" "$src/prototype.cpp" "$src/movement.cpp" "$src/saved_speed.cpp" \
- "$src/world_unit_stats.cpp" "$src/combat_rounds.cpp" "$src/world_combat_sensors.cpp" "$src/world_field_combat.cpp" \
+ "$src/world_unit_stats.cpp" "$src/combat_rounds.cpp" "$src/combat_crt.cpp" "$src/world_combat_sensors.cpp" "$src/world_field_combat.cpp" "$src/world_combat_crt.cpp" \
  "$src/world_field_combat_probe.cpp" -o "$1"
