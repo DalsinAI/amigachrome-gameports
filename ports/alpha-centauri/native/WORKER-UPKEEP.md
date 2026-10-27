@@ -48,8 +48,11 @@ including 50 accepted current-stage proposals, preserved assignments, missing
 and overassigned workers, malformed high bits, specialists, insufficient tile
 capacity, zero population, empty mask, stage/editor/governor/SMAX rejection,
 fresh fungus and technology overflow. Every input region, output sentinel and
-alias boundary is checked. Native connected validation is recorded separately
-when run; the host receipt does not claim it has run.
+alias boundary is checked. All 56 connected worlds also passed in the genuine
+68040/FPU FS-UAE/AROS guest, each RC0 with complete outputs identical to the
+independent host oracle. The 43,239-byte aggregate SHA-256 is
+`2bb51f98ab3acac6e53fe09449b4a8e4bad37aaf0ef48c5c964a6fedb1ae258c`;
+the final native receipt records the exact binary and each case separately.
 
 Run `test_worker_allocation.py` and `test_world_worker_upkeep.py` for host
 validation. Native build scripts are `build_worker_allocation_probe.sh` and
