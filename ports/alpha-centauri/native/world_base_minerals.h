@@ -14,6 +14,18 @@ struct WorldMineralResult {
  MineralFacts facts;
  MineralResult minerals;
 };
+struct CurrentMineralInputs {
+ Variant variant;
+ int32_t fresh_intake,convoy_to,convoy_from,forces_maintenance,raw_eco_damage;
+};
+struct WorldMineralAccounting {MineralFacts facts;MineralResult minerals;};
+/* Internal current-stage binding after worker assignment. Inputs must be fresh
+ * current proposed tile/convoy/support/ecology outputs, never saved totals.
+ * This does not compute/qualify those upstream stages or grant turn authority.
+ * Derives all real owner/facility/project/map facts and applies recovered leaf.
+ * No mutation; all world/rule/input/output overlaps reject atomically. */
+StableIntakeError world_mineral_accounting(const OriginalWorld&,const WorldRules&,
+ size_t base,const CurrentMineralInputs&,WorldMineralAccounting&);
 /* Read-only owned-world proposal. Computes actual convoy contributions then
  * fresh stable-human intake/raw ecology. The only supplied accounting fact is
  * fresh forces maintenance; callers must own its support stage. All physical

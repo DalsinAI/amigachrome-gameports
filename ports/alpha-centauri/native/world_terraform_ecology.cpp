@@ -16,6 +16,12 @@ unsigned popcount(uint32_t n){unsigned count=0;while(n){n&=n-1;++count;}return c
 TerraformEcologyError world_terraform_ecology(const OriginalWorld&w,size_t id,TerraformEcologyResult&output){
  if(aliases(w,&output,sizeof output))return TerraformEcologyError::bad_buffer;
  if(!w.loaded())return TerraformEcologyError::bad_state;
+ const auto*base=w.base(id);if(!base)return TerraformEcologyError::bad_state;
+ return world_terraform_ecology_for_workers(w,id,(uint32_t)base->worked_tiles&0x1fffffu,output);
+}
+TerraformEcologyError world_terraform_ecology_for_workers(const OriginalWorld&w,size_t id,uint32_t worked,TerraformEcologyResult&output){
+ if(aliases(w,&output,sizeof output))return TerraformEcologyError::bad_buffer;
+ if(!w.loaded()||(worked&~0x1fffffu))return TerraformEcologyError::bad_state;
  const auto&g=w.game();const auto&m=g.map.info;
  if(m.width<2||m.width>4096||(m.width&1u)||!m.height||m.height>4096||m.tile_count!=(m.width/2)*m.height||g.base_count>512 || (uint64_t)m.tile_count*sizeof(OriginalMapTile)>w.memory_bytes() || (uint64_t)g.base_count*sizeof(OriginalBase)>w.memory_bytes())return TerraformEcologyError::bad_state;
  const auto*base=w.base(id);if(!base)return TerraformEcologyError::bad_state;
@@ -30,7 +36,7 @@ TerraformEcologyError world_terraform_ecology(const OriginalWorld&w,size_t id,Te
   const auto*tile=w.tile(tile_id);if(!tile)return TerraformEcologyError::bad_state;
   next.valid_tiles|=1u<<i;const uint32_t items=tile->items;
   int32_t damage=(int32_t)popcount(items&0x1c8805cu);
-  if((uint32_t)base->worked_tiles&(1u<<i))damage*=2;
+  if(worked&(1u<<i))damage*=2;
   damage+=((items&0x1000000u)?8:0)+((items&0x800000u)?6:0)+((items&0x400000u)?4:0)-((items&0x200000u)?1:0);
   if(tree&&hybrid)damage=0;
   if(tree||hybrid)damage/=2;

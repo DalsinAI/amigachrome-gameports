@@ -23,7 +23,7 @@ StableIntakeError world_worker_upkeep_candidate(const OriginalWorld&w,const Rule
  if(aliases(w,t,u,basic,resources,stage,&output,sizeof output))return StableIntakeError::bad_buffer;
  if(!w.loaded()||id>2147483647u)return StableIntakeError::bad_state;
  const auto*base=w.base(id);if(!base||base->faction_id<1||base->faction_id>7||base->pop_size<0||base->specialist_total<0||base->specialist_total>base->pop_size||basic.nutrient_req_citizen<0)return StableIntakeError::bad_state;
- if(stage.upkeep_state!=1||stage.editor_active)return StableIntakeError::unsupported_stage;
+ if(stage.upkeep_state!=1||stage.editor_active||w.game().data_version>=11)return StableIntakeError::unsupported_stage;
  const auto&g=w.game();const int32_t faction=base->faction_id;
  if(!(g.preferences.FactionStatus[0]&(1u<<(unsigned)faction))||(((uint32_t)base->governor_flags&0x80000040u)==0x80000040u))return StableIntakeError::unsupported_stage;
  const auto*owner=w.faction(faction);const auto*definition=w.faction_definition(faction);if(!owner||!definition)return StableIntakeError::bad_state;
@@ -72,7 +72,7 @@ StableIntakeError world_worker_upkeep_candidate(const OriginalWorld&w,const Rule
   next.intake.base_energy_after=result.base_energy;reduction=0;
  }
  for(unsigned k=0;k<3;++k)if(!put((int64_t)next.intake.satellites[k]+next.intake.tiles[k],next.intake.intake[k]))return StableIntakeError::overflow;
- next.intake.terraform_reduction_after=reduction;TerraformEcologyResult ecology{};if(world_terraform_ecology(w,id,ecology)!=TerraformEcologyError::ok)return StableIntakeError::bad_state;next.intake.raw_eco_damage=ecology.raw_damage;
+ next.intake.terraform_reduction_after=reduction;TerraformEcologyResult ecology{};if(world_terraform_ecology_for_workers(w,id,next.allocation.worked,ecology)!=TerraformEcologyError::ok)return StableIntakeError::bad_state;next.intake.raw_eco_damage=ecology.raw_damage;
  output=next;return StableIntakeError::ok;
 }
 }

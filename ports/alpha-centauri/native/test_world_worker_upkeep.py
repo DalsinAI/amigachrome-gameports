@@ -74,11 +74,11 @@ def model(text,data,mode=None):
  if selected[0]:return fail(7 if selected[0]==3 else 1)
  mask=selected[1];temp=modified(data,mask=mask,pop=mask.bit_count()-1,special=0);fresh=intake.model('base',text,temp,1 if mode=='control' else 0)
  if fresh[0]:return fail(fresh[0])
- fresh=list(map(signed,fresh[1:]));fresh[0:3]=satellites
+ fresh=list(map(signed,fresh[1:]));fresh[10]&=0xffffffff;fresh[11]&=0xffffffff;fresh[0:3]=satellites
  fresh[6:9]=[fresh[3+k]+satellites[k] for k in range(3)]
  return {'BASE':[0],'FACTS':facts,'ALLOC':selected[1:],'YIELDS':values,'INTAKE':fresh}
 def main():
- p=argparse.ArgumentParser();p.add_argument('--out',type=Path,default=Path('/tmp/alpha-world-worker'));p.add_argument('--cc',default='g++');p.add_argument('--binary',type=Path);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True);exe=a.binary or a.out/'probe';command=[]
+ p=argparse.ArgumentParser();p.add_argument('--out',type=Path,default=Path('/tmp/alpha-world-worker'));p.add_argument('--cc',default='g++');p.add_argument('--binary',type=Path);p.add_argument('--only');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True);exe=a.binary or a.out/'probe';command=[]
  if not a.binary:
   command=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',*[str(HERE/(name+'.cpp')) for name in SOURCES],'-o',str(exe)];subprocess.run(command,check=True)
  text=intake.rules('base');tables=intake.sections(text);row,col,_=intake.ROW['nutrient_req_citizen'];tables['RULES'][row][col]='2';text=intake.material(tables)
@@ -91,15 +91,24 @@ def main():
   changed=bytearray(seed);struct.pack_into('<'+fmt,changed,off['bases']+delta,value);cases.append((name,bytes(changed),None,text))
  for name,variant in [('SMAX',12)]:cases.append((name,fixture(7,variant),None,text))
  for name,source in [('fungus',intake.fresh_fungus_fixture(seed,52)),('fresh-tech-overflow',intake.fresh_fungus_fixture(seed,52,True))]:cases.append((name,source,None,text))
+ changed=bytearray(modified(fixture(32,9),mask=1,pop=3,special=0));_,eco_off,_=intake.decode(changed)
+ for facility in [13,14]:changed[eco_off['bases']+0x8c+facility//8]&=~(1<<(facility%8))
+ for index in range(96):
+  if index!=52:
+   at=eco_off['tiles']+44*index+8;struct.pack_into('<I',changed,at,(struct.unpack_from('<I',changed,at)[0]&3)|0x200000|0x40)
+ cases.append(('proposed-mask-ecology',bytes(changed),None,text))
+ if a.only:cases=[case for case in cases if case[0]==a.only]
+ assert cases
  digest=hashlib.sha256();records=[]
  for name,data,mode,rules in cases:
   path,rule=a.out/'input.SC',a.out/'rules.txt';path.write_bytes(data);rule.write_bytes(rules)
   run=subprocess.run([str(exe),str(rule),str(path),*([mode] if mode else [])],capture_output=True,timeout=60,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'));assert run.returncode==0,(name,run.returncode,run.stderr)
   actual={line.split()[0]:list(map(int,line.split()[2:])) for line in run.stdout.decode().splitlines() if line.split()[1]=='0'};expected=model(rules,data,mode)
   assert actual==expected,(name,actual,expected)
+  if name=='proposed-mask-ecology':assert actual['BASE']==[0] and actual['INTAKE'][12]!=intake.ecology_expected(data)[1],actual
   (a.out/(name+'.SC')).write_bytes(data);(a.out/(name+'.rules.txt')).write_bytes(rules);(a.out/(name+'.expected.txt')).write_bytes(run.stdout)
   assert data==path.read_bytes() and rules==rule.read_bytes();digest.update(run.stdout);records.append(dict(name=name,accepted=actual['BASE']==[0],mode=mode,outputSHA256=hashlib.sha256(run.stdout).hexdigest()))
  receipt=dict(worlds=len(cases),accepted=sum(r['accepted'] for r in records),outputSHA256=digest.hexdigest(),command=command,records=records,native='UNRUN',allWorldAndRulesAndOutputsTransactional=True,upkeep1PreSpecialistProposalOnly=True)
- assert receipt['accepted']>=40,receipt
+ assert receipt['accepted']>=(1 if a.only else 40),receipt
  (a.out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps({k:v for k,v in receipt.items() if k not in ('command','records')}))
 if __name__=='__main__':main()
