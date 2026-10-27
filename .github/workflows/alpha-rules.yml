@@ -668,3 +668,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_historical_aftermath.py --out "$RUNNER_TEMP/design-history-host"
       - name: Saved design history aftermath independent 68040
         run: python3 ports/alpha-centauri/native/test_historical_aftermath.py --out "$RUNNER_TEMP/design-history-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original battle entry calculations host
+        run: python3 ports/alpha-centauri/native/test_battle_entry.py --output "$RUNNER_TEMP/battle-entry-host"
+      - name: Original battle entry calculations independent 68040
+        run: python3 ports/alpha-centauri/native/test_battle_entry.py --output "$RUNNER_TEMP/battle-entry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
