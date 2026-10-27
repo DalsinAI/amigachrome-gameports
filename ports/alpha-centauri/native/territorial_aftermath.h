@@ -27,6 +27,7 @@ class TerritorialBattleAftermathPlan {
   const ResolutionPools*accumulators()const{return ready_?&pools_:nullptr;}
   const BattleBookkeepingResult*bookkeeping()const{return ready_?after_.bookkeeping():nullptr;}
  private:
+  friend class HistoricalBattleAftermathPlan;
   friend PromotedAftermathError stage_territorial_aftermath(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const LandResolutionFacts&,const BattleAftermathRuntime&,const TerritoryRuntime&,TerritorialBattleAftermathPlan&,size_t);
   PromotedAftermathError prepare(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const LandResolutionFacts&,const BattleAftermathRuntime&,const TerritoryRuntime&,size_t);
   void swap(TerritorialBattleAftermathPlan&);

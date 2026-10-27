@@ -64,6 +64,7 @@ class OriginalWorld {
   const OriginalFactionDefinition* faction_definition(size_t i)const{return loaded() && i<8?definitions_+i:nullptr;}
  private:
   friend class WorldPromotionPlan;
+  friend class WorldCombatHistoryPlan;
   friend class WorldTerritorialCombatPlan;
   friend class LocalProductionSession;
   friend class WorldActions;

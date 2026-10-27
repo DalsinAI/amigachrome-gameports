@@ -26,6 +26,7 @@ class LandEngagementPlan {
   friend class TerritorialPromotedLandPlan;
   friend class PromotedLandResolutionPlan;
   friend class WorldPromotionPlan;
+  friend class WorldCombatHistoryPlan;
   friend class WorldTerritorialCombatPlan;
   friend class LandResolutionPlan;
   friend EngagementError stage_land_engagement(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const EngagementFacts&,LandEngagementPlan&,size_t);
