@@ -2401,3 +2401,26 @@ including all 4,096 original observations. Both outputs match. SDK build only;
 actual AmigaOS and remote final-head CI remain UNRUN. The full game remains
 incomplete. `test_prebattle_notification.py` also checks immutable inputs,
 preserved failure output and every wholly overlapping four-byte output offset.
+
+### Current World prebattle diplomacy proposals
+
+`world_prebattle_diplomacy.{h,cpp}` independently binds the recovered notification
+selector and observer aggression proposal to actual current actor ownership and
+faction records. The notification query derives all directional statuses and
+prior defender contact turn; the aggression query derives both directional
+statuses and combat counters. Both use the current world's edition. Current
+viewer, human status, flags, popup state, turn and local warning remain explicit
+runtime observations, with no saved-state authority fallback. A successful query
+never acknowledges an earlier notification or advances the original caller.
+Double-cross and participant audio/redraw remain held by the aggression helper.
+
+The independent wire model checks both proposals, exact failure preservation,
+all borrowed World storage aliases, immutable decoded/source records and RNG.
+The joined host/68040 suite passes 176,316 queries across 28 worlds, including
+three unchanged original tutorials: 58,464 notification proposals cover all four
+routes; aggression reports 31,752 proposals, 16,128 double-cross holds and 10,584
+participant UI holds. There are 1,392 alias/empty-world guards. The first host
+model failed on invalid-current versus same-faction error precedence in Explore;
+only the model was corrected. Production code was unchanged for passing reruns.
+SDK build only; actual AmigaOS and remote CI remain UNRUN. No World mutation,
+legal attack, event completion, turns or playable-game qualification is claimed.

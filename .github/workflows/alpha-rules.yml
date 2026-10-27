@@ -708,3 +708,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_prebattle_notification.py --out "$RUNNER_TEMP/prebattle-notification-host"
       - name: Original prebattle notification selector independent 68040
         run: python3 ports/alpha-centauri/native/test_prebattle_notification.py --out "$RUNNER_TEMP/prebattle-notification-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Current World prebattle diplomacy host
+        run: python3 ports/alpha-centauri/native/test_world_prebattle_diplomacy.py --out "$RUNNER_TEMP/world-prebattle-diplomacy-host"
+      - name: Current World prebattle diplomacy independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_prebattle_diplomacy.py --out "$RUNNER_TEMP/world-prebattle-diplomacy-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
