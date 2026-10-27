@@ -1875,3 +1875,32 @@ actual independent68040. The600 matching first-event/crop-argument plans also
 agree on both. All151 parent workflow commands remain plus two. Normal SDK probe
 and controls build only; native execution unrun. See
 `SEA-CROP-BOUNDARY-EVIDENCE-20261027.json`.
+
+
+### No-crop acquired-RAM later water sprites
+
+`render_water_item_sprites` is a separate late RAM layer for the original water
+item10,40,400000,800000 and1000000 sprites (including the last one's alternate
+landmark variant). The six source TER1 crop rectangles and exact trim profiles
+are recovered from loader instructions and complete original RAM extraction.
+Owner pixels stay private; no replacement art is generated. Physical PCX loading
+and global palette installation are not claimed.
+
+Every required crop event holds BEFORE any writes. The sea-platform operation
+and highbit Sprite_draw_dest/cache route are separately held rather than omitted.
+Caller supplies original observation/late gate, ExpansionEnabled, normal zoom-5/5,
+callerXY, clip, minimum dimensions and coherent scale-cache/resource authority.
+All active resources must match their qualified trim profile. Failure rolls back
+all earlier sprite writes; inputs/resources cannot alias the original destination.
+Padded surfaces preserve padding. No World, parent scene or frontend is enabled.
+
+All720 synthetic packed/padded/order/gate cases and36 boundary/alias/rollback
+controls pass host ASan/UBSan and actual independent68040. Six owner crops match
+complete original Extract2 metadata and every pixel. Forty-eight owner RAM
+contexts use actual MapWin-prefix water/base-grid pixels,96 separately executed
+original Draw3 geometry prefixes, and separate real original raster suffix waves
+in source intent order. Every final pixel matches on both architectures. This is
+joined RAM evidence, NOT a complete original callback/USER32/MapWin wrapper run;
+no original wrapper is resumed with a fabricated result. All153 parent workflow
+commands remain plus two. Normal SDK builds are native-unrun. See
+`WATER-ITEM-SPRITES-EVIDENCE-20261027.json`.

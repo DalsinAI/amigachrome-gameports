@@ -1,0 +1,33 @@
+{
+  "scope": "Bounded acquired-RAM later-water Draw3 sprites only; no crop calls required",
+  "resources": 6,
+  "publicCases": 720,
+  "controls": 36,
+  "publicSHA256": "e0e14986ab1b8575c423b3ad1ae7b4db81eab486494337dd35c981a928e64e6f",
+  "hostASanUBSan": true,
+  "independentBigEndian68040": true,
+  "wholeOriginalRAMExtractionCases": 6,
+  "ownerJoinedRAMContexts": 48,
+  "separateOriginalDraw3PrefixObservations": 96,
+  "ownerPixelsSHA256": "89a759e5b42e326329b4e0e6c9d91c0e70a1f68c13bf7f544213a5b376d65fae",
+  "wholeSpriteOrMapWinWrapper": false,
+  "USER32OrFakeCallback": false,
+  "requiredCropCallsHeld": true,
+  "SDKBuildOnly": {
+    "normalSDK": true,
+    "native": false,
+    "binaries": {
+      "water-item-probe-amiga": "f6cec491cc49ce85c292ddf83ca55558d4ad640b8f3548e08f24c334bbcc7e13",
+      "water-item-control-amiga": "57886defd80eb9d15b1b0dbcc23577e4d8b18222d5181e050f9234b99688b970"
+    }
+  },
+  "native": false,
+  "sceneOrFrontendEnabled": false,
+  "holds": [
+    "Requiredcrop runtime/yield authority",
+    "SeaPlatform is handled separately byparentcandidate, notsilentlydrawnhere",
+    "HighbitSprite_draw_dest/cache/specialRECT path",
+    "Othermodes/landmark/bonus/goody andlaterunsupportedresources",
+    "NoWorld/frontend enabling/native/lab/watch/deploy/export/publication"
+  ]
+}
