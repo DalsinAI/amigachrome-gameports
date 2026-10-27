@@ -1,0 +1,60 @@
+{
+  "scope": "Base SMAC graphics crop-call source fragments and unchanged whole-helper edition differential; inspection only",
+  "parentFrozen": "402f8d0977ebcb59e903bca93b2e1dd3e098cd0b",
+  "original": {
+    "baseSHA256": "0a61eb3642df750c0d5e516c3e3efeb4ad5ae7e1ce3163617759449327952a01",
+    "expansionSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf"
+  },
+  "callerFragments": {
+    "function": "SMAC MapWin original entry46fd00 (full function not executed)",
+    "resolvedFaction": "Unchanged46fec4\u219246ff00: viewer>=0 directly, negative viewer uses raw tile.val3&7 if nonzero else explicit CurrentFaction9430d4",
+    "gateCall": "Unchanged47263d\u2192472675: explicit original late/display/zoom/flags locals, actual call4fc6c0 at47266a, normal return then stack cleanup/store",
+    "arguments": [
+      "resolved faction",
+      "-1",
+      "mapX11",
+      "mapY9",
+      "0"
+    ],
+    "observation": "CPU TF/SIGTRAP observes exact instruction boundaries; records real callee-entry stack; does not replace any original instruction/callback/result",
+    "limits": "Harness supplies caller locals/registers at the two disjoint fragments; no intervening terrain, whole MapWin entry/return, caller reachability or live-runtime authority claim"
+  },
+  "baseBehavior": {
+    "negativeFacilityRead": "No ocean Aquafarm36 lookup exists; controlled pre-base byte96f110 unchanged/no influence",
+    "oceanImprovement": "Only shelf altitude2 adds improved-sea nutrient; no ExpansionEnabled branch",
+    "scratch": "BaseTerraformReduce918634 accumulates uncapped_value-2 on original nutrient limit; incoming counter is explicit, never reset by crop; paired calls accumulate twice",
+    "rawVsDisplayed": "Displayed/snapshot bits govern the supplied caller gate; whole helper independently rereads actual raw tile items/altitude, including snapshot/raw mismatch controls",
+    "otherState": "No substitute base0, CurrentBase facility, zero scratch or generic all-yield stage is used"
+  },
+  "editionComparison": {
+    "sourceOwner": "Owner Conquer.SC legacy TechOwners masks, matched raw bytes verified; explicit controlled query tiles/runtime state/resources, not a refreshed runtime",
+    "sourceOwnerSHA256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45",
+    "ownerTechMasksSHA256": "a26839c100ee9cc1bacedd0bebc1cc7dd2ec360a915d089cb6b5b34a5a85adea",
+    "baseCallerFragmentCases": 1296,
+    "baseCropCallsWithinFragment": 810,
+    "baseDoubleCallContexts": 810,
+    "baseDoubleCalls": 1620,
+    "SMAXSingleContexts": 1620,
+    "totalWholeOriginalCropCalls": 4050,
+    "editionDifferentialContexts": 648,
+    "baseCallerSHA256": "3e2f0d98c469edfafe4a83d2e593bfc171debf23fa0d1e019bc5e55581bd44e1",
+    "baseDoubleSHA256": "332598b96393c7b322148f15bc9fb55d2bc0aade672efd85146e1a0c56a80976",
+    "SMAXSingleSHA256": "685e9ed10cb04739a503b4d54feed74b80d4db5e1be8a9f1d32f485294e19f48",
+    "SMAXDifference": "ExpansionEnabled can apply deep-water kelp; unguarded facility36 reads97cf9c bit10 with base=-1, changing return and/or scratch, unlike SMAC"
+  },
+  "holds": [
+    "All production crop calls remain held",
+    "Actual live source scratch lifecycle/callback order",
+    "Actual SMAX pre-base adjacent-byte allocation authority",
+    "Intervening source terrain/visibility and whole MapWin caller",
+    "Other project/fungus/land/base contexts outside tested raw profile",
+    "Owned portable evaluator/BE/native/frontend integration"
+  ],
+  "productionUnchanged": true,
+  "workflowUnchanged": true,
+  "cropHoldRemoved": false,
+  "frontendOrWatchTouched": false,
+  "native": "UNRUN",
+  "independent68040": "Not run: no new portable implementation",
+  "SDK": "Not built: contract/evidence only"
+}

@@ -1959,3 +1959,28 @@ on this profile. These are separate numeric helper returns, not a resumed
 MapWin callback chain. There is no portable evaluator, renderer crop-hold removal,
 base-edition or native qualification here. All prior sources remain unchanged.
 See `GRAPHICS-CROP-CONTEXT-20261027.json` for the exact contract and limits.
+
+
+### Base SMAC graphics crop-call differential: hold retained
+
+The corresponding base-game profile differs from SMAX: its ocean-kelp branch
+has no Aquafarm36 access, so no negative-base facility alias. It improves shelf
+water only; ExpansionEnabled does not extend it to deep water. Its nutrient
+limit still accumulates the incoming BaseTerraformReduce counter, including on
+repeated draws. Edition behavior must remain explicit.
+
+Unchanged base-game faction-resolve46fec4→46ff00 and crop-gate/call/result-
+store47263d→472675 fragments pass1296 controlled cases.810 calls execute the
+complete original crop4fc6c0 with genuine bonus/bitmask/technology dependencies.
+The CPU boundary observer captures actual arguments; no original instruction or
+callee result is replaced. Caller locals/registers are supplied at these two
+disjoint fragments: the intervening terrain, whole MapWin and live-runtime
+reachability are not claimed. Raw/displayed farm mismatch and nonzero incoming
+scratch controls remain distinct.
+
+Another810 base paired-call contexts confirm accumulation twice;1620 separate
+SMAX profiles use the same actually observed arguments with explicit expansion
+and adjacent-memory facts.648 differ in yield and/or scratch. Actual owner
+TechOwners masks and edition rules are referenced privately. No production
+evaluator, crop-hold removal, portable68040/native or frontend change is made.
+See `SMAC-GRAPHICS-CROP-CONTEXT-20261027.json`.
