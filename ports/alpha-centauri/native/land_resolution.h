@@ -37,6 +37,7 @@ class LandResolutionPlan {
   const ResolutionPools*accumulators()const{return ready_?&pools_:nullptr;}
   const LandResolutionSummary*summary()const{return ready_?&summary_:nullptr;}
  private:
+  friend class BattleAftermathPlan;
   friend EngagementError stage_land_resolution(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const LandResolutionFacts&,LandResolutionPlan&,size_t);
   EngagementError prepare(const OriginalWorld&,const UnitDefinitions&,const Rules&,const BasicRules&,size_t,size_t,const LandResolutionFacts&,size_t);
   void swap(LandResolutionPlan&);

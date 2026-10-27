@@ -628,3 +628,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_battle_bookkeeping.py --out "$RUNNER_TEMP/world-battle-bookkeeping-host"
       - name: Big-endian owned current-world battle bookkeeping controls
         run: python3 ports/alpha-centauri/native/test_world_battle_bookkeeping.py --out "$RUNNER_TEMP/world-battle-bookkeeping-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned LAND body-state and bookkeeping composition
+        run: python3 ports/alpha-centauri/native/test_battle_aftermath.py --out "$RUNNER_TEMP/battle-aftermath-host"
+      - name: Big-endian owned LAND body-state and bookkeeping composition
+        run: python3 ports/alpha-centauri/native/test_battle_aftermath.py --out "$RUNNER_TEMP/battle-aftermath-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

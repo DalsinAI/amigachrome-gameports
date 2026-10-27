@@ -2219,3 +2219,5 @@ Checked vehicle-removal storage is documented in [VEHICLE-REMOVAL.md](VEHICLE-RE
 Ordered caller-field dependency: [battle bookkeeping](BATTLE-BOOKKEEPING.md), with explicit offline runtime and an active-player monument UI hold. No World/session commit.
 
 [Owned current-world battle bookkeeping](WORLD-BATTLE-BOOKKEEPING.md) binds selected current faction/monument fields and explicit runtime statistics to a separate clone, with UI/profile holds. No attack/session/save commit.
+
+[Owned LAND body-state and bookkeeping composition](BATTLE-AFTERMATH.md) preserves pre-cleanup faction identity, with explicit runtime and held caller paths. No player attack/session/save commit.
