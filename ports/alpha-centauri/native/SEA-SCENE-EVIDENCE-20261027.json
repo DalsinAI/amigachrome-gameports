@@ -1,0 +1,30 @@
+{
+  "scope": "Explicit bounded ordinary RAM scene + sea-platform composition; frontendunchanged",
+  "hostAndIndependentBigEndian": true,
+  "waterContexts": 2304,
+  "landDelegations": 1152,
+  "newAliasControls": 12,
+  "inheritedParentControls": true,
+  "lateFailureAndHeldTransactions": 5,
+  "publicSHA256": "98fa32c27932ac0e8e9a235c104462f9f330cb54ae7a088bd29bbf2307455cce",
+  "landSHA256": "4ec1aef3e7e6d30e2158180b0a632ab418f5ed67ccfd103814efd9321e82ebe7",
+  "originalPrefixAndSeparateSuffixCompositions": 12,
+  "ownerRAMSHA256": "3f3d4c9ac933dc363ebd2e16e854373a1c2d2606604c408a204b50556a98ec25",
+  "wholeOriginalWrapperOrMapWinNormalReturn": false,
+  "SDKBuildOnly": {
+    "normalSDK": true,
+    "nativeExecuted": false,
+    "probeSHA256": "9c5a7de7d6e22474f9f6e4fabd7d3c4acb29c321b544286091ec3ad3e67fd4f1",
+    "unchangedInstalledSDK": true
+  },
+  "native": false,
+  "frontend": false,
+  "limits": [
+    "seaFarm+drawbit20: crop_yield callbacks",
+    "missingMinimaOrCoherentCacheOrPreparedPixelAuthority",
+    "outline/specialHeight/unsupportedDrawModes",
+    "fulloriginalUSER32wrapper/physicalOSpalette/native/frontend"
+  ],
+  "paddedSurfaceContexts": 288,
+  "paddedSurfaceSHA256": "2db14157f3225367989a54d4803ba5accd455092e7b2909f10d164a5ec2adc00"
+}

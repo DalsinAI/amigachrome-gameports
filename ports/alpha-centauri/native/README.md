@@ -1807,3 +1807,36 @@ remain plus two. Normal SDK builds are native-unrun. Source minimum-size globals
 remain explicit, as do prepared owner pixel/cache authority. Shared drawbit20
 sea-farm contexts remain held because later crop-yield callbacks are unresolved.
 See `SEA-PLATFORM-EVIDENCE-20261026.json`.
+
+
+### Explicit sea-platform bounded scene composition
+
+`render_world_scene_with_sea_platform` composes the qualified water/feature/grid
+prefix and acquired-RAM sea sprite transactionally. It resolves actual displayed
+items and the separate late exploration gate from the owned World, retains all
+normal parent source-view/height/cache/identity gates, and requires explicit
+prepared owner pixels, clip, minimum dimensions and coherent source-scale cache.
+Only the normal source zoom-5/5 profile is supported. Original callerXY is retained.
+
+The unchanged parent water renderer is called with bit1 disabled: in this bounded
+water-only source path that bit solely enables the late sea sprite; observation,
+water, fungus and grid behavior is unchanged. The sprite follows the base-work
+grid. Land delegates unchanged. Sea-farm bit20 stays held for unresolved later
+crop-yield callbacks; no missing layer is silently omitted. The existing parent
+API and frontend remain unchanged, including their original sea-feature hold.
+
+All2304 synthetic water contexts (1536 active/768 inactive sea contexts),1152 land
+delegations,12 extra destination/input alias controls plus inherited parent
+controls,288 padded-surface cases and5 late-failure/held no-write controls pass host ASan/UBSan and actual
+independent68040. Source profile/minimum/cache failures are checked with
+the inherited validation precedence before drawing. Every late failure leaves
+the original destination unchanged after private terrain staging.
+
+Twelve unchanged original MapWin/Sprite entry prefixes supply actual water and
+base-work-grid pixels at the untouched unresolved USER32 import. Nine separate
+original sprite pixel suffix returns compose over those actual prefix pixels;
+three clipped cases retain the prefix. All12 owner-image results match exactly
+on both architectures. This is joined explicit-RAM evidence, NOT a full original
+MapWin/Sprite_draw3 return, USER32 execution, original loader or physical OS scene.
+All149 parent workflow commands remain plus two. Normal SDK builds are native
+execution-unrun. See `SEA-SCENE-EVIDENCE-20261027.json`.
