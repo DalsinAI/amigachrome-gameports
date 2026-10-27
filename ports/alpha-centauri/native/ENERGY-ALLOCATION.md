@@ -107,6 +107,15 @@ The additional oracle test deliberately poisons old specialist counts while
 passing valid fresh assignments, exercises changed specialist types and
 more than 16 specialists, and rejects mismatched population, missing centre,
 high mask bits, incomplete assignments and invalid active specialist IDs.
+All **280 final proposed-assignment cases** pass both host ASan/UBSan and genuine
+AROS guest execution with every return code 0 and complete outputs matching
+the independent oracle. There are 114 accepted proposals, including 16 with
+more than 16 specialists; remaining cases reject malformed or unavailable
+specialists. The aggregate final native output is 28,182 bytes, SHA-256
+`d35b8fbe5abe0ea5ddd37a3b74d1c6b6c5265837ac60f93de9648408d802686b`.
+`evidence/alpha-energy-allocation-20261027/proposed-native.json` identifies
+source `70895a4` and the final binary. Earlier native runs before the additional
+availability check do not qualify this version.
 
 ```
 python3 test_energy_allocation.py --out /tmp/alpha-allocation-leaf
