@@ -652,3 +652,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_promoted_aftermath.py --out "$RUNNER_TEMP/promoted-aftermath-host"
       - name: Promoted battle aftermath independent 68040
         run: python3 ports/alpha-centauri/native/test_promoted_aftermath.py --out "$RUNNER_TEMP/promoted-aftermath-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original territorial combat prefix host
+        run: python3 ports/alpha-centauri/native/test_territorial_combat.py --out "$RUNNER_TEMP/territorial-combat-host"
+      - name: Original territorial combat prefix independent 68040
+        run: python3 ports/alpha-centauri/native/test_territorial_combat.py --out "$RUNNER_TEMP/territorial-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
