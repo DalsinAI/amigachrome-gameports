@@ -48,9 +48,13 @@ def fixture(version,case):
  if case==76:state(1,'SE_research_pending',-2147483648)
  if case==77:pref('CurrentTurn',0)
  if case==78:pref('GamePreferences',0x20);pref('CurrentTurn',5)
+ if case==80:pref('GameRules',0x200);state(1,'tech_research_id',-1)
+ if case in[81,83,84]:pref('GameRules',0x200)
+ if case in[82,83,85]:state(1,'player_flags',0x40)
+ if case in[84,85]:pref('TechOwners',0,4)
  if case>=60 and case not in[77,78]:pref('CurrentTurn',30);pref('GamePreferences',0);state(1,'SE_research_pending',0)
  return bytes(data)
-def stage(case):return[1+case%37,case%103,case%100,2147483000 if case>=60 else case*3]
+def stage(case):return[1+case%37,case%103,case%100,0 if case in[81,82,83,85]else 2147483000 if case>=60 else case*3]
 def facts(text,data,owner):
  info,_,spans=intake.decode(data);legacy=int(info['version'])<11;fs=0x20bc if legacy else 0x20cc;schema=intake.FACTIONS['LegacyFactionV10'if legacy else'Faction'];pf=spans['legacy'if legacy else'preferences'];ds=intake.FACTIONS['MFaction']
  def pref(name,index=0):
@@ -61,15 +65,14 @@ def facts(text,data,owner):
  return info,spans,pref,state,definition,cost
 def clamp(n,lo,hi):return max(lo,min(hi,n))
 def model(text,data,base,s):
- info,_,spans=intake.decode(data);legacy=int(info['version'])<11;bs=304 if legacy else 308;owner=spans['bases'][base*bs+4];info,spans,pref,state,definition,cost=facts(text,data,owner);cost_failure=lambda e:[e]+[SENTINEL]*7;failure=lambda e:[e]+[SENTINEL]*22
+ info,_,spans=intake.decode(data);legacy=int(info['version'])<11;bs=304 if legacy else 308;owner=spans['bases'][base*bs+4];info,spans,pref,state,definition,cost=facts(text,data,owner);cost_failure=lambda e:[e]+[SENTINEL]*7;failure=lambda e:[e]+[SENTINEL]*26
  ce=cost_expected(cost)if legacy and pref('FactionStatus')&(1<<owner)else cost_failure(4)
- if not legacy or owner!=int(info['player'])or owner!=pref('CurrentFaction')or not pref('FactionStatus')&(1<<owner)or pref('GameRules')&0x200:return dict(cost=ce,research=failure(4))
- target=state(owner,'tech_research_id');rank=state(owner,'tech_ranking');debt=state(owner,'unk_27');achieved=state(owner,'tech_achieved');sphere=bool(spans['bases'][base*bs+0x8c+23//8]&(1<<(23%8)));contribution=[s[0],state(owner,'SE_research_pending'),pref('CurrentTurn'),state(owner,'diff_level'),999999999,*s[1:],bool(pref('GameRules')&0x4000000),bool(pref('GamePreferences')&0x20),sphere];pre=contribution_expected(contribution,progress=False)
+ if not legacy or owner!=int(info['player'])or owner!=pref('CurrentFaction')or not pref('FactionStatus')&(1<<owner):return dict(cost=ce,research=failure(4))
+ blind=int(bool(pref('GameRules')&0x200));target=state(owner,'tech_research_id');rank=state(owner,'tech_ranking');debt=state(owner,'unk_27');achieved=state(owner,'tech_achieved');sphere=bool(spans['bases'][base*bs+0x8c+23//8]&(1<<(23%8)));contribution=[s[0],state(owner,'SE_research_pending'),pref('CurrentTurn'),state(owner,'diff_level'),999999999,*s[1:],bool(pref('GameRules')&0x4000000),bool(pref('GamePreferences')&0x20),sphere];pre=contribution_expected(contribution,progress=False)
  # Conversion only never adds to accumulated and cannot complete a target.
  if pre[0]:return dict(cost=ce,research=failure(pre[0]))
  points=pre[5];pre[3]=s[3];pre[6]=0
- if not points:return dict(cost=ce,research=[*pre,target,target,rank,debt,achieved,0,0,0,0,0,0,0,0,0,0])
- if state(owner,'player_flags')&0x40:return dict(cost=ce,research=failure(4))
+ if not points:return dict(cost=ce,research=[*pre,target,target,rank,debt,achieved,0,0,0,0,0,0,0,0,0,0,blind,0,0,0])
  if target<0:return dict(cost=ce,research=failure(5))
  if 78<=target<=86 or target>=88:return dict(cost=ce,research=failure(4))
  table=sections(text)['TECHNOLOGY'];keys={r[1].lower():i for i,r in enumerate(table)};keys.update(none=-1,disable=-2)
@@ -82,22 +85,22 @@ def model(text,data,base,s):
  if ce[0]:return dict(cost=ce,research=failure(ce[0]))
  contribution[4]=ce[1];result=contribution_expected(contribution)
  if result[0]:return dict(cost=ce,research=failure(result[0]))
- mask=pref('TechOwners',target);complete=result[6];targetafter=target;effect=[0]*5;secrets=0
- if complete:
+ mask=pref('TechOwners',target);complete=result[6];pending=bool(state(owner,'player_flags')&0x40);acquire=int(bool(complete or pending));targetafter=target;effect=[0]*5;secrets=0;bonus_current=0;bonus_next=0
+ if acquire:
   if achieved<0:return dict(cost=ce,research=failure(1))
   if max(achieved+1,rank+2)>2147483647:return dict(cost=ce,research=failure(3))
   targetafter=-1;achieved+=1;rank+=2
   if debt<0:return dict(cost=ce,research=failure(1))
-  debt=max(0,debt-2);secrets=int(not mask and bool(int(row[8],2)&1));mask|=1<<owner;copy=bytearray(data);_,off,_=intake.decode(copy);field=next(f for f in intake.SCHEMA['GamePrefs']['fields']if f['name']=='TechOwners');at=off['legacy'if legacy else'preferences']+field['offset']-(0x7c if legacy and field['offset']>=0x184 else 0)+target;copy[at]=mask;error,effect=effects(text,bytes(copy),owner)
+  debt=max(0,debt-2);secrets=int(not mask and bool(int(row[8],2)&1));bonus_current=int(pending and not complete);bonus_next=int(bool(complete and(pending or secrets)));mask|=1<<owner;copy=bytearray(data);_,off,_=intake.decode(copy);field=next(f for f in intake.SCHEMA['GamePrefs']['fields']if f['name']=='TechOwners');at=off['legacy'if legacy else'preferences']+field['offset']-(0x7c if legacy and field['offset']>=0x184 else 0)+target;copy[at]=mask;error,effect=effects(text,bytes(copy),owner)
   if error:return dict(cost=ce,research=failure(3 if error==3 else 1))
- return dict(cost=ce,research=[*result,target,targetafter,rank,debt,achieved,mask,*effect,1,complete,complete,secrets])
+ return dict(cost=ce,research=[*result,target,targetafter,rank,debt,achieved,mask,*effect,1,acquire,acquire,secrets,blind,int(bool(acquire and blind)),bonus_current,bonus_next])
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--cc',default='c++');ap.add_argument('--binary',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False);exe=a.binary or a.out/'world-research-probe';cmd=[]
  if not a.binary:
   cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',*[str(HERE/(n+'.cpp'))for n in NAMES],'-o',str(exe)];subprocess.run(cmd,check=True)
  text=rules();rule=a.out/'base.txt';rule.write_bytes(text);records=[]
  for version in range(7,13):
-  for case in range(80 if version<11 else 3):
+  for case in range(86 if version<11 else 3):
    data=fixture(version,case);path=a.out/f'v{version}-{case}.SC';path.write_bytes(data);s=stage(case);want=model(text,data,0,s);run=subprocess.run([str(exe),str(rule),str(path),'0',*map(str,s)],capture_output=True,text=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'),timeout=30);assert run.returncode==0,(path,run.returncode,run.stderr);got={line.split()[0]:list(map(int,line.split()[1:]))for line in run.stdout.splitlines()};assert got==want,(path,s,got,want);records.append(dict(name=path.name,stage=s,base=0,sha256=hashlib.sha256(data).hexdigest(),result=got,passed=True))
  receipt=dict(cases=len(records),command=cmd,casesDetail=records,native='UNRUN',scope='Explicit fresh scalar/ledger boundary; coupled upkeep helper required for freshness authority');(a.out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(f'{len(records)} world original-cost and directed-research cases passed')
 if __name__=='__main__':main()

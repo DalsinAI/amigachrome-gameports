@@ -35,14 +35,13 @@ ResearchError world_base_research(const OriginalWorld&w,const Rules&t,const Basi
  if(aliases(w,b,&out,sizeof out)||overlap(&out,sizeof out,&t,sizeof t)||overlap(&out,sizeof out,&s,sizeof s))return ResearchError::bad_buffer;
  if(!w.loaded()||t.count!=89)return ResearchError::bad_state;
  const auto*base=w.base(id);if(!base)return ResearchError::bad_state;const int faction=base->faction_id;
- if(faction<1||faction>7||faction!=w.game().player||faction!=w.game().preferences.CurrentFaction||w.game().data_version>=11||!(w.game().preferences.FactionStatus[0]&(1u<<(unsigned)faction))||((uint32_t)w.game().preferences.GameRules&0x200u))return ResearchError::unsupported;
+ if(faction<1||faction>7||faction!=w.game().player||faction!=w.game().preferences.CurrentFaction||w.game().data_version>=11||!(w.game().preferences.FactionStatus[0]&(1u<<(unsigned)faction)))return ResearchError::unsupported;
  const auto*f=w.faction((size_t)faction);if(!f)return ResearchError::bad_state;
  WorldResearchResult next{};next.target=f->tech_research_id;next.target_after=next.target;next.ranking_after=f->tech_ranking;next.ranking_debt_after=f->unk_27;next.achieved_after=f->tech_achieved;
- const uint32_t rules=(uint32_t)w.game().preferences.GameRules;
+ const uint32_t rules=(uint32_t)w.game().preferences.GameRules;next.blind_research=(rules&0x200u)!=0;
  ResearchContributionFacts facts{s.fresh_labs,f->SE_research_pending,w.game().preferences.CurrentTurn,f->diff_level,0,s.before,(rules&0x4000000u)!=0,((uint32_t)w.game().preferences.GamePreferences&0x20u)!=0,(base->facilities_built[23/8]&(1u<<(23%8)))!=0};
  auto error=research_labs(facts,next.contribution);if(error!=ResearchError::ok)return error;
  if(!next.contribution.research_points){out=next;return ResearchError::ok;}
- if(f->player_flags&0x40u)return ResearchError::unsupported;
  if(next.target<0)return ResearchError::needs_target;
  if(next.target>=78&&next.target<=86)return ResearchError::unsupported;
  if(next.target>=88)return ResearchError::unsupported;
@@ -51,9 +50,10 @@ ResearchError world_base_research(const OriginalWorld&w,const Rules&t,const Basi
  error=world_original_research_cost(w,b,faction,next.cost);if(error!=ResearchError::ok)return error;next.cost_computed=true;facts.fresh_cost=next.cost.result.cost;
  error=research_contribution(facts,next.contribution);if(error!=ResearchError::ok)return error;
  next.owner_mask_after=w.game().preferences.TechOwners[next.target];
- if(next.contribution.completion){
+ const bool pending_secret=(f->player_flags&0x40u)!=0;
+ if(next.contribution.completion||pending_secret){
   if(next.achieved_after<0)return ResearchError::bad_state;
-  next.target_after=-1;next.acquisition_required=true;next.next_choice_required=true;next.first_secrets_required=!next.owner_mask_after&&(target.flags&1u);next.owner_mask_after|=1u<<(unsigned)faction;
+  next.target_after=-1;next.acquisition_required=true;next.next_choice_required=true;next.first_secrets_required=!next.owner_mask_after&&(target.flags&1u);next.next_selection_automatic=next.blind_research;next.bonus_current_target=pending_secret&&!next.contribution.completion;next.bonus_next_target_required=next.contribution.completion&&(pending_secret||next.first_secrets_required);next.owner_mask_after|=1u<<(unsigned)faction;
   if(!add(next.achieved_after,1)||!add(next.ranking_after,2))return ResearchError::overflow;
   if(next.ranking_debt_after<0)return ResearchError::bad_state;
   next.ranking_debt_after=next.ranking_debt_after>=2?next.ranking_debt_after-2:0;

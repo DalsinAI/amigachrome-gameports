@@ -47,16 +47,27 @@ a freshly computed cost. Behavior includes:
 fresh labs and running `{labs_total,rounding_remainder,accumulated}` ledger must
 already be authoritative for this stage. Copying a stale displayed lab count
 does not establish freshness. Saved lab/cost/accumulation/remainder fields never
-substitute for those inputs. A separate internally recomputed upkeep composition
-is needed before this can be used as a live upkeep income path.
+substitute for those inputs. The `world_upkeep_research` composition below establishes internal lab freshness
+without accepting such a scalar.
 
 It requires the actual current player/faction's human base-game base and a
-directed selected target. Original `tech_avail` prerequisite/ownership gates
-(complete OpenSMACX005BAC20) are checked. Blind research, AI/SMAX, repeatable
-Transcendent Thought, expansion-only targets and a pending bonus-Secrets choice
-reject rather than silently inventing selection or another discovery.
+selected target. Original `tech_avail` prerequisite/ownership gates
+(complete OpenSMACX005BAC20) are checked. AI/SMAX, repeatable
+Transcendent Thought, expansion-only targets and missing targets reject. An
+already-selected target advances under Blind Research through the same source
+contribution/cost/ownership mechanics; completion emits an automatic next-target
+event instead of a directed choice. No target is fabricated.
 
-Completion returns proposed owner bits, target reset, achievement/ranking/debt
+A pending FIRST_SECRETS flag is processed in the source order after a positive
+contribution. Below cost it grants the current selected target while preserving
+accumulated points; this is explicitly marked `bonus_current_target`. If cost
+completion already grants that target, a pending or newly generated Secrets
+bonus instead marks `bonus_next_target_required` for another real selection and
+acquisition. A newly discovered Secrets technology can generate a future bonus
+even when the current bonus was consumed. Those events remain explicit and no
+second target is guessed.
+
+Acquisition returns proposed owner bits, target reset, achievement/ranking/debt
 counters and fresh technology fungus/commerce effects. The effects are rebuilt
 with proposed ownership before bonus/clamp ordering, not incremented after an
 already-clamped saved cache. First-discovery Secrets is an explicit event.

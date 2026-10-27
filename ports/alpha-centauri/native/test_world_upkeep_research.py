@@ -44,7 +44,7 @@ def main():
   if r['ASSIGN'][-1]:return{'BASE':[6]}
   proposed=research.model(text,data,base,[r['ALLOCATION'][3],*ledger])
   if proposed['research'][0]:return{'BASE':[proposed['research'][0]]}
-  r['INTAKE'][10]&=0xffffffff;r['INTAKE'][11]&=0xffffffff;supported=support.world_expected(mapped,text);assert supported[0]==0;r['SUPPORT']=supported[1:9];r['STATES']=[int(info['vehicles']),*supported[9:]];r['RESEARCH']=proposed['research'];computed=r['RESEARCH'][-4];r['COST']=[computed,*proposed['cost'][1:]]if computed else[0]*8
+  r['INTAKE'][10]&=0xffffffff;r['INTAKE'][11]&=0xffffffff;supported=support.world_expected(mapped,text);assert supported[0]==0;r['SUPPORT']=supported[1:9];r['STATES']=[int(info['vehicles']),*supported[9:]];r['RESEARCH']=proposed['research'];computed=r['RESEARCH'][-8];r['COST']=[computed,*proposed['cost'][1:]]if computed else[0]*8
   cancel=[0]*64;cancel_count=0
   if r['ENERGY'][6]<0:
    bs=304 if int(info['version'])<11 else 308;owner=spans['bases'][base*bs+4];width=int(info['width'])

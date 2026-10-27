@@ -14,6 +14,7 @@ struct WorldResearchResult {
  uint32_t owner_mask_after;
  TechnologyEffects effects_after;
  bool cost_computed,acquisition_required,next_choice_required,first_secrets_required;
+ bool blind_research,next_selection_automatic,bonus_current_target,bonus_next_target_required;
 };
 /* Current-player/current-faction human base-game directed research proposal.
  * fresh_labs and the running ledger must be supplied by the current authoritative
@@ -23,7 +24,10 @@ struct WorldResearchResult {
  * Completion emits acquisition/next-choice events plus proposed owner/counter/
  * fresh technology effects, not a silent acquisition. Prototype/free facility,
  * map, sharing/secrets, UI and scheduler effects remain required. No mutation.
- * Blind/AI/SMAX/repeated Transcendent Thought/pending bonus-secret paths reject.
+ * Existing selected targets may progress in blind mode; next selection is an
+ * explicit automatic event, never a fabricated target. Pending Secrets can
+ * grant this current target; an additional target/bonus is an explicit event.
+ * AI/SMAX/repeated Transcendent Thought and missing-target paths reject.
  * All outputs and inputs disjoint; every failure leaves output unchanged. */
 ResearchError world_base_research(const OriginalWorld&,const Rules&,const BasicRules&,
  size_t base,const WorldResearchStage&,WorldResearchResult&);
