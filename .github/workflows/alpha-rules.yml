@@ -640,3 +640,7 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_promotion.py --out "$RUNNER_TEMP/world-promotion-host"
       - name: Big-endian owned nonrandom promotion frame controls
         run: python3 ports/alpha-centauri/native/test_world_promotion.py --out "$RUNNER_TEMP/world-promotion-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original promotion caller selection controls
+        run: python3 ports/alpha-centauri/native/test_promotion_selection.py --out "$RUNNER_TEMP/promotion-selection-host"
+      - name: Big-endian original promotion caller selection controls
+        run: python3 ports/alpha-centauri/native/test_promotion_selection.py --out "$RUNNER_TEMP/promotion-selection-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
