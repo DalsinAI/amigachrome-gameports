@@ -1,0 +1,82 @@
+{
+  "scope": "Private currentWorld conventional LAND plan through pending casualty or post-retreat-storage boundary; no legal player attack/commit or full battle claim.",
+  "host": {
+    "worlds": 26,
+    "counts": {
+      "accepted": 2352,
+      "rejected": 1860,
+      "retreated": 28,
+      "attacker_casualty": 1339,
+      "defender_casualty": 985,
+      "rounds": 22559,
+      "draws": 39730
+    },
+    "outputSHA256": "ff9086903642f2a94932f7d312b7827ac44d58eddfd64a65de2273cbe8efbcdf",
+    "binarySHA256": "6b7736330c78635705b82b3cb71b3137e31c232fd4f60813e006051889b6b6ef"
+  },
+  "independent68040": {
+    "worlds": 26,
+    "counts": {
+      "accepted": 2352,
+      "rejected": 1860,
+      "retreated": 28,
+      "attacker_casualty": 1339,
+      "defender_casualty": 985,
+      "rounds": 22559,
+      "draws": 39730
+    },
+    "outputSHA256": "ff9086903642f2a94932f7d312b7827ac44d58eddfd64a65de2273cbe8efbcdf",
+    "binarySHA256": "995f83ca9cd68e750c065c7a89eef1db10c14ad6861f3380faf4d0d08b7dee7f"
+  },
+  "originalCounterGate": [
+    {
+      "edition": "base",
+      "contexts": 4032,
+      "entry": "0x51d4ed",
+      "stop": "0x51d577",
+      "originalBytes": 138,
+      "prefixSHA256": "69284c7569e0e5a2e03b567c3f5d4536099ab2ef8ac021563e99204de4777ad3",
+      "outputSHA256": "d177f0fd33637837edb0cf2719a07dd91309c819dd75b6d5a84510c9ce293a63",
+      "mappedGlobalsUnchangedEach": 851968,
+      "helperPatches": 0,
+      "observationJumps": 2,
+      "scope": "Post-defender-hit retreat counter gate fragment: current health from real prototype plan/reactor and damage byte, zero/dead short circuits, signed quantum countdown, branch to destination only when exhausted alive. No RNG, calls, battle loop or relocation executed."
+    },
+    {
+      "edition": "expansion",
+      "contexts": 4032,
+      "entry": "0x50936c",
+      "stop": "0x5093f1",
+      "originalBytes": 133,
+      "prefixSHA256": "50641b8db60670f4552bbdfae537eac0b9a03abb363cc5a04dd3f88bb76a0c9c",
+      "outputSHA256": "d177f0fd33637837edb0cf2719a07dd91309c819dd75b6d5a84510c9ce293a63",
+      "mappedGlobalsUnchangedEach": 851968,
+      "helperPatches": 0,
+      "observationJumps": 2,
+      "scope": "Post-defender-hit retreat counter gate fragment: current health from real prototype plan/reactor and damage byte, zero/dead short circuits, signed quantum countdown, branch to destination only when exhausted alive. No RNG, calls, battle loop or relocation executed."
+    }
+  ],
+  "sdkSHA256": "18d32a7cfcf2694c53885279da2527ea56dcd85a2c001d5772bd5ef45e3ea2ae",
+  "sdk": "Two final normal SDK builds byte-identical; actual AmigaOS UNRUN.",
+  "sharedWorldRegression": "64 originalWorld ownership/lifetime/reload/resource cases PASS on host and actual independent68040.",
+  "sourceIdentity": {
+    "parent": "ff7f8613374deefd3418768e5ee1d6bde885a79c",
+    "parentProductionCppUnchanged": true,
+    "sharedWorldHeaderOnlyOneFriendDeclaration": true,
+    "parentWorkflowCommands": 289,
+    "finalWorkflowCommands": 291,
+    "allParentCommandsRetained": true,
+    "scope": "Source identity/union only; unchanged inherited suites not wholesale rerun. Shared originalWorld ownership regression run separately."
+  },
+  "native": "UNRUN",
+  "remoteFinalHeadCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED; source-export permission pending",
+  "holds": [
+    "No full original battle/TLS getter/PEstartup execution. Composition is checked by independent source-derived Python models and separately bounded original stages.",
+    "Caller World and movement RNG untouched; explicit combat CRT state returned, not initialized or committed/persisted by this API.",
+    "Attacker/defender casualty result is a pending-effects boundary. No death deletion, kill rewards, events or turn/AI/diplomacy completion.",
+    "Solitary capacity0/rawCarrier0 retreat only. SMAX design-owner FREEABIL retreat profiles conservatively held.",
+    "Plans0..3 attacker;0..3 or artifact12 defender; real reactors1..4; flags0 ordinary conventional LAND only.",
+    "No player controls/frontend/native/remoteCI qualification. Inherited tests retained, not all rerun wholesale."
+  ]
+}

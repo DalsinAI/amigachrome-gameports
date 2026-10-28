@@ -14,7 +14,7 @@ availability query must accept every selected non-centre tile. The centre must
 contain a base marker for the actual owner. Missing assignments, specialist
 handling and stages requiring allocation reject explicitly. Selected fungus
 now uses the complete fresh technology-effects calculation, rather than saved
-fungus production totals; see `WORLD-TECHNOLOGY-EFFECTS.md`.
+fungus production totals; see `TECHNOLOGY-EFFECTS.md`.
 The caller supplies the runtime edition, expansion switch, worker inspection
 stage, ControlUpkeep branch and incoming scratch values. They are not inferred
 from saved flags or treated as live authority. Only normal worker inspection is
@@ -63,3 +63,5 @@ Run `test_world_stable_intake.py --out NEW_DIRECTORY` for host sanitizers, or ad
 `--cc m68k-linux-gnu-g++ --m68k-linux` for independent Linux 68040 execution.
 `build_world_stable_intake_probe.sh OUTPUT` builds with the normal Amiga SDK.
 Actual AmigaOS execution remains unrun and is required before merge or UI use.
+
+Fresh technology-effects integration supersedes the earlier selected/harvested-fungus refusal; see [WORLD-FRESH-TECHNOLOGY-YIELDS.md](WORLD-FRESH-TECHNOLOGY-YIELDS.md). All other stable-domain and mutation exclusions remain.

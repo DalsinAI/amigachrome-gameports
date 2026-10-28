@@ -1,0 +1,38 @@
+{
+  "scope": "Complete explicit-fact base energy proposal only; supplied actual commerce/technology/ownership/garrison facts, noWorld/authority/mutation/upkeep/turn/UI/save",
+  "publicControlsEachArchitecture": {
+    "cases": 1568,
+    "accepted": 1516,
+    "invalid": 44,
+    "overflow": 8,
+    "outputSHA256": "7c1ce3ea59ac2c47c14bb15f6f596c501bfd40fb6f5a8d2bb884d53af632c5f6"
+  },
+  "originalDerivedControlsEachArchitecture": {
+    "contexts": 3072,
+    "originalAccepted": {
+      "base": 1536,
+      "expansion": 1381
+    },
+    "rejectOriginalUninitializedAlienPath": 155,
+    "fields": 120,
+    "outputSHA256": "9b9555a080c58f16e3c89b18be5ab69739aaa1a9ff599372252d4467fb177e1f"
+  },
+  "explicitPolicyControlsEachArchitecture": 2,
+  "directBufferAndCapacityControlsEachBinary": 7,
+  "aliasControls": "Three facts/output overlaps per serialized case plus garrison/output when nonempty",
+  "normalSDK": {
+    "builds": 2,
+    "byteIdentical": true,
+    "binarySHA256": "e5086613fb332c1a3c52f9949cb088988ec07839fd38d63241eae571125a5cfa",
+    "AmigaOS": "UNRUN"
+  },
+  "CI": "UNRUN",
+  "inheritance": {
+    "parent": "d9b2b8c7bf929eb37b4ddba2ae8775858d1f7089",
+    "unchangedParentProductionFiles": 181,
+    "parentWorkflowCommands": 117,
+    "currentWorkflowCommands": 119,
+    "missingParentCommands": []
+  },
+  "alienPolicy": "Default rejects undefined original scratch paths. initialize_zero is an explicit deterministic FIX, not an original World/default-zero semantic claim."
+}

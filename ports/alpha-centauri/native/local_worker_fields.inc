@@ -1,0 +1,10 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later. Modern offsets; legacy>=98 minus4. */
+WORKER_FIELD(state_flags,0x30)
+WORKER_FIELD(worked_tiles,0x78)
+WORKER_FIELD(specialist_total,0x7c)
+WORKER_FIELD(specialist_adjust,0x80)
+WORKER_FIELD(nutrient_intake,0xb0)
+WORKER_FIELD(mineral_intake,0xb4)
+WORKER_FIELD(energy_intake,0xb8)
+WORKER_FIELD(unused_intake,0xbc)
+WORKER_FIELD(unused_intake_2,0xcc)
