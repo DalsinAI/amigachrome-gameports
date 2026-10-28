@@ -754,11 +754,15 @@ static void test_unit_birth() {
     CHECK(popups_with("ABANDONBASE") + popups_with("ABANDONBASE1") >= 1);
     CHECK_EQ(*BaseCount, 1);
     // Answer "abandon" (2): the pod is built and the base is removed.
+    // Integration: WP8's mod_eliminate_player (Thinker rule) removes a faction
+    // left without a base together with its units, so faction 1 keeps a
+    // second base for the new pod to survive.
+    make_base(1, 18, 12, 1);
     headless_sink()->choices["ABANDONBASE"] = 2;
     headless_sink()->choices["ABANDONBASE1"] = 2;
     Bases[b].minerals_accumulated = mineral_cost(b, BSC_COLONY_POD);
     CHECK_EQ(mod_base_upkeep(b), 1);
-    CHECK_EQ(*BaseCount, 0);
+    CHECK_EQ(*BaseCount, 1);
     CHECK_EQ(Vehs[*VehCount - 1].unit_id, BSC_COLONY_POD);
     CHECK_EQ(Vehs[*VehCount - 1].home_base_id, -1);
 }
