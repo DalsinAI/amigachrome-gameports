@@ -67,7 +67,10 @@ class OriginalWorld {
   friend class WorldPromotionPlan;
   friend class WorldCombatHistoryPlan;
   friend class WorldTerritorialCombatPlan;
+  friend class DiscoveryContinuationPlan;
   friend class LocalProductionSession;
+  // Private read-only discovery working snapshot; no public World mutator.
+  friend class DiscoveryReactorSequencePlan;
   friend class WorldActions;
   friend class FacilityProductionStage;
   friend class HumanUpkeepTransaction;
