@@ -20,6 +20,7 @@
 #include "turn.h"
 #include "base_wp2.h"
 #include "combat.h"
+#include "ai_api.h"
 
 #include <memory>
 #include <string>
@@ -362,6 +363,7 @@ static int run_turns(const char* in, const char* out, int turns) {
     }
     game_srand(1);
     random_reseed(1);
+    ai_stats_reset();
     uint32_t h = 2166136261u;
     int battles = 0;
     int vehicles_start = *VehCount;
@@ -399,6 +401,10 @@ static int run_turns(const char* in, const char* out, int turns) {
         printf("save_error=%d\n", status);
         return 22;
     }
+    const AIStats& ai = ai_stats();
+    printf("ai enemy_turns=%u veh_moves=%u move_upkeeps=%u build_choices=%u strategy_calls=%u\n",
+        (unsigned)ai.enemy_turns, (unsigned)ai.veh_moves, (unsigned)ai.move_upkeeps,
+        (unsigned)ai.build_choices, (unsigned)ai.strategy_calls);
     printf("battles=%d vehicles=%d->%d digest=%08x save_bytes=%u save_digest=%08x\n",
         battles, vehicles_start, *VehCount, (unsigned)h, (unsigned)save.size(),
         (unsigned)fnv1a(save.data(), save.size(), 2166136261u));
