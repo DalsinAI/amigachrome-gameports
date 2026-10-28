@@ -10,6 +10,8 @@
 #include "technology_browser.h"
 #include "cvr_infantry.h"
 #include "ui_mapview.h"
+#include "play_session.h"
+#include <vector>
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
 #include "local_player.h"
 #include "world_base_accounting.h"
@@ -72,6 +74,14 @@ static alpha::UiTextItem panel_items[96],message_items[24];static size_t panel_c
 static uint8_t* extras_reader(void*,const char* name,size_t& size);
 static alpha::Rules technologies;static alpha::UnitDefinitions definitions;static alpha::BasicRules basic;static alpha::WorldRules world_rules;
 static const int W=928,H=480;static uint8_t* frame;static size_t selected=0;static int camera_x,camera_y,zoom=2;
+// Engine play mode: the game is the engine's (play_session.h); the view is
+// rebuilt from the engine's SAV bytes after every command.
+static bool play_enabled=false;static alpha::play::Session* game=nullptr;
+enum PlayPanel { PANEL_NONE=0,PANEL_PRODUCTION,PANEL_RESEARCH,PANEL_SOCIAL,PANEL_DESIGN,PANEL_BATTLE,PANEL_DIPLO,PANEL_GAME_OVER };
+static int play_panel=PANEL_NONE;static int target_mode=0;static int attack_veh=-1,attack_x=0,attack_y=0;
+static alpha::BaseProductionModel production_model;static alpha::ResearchPanelModel research_model;static alpha::SocialPanelModel social_model;
+static alpha::DesignPanelModel design_model;static alpha::DiploPanelModel diplo_model;static int contact_index=0;
+static bool play_dirty=false;static bool play_quit_warned=false;static char last_play_save[256];
 static uint8_t* read_file(const char* path,size_t& size){
  FILE* f=fopen(path,"rb");if(!f){fprintf(stderr,"Cannot open world asset %s: %s\n",path,strerror(errno));return nullptr;}if(fseek(f,0,SEEK_END)){fclose(f);return nullptr;}long n=ftell(f);rewind(f);
  if(n<=0 || n>64*1024*1024){fclose(f);return nullptr;}auto* p=(uint8_t*)malloc((size_t)n);if(!p){fclose(f);return nullptr;}
@@ -137,6 +147,8 @@ static void select_local_actors(){
 static void hud_text(struct RastPort* rp,int x,int y,const char* s,int width=220,bool heading=false,alpha::UiInk ink=alpha::UiInk::body){ui_text.draw(rp,12+HUD_X+x,HUD_Y+y,s,width,heading,ink);}
 static void production_name(const alpha::OriginalBase& base,char* out,size_t bytes){
  if(base.queue_size<0 || base.queue_size>9){snprintf(out,bytes,"Production details unavailable");return;}
+ if(play_enabled && game && base.faction_id==game->player()){alpha::BaseProductionModel m;m.valid=false;
+  for(int b=0;b<game->base_count();++b){if(game->base_at(base.x,base.y)==b && game->base_production(b,m)){snprintf(out,bytes,"%.31s (%d/%d)",m.current_name,m.minerals,m.cost);return;}}}
  int id=base.queue_items[0];if(id>=0 && id<512){const auto* p=world().prototype((size_t)id);snprintf(out,bytes,"%.31s",p && p->name[0]?p->name:"Original unit design");}
  else {
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
@@ -168,18 +180,26 @@ static void draw_hud(struct Window* window){
    if(t->items&0x20u)hud_text(rp,146,147,"Fungus",98);
    if(t->items&0x80u)hud_text(rp,146,166,"River",98);
    if(t->items&0x200000u)hud_text(rp,146,184,"Forest",98);
-   hud_text(rp,146,215,"Saved tile",98);hud_text(rp,146,234,local_enabled?"Local actions":"Read only",98);
+   hud_text(rp,146,215,play_enabled?"Engine game":"Saved tile",98);hud_text(rp,146,234,play_enabled?"Your orders":local_enabled?"Local actions":"Read only",98);
   }
  }
  if(world().game().base_count){const auto&b=*world().base(selected_base);hud_text(rp,274,89,b.name,260,true,alpha::UiInk::title);
   snprintf(line,sizeof(line),"Population %d",b.pop_size);hud_text(rp,274,113,line);
   snprintf(line,sizeof(line),"Nutrients %ld   Minerals %ld",(long)b.nutrients_accumulated,(long)b.minerals_accumulated);hud_text(rp,274,137,line,260);
   snprintf(line,sizeof(line),"Surplus  N %+ld   M %+ld   E %+ld",(long)b.nutrient_surplus,(long)b.mineral_surplus,(long)b.energy_surplus);hud_text(rp,274,161,line,260);
-  production_name(b,line,sizeof(line));hud_text(rp,274,212,"PRODUCTION (SAVED TURN)",260,false,alpha::UiInk::label);hud_text(rp,274,236,line,260,false,alpha::UiInk::value);
+  production_name(b,line,sizeof(line));hud_text(rp,274,212,play_enabled?"PRODUCTION":"PRODUCTION (SAVED TURN)",260,false,alpha::UiInk::label);hud_text(rp,274,236,line,260,false,alpha::UiInk::value);
 
  }
+ if(play_enabled && game){
+  FillPixelArray(rp,12+HUD_X+563,HUD_Y+228,224,26,game->game_over()?0x00401010u:0x00305a30u);
+  hud_text(rp,600,246,game->game_over()?"GAME OVER":"END TURN  [E]",180,true,alpha::UiInk::title);
+  snprintf(line,sizeof(line),"Turn %d   Year %d   Energy %d",game->turn(),game->year(),game->credits());hud_text(rp,274,60,line,260,false,alpha::UiInk::value);
+  alpha::play::UnitInfo u;if(game->unit((int)selected,u)){snprintf(line,sizeof(line),"Moves %d/%d%s",u.moves_left,u.speed,u.own?"":" (not yours)");hud_text(rp,10,160,line,116);}
+  ui_text.draw(rp,20,840,action_status[0]?action_status:"Keypad move/attack | E end turn | G go to | R road | F farm M mine S solar | B base | L sentry H hold | U upgrade | T research P social K design X comm | V save",910);
+ }else{
  hud_text(rp,565,245,"Click map to navigate",210);
  ui_text.draw(rp,20,840,local_enabled?action_status:"Saved turn | B: next base | I: details | ESC: close | Q: quit | Orders / End Turn unavailable",910);
+ }
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  if(local_enabled && world().game().vehicle_count){const auto& v=*world().vehicle(selected);uint32_t speed=0;
   if(alpha::world_vehicle_speed(world(),definitions,technologies,selected,basic.move_rate_roads,false,speed)==alpha::LogicError::ok){char budget[96];snprintf(budget,sizeof(budget),"Moves %lu/%lu%s",(unsigned long)(speed>v.moves_spent?speed-v.moves_spent:0),(unsigned long)speed,player.dirty()?" *":"");hud_text(rp,10,160,budget,116);}
@@ -283,6 +303,221 @@ static bool base_proposal_pending(){
 #endif
 }
 static void text(struct RastPort* rp,int x,int y,const char* s){if(x>=0 && x<W)ui_text.draw(rp,x,y,s,W-x);}
+/* ---- Engine play mode ---- */
+static void play_drain(){
+ for(size_t i=0;i<game->message_count();++i){const auto* m=game->message(i);
+  extras.messages().add(m->turn,(alpha::MessageKind)m->kind,m->text);printf("PLAY MSG t%d %s\n",(int)m->turn,m->text);}
+ game->take_messages();fflush(stdout);
+}
+static bool play_rebuild(){
+ std::vector<uint8_t> bytes;
+ if(game->view_bytes(bytes)!=alpha::play::PLAY_OK){snprintf(action_status,sizeof(action_status),"The engine state could not be read.");return false;}
+ const auto e=preview_world.load(bytes.data(),bytes.size(),0x12345678u);visible_world=&preview_world;
+ if(e!=alpha::WorldLoadError::ok){snprintf(action_status,sizeof(action_status),"View rebuild failed: %s",alpha::world_load_error_name(e));return false;}
+ if(selected>=world().game().vehicle_count)selected=0;
+ if(selected_base>=world().game().base_count)selected_base=0;
+ return true;
+}
+static int play_run(const alpha::play::Command& c){
+ const int r=game->run(c);
+ if(r==alpha::play::PLAY_OK)play_dirty=true;
+ play_quit_warned=false;
+ snprintf(action_status,sizeof(action_status),"%s: %s",alpha::play::command_name(c.kind),alpha::play::play_status_name(r));
+ if(game->message_count())snprintf(action_status,sizeof(action_status),"%.170s",game->message(game->message_count()-1)->text);
+ printf("PLAY CMD %s %d %d %d -> %s\n",alpha::play::command_name(c.kind),c.a,c.b,c.c,alpha::play::play_status_name(r));
+ play_drain();play_rebuild();
+ if(game->game_over())play_panel=PANEL_GAME_OVER;
+ return r;
+}
+static void play_centre(){alpha::play::UnitInfo u;if(game->unit((int)selected,u)){camera_x=u.x;camera_y=u.y;}}
+static void play_next_unit(){const int v=game->next_unit((int)selected);if(v>=0){selected=(size_t)v;play_centre();}else snprintf(action_status,sizeof(action_status),"All units have moved. E ends the turn.");}
+static bool play_own_selected(){alpha::play::UnitInfo u;if(game->unit((int)selected,u) && u.own)return true;snprintf(action_status,sizeof(action_status),"Select one of your units first (TAB, N or a click).");return false;}
+static void play_unit_order(int kind,int b=0){if(!play_own_selected())return;play_run(alpha::play::command(kind,(int)selected,b));alpha::play::UnitInfo u;if(!game->unit((int)selected,u) || !u.own || u.moves_left<=0 || u.order)play_next_unit();}
+static void play_end_turn(){
+ play_panel=PANEL_NONE;target_mode=0;
+ const int r=play_run(alpha::play::command(alpha::play::CMD_END_TURN));
+ messages_open=true;
+ if(r==alpha::play::PLAY_OK){selected=0;play_next_unit();snprintf(action_status,sizeof(action_status),"Turn %d, mission year %d. Your move.",game->turn(),game->year());}
+}
+static void play_attack_preview(int veh,int x,int y){
+ attack_veh=veh;attack_x=x;attack_y=y;game->run(alpha::play::command(alpha::play::CMD_ODDS,veh,x,y));play_drain();play_panel=PANEL_BATTLE;
+}
+static void play_move(int dir){
+ if(!play_own_selected())return;
+ int x,y;if(!game->step_target((int)selected,dir,x,y)){snprintf(action_status,sizeof(action_status),"Off the map.");return;}
+ if(game->hostile_at(x,y)){play_attack_preview((int)selected,x,y);return;}
+ if(play_run(alpha::play::command(alpha::play::CMD_MOVE,(int)selected,dir))==alpha::play::PLAY_OK){play_centre();
+  alpha::play::UnitInfo u;if(!game->unit((int)selected,u) || !u.own || u.moves_left<=0)play_next_unit();}
+}
+static bool play_open_panel(int panel){
+ bool ok=false;
+ switch(panel){
+ case PANEL_PRODUCTION:production_model.valid=false;ok=game->base_production((int)selected_base,production_model);if(!ok)snprintf(action_status,sizeof(action_status),"Choose one of your bases first (B or a click).");break;
+ case PANEL_RESEARCH:ok=game->research(research_model);research_model.confirm=false;break;
+ case PANEL_SOCIAL:ok=game->social(social_model);break;
+ case PANEL_DESIGN:ok=game->design(design_model);break;
+ case PANEL_DIPLO:{
+  if(!alpha::play::Session::diplomacy_available()){snprintf(action_status,sizeof(action_status),"Diplomacy is not in this build.");break;}
+  int ids[8];const int n=game->contacts(ids,8);if(!n){snprintf(action_status,sizeof(action_status),"No faction has been contacted yet.");break;}
+  contact_index=((contact_index%n)+n)%n;diplo_model.valid=false;ok=game->diplomacy(ids[contact_index],diplo_model);
+  if(ok)game->run(alpha::play::command(alpha::play::CMD_DIPLO,ids[contact_index],-1));
+  break;}
+ default:break;}
+ play_panel=ok?panel:PANEL_NONE;return ok;
+}
+static void play_refresh_panel(){
+ switch(play_panel){
+ case PANEL_PRODUCTION:game->base_production((int)selected_base,production_model);break;
+ case PANEL_RESEARCH:game->research(research_model);break;
+ case PANEL_SOCIAL:game->social(social_model);break;
+ case PANEL_DESIGN:game->design(design_model);break;
+ case PANEL_DIPLO:game->diplomacy(diplo_model.other,diplo_model);break;
+ default:break;}
+}
+static bool play_panel_key(UWORD code){
+ namespace P=alpha::play;
+ const int key=alpha::ui_key_from_char(code);int a;
+ switch(play_panel){
+ case PANEL_BATTLE:
+  a=alpha::battle_panel_key(game->battle(),key);
+  if(a==alpha::UIA_APPLY){play_run(P::command(P::CMD_ATTACK,attack_veh,attack_x,attack_y));if(game->battle().valid)play_panel=PANEL_BATTLE;else play_panel=PANEL_NONE;}
+  else if(a==alpha::UIA_CLOSE){play_panel=PANEL_NONE;alpha::play::UnitInfo u;if(!game->unit((int)selected,u) || !u.own || u.moves_left<=0)play_next_unit();}
+  return true;
+ case PANEL_PRODUCTION:{
+  a=alpha::base_production_key(production_model,code);const auto& m=production_model;
+  if(a==alpha::BASE_EDIT_SET)play_run(P::command(P::CMD_PRODUCE,m.base,m.items[m.selected].id));
+  else if(a==alpha::BASE_EDIT_QUEUE_ADD)play_run(P::command(P::CMD_QUEUE_ADD,m.base,m.items[m.selected].id));
+  else if(a==alpha::BASE_EDIT_QUEUE_REMOVE)play_run(P::command(P::CMD_QUEUE_REMOVE,m.base,m.queue_count-1));
+  else if(a==alpha::BASE_EDIT_HURRY)play_run(P::command(P::CMD_HURRY,m.base));
+  else if(a==alpha::BASE_EDIT_CLOSE){play_panel=PANEL_NONE;return true;}
+  play_refresh_panel();return true;}
+ case PANEL_RESEARCH:
+  a=alpha::research_panel_key(research_model,key);
+  if(a==alpha::UIA_APPLY){const int r=play_run(P::command(P::CMD_RESEARCH,research_model.ids[research_model.selected],0,research_model.confirm?1:0));
+   if(r==P::PLAY_NEEDS_CONFIRM){research_model.confirm=true;snprintf(action_status,sizeof(action_status),"Changing research halves the progress. RETURN again confirms.");}
+   else {research_model.confirm=false;play_refresh_panel();}}
+  else if(a==alpha::UIA_CLOSE)play_panel=PANEL_NONE;
+  return true;
+ case PANEL_SOCIAL:
+  a=alpha::social_panel_key(social_model,key);
+  if(a==alpha::UIA_APPLY){play_run(P::command(P::CMD_SOCIAL,social_model.row,social_model.col));play_refresh_panel();}
+  else if(a==alpha::UIA_CLOSE)play_panel=PANEL_NONE;
+  return true;
+ case PANEL_DESIGN:
+  a=alpha::design_panel_key(design_model,key);
+  if(a==alpha::UIA_MOVED)game->design_preview(design_model);
+  else if(a==alpha::UIA_APPLY){int c,w,ar,r,ab;alpha::design_selection(design_model,c,w,ar,r,ab);play_run(P::command(P::CMD_DESIGN,c,w,ar,r,ab));play_refresh_panel();}
+  else if(a==alpha::UIA_CLOSE)play_panel=PANEL_NONE;
+  return true;
+ case PANEL_DIPLO:
+  if(key==alpha::UIK_LEFT || key==alpha::UIK_RIGHT){game->run(P::command(P::CMD_DIPLO,diplo_model.other,-2));contact_index+=key==alpha::UIK_LEFT?-1:1;play_open_panel(PANEL_DIPLO);return true;}
+  a=alpha::diplo_panel_key(diplo_model,key);
+  if(a==alpha::UIA_APPLY){play_run(P::command(P::CMD_DIPLO,diplo_model.other,diplo_model.proposals[diplo_model.selected]));play_refresh_panel();}
+  else if(a==alpha::UIA_CLOSE){game->run(P::command(P::CMD_DIPLO,diplo_model.other,-2));play_panel=PANEL_NONE;}
+  return true;
+ case PANEL_GAME_OVER:
+  if(code==27 || code==13)play_panel=PANEL_NONE;
+  return code!='q' && code!='Q' && code!='v' && code!='V';
+ default:return false;}
+}
+static size_t play_render_panel(){
+ const alpha::UiFrame f{frame,(size_t)W*H*3,(unsigned)W,(unsigned)H};const alpha::UiRect r{92,50,744,398};
+ switch(play_panel){
+ case PANEL_PRODUCTION:return alpha::render_base_production(production_model,f,r,panel_items,96);
+ case PANEL_RESEARCH:return alpha::render_research_panel(research_model,f,r,panel_items,96);
+ case PANEL_SOCIAL:return alpha::render_social_panel(social_model,f,r,panel_items,96);
+ case PANEL_DESIGN:return alpha::render_design_panel(design_model,f,r,panel_items,96);
+ case PANEL_BATTLE:return alpha::render_battle_panel(game->battle(),f,{192,110,544,300},panel_items,96);
+ case PANEL_DIPLO:return alpha::render_diplo_panel(diplo_model,f,r,panel_items,96);
+ case PANEL_GAME_OVER:{static const uint8_t fill[3]={30,8,8},edge[3]={170,80,60};alpha::ui_panel(f,{232,150,464,160},fill,edge);size_t n=0;char line[96];
+  alpha::ui_text_item(panel_items,96,n,256,190,420,3,true,"GAME OVER");
+  snprintf(line,sizeof(line),"The game ended on turn %d (mission year %d).",game->turn(),game->year());alpha::ui_text_item(panel_items,96,n,256,222,420,0,false,line);
+  alpha::ui_text_item(panel_items,96,n,256,250,420,0,false,"V saves the final state, Q quits. ESC shows the map.");return n;}
+ default:return 0;}
+}
+/* Nearest map tile under a frame pixel (flat diamond projection). */
+static bool screen_tile(int px,int py,int& tx,int& ty){
+ int best=1<<30;
+ for(int y=camera_y-17;y<=camera_y+17;++y)for(int raw=camera_x-17;raw<=camera_x+17;++raw){const int x=wrap(raw);if(!tile(x,y))continue;int sx,sy;if(!position(x,y,sx,sy))continue;
+  const int d=abs(px-sx)*16+abs(py-sy)*32;if(d<best){best=d;tx=x;ty=y;}}
+ return best<=512*zoom;
+}
+static void play_save(){
+ std::vector<uint8_t> bytes;if(game->save_game(bytes)!=alpha::play::PLAY_OK){snprintf(action_status,sizeof(action_status),"Save failed.");play_drain();return;}
+ char path[256];FILE* f=nullptr;
+ for(unsigned i=1;i<1000 && !f;++i){snprintf(path,sizeof(path),"PROGDIR:AlphaPlay-%03u.SAV",i);FILE* probe=fopen(path,"rb");if(probe){fclose(probe);continue;}f=fopen(path,"wb");}
+ if(!f){snprintf(action_status,sizeof(action_status),"No free save slot (AlphaPlay-001..999.SAV).");return;}
+ bool ok=fwrite(bytes.data(),1,bytes.size(),f)==bytes.size();if(fclose(f))ok=false;
+ if(ok){snprintf(last_play_save,sizeof(last_play_save),"%s",path);play_dirty=false;snprintf(action_status,sizeof(action_status),"Saved %.150s",path);}
+ else snprintf(action_status,sizeof(action_status),"Writing %.150s failed.",path);
+ play_drain();
+}
+static void play_reload(){
+ if(!last_play_save[0]){snprintf(action_status,sizeof(action_status),"Nothing saved in this session yet (V saves).");return;}
+ size_t n=0;uint8_t* p=read_file(last_play_save,n);if(!p){snprintf(action_status,sizeof(action_status),"Cannot read %.150s",last_play_save);return;}
+ const int r=game->load_game(p,n);free(p);play_drain();
+ if(r==alpha::play::PLAY_OK){play_rebuild();play_panel=PANEL_NONE;play_dirty=false;selected=0;play_next_unit();snprintf(action_status,sizeof(action_status),"Reloaded %.150s",last_play_save);}
+ else snprintf(action_status,sizeof(action_status),"Reload failed.");
+}
+static bool play_key(UWORD code,bool& quit){
+ namespace P=alpha::play;
+ if(code=='q' || code=='Q'){if(play_dirty && !play_quit_warned){play_quit_warned=true;snprintf(action_status,sizeof(action_status),"Unsaved turns. V saves; Q again quits.");return true;}quit=true;return true;}
+ if(code=='v' || code=='V'){play_save();return true;}
+ if(code==12){play_reload();return true;} // Ctrl+L
+ if(play_panel!=PANEL_NONE && play_panel_key(code))return true;
+ if(target_mode && code==27){target_mode=0;snprintf(action_status,sizeof(action_status),"Target cancelled.");return true;}
+ static const int dirs[10]={-1,4,3,2,5,-1,1,6,7,0}; // keypad digit -> BaseOffset direction
+ if(code>='1' && code<='9' && code!='5'){if(base_open){base_open=false;}play_move(dirs[code-'0']);return true;}
+ switch(code){
+ case 'e':case 'E':play_end_turn();return true;
+ case '5':case ' ':play_unit_order(P::CMD_SKIP);return true;
+ case 9:case 'n':case 'N':play_next_unit();return true;
+ case 'g':case 'G':if(play_own_selected()){target_mode='g';snprintf(action_status,sizeof(action_status),"Go to: click the destination (ESC cancels).");}return true;
+ case 'R':if(play_own_selected()){target_mode='R';snprintf(action_status,sizeof(action_status),"Road to: click the destination (ESC cancels).");}return true;
+ case 'r':play_unit_order(P::CMD_TERRAFORM,5);return true;
+ case 'f':play_unit_order(P::CMD_TERRAFORM,0);return true;
+ case 'F':play_unit_order(P::CMD_TERRAFORM,4);return true;
+ case 'm':play_unit_order(P::CMD_TERRAFORM,2);return true;
+ case 's':play_unit_order(P::CMD_TERRAFORM,3);return true;
+ case 'S':play_unit_order(P::CMD_TERRAFORM,9);return true;
+ case 'l':play_unit_order(P::CMD_SENTRY);return true;
+ case 'h':play_unit_order(P::CMD_HOLD);return true;
+ case 'H':play_unit_order(P::CMD_SET_HOME);return true;
+ case 'j':play_unit_order(P::CMD_RETURN_HOME);return true;
+ case 'w':play_unit_order(P::CMD_WAKE);return true;
+ case 'D':play_unit_order(P::CMD_DISBAND);return true;
+ case 'u':case 'U':play_unit_order(P::CMD_UPGRADE,-1);return true;
+ case 'b':{alpha::play::UnitInfo u;if(game->unit((int)selected,u) && u.own && u.colony){play_unit_order(P::CMD_BUILD_BASE);return true;}return false;}
+ case 'p':case 'P':
+  if(base_open){play_open_panel(PANEL_PRODUCTION);return true;}
+  play_open_panel(PANEL_SOCIAL);return true;
+ case 't':case 'T':play_open_panel(PANEL_RESEARCH);return true;
+ case 'k':case 'K':play_open_panel(PANEL_DESIGN);return true;
+ case 'x':case 'X':play_open_panel(PANEL_DIPLO);return true;
+ case 'M':messages_open=!messages_open;return true;
+ default:return false;}
+}
+static bool play_rawkey(UWORD code){
+ switch(code){
+ case 0x51:play_open_panel(PANEL_RESEARCH);return true;  // F2
+ case 0x52:play_open_panel(PANEL_SOCIAL);return true;    // F3
+ case 0x53:play_open_panel(PANEL_DESIGN);return true;    // F4
+ case 0x54:play_open_panel(PANEL_DIPLO);return true;     // F5
+ case 0x4c:camera_y-=2;return true;case 0x4d:camera_y+=2;return true; // cursor up/down
+ case 0x4e:camera_x=wrap(camera_x+2);return true;case 0x4f:camera_x=wrap(camera_x-2);return true;
+ default:return false;}
+}
+static void play_click(int mouse_x,int mouse_y){
+ namespace P=alpha::play;
+ if(mouse_x>=12+HUD_X+563 && mouse_x<12+HUD_X+787 && mouse_y>=HUD_Y+228 && mouse_y<HUD_Y+254){play_end_turn();return;}
+ int tx=0,ty=0;if(!screen_tile(mouse_x-12,mouse_y-70,tx,ty))return;
+ if(target_mode){const int kind=target_mode=='g'?P::CMD_GOTO:P::CMD_ROAD_TO;target_mode=0;play_run(P::command(kind,(int)selected,tx,ty));return;}
+ const int own=game->unit_at(tx,ty);
+ if(own>=0){selected=(size_t)own;base_open=false;snprintf(action_status,sizeof(action_status),"Unit selected.");return;}
+ const int b=game->base_at(tx,ty);
+ if(b>=0){selected_base=(size_t)b;base_open=true;return;}
+ alpha::play::UnitInfo u;if(game->hostile_at(tx,ty) && game->unit((int)selected,u) && u.own){play_attack_preview((int)selected,tx,ty);return;}
+}
 static void draw(struct Window* window){
  for(size_t i=0;i<(size_t)W*H;++i){frame[3*i]=6;frame[3*i+1]=15;frame[3*i+2]=24;}
  for(int y=camera_y-17;y<=camera_y+17;++y)for(int raw=camera_x-17;raw<=camera_x+17;++raw){
@@ -312,7 +547,8 @@ static void draw(struct Window* window){
  }
  }
  panel_count=message_count=0;
- if(base_open && world().game().base_count && !base_proposal_pending()){
+ if(play_enabled && play_panel!=PANEL_NONE)panel_count=play_render_panel();
+ else if(base_open && world().game().base_count && !base_proposal_pending()){
   const alpha::BaseWindowForecast* fc=nullptr;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
   alpha::BaseWindowForecast fresh{};
@@ -328,7 +564,7 @@ static void draw(struct Window* window){
  FillPixelArray(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-window->BorderLeft,64-window->BorderTop,0x00071316u);FillPixelArray(rp,window->BorderLeft,554,window->Width-window->BorderRight-window->BorderLeft,window->Height-window->BorderBottom-554,0x00071316u);
  SetAPen(rp,1);SetBPen(rp,0);SetDrMd(rp,JAM2);char line[180];
  snprintf(line,sizeof(line),"%.64s | Turn %ld | %lu x %lu | %lu units, %lu bases",source_label,(long)world().game().preferences.CurrentTurn,(unsigned long)world().game().map.info.width,(unsigned long)world().game().map.info.height,(unsigned long)world().game().vehicle_count,(unsigned long)world().game().base_count);text(rp,15,42,line);
- text(rp,15,62,local_enabled?"Local actions | Keypad: move | P: production | F: forecast | V: save | R: reload | No End Turn":extras.viewer()<0?"Read-only original world (all tiles) | O: player view | M: messages | WASD scroll | TAB select | +/- zoom | Q quit":"Read-only original world (player view) | O: all tiles | M: messages | WASD scroll | TAB select | +/- zoom | Q quit");
+ text(rp,15,62,play_enabled?(target_mode?"Click the destination tile (ESC cancels)":"Engine game | keypad move/attack | E end turn | I base, P production | T research | P social | K design | X comm link | V save | Q quit"):local_enabled?"Local actions | Keypad: move | P: production | F: forecast | V: save | R: reload | No End Turn":extras.viewer()<0?"Read-only original world (all tiles) | O: player view | M: messages | WASD scroll | TAB select | +/- zoom | Q quit":"Read-only original world (player view) | O: all tiles | M: messages | WASD scroll | TAB select | +/- zoom | Q quit");
  for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);int sx,sy;if(!panel_count && extras.tile_visible(world(),b.x,b.y) && position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){alpha::MapViewExtras::base_label(b,line,sizeof(line));ui_text.draw(rp,12+sx-24,70+sy+24,line,W-(12+sx-24),false,alpha::UiInk::map_label);}}
  for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);int sx,sy;if(panel_count || !extras.tile_visible(world(),v.x,v.y) || !position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
   const auto& p=*world().prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || infantry_profile(v) || speeder_profile(v) || extras.has_vehicle_model(world(),i);
@@ -397,13 +633,27 @@ static bool local_key(UWORD code){
 #endif
 int alpha_original_view(int argc,char** argv){
  if((argc!=6 && argc!=7) || (strcmp(argv[1],"base") && strcmp(argv[1],"expansion"))){puts("Usage: alpha-original-view base|expansion RULES SCENARIO texture.pcx Units.pcx");return 20;}
- set_source_label(argv[3]);
+ const bool play_arg=argc==7 && (!strcmp(argv[6],"--play") || !strcmp(argv[6],"--play-current"));
+ set_source_label(play_arg && !strcmp(argv[6],"--play-current")?"New game":argv[3]);
  local_enabled=false;visible_world=&preview_world;action_status[0]=0;
+ play_enabled=false;game=nullptr;play_panel=PANEL_NONE;target_mode=0;play_dirty=false;play_quit_warned=false;last_play_save[0]=0;
+ if(play_arg){
+  game=&alpha::play::session();
+  if(!strcmp(argv[6],"--play")){
+   // Rules: engine_load_rules from the directory that holds RULES.
+   char dir[256];snprintf(dir,sizeof(dir),"%s",argv[2]);size_t cut=0;for(size_t i=0;dir[i];++i)if(dir[i]=='/' || dir[i]==':')cut=i+1;dir[cut]=0;
+   if(game->load_rules(dir,strcmp(argv[1],"base")!=0)!=alpha::play::PLAY_OK){printf("PLAY RULES %s\n",game->rules_error());return 20;}
+   size_t sn=0;uint8_t* save=read_file(argv[3],sn);if(!save)return 20;
+   const int r=game->load_game(save,sn);free(save);if(r!=alpha::play::PLAY_OK){printf("PLAY LOAD %s\n",alpha::play::play_status_name(r));return 20;}
+  }else if(!game->loaded())return 20;
+  play_enabled=true;
+  if(!play_rebuild()){play_enabled=false;game=nullptr;return 20;}
+ }
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  PlayerViewScope player_scope;
  forecast_open=false;forecast_resources_ready=false;forecast_citizens_ready=false;forecast_budget_ready=false;
  player.close();free(player_rules);player_rules=nullptr;player_rules_length=0;last_checkpoint[0]=0;discard_pending=false;
- if(argc==7){
+ if(argc==7 && !play_arg){
   if(strcmp(argv[6],"--local") || strcmp(argv[1],"base"))return 20;
   size_t rn=0,sn=0;auto* rules=read_file(argv[2],rn);auto* save=read_file(argv[3],sn);
   if(!rules || !save){free(rules);free(save);return 20;}
@@ -414,7 +664,7 @@ int alpha_original_view(int argc,char** argv){
   snprintf(action_status,sizeof(action_status),"Local actions: keypad moves; P facility; ENTER confirm; F forecast; V save; R reload last save.");
  }
 #else
- if(argc==7)return 20;
+ if(argc==7 && !play_arg)return 20;
 #endif
  size_t n;auto* p=read_file(argv[2],n);if(!p)return 20;auto variant=strcmp(argv[1],"base")==0?alpha::Variant::base:alpha::Variant::alien_crossfire;
  bool ok=alpha::read_technologies(p,n,technologies)==alpha::Error::ok && alpha::read_unit_definitions(p,n,technologies,variant,definitions)==alpha::Error::ok && alpha::read_basic_rules(p,n,technologies,variant,basic,world_rules)==alpha::Error::ok;
@@ -424,7 +674,7 @@ int alpha_original_view(int argc,char** argv){
  if(local_enabled)forecast_citizens_ready=alpha::read_citizens(p,n,technologies,forecast_citizens)==alpha::Error::ok;
 #endif
  free(p);if(!ok)return 20;
- if(!local_enabled){p=read_file(argv[3],n);if(!p)return 20;ok=preview_world.load(p,n,0x12345678u)==alpha::WorldLoadError::ok;free(p);if(!ok || (world().game().data_version<11)!=(variant==alpha::Variant::base))return 20;}
+ if(!local_enabled && !play_enabled){p=read_file(argv[3],n);if(!p)return 20;ok=preview_world.load(p,n,0x12345678u)==alpha::WorldLoadError::ok;free(p);if(!ok || (world().game().data_version<11)!=(variant==alpha::Variant::base))return 20;}
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  if(local_enabled && alpha::read_facility_definitions(player_rules,player_rules_length,technologies,alpha::Variant::base,facility_labels)!=alpha::Error::ok)return 20;
 #endif
@@ -434,10 +684,13 @@ int alpha_original_view(int argc,char** argv){
  if(local_enabled)select_local_actors();
  bool needed[8]{};
  for(size_t i=0;i<world().game().base_count;++i){int f=world().base(i)->faction_id;if(f<0 || f>=8)return 20;needed[f]=true;}
- for(unsigned f=0;f<8;++f)if(needed[f]){char name[32];unsigned len=0;const auto& def=*world().faction_definition(f);
-  for(;len<24 && def.filename[len];++len){unsigned char c=(unsigned char)def.filename[len];if(c>='A' && c<='Z')c=(unsigned char)(c-'A'+'a');if(!((c>='a' && c<='z') || (c>='0' && c<='9') || c=='_' || c=='-'))return 20;name[len]=(char)c;}
-  if(!len || len>=24)return 20;
-  memcpy(name+len,".pcx",5);if(!load_image(name,faction_images[f])){fprintf(stderr,"Missing faction art %s\n",name);return 20;}
+ // A played game founds bases later: load every faction's art, and a
+ // missing file only leaves that faction's bases undrawn.
+ if(play_enabled)for(unsigned f=1;f<8;++f)needed[f]=world().faction_definition(f)->filename[0]!=0;
+ for(unsigned f=0;f<8;++f)if(needed[f]){char name[32];unsigned len=0;const auto& def=*world().faction_definition(f);bool bad=false;
+  for(;len<24 && def.filename[len];++len){unsigned char c=(unsigned char)def.filename[len];if(c>='A' && c<='Z')c=(unsigned char)(c-'A'+'a');if(!((c>='a' && c<='z') || (c>='0' && c<='9') || c=='_' || c=='-'))bad=true;name[len]=(char)c;}
+  if(bad || !len || len>=24){if(play_enabled)continue;return 20;}
+  memcpy(name+len,".pcx",5);if(!load_image(name,faction_images[f])){fprintf(stderr,"Missing faction art %s\n",name);if(play_enabled)continue;return 20;}
  }
  {const alpha::PcxImage* art[8]{};for(unsigned f=0;f<8;++f)if(needed[f])art[f]=&faction_images[f];
   extras.open(world(),art,extras_reader,nullptr);extras.set_viewer(world().game().player);messages_open=false;logged_status[0]=0;}
@@ -453,16 +706,21 @@ int alpha_original_view(int argc,char** argv){
  printf("INFANTRY PROFILE ready=%d base-human-basic-static; tile-foot anchor; no original viewport/shadows\n",infantry_available);fflush(stdout);
  if(!ui_text.open()){puts("Original UI fonts are required.");return 20;}
  frame=(uint8_t*)malloc((size_t)W*H*3);hud_frame=(uint8_t*)malloc((size_t)W*HUD_H*3);if(!frame || !hud_frame){free(frame);free(hud_frame);ui_text.close();return 20;}
+ if(play_enabled){selected=0;const int v=game->next_unit(-1);if(v>=0)selected=(size_t)v;play_drain();
+  for(size_t i=0;i<world().game().base_count;++i)if(world().base(i)->faction_id==game->player()){selected_base=i;break;}
+  snprintf(action_status,sizeof(action_status),"Turn %d, mission year %d. Keypad moves, E ends the turn.",game->turn(),game->year());}
  if(world().game().vehicle_count){camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}else {camera_x=(int)world().game().map.info.width/2;camera_y=(int)world().game().map.info.height/2;}
  IntuitionBase=(struct IntuitionBase*)OpenLibrary((STRPTR)"intuition.library",39);GfxBase=(struct GfxBase*)OpenLibrary((STRPTR)"graphics.library",39);CyberGfxBase=OpenLibrary((STRPTR)"cybergraphics.library",41);
  struct Window* window=nullptr;
  char window_title[128];snprintf(window_title,sizeof(window_title),"Alpha Centauri - %s",source_label);
- if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(NULL,WA_Title,(ULONG)window_title,WA_Width,952,WA_Height,864,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
+ if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(NULL,WA_Title,(ULONG)window_title,WA_Width,952,WA_Height,864,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
  int rc=20;
  if(!window)fprintf(stderr,"Cannot open world window (952x864): intuition=%d graphics=%d cybergraphics=%d\n",IntuitionBase!=nullptr,GfxBase!=nullptr,CyberGfxBase!=nullptr);
  if(window){draw(window);bool quit=false;while(!quit){WaitPort(window->UserPort);struct IntuiMessage* m;
   while((m=(struct IntuiMessage*)GetMsg(window->UserPort))){ULONG kind=m->Class;UWORD code=m->Code;WORD mouse_x=m->MouseX,mouse_y=m->MouseY;ReplyMsg((struct Message*)m);
-   if(kind==IDCMP_CLOSEWINDOW){
+   if(kind==IDCMP_CLOSEWINDOW && play_enabled){bool q=false;play_key('q',q);quit=q;if(!quit)draw(window);}
+   else if(kind==IDCMP_RAWKEY){if(play_enabled && !(code&0x80) && play_rawkey(code))draw(window);}
+   else if(kind==IDCMP_CLOSEWINDOW){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
     quit=leave_local();if(!quit)draw(window);
 #else
@@ -475,6 +733,7 @@ int alpha_original_view(int argc,char** argv){
     discard_pending=0;forecast_open=false;
 #endif
     int map_x,map_y;if(extras.minimap_click(world(),{12+HUD_X+563,HUD_Y+52,224,174},mouse_x,mouse_y,map_x,map_y)){camera_x=map_x;camera_y=map_y;}
+    else if(play_enabled){if(play_panel==PANEL_NONE || mouse_y>=HUD_Y)play_click(mouse_x,mouse_y);}
     else for(size_t i=0;i<world().game().base_count;++i){int x,y;const auto&b=*world().base(i);if(position(b.x,b.y,x,y) && abs(mouse_x-12-x)<24*zoom && abs(mouse_y-70-y)<24*zoom){selected_base=i;base_open=true;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
      player.cancel_facility();discard_pending=false;
@@ -482,6 +741,11 @@ int alpha_original_view(int argc,char** argv){
      break;}}
     draw(window);
    }
+   else if(kind==IDCMP_VANILLAKEY && play_enabled && play_key(code,quit)){
+    if(camera_x<0)camera_x=0;
+    if(camera_y<0)camera_y=0;
+    if(camera_y>=(int)world().game().map.info.height)camera_y=(int)world().game().map.info.height-1;
+    if(!quit)draw(window);}
    else if(kind==IDCMP_VANILLAKEY){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
     if(code=='q' || code=='Q'){quit=leave_local();if(!quit)draw(window);continue;}
@@ -502,6 +766,7 @@ int alpha_original_view(int argc,char** argv){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  player.close();visible_world=&preview_world;local_enabled=false;free(player_rules);player_rules=nullptr;player_rules_length=0;
 #endif
+ play_enabled=false;game=nullptr;visible_world=&preview_world;
  extras.close();free(frame);free(hud_frame);ui_text.close();printf("ORIGINAL VIEW RC %d\n",rc);return rc;
 }
 
