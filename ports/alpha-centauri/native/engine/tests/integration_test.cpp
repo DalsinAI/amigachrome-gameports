@@ -42,7 +42,6 @@ static uint32_t mix(uint32_t h, int32_t v) {
     return fnv1a(b, 4, h);
 }
 
-static char empty_str[] = "";
 static char morale_names[7][16] = {"Very Green", "Green", "Disciplined", "Hardened", "Veteran", "Commando", "Elite"};
 static char facility_names[SP_ID_Last + 1][24];
 static char weapon_names[MaxWeaponNum][24];

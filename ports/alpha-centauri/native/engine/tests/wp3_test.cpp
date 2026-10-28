@@ -97,6 +97,13 @@ int carry = 0, uint32_t abilities = 0, int reactor = REC_FISSION) {
 /* Synthetic rules: alpha.txt-like values for every table WP3 reads. The
  * rules loader (WP0b) is not needed; only what the tests rely on is set. */
 static void setup_rules() {
+    // Integration: WP4's mod_say_morale2 (replacing the WP3 fallback) reads the
+    // morale names, which the rules loader never leaves null.
+    static char morale_name[] = "";
+    for (int i = 0; i < MaxMoraleNum; i++) {
+        Morale[i].name = morale_name;
+        Morale[i].name_lifecycle = morale_name;
+    }
     Rules->move_rate_roads = RoadRate;
     Rules->max_airdrop_rng_wo_orbital_insert = 8;
     Rules->artillery_max_rng = 2;
