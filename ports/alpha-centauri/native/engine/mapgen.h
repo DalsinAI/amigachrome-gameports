@@ -52,18 +52,5 @@ void __cdecl map_wipe();
 void __cdecl Path_continents();
 int __cdecl world_site(int x, int y, int toggle);
 
-/* WP7-local copies of Thinker map.cpp terrain routines (mapgen_terrain.cpp).
- * World generation and start placement call these instead of the shared
- * engine_wp.h versions owned by WP3; on a running game alt_set and
- * world_alt_set forward to the shared versions. */
-namespace wp7 {
-void alt_set(int x, int y, int altitude);
-void alt_set_both(int x, int y, int altitude);
-void world_alt_set(int x, int y, int altitude, int toggle);
-int minerals_at(int x, int y);
-int bonus_at(int x, int y);
-int goody_at(int x, int y);
-} // namespace wp7
-
 } // namespace engine
 } // namespace alpha

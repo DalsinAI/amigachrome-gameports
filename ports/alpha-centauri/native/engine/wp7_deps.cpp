@@ -45,15 +45,6 @@ WP7_WEAK void __cdecl clear_goals(int faction_id) {
 WP7_WEAK void __cdecl clear_bunglist(int UNUSED(faction_id)) {
 }
 
-/* Executable routine: designs the faction's starting prototypes. Without it
- * the faction starts with the basic units of alpha.txt. */
-WP7_WEAK void __cdecl consider_designs(int UNUSED(faction_id)) {
-}
-
-WP7_WEAK void __cdecl clear_monuments() {
-    memset(Monuments, 0, sizeof(Monument) * MaxPlayerNum);
-}
-
 /* Executable routines: Faction::diplo_agenda bit updates. */
 WP7_WEAK void __cdecl agenda_on(int faction_id_1, int faction_id_2, uint32_t status) {
     Factions[faction_id_1].diplo_agenda[faction_id_2] |= status;

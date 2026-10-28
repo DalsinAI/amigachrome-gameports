@@ -14,8 +14,8 @@
  * - DEBUG-only overlay bookkeeping (mapdata) is removed;
  * - mod_world_build always uses world_generate: the original world_build is
  *   in no upstream source (see ENGINE-WP7.md);
- * - alt_set, world_alt_set and minerals_at are the WP7-local copies in
- *   mapgen_terrain.cpp (namespace wp7).
+ * - alt_set, world_alt_set and minerals_at are the shared versions in
+ *   WP3 terrain.cpp (integration: WP7's copies in mapgen_terrain.cpp were removed).
  */
 #include "engine.h"
 #include "mapgen.h"
@@ -640,7 +640,7 @@ void __cdecl world_rocky() {
                 && sq->code_at() != 16
                 && sq->code_at() != 19
                 && sq->code_at() != 20)) {
-                    int value = wp7::minerals_at(x, y); // Original: minerals_at
+                    int value = mod_minerals_at(x, y); // Original: minerals_at
                     rocky_set(x, y, value);
                     if (!(sq->landmarks & LM_FRESH) || !is_ocean(sq)) {
                         if (is_ocean(sq)) {
@@ -707,7 +707,7 @@ void __cdecl world_shorelines() {
     for (int y = 0; y < *MapAreaY; y++) {
         for (int x = y & 1; x < *MapAreaX; x += 2) {
             int alt = alt_natural(x, y);
-            wp7::alt_set(x, y, alt);
+            alt_set(x, y, alt);
             if ((*GameState & STATE_OMNISCIENT_VIEW) && *WorldAddTemperature) {
                 if (alt >= 3) {
                     temp_set(x, y, clamp(alt - 3, 0, 2));
@@ -720,7 +720,7 @@ void __cdecl world_shorelines() {
         for (int y = 0; y < *MapAreaY; y++) {
             for (int x = y & 1; x < *MapAreaX; x += 2) {
                 if (alt_at(x, y) == alt) {
-                    wp7::world_alt_set(x, y, alt, 1);
+                    world_alt_set(x, y, alt, 1);
                 }
             }
         }
@@ -765,11 +765,11 @@ void __cdecl mod_world_crater(int x, int y) {
     if (!locate_landmark(&x, &y, false)) {
         return;
     }
-    wp7::world_alt_set(x, y, ALT_OCEAN_TRENCH, true);
-    wp7::world_alt_set(x, y, ALT_THREE_ABOVE_SEA, true);
-    wp7::world_alt_set(x, y, ALT_SHORE_LINE, true);
-    wp7::world_alt_set(x, y, ALT_OCEAN_SHELF, true);
-    wp7::world_alt_set(x, y, ALT_SHORE_LINE, true);
+    world_alt_set(x, y, ALT_OCEAN_TRENCH, true);
+    world_alt_set(x, y, ALT_THREE_ABOVE_SEA, true);
+    world_alt_set(x, y, ALT_SHORE_LINE, true);
+    world_alt_set(x, y, ALT_OCEAN_SHELF, true);
+    world_alt_set(x, y, ALT_SHORE_LINE, true);
     uint8_t temperature = temp_at(x, y);
     for (int i = 0; i < TableRange[3]; i++) {
         int x2 = wrap(x + TableOffsetX[i]);
@@ -819,7 +819,7 @@ void __cdecl mod_world_monsoon(int x, int y) {
             sq = mapsq(x2, y2);
             if (sq && abs(TableOffsetY[i]) <= 8) {
                 if (i < 21 && is_ocean(sq)) {
-                    wp7::world_alt_set(x2, y2, ALT_SHORE_LINE, true);
+                    world_alt_set(x2, y2, ALT_SHORE_LINE, true);
                 }
                 bit2_set(x2, y2, LM_JUNGLE, true);
                 code_set(x2, y2, i);
@@ -920,7 +920,7 @@ void __cdecl mod_world_sargasso(int x, int y) {
         int y2 = y + TableOffsetY[i];
         MAP* sq = mapsq(x2, y2);
         if (sq && (is_ocean(sq) || i < 21)) {
-            wp7::world_alt_set(x2, y2, ALT_OCEAN_SHELF, true);
+            world_alt_set(x2, y2, ALT_OCEAN_SHELF, true);
             bit2_set(x2, y2, LM_SARGASSO, true);
             code_set(x2, y2, i);
             if (i <= 4) {
@@ -946,7 +946,7 @@ void __cdecl mod_world_ruin(int x, int y) {
         int y2 = y + TableOffsetY[i];
         MAP* sq = mapsq(x2, y2);
         if (sq) {
-            wp7::world_alt_set(x2, y2, ALT_SHORE_LINE, true);
+            world_alt_set(x2, y2, ALT_SHORE_LINE, true);
             if (is_ocean(sq)) {
                 if (i && i < 9) {
                     bit_set(x2, y2, BIT_MONOLITH, true);
@@ -991,9 +991,9 @@ void __cdecl mod_world_dune(int x, int y) {
         sq = mapsq(x2, y2);
         if (sq && (!is_ocean(sq) || i < 9 || map_rand.get(3))) {
             if (i == 2 || i == 7) {
-                wp7::world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
+                world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
             } else {
-                wp7::world_alt_set(x2, y2, ALT_SHORE_LINE, true);
+                world_alt_set(x2, y2, ALT_SHORE_LINE, true);
             }
             bit_set(x2, y2, BIT_FUNGUS, false);
             bit2_set(x2, y2, LM_DUNES, true);
@@ -1014,7 +1014,7 @@ void __cdecl mod_world_diamond(int x, int y) {
         MAP* sq = mapsq(x2, y2);
         if (sq) {
             if (i < 9 || !is_ocean(sq) || map_rand.get(3)) {
-                wp7::world_alt_set(x2, y2, ALT_SHORE_LINE, true);
+                world_alt_set(x2, y2, ALT_SHORE_LINE, true);
                 bit2_set(x2, y2, LM_URANIUM, true);
                 rocky_set(x2, y2, LEVEL_FLAT);
                 bit_set(x2, y2, BIT_FUNGUS, false);
@@ -1069,8 +1069,8 @@ void __cdecl mod_world_volcano(int x, int y, int skip_label) {
     if (!locate_landmark(&x, &y, false)) {
         return;
     }
-    wp7::world_alt_set(x, y, ALT_OCEAN_TRENCH, true);
-    wp7::world_alt_set(x, y, ALT_THREE_ABOVE_SEA, true);
+    world_alt_set(x, y, ALT_OCEAN_TRENCH, true);
+    world_alt_set(x, y, ALT_THREE_ABOVE_SEA, true);
     for (int i = 0; i < TableRange[1]; i++) {
         int x2 = wrap(x + TableOffsetX[i]);
         int y2 = y + TableOffsetY[i];
@@ -1136,7 +1136,7 @@ void __cdecl mod_world_borehole(int x, int y) {
         int x2 = wrap(x + TableOffsetX[i]);
         int y2 = y + TableOffsetY[i];
         if (mapsq(x2, y2)) {
-            wp7::world_alt_set(x2, y2, ALT_SHORE_LINE, true);
+            world_alt_set(x2, y2, ALT_SHORE_LINE, true);
             bit_set(x2, y2, BIT_SUPPLY_REMOVE, true);
             if (i == val1 || i == val2 || i == val3 || i == val4) {
                 bit_set(x2, y2, BIT_THERMAL_BORE, true);
@@ -1153,7 +1153,7 @@ void __cdecl mod_world_borehole(int x, int y) {
                 int x3 = wrap(x2 + TableOffsetX[i]);
                 int y3 = y2 + TableOffsetY[i];
                 if (mapsq(x3, y3) && is_ocean(mapsq(x3, y3))) {
-                    wp7::world_alt_set(x3, y3, ALT_SHORE_LINE, true);
+                    world_alt_set(x3, y3, ALT_SHORE_LINE, true);
                 }
             }
         }
@@ -1173,7 +1173,7 @@ void __cdecl mod_world_temple(int x, int y) {
         int x2 = wrap(x + TableOffsetX[i]);
         int y2 = y + TableOffsetY[i];
         if (mapsq(x2, y2)) {
-            wp7::world_alt_set(x2, y2, ALT_SHORE_LINE, true);
+            world_alt_set(x2, y2, ALT_SHORE_LINE, true);
             bit_set(x2, y2, BIT_SUPPLY_REMOVE, true);
             bit2_set(x2, y2, LM_NEXUS, true);
             code_set(x2, y2, i);
@@ -1195,7 +1195,7 @@ void __cdecl mod_world_unity(int x, int y) {
         int x2 = wrap(x + TableOffsetX[i]);
         int y2 = y + TableOffsetY[i];
         if (mapsq(x2, y2)) {
-            wp7::world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
+            world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
         }
     }
     x += 2;
@@ -1204,7 +1204,7 @@ void __cdecl mod_world_unity(int x, int y) {
         int x2 = wrap(x + TableOffsetX[i]);
         int y2 = y + TableOffsetY[i];
         if (mapsq(x2, y2)) {
-            wp7::world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
+            world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
         }
     }
     x--;
@@ -1240,9 +1240,9 @@ void __cdecl mod_world_fossil(int x, int y) {
         int y2 = y + TableOffsetY[i];
         MAP* sq = mapsq(x2, y2);
         if (sq && is_ocean(sq)) {
-            wp7::world_alt_set(x2, y2, ALT_OCEAN, true);
+            world_alt_set(x2, y2, ALT_OCEAN, true);
             if (conf.modified_landmarks) {
-                wp7::world_alt_set(x2, y2, ALT_OCEAN_SHELF, true);
+                world_alt_set(x2, y2, ALT_OCEAN_SHELF, true);
             }
             bit2_set(x2, y2, LM_FOSSIL, true);
             code_set(x2, y2, i);
@@ -1260,10 +1260,10 @@ void __cdecl mod_world_canyon(int x, int y) {
         int x2 = wrap(x + TableOffsetX[WorldCanyonOffset[i]]);
         int y2 = y + TableOffsetY[WorldCanyonOffset[i]];
         if (mapsq(x2, y2)) {
-            wp7::world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
-            wp7::world_alt_set(x2, y2, ALT_SHORE_LINE, true);
+            world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
+            world_alt_set(x2, y2, ALT_SHORE_LINE, true);
             bit2_set(x2, y2, LM_CANYON, true); // rolled these two into single loop with
-            code_set(x2, y2, WorldCanyonOffset[i]); // the above wp7::world_alt_set()
+            code_set(x2, y2, WorldCanyonOffset[i]); // the above world_alt_set()
         }
     }
     name_landmark(x, y + 2, LM_CANYON);
@@ -1277,7 +1277,7 @@ void __cdecl mod_world_mesa(int x, int y) {
         int x2 = wrap(x + TableOffsetX[i]);
         int y2 = y + TableOffsetY[i];
         if (mapsq(x2, y2)) {
-            wp7::world_alt_set(x2, y2, (i < TableRange[2]) + ALT_SHORE_LINE, true);
+            world_alt_set(x2, y2, (i < TableRange[2]) + ALT_SHORE_LINE, true);
             bit2_set(x2, y2, LM_MESA, true);
             code_set(x2, y2, i);
         }
@@ -1294,9 +1294,9 @@ void __cdecl mod_world_ridge(int x, int y) {
         int x2 = wrap(x + TableOffsetX[WorldRidgeOffset[i]]);
         int y2 = y + TableOffsetY[WorldRidgeOffset[i]];
         if (mapsq(x2, y2)) {
-            wp7::world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
+            world_alt_set(x2, y2, ALT_ONE_ABOVE_SEA, true);
             bit2_set(x2, y2, LM_RIDGE, true); // rolled these two into single loop with
-            code_set(x2, y2, WorldRidgeOffset[i]); // the above wp7::world_alt_set()
+            code_set(x2, y2, WorldRidgeOffset[i]); // the above world_alt_set()
         }
     }
     name_landmark(x, y + 2, LM_RIDGE);
@@ -1313,7 +1313,7 @@ void __cdecl mod_world_geothermal(int x, int y) {
         MAP* sq = mapsq(x2, y2);
         if (sq && (is_ocean(sq) || i < 9)) {
             if ((has_skipped || !i || map_rand.get(25)) && (i < 9 || map_rand.get(3))) {
-                wp7::world_alt_set(x2, y2, ALT_OCEAN_SHELF, true);
+                world_alt_set(x2, y2, ALT_OCEAN_SHELF, true);
                 bit2_set(x2, y2, LM_GEOTHERMAL, true);
                 code_set(x2, y2, i);
             } else {
@@ -1523,8 +1523,8 @@ void world_generate(uint32_t seed) {
         }
     }
     for (auto& p : bridges) {
-        wp7::world_alt_set(p.x, p.y, ALT_OCEAN, 1);
-        wp7::world_alt_set(p.x, p.y, ALT_OCEAN_SHELF, 1);
+        world_alt_set(p.x, p.y, ALT_OCEAN, 1);
+        world_alt_set(p.x, p.y, ALT_OCEAN_SHELF, 1);
     }
     world_temperature();
     world_riverbeds();
