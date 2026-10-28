@@ -67,8 +67,13 @@ int game_write_bytes(std::vector<uint8_t>& out);
 /* Thinker mod_load_daemon equivalent on bytes: game_read_bytes followed by the
  * original load-time fixups (fixup_landmarks, AltNatural, PFLAG_MAP_REVEALED,
  * set_alive, cursor list, rebuild_vehicle_bits/rebuild_base_bits, ...).
- * Returns a SaveLoadStatus. */
+ * Returns a SaveLoadStatus. Also repairs prototype component ids past their
+ * rules tables (fix_prototype_ids). */
 int load_daemon_bytes(const uint8_t* data, size_t length);
+/* Set prototype chassis/weapon/armor ids past their tables to 0 and reactor
+ * ids above MaxReactorNum to REC_FISSION in Units. Returns the number of
+ * prototypes changed. load_daemon_bytes calls it. */
+int fix_prototype_ids();
 /* Thinker mod_save_daemon equivalent on bytes (seed = save_tick_seed). */
 int save_daemon_bytes(std::vector<uint8_t>& out);
 /* File versions (stdio). */

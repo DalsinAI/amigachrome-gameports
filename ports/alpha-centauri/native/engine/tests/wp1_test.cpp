@@ -322,13 +322,20 @@ static void test_repair_and_economy() {
     // A unit that moved last turn is not repaired.
     CHECK_EQ(Vehs[x].damage_taken, 8);
 
+    // Integration: production_phase now runs WP2's base upkeep, which adds the
+    // base's energy income after the loan payments and interest; measure it.
+    Factions[1].energy_credits = 100;
+    production_phase(1);
+    const int income = Factions[1].energy_credits - 100;
+    CHECK(income >= 0);
+
     // Loans: faction 1 pays faction 2 what it can, the rest stays on the balance.
     Factions[1].energy_credits = 3;
     Factions[1].loan_balance[2] = 20;
     Factions[1].loan_payment[2] = 5;
     Factions[2].energy_credits = 0;
     production_phase(1);
-    CHECK_EQ(Factions[1].energy_credits, 0);
+    CHECK_EQ(Factions[1].energy_credits, 0 + income);
     CHECK_EQ(Factions[2].energy_credits, 3);
     CHECK_EQ(Factions[1].loan_balance[2], 19);
 
@@ -338,10 +345,11 @@ static void test_repair_and_economy() {
     MFactions[1].rule_interest = 0;
     Factions[1].energy_credits = 10;
     production_phase(1);
-    CHECK_EQ(Factions[1].energy_credits, 11);
+    CHECK_EQ(Factions[1].energy_credits, 11 + income);
     MFactions[1].rule_interest = 10;
+    Factions[1].energy_credits = 10;
     production_phase(1);
-    CHECK_EQ(Factions[1].energy_credits, 12);
+    CHECK_EQ(Factions[1].energy_credits, 11 + income);
 
     // Hurry costs are paid at the end of faction upkeep and credits never go negative.
     Factions[1].hurry_cost_total = 50;
