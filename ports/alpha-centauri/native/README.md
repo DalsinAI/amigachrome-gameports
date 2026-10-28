@@ -2594,3 +2594,6 @@ CI runs 115 raw contexts plus two invalid snapshot controls and 64 owned worlds
 (512 faction queries) on both host sanitizers and independent 68040. Normal SDK
 raw/world builds pass; actual AmigaOS execution remains unrun and is a merge
 gate. This stacked draft depends on PR86 and preserves separate PR89 unchanged.
+Original human nutrient/mineral factors retain original zero/default-Industry
+behavior in a separate pure API: [scope](HUMAN-COST.md),
+[evidence](HUMAN-COST-EVIDENCE-20261025.json). Native execution remains pending.

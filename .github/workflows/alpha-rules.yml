@@ -156,6 +156,10 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_unit_support.py --out "$RUNNER_TEMP/world-unit-support-host"
       - name: Big-endian owned-world unit mineral support controls
         run: python3 ports/alpha-centauri/native/test_world_unit_support.py --out "$RUNNER_TEMP/world-unit-support-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original human cost controls
+        run: python3 ports/alpha-centauri/native/test_original_human_cost.py --out "$RUNNER_TEMP/human-cost-host"
+      - name: Big-endian original human cost controls
+        run: python3 ports/alpha-centauri/native/test_original_human_cost.py --out "$RUNNER_TEMP/human-cost-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host saved-world movement pricing controls
         run: python3 ports/alpha-centauri/native/test_world_movement_price.py --out "$RUNNER_TEMP/world-price-host"
       - name: Big-endian saved-world movement pricing controls
