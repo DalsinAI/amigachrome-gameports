@@ -1,0 +1,47 @@
+{
+  "scope": "Read-only owned original tech_avail candidate query, not final human choice menu or research turns",
+  "source": {
+    "OpenSMACX": "2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c technology.cpp has_tech/tech_avail",
+    "Thinker": "dabe62f2d1abba03de40f3dd3048494843f6a9af tech.cpp same eligibility conditions",
+    "existingOwnedLookupReused": "world_has_technology"
+  },
+  "host": {
+    "worldContexts": 195,
+    "eligibilityQueries": 138840,
+    "invalidTransactionalControls": 1365,
+    "sourceAndIndependentMatches": true,
+    "outputSHA256": "bb6dea9cc2b0ac480f898f393a21ea024627ad56585a6205cc9f440d0caf1ae0"
+  },
+  "originalDataCoverage": {
+    "actualBaseTutorials": 3,
+    "originalBaseRulesSyntheticStates": 32,
+    "originalExpansionRulesSyntheticStates": 32,
+    "syntheticRulesWireContexts": 128,
+    "actualOriginalExpansionSave": false
+  },
+  "normalSDK": {
+    "version": "OpenAmigaGCC16.2.0-open3 normal private SDK",
+    "build": "PASS",
+    "probeSHA256": "3600b17d3e7dbc2bf4abab98086344399b4ea021746ad28acfc8b6a92f07100a",
+    "executed": false
+  },
+  "nativeQualification": "NOT RUN: user watch preview exclusively owns lab; no lab calls or changes performed",
+  "independentBigEndianCI": "Required before qualification; not inferred from compile",
+  "output": {
+    "allSlots": 89,
+    "explicitRuntimeVariant": true,
+    "snapshotAccounting": true,
+    "missingPrerequisiteMask": true,
+    "transactionalInvalidInputs": true,
+    "wireAndWorldRNGUnchanged": true
+  },
+  "notImplemented": [
+    "Research choice dialog filtering/modulo-three history gate",
+    "Blind research and AI selection",
+    "Research cost computation or accumulated-point update",
+    "Discovery awards/callbacks/secrets/free-tech effects",
+    "Networking/research synchronization",
+    "Browser/UI wiring or native query execution"
+  ],
+  "proprietaryAssetsUploaded": false
+}

@@ -196,6 +196,10 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_technology_browser.py --out "$RUNNER_TEMP/technology-browser-host"
       - name: Big-endian technology browser graph and description controls
         run: python3 ports/alpha-centauri/native/test_technology_browser.py --out "$RUNNER_TEMP/technology-browser-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned research eligibility controls
+        run: python3 ports/alpha-centauri/native/test_research_options.py --out "$RUNNER_TEMP/research-host"
+      - name: Big-endian owned research eligibility controls
+        run: python3 ports/alpha-centauri/native/test_research_options.py --out "$RUNNER_TEMP/research-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Native infantry composition host controls
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-host"
       - name: Native infantry composition big-endian 68040 controls
@@ -816,3 +820,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_research_choice.py --out "$RUNNER_TEMP/research-choice-host"
       - name: Big-endian manual research choice controls
         run: python3 ports/alpha-centauri/native/test_research_choice.py --out "$RUNNER_TEMP/research-choice-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host normal human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool.py --out "$RUNNER_TEMP/research-pool-host"
+      - name: Big-endian normal human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool.py --out "$RUNNER_TEMP/research-pool-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned-world human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool_world.py --out "$RUNNER_TEMP/research-pool-world-host"
+      - name: Big-endian owned-world human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool_world.py --out "$RUNNER_TEMP/research-pool-world-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
