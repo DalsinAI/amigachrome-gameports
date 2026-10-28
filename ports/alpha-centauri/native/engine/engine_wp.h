@@ -69,6 +69,7 @@ int __cdecl mod_energy_yield(int faction_id, int base_id, int x, int y, int flag
 int __cdecl mod_black_market(int base_id, int energy);
 int __cdecl facility_avail(FacilityId item_id, int faction_id, int base_id, int queue_count);
 void find_relocate_base(int faction_id); // static in Thinker base.cpp
+void __cdecl action_staple(int base_id); // basewin.cpp; called by WP6 (select_build)
 
 /* ---- WP3: unit orders, movement, terraforming (engine/veh_action.cpp, engine/path.cpp) ---- */
 int __cdecl order_veh(int veh_id, int offset, int flag);
@@ -104,6 +105,13 @@ int __cdecl action_airdrop(int veh_id, int tx, int ty, int flags);
 void __cdecl action_destroy(int veh_id, int tgt_item, int tgt_x, int tgt_y);
 int __cdecl contribution(int veh_id, int frm_id);
 int __cdecl find_return_base(int veh_id);
+/* Also called by WP6 (computer players); signatures as in WP3 veh_action.h. */
+int __cdecl action(int veh_id);
+int __cdecl action_build(int veh_id, const char* name);
+void __cdecl action_gate(int veh_id, int base_id);
+int __cdecl study_artifact(int veh_id);
+int __cdecl Path_find(int x1, int y1, int x2, int y2, int unit_id, int faction_id, int flags, int unk);
+int __cdecl Path_move(int veh_id, int faction_id);
 
 /* ---- WP4: combat (engine/combat.cpp) ---- */
 void __cdecl mod_battle_compute(int veh_id_atk, int veh_id_def, int* offense_out, int* defense_out, int combat_type);
@@ -139,6 +147,7 @@ void __cdecl name_proto(char* name, int unit_id, int faction_id, int chassis_id,
 int __cdecl mod_upgrade_prototype(int faction_id, int new_unit_id, int old_unit_id, int flag);
 int __cdecl veh_avail(int unit_id, int faction_id, int base_id);
 int find_proto(int base_id, TriadFlag triad, VehWeaponMode mode, bool defend);
+void __cdecl social_set(int faction_id); // exe-only; also called by WP6 (mod_social_ai)
 
 /* ---- WP6: AI (engine/ai_*.cpp) ---- */
 void __cdecl mod_enemy_turn(int faction_id);

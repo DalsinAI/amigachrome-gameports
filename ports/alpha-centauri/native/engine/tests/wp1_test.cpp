@@ -617,6 +617,10 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         BASE* b = &Bases[i];
         b->faction_id = b->faction_id & 7;
         b->pop_size = b->pop_size & 15;
+        // Integration: WP2's base messages print the base name; the patterned
+        // names have no terminator, and reading on past them shows the
+        // following fields in host byte order.
+        b->name[sizeof(b->name) - 1] = '\0';
         // Integration: production_phase now runs WP2's base upkeep, which needs the
         // base on a map tile (its worked radius starts at the base tile).
         if (!mapsq(b->x, b->y) && *MapAreaX >= 2 && *MapAreaY >= 1) {

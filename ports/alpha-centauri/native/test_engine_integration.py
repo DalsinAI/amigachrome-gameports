@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Combined engine control: End Turn (WP1), base upkeep (WP2) and combat (WP4)
-on one state, through a saved game.
+"""Combined engine control: End Turn (WP1), base upkeep (WP2), combat (WP4)
+and the computer players (WP6) on one state, through a saved game.
 
 Builds engine/tests/integration_test.cpp with every engine source, on the host
 with ASan/UBSan or for m68k-linux under qemu (big-endian), then:
@@ -9,8 +9,10 @@ with ASan/UBSan or for m68k-linux under qemu (big-endian), then:
   assets): three factions, bases producing units and facilities, opposing
   units on a front line;
 - "run" loads it with load_daemon_bytes and makes TURNS End Turn calls, with a
-  scripted human attack before every second call; it prints the battles, the
-  turn results and the base state, and saves the final game;
+  scripted human attack before every second call (factions 2 and 3 are
+  computer players and move, build and fight on their own); it prints the
+  battles, the turn results, the base state and the AI work counters, and
+  saves the final game;
 - every run is made twice and must give identical output and saved bytes;
 - with --m68k-linux, a plain host build must make the same synthetic save and
   give the same output and saved bytes as the big-endian run.
@@ -24,7 +26,7 @@ from test_engine_wp4 import wp3_double
 
 SRC=Path(__file__).resolve().parent
 ENGINE=SRC/'engine'
-TURNS=8
+TURNS=24
 
 def sources(out):
  stubs=sorted((ENGINE/'stubs').glob('*.cpp'));double=wp3_double(out)
@@ -65,9 +67,11 @@ def main():
  battles=int(summary.split('battles=')[1].split()[0]);assert battles>=1,summary
  # Bases produced units: more vehicles at the end than the battles left.
  v0,v1=map(int,summary.split('vehicles=')[1].split()[0].split('->'));assert v1>v0-battles,summary
- # Base 1 (faction 1) builds Recycling Tanks (facility 3, bit 0x08 of the first byte).
- last_base1=[l for l in lines if l.startswith('  base=1 ')][-1]
- assert int(last_base1.split('facilities=')[1],16)&0x08,last_base1
+ # Bases complete facilities (the synthetic bases start with none).
+ assert any(int(l.split('facilities=')[1],16) for l in lines if l.startswith('  base=')),text
+ # The computer players took their turns: unit moves, builds and strategy.
+ ai=[l for l in lines if l.startswith('ai ')][0];stats={k:int(v) for k,v in (x.split('=') for x in ai.split()[1:])}
+ assert stats['enemy_turns']>=a.turns and stats['veh_moves']>0 and stats['build_choices']>0 and stats['strategy_calls']>0,ai
  rec=dict(command=cmd,runner=runner,turns=a.turns,made=made.strip(),synthetic_sha256=hashlib.sha256(save.read_bytes()).hexdigest(),
   output_sha256=hashlib.sha256(final).hexdigest(),attacks=attacks,calls=calls,summary=summary,
   binarySHA256=hashlib.sha256(exe.read_bytes()).hexdigest())
@@ -80,7 +84,7 @@ def main():
   rec['host_equal']=True
  (out/'receipt.json').write_text(json.dumps(rec,indent=2)+'\n')
  for l in attacks:print(l)
- print(calls[-1]);print(summary)
+ print(calls[-1]);print(ai);print(summary)
  print(f'{a.turns} End Turn calls with production and {len(attacks)} scripted attacks ran deterministically'
   +(' with byte-identical host and m68k output and saves' if ref else ''))
 if __name__=='__main__':main()

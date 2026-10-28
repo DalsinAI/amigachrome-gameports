@@ -10,35 +10,11 @@
 #define WP7_WEAK __attribute__((weak))
 
 /* Integration: agenda_on, set_agenda and GameVictoryType are WP8's
- * (diplo.cpp); their fallbacks were removed here. */
+ * (diplo.cpp); reset_state and clear_goals are WP6's (integration.cpp).
+ * Their fallbacks were removed here. */
 
 namespace alpha {
 namespace engine {
-
-/* Thinker plan.cpp reset_state invalidates WP6 plan caches; nothing to do
- * without WP6. */
-WP7_WEAK void reset_state() {
-}
-
-/* Thinker goal.cpp */
-WP7_WEAK void __cdecl clear_goals(int faction_id) {
-    for (int i = 0; i < MaxGoalsNum; i++) {
-        Goal& goal = Factions[faction_id].goals[i];
-        goal.type = -1;
-        goal.priority = 0;
-        goal.x = 0;
-        goal.y = 0;
-        goal.base_id = 0;
-    }
-    for (int i = 0; i < MaxSitesNum; i++) {
-        Goal& site = Factions[faction_id].sites[i];
-        site.type = -1;
-        site.priority = 0;
-        site.x = 0;
-        site.y = 0;
-        site.base_id = 0;
-    }
-}
 
 /* Executable routine: clears the AI's failed-target list. The bunglist is
  * kept as opaque saved bytes (EngineState::bunglist); left untouched. */
