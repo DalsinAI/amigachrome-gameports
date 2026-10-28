@@ -11,6 +11,7 @@
 #include "turn.h"
 #include "base_wp2.h"
 #include "base_deps.h"
+#include "tech.h"
 
 namespace alpha {
 namespace engine {
@@ -20,7 +21,6 @@ namespace engine {
 static int s_control_turn_a = 0;  // ControlTurnA: quit/load requested, leave control_turn
 static int s_control_upkeep_a = 0; // ControlUpkeepA: 1 while faction_upkeep runs
 static int s_energy_credits = 0;  // EnergyCredits: credits before this turn's base upkeep
-static int s_skip_tech_screen_a = 0; // SkipTechScreenA
 static int s_net_upkeep_state = 0; // NetUpkeepState (network only, always 0)
 static int s_dword_93A940 = 0;
 static int s_dword_93A950 = 0;
@@ -764,11 +764,11 @@ void __cdecl production_phase(int faction_id) {
 
     if (*CurrentTurn == 1) {
         int techs = m->rule_tech_selected;
-        s_skip_tech_screen_a = 1;
+        *SkipTechScreenA = 1;
         while (--techs >= 0) {
             tech_advance(faction_id);
         }
-        s_skip_tech_screen_a = 0;
+        *SkipTechScreenA = 0;
     }
     if (full_game_turn()) {
         if (f->sanction_turns) {
