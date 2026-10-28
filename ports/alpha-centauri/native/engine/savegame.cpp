@@ -583,6 +583,46 @@ void upgrade_save_version() {
 }
 
 /*
+Fix: the prototype component ids of a saved game index the rules tables
+(Chassis, Weapon, Armor, Reactor[reactor_id - 1]) everywhere, but neither the
+original nor Thinker checks them on load. An id past its table is set to the
+first entry (reactor: REC_FISSION) so no read goes past the table. This is a
+load-time fixup like the others in load_daemon_bytes, not a rejection:
+game_read_bytes keeps the container bytes as stored, so a container round
+trip stays exact, and the repair is idempotent, so a second load_daemon +
+save_daemon cycle gives the same bytes. Original saves only hold valid ids.
+Returns the number of prototypes changed.
+*/
+int fix_prototype_ids() {
+    int fixed = 0;
+    for (int i = 0; i < MaxProtoNum; ++i) {
+        UNIT* u = &Units[i];
+        bool bad = false;
+        if (u->chassis_id >= MaxChassisNum) {
+            u->chassis_id = 0;
+            bad = true;
+        }
+        if (u->weapon_id >= MaxWeaponNum) {
+            u->weapon_id = 0;
+            bad = true;
+        }
+        if (u->armor_id >= MaxArmorNum) {
+            u->armor_id = 0;
+            bad = true;
+        }
+        if (u->reactor_id > MaxReactorNum) {
+            u->reactor_id = REC_FISSION;
+            bad = true;
+        }
+        if (bad) {
+            debug("load_daemon prototype %d: component id out of range\n", i);
+            fixed++;
+        }
+    }
+    return fixed;
+}
+
+/*
 Thinker mod_load_daemon after game_data(): load-time fixups.
 */
 int load_daemon_bytes(const uint8_t* data, size_t length) {
@@ -595,6 +635,7 @@ int load_daemon_bytes(const uint8_t* data, size_t length) {
         engine_notify(EV_GAME_LOADED, SAVE_LOAD_ERROR, error);
         return error == SAVE_ERR_SECURITY ? SAVE_LOAD_SECURITY : SAVE_LOAD_ERROR;
     }
+    fix_prototype_ids();
     fixup_landmarks(); // map_read
     engine_notify(EV_MAP_CHANGED);
     if (*GameRules & RULES_IRONMAN && info.has_tick_seed) {
