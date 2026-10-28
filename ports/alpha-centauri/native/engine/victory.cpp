@@ -465,7 +465,9 @@ int __cdecl end_of_game(int flag) {
     }
     int winner_id = -1;
     if (!(*GameState & STATE_GAME_DONE) && flag) {
-        if (*CurrentMissionYear >= *EndingMissionYear) {
+        // Fix: an unset ending year (0, e.g. a state that setup_game has not
+        // initialised) means no time limit instead of ending the game at once.
+        if (*EndingMissionYear > 0 && *CurrentMissionYear >= *EndingMissionYear) {
             *GameVictoryType = VIC_TIME_LIMIT;
             *GameState |= STATE_GAME_DONE;
         }
