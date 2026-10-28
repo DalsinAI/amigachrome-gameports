@@ -157,6 +157,14 @@ struct EngineState {
     int32_t parse_str_plurality[10];// ParseStrPlurality
     int32_t gender_default;        // GenderDefault
     int32_t plural_default;        // PluralDefault
+    int32_t veh_attack_flags;      // VehAttackFlags (order_veh/battle_fight flag bits)
+    int32_t control_turn_c;        // ControlTurnC (1 while upkeep phases run)
+    int32_t map_base_submerged_count[MaxPlayerNum];          // MapBaseSubmergedCount
+    int32_t map_base_id_closest_submerged_veh[MaxPlayerNum]; // MapBaseIdClosestSubmergedVeh
+    int32_t world_skip_territory;  // WorldSkipTerritory
+    int32_t climate_terraform_base_id; // dword_9B22E0 (world_climate: base hit by rainfall change)
+    int32_t terraform_tutorial_done;   // dword_90DB84 (action_terraform one-shot sound)
+    char str_buffer[StrBufLen];    // StrBuffer
     RandomState rng;
 };
 
@@ -326,6 +334,14 @@ extern int* ParseStrGender;
 extern int* ParseStrPlurality;
 extern int* GenderDefault;
 extern int* PluralDefault;
+extern int* VehAttackFlags;
+extern int* ControlTurnC;
+extern int* MapBaseSubmergedCount;
+extern int* MapBaseIdClosestSubmergedVeh;
+extern int* WorldSkipTerritory;
+extern int* dword_9B22E0;
+extern int* dword_90DB84;
+extern char* StrBuffer;
 
 /* Thinker-specific save variables stored in MFactions[0].pad_2. */
 struct ThinkerData {
