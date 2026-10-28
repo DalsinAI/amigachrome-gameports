@@ -9,10 +9,6 @@
 
 namespace alpha {
 namespace engine {
-namespace ai {
-
-
-} // namespace ai
 
 void __cdecl mod_enemy_turn(int faction_id) {
     using namespace ai;
@@ -111,10 +107,6 @@ void __cdecl mod_enemy_turn(int faction_id) {
     }
 }
 
-namespace ai {
-
-} // namespace ai
-
 int __cdecl mod_enemy_veh(int veh_id) {
     using namespace ai;
     VEH* veh = &Vehs[veh_id];
@@ -137,10 +129,6 @@ int __cdecl mod_enemy_veh(int veh_id) {
         return VEH_SKIP;
     }
 }
-
-namespace ai {
-
-} // namespace ai
 
 int __cdecl mod_enemy_move(int veh_id) {
     using namespace ai;
@@ -583,8 +571,5 @@ int __cdecl mod_alien_move(int veh_id) {
     return 0;
 }
 
-namespace ai {
-
-} // namespace ai
 } // namespace engine
 } // namespace alpha

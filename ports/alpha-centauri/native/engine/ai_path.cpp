@@ -11,8 +11,6 @@ namespace alpha {
 namespace engine {
 namespace ai {
 
-
-
 void TileSearch::reset() {
     type = 0;
     head = 0;
@@ -174,10 +172,6 @@ MAP* TileSearch::get_next() {
     return NULL;
 }
 
-
-
-
-
 int __cdecl contiguous(int faction_id_1, int faction_id_2, int region, int flag) {
     if (region && (!Factions[faction_id_1].region_total_bases[region]
     || !Factions[faction_id_2].region_total_bases[region])) {
@@ -333,8 +327,6 @@ void update_move_path(PMTable& tbl, int veh_id, int tx, int ty) {
         }
     }
 }
-
-
 
 bool defend_tile(VEH* veh, MAP* sq) {
     if (!sq || (sq->items & BIT_MONOLITH && veh->need_monolith())) {

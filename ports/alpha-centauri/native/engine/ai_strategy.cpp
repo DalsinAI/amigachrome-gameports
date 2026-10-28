@@ -9,9 +9,6 @@
 
 namespace alpha {
 namespace engine {
-namespace ai {
-
-} // namespace ai
 
 void __cdecl enemy_capabilities(int faction_id) {
     using namespace ai;
@@ -96,10 +93,6 @@ void __cdecl enemy_capabilities(int faction_id) {
         }
     }
 }
-
-namespace ai {
-
-} // namespace ai
 
 void __cdecl enemy_strategy(int faction_id) {
     using namespace ai;
@@ -1259,8 +1252,5 @@ void __cdecl enemy_strategy(int faction_id) {
     wipe_goals(faction_id);
 }
 
-namespace ai {
-
-} // namespace ai
 } // namespace engine
 } // namespace alpha

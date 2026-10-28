@@ -9,9 +9,6 @@
 
 namespace alpha {
 namespace engine {
-namespace ai {
-
-} // namespace ai
 
 void __cdecl alien_fauna() {
     using namespace ai;
@@ -292,8 +289,5 @@ void __cdecl alien_fauna() {
     }
 }
 
-namespace ai {
-
-} // namespace ai
 } // namespace engine
 } // namespace alpha

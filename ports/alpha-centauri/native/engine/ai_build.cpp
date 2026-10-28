@@ -11,7 +11,6 @@ namespace alpha {
 namespace engine {
 namespace ai {
 
-
 enum UnitScoreFlag {
     SC_None = 0,
     SC_Defend = 1,
@@ -53,7 +52,6 @@ static int proto_extra_cost(int unit_id) {
     return unit_id >= MaxProtoFactionNum && !Units[unit_id].is_prototyped()
         ? prototype_factor(unit_id) : 0;
 }
-
 
 int hurry_item(int base_id, int mins, int cost) {
     BASE* b = &Bases[base_id];
@@ -468,7 +466,6 @@ int unit_score(BASE* const base, int unit_id, int psi_score, int psi_atk, int ps
         unit_id, psi_score, u->cost, turns, cnt_val, score, u->name);
     return score;
 }
-
 
 int select_colony(int base_id, int num_colony, bool build_ships) {
     TileSearch ts;
@@ -1083,8 +1080,5 @@ int select_build(int base_id) {
     return select_combat(base_id, sea_base, allow_ships);
 }
 
-namespace ai {
-
-} // namespace ai
 } // namespace engine
 } // namespace alpha

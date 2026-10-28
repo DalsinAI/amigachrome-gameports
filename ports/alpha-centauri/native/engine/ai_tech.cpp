@@ -288,10 +288,6 @@ int __cdecl mod_tech_val(int tech_id, int faction_id, int simple_calc) {
     return value;
 }
 
-namespace ai {
-
-} // namespace ai
-
 int __cdecl mod_tech_ai(int faction_id) {
     using namespace ai;
     int tech_id = -1;
@@ -320,8 +316,5 @@ int __cdecl mod_tech_ai(int faction_id) {
     return tech_id;
 }
 
-namespace ai {
-
-} // namespace ai
 } // namespace engine
 } // namespace alpha

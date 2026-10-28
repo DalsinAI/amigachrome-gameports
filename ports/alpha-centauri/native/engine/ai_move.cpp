@@ -11,7 +11,6 @@ namespace alpha {
 namespace engine {
 namespace ai {
 
-
 /*
 Priority Map Tables contain values calculated for each map square
 to guide the AI in its move planning.
@@ -30,7 +29,6 @@ PM_SAFE defines the threshold below which the units will attempt to flee
 to the square chosen by escape_move.
 */
 
-
 PMTable mapdata;
 NodeSet mapnodes;
 static Points nonally;
@@ -39,7 +37,6 @@ static int nonally_faction_id = 0;
 static std::set<int> region_enemy;
 static std::set<int> region_probe;
 static const int VehRemoveTurns = 60;
-
 
 static void adjust_former(int x, int y, int range, int value) {
     assert(range > 0 && range < 9);

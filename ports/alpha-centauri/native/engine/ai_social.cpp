@@ -259,8 +259,5 @@ int __cdecl mod_social_ai(int faction_id, int a2, int a3, int a4, int a5, CSocia
     return 0;
 }
 
-namespace ai {
-
-} // namespace ai
 } // namespace engine
 } // namespace alpha

@@ -1000,6 +1000,11 @@ int __cdecl mod_veh_skip(int veh_id) {
 int set_move_to(int veh_id, int x, int y) {
     VEH* veh = &Vehs[veh_id];
     debug("set_move_to %2d %2d -> %2d %2d %s\n", veh->x, veh->y, x, y, veh->name());
+    if (!mapsq(x, y)) {
+        // Fix: trans_move can still find a naval start node after the naval plan
+        // was dropped (naval_end -1, -1); skip instead of a go-to order off the map.
+        return mod_veh_skip(veh_id);
+    }
     veh->waypoint_x[0] = x;
     veh->waypoint_y[0] = y;
     veh->order = ORDER_MOVE_TO;

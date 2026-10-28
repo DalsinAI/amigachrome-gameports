@@ -11,10 +11,8 @@ namespace alpha {
 namespace engine {
 namespace ai {
 
-
 int plan_upkeep_turn = -1;
 int move_upkeep_faction = -1;
-
 
 int facility_score(FacilityId item_id, WItem& Wgov) {
     CFacility& p = Facility[item_id];

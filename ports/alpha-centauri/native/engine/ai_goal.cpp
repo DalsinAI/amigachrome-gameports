@@ -11,8 +11,6 @@ namespace alpha {
 namespace engine {
 namespace ai {
 
-
-
 bool ignore_goal(int type) {
     return type == AI_GOAL_COLONIZE || type == AI_GOAL_TERRAFORM_LAND
         || type == AI_GOAL_TERRAFORM_WATER || type == AI_GOAL_CONDENSER
