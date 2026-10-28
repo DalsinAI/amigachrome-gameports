@@ -1296,3 +1296,82 @@ our viewer's64px tiles; the foot anchor is our own UI wiring. No gameplay or
 full-scene equivalence claim. Native execution and integrated original tutorial
 qualification are **pending**; the user's live watch session is untouched.
 See `SPEEDER-EVIDENCE-20261025.json` for the explicit current validation bounds.
+
+## World-view rendering: vehicles, overlays, fog, minimap, messages, base window
+
+These modules are platform-free. Pixels go into the viewer's RGB frames, and
+text comes back as items that the viewer draws with the original fonts. They
+are wired into the original-world viewer with small hook calls through
+`ui_mapview.cpp`. All art is read at run time from the owner's game folder;
+nothing original is committed. GLSMAC was consulted only for texture-sheet
+cell coordinates and faction-art pixel positions (layout facts); no GLSMAC
+code is used.
+
+- `cvr_vehicle.h/cpp`: generic chassis/weapon/armour/reactor assembly of up to
+  twelve CVR parts on one depth surface. It reuses the qualified projection,
+  lighting, LOD and pixel stage. With model colours it is byte-identical to the
+  infantry and speeder profiles. With the owner's `palette.pcx` it writes global
+  palette indices and remaps painted parts (VGMCP and VBP for the speeder)
+  through `build_cvr_faction_palette`, using the faction tint from the faction
+  art. Built-in recipes cover basic human infantry and the speeder. Other
+  designs come from an optional owner `cvr_units.txt` (`chassis weapon armour
+  reactor scale root_x body_frames voxel_limit : stem stem* ...`, where `*`
+  marks painted parts). Designs without a recipe, or with missing parts, keep
+  the explicit CVR label.
+- `map_overlays.h/cpp`: draws rivers, roads/mag tubes, farms, forest, fungus,
+  soil enrichers, mines, solar collectors, condensers, mirrors, boreholes,
+  sensors, bunkers, airbases, monoliths, pods and territory borders from saved
+  tile bits. Fog comes from the viewing faction's visibility bit and its
+  last-seen improvement bits. Rivers, roads and borders are connection strokes
+  (new presentation, not the original atlas variant selection).
+  Farm/forest/fungus use `texture.pcx` cells, and improvements use `ter1.pcx`
+  cells when present, with simple markers otherwise. The `ter1.pcx` transparency
+  keys are not yet qualified against owner art.
+- `ui_minimap.h/cpp`: terrain, territory tint, fog, base and unit markers and
+  the camera box. Clicks map back to tiles. It replaces the HUD thumbnail.
+- `ui_messages.h/cpp`: a bounded 64-entry log with repeat folding and
+  scrolling. The viewer logs asset status and every action status.
+- `ui_basewin.h/cpp`: a read-only base window with the 21-tile radius and worked
+  tiles, nutrient/mineral/energy bars (intake split into consumption and
+  surplus), stored resources, economy/labs/psych, the production queue and built
+  facilities. In local mode, a fresh `world_base_accounting` forecast (F)
+  replaces the saved numbers until the next action. Facility proposals keep the
+  previous details panel.
+
+New viewer keys: O switches between the player view and all tiles (the default
+is the saved current player's view), M toggles the message log, and < > scroll
+it. In player view, bases and units on unexplored tiles are hidden. Units
+outside current sight are not yet hidden.
+
+```sh
+python3 ports/alpha-centauri/native/test_cvr_vehicle.py --out /tmp/vehicle-host
+python3 ports/alpha-centauri/native/test_cvr_vehicle.py --out /tmp/vehicle-m68k --cc m68k-linux-gnu-g++ --m68k-linux
+python3 ports/alpha-centauri/native/test_map_render.py --out /tmp/render-host
+python3 ports/alpha-centauri/native/test_map_render.py --out /tmp/render-m68k --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+`test_cvr_vehicle.py` checks:
+- 64 views for byte equality with the existing infantry/speeder profiles;
+- 192 colour-mode views against an independent faction-table oracle;
+- rejected assemblies, the recipe parser, tint metadata and the design-keyed
+  vehicle set.
+
+`test_map_render.py` checks:
+- overlay counts against an independent Python model of the rules;
+- 61 probe pixels;
+- minimap, message log and base window structure;
+- 26 golden frame digests, which the sanitizer host and the big-endian 68040
+  must both reproduce.
+
+The same control binaries, built with the AmigaOS cross compiler, reproduce
+those digests and all other outputs under AROS 68040 in FS-UAE
+(`RENDER-EVIDENCE-20261028.json`).
+
+Not yet done:
+- The full viewer was not linked or run here, because the SDL2 SDK and the
+  owner's assets are not available in this environment.
+- Original slope terrain and coast blending.
+- Atlas-accurate river/road variants.
+- Unit shadows and animation.
+- Hiding enemy units outside current sight.
+- Worked-tile editing, hurry, and the other report screens.

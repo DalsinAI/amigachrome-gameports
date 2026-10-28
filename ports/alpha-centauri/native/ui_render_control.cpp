@@ -26,6 +26,7 @@ bool load_map(const char* path,Map& m){
  m.view={w,h,b[8]!=0,m.tiles,count};free(b);return true;
 }
 bool load_pcx(const char* path,alpha::PcxImage& image){if(!strcmp(path,"-"))return false;size_t n=0;uint8_t* b=read(path,n);const bool ok=b && image.load(b,n);free(b);return ok;}
+alpha::MapViewExtras view_extras;
 const uint8_t factions[8][3]={{0,0,0},{230,60,60},{60,200,90},{70,110,240},{230,210,60},{200,90,220},{60,210,220},{240,150,60}};
 void write_ppm(const char* path,const uint8_t* rgb,unsigned w,unsigned h){if(!path || !strcmp(path,"-"))return;FILE*f=fopen(path,"wb");if(!f)return;fprintf(f,"P6\n%u %u\n255\n",w,h);fwrite(rgb,1,(size_t)w*h*3,f);fclose(f);}
 void print_items(const alpha::UiTextItem* items,size_t n){for(size_t i=0;i<n;++i)printf("TEXT %d %d %d %u %d |%s|\n",items[i].x,items[i].baseline,items[i].width,(unsigned)items[i].ink,(int)items[i].heading,items[i].text);}
@@ -123,7 +124,7 @@ int main(int argc,char** argv){
   auto reader=[](void* c,const char* name,size_t& size)->uint8_t*{char path[1024];snprintf(path,sizeof(path),"%s/%s",((Ctx*)c)->dir,name);return read(path,size);};
   alpha::PcxImage art1;char path[1024];snprintf(path,sizeof(path),"%s/faction1.pcx",argv[2]);const bool has_art=load_pcx(path,art1);
   const alpha::PcxImage* art[8]{};if(has_art)art[1]=&art1;
-  static alpha::MapViewExtras extras;extras.open(world,art,reader,&ctx);
+  alpha::MapViewExtras& extras=view_extras;extras.open(world,art,reader,&ctx);
   for(size_t i=0;i<extras.messages().count();++i){const auto* m=extras.messages().newest(extras.messages().count()-1-i);printf("LOG k%u |%s|\n",(unsigned)m->kind,m->text);}
   printf("COLOURS %d\n",(int)extras.faction_colours());
   const unsigned fw=256,fh=256;const size_t bytes=(size_t)fw*fh*3;uint8_t* rgb=(uint8_t*)malloc(bytes);if(!rgb)return 20;

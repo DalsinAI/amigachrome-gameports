@@ -25,6 +25,10 @@ void blit(const uint8_t* rgba,unsigned sw,unsigned sh,uint8_t* output,unsigned w
  for(unsigned y=0;y<sh;++y){const int dy=foot-(int)sh+8*(int)zoom+(int)y;if(dy<0 || dy>=(int)height)continue;
   for(unsigned x=0;x<sw;++x){const size_t n=(size_t)y*sw+x;const int dx=cx-(int)sw/2+(int)x;if(rgba[n*4+3] && dx>=0 && dx<(int)width)memcpy(output+((size_t)dy*width+dx)*3,rgba+n*4,3);}}
 }
+// Heap objects use malloc plus placement new: no libstdc++ allocator or
+// exception runtime is linked into the AmigaOS build.
+CvrVehicle* create_vehicle(){void* p=malloc(sizeof(CvrVehicle));return p?new(p) CvrVehicle():nullptr;}
+void destroy_vehicle(CvrVehicle* v){if(v){v->~CvrVehicle();free(v);}}
 bool stem_char(char c){return (c>='a' && c<='z') || (c>='0' && c<='9') || c=='_';}
 void set_recipe(CvrRecipe& r,const char* const* names,const bool* painted,unsigned count,float scale,float root,unsigned frames,unsigned limit){
  memset(&r,0,sizeof(r));r.count=count;
@@ -196,7 +200,7 @@ bool cvr_faction_tint(const uint8_t* indices,uint32_t width,uint32_t height,cons
 
 CvrVehicleSet::CvrVehicleSet():slots_{},failed_{},failed_count_(0),clock_(0),reader_(nullptr),context_(nullptr),table_(nullptr),global_(false),global_rgb_{},tints_{},mask_(0){}
 CvrVehicleSet::~CvrVehicleSet(){clear();}
-void CvrVehicleSet::clear(){for(auto&s:slots_){delete s.vehicle;s.vehicle=nullptr;}failed_count_=0;clock_=0;}
+void CvrVehicleSet::clear(){for(auto&s:slots_){destroy_vehicle(s.vehicle);s.vehicle=nullptr;}failed_count_=0;clock_=0;}
 void CvrVehicleSet::configure(Reader reader,void* context,const CvrRecipeTable* table,const uint8_t* global_rgb,const uint8_t (*tints)[3],uint8_t mask){
  clear();reader_=reader;context_=context;table_=table;global_=global_rgb!=nullptr;
  if(global_)memcpy(global_rgb_,global_rgb,768);
@@ -213,12 +217,12 @@ CvrVehicle* CvrVehicleSet::get(int chassis,int weapon,int armor,int reactor,uint
   CvrVehiclePart parts[cvr_vehicle_max_parts]{};uint8_t* owned[cvr_vehicle_max_parts]{};
   for(unsigned i=0;ok && i<recipe.count;++i){char name[32];memcpy(name,recipe.names[i],sizeof(recipe.names[i]));name[23]=0;strcat(name,".cvr");
    size_t n=0;owned[i]=reader_(context_,name,n);if(!owned[i]){ok=false;break;}parts[i]={owned[i],n,recipe.painted[i]};}
-  if(ok){vehicle=new(std::nothrow) CvrVehicle();ok=vehicle && vehicle->load(parts,recipe.count,recipe.profile) && vehicle->set_colours(global_?global_rgb_:nullptr,mask_?tints_:nullptr,mask_);}
+  if(ok){vehicle=create_vehicle();ok=vehicle && vehicle->load(parts,recipe.count,recipe.profile) && vehicle->set_colours(global_?global_rgb_:nullptr,mask_?tints_:nullptr,mask_);}
   for(auto*p:owned)free(p);
  }
- if(!ok){delete vehicle;if(failed_count_<32)memcpy(failed_[failed_count_++],key,sizeof(key));return nullptr;}
+ if(!ok){destroy_vehicle(vehicle);if(failed_count_<32)memcpy(failed_[failed_count_++],key,sizeof(key));return nullptr;}
  Slot* victim=&slots_[0];
  for(auto&s:slots_){if(!s.vehicle){victim=&s;break;}if(s.used<victim->used)victim=&s;}
- delete victim->vehicle;memcpy(victim->key,key,sizeof(key));victim->vehicle=vehicle;victim->used=clock_;return vehicle;
+ destroy_vehicle(victim->vehicle);memcpy(victim->key,key,sizeof(key));victim->vehicle=vehicle;victim->used=clock_;return vehicle;
 }
 }

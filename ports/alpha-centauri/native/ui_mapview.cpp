@@ -13,7 +13,7 @@ void sample(const PcxImage* t,unsigned x,unsigned y,uint8_t out[3],uint8_t r,uin
 }
 MapViewExtras::MapViewExtras():recipes_(nullptr),ter1_(nullptr),global_{},tints_{},tint_mask_(0),palette_ready_(false),borders_{},border_mask_(0),viewer_(-1){}
 MapViewExtras::~MapViewExtras(){close();}
-void MapViewExtras::close(){vehicles_.clear();free(recipes_);recipes_=nullptr;delete ter1_;ter1_=nullptr;tint_mask_=border_mask_=0;palette_ready_=false;viewer_=-1;}
+void MapViewExtras::close(){vehicles_.clear();free(recipes_);recipes_=nullptr;if(ter1_){ter1_->~PcxImage();free(ter1_);}ter1_=nullptr;tint_mask_=border_mask_=0;palette_ready_=false;viewer_=-1;}
 void MapViewExtras::open(const OriginalWorld& w,const PcxImage* const art[8],Reader reader,void* context){
  close();log_.clear();
  const int32_t turn=w.game().preferences.CurrentTurn;char line[120];
@@ -31,7 +31,8 @@ void MapViewExtras::open(const OriginalWorld& w,const PcxImage* const art[8],Rea
   else{snprintf(line,sizeof(line),"cvr_units.txt: %u extra unit recipes.",recipes_->count);log_.add(turn,MessageKind::info,line);}
   free(bytes);}
  bytes=reader?reader(context,"ter1.pcx",n):nullptr;
- if(bytes){ter1_=new(std::nothrow) PcxImage();if(ter1_ && !(ter1_->load(bytes,n) && ter1_->width()>=1024 && ter1_->height()>=768)){delete ter1_;ter1_=nullptr;}free(bytes);}
+ if(bytes){void* mem=malloc(sizeof(PcxImage));ter1_=mem?new(mem) PcxImage():nullptr;
+  if(ter1_ && !(ter1_->load(bytes,n) && ter1_->width()>=1024 && ter1_->height()>=768)){ter1_->~PcxImage();free(ter1_);ter1_=nullptr;}free(bytes);}
  log_.add(turn,MessageKind::info,ter1_?"Improvement art from ter1.pcx.":"ter1.pcx not found: improvements use simple markers.");
  vehicles_.configure(reader,context,recipes_,palette_ready_?global_:nullptr,tints_,tint_mask_);
 }
