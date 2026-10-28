@@ -1285,3 +1285,41 @@ user's lab session. See `PALETTE-EVIDENCE-20261025.json`.
 Original human nutrient/mineral factors retain original zero/default-Industry
 behavior in a separate pure API: [scope](HUMAN-COST.md),
 [evidence](HUMAN-COST-EVIDENCE-20261025.json). Native execution remains pending.
+### Static basic human speeder profile (native qualification pending)
+
+The actual original-world viewer can now render the base-game basic human
+speeder (chassis1/weapon0/armour0/reactor1/no raw abilities), including the custom
+prototype320 in the original Explore tutorial. It does not substitute infantry
+for the rover. The ten original components are appended in source-backed order:
+VRCP00, VGMC, VGMCP, VB, VBP, VSP, vsptb, vsptf, VLIGHTS, VR00. Assets stay private
+and are loaded from the viewer's directory using those lowercase filenames.
+Missing parts or unsupported variants keep the existing explicit labels.
+
+The composition reuses strict shared depth, separate component palettes and
+bounded transparent facing/zoom caches. `CvrUnitAssembly` retains the prior
+`CvrInfantry` API alias. Infantry remains capped at100,000 voxels; the ten-part
+speeder at160,000. The original infantry's16 hashes and PPM remain identical.
+
+VLIGHTS requires CVR10.0 and five chained geometry LODs. The reader now validates
+up to16 ordered levels, including unselected geometry, and selects using the
+original1.414199948310852 threshold. Exact float-input products are compared in
+double: a bounded original x86 helper exposed premature float rounding at LOD
+boundaries. This bounded static profile rejects assets whose selected LOD
+changes between its two supported zooms; the owner lights choose the same
+coarsest level at both. Non-STOP single streams and the observed CVR10.0 opaque alternate
+palette length are supported; unknown flags/offset jumps remain rejected.
+
+Run `test_cvr_lod.py` for40 synthetic LOD/legacy/boundary rejection controls and
+`test_cvr_speeder.py` for34 ten-part ordering/palette/hidden/transactional/cache
+controls. Both have independent big-endian68040 CI commands. The normal SDK
+`build_cvr_speeder.sh probe OUTPUT` builds a16-facing/zoom original-asset control;
+run it as `PROBE PRIVATE_MODEL_DIRECTORY OUTPUT.ppm`. The actual frontend is
+built normally with `build_original_frontend.sh`.
+
+This is static frame0 and raw per-model colours. Original faction-table
+remapping for VGMCP/VBP, full animation, global palette/shadows and exact original
+viewport remain unfinished. Source-derived camera/facing/scale is mapped into
+our viewer's64px tiles; the foot anchor is our own UI wiring. No gameplay or
+full-scene equivalence claim. Native execution and integrated original tutorial
+qualification are **pending**; the user's live watch session is untouched.
+See `SPEEDER-EVIDENCE-20261025.json` for the explicit current validation bounds.

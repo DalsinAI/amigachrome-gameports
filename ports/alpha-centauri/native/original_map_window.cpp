@@ -29,7 +29,7 @@
 #include <string.h>
 #include <errno.h>
 struct IntuitionBase* IntuitionBase;struct GfxBase* GfxBase;struct Library* CyberGfxBase;
-static alpha::CvrInfantry infantry;static bool infantry_available=false;
+static alpha::CvrUnitAssembly infantry,speeder;static bool infantry_available=false,speeder_available=false;
 static alpha::OriginalWorld preview_world;
 static const alpha::OriginalWorld* visible_world=&preview_world;
 static const alpha::OriginalWorld& world(){return *visible_world;}
@@ -80,6 +80,10 @@ static bool transparent(const uint8_t* rgb,bool sprite){
 static bool infantry_profile(const alpha::OriginalVehicle& v){
  const auto* p=world().prototype((size_t)v.unit_id);const auto* f=world().faction_definition(v.faction_id);
  return infantry_available && infantry.ready() && p && f && v.rotate_angle>=-1 && v.rotate_angle<=7 && world().game().data_version<11 && p->chassis_id==0 && p->weapon_id==0 && p->armor_id==0 && p->reactor_id==1 && p->ability_flags==0 && !(f->rule_flags&0x80u);
+}
+static bool speeder_profile(const alpha::OriginalVehicle& v){
+ const auto* p=world().prototype((size_t)v.unit_id);const auto* f=world().faction_definition(v.faction_id);
+ return speeder_available && speeder.ready() && p && f && v.rotate_angle>=-1 && v.rotate_angle<=7 && world().game().data_version<11 && p->chassis_id==1 && p->weapon_id==0 && p->armor_id==0 && p->reactor_id==1 && p->ability_flags==0 && !(f->rule_flags&0x80u);
 }
 static void pixel(int x,int y,const uint8_t* rgb){if(x<0 || y<0 || x>=W || y>=H || !rgb)return;auto* p=frame+((size_t)y*W+x)*3;p[0]=rgb[0];p[1]=rgb[1];p[2]=rgb[2];}
 static void diamond(int cx,int cy,int atlas_x,int atlas_y,bool overlay){
@@ -286,9 +290,9 @@ static void draw(struct Window* window){
   if(alpha::world_effective_morale(world(),definitions,technologies,i,true,morale)==alpha::LogicError::ok)col=(int)morale;
   switch(v.unit_id){case 7:row=0;col=0;break;case 8:row=3;break;case 9:row=4;break;case 10:row=7;col=0;break;case 15:if(world().game().data_version>=11)row=5;break;}
   if(row>=0)sprite(sx,sy,row,col);
-  else if(infantry_profile(v)){
+  else if(infantry_profile(v) || speeder_profile(v)){
    const unsigned facing=v.rotate_angle<0?0:(unsigned)v.rotate_angle&7u;
-   if(sx>=0 && sx<W && sy>=0 && sy<H){bool drawn=infantry.draw(frame,(size_t)W*H*3,W,H,sx,sy,(unsigned)zoom,facing);printf("INFANTRY DRAW unit=%lu facing=%u ok=%d\n",(unsigned long)i,facing,drawn);}
+   if(sx>=0 && sx<W && sy>=0 && sy<H){bool drawn=(speeder_profile(v)?speeder:infantry).draw(frame,(size_t)W*H*3,W,H,sx,sy,(unsigned)zoom,facing);printf("%s DRAW unit=%lu facing=%u ok=%d\n",speeder_profile(v)?"SPEEDER":"INFANTRY",(unsigned long)i,facing,drawn);}
   }
  }
  }
@@ -296,10 +300,10 @@ static void draw(struct Window* window){
  FillPixelArray(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-window->BorderLeft,64-window->BorderTop,0x00071316u);FillPixelArray(rp,window->BorderLeft,554,window->Width-window->BorderRight-window->BorderLeft,window->Height-window->BorderBottom-554,0x00071316u);
  SetAPen(rp,1);SetBPen(rp,0);SetDrMd(rp,JAM2);char line[180];
  snprintf(line,sizeof(line),"%.64s | Turn %ld | %lu x %lu | %lu units, %lu bases",source_label,(long)world().game().preferences.CurrentTurn,(unsigned long)world().game().map.info.width,(unsigned long)world().game().map.info.height,(unsigned long)world().game().vehicle_count,(unsigned long)world().game().base_count);text(rp,15,42,line);
- text(rp,15,62,local_enabled?"Local actions | Keypad: move | P: production | F: forecast | V: save | R: reload | No End Turn":"Read-only original world | Basic infantry CVR profile; other models pending | WASD scroll | TAB select | +/- zoom | Q quit");
+ text(rp,15,62,local_enabled?"Local actions | Keypad: move | P: production | F: forecast | V: save | R: reload | No End Turn":"Read-only original world | Basic infantry/speeder CVR; other models pending | WASD scroll | TAB select | +/- zoom | Q quit");
  for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);int sx,sy;if(position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){snprintf(line,sizeof(line),"[Base] %.24s",b.name);ui_text.draw(rp,12+sx-24,70+sy+24,line,W-(12+sx-24),false,alpha::UiInk::map_label);}}
  for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);int sx,sy;if(!position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
-  const auto& p=*world().prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || infantry_profile(v);
+  const auto& p=*world().prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || infantry_profile(v) || speeder_profile(v);
   if(!native && sx>=30 && sx<W-180){snprintf(line,sizeof(line),"%.16s [CVR]",p.name[0]?p.name:"Saved design");text(rp,12+sx-25,70+sy-16,line);}
   if(i==selected){Move(rp,12+sx,70+sy-14);Draw(rp,12+sx+29,70+sy);Draw(rp,12+sx,70+sy+14);Draw(rp,12+sx-29,70+sy);Draw(rp,12+sx,70+sy-14);}
  }
@@ -406,6 +410,11 @@ int alpha_original_view(int argc,char** argv){
  // label instead of silently substituting a different chassis.
  size_t body_size=0,reactor_size=0;auto* body_data=read_file("VI.cvr",body_size);auto* reactor_data=read_file("Viptr00.cvr",reactor_size);
  infantry_available=body_data && reactor_data && infantry.load(body_data,body_size,reactor_data,reactor_size);free(body_data);free(reactor_data);
+ const char* names[]={"vrcp00.cvr","vgmc.cvr","vgmcp.cvr","vb.cvr","vbp.cvr","vsp.cvr","vsptb.cvr","vsptf.cvr","vlights.cvr","vr00.cvr"};
+ alpha::CvrPartInput parts[10]{};uint8_t* owned[10]{};bool all=true;
+ for(unsigned i=0;i<10;++i){owned[i]=read_file(names[i],parts[i].size);parts[i].data=owned[i];all=all && owned[i];}
+ speeder_available=all && speeder.load_speeder(parts,10);for(auto*p:owned)free(p);
+ printf("SPEEDER PROFILE ready=%d base-human-basic-static; raw component palettes; no faction remap/shadows\n",speeder_available);
  printf("INFANTRY PROFILE ready=%d base-human-basic-static; tile-foot anchor; no original viewport/shadows\n",infantry_available);fflush(stdout);
  if(!ui_text.open()){puts("Original UI fonts are required.");return 20;}
  frame=(uint8_t*)malloc((size_t)W*H*3);hud_frame=(uint8_t*)malloc((size_t)W*HUD_H*3);if(!frame || !hud_frame){free(frame);free(hud_frame);ui_text.close();return 20;}
