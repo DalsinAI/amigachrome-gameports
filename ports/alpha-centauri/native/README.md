@@ -1211,3 +1211,17 @@ surplus and stored-food adjustments. `world_fresh_nutrients` binds it to actual
 owned records and fresh stable intake, with explicit convoy facts. The same
 normal worker inspection stage is retained; no upkeep or population growth is
 executed. See [BASE-NUTRIENTS.md](BASE-NUTRIENTS.md).
+## Normal human research pool (draft, native unrun)
+
+`research_pool.h` queries the original directed-human candidate pool using the
+PR86 owned eligibility API. It preserves original category ties, global first
+offer, modulo-three ranking rotation and starting-ID exceptions. Blind, AI and
+turn-zero paths explicitly require automatic selection; this addition does not
+implement that selection, discovery awards or turn advancement. No choice
+controls are exposed in the frontend. See `RESEARCH-POOL.md` and
+`RESEARCH-POOL-EVIDENCE-20261025.json` for source and qualification limits.
+
+CI runs 115 raw contexts plus two invalid snapshot controls and 64 owned worlds
+(512 faction queries) on both host sanitizers and independent 68040. Normal SDK
+raw/world builds pass; actual AmigaOS execution remains unrun and is a merge
+gate. This stacked draft depends on PR86 and preserves separate PR89 unchanged.

@@ -300,3 +300,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_upkeep_research.py --out "$RUNNER_TEMP/world-upkeep-research-host"
       - name: Explicit empty-sea capability and checkpoint preservation
         run: python3 ports/alpha-centauri/native/test_surface_actions.py --out "$RUNNER_TEMP/surface-actions-host"
+      - name: Host normal human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool.py --out "$RUNNER_TEMP/research-pool-host"
+      - name: Big-endian normal human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool.py --out "$RUNNER_TEMP/research-pool-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned-world human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool_world.py --out "$RUNNER_TEMP/research-pool-world-host"
+      - name: Big-endian owned-world human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool_world.py --out "$RUNNER_TEMP/research-pool-world-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
