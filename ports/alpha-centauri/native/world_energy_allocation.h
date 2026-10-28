@@ -1,7 +1,7 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later. See energy_allocation.h. */
+/* SPDX-License-Identifier: GPL-3.0-or-later. See upkeep_energy_allocation.h. */
 #ifndef ALPHA_WORLD_ENERGY_ALLOCATION_H
 #define ALPHA_WORLD_ENERGY_ALLOCATION_H
-#include "energy_allocation.h"
+#include "upkeep_energy_allocation.h"
 #include "original_world.h"
 namespace alpha {
 struct WorldAllocationResult {AllocationResult allocation;AllocationFacts facts;};

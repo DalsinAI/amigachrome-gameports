@@ -164,3 +164,63 @@ Copyright (c) 2026 AmigaChrome Team.
 ## Contributors
 
 AmigaChrome Game Ports is created and maintained by [SacredTrees](https://github.com/SacredTrees) with The AmigaChrome Team, copyright AmigaChrome Team. Everyone whose work it includes is credited in [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
+
+The local Alpha citizen-definition reader is documented in
+[the native boundary](ports/alpha-centauri/native/CITIZEN-DEFINITIONS.md).
+It supplies original specialist data for subsequent energy integration; it does
+not yet bind technology availability or mutate the world.
+
+Current faction technologies can now be resolved into the seven specialist
+fact records through the local [World binding](ports/alpha-centauri/native/WORLD-CITIZEN-ENERGY.md).
+This query preserves the world and does not execute income or turns.
+
+The local Alpha [commerce proposal](ports/alpha-centauri/native/WORLD-COMMERCE.md)
+now derives original base ranking and trade amounts from world facts, with an
+explicit choice of supplied or freshly recomputed faction bonus stage. It does
+not commit income or execute a turn.
+
+The local [police snapshot](ports/alpha-centauri/native/WORLD-POLICE.md) supplies
+ordered garrison and edition-correct double-police facts without repairing or
+mutating units. It is a dependency for later happiness and income composition.
+
+The local [pacifism dependency](ports/alpha-centauri/native/WORLD-PACIFISM.md)
+now derives the original counter from actual home units, plans, components and
+location. It does not commit happiness or execute upkeep.
+
+The local [world psych binding](ports/alpha-centauri/native/WORLD-PSYCH.md)
+combines saved population and pending social facts with current home-unit
+pacifism and an ordered validated garrison. Spending and stage remain explicit;
+this proposes happiness/social results without committing accounting or turns.
+Host and independent Linux68040 controls passed locally. AmigaOS execution,
+CI, publication, full fresh-world energy and player turn execution remain held.
+
+The local [fresh world energy proposal](ports/alpha-centauri/native/WORLD-ENERGY.md)
+connects actual resources, convoys, mineral support, commerce, owner specialist
+rules and happiness. It currently requires the inherited stable directed-human
+worker allocation and proposes results without committing an economy or turn.
+Native execution and CI remain unrun; this local candidate is unpublished.
+
+The local [owned unit wake command](ports/alpha-centauri/native/UNIT-WAKE.md) recovers the original order cancellation,
+terraforming-work reduction and alert exception. Super Former uses mask1,
+with original edition-specific design-owner grants; project indices2 and8
+select Weather Paradigm and Xenoempathy Dome. Alert uses original byte11.
+The command preserves the original signed order boundary and state mask,
+with checked speed dependencies and revision-bound, local-owner commits.
+Its tests cover full-container export/reload and stale/suspended sessions.
+This isolated candidate adds no player controls or turn authority. Native
+execution, publication and remote CI remain held.
+
+The local [deferred selection state](ports/alpha-centauri/native/UNIT-WAIT-PROJECTION.md)
+atomically combines the original deferred-unit bit with offline re-selection.
+It preserves movement/RNG and exact buffer persistence. Full Console_wait
+rendering, rally, audio, input flushing and command-loop completion remain
+unimplemented; no new player control or End Turn authority is exposed.
+Host and independent Linux68040 controls pass. Native execution, publication
+and remote CI remain held.
+
+The local [combat prototype strengths](ports/alpha-centauri/native/COMBAT-PROTOTYPE.md)
+restore original conventional/psi rating leaves and saved-world faction/project
+bindings, including edition-specific Spore/Tower rules. Host and independent
+Linux68040 match the original closed helpers; full battle modifiers, RNG damage,
+kills, attack legality and player combat remain unimplemented. Normal SDK builds
+are compile-only; native execution, publication and remote CI remain held.

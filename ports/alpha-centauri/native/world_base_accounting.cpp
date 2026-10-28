@@ -56,7 +56,7 @@ StableIntakeError world_base_accounting(const OriginalWorld&w,const Rules&t,
   (uint32_t)s.intake.worker.upkeep_state,(base->facilities_built[0]&4u?1u:0u)|((uint32_t)base->state_flags&4u?2u:0u)};
  const auto nutrient=base_nutrients(nf,next.nutrient);
  if(nutrient!=NutrientError::ok)return nutrient==NutrientError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
- const WorldEnergyStage es{fresh.intake[2],convoy.to[2],s.commerce,s.energy_grid,convoy.from[2],s.intake.worker.upkeep_state};
+ const UpkeepWorldEnergyStage es{fresh.intake[2],convoy.to[2],s.commerce,s.energy_grid,convoy.from[2],s.intake.worker.upkeep_state};
  auto energy=world_energy_accounting(w,id,es,next.energy);
  if(energy!=EnergyError::ok)return energy==EnergyError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
  energy=world_energy_shortfall_orders(w,id,next.energy.accounting.surplus,next.energy_shortfall);

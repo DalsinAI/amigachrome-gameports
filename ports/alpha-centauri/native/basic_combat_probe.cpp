@@ -1,0 +1,9 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include "basic_combat.h"
+#include <stdio.h>
+#include <string.h>
+using namespace alpha;
+static int32_t word(const unsigned char*p){uint32_t x=(uint32_t)p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);return x<=0x7fffffffu?(int32_t)x:-1-(int32_t)(~x);}
+static bool emit(uint32_t n){unsigned char b[4];for(unsigned i=0;i<4;++i){b[i]=(unsigned char)n;n>>=8;}return fwrite(b,1,4,stdout)==4;}
+template<class T>static T&alias(uintptr_t p){return *reinterpret_cast<T*>(p);}
+int main(){unsigned char b[72];while(true){size_t n=fread(b,1,sizeof b,stdin);if(!n)return ferror(stdin)?20:0;if(n!=sizeof b)return 20;int32_t x[18];for(unsigned i=0;i<18;++i)x[i]=word(b+4*i);const auto variant=x[0]==0?Variant::base:x[0]==1?Variant::alien_crossfire:(Variant)42;BasicCombatContext c{x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8],x[9]!=0,x[10]!=0,x[11]!=0,x[12]!=0,x[13]!=0,x[14]!=0,x[15]!=0,x[16],x[17]};unsigned char source[sizeof c];memcpy(source,&c,sizeof c);BasicCombatStrengths out;memset(&out,0xa5,sizeof out);unsigned char original[sizeof out];memcpy(original,&out,sizeof out);auto e=basic_combat_strengths(variant,c,out);unsigned guards=0;if(memcmp(source,&c,sizeof c))return 21;++guards;if(e!=LogicError::ok&&memcmp(original,&out,sizeof out))return 22;if(e!=LogicError::ok)++guards;if(basic_combat_strengths(variant,c,alias<BasicCombatStrengths>((uintptr_t)&c))!=LogicError::bad_state||memcmp(source,&c,sizeof c))return 23;++guards;if(!emit(e==LogicError::ok?0:e==LogicError::overflow?2:1)||!emit(e==LogicError::ok?(uint32_t)out.offense:0)||!emit(e==LogicError::ok?(uint32_t)out.defense:0)||!emit(e==LogicError::ok?(uint32_t)out.offense_morale:0)||!emit(e==LogicError::ok?(uint32_t)out.defense_morale:0)||!emit(e==LogicError::ok?out.fixed_defense:0)||!emit(guards))return 24;}}

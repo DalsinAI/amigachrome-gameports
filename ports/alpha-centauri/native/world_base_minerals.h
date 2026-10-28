@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #ifndef ALPHA_WORLD_BASE_MINERALS_H
 #define ALPHA_WORLD_BASE_MINERALS_H
-#include "base_minerals.h"
+#include "upkeep_base_minerals.h"
 #include "world_convoy_nutrients.h"
 namespace alpha {
 struct WorldMineralStage {
@@ -12,13 +12,13 @@ struct WorldMineralResult {
  WorldConvoyFlows convoys;
  StableIntakeResult fresh;
  MineralFacts facts;
- MineralResult minerals;
+ UpkeepMineralResult minerals;
 };
 struct CurrentMineralInputs {
  Variant variant;
  int32_t fresh_intake,convoy_to,convoy_from,forces_maintenance,raw_eco_damage;
 };
-struct WorldMineralAccounting {MineralFacts facts;MineralResult minerals;};
+struct WorldMineralAccounting {MineralFacts facts;UpkeepMineralResult minerals;};
 /* Internal current-stage binding after worker assignment. Inputs must be fresh
  * current proposed tile/convoy/support/ecology outputs, never saved totals.
  * This does not compute/qualify those upstream stages or grant turn authority.

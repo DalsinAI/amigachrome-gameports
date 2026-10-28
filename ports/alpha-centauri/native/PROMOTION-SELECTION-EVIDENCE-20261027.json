@@ -1,0 +1,162 @@
+{
+  "scope": "Bounded source caller selection inspection; no promotion/caller/session commit",
+  "host": {
+    "cases": 4810,
+    "accepted": 4796,
+    "invalid": 14,
+    "intentCounts": {
+      "0": 1432,
+      "1": 2041,
+      "2": 1323
+    },
+    "inputAliasNoWriteChecks": 4810,
+    "hostPoisonedInputNoRead": true,
+    "outputSHA256": "b358d7e2ace447dc23beefc2904305e865c423201b5effab70f83e3c98c07565",
+    "originalPrefixCases": 4096,
+    "originalPrefixOutputSHA256": "ccbc6410353b2e327d17ac0ba27115b3ce5d3becc2d9d40ce3c6fdd83a95d747",
+    "binarySHA256": "fa256cde776ab02cd8af66f8d7c57ac5c1e043be20726dcc18f1fd51c615f431",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "cases": 4810,
+    "accepted": 4796,
+    "invalid": 14,
+    "intentCounts": {
+      "0": 1432,
+      "1": 2041,
+      "2": 1323
+    },
+    "inputAliasNoWriteChecks": 4810,
+    "hostPoisonedInputNoRead": false,
+    "outputSHA256": "b358d7e2ace447dc23beefc2904305e865c423201b5effab70f83e3c98c07565",
+    "originalPrefixCases": 4096,
+    "originalPrefixOutputSHA256": "ccbc6410353b2e327d17ac0ba27115b3ce5d3becc2d9d40ce3c6fdd83a95d747",
+    "binarySHA256": "3f925db0a5583d43dadb9cc5fd24771dd098f588044c60a333532a8cf6ca8fc6",
+    "native": "UNRUN"
+  },
+  "originalBase": {
+    "edition": "base",
+    "entry": "0x51e193",
+    "contexts": 4096,
+    "outcomes": {
+      "0": 1252,
+      "1": 1541,
+      "2": 1303
+    },
+    "realMorale": "0x5d8f50",
+    "prefixBytes": 681,
+    "originalPrefixSHA256": "8ad520557d639195f03c68c2a65d7de96ecdcdb90ca2c1f309fe97d3af80d4de",
+    "observerPatches": [
+      {
+        "address": "0x51e2c2",
+        "originalBytes": "e829c0ffff",
+        "observerKind": 1
+      },
+      {
+        "address": "0x51e42f",
+        "originalBytes": "e8bcbeffff",
+        "observerKind": 1
+      },
+      {
+        "address": "0x51e2b3",
+        "originalBytes": "e8d5271400",
+        "observerKind": 2
+      },
+      {
+        "address": "0x51e3fe",
+        "originalBytes": "e88a261400",
+        "observerKind": 2
+      },
+      {
+        "address": "0x51e2ca",
+        "originalBytes": "8b44241085",
+        "observerKind": 0
+      },
+      {
+        "address": "0x51e437",
+        "originalBytes": "8b44241485",
+        "observerKind": 0
+      }
+    ],
+    "comparedReadOnlyGlobalsEach": 1114112,
+    "outputSHA256": "ccbc6410353b2e327d17ac0ba27115b3ce5d3becc2d9d40ce3c6fdd83a95d747",
+    "originalEXESHA256": "0a61eb3642df750c0d5e516c3e3efeb4ad5ae7e1ce3163617759449327952a01",
+    "scope": "Bounded caller selection prefix; six honest observer jumps stop before promote/random calls or at skip boundary. No fake call returns; actual morale helper executes. Supplied caller locals/registers, not full battle caller. No actual random draw/promotion/UI/session/native."
+  },
+  "originalExpansion": {
+    "edition": "expansion",
+    "entry": "0x50a1b3",
+    "contexts": 4096,
+    "outcomes": {
+      "0": 1252,
+      "1": 1541,
+      "2": 1303
+    },
+    "realMorale": "0x5c0e40",
+    "prefixBytes": 644,
+    "originalPrefixSHA256": "8db1bf0aa745447b80da9cc4aed3b914c227f0fc2ed29b15f6cde77f0b2dbfc0",
+    "observerPatches": [
+      {
+        "address": "0x50a2d5",
+        "originalBytes": "e8d6bfffff",
+        "observerKind": 1
+      },
+      {
+        "address": "0x50a42a",
+        "originalBytes": "e881beffff",
+        "observerKind": 1
+      },
+      {
+        "address": "0x50a2c7",
+        "originalBytes": "e851bd1300",
+        "observerKind": 2
+      },
+      {
+        "address": "0x50a403",
+        "originalBytes": "e815bc1300",
+        "observerKind": 2
+      },
+      {
+        "address": "0x50a2dd",
+        "originalBytes": "85ff0f8568",
+        "observerKind": 0
+      },
+      {
+        "address": "0x50a432",
+        "originalBytes": "8b45f485c0",
+        "observerKind": 0
+      }
+    ],
+    "comparedReadOnlyGlobalsEach": 1114112,
+    "outputSHA256": "ccbc6410353b2e327d17ac0ba27115b3ce5d3becc2d9d40ce3c6fdd83a95d747",
+    "originalEXESHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf",
+    "scope": "Bounded caller selection prefix; six honest observer jumps stop before promote/random calls or at skip boundary. No fake call returns; actual morale helper executes. Supplied caller locals/registers, not full battle caller. No actual random draw/promotion/UI/session/native."
+  },
+  "sourceIdentity": {
+    "parent": "ff88baef13c61201d86754f3c5e9e7adf31bd429",
+    "unchangedParentCpp": 330,
+    "parentWorkflowCommands": 311,
+    "finalWorkflowCommands": 313,
+    "allParentCommandsRetained": true
+  },
+  "missingObservationNoWriteChecksEachArchitecture": 4810,
+  "sdk": {
+    "sha256": "6b437d365f27f15664fe556529c2775c215658f4c3ebaf3af9e3ce8e1b8ec2fd",
+    "twoFreshFinalBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "qualificationLimit": "Supplied caller locals/registers and real morale helper, not a complete battle run. Prefix stop jumps replace six call/skip sites to observe intent without returning fake callee results. Some arithmetic edge contexts are not claimed reachable full battles.",
+  "history": [
+    "host1/be1 and first SDK attempt rejected direct typed alias reference under strict-aliasing diagnostics. Probe uses the existing checked address-reference helper pattern; no alias read/write occurs and host input is ASan poisoned.",
+    "host2/be2 and SDK1/2 precede missing-observation controls. Final host3/be3 and SDK3/4 include those controls; numeric implementation unchanged."
+  ],
+  "held": [
+    "Caller world/initial-health/strength/selected-morale binding",
+    "Actual source random draws and original TLS initialization provenance",
+    "Promotion helper invocation, notification and other caller side effects",
+    "Full original caller/legal attack/session/persistence/turn/AI/diplomacy/frontend/native"
+  ],
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED"
+}

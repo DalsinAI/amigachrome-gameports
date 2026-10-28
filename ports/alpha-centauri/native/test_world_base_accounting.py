@@ -13,7 +13,7 @@ import test_world_base_minerals as mineral
 import test_world_stable_intake as intake
 import test_world_convoy_nutrients as convoy
 from test_base_nutrients import expected as nutrient_expected
-from test_base_energy import expected as energy_expected
+from test_upkeep_base_energy import expected as energy_expected
 
 HERE = Path(__file__).resolve().parent
 SOURCES = list(dict.fromkeys([name for name in mineral.SOURCES if name != 'world_base_minerals_probe'] + 'base_support world_base_support base_energy world_energy world_technology_effects world_base_accounting world_base_accounting_probe'.split()))

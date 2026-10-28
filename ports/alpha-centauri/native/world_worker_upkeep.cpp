@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later. Attribution and policy in corresponding header. */
 #include "world_worker_upkeep.h"
-#include "world_energy.h"
+#include "upkeep_world_energy.h"
 #include "world_unit_stats.h"
 #include "world_terraform_ecology.h"
 #include "movement.h"
@@ -50,13 +50,13 @@ StableIntakeError world_worker_upkeep_candidate(const OriginalWorld&w,const Rule
  const int64_t cap=facility(*base,25)?127:(facility(*base,24)?basic.pop_limit_sans_hab_dome:basic.pop_limit_sans_hab_complex)+(ascetic?2LL:0)-definition->rule_population;
  facts.can_grow=cap>base->pop_size;facts.can_riot=!base->nerve_staple_turns_left&&!matrix&&!facility(*base,23);
  facts.psych_allocation=owner->SE_alloc_psych;
- WorldEnergyStage efficiency_stage{16,0,0,0,0,0};WorldEnergyResult efficiency{};
+ UpkeepWorldEnergyStage efficiency_stage{16,0,0,0,0,0};UpkeepWorldEnergyResult efficiency{};
  const auto energy=world_energy_accounting(w,id,efficiency_stage,efficiency);if(energy!=EnergyError::ok)return energy==EnergyError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
  facts.efficiency=16-efficiency.accounting.inefficiency;
  for(unsigned i=0;i<21;++i){if(!(facts.available&(1u<<i)))continue;int32_t x=base->x+dx[i];const int32_t y=base->y+dy[i];if(!geometry.flat){if(x<0)x+=geometry.width;else if(x>=geometry.width)x-=geometry.width;}
   WorldTileYieldStage ts{Variant::base,false,false,stage.control_upkeep,(int32_t)id,0,0};TileYieldResult result{};
   size_t tile;if(movement_tile_index(geometry,x,y,tile)!=LogicError::ok)return StableIntakeError::bad_state;
-  const auto error=(w.tile(tile)->items&0x20u)?world_fresh_tile_yields(w,t,basic,resources,id,faction,x,y,ts,result):world_tile_yields(w,t,basic,resources,id,faction,x,y,ts,result);
+  const auto error=(w.tile(tile)->items&0x20u)?world_upkeep_fresh_tile_yields(w,t,basic,resources,id,faction,x,y,ts,result):world_tile_yields(w,t,basic,resources,id,faction,x,y,ts,result);
   if(error!=TileYieldError::ok)return error==TileYieldError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
   facts.yields[i][0]=result.nutrient;facts.yields[i][1]=result.mineral;facts.yields[i][2]=result.energy;
  }
@@ -67,7 +67,7 @@ StableIntakeError world_worker_upkeep_candidate(const OriginalWorld&w,const Rule
   if(movement_tile_index(geometry,x,y,tile)!=LogicError::ok)return StableIntakeError::bad_state;
   if((w.tile(tile)->climate&0xe0u)<0x60u)next.intake.state_flags|=0x8000u;
   WorldTileYieldStage ts{Variant::base,false,false,stage.control_upkeep,(int32_t)id,reduction,next.intake.base_energy_after};TileYieldResult result{};
-  const auto error=(w.tile(tile)->items&0x20u)?world_fresh_tile_yields(w,t,basic,resources,id,faction,x,y,ts,result):world_tile_yields(w,t,basic,resources,id,faction,x,y,ts,result);if(error!=TileYieldError::ok)return error==TileYieldError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
+  const auto error=(w.tile(tile)->items&0x20u)?world_upkeep_fresh_tile_yields(w,t,basic,resources,id,faction,x,y,ts,result):world_tile_yields(w,t,basic,resources,id,faction,x,y,ts,result);if(error!=TileYieldError::ok)return error==TileYieldError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
   const int32_t values[]={result.nutrient,result.mineral,result.energy};for(unsigned k=0;k<3;++k){next.intake.tile_yields[i][k]=values[k];if(!put((int64_t)next.intake.tiles[k]+values[k],next.intake.tiles[k]))return StableIntakeError::overflow;}
   next.intake.base_energy_after=result.base_energy;reduction=0;
  }

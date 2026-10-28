@@ -8,7 +8,7 @@
 #include "world_energy_allocation.h"
 #include "world_base_psych.h"
 #include "world_base_minerals.h"
-#include "world_energy.h"
+#include "upkeep_world_energy.h"
 namespace alpha {
 struct WorkerResolutionStage {WorkerUpkeepStage worker;int32_t commerce,energy_grid;};
 struct WorkerResolutionResult {
@@ -17,7 +17,7 @@ struct WorkerResolutionResult {
  StableIntakeResult intake;
  WorldMineralAccounting mineral;
  BaseNutrientResult nutrient;
- WorldEnergyResult energy;
+ UpkeepWorldEnergyResult energy;
  WorldAllocationResult allocation;
  WorldPsychResult psych;
  uint32_t specialist_adjust,trimmed_workers;

@@ -5,7 +5,7 @@ import argparse,hashlib,json,os,random,struct,subprocess
 from pathlib import Path
 import test_world_stable_intake as intake
 from test_units import sections,material
-from test_energy_allocation import expected,SENTINEL
+from test_upkeep_energy_allocation import expected,SENTINEL
 HERE=Path(__file__).resolve().parent
 NAMES='rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats energy_allocation world_energy_allocation world_energy_allocation_probe'.split()
 def rules():

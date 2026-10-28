@@ -1,4 +1,4 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in energy_allocation.h. */
+/* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in upkeep_energy_allocation.h. */
 #include "world_energy_allocation.h"
 #include "world_unit_stats.h"
 namespace alpha {namespace {

@@ -6,7 +6,7 @@ from pathlib import Path
 import test_world_worker_upkeep as worker
 import test_world_stable_intake as intake
 import test_base_support as support
-import test_base_psych as leaf
+import test_upkeep_base_psych as leaf
 HERE=Path(__file__).resolve().parent
 SOURCES='rules_text original_map original_game original_faction original_world base_support world_base_support prototype movement saved_speed world_unit_stats base_psych world_base_psych world_base_psych_probe'.split()
 def fixture(case,version=9):
