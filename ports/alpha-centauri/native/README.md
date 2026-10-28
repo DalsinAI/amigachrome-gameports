@@ -958,6 +958,9 @@ human CVR assembly and faction colours remain separate renderer work.
 The opening-menu WAV pauses while the world is open. Returning resumes it only
 if the user had enabled music. The world remains silent until its own audio
 system is restored; the opening loop is not used as substitute ambient music.
+The world now has its own audio service: effects, voice-over and an
+owner-prepared music playlist. See `AUDIO.md`. That service has host and
+qemu-m68k evidence only; native AmigaOS qualification is still pending.
 Actual native PCM capture verifies nonzero menu output, zero output inside the
 world, automatic resume, preservation of user mute through a second world visit,
 and manual re-enable. The complete frontend exits normally. The isolated lab

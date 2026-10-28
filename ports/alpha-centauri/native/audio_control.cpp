@@ -193,8 +193,28 @@ void pump_tests(const char* dir){
  // Find the end of track A then expect track B exactly (after the ramp, gain is unity).
  bool a_ok=true,b_ok=true;for(int i=600;i<3000;++i)a_ok&=out[i]==a[i];for(int i=0;i<1000;++i)b_ok&=out[3000+i]==b[i];
  if(!CHECK(a_ok&&b_ok&&p.tracks_started>=3&&m.stats().music_underruns==0)){printf("tracks=%u under=%u fail=%u\n",p.tracks_started,m.stats().music_underruns,p.failures);for(int i=0;i<4000;++i)if(i<3000?out[i]!=a[i]&&i>=600:out[i]!=b[i-3000]){printf("first mismatch %d got %d\n",i,out[i]);break;}}
+ // A track at another rate waits for the ring to drain, then restarts it.
+ {
+  static int16_t c[500];for(auto& v:c)v=-900;
+  CHECK(write("music/bset1.wav",b,1000,22050)&&write("music/bset1-1.wav",c,500,11025));
+  static MusicPump r;r=MusicPump{};snprintf(r.directory,sizeof(r.directory),"%s",dir);
+  CHECK(r.playlist.build("believe",exists,&ctx)==2);
+  m.reset();m.set_levels(l);got=0;
+  for(int step=0;step<40;++step){music_pump(r,m,nolock,nolock,nullptr);m.render(out+got,128);got+=128;}
+  bool first=true;for(int i=600;i<1000;++i)first&=out[i]==b[i];
+  // 500 frames at 11025 Hz become about 1000 output frames of -900.
+  size_t start=1000;while(start<got&&out[start]!=-900)++start;
+  size_t run=0;while(start+run<got&&out[start+run]==-900)++run;
+  CHECK(first&&start<got&&run>=990&&run<=1000&&r.tracks_started>=2&&m.stats().music_underruns==0);
+ }
  // ADPCM music and missing files are refused; a playlist of only bad files stops.
  MusicStreamer st;char path[512];join_audio_path(dir,"music/none.wav",path,sizeof(path));CHECK(st.open(path)!=WavError::ok&&!st.active());
+ {
+  Buf ad;ad.tag("RIFF");ad.u32(4+28+8+36);ad.tag("WAVE");ad.tag("fmt ");ad.u32(20);ad.u16(0x11);ad.u16(1);ad.u32(22050);ad.u32(11100);ad.u16(36);ad.u16(4);ad.u16(2);ad.u16(65);
+  ad.tag("data");ad.u32(36);for(int i=0;i<36;++i)ad.b[ad.n++]=0;
+  join_audio_path(dir,"music/adpcm.wav",path,sizeof(path));WavInfo ai;
+  CHECK(spit(path,ad.b,ad.n)&&parse_wav(ad.b,ad.n,ad.n,ai)==WavError::ok&&ai.frames==65&&st.open(path)==WavError::unsupported&&!st.active());
+ }
  static MusicPump q;q=MusicPump{};snprintf(q.directory,sizeof(q.directory),"%s",dir);q.playlist.count=1;snprintf(q.playlist.track[0],audio_name_bytes,"music/none.wav");
  m.music_stop();size_t qp=music_pump(q,m,nolock,nolock,nullptr);if(!CHECK(qp==0&&q.stopped&&q.failures==1))printf("qp=%lu stopped=%d failures=%u fill=%lu\n",(unsigned long)qp,q.stopped,q.failures,(unsigned long)m.music_fill());
  char s1[256];CHECK(join_audio_path("DH0:Alpha","fx/ok.wav",s1,sizeof(s1))&&!strcmp(s1,"DH0:Alpha/fx/ok.wav"));

@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "audio_music.h"
 #include <string.h>
+#ifdef __amigaos__
+#include <proto/dos.h>
+#include <dos/dos.h>
+#endif
 namespace alpha {
 bool join_audio_path(const char* dir,const char* rel,char* out,size_t cap){
  if(!rel||!out||!cap)return false;
@@ -8,23 +12,40 @@ bool join_audio_path(const char* dir,const char* rel,char* out,size_t cap){
  bool sep=dn&&dir[dn-1]!='/'&&dir[dn-1]!=':';
  int n=snprintf(out,cap,"%s%s%s",dn?dir:"",sep?"/":"",rel);return n>=0&&(size_t)n<cap;
 }
+#ifdef __amigaos__
+void* MusicStreamer::file_open(const char* path,long& size){
+ BPTR f=Open((CONST_STRPTR)path,MODE_OLDFILE);if(!f)return nullptr;
+ if(Seek(f,0,OFFSET_END)<0){Close(f);return nullptr;}size=Seek(f,0,OFFSET_BEGINNING);
+ if(size<0){Close(f);return nullptr;}return (void*)f;
+}
+size_t MusicStreamer::file_read(void* f,void* out,size_t n){LONG got=Read((BPTR)f,out,(LONG)n);return got>0?(size_t)got:0;}
+bool MusicStreamer::file_seek(void* f,long offset){return Seek((BPTR)f,offset,OFFSET_BEGINNING)>=0;}
+void MusicStreamer::file_close(void* f){if(f)Close((BPTR)f);}
+#else
+void* MusicStreamer::file_open(const char* path,long& size){
+ FILE* f=fopen(path,"rb");if(!f)return nullptr;
+ if(fseek(f,0,SEEK_END)||(size=ftell(f))<0||fseek(f,0,SEEK_SET)){fclose(f);return nullptr;}return f;
+}
+size_t MusicStreamer::file_read(void* f,void* out,size_t n){return fread(out,1,n,(FILE*)f);}
+bool MusicStreamer::file_seek(void* f,long offset){return fseek((FILE*)f,offset,SEEK_SET)==0;}
+void MusicStreamer::file_close(void* f){if(f)fclose((FILE*)f);}
+#endif
 WavError MusicStreamer::open(const char* path){
- close();FILE* f=fopen(path,"rb");if(!f)return WavError::truncated;
- if(fseek(f,0,SEEK_END)){fclose(f);return WavError::truncated;}long size=ftell(f);
- if(size<12||fseek(f,0,SEEK_SET)){fclose(f);return WavError::truncated;}
- size_t prefix=fread(raw_,1,sizeof(raw_),f);WavInfo w;
+ close();long size=0;void* f=file_open(path,size);if(!f)return WavError::truncated;
+ if(size<12){file_close(f);return WavError::truncated;}
+ size_t prefix=file_read(f,raw_,sizeof(raw_));WavInfo w;
  WavError e=parse_wav(raw_,prefix,(size_t)size,w);
  if(e==WavError::ok&&!wav_frame_bytes(w))e=WavError::unsupported;
- if(e==WavError::ok&&fseek(f,(long)w.data_offset,SEEK_SET))e=WavError::truncated;
- if(e!=WavError::ok){fclose(f);return e;}
+ if(e==WavError::ok&&!file_seek(f,(long)w.data_offset))e=WavError::truncated;
+ if(e!=WavError::ok){file_close(f);return e;}
  file_=f;info_=w;left_=w.frames;return WavError::ok;
 }
-void MusicStreamer::close(){if(file_)fclose(file_);file_=nullptr;left_=0;}
+void MusicStreamer::close(){file_close(file_);file_=nullptr;left_=0;}
 size_t MusicStreamer::read(int16_t* out,size_t max){
  if(!file_||!left_)return 0;
  size_t fb=wav_frame_bytes(info_);
  size_t want=max<left_?max:left_;if(want>sizeof(raw_)/fb)want=sizeof(raw_)/fb;
- size_t got=fread(raw_,1,want*fb,file_)/fb;
+ size_t got=file_read(file_,raw_,want*fb)/fb;
  if(got<want)left_=got; // short file: finish after what was read
  convert_pcm_frames(raw_,got,info_,out);left_-=got;return got;
 }
