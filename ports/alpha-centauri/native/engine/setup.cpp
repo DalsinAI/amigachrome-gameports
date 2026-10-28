@@ -12,7 +12,9 @@
  *   and council notification resets are user-interface or network state
  *   that the engine does not have; they are dropped;
  * - DEBUG-only paths (setup_values) are removed;
- * - calls into other packages go through engine_wp.h or wp7_deps.h.
+ * - calls into other packages go through engine_wp.h or wp7_deps.h;
+ *   goody_at and bonus_at are the WP7-local copies of Thinker mod_goody_at
+ *   and mod_bonus_at (mapgen_terrain.cpp).
  */
 #include "engine.h"
 #include "mapgen.h"
@@ -96,7 +98,7 @@ static bool valid_start(int faction_id, int iter, int x, int y) {
     if (aquatic != is_ocean(sq) || ((sq->lm_items() & ~LM_FRESH) && iter < 160)) {
         return false;
     }
-    if ((mod_goody_at(x, y) || mod_bonus_at(x, y)) && iter < 160) {
+    if ((wp7::goody_at(x, y) || wp7::bonus_at(x, y)) && iter < 160) {
         return false;
     }
     if (Continents[sq->region].tile_count < *MapAreaTiles / ((aquatic ? 20 : 40) << (iter/40))) {
@@ -115,7 +117,7 @@ static bool valid_start(int faction_id, int iter, int x, int y) {
         return false;
     }
     for (auto& m : iterate_tiles(x, y, 0, 45)) {
-        int bonus = mod_bonus_at(m.x, m.y);
+        int bonus = wp7::bonus_at(m.x, m.y);
         if (is_ocean(m.sq)) {
             if (!is_ocean_shelf(m.sq)) {
                 sc -= 2;
@@ -138,7 +140,7 @@ static bool valid_start(int faction_id, int iter, int x, int y) {
         if (bonus != RES_NONE) {
             sc += (m.i < 25 ? 10 : 8);
         }
-        if (mod_goody_at(m.x, m.y)) {
+        if (wp7::goody_at(m.x, m.y)) {
             sc += 10;
         }
         if (m.sq->items & BIT_FUNGUS) {
@@ -193,8 +195,8 @@ static void apply_nutrient_bonus(int faction_id, int* x, int* y) {
 
     // Bonus resources are placed adjacent to each other only on diagonals
     for (auto& m : iterate_tiles(*x, *y, 0, 80)) {
-        int bonus = mod_bonus_at(m.x, m.y);
-        int goody = mod_goody_at(m.x, m.y);
+        int bonus = wp7::bonus_at(m.x, m.y);
+        int goody = wp7::goody_at(m.x, m.y);
         if (aquatic == is_ocean(m.sq) && m.sq->alt_level() >= ALT_OCEAN_SHELF
         && (m.i < 25 || (m.i < 45 && nutrient + (int)places.size()/4 < conf.nutrient_bonus))) {
             if (bonus == RES_NUTRIENT) {
@@ -269,9 +271,9 @@ static void apply_supply_pods(int faction_id, int x, int y) {
         if (conf.rare_supply_pods > 1) {
             m.sq->items |= BIT_SUPPLY_REMOVE;
             synch_bit(m.x, m.y, faction_id);
-        } else if (mod_goody_at(m.x, m.y)) {
+        } else if (wp7::goody_at(m.x, m.y)) {
             pods++;
-        } else if (mod_bonus_at(m.x, m.y)) {
+        } else if (wp7::bonus_at(m.x, m.y)) {
             bonus++;
         } else if (m.i > 0 && m.sq->allow_supply()) {
             places.insert({m.x, m.y});

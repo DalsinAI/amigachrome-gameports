@@ -23,6 +23,10 @@
 //
 // VERSION: 1.0.1
 // https://github.com/Auburn/FastNoise
+//
+// Fix (alpha engine, see engine/ENGINE-WP7.md): integer hashing wraps in
+// unsigned arithmetic; the original relies on signed overflow, which is
+// undefined behaviour. Results are unchanged on two's complement targets.
 
 #ifndef FASTNOISELITE_H
 #define FASTNOISELITE_H
@@ -469,7 +473,7 @@ private:
     {
         int hash = seed ^ xPrimed ^ yPrimed;
 
-        hash *= 0x27d4eb2d;
+        hash = (int)((unsigned)hash * 0x27d4eb2du); // Fix: wrapping multiply
         return hash;
     }
 
@@ -478,7 +482,7 @@ private:
     {
         int hash = seed ^ xPrimed ^ yPrimed ^ zPrimed;
 
-        hash *= 0x27d4eb2d;
+        hash = (int)((unsigned)hash * 0x27d4eb2du); // Fix: wrapping multiply
         return hash;
     }
 
@@ -827,7 +831,8 @@ private:
 
         for (int i = 0; i < mOctaves; i++)
         {
-            float noise = GenNoiseSingle(seed++, x, y);
+            float noise = GenNoiseSingle(seed, x, y);
+            seed = (int)((unsigned)seed + 1u); // Fix: wrapping seed++
             sum += noise * amp;
             amp *= Lerp(1.0f, FastMin(noise + 1, 2) * 0.5f, mWeightedStrength);
 
@@ -1144,15 +1149,17 @@ private:
          * x += s; y += s;
         */
 
-        int i = FastFloor(x);
-        int j = FastFloor(y);
-        float xi = (float)(x - i);
-        float yi = (float)(y - j);
+        int i0 = FastFloor(x);
+        int j0 = FastFloor(y);
+        float xi = (float)(x - i0);
+        float yi = (float)(y - j0);
 
-        i *= PrimeX;
-        j *= PrimeY;
-        int i1 = i + PrimeX;
-        int j1 = j + PrimeY;
+        // Fix: primed coordinates are unsigned so the multiply and the
+        // offsets below wrap; GradCoord receives the same bit patterns.
+        unsigned i = (unsigned)i0 * (unsigned)PrimeX;
+        unsigned j = (unsigned)j0 * (unsigned)PrimeY;
+        unsigned i1 = i + PrimeX;
+        unsigned j1 = j + PrimeY;
 
         float t = (xi + yi) * (float)G2;
         float x0 = xi - t;
