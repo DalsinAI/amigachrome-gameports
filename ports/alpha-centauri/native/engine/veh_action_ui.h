@@ -86,10 +86,14 @@ static inline void Popup_start(Popup* p, const char* filename, const char* label
 static inline void Dialogs_item(std::vector<int>* dialogs, const char*, int value) {
     dialogs->push_back(value);
 }
-static inline int X_text_open(const char*, const char*) { return 0; }
-static inline char* text_get() { static char empty[1] = {0}; return empty; }
-static inline char* text_buf_ptr() { return text_get(); }
-static inline void parse_string(const char*, char* dest) { dest[0] = 0; }
+/* Original: X_text_open opens a script.txt section for the popup item texts.
+ * Fix: the rules loader's text_open is used when the file is there, but the
+ * popup always proceeds (the item values, not their texts, decide the
+ * choice); text_get then yields NULL and parse_string leaves the text empty. */
+static inline int X_text_open(const char* filename, const char* label) {
+    text_open(filename, label);
+    return 0;
+}
 static inline int Buffer_get_pcx_dimensions(const char*, int*, int*) { return 1; }
 static inline int Sprite_init(void*, const char*, int, int) { return 1; }
 static inline int BasePop_exec_3(Popup* p, int, int) {
@@ -130,30 +134,6 @@ static inline int abil_index(int ability_flag) {
 }
 static inline void InfoWin_on_redraw(void*) {}
 
-/* Original: _stricmp */
-static inline int str_icmp(const char* a, const char* b) {
-    for (;; a++, b++) {
-        int ca = tolower((unsigned char)*a);
-        int cb = tolower((unsigned char)*b);
-        if (ca != cb || !ca) {
-            return ca - cb;
-        }
-    }
-}
-
-/* Original: label_get reads labels.txt; the engine keeps the few labels WP3
- * puts into messages as fixed English text. */
-static inline const char* label_get(int index) {
-    switch (index) {
-    case TL_Nutrient: return "Nutrient";
-    case TL_Minerals: return "Minerals";
-    case TL_Energy: return "Energy";
-    case TL_Bonus: return "Bonus";
-    case TL_Near: return "near";
-    case TL_At: return "at";
-    default: return "";
-    }
-}
 } // namespace wp3_ui
 } // namespace engine
 } // namespace alpha

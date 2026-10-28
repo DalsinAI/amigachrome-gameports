@@ -4,8 +4,8 @@
  * dabe62f2d1abba03de40f3dd3048494843f6a9af.
  * Copyright (c) Thinker Mod authors, MIT licence; see engine/THINKER-LICENSE.
  * Changes: presentation calls go to veh_action_ui.h; mod_morale_veh is WP4's
- * morale_veh; label_get texts are fixed English labels (labels.txt is not
- * loaded by the engine). Deliberate changes are marked "Fix:".
+ * morale_veh; label_get and _stricmp come from the rules loader (rules.h).
+ * Deliberate changes are marked "Fix:".
  */
 #include "engine.h"
 #include "veh_action.h"
@@ -306,7 +306,7 @@ int __cdecl do_unity_crash(int x, int y, int faction_id) {
         for (int i = 0; i < *BaseCount; i++) {
             MFaction* fac = &MFactions[Bases[i].faction_id];
             if (has_fac_built(FAC_HEADQUARTERS, i) && !fac->is_alien()) {
-                if (str_icmp(fac->filename, "FUNGBOY") != 0) {
+                if (_stricmp(fac->filename, "FUNGBOY") != 0) {
                     spot_loc(Bases[i].x, Bases[i].y, faction_id);
                 }
             }
