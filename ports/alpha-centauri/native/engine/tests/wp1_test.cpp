@@ -99,6 +99,27 @@ static void synthetic_rules() {
     // Integration: WP2's base upkeep divides by these (alpha.txt gives 1/1).
     Rules->freq_global_warming_numerator = 1;
     Rules->freq_global_warming_denominator = 1;
+    // Integration: WP7's world_climate (turn hook) divides by the
+    // #WORLDBUILDER values; these are the alpha.txt defaults.
+    CWorldbuilder& w = *WorldBuilder;
+    w.land_base = 384; w.land_mod = 256; w.continent_base = 12; w.continent_mod = 24;
+    w.hills_base = 1; w.hills_mod = 2; w.plateau_base = 4; w.plateau_mod = 8;
+    w.rivers_base = 8; w.rivers_rain_mod = 12; w.solar_energy = 14; w.thermal_band = 14;
+    w.thermal_deviance = 8; w.global_warming = 8; w.sea_level_rises = 5;
+    w.cloudmass_peaks = 5; w.cloudmass_hills = 3; w.rainfall_coeff = 1;
+    w.deep_water = 15; w.shelf = 10; w.plains = 15; w.beach = 10; w.hills = 10; w.peaks = 25;
+    w.fungus = 1;
+}
+
+/* Integration: WP8's mod_eliminate_player (Thinker rule) removes a faction
+ * that has neither a base nor a colony pod, so every alive faction of the
+ * turn-order tests gets a colony pod. */
+static void add_colony_pods(uint32_t alive) {
+    for (int i = 1; i < MaxPlayerNum; i++) {
+        if ((alive >> i) & 1) {
+            CHECK(veh_init(BSC_COLONY_POD, i, 0, 2 * i) >= 0);
+        }
+    }
 }
 
 /* width x height land map, all region 1, factions alive as given, humans as given. */
@@ -161,6 +182,7 @@ static void test_single_human() {
     auto s = new_state();
     engine_bind(s.get());
     setup_world(0x0E, 0x02); // factions 1..3 alive, 1 human
+    add_colony_pods(0x0E);
     int v1 = veh_init(BSC_SCOUT_PATROL, 1, 2, 2);
     int v2 = veh_init(BSC_SCOUT_PATROL, 2, 8, 8);
     int v3 = veh_init(BSC_SCOUT_PATROL, 3, 12, 12);
@@ -236,6 +258,7 @@ static void test_all_ai() {
     auto s = new_state();
     engine_bind(s.get());
     setup_world(0x0F, 0x00); // natives + 1..3, no human
+    add_colony_pods(0x0F);
     int v = veh_init(BSC_SCOUT_PATROL, 2, 4, 4);
     for (int t = 1; t <= 6; t++) {
         Vehs[v].moves_spent = 5;
@@ -266,6 +289,7 @@ static void test_hotseat() {
     auto s = new_state();
     engine_bind(s.get());
     setup_world(0x0E, 0x06); // 1 and 2 human, 3 AI
+    add_colony_pods(0x0E);
     HeadlessSink* sink = headless_sink();
     sink->clear();
     TurnResult r = engine_end_turn();
@@ -551,6 +575,13 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         return 20;
     }
     synthetic_rules();
+    // Integration: WP7's world_temperature divides the map height by these
+    // #WORLDBUILDER values (as the original does); the synthetic maps are
+    // smaller than any real one, so scale them down to the map height.
+    for (int32_t* v : {&WorldBuilder->solar_energy, &WorldBuilder->thermal_band,
+            &WorldBuilder->thermal_deviance, &WorldBuilder->global_warming}) {
+        *v = clamp(*v, 1, max(1, *MapAreaY));
+    }
     // Patterned bytes: keep every record inside the ranges the turn code indexes.
     for (int i = 0; i < *VehCount; i++) {
         VEH* v = &Vehs[i];
@@ -586,6 +617,10 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         BASE* b = &Bases[i];
         b->faction_id = b->faction_id & 7;
         b->pop_size = b->pop_size & 15;
+        // Integration: WP2's base messages print the base name; the patterned
+        // names have no terminator, and reading on past them shows the
+        // following fields in host byte order.
+        b->name[sizeof(b->name) - 1] = '\0';
         // Integration: production_phase now runs WP2's base upkeep, which needs the
         // base on a map tile (its worked radius starts at the base tile).
         if (!mapsq(b->x, b->y) && *MapAreaX >= 2 && *MapAreaY >= 1) {
