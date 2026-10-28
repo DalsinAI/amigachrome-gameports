@@ -273,6 +273,33 @@ static int unit_checks() {
     CHECK_EQ(*GovernorFaction, -1);
     CHECK(*GameState & STATE_SCENARIO_EDITOR);
 
+    /* Integration: world_temperature on the smallest map (size 0, 48 tiles
+     * high) with the largest #WORLDBUILDER bands (64) must not divide by
+     * zero, and every land tile gets a temperature in range. */
+    {
+        std::unique_ptr<EngineState> t = new_state();
+        worldbuilder_defaults();
+        WorldBuilder->solar_energy = 64;
+        WorldBuilder->thermal_band = 64;
+        WorldBuilder->thermal_deviance = 64;
+        WorldBuilder->global_warming = 64;
+        *MapAreaX = 2 * WorldSizes[0][0];
+        *MapAreaY = WorldSizes[0][1];
+        *MapPlanetaryOrbit = 1;
+        CHECK_EQ(map_init(), 0);
+        for (int i = 0; i < *MapAreaTiles; i++) {
+            (*MapTiles)[i].climate = (uint8_t)((ALT_SHORE_LINE + 1) << 5);
+        }
+        world_temperature();
+        int bad = 0;
+        for (int y = 0; y < *MapAreaY; y++) {
+            for (int x = y & 1; x < *MapAreaX; x += 2) {
+                bad += temp_at(x, y) < 0 || temp_at(x, y) > 2;
+            }
+        }
+        CHECK_EQ(bad, 0);
+    }
+
     if (failures) {
         fprintf(stderr, "%d of %d unit checks failed\n", failures, checks);
         return 1;

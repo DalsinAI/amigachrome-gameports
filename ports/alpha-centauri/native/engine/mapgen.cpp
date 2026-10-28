@@ -92,10 +92,15 @@ void __cdecl world_temperature() {
     uint32_t loc_rnd_state = 0; // Original: GameRandom loc_rnd (object with its own state)
     GameRandom loc_rnd(&loc_rnd_state);
     loc_rnd.reseed(*MapRandomSeed + 17);
-    int solar_scale = *MapAreaY / WorldBuilder->solar_energy;
-    int thermal_scale = *MapAreaY / WorldBuilder->thermal_band;
-    int deviance_scale = *MapAreaY / WorldBuilder->thermal_deviance;
-    int warming_scale = *MapAreaY / WorldBuilder->global_warming;
+    // Fix: #WORLDBUILDER allows 1..64 for these, and the smallest map is 48
+    // tiles high, so a large thermal band made thermal_scale 0 and the
+    // temperature step below divided by zero (a divide error on the
+    // original). Divisors are kept at 1 or more; within the ranges where
+    // the original works, the results are unchanged.
+    int solar_scale = *MapAreaY / max(1, WorldBuilder->solar_energy);
+    int thermal_scale = max(1, *MapAreaY / max(1, WorldBuilder->thermal_band));
+    int deviance_scale = *MapAreaY / max(1, WorldBuilder->thermal_deviance);
+    int warming_scale = *MapAreaY / max(1, WorldBuilder->global_warming);
 
     for (int y = 0; y < *MapAreaY; y++) {
         for (int x = y & 1; x < *MapAreaX; x += 2) {
