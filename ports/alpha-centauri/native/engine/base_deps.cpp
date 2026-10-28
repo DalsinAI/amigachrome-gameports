@@ -8,7 +8,8 @@
  * routines removed (the executable is not available).
  * Integration: steal_tech, prototype_factor, mod_proto_cost, mod_base_cost,
  * mod_veh_cost, prune_protos and upgrade_prototypes are WP5's (tech.cpp,
- * design.cpp); their weak copies were removed here.
+ * design.cpp); their weak copies were removed here. world_climate and
+ * mod_world_volcano are WP7's.
  */
 #include "engine.h"
 #include "base_wp2.h"
@@ -312,14 +313,6 @@ __attribute__((weak)) int consider_staple(int base_id) {
 
 __attribute__((weak)) int wp2_project_hurry_score(int UNUSED(base_id), FacilityId UNUSED(item_id)) {
     return 0;
-}
-
-__attribute__((weak)) void __cdecl mod_world_volcano(int UNUSED(x), int UNUSED(y), int UNUSED(skip_label)) {
-    not_implemented("mod_world_volcano");
-}
-
-__attribute__((weak)) void __cdecl world_climate() {
-    not_implemented("world_climate");
 }
 
 } // namespace engine

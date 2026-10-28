@@ -677,9 +677,15 @@ int nearby_items(int x, int y, size_t start_index, size_t end_index, uint32_t it
 }
 
 char* strcpy_n(char* dst, size_t count, const char* src) {
-    if (count > 0) {
-        strncpy(dst, src, count);
-        dst[count - 1] = '\0';
+    // Same bytes as strncpy(dst, src, count) + dst[count - 1] = 0 (zero padded),
+    // written as a loop: gcc -O2 inlines strncpy here and -Wstringop-truncation
+    // then fails the build when count equals the destination size.
+    size_t i = 0;
+    for (; i + 1 < count && src[i]; i++) {
+        dst[i] = src[i];
+    }
+    for (; i < count; i++) {
+        dst[i] = '\0';
     }
     return dst;
 }
