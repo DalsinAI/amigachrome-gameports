@@ -780,8 +780,8 @@ its original inputs restored. Assets and captured screens remain private.
 selectors, their original title PCXs, original TrueType lettering, the original
 menu WAV, a base Explore tutorial shortcut and an original scenario/save file
 requester. It embeds the qualified read-only world viewer and restores keyboard
-focus when that view or the requester closes. This is a restoration preview;
-it does not offer an implemented full campaign behind a New Game button.
+focus when that view or the requester closes. New game (N) and Play a saved
+game (P) start the engine game; see "Playing the engine game" below.
 
 Build with `CXX=.../m68k-amigaos-g++ sh build_original_frontend.sh OUTPUT`.
 This uses the normal SDK SDL2_ttf and SDL2 libraries. In addition to the world
@@ -2717,3 +2717,89 @@ Not yet done:
 - Unit shadows and animation.
 - Hiding enemy units outside current sight.
 - Worked-tile editing, hurry, and the other report screens.
+
+## Playing the engine game (play mode)
+
+The map window and the title screen can now play a game on the shared engine
+(`engine/`, the Thinker port). `play_session.h/.cpp` is the command layer
+between the window and the engine. Every action is a `Command` run by
+`alpha::play::Session`. The window and the headless test use the same calls.
+
+- **Load:** a save is loaded with `load_daemon_bytes`, and the rules with
+  `engine_load_rules` from the folder that holds `alpha.txt`/`alphax.txt`.
+- **View:** after every command, the view is rebuilt from the engine's own SAV
+  bytes (`game_write_bytes`) with `OriginalWorld`. V writes the engine's save
+  (`save_daemon_bytes`) to a new `PROGDIR:AlphaPlay-NNN.SAV`.
+- **End Turn:** the E key or the HUD button runs `engine_end_turn()`. The turn
+  hooks are installed by `engine_install_turn_hooks()`. Every event of the
+  turn is listed in the message log: popups, units built or lost, bases
+  founded, AI turns, and game over.
+- **Units:** all unit orders use the order API (`order_*`); the old local move
+  paths are not used in play mode. Moving onto an enemy tile opens the battle
+  panel with the odds (`engine_attack_odds`). RETURN attacks
+  (`engine_attack`), and the panel then shows the result.
+- **Panels:**
+  - The production panel sets production, adds to and removes from the queue,
+    and hurries (`base_hurry_quote` / `base_hurry_player`).
+  - Research uses the tech chooser hooks. A change that halves progress asks
+    to be confirmed.
+  - Social engineering.
+  - Unit design, with a live name and cost preview.
+  - A comm-link dialog uses the diplomacy model (`ui_diplo`).
+- **New game:** New game on the title screen runs the `ui_newgame` screens
+  (faction, settings, planetfall), then opens the map.
+
+Start:
+- **New game:** N, or the New game button, on the title screen.
+- **Saved game:** P plays on from a saved game.
+- **From the command line:**
+  `alpha-original-view base|expansion alpha.txt|alphax.txt GAME.SAV texture.pcx Units.pcx --play`.
+
+Keys in play mode:
+- Units:
+  - Keypad 1-9 move, or attack an enemy tile. 5 or Space skips; TAB or N
+    selects the next unit.
+  - G go to, then click the destination.
+  - R road to, then click; r builds a road here.
+  - f farm, F forest, m mine, s solar, S sensor.
+  - B builds a base with a colony unit (otherwise B selects the next base).
+  - L sentry, h hold, w wake, H set home, j return home, U upgrade, D disband.
+- E or the button: End Turn.
+- Screens:
+  - I opens the base window, and P inside it opens production. In the
+    production panel: 8/2 choose, RETURN set, A add to the queue, X remove
+    the last item, H hurry, ESC close.
+  - T or F2 research, P or F3 social, K or F4 design, X or F5 comm link.
+  - Panels: cursor keys or 8/2/4/6, RETURN applies, ESC closes.
+- Clicks: a click selects your unit, opens your base, or shows the odds
+  against an enemy.
+- Files: V saves; Ctrl+L reloads the last save made in this session.
+- Q quits, and warns once if turns are unsaved.
+
+Builds: `build_original_map_window.sh` and `build_original_frontend.sh`
+compile `engine/*.cpp`, the play layer and its panels, and add `-pthread`
+(see `build_engine.sh`).
+
+Test without a window: `python3 test_play_session.py --out DIR` builds
+`play_control.cpp` with ASan/UBSan. It then plays one game on synthetic rules
+(no original assets), twice, through the same command layer:
+1. Start a new game.
+2. Build a colony pod and found a base. Set production and the queue, hurry,
+   and terraform.
+3. End Turn x20, with the view rebuilt and checked after every turn.
+4. An attack, with odds first and then the battle.
+5. A research change with confirmation, social engineering, a new design,
+   and a comm-link proposal.
+6. Save, load into two new sessions, and continue three turns. The two loads
+   must stay identical.
+
+`--cc m68k-linux-gnu-g++ --m68k-linux` runs the same game on a big-endian 68040
+under qemu. Its output and saves must be byte-identical to a host build.
+
+Not yet done:
+- Worked-tile editing: the engine's base package does not expose it.
+- Probe-team and air actions, artillery, supply-crawler convoys.
+- Mouse play is limited to select, go to, road to and attack.
+- The window and title-screen play mode is compile- and link-checked for
+  AmigaOS in every build mode, but not yet run on a screen. The SDL2 SDK and
+  the original assets are not available here.

@@ -28,5 +28,25 @@ bool build_base_window(const OriginalWorld&,size_t base,const FacilityDefinition
 /* Panel: radius map with worked tiles, three resource bars, then text items
  * for the header, resources, queue and facilities. Rect at least 360x300. */
 size_t render_base_window(const BaseWindowModel&,const UiFrame&,const UiRect&,UiTextItem* items,size_t capacity);
+
+/* Production editing for the player's own base (engine-backed play mode).
+ * The caller (play_session.cpp) fills the model from the engine: the items
+ * the base may build (WP2 base_queue_valid_item), the queue and the hurry
+ * quote (WP2 base_hurry_quote); keys map to commands. */
+enum BaseItemKind { ITEM_FACILITY=0,ITEM_PROJECT,ITEM_COMBAT,ITEM_COLONY,ITEM_FORMER,ITEM_OTHER_UNIT };
+struct BaseProductionItem { int id,kind;char name[32];int cost,turns; };
+struct BaseProductionModel {
+ bool valid;int base;char name[26];
+ int current;char current_name[32];int minerals,cost,surplus,turns;
+ int queue_count;int queue[10];char queue_names[10][32];
+ int hurry_cost,credits;bool hurried;
+ int count;BaseProductionItem items[96];int selected;
+};
+enum BaseEditAction { BASE_EDIT_NONE=0,BASE_EDIT_MOVED,BASE_EDIT_SET,BASE_EDIT_QUEUE_ADD,BASE_EDIT_QUEUE_REMOVE,BASE_EDIT_HURRY,BASE_EDIT_CLOSE };
+/* Choice list with the current item, queue and hurry line. Rect at least 360x300. */
+size_t render_base_production(const BaseProductionModel&,const UiFrame&,const UiRect&,UiTextItem* items,size_t capacity);
+/* Character keys: 8/2 select, RETURN set production, A add to the queue,
+ * X remove the last queue entry, H hurry, ESC close. */
+int base_production_key(BaseProductionModel&,int c);
 }
 #endif

@@ -19,5 +19,14 @@ void ui_panel(const UiFrame&,const UiRect&,const uint8_t fill[3],const uint8_t e
 int ui_bar(const UiFrame&,const UiRect&,const int32_t values[3],const uint8_t colours[3][3],int32_t scale);
 /* Append a bounded text item; returns false when items are full. */
 bool ui_text_item(UiTextItem* items,size_t capacity,size_t& count,int x,int baseline,int width,uint8_t ink,bool heading,const char* text);
+/* Panel keys. The window maps Amiga keys (keypad 8/2/4/6, cursor keys,
+ * RETURN, ESC) to these before passing them to a panel. */
+enum UiKey { UIK_NONE=0,UIK_UP,UIK_DOWN,UIK_LEFT,UIK_RIGHT,UIK_ENTER,UIK_BACK };
+/* Keypad digits, RETURN/ENTER and ESC as UiKey; anything else UIK_NONE. */
+int ui_key_from_char(int c);
+/* Panel results. */
+enum UiPanelAction { UIA_NONE=0,UIA_MOVED,UIA_APPLY,UIA_CLOSE,UIA_EXTRA1,UIA_EXTRA2,UIA_EXTRA3 };
+/* Move a list cursor by one with wrap-around; count 0 leaves it at 0. */
+void ui_list_step(int& cursor,int count,int delta);
 }
 #endif
