@@ -300,3 +300,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_palette.py --out "$RUNNER_TEMP/cvr-palette-host"
       - name: Default global and faction CVR palette controls on independent big-endian 68040
         run: python3 ports/alpha-centauri/native/test_cvr_palette.py --out "$RUNNER_TEMP/cvr-palette-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Synthetic chained CVR LOD controls on host
+        run: python3 ports/alpha-centauri/native/test_cvr_lod.py --out "$RUNNER_TEMP/cvr-lod-host"
+      - name: Synthetic chained CVR LOD controls on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_cvr_lod.py --out "$RUNNER_TEMP/cvr-lod-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Ten-part speeder composition on host
+        run: python3 ports/alpha-centauri/native/test_cvr_speeder.py --out "$RUNNER_TEMP/speeder-host"
+      - name: Ten-part speeder composition on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_cvr_speeder.py --out "$RUNNER_TEMP/speeder-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
