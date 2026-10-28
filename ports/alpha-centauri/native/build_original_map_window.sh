@@ -29,7 +29,8 @@ fi
 for unit in play_session ui_research ui_social ui_design ui_battle ui_diplowin ui_newgame ui_diplo; do
  set -- "$@" "$src/$unit.cpp"
 done
-set -- "$@" "$src"/engine/*.cpp "$src"/engine/stubs/*.cpp
+set -- "$@" "$src"/engine/*.cpp
+for stub in "$src"/engine/stubs/*.cpp; do [ -f "$stub" ] && set -- "$@" "$stub"; done # none once every package has landed
 "${CXX:-m68k-amigaos-g++}" -m68040 -m68881 -std=c++17 -O2 -Wall -Wextra -Werror \
  $local_flags -pthread -I"$src/engine" -fno-exceptions -fno-rtti -fno-builtin -fno-tree-loop-distribute-patterns \
  "$src/rules_text.cpp" "$src/technology_browser.cpp" "$src/technology_browser_window.cpp" "$src/original_map.cpp" "$src/original_game.cpp" "$src/original_faction.cpp" "$src/original_world.cpp" "$src/prototype.cpp" "$src/movement.cpp" "$src/saved_speed.cpp" "$src/world_unit_stats.cpp" "$src/world_movement_price.cpp" "$src/cvr_model.cpp" "$src/cvr_lighting.cpp" "$src/cvr_raster.cpp" "$src/cvr_infantry.cpp" "$src/cvr_palette.cpp" "$src/cvr_vehicle.cpp" "$src/map_overlays.cpp" "$src/ui_panel.cpp" "$src/ui_minimap.cpp" "$src/ui_messages.cpp" "$src/ui_basewin.cpp" "$src/ui_mapview.cpp" "$src/pcx_image.cpp" "$src/original_ui_text.cpp" "$src/original_map_window.cpp" "$@" -lSDL2_ttf -lSDL2 -lm -o "$output"
