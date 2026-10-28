@@ -33,7 +33,8 @@ size_t render_base_window(const BaseWindowModel&,const UiFrame&,const UiRect&,Ui
  * The caller (play_session.cpp) fills the model from the engine: the items
  * the base may build (WP2 base_queue_valid_item), the queue and the hurry
  * quote (WP2 base_hurry_quote); keys map to commands. */
-struct BaseProductionItem { int id;char name[32];int cost,turns; };
+enum BaseItemKind { ITEM_FACILITY=0,ITEM_PROJECT,ITEM_COMBAT,ITEM_COLONY,ITEM_FORMER,ITEM_OTHER_UNIT };
+struct BaseProductionItem { int id,kind;char name[32];int cost,turns; };
 struct BaseProductionModel {
  bool valid;int base;char name[26];
  int current;char current_name[32];int minerals,cost,surplus,turns;

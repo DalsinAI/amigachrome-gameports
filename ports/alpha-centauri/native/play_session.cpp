@@ -158,16 +158,10 @@ public:
  void bind(){
   E::engine_bind(state.get());
   E::set_event_sink(&sink);
-  E::engine_install_turn_hooks();
+  E::engine_install_turn_hooks(); // WP1..WP8 hooks (integration.cpp)
   E::TurnHooks& h=E::turn_hooks();
   h.interlude=&interlude;
-#if PLAY_HAS_NEWGAME
-  if(!h.crash_landing)h.crash_landing=E::crash_landing;
-#endif
 #if PLAY_HAS_DIPLO
-  if(!h.pact_ends)h.pact_ends=E::pact_ends;
-  if(!h.can_call_council)h.can_call_council=E::can_call_council;
-  if(!h.call_council)h.call_council=E::call_council;
   // Comm-link contacts the engine opens during End Turn close at once; the
   // player opens the dialog from the map (F5).
   ui_diplo::install_ui_diplo(nullptr,nullptr,0);
@@ -538,7 +532,9 @@ bool Session::base_production(int b,BaseProductionModel& m)const{
  m.hurry_cost=E::base_hurry_quote(b,-1);m.credits=E::Factions[base.faction_id].energy_credits;m.hurried=(base.state_flags&E::BSTATE_HURRY_PRODUCTION)!=0;
  const int f=base.faction_id;const int cap=(int)(sizeof(m.items)/sizeof(m.items[0]));
  auto push=[&](int item){if(m.count>=cap || !E::base_queue_valid_item(b,item))return;BaseProductionItem& it=m.items[m.count++];it.id=item;
-  snprintf(it.name,sizeof(it.name),"%s",SessionImpl::item_name(item));it.cost=E::mineral_cost(b,item);it.turns=m.surplus>0?(it.cost+m.surplus-1)/m.surplus:0;};
+  snprintf(it.name,sizeof(it.name),"%s",SessionImpl::item_name(item));
+  if(item<0)it.kind=-item>=E::SP_ID_First?ITEM_PROJECT:ITEM_FACILITY;
+  else{E::UNIT& u=E::Units[item];it.kind=u.is_colony()?ITEM_COLONY:u.is_former()?ITEM_FORMER:u.is_combat_unit()?ITEM_COMBAT:ITEM_OTHER_UNIT;}it.cost=E::mineral_cost(b,item);it.turns=m.surplus>0?(it.cost+m.surplus-1)/m.surplus:0;};
  for(int u=0;u<E::MaxProtoFactionNum;++u)push(u);
  for(int u=f*E::MaxProtoFactionNum;u<(f+1)*E::MaxProtoFactionNum && f>0;++u)push(u);
  for(int i=1;i<=E::SP_ID_Last;++i)push(-i);

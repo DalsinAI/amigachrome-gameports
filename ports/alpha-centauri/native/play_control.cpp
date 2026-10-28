@@ -98,38 +98,33 @@ static int play_game(const char* rules,int exp,uint32_t seed,const char* out,int
  Session& s=play::session();
  if(!read_rules(s,rules,exp))return 20;
  if(!Session::new_game_available()){puts("NEWGAME unavailable in this build");return 20;}
- const int ng=s.new_game(seed,1,2,0);printf("NEWGAME %s player=%d turn=%d year=%d\n",play::play_status_name(ng),s.player(),s.turn(),s.year());drain(s,"A");
+ const int ng=s.new_game(seed,1,2,2);printf("NEWGAME %s player=%d turn=%d year=%d\n",play::play_status_name(ng),s.player(),s.turn(),s.year());drain(s,"A");
  check(ng==play::PLAY_OK,"new game");if(ng!=play::PLAY_OK)return 20;
  view_check(s,"A");list_units(s,"A");
 
- // Found the first base where the first colony pod landed, then move the
- // second pod away and found another.
- int pod=find_unit(s,true,false,false);check(pod>=0,"colony pod");
- if(pod>=0){
-  Command b=play::command(play::CMD_BUILD_BASE,pod);run(s,b);
- }
- pod=find_unit(s,true,false,false);
- if(pod>=0){wander(s,pod,3,1);Command b=play::command(play::CMD_BUILD_BASE,pod);run(s,b);}
+ // The new game starts with a base per faction. Production: a colony pod
+ // now (hurried), a facility queued behind it.
  int base=own_base(s);check(base>=0,"own base");
  printf("BASES %d\n",s.base_count());
- view_check(s,"A");
-
- // Production: build the first facility the base offers, queue a unit.
  BaseProductionModel prod{};
  if(base>=0 && s.base_production(base,prod)){
-  int facility=-1,unit=-1;for(int i=0;i<prod.count;++i){if(prod.items[i].id<0 && facility<0)facility=prod.items[i].id;if(prod.items[i].id>=0 && unit<0)unit=prod.items[i].id;}
+  int facility=-1,colony=-1;for(int i=0;i<prod.count;++i){if(prod.items[i].kind==ITEM_FACILITY && facility<0)facility=prod.items[i].id;if(prod.items[i].kind==ITEM_COLONY && colony<0)colony=prod.items[i].id;}
+  check(colony>=0,"colony pod buildable");
+  check(run(s,play::command(play::CMD_PRODUCE,base,colony>=0?colony:prod.items[0].id))==play::PLAY_OK,"set production");
   if(facility<0)facility=prod.items[0].id;
-  check(run(s,play::command(play::CMD_PRODUCE,base,facility))==play::PLAY_OK,"set production");
-  if(unit>=0)check(run(s,play::command(play::CMD_QUEUE_ADD,base,unit))==play::PLAY_OK,"queue unit");
+  check(run(s,play::command(play::CMD_QUEUE_ADD,base,facility))==play::PLAY_OK,"queue facility");
   s.base_production(base,prod);show_items("production",render_base_production(prod,ui_frame(),{0,0,620,420},items,256));
   int key=base_production_key(prod,'2');printf("BASEKEY down -> %d selected=%d\n",key,prod.selected);
+  run(s,play::command(play::CMD_HURRY,base));
  }
-
- // Formers and scouts get orders, then twenty End Turns.
  int former=find_unit(s,false,true,false);
  if(former>=0){run(s,play::command(play::CMD_TERRAFORM,former,5));}
  int scout=find_unit(s,false,false,true);
+ int founded=0;
  for(int t=0;t<turns;++t){
+  // A colony pod from production moves two steps and founds a base.
+  const int pod=find_unit(s,true,false,false);
+  if(pod>=0){wander(s,pod,2,2*t+1);if(run(s,play::command(play::CMD_BUILD_BASE,pod))==play::PLAY_OK)++founded;}
   if(scout>=0){play::UnitInfo u;if(s.unit(scout,u) && u.own && u.combat)wander(s,scout,2,t);else scout=find_unit(s,false,false,true);}
   if(former>=0){play::UnitInfo u;if(s.unit(former,u) && u.own && u.former && !u.order)run(s,play::command(play::CMD_TERRAFORM,former,t&1?0:5));}
   const int r=run(s,play::command(play::CMD_END_TURN));
@@ -137,6 +132,7 @@ static int play_game(const char* rules,int exp,uint32_t seed,const char* out,int
   check(r==play::PLAY_OK || r==play::PLAY_GAME_OVER,"end turn");if(r==play::PLAY_GAME_OVER)break;
   view_check(s,"A");
  }
+ printf("FOUNDED %d\n",founded);check(founded>0,"base founded by a colony pod");
  list_units(s,"A");
 
  // Attack: the scenario editor places an enemy next to a combat unit.
@@ -180,19 +176,26 @@ static int play_game(const char* rules,int exp,uint32_t seed,const char* out,int
   if(dm.count)run(s,play::command(play::CMD_DIPLO,ids[0],dm.proposals[0]));}}
  run(s,play::command(play::CMD_END_TURN));view_check(s,"A");
 
- // Save, load into a second session, continue both: identical.
+ // Save, load into two new sessions and continue: both continuations must be
+ // identical. (The unsaved game A continues too; the engine does not save its
+ // random number state, so A may differ from them, as in the original.)
  std::vector<uint8_t> saved;check(s.save_game(saved)==play::PLAY_OK,"save");
  char path[512];snprintf(path,sizeof(path),"%s/play.SAV",out);FILE* f=fopen(path,"wb");if(f){fwrite(saved.data(),1,saved.size(),f);fclose(f);}
  printf("SAVE bytes=%lu digest=%08lx\n",(unsigned long)saved.size(),(unsigned long)fnv(saved.data(),saved.size()));
- Session b;check(read_rules(b,rules,exp),"rules B");
  std::vector<uint8_t> again;{FILE* g=fopen(path,"rb");if(g){fseek(g,0,SEEK_END);long n=ftell(g);rewind(g);again.resize((size_t)n);check(fread(again.data(),1,(size_t)n,g)==(size_t)n,"read save");fclose(g);}}
- check(b.load_game(again.data(),again.size())==play::PLAY_OK,"load");drain(b,"B");
+ check(again==saved,"save file bytes");
+ Session b,c;check(read_rules(b,rules,exp),"rules B");check(read_rules(c,rules,exp),"rules C");
+ check(b.load_game(again.data(),again.size())==play::PLAY_OK,"load B");drain(b,"B");
+ check(c.load_game(again.data(),again.size())==play::PLAY_OK,"load C");drain(c,"C");
  check(b.digest()==s.digest(),"loaded state equals saved state");
- for(int t=0;t<3;++t){run(s,play::command(play::CMD_END_TURN),"A");run(b,play::command(play::CMD_END_TURN),"B");
-  const uint32_t da=s.digest(),db=b.digest();printf("CONTINUE %d A=%08lx B=%08lx\n",t,(unsigned long)da,(unsigned long)db);check(da==db,"continued game equals unsaved game");}
+ for(int t=0;t<3;++t){run(s,play::command(play::CMD_END_TURN),"A");run(b,play::command(play::CMD_END_TURN),"B");run(c,play::command(play::CMD_END_TURN),"C");
+  const uint32_t db=b.digest(),dc=c.digest();printf("CONTINUE %d A=%08lx B=%08lx C=%08lx\n",t,(unsigned long)s.digest(),(unsigned long)db,(unsigned long)dc);check(db==dc,"continued loaded games equal");}
+ if(b.base_count()){BaseProductionModel pb{};for(int i=0;i<b.base_count();++i)if(b.base_production(i,pb))break;
+  if(pb.valid && pb.count)run(b,play::command(play::CMD_PRODUCE,pb.base,pb.items[pb.count-1].id),"B");}
+ run(b,play::command(play::CMD_END_TURN),"B");
  view_check(b,"B");
- std::vector<uint8_t> fin;s.save_game(fin);snprintf(path,sizeof(path),"%s/final.SAV",out);f=fopen(path,"wb");if(f){fwrite(fin.data(),1,fin.size(),f);fclose(f);}
- printf("FINAL turn=%d units=%d bases=%d digest=%08lx failures=%d\n",s.turn(),s.vehicle_count(),s.base_count(),(unsigned long)s.digest(),failures);
+ std::vector<uint8_t> fin;b.save_game(fin);snprintf(path,sizeof(path),"%s/final.SAV",out);f=fopen(path,"wb");if(f){fwrite(fin.data(),1,fin.size(),f);fclose(f);}
+ printf("FINAL turn=%d units=%d bases=%d digest=%08lx failures=%d\n",b.turn(),b.vehicle_count(),b.base_count(),(unsigned long)b.digest(),failures);
  return failures?1:0;
 }
 
