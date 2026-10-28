@@ -234,4 +234,5 @@ typedef std::map<int, int> map_int_t;
 #include "veh.h"
 #include "bases.h"
 #include "savegame.h"
+#include "rules.h"
 #include "engine_wp.h"
