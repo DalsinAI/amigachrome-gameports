@@ -641,7 +641,7 @@ void config_vanilla(Config& c) {
     c.planetpearls = 2;
     c.tile_output_limit[0] = c.tile_output_limit[1] = c.tile_output_limit[2] = 2;
     c.soil_improve_value = 0;
-    const int lifecycle[6] = {45, 90, 170, 250, 0, 330};
+    const int lifecycle[6] = {45, 90, 170, 250, 330, 330}; // original: 4 until turn 330, then 6
     memcpy(c.native_lifecycle_levels, lifecycle, sizeof(lifecycle));
     const int talent[4] = {0, 2, 1, 2};
     memcpy(c.facility_talent_value, talent, sizeof(talent));
