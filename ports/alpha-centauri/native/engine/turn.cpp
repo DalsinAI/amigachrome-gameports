@@ -25,6 +25,10 @@ static int s_dword_93A950 = 0;
 
 static TurnHooks s_hooks = {};
 
+static int wrap_add(int a, int b) {
+    return (int)((uint32_t)a + (uint32_t)b);
+}
+
 TurnHooks& turn_hooks() {
     return s_hooks;
 }
@@ -325,10 +329,12 @@ void __cdecl turn_upkeep() {
     engine_notify(EV_MESSAGE, TE_TURN_BEGIN, *CurrentTurn, *CurrentMissionYear, 0, -1, -1, "turn_begin");
 
     if (*ClimateFutureChange) {
-        int val = *ClimateValueA + *ClimateValueC;
-        *ClimateValueC += *ClimateValueA;
+        // Fix: 32-bit wrap-around arithmetic like the original x86 code, without
+        // signed overflow on damaged values.
+        int val = wrap_add(*ClimateValueA, *ClimateValueC);
+        *ClimateValueC = val;
         if (*ClimateValueC >= *ClimateValueB) {
-            *ClimateValueC = val - *ClimateValueB;
+            *ClimateValueC = (int)((uint32_t)val - (uint32_t)*ClimateValueB);
             int alt_val = clamp(*ClimateFutureChange, -1, 1);
             *ClimateFutureChange -= alt_val;
             *MapSeaLevel += alt_val;

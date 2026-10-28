@@ -5,8 +5,8 @@
  *       synthetic worlds: turn order, human/AI/hotseat stops, year and turn counter,
  *       movement refill, repair, loans, hurry costs, territory, rankings, social
  *       upheaval, fungal towers, load/resume and same-seed determinism.
- *   wp1_test run IN OUT TURNS
- *       load_daemon_bytes(IN), set synthetic rules, call engine_end_turn() TURNS times
+ *   wp1_test run IN OUT TURNS [HUMAN]
+ *       load_daemon_bytes(IN), set synthetic rules (HUMAN: make that faction a living human), call engine_end_turn() TURNS times
  *       (printing one line per call and a digest of the events), save_daemon_bytes -> OUT.
  */
 #include "../engine.h"
@@ -73,6 +73,11 @@ static void synthetic_rules() {
         Units[i].cost = 3;
         Units[i].reactor_id = 1;
         Units[i].chassis_id = CHS_INFANTRY;
+        Units[i].weapon_id = (uint8_t)(Units[i].weapon_id % MaxWeaponNum);
+        Units[i].armor_id = (uint8_t)(Units[i].armor_id % MaxArmorNum);
+    }
+    for (int i = 0; i < MaxWeaponNum; i++) {
+        Weapon[i].offense_value = (int8_t)(i % 8);
     }
     Units[BSC_COLONY_POD].plan = PLAN_COLONY;
     for (int i = 0; i < MaxChassisNum; i++) {
@@ -524,7 +529,7 @@ static std::vector<uint8_t> read_file(const char* path) {
 
 /* Load a synthetic save, make its patterned records valid for the turn code, then
  * run TURNS End Turn calls. */
-static int run_turns(const char* in, const char* out, int turns) {
+static int run_turns(const char* in, const char* out, int turns, int human) {
     auto s = new_state();
     engine_bind(s.get());
     config_vanilla(conf);
@@ -544,18 +549,59 @@ static int run_turns(const char* in, const char* out, int turns) {
         }
     }
     for (int i = 0; i < *BaseCount; i++) {
-        Bases[i].faction_id = Bases[i].faction_id & 7;
+        BASE* b = &Bases[i];
+        b->faction_id = b->faction_id & 7;
+        b->pop_size = b->pop_size & 15;
+        b->specialist_adjust = b->specialist_adjust & 7;
+        b->drone_total = b->drone_total & 7;
+        b->talent_total = b->talent_total & 7;
+        b->energy_surplus = b->energy_surplus & 255;
+        b->unk_total = b->unk_total & 255;
     }
     for (int i = 0; i < MaxPlayerNum; i++) {
-        Factions[i].base_id_attack_target = -1;
+        Faction* f = &Factions[i];
+        f->base_id_attack_target = -1;
+        f->AI_fight = f->AI_fight & 1;
+        f->AI_growth = f->AI_growth & 1;
+        f->AI_tech = f->AI_tech & 1;
+        f->AI_wealth = f->AI_wealth & 1;
+        f->AI_power = f->AI_power & 1;
+        f->SE_police_pending = clamp(f->SE_police_pending, -5, 5);
+        f->SE_effic_2 = clamp(f->SE_effic_2, -5, 5);
+        f->SE_alloc_psych = f->SE_alloc_psych & 3;
+        f->SE_alloc_labs = f->SE_alloc_labs & 7;
+        f->energy_credits = f->energy_credits & 0xFFFF;
+        f->hurry_cost_total = f->hurry_cost_total & 0xFF;
+        f->pop_total = f->pop_total & 0xFFF;
+        f->tech_count_transcendent = f->tech_count_transcendent & 0xFF;
+        f->unk_101 = f->unk_101 & 0xFF;
+        f->integrity_blemishes = f->integrity_blemishes & 0xFF;
+        for (int j = 0; j < MaxPlayerNum; j++) {
+            f->loan_balance[j] = f->loan_balance[j] & 0xFFFF;
+            f->loan_payment[j] = f->loan_payment[j] & 0xFF;
+            f->diplo_gifts[j] = f->diplo_gifts[j] & 0xFF;
+        }
         MFactions[i].faction_bonus_count = 0;
+        MFactions[i].rule_techcost = MFactions[i].rule_techcost & 0xFF;
+        MFactions[i].rule_interest = MFactions[i].rule_interest % 100;
     }
+    *ObjectiveAchievePts = *ObjectiveAchievePts & 0xFF;
+    *ClimateValueA = *ClimateValueA & 0xFFFF;
+    *ClimateValueB = *ClimateValueB & 0xFFFF;
+    *ClimateValueC = *ClimateValueC & 0xFFFF;
     for (int i = 0; i < MaxSecretProjectNum; i++) {
         if (SecretProjects[i] >= *BaseCount) {
             SecretProjects[i] = -1;
         }
     }
     *GamePreferences &= ~PREF_BSC_AUTOSAVE_EACH_TURN;
+    if (human > 0 && human < MaxPlayerNum) {
+        set_alive(human, true);
+        set_human(human, true);
+        MapWin->cOwner = human;
+        *CurrentPlayerFaction = human;
+        *ControlTurnMove = 0;
+    }
     game_srand(1);
     random_reseed(1);
     uint32_t h = 2166136261u;
@@ -584,9 +630,9 @@ int main(int argc, char** argv) {
     if (argc >= 2 && !strcmp(argv[1], "unit")) {
         return run_unit();
     }
-    if (argc == 5 && !strcmp(argv[1], "run")) {
-        return run_turns(argv[2], argv[3], atoi(argv[4]));
+    if ((argc == 5 || argc == 6) && !strcmp(argv[1], "run")) {
+        return run_turns(argv[2], argv[3], atoi(argv[4]), argc == 6 ? atoi(argv[5]) : 0);
     }
-    fprintf(stderr, "usage: %s unit | run IN OUT TURNS\n", argv[0]);
+    fprintf(stderr, "usage: %s unit | run IN OUT TURNS [HUMAN]\n", argv[0]);
     return 2;
 }

@@ -339,7 +339,7 @@ static void test_events() {
     CHECK(strcmp(ParseStrBuffer[0].str, "Gaians") == 0);
     CHECK_EQ(ParseNumTable[1], 42);
     size_t ni = sink->not_implemented;
-    control_turn(); // WP1 stub
+    not_implemented("engine_test"); // (was the WP1 control_turn stub, now implemented)
     CHECK_EQ(sink->not_implemented, ni + 1);
     draw_map(1);
     CHECK_EQ(sink->redraws, 1);
