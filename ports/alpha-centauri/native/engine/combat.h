@@ -81,12 +81,8 @@ int battle_label_id(int type, int offset);
  * returns non-zero when the attack is called off (treaty kept). */
 int __cdecl shoot(int faction_id, int faction_id_tgt, int x, int y);
 
-/* Combat label text. The engine has no labels.txt; label_get returns a short
- * English text for the label ids used by combat (Thinker's comments) unless
- * a provider is installed. label_id_of maps such a pointer back to its id. */
-typedef const char* (*LabelProvider)(int label_id);
-LabelProvider set_label_provider(LabelProvider provider);
-const char* label_get(int label_id);
+/* Label id (labels.txt line) of a label_get() string, -1 for other text
+ * such as unit or facility names. label_get() is the rules loader's. */
 int label_id_of(const char* text);
 const char* difficulty_name(int diff_level);
 

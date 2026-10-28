@@ -39,80 +39,25 @@ int battle_label_id(int type, int offset) {
     return veh_battle_label[type][offset];
 }
 
-/* ---- Engine: label texts used by combat (Thinker's comments) ---- */
-struct CombatLabel {
-    int id;
-    const char* text;
-};
-static const CombatLabel combat_labels[] = {
-    {91, "Rocky"}, {291, "Forest"}, {312, "Combat"}, {329, "Trance"}, {330, "Downhill"},
-    {331, "Terrain"}, {332, "Base"}, {335, "In Port"}, {336, "Jammer"}, {337, "Tracking"},
-    {338, "Fungus"}, {339, "Hasty"}, {341, "Nerve Gas"}, {342, "Gaian Psi"},
-    {343, "Dream Twist"}, {344, "Neural Amp"}, {354, "Perimeter"}, {357, "Tachyon"},
-    {358, "Bunker"}, {428, "Base vs. Blink"}, {435, "Land Based Guns"}, {437, "Air Drop"},
-    {438, "Orbital Insertion"}, {439, "Non Combat"}, {441, "Uphill"}, {448, "Ground Strike"},
-    {449, "Air-to-Air"}, {525, "Open Ground"}, {528, "Belief"}, {547, "Infantry vs. Base"},
-    {548, "Rough vs. Mobile"}, {576, "Altitude"}, {606, "Road Attack"}, {611, "Mobile in open"},
-    {612, "Mobile vs. Base"}, {613, "Sensor"}, {625, "Planet"}, {1108, "Alien Offense"},
-    {1109, "Alien Defense"}, {1110, "Resonance Attack"}, {1111, "Resonance Def."},
-    {1112, "Pulse Defense"}, {1113, "Flechette"}, {1123, "GSP"},
-};
-static const char* const difficulty_names[] = {
-    "Citizen", "Specialist", "Talent", "Librarian", "Thinker", "Transcend",
-};
-static LabelProvider label_provider = nullptr;
-static const int MaxLabelSlots = 64;
-static int label_slot_ids[MaxLabelSlots];
-static const char* label_slot_text[MaxLabelSlots];
-static int label_slot_count = 0;
-
-LabelProvider set_label_provider(LabelProvider provider) {
-    LabelProvider prev = label_provider;
-    label_provider = provider;
-    label_slot_count = 0;
-    return prev;
-}
-
-const char* label_get(int label_id) {
-    const char* text = nullptr;
-    if (label_provider) {
-        text = label_provider(label_id);
-    }
-    if (!text) {
-        text = "";
-        for (const CombatLabel& l : combat_labels) {
-            if (l.id == label_id) {
-                text = l.text;
-                break;
-            }
-        }
-    }
-    // Remember the pointer so add_bat can report the label id to the UI.
-    for (int i = 0; i < label_slot_count; i++) {
-        if (label_slot_ids[i] == label_id) {
-            label_slot_text[i] = text;
-            return text;
-        }
-    }
-    if (label_slot_count < MaxLabelSlots) {
-        label_slot_ids[label_slot_count] = label_id;
-        label_slot_text[label_slot_count] = text;
-        label_slot_count++;
-    }
-    return text;
-}
-
+/* ---- Engine: label ids of the battle display ----
+ * label_get() and Difficulty come from the rules loader (rules.h). */
 int label_id_of(const char* text) {
-    for (int i = 0; text && i < label_slot_count; i++) {
-        if (label_slot_text[i] == text) {
-            return label_slot_ids[i];
+    if (!text || !*text || !TextLabels || !TextLabels->labels) {
+        return -1;
+    }
+    for (int i = 0; i < TextLabels->label_count; i++) {
+        if (TextLabels->labels[i] == text) {
+            return i;
         }
     }
     return -1;
 }
 
 const char* difficulty_name(int diff_level) {
-    return (diff_level >= 0 && diff_level < 6) ? difficulty_names[diff_level] : "";
+    if (Difficulty && diff_level >= 0 && diff_level < MaxDiffNum && Difficulty[diff_level]) {
+        return Difficulty[diff_level];
+    }
+    return "";
 }
 
 /* ---- Engine: battle observer ---- */
