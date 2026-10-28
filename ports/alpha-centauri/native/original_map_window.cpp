@@ -9,6 +9,7 @@
 #include "original_ui_text.h"
 #include "technology_browser.h"
 #include "cvr_infantry.h"
+#include "audio_world.h"
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
 #include "local_player.h"
 #include "world_base_accounting.h"
@@ -348,13 +349,13 @@ static bool local_key(UWORD code){
   auto e=player.next_facility((int32_t)selected_base);base_open=true;
   snprintf(action_status,sizeof(action_status),e==alpha::LocalOrderError::ok?"P selects another available facility. ENTER confirms; ESC cancels.":"Production unavailable: %s",alpha::local_order_error_name(e));return true;
  }
- if(code==13){alpha::FacilityOrderReceipt out{};auto e=player.confirm_facility(out);snprintf(action_status,sizeof(action_status),"Production: %s",alpha::local_order_error_name(e));return true;}
+ if(code==13){alpha::FacilityOrderReceipt out{};auto e=player.confirm_facility(out);if(e==alpha::LocalOrderError::ok)alpha::audio_event(alpha::AudioEvent::ui_click);snprintf(action_status,sizeof(action_status),"Production: %s",alpha::local_order_error_name(e));return true;}
  if(code==27 || code=='b' || code=='B'){player.cancel_facility();return false;}
  int dx=0,dy=0;
  switch(code){case '7':dx=-1;dy=-1;break;case '8':dy=-2;break;case '9':dx=1;dy=-1;break;case '4':dx=-2;break;case '6':dx=2;break;case '1':dx=-1;dy=1;break;case '2':dy=2;break;case '3':dx=1;dy=1;break;default:return false;}
  if(base_open){snprintf(action_status,sizeof(action_status),"Close base details with ESC before moving.");return true;}
  alpha::LocalStepReceipt out{};auto e=player.step(selected,dx,dy,out);
- if(e==alpha::LocalOrderError::ok){snprintf(action_status,sizeof(action_status),"Move: %s (cost %lu)",alpha::step_status_name(out.result.status),(unsigned long)out.result.price);if(out.changed){camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}}
+ if(e==alpha::LocalOrderError::ok){snprintf(action_status,sizeof(action_status),"Move: %s (cost %lu)",alpha::step_status_name(out.result.status),(unsigned long)out.result.price);if(out.changed){alpha::audio_event(alpha::AudioEvent::unit_move);camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}}
  else snprintf(action_status,sizeof(action_status),"Move unavailable: %s",alpha::local_order_error_name(e));
  return true;
 }
@@ -416,7 +417,7 @@ int alpha_original_view(int argc,char** argv){
  if(IntuitionBase && GfxBase && CyberGfxBase)window=OpenWindowTags(NULL,WA_Title,(ULONG)window_title,WA_Width,952,WA_Height,864,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
  int rc=20;
  if(!window)fprintf(stderr,"Cannot open world window (952x864): intuition=%d graphics=%d cybergraphics=%d\n",IntuitionBase!=nullptr,GfxBase!=nullptr,CyberGfxBase!=nullptr);
- if(window){draw(window);bool quit=false;while(!quit){WaitPort(window->UserPort);struct IntuiMessage* m;
+ if(window){alpha::audio_world_enter(world());draw(window);bool quit=false;while(!quit){WaitPort(window->UserPort);struct IntuiMessage* m;
   while((m=(struct IntuiMessage*)GetMsg(window->UserPort))){ULONG kind=m->Class;UWORD code=m->Code;WORD mouse_x=m->MouseX,mouse_y=m->MouseY;ReplyMsg((struct Message*)m);
    if(kind==IDCMP_CLOSEWINDOW){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
@@ -431,7 +432,7 @@ int alpha_original_view(int argc,char** argv){
     discard_pending=0;forecast_open=false;
 #endif
     if(mouse_x>=12+HUD_X+563 && mouse_x<12+HUD_X+787 && mouse_y>=HUD_Y+52 && mouse_y<HUD_Y+226){camera_x=(int)((uint32_t)(mouse_x-12-HUD_X-563)*world().game().map.info.width/224);camera_y=(int)((uint32_t)(mouse_y-HUD_Y-52)*world().game().map.info.height/174);}
-    else for(size_t i=0;i<world().game().base_count;++i){int x,y;const auto&b=*world().base(i);if(position(b.x,b.y,x,y) && abs(mouse_x-12-x)<24*zoom && abs(mouse_y-70-y)<24*zoom){selected_base=i;base_open=true;
+    else for(size_t i=0;i<world().game().base_count;++i){int x,y;const auto&b=*world().base(i);if(position(b.x,b.y,x,y) && abs(mouse_x-12-x)<24*zoom && abs(mouse_y-70-y)<24*zoom){selected_base=i;base_open=true;alpha::audio_event(alpha::AudioEvent::menu_open);
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
      player.cancel_facility();discard_pending=false;
 #endif
@@ -443,14 +444,15 @@ int alpha_original_view(int argc,char** argv){
     if(code=='q' || code=='Q'){quit=leave_local();if(!quit)draw(window);continue;}
     if(local_key(code)){printf("LOCAL ACTION key=%u status=%s dirty=%d\n",(unsigned)code,action_status,player.dirty());fflush(stdout);draw(window);continue;}
 #endif
-    switch(code){case 't':case 'T':{int rc=alpha_technology_browser(argv[2]);printf("WORLD TECHNOLOGY RC %d\n",rc);fflush(stdout);ActivateWindow(window);}break;case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world().game().base_count){selected_base=(selected_base+1)%world().game().base_count;camera_x=world().base(selected_base)->x;camera_y=world().base(selected_base)->y;}break;case 'i':if(world().game().base_count)base_open=!base_open;break;case 27:base_open=false;break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world().game().vehicle_count)selected=(selected+1)%world().game().vehicle_count;break;case 'c':if(world().game().vehicle_count){camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}break;}
+    if(const char* note=alpha::audio_world_key(code)){snprintf(action_status,sizeof(action_status),"%s",note);draw(window);continue;}
+    switch(code){case 't':case 'T':{alpha::audio_suspend();int rc=alpha_technology_browser(argv[2]);alpha::audio_resume();printf("WORLD TECHNOLOGY RC %d\n",rc);fflush(stdout);ActivateWindow(window);}break;case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world().game().base_count){selected_base=(selected_base+1)%world().game().base_count;camera_x=world().base(selected_base)->x;camera_y=world().base(selected_base)->y;}break;case 'i':if(world().game().base_count){base_open=!base_open;alpha::audio_event(base_open?alpha::AudioEvent::menu_open:alpha::AudioEvent::menu_close);}break;case 27:base_open=false;break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world().game().vehicle_count)selected=(selected+1)%world().game().vehicle_count;break;case 'c':if(world().game().vehicle_count){camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}break;}
     if(camera_x<0)camera_x=0;
     if(camera_x>=(int)world().game().map.info.width)camera_x=(int)world().game().map.info.width-1;
     if(camera_y<0)camera_y=0;
     if(camera_y>=(int)world().game().map.info.height)camera_y=(int)world().game().map.info.height-1;
     draw(window);}
   }
- }CloseWindow(window);rc=0;}
+ }alpha::audio_world_leave();CloseWindow(window);rc=0;}
  if(CyberGfxBase)CloseLibrary(CyberGfxBase);
  if(GfxBase)CloseLibrary((struct Library*)GfxBase);
  if(IntuitionBase)CloseLibrary((struct Library*)IntuitionBase);
