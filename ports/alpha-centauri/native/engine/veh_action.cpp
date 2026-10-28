@@ -11,6 +11,7 @@
  */
 #include "engine.h"
 #include "veh_action.h"
+#include "combat.h"
 #include "veh_action_ui.h"
 #include "wp3_deps.h"
 
@@ -19,26 +20,8 @@ namespace engine {
 
 using namespace wp3_ui;
 
-/* Thinker veh_combat.cpp mod_battle_fight (owned by WP4); kept local under
- * another name so the link never sees two definitions. */
-static int battle_fight(int veh_id, int offset, int table_offset, int option, int* def_id) {
-    VEH* veh = &Vehs[veh_id];
-    int x2, y2;
-    if (table_offset) {
-        x2 = wrap(veh->x + TableOffsetX[offset]);
-        y2 = veh->y + TableOffsetY[offset];
-    } else {
-        x2 = wrap(veh->x + BaseOffsetX[offset]);
-        y2 = veh->y + BaseOffsetY[offset];
-    }
-    for (int i = 0; i < *VehCount; i++) {
-        if (Vehs[i].x == x2 && Vehs[i].y == y2 && Vehs[i].faction_id == veh->faction_id) {
-            // Skip alien_move or action_destroy artillery attack on friendly units
-            return 0;
-        }
-    }
-    return mod_battle_fight_2(veh_id, offset, x2, y2, table_offset, option, def_id);
-}
+/* Integration: the local copy of Thinker mod_battle_fight was removed;
+ * WP4's mod_battle_fight (combat.h) is used. */
 
 
 int __cdecl terrain_avail(FormerItem frm_id, int ocean, int faction_id) {
@@ -698,7 +681,7 @@ void __cdecl action_destroy(int veh_id, int tgt_item, int tgt_x, int tgt_y) {
                     int stack_id = stack_fix(veh_at(px, py));
                     if (stack_id >= 0) {
                         if (stack_check(stack_id, 15, owner, -1, -1)) {
-                            battle_fight(veh_id, i, 1, 1, 0);
+                            mod_battle_fight(veh_id, i, 1, 1, 0);
                             return;
                         }
                     }
@@ -1178,7 +1161,7 @@ void __cdecl action_arty(net_int_t veh_id, int tx, int ty) {
                         if (*MultiplayerActive) {
                             if (!NetDaemon_maybe_lock(NetState, &veh_id, 0, 0, tx, ty, 4)) {
                                 *VehAttackFlags = 1;
-                                if (battle_fight(veh_id, offset, 1, 1, 0)) {
+                                if (mod_battle_fight(veh_id, offset, 1, 1, 0)) {
                                     NetDaemon_unlock_veh(NetState);
                                 } else {
                                     message_veh(0x2402, veh_id, offset, 0);
@@ -1187,7 +1170,7 @@ void __cdecl action_arty(net_int_t veh_id, int tx, int ty) {
                             }
                         } else {
                             *VehAttackFlags = 3;
-                            battle_fight(veh_id, offset, 1, 1, 0);
+                            mod_battle_fight(veh_id, offset, 1, 1, 0);
                         }
                     }
                 }
@@ -2456,7 +2439,7 @@ MOV_SPOT:
         }
         *CurrentVehID = veh_id;
         if (!(*VehAttackFlags & 2)) {
-            move_result = battle_fight(veh_id, offset, 0, 1, 0) == 0;
+            move_result = mod_battle_fight(veh_id, offset, 0, 1, 0) == 0;
             goto MOV_END;
         }
         if (!tgt_fc_id && Vehs[veh_id].triad() != TRIAD_AIR) {
@@ -2544,7 +2527,7 @@ MOV_SPOT:
         }
         {
             move_fight = 1;
-            int value = battle_fight(veh_id, offset, 0, 1, 0);
+            int value = mod_battle_fight(veh_id, offset, 0, 1, 0);
             if (!value) {
                 goto MOV_END;
             }
