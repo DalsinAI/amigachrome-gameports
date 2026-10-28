@@ -11,7 +11,6 @@
 #include "engine.h"
 #include "turn.h"
 
-#include <ctype.h>
 
 namespace alpha {
 namespace engine {
@@ -349,17 +348,6 @@ void init_save_game(int faction_id) {
             plr->base_id_attack_target = -1;
         }
     }
-}
-
-int strcmpi(const char* a, const char* b) {
-    while (*a && *b) {
-        int ca = tolower((unsigned char)*a++);
-        int cb = tolower((unsigned char)*b++);
-        if (ca != cb) {
-            return ca - cb;
-        }
-    }
-    return tolower((unsigned char)*a) - tolower((unsigned char)*b);
 }
 
 /* Original: POP2 (exe) shows a SCRIPT popup with an image, centred on a base. */

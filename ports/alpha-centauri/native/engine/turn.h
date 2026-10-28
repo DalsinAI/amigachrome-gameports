@@ -115,7 +115,6 @@ bool base_can_riot(int base_id, bool allow_staple);
 int fac_maint(int facility_id, int faction_id);
 int energy_limit(int faction_id);
 void init_save_game(int faction_id);
-int strcmpi(const char* a, const char* b);
 int pop2(const char* label, const char* pcx_filename, int base_id);
 } // namespace wp1
 
