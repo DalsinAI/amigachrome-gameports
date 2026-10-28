@@ -16,7 +16,7 @@ from test_base_nutrients import expected as nutrient_expected
 from test_upkeep_base_energy import expected as energy_expected
 
 HERE = Path(__file__).resolve().parent
-SOURCES = list(dict.fromkeys([name for name in mineral.SOURCES if name != 'world_base_minerals_probe'] + 'base_support world_base_support base_energy world_energy world_technology_effects world_base_accounting world_base_accounting_probe'.split()))
+SOURCES = list(dict.fromkeys([name for name in mineral.SOURCES if name != 'world_base_minerals_probe'] + 'base_support world_base_support upkeep_base_energy upkeep_world_energy world_technology_effects world_base_accounting world_base_accounting_probe'.split()))
 
 
 def model(variant, text, original, base_id, commerce, grid, mode=None):

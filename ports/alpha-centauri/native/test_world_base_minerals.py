@@ -14,7 +14,7 @@ from test_upkeep_base_minerals import expected as mineral_expected
 from test_original_game import decode, SCHEMA, FORMATS
 
 HERE = Path(__file__).resolve().parent
-SOURCES = 'rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats vehicle_stack tile_yields world_technology_effects world_upkeep_tile_yields world_tile_yields world_worker_radius world_terraform_ecology world_stable_intake base_nutrients world_fresh_nutrients world_convoy_nutrients base_minerals world_base_minerals world_base_minerals_probe'.split()
+SOURCES = 'rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats vehicle_stack tile_yields world_technology_effects world_upkeep_tile_yields world_tile_yields technology_effects world_fresh_tile_yields world_worker_radius world_terraform_ecology world_stable_intake base_nutrients world_fresh_nutrients world_convoy_nutrients upkeep_base_minerals world_base_minerals world_base_minerals_probe'.split()
 
 
 def normalized(data, target):

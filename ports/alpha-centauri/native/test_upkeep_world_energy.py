@@ -7,7 +7,7 @@ import test_world_convoy_nutrients as convoy
 import test_world_stable_intake as intake
 from test_upkeep_base_energy import expected as energy_expected
 HERE=Path(__file__).resolve().parent
-NAMES='base_energy rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats vehicle_stack tile_yields world_technology_effects world_upkeep_tile_yields world_tile_yields world_worker_radius world_terraform_ecology world_stable_intake base_nutrients world_fresh_nutrients world_convoy_nutrients world_energy world_fresh_energy upkeep_world_energy_probe'.split()
+NAMES='upkeep_base_energy rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats vehicle_stack tile_yields world_technology_effects world_upkeep_tile_yields world_tile_yields technology_effects world_fresh_tile_yields world_worker_radius world_terraform_ecology world_stable_intake base_nutrients world_fresh_nutrients world_convoy_nutrients upkeep_world_energy world_fresh_energy upkeep_world_energy_probe'.split()
 def fixture(variant,version,case):
  # Mix at-base/exterior/foreign/otherhome/wrongplan/channel/order convoys.
  actors=[(1,0,3,2,1,10),(1,1,3,2,1,10),(1,0,3,2,0,10),(2,0,3,2,1,10),(1,0,0,2,1,10),(1,0,3,1,1,10),(1,0,3,2,1,11)]

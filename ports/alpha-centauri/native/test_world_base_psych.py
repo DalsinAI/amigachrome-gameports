@@ -8,7 +8,7 @@ import test_world_stable_intake as intake
 import test_base_support as support
 import test_upkeep_base_psych as leaf
 HERE=Path(__file__).resolve().parent
-SOURCES='rules_text original_map original_game original_faction original_world base_support world_base_support prototype movement saved_speed world_unit_stats base_psych world_base_psych world_base_psych_probe'.split()
+SOURCES='rules_text original_map original_game original_faction original_world base_support world_base_support prototype movement saved_speed world_unit_stats upkeep_base_psych world_base_psych world_base_psych_probe'.split()
 def fixture(case,version=9):
  b=bytearray(worker.fixture(case,version));_,off,_=intake.decode(b);legacy=version<11;schema=intake.FACTIONS['LegacyFactionV10' if legacy else 'Faction'];fs=0x20bc if legacy else 0x20cc;definition=intake.FACTIONS['MFaction'];state_start=off['factions']+fs;definition_start=off['faction_definitions']+0x59c;pf=off['legacy'] if legacy else off['preferences']
  def put(start,schema,name,value,index=0):
