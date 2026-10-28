@@ -134,4 +134,19 @@ WavError decode_wav_mono(const uint8_t* b,size_t size,const WavInfo& w,int16_t* 
  if(produced!=w.frames)return WavError::bad_format;
  count=produced;return WavError::ok;
 }
+size_t resampled_frames(size_t n,uint32_t from,uint32_t to){
+ if(!n||!from||!to)return 0;
+ return (size_t)(((uint64_t)n*to+from-1)/from);
+}
+size_t resample_linear(const int16_t* in,size_t n,uint32_t from,int16_t* out,size_t cap,uint32_t to){
+ size_t m=resampled_frames(n,from,to);if(!m||m>cap||!in||!out)return 0;
+ if(from==to){memcpy(out,in,n*2);return n;}
+ const uint32_t step=(uint32_t)(((uint64_t)from<<16)/to);uint32_t pos=0,frac=0;
+ for(size_t i=0;i<m;++i){
+  int32_t a=pos<n?in[pos]:0,b=pos+1<n?in[pos+1]:a;
+  out[i]=(int16_t)(a+(((b-a)*(int32_t)(frac>>1))>>15));
+  uint32_t f=frac+step;pos+=f>>16;frac=f&0xFFFF;
+ }
+ return m;
+}
 }

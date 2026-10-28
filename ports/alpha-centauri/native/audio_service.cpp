@@ -59,7 +59,14 @@ int16_t* load_wav(const char* path,uint32_t& frames,uint32_t& rate,bool& missing
  WavInfo w;int16_t* pcm=nullptr;size_t count=0;
  if(parse_wav(raw,n,n,w)==WavError::ok&&(pcm=(int16_t*)malloc((size_t)w.frames*2))!=nullptr&&decode_wav_mono(raw,n,w,pcm,w.frames,count)==WavError::ok){frames=(uint32_t)count;rate=w.rate;}
  else{free(pcm);pcm=nullptr;}
- free(raw);return pcm;
+ free(raw);
+ // Convert once to the mixer rate so playback takes the cheap unresampled path.
+ if(pcm&&rate!=AudioMixer::output_rate){
+  size_t m=resampled_frames(frames,rate,AudioMixer::output_rate);auto* conv=m&&m<=0xFFFFFFFFu?(int16_t*)malloc(m*2):nullptr;
+  if(conv&&resample_linear(pcm,frames,rate,conv,m,AudioMixer::output_rate)==m){free(pcm);pcm=conv;frames=(uint32_t)m;rate=AudioMixer::output_rate;}
+  else free(conv); // keep the original rate; the mixer resamples it live
+ }
+ return pcm;
 }
 size_t resident(){size_t b=0;for(auto& c:state->clips)if(c.samples)b+=(size_t)c.frames*2;return b;}
 void evict_for(size_t bytes){

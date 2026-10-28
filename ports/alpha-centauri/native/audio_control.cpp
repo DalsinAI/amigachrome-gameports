@@ -113,6 +113,9 @@ void mixer_tests(){
  // 11025 Hz source: every other output sample is the linear midpoint.
  int16_t half[3]={0,1000,-1000};AudioClip hc{half,3,11025};m.play_sfx(hc);m.render(out,8);
  CHECK(out[0]==0&&out[1]==500&&out[2]==1000&&out[3]==0&&out[4]==-1000&&out[5]==-500&&out[6]==0);
+ // Load-time resampling matches the live mixer path exactly.
+ int16_t up[8];CHECK(resampled_frames(3,11025,22050)==6&&resample_linear(half,3,11025,up,8,22050)==6&&up[0]==0&&up[1]==500&&up[2]==1000&&up[3]==0&&up[4]==-1000&&up[5]==-1000);
+ CHECK(resample_linear(half,3,11025,up,5,22050)==0&&resampled_frames(4,44100,22050)==2&&resample_linear(ramp,4,44100,up,8,22050)==2&&up[0]==ramp[0]&&up[1]==ramp[2]);
  // References guard.
  m.play_sfx(oc);CHECK(m.references(one)&&!m.references(half));m.stop_sfx();CHECK(!m.references(one));
  // Voice: plays once; fade stops it after the fade length.
@@ -199,7 +202,17 @@ void pump_tests(const char* dir){
 }
 int bench(const char* kind,const char* file){
  if(!strcmp(kind,"mix")){
-  // One second: three 11025 Hz effects, a 22050 Hz voice and music, ducked.
+  // Typical second: two effects (pre-resampled to 22050 Hz at load, unity
+  // gain), a voice line and music at the default 70%.
+  static AudioMixer m;m.reset();static int16_t fx[22050],vo[22050],mus[22050],out[22050];
+  for(int i=0;i<22050;++i){fx[i]=(int16_t)(i*37);vo[i]=(int16_t)(i*11);mus[i]=(int16_t)(i*5);}
+  MixerLevels l;l.music_duck=100;m.set_levels(l);
+  m.music_start(22050);m.music_push(mus,22050);for(int k=0;k<2;++k)m.play_sfx(AudioClip{fx,22050,22050});m.play_voice(AudioClip{vo,22050,22050});
+  unsigned sum=0;for(int i=0;i<22050;i+=1024){size_t n=22050-i<1024?22050-i:1024;m.render(out+i,n);}for(auto v:out)sum=sum*31+(uint16_t)v;
+  printf("BENCH mix frames=22050 sum=%08x\n",sum);return 0;
+ }
+ if(!strcmp(kind,"mix-worst")){
+  // Worst case: three 11025 Hz effects resampled live, a voice and ducked music.
   static AudioMixer m;m.reset();static int16_t fx[22050],vo[22050],mus[22050],out[22050];
   for(int i=0;i<22050;++i){fx[i]=(int16_t)(i*37);vo[i]=(int16_t)(i*11);mus[i]=(int16_t)(i*5);}
   m.music_start(22050);m.music_push(mus,22050);for(int k=0;k<3;++k)m.play_sfx(AudioClip{fx,22050,11025});m.play_voice(AudioClip{vo,22050,22050});

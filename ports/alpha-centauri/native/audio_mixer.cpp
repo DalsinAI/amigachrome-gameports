@@ -51,16 +51,31 @@ size_t AudioMixer::music_push(const int16_t* s,size_t n){
  for(size_t i=0;i<n;++i){music_[music_write_]=s[i];music_write_=(music_write_+1)%music_ring;}
  return n;
 }
-// Returns false once the clip has finished.
+// Returns false once the clip has finished. Gains are Q12 (<= 4096), so every
+// product fits 32 bits; the common unresampled case has its own tight loop.
 bool AudioMixer::mix_channel(Channel& c,int32_t* acc,size_t frames,int32_t gain){
- const int16_t* s=c.clip.samples;uint32_t n=c.clip.frames;
+ const int16_t* s=c.clip.samples;const uint32_t n=c.clip.frames;
+ if(c.fade_step){
+  for(size_t i=0;i<frames;++i){
+   if(c.pos>=n)return false;
+   c.fade-=c.fade_step;if(c.fade<=0)return false;
+   int32_t v=s[c.pos];if(c.frac)v=lerp(v,c.pos+1<n?s[c.pos+1]:0,c.frac);
+   acc[i]+=(v*((gain*(c.fade>>8))>>12))>>12;
+   uint32_t f=c.frac+c.step;c.pos+=f>>16;c.frac=f&0xFFFF;
+  }
+  return c.pos<n;
+ }
+ if(c.step==0x10000u&&!c.frac){
+  size_t k=n-c.pos;if(k>frames)k=frames;const int16_t* p=s+c.pos;
+  if(gain==unity)for(size_t i=0;i<k;++i)acc[i]+=p[i];
+  else{const int16_t g=(int16_t)gain;for(size_t i=0;i<k;++i)acc[i]+=((int32_t)p[i]*g)>>12;}
+  c.pos+=(uint32_t)k;return c.pos<n;
+ }
+ const int16_t g=(int16_t)gain;
  for(size_t i=0;i<frames;++i){
   if(c.pos>=n)return false;
-  int32_t v=s[c.pos];
-  if(c.frac)v=lerp(v,c.pos+1<n?s[c.pos+1]:0,c.frac);
-  int32_t g=gain;
-  if(c.fade_step){c.fade-=c.fade_step;if(c.fade<=0)return false;g=(int32_t)(((int64_t)g*(c.fade>>8))>>12);}
-  acc[i]+=g==unity?v:(v*g)>>12;
+  int32_t v=s[c.pos];if(c.frac)v=lerp(v,c.pos+1<n?s[c.pos+1]:0,c.frac);
+  acc[i]+=(v*g)>>12;
   uint32_t f=c.frac+c.step;c.pos+=f>>16;c.frac=f&0xFFFF;
  }
  return c.pos<n;
@@ -71,21 +86,21 @@ void AudioMixer::render(int16_t* out,size_t frames){
  if(voice_.clip.samples && voice_bus)music_target=percent(music_target,levels_.music_duck);
  while(frames){
   size_t n=frames<512?frames:512;memset(acc_,0,n*sizeof(int32_t));
-  for(auto& c:sfx_)if(c.clip.samples){int32_t g=(int32_t)(((int64_t)sfx_bus*c.gain)>>12);if(!mix_channel(c,acc_,n,g))c=Channel{};}
+  for(auto& c:sfx_)if(c.clip.samples){int32_t g=(sfx_bus*c.gain)>>12;if(!mix_channel(c,acc_,n,g))c=Channel{};}
   if(voice_.clip.samples && !mix_channel(voice_,acc_,n,voice_bus))voice_=Channel{};
   // A muted music bus pauses the stream (position kept) once its ramp ends.
   if(music_live_ && (music_target || music_gain_now_)){
    const size_t need=2+(music_step_>>16); // both interpolation taps plus the advance stay unread-safe
+   size_t fill=music_fill();
    for(size_t i=0;i<n;++i){
     if(music_gain_now_!=music_target){int32_t d=music_target-music_gain_now_;music_gain_now_+=d>8?8:d<-8?-8:d;} // ~23 ms full ramp
-    size_t fill=music_fill();
     if(fill<need && !(music_eos_ && fill)){if(!music_eos_)++stats_.music_underruns;break;}
     // At the end of the stream the last samples play without a future tap.
-    int32_t a=music_[music_read_],b=fill>=2?music_[(music_read_+1)%music_ring]:a;
-    int32_t v=music_frac_?lerp(a,b,music_frac_):a;
+    int32_t v=music_[music_read_];
+    if(music_frac_)v=lerp(v,fill>=2?music_[(music_read_+1)%music_ring]:v,music_frac_);
     acc_[i]+=(v*music_gain_now_)>>12;
     uint32_t f=music_frac_+music_step_;size_t advance=f>>16;if(advance>fill)advance=fill;
-    music_read_=(music_read_+advance)%music_ring;music_frac_=f&0xFFFF;
+    music_read_=(music_read_+advance)%music_ring;music_frac_=f&0xFFFF;fill-=advance;
    }
   }
   for(size_t i=0;i<n;++i){int32_t v=acc_[i];if(v>32767){v=32767;++stats_.clipped;}else if(v<-32768){v=-32768;++stats_.clipped;}out[i]=(int16_t)v;}

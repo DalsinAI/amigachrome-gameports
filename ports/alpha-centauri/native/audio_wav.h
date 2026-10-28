@@ -34,6 +34,11 @@ WavError decode_wav_mono(const uint8_t* bytes, size_t size, const WavInfo& info,
 // Streaming helper for PCM codecs: convert `frames` whole frames of raw data.
 // Returns false for ADPCM (music tracks are expected as PCM, see AUDIO.md).
 bool convert_pcm_frames(const uint8_t* raw, size_t frames, const WavInfo& info, int16_t* out);
+// Linear resampling of a decoded clip (done once at load so the mixer can use
+// its unresampled fast path). Returns frames written; 0 if `capacity` is short.
+size_t resampled_frames(size_t frames, uint32_t from_rate, uint32_t to_rate);
+size_t resample_linear(const int16_t* in, size_t frames, uint32_t from_rate,
+                       int16_t* out, size_t capacity, uint32_t to_rate);
 inline size_t wav_frame_bytes(const WavInfo& i){return i.codec==WavCodec::pcm_u8?i.channels:i.codec==WavCodec::pcm_s16?2u*i.channels:0;}
 }
 #endif
