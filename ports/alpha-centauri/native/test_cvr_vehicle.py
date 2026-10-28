@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Generic CVR vehicle assembly controls. All models, palettes and faction art
-are generated synthetic fixtures; no original data is read or embedded."""
+are synthetic fixtures built by this script; no original data is read or embedded."""
 import argparse,json,os,re,subprocess
 from pathlib import Path
 from test_cvr_infantry import model
