@@ -5,11 +5,14 @@
  * (src/savegame.cpp) are ported from Thinker Mod at
  * dabe62f2d1abba03de40f3dd3048494843f6a9af (MIT; see engine/THINKER-LICENSE).
  * The wp1:: helpers are copies of small Thinker functions whose files belong to
- * other packages (game.cpp, faction.cpp, score.cpp, base.cpp); they keep the
- * Thinker bodies. Deviations are marked "Fix:" or "Original:".
+ * packages that have not landed (game.cpp, faction.cpp, score.cpp); they keep the
+ * Thinker bodies. Integration: the copies of base.cpp, game.cpp and faction.cpp
+ * helpers that WP2 provides (base_wp2.h, base_deps.h) were removed in favour of those. Deviations are marked "Fix:" or "Original:".
  */
 #include "engine.h"
 #include "turn.h"
+#include "base_wp2.h"
+#include "base_deps.h"
 
 
 namespace alpha {
@@ -17,137 +20,6 @@ namespace engine {
 
 /* ---- wp1:: local helpers ---- */
 namespace wp1 {
-
-bool victory_done() {
-    return (*GameState & STATE_GAME_DONE);
-}
-
-bool full_game_turn() {
-    return !(*GameState & STATE_GAME_DONE) || (*GameState & STATE_FINAL_SCORE_DONE);
-}
-
-bool voice_of_planet() {
-    // Even destroyed Voice of Planet allows building Ascent to Transcendence
-    return project_base(FAC_VOICE_OF_PLANET) != SP_Unbuilt;
-}
-
-int council_votes(int faction_id) {
-    if (is_alien(faction_id)) {
-        return 0;
-    }
-    int votes = 0;
-    for (int i = 0; i < *BaseCount; i++) {
-        if (Bases[i].faction_id == faction_id ) {
-            votes += Bases[i].pop_size;
-        }
-    }
-    if (has_project(FAC_EMPATH_GUILD, faction_id)) {
-        votes += votes / 2; // +50% votes
-    }
-    if (has_project(FAC_CLINICAL_IMMORTALITY, faction_id)) {
-        votes *= 2; // Doubles votes
-    }
-    int bonus_count = MFactions[faction_id].faction_bonus_count;
-    for (int i = 0; i < bonus_count; i++) {
-        if (MFactions[faction_id].faction_bonus_id[i] == RULE_VOTES) {
-            int votes_bonus = MFactions[faction_id].faction_bonus_val1[i];
-            if (votes_bonus >= 0) {
-                votes *= votes_bonus; // Peacekeeper bonus
-            }
-        }
-    }
-    return votes;
-}
-
-int aah_ooga(int faction_id, int pact_faction_id) {
-    if (!(*GameRules & RULES_VICTORY_DIPLOMATIC)) {
-        return 0; // Diplomatic Victory not allowed
-    }
-    int votes_total = 0;
-    for (int i = 1; i < MaxPlayerNum; i++) {
-        votes_total += council_votes(i);
-    }
-    int value = 0;
-    for (int i = 1; i < MaxPlayerNum; i++) {
-        if (i != pact_faction_id
-        && (pact_faction_id <= 0 || !has_treaty(i, pact_faction_id, DIPLO_PACT)
-        || !(*GameRules & RULES_VICTORY_COOPERATIVE))) {
-            int proposal_preq = Proposal[PROP_UNITE_SUPREME_LEADER].preq_tech;
-            if ((has_tech(proposal_preq, faction_id)
-            || (proposal_preq >= 0
-            && (has_tech(Tech[proposal_preq].preq_tech1, faction_id)
-            || has_tech(Tech[proposal_preq].preq_tech2, faction_id))))
-            && council_votes(i) * 2 >= votes_total && (!value || i == faction_id)) {
-                value = i;
-            }
-        }
-    }
-    return value;
-}
-
-int climactic_battle() {
-    for (int i = 1; i < MaxPlayerNum; i++) {
-        if (is_human(i) && Factions[i].corner_market_turn > *CurrentTurn) {
-            return true;
-        }
-    }
-    // Removed following code since this will always return false.
-    // This may have been disabled as a design decision rather than a bug.
-    // if (aah_ooga(0, -1)) { return true; }
-    if (voice_of_planet()) { // Replace function ascending(0)
-        for (int i = 1; i < MaxPlayerNum; i++) {
-            if (is_human(i) && (has_tech(Facility[FAC_PSI_GATE].preq_tech, i)
-            || has_tech(Facility[FAC_VOICE_OF_PLANET].preq_tech, i))) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-int great_beelzebub(int faction_id, int is_aggressive) {
-    if (is_human(faction_id) && FactionRankings[7] == faction_id) {
-        int bases_threat = (*CurrentTurn + 25) / 50;
-        if (bases_threat < 4) {
-            bases_threat = 4;
-        }
-        if (Factions[faction_id].base_count > bases_threat
-        && (Factions[faction_id].diff_level > DIFF_SPECIALIST
-        || *GameRules & RULES_INTENSE_RIVALRY || is_aggressive)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-int great_satan(int faction_id, int is_aggressive) {
-    if (great_beelzebub(faction_id, is_aggressive)) {
-        bool intense_rivalry = (*GameRules & RULES_INTENSE_RIVALRY);
-        if (*CurrentTurn <= ((intense_rivalry ? 0
-        : (DIFF_TRANSCEND - Factions[faction_id].diff_level) * 50) + 100)) {
-            return false;
-        }
-        if (climactic_battle() && aah_ooga(faction_id, -1) == faction_id) {
-            return true;
-        }
-        int diff_factor;
-        int factor;
-        if (intense_rivalry) {
-            factor = 4;
-            diff_factor = DIFF_TRANSCEND;
-        } else if (Factions[faction_id].diff_level >= DIFF_LIBRARIAN
-        || *GameRules & RULES_VICTORY_CONQUEST || *ObjectiveReqVictory <= 1000) {
-            factor = 2;
-            diff_factor = DIFF_LIBRARIAN;
-        } else {
-            factor = 1;
-            diff_factor = DIFF_TALENT;
-        }
-        return (factor * FactionRankingsUnk[FactionRankings[7]]
-            >= diff_factor * FactionRankingsUnk[FactionRankings[6]]);
-    }
-    return false;
-}
 
 int reputation(int faction_id, int faction_id_with) {
     return clamp(Factions[faction_id].integrity_blemishes
@@ -269,51 +141,6 @@ int num_objectives(int faction_id, int incl_pact) {
     return score;
 }
 
-int breed_mod(int base_id, int faction_id) {
-    int value = 0;
-    if (has_project(FAC_XENOEMPATHY_DOME, faction_id)) {
-        value++;
-    }
-    if (has_project(FAC_PHOLUS_MUTAGEN, faction_id)) {
-        value++;
-    }
-    if (has_project(FAC_VOICE_OF_PLANET, faction_id)) {
-        value++;
-    }
-    if (has_fac_built(FAC_CENTAURI_PRESERVE, base_id)) {
-        value++;
-    }
-    if (has_fac_built(FAC_TEMPLE_OF_PLANET, base_id)) {
-        value++;
-    }
-    if (has_fac_built(FAC_BIOLOGY_LAB, base_id)) {
-        value++;
-    }
-    return value;
-}
-
-bool base_can_riot(int base_id, bool allow_staple) {
-    BASE* b = &Bases[base_id];
-    return (!allow_staple || !b->nerve_staple_turns_left)
-        && !has_project(FAC_TELEPATHIC_MATRIX, b->faction_id)
-        && !has_fac_built(FAC_PUNISHMENT_SPHERE, base_id);
-}
-
-int fac_maint(int facility_id, int faction_id) {
-    CFacility& facility = Facility[facility_id];
-    MFaction& m = MFactions[faction_id];
-
-    for (int i = 0; i < m.faction_bonus_count; i++) {
-        if (m.faction_bonus_val1[i] == facility_id
-        && (m.faction_bonus_id[i] == RULE_FACILITY
-        || (m.faction_bonus_id[i] == RULE_FREEFAC
-        && has_tech(facility.preq_tech, faction_id)))) {
-            return 0;
-        }
-    }
-    return facility.maint;
-}
-
 /*
 Original: energy_limit is terranx.exe 0x445440 and is in no upstream source.
 Without a hook it returns 10 (no limit), so allocate_energy keeps only its
@@ -421,7 +248,7 @@ void __cdecl tech_research(int faction_id, int value) {
     CFacility& fac_ascent = Facility[FAC_ASCENT_TO_TRANSCENDENCE];
     Faction& plr = Factions[faction_id];
     if (value > 0) {
-        if (!is_human(faction_id) && wp1::climactic_battle()) {
+        if (!is_human(faction_id) && climactic_battle()) {
             // Original also applied this hidden AI bonus for faction_id <= 0.
             // The reason for this is unclear and it may not be useful so it is removed.
             // PSI Gate checks are related to conditions on climactic_battle.
@@ -587,8 +414,8 @@ void __cdecl rankings(int flag) {
             break;
         }
     }
-    int leader_faction = wp1::great_satan(FactionRankings[7], 0) ? FactionRankings[7] : 0;
-    if (wp1::climactic_battle()) {
+    int leader_faction = great_satan(FactionRankings[7], 0) ? FactionRankings[7] : 0;
+    if (climactic_battle()) {
         for (int i = 1; i < MaxPlayerNum; i++) {
             if (is_human(i) && (Factions[i].diff_level >= 4 || (*GameRules & RULES_INTENSE_RIVALRY))) {
                 leader_faction = i;
@@ -621,7 +448,7 @@ void __cdecl rankings(int flag) {
         bool wants_revenge = (Factions[leader_faction].diplo_status[i] & DIPLO_WANT_REVENGE) != 0;
         int chance = difficulty * ((wants_revenge ? 4 : 0)
             + ((Factions[i].player_flags_ext & PFLAG_EXT_SHAMELESS_BETRAY_HUMANS) ? 4 : 0)
-            + (wp1::climactic_battle() ? 4 : 0)
+            + (climactic_battle() ? 4 : 0)
             + wp1::reputation(leader_faction, i));
         int roll_range = (vendetta_count - Factions[i].AI_fight + 2) << 8;
         int roll = roll_range > 1 ? game_rand() % roll_range : 0;

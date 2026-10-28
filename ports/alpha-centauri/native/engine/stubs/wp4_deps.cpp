@@ -3,10 +3,11 @@
  * packages and are not declared in engine_wp.h (declarations: combat.h).
  * Each raises EV_NOT_IMPLEMENTED and returns a neutral value. The owning
  * package deletes the matching function here when it defines the real one:
- *   WP8: break_treaty, act_of_aggression, cause_friction, major_atrocity, un_charter
- *   WP2: mon_enemy_destroyed (Thinker monument.cpp)
+ *   WP8: break_treaty, act_of_aggression, cause_friction, major_atrocity
  *   WP6: add_goal
- *   WP7: world_climate
+ * Integration: mon_enemy_destroyed is WP2's (base_monument.cpp); un_charter
+ * and world_climate were duplicates of WP2's weak definitions in
+ * base_deps.cpp (un_charter there is Thinker's body) and are removed here.
  * Thinker Mod signatures (dabe62f2, MIT; see engine/THINKER-LICENSE).
  */
 #include "../combat.h"
@@ -32,22 +33,9 @@ void __cdecl major_atrocity(int UNUSED(faction_id), int UNUSED(faction_id_tgt)) 
     not_implemented("major_atrocity");
 }
 
-bool un_charter() {
-    not_implemented("un_charter");
-    return false;
-}
-
-void __cdecl mon_enemy_destroyed(int UNUSED(faction_id), int UNUSED(enemy_id)) {
-    not_implemented("mon_enemy_destroyed");
-}
-
 void __cdecl add_goal(int UNUSED(faction_id), int UNUSED(type), int UNUSED(priority),
 int UNUSED(x), int UNUSED(y), int UNUSED(base_id)) {
     not_implemented("add_goal");
-}
-
-void __cdecl world_climate() {
-    not_implemented("world_climate");
 }
 
 } // namespace engine
