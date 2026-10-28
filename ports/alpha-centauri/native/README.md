@@ -1282,3 +1282,6 @@ container (RGB768, neutral6144, tint3), the latter reads raw PCX RGB768.
 selection and shared renderer cache binding remain required before this can be
 called a visible colour fix. This scope neither changes PR87 nor touches the
 user's lab session. See `PALETTE-EVIDENCE-20261025.json`.
+Original human nutrient/mineral factors retain original zero/default-Industry
+behavior in a separate pure API: [scope](HUMAN-COST.md),
+[evidence](HUMAN-COST-EVIDENCE-20261025.json). Native execution remains pending.
