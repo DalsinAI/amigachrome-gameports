@@ -577,6 +577,7 @@ int __cdecl veh_init(int unit_id, int faction_id, int x, int y) {
     }
     veh_drop(veh_id, x, y);
     spot_all(veh_id, 1);
+    engine_notify(EV_VEH_CREATED, veh_id, unit_id, faction_id, veh->home_base_id, x, y);
 
     if (plr->target_x < 0) {
         return veh_id;

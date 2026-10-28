@@ -627,7 +627,9 @@ int load_daemon_bytes(const uint8_t* data, size_t length) {
         }
         if (!active) {
             for (int i = 0; i < *VehCount; ++i) {
-                if (Vehs[i].faction_id == fc && Vehs[i].plan() == PLAN_COLONY) {
+                // Fix: bounds check, a corrupt unit_id must not index past Units.
+                if (Vehs[i].faction_id == fc && Vehs[i].unit_id >= 0
+                && Vehs[i].unit_id < MaxProtoNum && Vehs[i].plan() == PLAN_COLONY) {
                     active = true;
                     break;
                 }
