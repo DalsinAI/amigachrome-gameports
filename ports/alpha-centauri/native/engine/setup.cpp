@@ -191,7 +191,8 @@ static void apply_nutrient_bonus(int faction_id, int* x, int* y) {
     bool aquatic = MFactions[faction_id].is_aquatic();
     int adjust = (aquatic ? 0 : 8);
     int nutrient = 0;
-    int num = 0;
+    int num = 0; // Fix: counted for parity; unread, as in Thinker
+    (void)num;
 
     // Bonus resources are placed adjacent to each other only on diagonals
     for (auto& m : iterate_tiles(*x, *y, 0, 80)) {

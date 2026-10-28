@@ -145,7 +145,8 @@ void __cdecl world_rivers() {
     uint32_t loc_rnd_state = 0; // Original: GameRandom loc_rnd (object with its own state)
     GameRandom loc_rnd(&loc_rnd_state);
     const int n_tiles = *MapAreaTiles;
-    int river_count = 0;
+    int river_count = 0; // Fix: counted for parity; unread, as in Thinker
+    (void)river_count;
 
     for (int i = 0; i < n_tiles; i++) {
         (*MapTiles)[i].items &= ~(BIT_RIVER_LAKE | BIT_RIVER);

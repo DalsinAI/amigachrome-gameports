@@ -13,6 +13,9 @@
  *       engine_new_game, start position checks, save_daemon_bytes to OUT.SAV,
  *       then load_daemon_bytes into a fresh state and save again: the two
  *       saves must be identical. Prints one line per faction start.
+ *   wp7_test ui RULES_DIR base|expansion SEED
+ *       drives the new game screens (ui_newgame.cpp) with keys: faction pick,
+ *       settings, start, planetfall; prints each screen's lines.
  * Exit status 0 on success, 1 on a failed check.
  */
 #include "../engine.h"
@@ -20,6 +23,7 @@
 #include "../newgame.h"
 #include "../setup.h"
 #include "../lib/FastNoiseLite.h"
+#include "../../ui_newgame.h"
 
 #include <memory>
 
@@ -478,6 +482,86 @@ static int newgame_case(char** argv) {
     return 0;
 }
 
+static void print_view(const alpha::ui::NewGameView& v) {
+    printf("screen=%d title=%s\n", (int)v.screen, v.title.c_str());
+    for (auto& l : v.lines) {
+        printf("%s%s%s\n", l.selected ? "> " : "  ", l.heading ? "# " : "", l.text.c_str());
+    }
+}
+
+static int ui_case(char** argv) {
+    using namespace alpha::ui;
+    std::unique_ptr<EngineState> s = new_state();
+    if (load_rules(argv[2], argv[3])) {
+        return 20;
+    }
+    NewGameState st;
+    newgame_open(st, (uint32_t)strtoul(argv[4], nullptr, 0));
+    CHECK_EQ(st.screen, NG_FACTION);
+    print_view(newgame_view(st));
+    CHECK_EQ((int)newgame_view(st).lines.size(), 7);
+    CHECK(newgame_key(st, NGK_UP));             // wraps to faction 7
+    CHECK_EQ(st.row, 6);
+    CHECK(newgame_key(st, NGK_DOWN));
+    CHECK(newgame_key(st, NGK_DOWN));
+    CHECK(newgame_key(st, NGK_DOWN));           // faction 3
+    CHECK(!newgame_key(st, NGK_LEFT));          // no values on this screen
+    CHECK(newgame_key(st, NGK_ENTER));
+    CHECK_EQ(st.screen, NG_SETTINGS);
+    CHECK_EQ(st.player_faction, 3);
+    CHECK_EQ(st.row, NGS_START);
+    CHECK(newgame_key(st, NGK_BACK));           // back keeps the pick
+    CHECK_EQ(st.screen, NG_FACTION);
+    CHECK_EQ(st.row, 2);
+    CHECK(newgame_key(st, NGK_ENTER));
+    for (int i = 0; i < NGS_START - NGS_SIZE; i++) {
+        newgame_key(st, NGK_UP);
+    }
+    CHECK_EQ(st.row, NGS_SIZE);
+    newgame_key(st, NGK_LEFT);
+    newgame_key(st, NGK_LEFT);                  // Standard -> Tiny
+    CHECK_EQ(st.size, 0);
+    newgame_key(st, NGK_DOWN);                  // ocean
+    newgame_key(st, NGK_RIGHT);
+    CHECK_EQ(st.ocean, 2);
+    print_view(newgame_view(st));
+    NewGameSettings ng = newgame_settings(st);
+    CHECK_EQ(ng.map_size, 0);
+    CHECK_EQ(ng.ocean, 2);
+    CHECK_EQ(ng.player_faction, 3);
+    CHECK(ng.rules & RULES_BLIND_RESEARCH);
+    while (st.row != NGS_START) {
+        newgame_key(st, NGK_DOWN);
+    }
+    CHECK(newgame_key(st, NGK_ENTER));          // builds the world
+    CHECK_EQ(st.start_status, 0);
+    CHECK_EQ(st.screen, NG_PLANETFALL);
+    CHECK_EQ(*MapAreaX, 2 * WorldSizes[0][0]);
+    CHECK_EQ(MapWin->cOwner, 3);
+    int x = -1, y = -1;
+    CHECK(landing_site(3, &x, &y));
+    CHECK_EQ(st.landing_x, x);
+    CHECK_EQ(st.landing_y, y);
+    CHECK(!st.planetfall_leader.empty() || !MFactions[3].name_leader[0]);
+    print_view(newgame_view(st));
+    CHECK(!newgame_done(st));
+    CHECK(newgame_key(st, NGK_ENTER));
+    CHECK(newgame_done(st));
+    CHECK_EQ(st.screen, NG_DONE);
+    /* Cancelling from the faction screen. */
+    NewGameState c;
+    newgame_open(c, 5);
+    CHECK(newgame_key(c, NGK_BACK));
+    CHECK_EQ(c.screen, NG_CANCELLED);
+    CHECK(newgame_done(c));
+    if (failures) {
+        fprintf(stderr, "%d of %d ui checks failed\n", failures, checks);
+        return 1;
+    }
+    printf("%d ui checks passed\n", checks);
+    return 0;
+}
+
 int main(int argc, char** argv) {
     if (argc >= 2 && !strcmp(argv[1], "unit")) {
         return unit_checks();
@@ -485,10 +569,13 @@ int main(int argc, char** argv) {
     if (argc >= 10 && !strcmp(argv[1], "map")) {
         return map_case(argv);
     }
+    if (argc >= 5 && !strcmp(argv[1], "ui")) {
+        return ui_case(argv);
+    }
     if (argc >= 8 && !strcmp(argv[1], "newgame")) {
         return newgame_case(argv);
     }
     fprintf(stderr, "usage: wp7_test unit | map DIR VARIANT SEED SIZE OCEAN EROSION NATIVE OUT"
-        " | newgame DIR VARIANT SEED SIZE PLAYER OUT.SAV\n");
+        " | newgame DIR VARIANT SEED SIZE PLAYER OUT.SAV | ui DIR VARIANT SEED\n");
     return 2;
 }

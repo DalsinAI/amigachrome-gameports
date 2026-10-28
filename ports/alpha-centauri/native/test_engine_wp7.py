@@ -12,6 +12,8 @@ the base game, alphax.txt for Alien Crossfire, no original assets):
 - seeded maps for every planet size and a spread of ocean, erosion and native
   settings: the same seed must give the same bytes on a second run, other
   seeds different bytes;
+- the new game screens (ui_newgame.cpp) driven by keys from faction pick to
+  planetfall;
 - new games for several seeds and player factions: valid start positions for
   every faction, a planetfall notice, and a save that round-trips through
   save_daemon_bytes/load_daemon_bytes (only PFLAG_MAP_REVEALED, which
@@ -32,7 +34,7 @@ MAP_CASES=[(seed,size,ocean,erosion,native) for seed,size,ocean,erosion,native i
 NEWGAME_CASES=[(777,2,3),(1,0,1),(31337,1,5),(2024,3,7),(0xCAFEBABE,2,2)]
 
 def build(cc,flags,exe):
- sources=sorted(ENGINE.glob('*.cpp'))+sorted((ENGINE/'stubs').glob('*.cpp'))+[ENGINE/'tests'/'wp7_test.cpp']
+ sources=sorted(ENGINE.glob('*.cpp'))+sorted((ENGINE/'stubs').glob('*.cpp'))+[SRC/'ui_newgame.cpp',ENGINE/'tests'/'wp7_test.cpp']
  cmd=[cc,*flags,'-I',str(ENGINE),*map(str,sources),'-o',str(exe)];subprocess.run(cmd,check=True);return cmd
 
 def runner_for(exe,runner):
@@ -79,12 +81,18 @@ def main():
  for variant in ['base','expansion']:
   rules[variant]=out/f'rules-{variant}';test_engine_wp0b.make_dir(rules[variant],variant)
  unit=check(run('unit'),'unit').strip();print(unit)
+ ui={}
+ for variant in ['base','expansion']:
+  ui[variant]=check(run('ui',rules[variant],variant,4321),'ui-'+variant);print(ui[variant].strip().splitlines()[-1])
  res=run_cases(run,out,rules,'m68k' if a.m68k_linux else 'host')
  compared=0
  if a.m68k_linux:
-  ref=out/'wp7-host-reference';build(a.host_cc,['-std=c++17','-O2','-Wall','-Wextra','-Werror'],ref)
+  ref=out/'wp7-host-reference';build(a.host_cc,['-std=c++17','-O1','-Wall','-Wextra','-Werror'],ref)
   hrun=runner_for(ref,[])
   hunit=check(hrun('unit'),'host-unit').strip()
+  for variant in ['base','expansion']:
+   assert check(hrun('ui',rules[variant],variant,4321),'host-ui')==ui[variant],('ui screens differ',variant)
+   compared+=1
   assert hunit.splitlines()[0]==unit.splitlines()[0],('noise samples differ',hunit,unit)
   href=run_cases(hrun,out,rules,'hostref')
   for kind in ['maps','games']:
@@ -96,7 +104,7 @@ def main():
     compared+=1
  for kind in ['maps','games']:
   for k,v in res[kind].items():print(f'{k}: {v["summary"]}')
- (out/'receipt.json').write_text(json.dumps(dict(command=cmd,runner=runner,unit=unit,results=res,
+ (out/'receipt.json').write_text(json.dumps(dict(command=cmd,runner=runner,unit=unit,ui=ui,results=res,
    cross_compared=compared,binarySHA256=hashlib.sha256(exe.read_bytes()).hexdigest()),indent=2)+'\n')
  print(f'{len(res["maps"])} map cases and {len(res["games"])} new game cases passed'+
   (f'; {compared} outputs byte-identical to the host reference' if a.m68k_linux else ''))
