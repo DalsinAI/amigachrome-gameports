@@ -1,13 +1,15 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later
- * Placeholders for the WP2 and WP3 entry points that engine_wp.h declares for
- * WP6 (computer players): action_staple (WP2) and action, action_build,
- * action_gate, study_artifact, Path_find, Path_move (WP3). Each raises
- * EV_NOT_IMPLEMENTED and returns a neutral value, like engine/stubs/wpN.cpp.
+ * Placeholders for the WP2, WP3 and WP5 entry points that engine_wp.h declares
+ * for WP6 (computer players): action_staple (WP2); action, action_build,
+ * action_gate, study_artifact, Path_find, Path_move (WP3); social_set (WP5).
+ * Each raises EV_NOT_IMPLEMENTED and returns a neutral value, like
+ * engine/stubs/wpN.cpp.
  *
- * WP2 and WP3 already define these functions on their branches (with the same
- * signatures) but outside engine_wp.h. When a package lands, delete its
- * functions from this file in the same merge; when both have landed, delete
- * the file. A leftover placeholder shows up as a duplicate symbol at link time.
+ * WP2, WP3 and WP5 already define these functions on their branches (with the
+ * same signatures) but outside engine_wp.h. When a package lands, delete its
+ * functions from this file in the same merge; when all three have landed,
+ * delete the file. A leftover placeholder shows up as a duplicate symbol at
+ * link time.
  */
 #include "../engine.h"
 
@@ -48,6 +50,11 @@ int UNUSED(unit_id), int UNUSED(faction_id), int UNUSED(flags), int UNUSED(unk))
 int __cdecl Path_move(int UNUSED(veh_id), int UNUSED(faction_id)) {
     not_implemented("Path_move");
     return -1;
+}
+
+/* ---- WP5 ---- */
+void __cdecl social_set(int UNUSED(faction_id)) {
+    not_implemented("social_set");
 }
 
 } // namespace engine

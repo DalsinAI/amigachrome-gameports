@@ -147,6 +147,7 @@ void __cdecl name_proto(char* name, int unit_id, int faction_id, int chassis_id,
 int __cdecl mod_upgrade_prototype(int faction_id, int new_unit_id, int old_unit_id, int flag);
 int __cdecl veh_avail(int unit_id, int faction_id, int base_id);
 int find_proto(int base_id, TriadFlag triad, VehWeaponMode mode, bool defend);
+void __cdecl social_set(int faction_id); // exe-only; also called by WP6 (mod_social_ai)
 
 /* ---- WP6: AI (engine/ai_*.cpp) ---- */
 void __cdecl mod_enemy_turn(int faction_id);
