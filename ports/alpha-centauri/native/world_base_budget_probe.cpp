@@ -8,7 +8,7 @@
 using namespace alpha;
 static OriginalWorld world;
 static Rules tech;static UnitDefinitions units;static BasicRules basic;static WorldRules wr;
-static ResourceInfo resources;static CitizenDefinitions citizens;static FacilityDefinitions facilities;
+static ResourceInfo resources;static UpkeepCitizenDefinitions citizens;static FacilityDefinitions facilities;
 static uint8_t* read(const char* path,size_t& n){
  FILE*f=fopen(path,"rb");if(!f)return nullptr;
  if(fseek(f,0,SEEK_END)){fclose(f);return nullptr;}

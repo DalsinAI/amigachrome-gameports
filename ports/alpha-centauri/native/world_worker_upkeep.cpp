@@ -60,7 +60,7 @@ StableIntakeError world_worker_upkeep_candidate(const OriginalWorld&w,const Rule
   if(error!=TileYieldError::ok)return error==TileYieldError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
   facts.yields[i][0]=result.nutrient;facts.yields[i][1]=result.mineral;facts.yields[i][2]=result.energy;
  }
- const auto allocated=worker_allocation_candidate(facts,next.allocation);if(allocated!=WorkerAllocationError::ok)return allocated==WorkerAllocationError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
+ const auto allocated=worker_allocation_candidate(facts,next.allocation);if(allocated!=UpkeepWorkerAllocationError::ok)return allocated==UpkeepWorkerAllocationError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
  next.intake.worked_tiles=next.allocation.worked;next.intake.state_flags=(uint32_t)base->state_flags&~0x8100u;next.intake.base_energy_after=next.convoys.base_energy_after;
  int32_t reduction=next.convoys.terraform_reduction_after;
  for(unsigned i=0;i<21;++i){if(!(next.allocation.worked&(1u<<i)))continue;int32_t x=base->x+dx[i];const int32_t y=base->y+dy[i];if(!geometry.flat){if(x<0)x+=geometry.width;else if(x>=geometry.width)x-=geometry.width;}size_t tile;

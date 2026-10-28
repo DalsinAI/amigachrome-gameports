@@ -35,7 +35,7 @@ struct WorkerResolutionResult {
  */
 StableIntakeError world_worker_resolution(const OriginalWorld&,const Rules&,
  const UnitDefinitions&,const BasicRules&,const WorldRules&,const ResourceInfo&,
- const CitizenDefinitions&,size_t base,const WorkerResolutionStage&,
+ const UpkeepCitizenDefinitions&,size_t base,const WorkerResolutionStage&,
  WorkerResolutionResult&);
 }
 #endif

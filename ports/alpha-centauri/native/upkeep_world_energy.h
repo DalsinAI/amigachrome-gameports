@@ -2,8 +2,8 @@
  * OpenSMACX (C)2013-2021 Brendan Casey, black_market/base_energy_costs,
  * map.cpp::vector_dist/base_who; pin2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c.
  */
-#ifndef ALPHA_WORLD_ENERGY_H
-#define ALPHA_WORLD_ENERGY_H
+#ifndef ALPHA_UPKEEP_WORLD_ENERGY_H
+#define ALPHA_UPKEEP_WORLD_ENERGY_H
 #include "upkeep_base_energy.h"
 #include "original_world.h"
 namespace alpha {

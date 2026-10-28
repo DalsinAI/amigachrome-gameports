@@ -4,11 +4,11 @@
 #include "upkeep_base_minerals.h"
 #include "world_convoy_nutrients.h"
 namespace alpha {
-struct WorldMineralStage {
+struct UpkeepWorldMineralStage {
  StableIntakeStage intake;
  int32_t forces_maintenance; // fresh support-engine result, never saved consumption
 };
-struct WorldMineralResult {
+struct UpkeepWorldMineralResult {
  WorldConvoyFlows convoys;
  StableIntakeResult fresh;
  MineralFacts facts;
@@ -38,6 +38,6 @@ StableIntakeError world_mineral_accounting(const OriginalWorld&,const WorldRules
  */
 StableIntakeError world_base_minerals(const OriginalWorld&,const Rules&,
  const BasicRules&,const WorldRules&,const ResourceInfo&,size_t base,
- const WorldMineralStage&,WorldMineralResult&);
+ const UpkeepWorldMineralStage&,UpkeepWorldMineralResult&);
 }
 #endif

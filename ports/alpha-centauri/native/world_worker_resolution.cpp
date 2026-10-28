@@ -7,7 +7,7 @@ namespace alpha {namespace {
 const int32_t dx[21]={0,1,2,1,0,-1,-2,-1,0,2,2,-2,-2,1,3,3,1,-1,-3,-3,-1};
 const int32_t dy[21]={0,-1,0,1,2,1,0,-1,-2,-2,2,2,-2,-3,-1,1,3,3,1,-1,-3};
 bool overlap(const void*a,size_t an,const void*b,size_t bn){if(!a||!b||!an||!bn)return false;const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;if(an>UINTPTR_MAX-x||bn>UINTPTR_MAX-y)return true;return x<=y?y-x<an:x-y<bn;}
-bool aliases(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const CitizenDefinitions&c,const WorkerResolutionStage&s,const void*out,size_t n){
+bool aliases(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const UpkeepCitizenDefinitions&c,const WorkerResolutionStage&s,const void*out,size_t n){
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&t,sizeof t)||overlap(out,n,&u,sizeof u)||overlap(out,n,&b,sizeof b)||overlap(out,n,&wr,sizeof wr)||overlap(out,n,&r,sizeof r)||overlap(out,n,&c,sizeof c)||overlap(out,n,&s,sizeof s))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();return overlap(out,n,w.original_bytes(),w.original_size())||overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile))||overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase))||overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle))||overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype))||overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState))||overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
@@ -33,7 +33,7 @@ StableIntakeError intake_for(const OriginalWorld&w,const Rules&t,const BasicRule
  for(unsigned k=0;k<3;++k)if(!put((int64_t)fresh.satellites[k]+fresh.tiles[k],fresh.intake[k]))return StableIntakeError::overflow;
  fresh.terraform_reduction_after=reduction;TerraformEcologyResult ecology{};if(world_terraform_ecology_for_workers(w,id,a.worked_tiles,ecology)!=TerraformEcologyError::ok)return StableIntakeError::bad_state;fresh.raw_eco_damage=ecology.raw_damage;next.intake=fresh;return StableIntakeError::ok;
 }
-StableIntakeError evaluate(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const CitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&next){
+StableIntakeError evaluate(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const UpkeepCitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&next){
  auto error=intake_for(w,t,b,r,id,s,next);if(error!=StableIntakeError::ok)return error;
  const auto*base=w.base(id);const auto*owner=w.faction(base->faction_id);const auto&convoy=next.candidate.convoys;
  const CurrentMineralInputs mi{Variant::base,next.intake.intake[1],convoy.to[1],convoy.from[1],next.candidate.support.mineral_cost,next.intake.raw_eco_damage};error=world_mineral_accounting(w,wr,id,mi,next.mineral);if(error!=StableIntakeError::ok)return error;
@@ -46,7 +46,7 @@ StableIntakeError evaluate(const OriginalWorld&w,const Rules&t,const UnitDefinit
  next.requires_riot_event=next.psych.psych.will_riot;return StableIntakeError::ok;
 }
 }
-StableIntakeError world_worker_resolution(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const CitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&output){
+StableIntakeError world_worker_resolution(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const UpkeepCitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&output){
  if(aliases(w,t,u,b,wr,r,c,s,&output,sizeof output))return StableIntakeError::bad_buffer;
  if(s.commerce<0||s.energy_grid<0||c.count!=7)return StableIntakeError::bad_state;
  WorkerResolutionResult next{};auto error=world_worker_upkeep_candidate(w,t,u,b,r,id,s.worker,next.candidate);if(error!=StableIntakeError::ok)return error;

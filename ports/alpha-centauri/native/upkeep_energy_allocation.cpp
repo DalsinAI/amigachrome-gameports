@@ -10,11 +10,11 @@ int technology(const Rules&r,const char*key){if(equal(key,"None"))return -1;if(e
 bool number(const char*p,int32_t&out){bool negative=false;if(*p=='-'||*p=='+')negative=*p++=='-';if(!*p)return false;uint32_t n=0,limit=negative?0x80000000u:0x7fffffffu;for(;*p;++p){if(*p<'0'||*p>'9')return false;unsigned d=(unsigned)(*p-'0');if(n>(limit-d)/10)return false;n=n*10+d;}out=negative?(n==0x80000000u?(-2147483647-1):-(int32_t)n):(int32_t)n;return true;}
 bool line(Text&t){while(t.next())if(t.line()[0]&&t.line()[0]!=';')return true;return false;}
 }
-Error read_citizens(const uint8_t*bytes,size_t size,const Rules&r,CitizenDefinitions&out){
+Error read_citizens(const uint8_t*bytes,size_t size,const Rules&r,UpkeepCitizenDefinitions&out){
  if(overlap(&out,sizeof out,bytes,size)||overlap(&out,sizeof out,&r,sizeof r))return Error::bad_row;
  if(r.count!=89)return Error::wrong_count;
  if(!bytes||!size)return Error::missing_section;
- Text t(bytes,size);if(!t.section("CITIZENS"))return t.error();CitizenDefinitions next{};next.count=7;
+ Text t(bytes,size);if(!t.section("CITIZENS"))return t.error();UpkeepCitizenDefinitions next{};next.count=7;
  for(unsigned i=0;i<10;++i){if(!line(t)||t.line()[0]=='#')return t.error()==Error::ok?Error::wrong_count:t.error();char token[128];
   for(unsigned j=0;j<2;++j)if(!t.item(token,sizeof token)||!*token)return Error::bad_row;
   if(i<7){auto&c=next.specialists[i];int32_t*values[]={&c.prerequisite,&c.obsolete,&c.economy,&c.psych,&c.labs};

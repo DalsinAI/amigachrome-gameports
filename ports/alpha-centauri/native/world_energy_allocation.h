@@ -16,7 +16,7 @@ struct ProposedCitizenAssignment {
  * Economy excludes stockpile production. No credits/research/psych-drone/world
  * mutation. Input aliases and all failures preserve output. */
 EnergyError world_energy_allocation(const OriginalWorld&,const Rules&,
- const BasicRules&,const CitizenDefinitions&,size_t base,int32_t fresh_surplus,
+ const BasicRules&,const UpkeepCitizenDefinitions&,size_t base,int32_t fresh_surplus,
  int32_t commerce,WorldAllocationResult&);
 /* Same current population, with a freshly qualified worker-stage proposal.
  * Requires centre, first21 mask, every citizen assigned, and valid active
@@ -28,7 +28,7 @@ EnergyError world_energy_allocation(const OriginalWorld&,const Rules&,
  * count. Growth must commit/recompute its real population before this call.
  * Proposed upgrade slots are returned through allocation.specialist_types. */
 EnergyError world_energy_allocation_for_assignment(const OriginalWorld&,
- const Rules&,const BasicRules&,const CitizenDefinitions&,size_t base,
+ const Rules&,const BasicRules&,const UpkeepCitizenDefinitions&,size_t base,
  const ProposedCitizenAssignment&,int32_t fresh_surplus,int32_t commerce,
  WorldAllocationResult&);
 }

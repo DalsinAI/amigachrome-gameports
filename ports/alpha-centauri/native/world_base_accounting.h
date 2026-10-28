@@ -12,7 +12,7 @@ struct WorldAccountingStage {
 };
 struct WorldAccountingResult {
  SupportResult support;
- WorldMineralResult mineral;
+ UpkeepWorldMineralResult mineral;
  BaseNutrientResult nutrient;
  UpkeepWorldEnergyResult energy;
  EnergyShortfallOrders energy_shortfall;

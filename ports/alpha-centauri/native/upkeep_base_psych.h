@@ -4,8 +4,8 @@
  * Not recovered original base_psych: default diminishing returns and forced
  * talents are intentionally identified as Thinker policy, without mod knobs.
  */
-#ifndef ALPHA_BASE_PSYCH_H
-#define ALPHA_BASE_PSYCH_H
+#ifndef ALPHA_UPKEEP_BASE_PSYCH_H
+#define ALPHA_UPKEEP_BASE_PSYCH_H
 #include <stdint.h>
 namespace alpha {
 enum class UpkeepPsychError {ok,bad_state,bad_buffer,unsupported,out_of_memory,overflow};

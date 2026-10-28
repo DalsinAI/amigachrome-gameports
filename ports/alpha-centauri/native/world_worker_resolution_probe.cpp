@@ -10,7 +10,7 @@ alignas(WorkerResolutionResult) static UnitDefinitions units;
 alignas(WorkerResolutionResult) static BasicRules basic;
 alignas(WorkerResolutionResult) static WorldRules world_rules;
 alignas(WorkerResolutionResult) static ResourceInfo resources;
-alignas(WorkerResolutionResult) static CitizenDefinitions citizens;
+alignas(WorkerResolutionResult) static UpkeepCitizenDefinitions citizens;
 alignas(WorkerResolutionResult) static OriginalWorld world;
 struct Range {const void*p;size_t n;};
 static uint8_t*read(const char*path,size_t&n){FILE*f=fopen(path,"rb");if(!f)return nullptr;if(fseek(f,0,SEEK_END)){fclose(f);return nullptr;}const long z=ftell(f);rewind(f);if(z<=0||z>64*1024*1024){fclose(f);return nullptr;}auto*p=(uint8_t*)malloc((size_t)z);if(!p){fclose(f);return nullptr;}n=(size_t)z;const bool ok=fread(p,1,n,f)==n;fclose(f);if(!ok){free(p);return nullptr;}return p;}

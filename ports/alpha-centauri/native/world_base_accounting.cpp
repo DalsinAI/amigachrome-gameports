@@ -46,7 +46,7 @@ StableIntakeError world_base_accounting(const OriginalWorld&w,const Rules&t,
  WorldAccountingResult next{};
  const auto support=world_base_support_policy(w,u,id,next.support,scratch.p,count);
  if(support!=SupportError::ok)return support_error(support);
- const WorldMineralStage ms{s.intake,next.support.mineral_cost};
+ const UpkeepWorldMineralStage ms{s.intake,next.support.mineral_cost};
  const auto mineral=world_base_minerals(w,t,b,wr,r,id,ms,next.mineral);
  if(mineral!=StableIntakeError::ok)return mineral;
  const auto*base=w.base(id);const auto*faction=w.faction((size_t)base->faction_id);

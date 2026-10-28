@@ -3,22 +3,22 @@
  * MIT pin dabe62f2d1abba03de40f3dd3048494843f6a9af. This is not a recovered
  * original base_energy body. See UPKEEP-ENERGY-ALLOCATION.md and THINKER-LICENSE.txt.
  */
-#ifndef ALPHA_ENERGY_ALLOCATION_H
-#define ALPHA_ENERGY_ALLOCATION_H
+#ifndef ALPHA_UPKEEP_ENERGY_ALLOCATION_H
+#define ALPHA_UPKEEP_ENERGY_ALLOCATION_H
 #include "upkeep_base_energy.h"
 #include "rules_text.h"
 namespace alpha {
-struct CitizenDefinition {int32_t prerequisite,obsolete,economy,psych,labs;};
-struct CitizenDefinitions {CitizenDefinition specialists[7];uint32_t count;};
+struct UpkeepCitizenDefinition {int32_t prerequisite,obsolete,economy,psych,labs;};
+struct UpkeepCitizenDefinitions {UpkeepCitizenDefinition specialists[7];uint32_t count;};
 /* Original CITIZENS parser: ten rows, seven economic specialist rows followed
  * by three ordinary citizen labels. Owns no strings or input pointers. */
-Error read_citizens(const uint8_t*,size_t,const Rules&,CitizenDefinitions&);
+Error read_citizens(const uint8_t*,size_t,const Rules&,UpkeepCitizenDefinitions&);
 struct AllocationFacts {
  int32_t fresh_surplus,alloc_labs,alloc_psych,pending_efficiency;
  int32_t population,specialist_count,min_specialist_population;
  uint32_t specialist_types[2];
  uint8_t prerequisite_known[7],obsolete_known[7];
- CitizenDefinitions citizens;
+ UpkeepCitizenDefinitions citizens;
  bool biology_lab,energy_bank,network_node,hologram_theatre;
  bool research_hospital,nanohospital,tree_farm,hybrid_forest,fusion_lab,quantum_lab;
  bool supercollider,theory_everything,space_elevator,longevity_free_market,network_backbone;

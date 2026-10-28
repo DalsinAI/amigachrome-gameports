@@ -3,8 +3,8 @@
  * base.cpp::base_minerals, pin 2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c.
  * Original routine offset 004E9CB0. No original executable is required.
  */
-#ifndef ALPHA_BASE_MINERALS_H
-#define ALPHA_BASE_MINERALS_H
+#ifndef ALPHA_UPKEEP_BASE_MINERALS_H
+#define ALPHA_UPKEEP_BASE_MINERALS_H
 #include <stdint.h>
 namespace alpha {
 enum class MineralError {ok,bad_state,bad_buffer,overflow};

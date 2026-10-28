@@ -3,7 +3,7 @@
 #include "world_unit_stats.h"
 namespace alpha {namespace {
 bool overlap(const void*a,size_t an,const void*b,size_t bn){if(!a||!b||!an||!bn)return false;const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;if(an>UINTPTR_MAX-x||bn>UINTPTR_MAX-y)return true;return x<=y?y-x<an:x-y<bn;}
-bool aliases(const OriginalWorld&w,const Rules&t,const BasicRules&b,const CitizenDefinitions&c,const void*out,size_t n){
+bool aliases(const OriginalWorld&w,const Rules&t,const BasicRules&b,const UpkeepCitizenDefinitions&c,const void*out,size_t n){
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&t,sizeof t)||overlap(out,n,&b,sizeof b)||overlap(out,n,&c,sizeof c))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();
@@ -11,7 +11,7 @@ bool aliases(const OriginalWorld&w,const Rules&t,const BasicRules&b,const Citize
 }
 bool built(const OriginalBase&b,unsigned id){return (b.facilities_built[id/8]&(1u<<(id%8)))!=0;}
 }
-static EnergyError allocate_world(const OriginalWorld&w,const Rules&t,const BasicRules&b,const CitizenDefinitions&c,size_t id,const ProposedCitizenAssignment*proposal,int32_t surplus,int32_t commerce,WorldAllocationResult&out){
+static EnergyError allocate_world(const OriginalWorld&w,const Rules&t,const BasicRules&b,const UpkeepCitizenDefinitions&c,size_t id,const ProposedCitizenAssignment*proposal,int32_t surplus,int32_t commerce,WorldAllocationResult&out){
  if(aliases(w,t,b,c,&out,sizeof out))return EnergyError::bad_buffer;
  if(proposal&&overlap(&out,sizeof out,proposal,sizeof *proposal))return EnergyError::bad_buffer;
  if(!w.loaded()||t.count!=89||c.count!=7||w.game().base_count>512)return EnergyError::bad_state;
@@ -43,6 +43,6 @@ static EnergyError allocate_world(const OriginalWorld&w,const Rules&t,const Basi
  }
  out=next;return EnergyError::ok;
 }
-EnergyError world_energy_allocation(const OriginalWorld&w,const Rules&t,const BasicRules&b,const CitizenDefinitions&c,size_t id,int32_t surplus,int32_t commerce,WorldAllocationResult&out){return allocate_world(w,t,b,c,id,nullptr,surplus,commerce,out);}
-EnergyError world_energy_allocation_for_assignment(const OriginalWorld&w,const Rules&t,const BasicRules&b,const CitizenDefinitions&c,size_t id,const ProposedCitizenAssignment&proposal,int32_t surplus,int32_t commerce,WorldAllocationResult&out){return allocate_world(w,t,b,c,id,&proposal,surplus,commerce,out);}
+EnergyError world_energy_allocation(const OriginalWorld&w,const Rules&t,const BasicRules&b,const UpkeepCitizenDefinitions&c,size_t id,int32_t surplus,int32_t commerce,WorldAllocationResult&out){return allocate_world(w,t,b,c,id,nullptr,surplus,commerce,out);}
+EnergyError world_energy_allocation_for_assignment(const OriginalWorld&w,const Rules&t,const BasicRules&b,const UpkeepCitizenDefinitions&c,size_t id,const ProposedCitizenAssignment&proposal,int32_t surplus,int32_t commerce,WorldAllocationResult&out){return allocate_world(w,t,b,c,id,&proposal,surplus,commerce,out);}
 }
