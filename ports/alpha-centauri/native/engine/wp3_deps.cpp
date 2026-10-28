@@ -9,8 +9,9 @@
  * Integration: the fallbacks whose owners have landed were removed:
  * mon_colony_founded, make_base_unique (WP2), tech_is_preq, mod_veh_cost,
  * mod_upgrade_cost (WP5), mod_say_morale2 (WP4); world_climate duplicated
- * the WP2 weak placeholder in base_deps.cpp. break_treaty,
- * act_of_aggression and add_goal here replace WP4's duplicate placeholders.
+ * the WP2 weak placeholder in base_deps.cpp; double_cross, break_treaty and
+ * act_of_aggression are WP8's. add_goal here replaces WP4's duplicate
+ * placeholder.
  */
 #include "engine.h"
 #include "wp3_deps.h"
@@ -19,20 +20,6 @@
 
 namespace alpha {
 namespace engine {
-
-WP3_WEAK void __cdecl double_cross(int, int, int) {
-    not_implemented("double_cross");
-}
-
-WP3_WEAK int __cdecl break_treaty(int, int, uint32_t) {
-    not_implemented("break_treaty");
-    return 0; // 0 = go ahead with the attack
-}
-
-WP3_WEAK int __cdecl act_of_aggression(int, int) {
-    not_implemented("act_of_aggression");
-    return 0;
-}
 
 WP3_WEAK int __cdecl probe(int, int, int, int) {
     not_implemented("probe");

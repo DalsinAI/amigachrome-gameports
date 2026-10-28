@@ -9,7 +9,10 @@
  * Integration: steal_tech, prototype_factor, mod_proto_cost, mod_base_cost,
  * mod_veh_cost, prune_protos and upgrade_prototypes are WP5's (tech.cpp,
  * design.cpp); their weak copies were removed here. world_climate and
- * mod_world_volcano are WP7's.
+ * mod_world_volcano are WP7's. un_charter, global_trade_pact, victory_done,
+ * full_game_turn, voice_of_planet, generators, spying, council_votes,
+ * great_beelzebub, great_satan, aah_ooga, climactic_battle, DiploFearScale
+ * and DiploCanSurrender are WP8's (diplo.cpp, victory.cpp).
  */
 #include "engine.h"
 #include "base_wp2.h"
@@ -18,61 +21,12 @@
 namespace alpha {
 namespace engine {
 
-static int wp2_diplo_fear_scale = 0;
-static int wp2_diplo_can_surrender = 0;
-__attribute__((weak)) int* DiploFearScale = &wp2_diplo_fear_scale;
-__attribute__((weak)) int* DiploCanSurrender = &wp2_diplo_can_surrender;
-
 /*
 Calculate the offset and bitmask for the specified input.
 */
 __attribute__((weak)) void __cdecl bitmask(uint32_t input, uint32_t* offset, uint32_t* mask) {
     *offset = input / 8;
     *mask = 1 << (input & 7);
-}
-
-__attribute__((weak)) bool un_charter() {
-    return ProposalPassCount[PROP_REPEAL_UN_CHARTER]
-        <= ProposalPassCount[PROP_REINSTATE_UN_CHARTER];
-}
-
-__attribute__((weak)) bool global_trade_pact() {
-    return ProposalPassCount[PROP_REPEAL_GLOBAL_TRADE_PACT]
-        < ProposalPassCount[PROP_GLOBAL_TRADE_PACT];
-}
-
-__attribute__((weak)) bool victory_done() {
-    return (*GameState & STATE_GAME_DONE);
-}
-
-__attribute__((weak)) bool full_game_turn() {
-    return !(*GameState & STATE_GAME_DONE) || (*GameState & STATE_FINAL_SCORE_DONE);
-}
-
-__attribute__((weak)) bool voice_of_planet() {
-    // Even destroyed Voice of Planet allows building Ascent to Transcendence
-    return project_base(FAC_VOICE_OF_PLANET) != SP_Unbuilt;
-}
-
-__attribute__((weak)) int __cdecl generators(int faction_id, int* pop_size_req) {
-    if (pop_size_req) {
-        *pop_size_req = 0;
-    }
-    if (!MFactions[faction_id].is_alien()) {
-        return 0;
-    }
-    int completed = 0;
-    for (int i = 0; i < *BaseCount; i++) {
-        BASE* base = &Bases[i];
-        if (base->faction_id == faction_id && base->has_fac_built(FAC_SUBSPACE_GENERATOR)) {
-            if (base->pop_size >= Rules->base_size_subspace_gen) {
-                ++completed;
-            } else if (pop_size_req) {
-                ++(*pop_size_req);
-            }
-        }
-    }
-    return completed;
 }
 
 __attribute__((weak)) bool has_wmode(int faction_id, VehWeaponMode mode) {
@@ -85,132 +39,6 @@ __attribute__((weak)) bool has_wmode(int faction_id, VehWeaponMode mode) {
         UNIT* u = &Units[i];
         if (veh_avail(i, faction_id, -1) && u->weapon_mode() == mode) {
             return true;
-        }
-    }
-    return false;
-}
-
-__attribute__((weak)) int __cdecl spying(int faction_id) {
-    return has_treaty(MapWin->cOwner, faction_id, DIPLO_HAVE_INFILTRATOR)
-        || has_project(FAC_EMPATH_GUILD, MapWin->cOwner)
-        || (MapWin->cOwner == *GovernorFaction && !MFactions[faction_id].is_alien());
-}
-
-__attribute__((weak)) int __cdecl council_votes(int faction_id) {
-    if (is_alien(faction_id)) {
-        return 0;
-    }
-    int votes = 0;
-    for (int i = 0; i < *BaseCount; i++) {
-        if (Bases[i].faction_id == faction_id ) {
-            votes += Bases[i].pop_size;
-        }
-    }
-    if (has_project(FAC_EMPATH_GUILD, faction_id)) {
-        votes += votes / 2; // +50% votes
-    }
-    if (has_project(FAC_CLINICAL_IMMORTALITY, faction_id)) {
-        votes *= 2; // Doubles votes
-    }
-    int bonus_count = MFactions[faction_id].faction_bonus_count;
-    for (int i = 0; i < bonus_count; i++) {
-        if (MFactions[faction_id].faction_bonus_id[i] == RULE_VOTES) {
-            int votes_bonus = MFactions[faction_id].faction_bonus_val1[i];
-            if (votes_bonus >= 0) {
-                votes *= votes_bonus; // Peacekeeper bonus
-            }
-        }
-    }
-    return votes;
-}
-
-__attribute__((weak)) int __cdecl great_beelzebub(int faction_id, int is_aggressive) {
-    if (is_human(faction_id) && FactionRankings[7] == faction_id) {
-        int bases_threat = (*CurrentTurn + 25) / 50;
-        if (bases_threat < 4) {
-            bases_threat = 4;
-        }
-        if (Factions[faction_id].base_count > bases_threat
-        && (Factions[faction_id].diff_level > DIFF_SPECIALIST
-        || *GameRules & RULES_INTENSE_RIVALRY || is_aggressive)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-__attribute__((weak)) int __cdecl great_satan(int faction_id, int is_aggressive) {
-    if (great_beelzebub(faction_id, is_aggressive)) {
-        bool intense_rivalry = (*GameRules & RULES_INTENSE_RIVALRY);
-        if (*CurrentTurn <= ((intense_rivalry ? 0
-        : (DIFF_TRANSCEND - Factions[faction_id].diff_level) * 50) + 100)) {
-            return false;
-        }
-        if (climactic_battle() && aah_ooga(faction_id, -1) == faction_id) {
-            return true;
-        }
-        int diff_factor;
-        int factor;
-        if (intense_rivalry) {
-            factor = 4;
-            diff_factor = DIFF_TRANSCEND;
-        } else if (Factions[faction_id].diff_level >= DIFF_LIBRARIAN
-        || *GameRules & RULES_VICTORY_CONQUEST || *ObjectiveReqVictory <= 1000) {
-            factor = 2;
-            diff_factor = DIFF_LIBRARIAN;
-        } else {
-            factor = 1;
-            diff_factor = DIFF_TALENT;
-        }
-        return (factor * FactionRankingsUnk[FactionRankings[7]]
-            >= diff_factor * FactionRankingsUnk[FactionRankings[6]]);
-    }
-    return false;
-}
-
-__attribute__((weak)) int __cdecl aah_ooga(int faction_id, int pact_faction_id) {
-    if (!(*GameRules & RULES_VICTORY_DIPLOMATIC)) {
-        return 0; // Diplomatic Victory not allowed
-    }
-    int votes_total = 0;
-    for (int i = 1; i < MaxPlayerNum; i++) {
-        votes_total += council_votes(i);
-    }
-    int value = 0;
-    for (int i = 1; i < MaxPlayerNum; i++) {
-        if (i != pact_faction_id
-        && (pact_faction_id <= 0 || !has_treaty(i, pact_faction_id, DIPLO_PACT)
-        || !(*GameRules & RULES_VICTORY_COOPERATIVE))) {
-            int proposal_preq = Proposal[PROP_UNITE_SUPREME_LEADER].preq_tech;
-            if ((has_tech(proposal_preq, faction_id)
-            || (proposal_preq >= 0
-            && (has_tech(Tech[proposal_preq].preq_tech1, faction_id)
-            || has_tech(Tech[proposal_preq].preq_tech2, faction_id))))
-            && council_votes(i) * 2 >= votes_total && (!value || i == faction_id)) {
-                value = i;
-            }
-        }
-    }
-    return value;
-}
-
-__attribute__((weak)) int __cdecl climactic_battle() {
-    for (int i = 1; i < MaxPlayerNum; i++) {
-        if (is_human(i) && Factions[i].corner_market_turn > *CurrentTurn) {
-            return true;
-        }
-    }
-    // Removed following code since this will always return false.
-    // This may have been disabled as a design decision rather than a bug.
-    // if (aah_ooga(0, -1)) { return true; }
-    assert(!aah_ooga(0, -1));
-
-    if (voice_of_planet()) { // Replace function ascending(0)
-        for (int i = 1; i < MaxPlayerNum; i++) {
-            if (is_human(i) && (has_tech(Facility[FAC_PSI_GATE].preq_tech, i)
-            || has_tech(Facility[FAC_VOICE_OF_PLANET].preq_tech, i))) {
-                return true;
-            }
         }
     }
     return false;

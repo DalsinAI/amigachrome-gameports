@@ -17,7 +17,7 @@ void __cdecl clear_bunglist(int faction_id);                            // exe-o
 void __cdecl consider_designs(int faction_id);                          // exe-only, WP5/WP6
 void __cdecl clear_monuments();                                         // WP2 (monument)
 void __cdecl agenda_on(int faction_id_1, int faction_id_2, uint32_t status);              // WP8
-void __cdecl set_agenda(int faction_id_1, int faction_id_2, uint32_t status, int add);    // WP8
+void __cdecl set_agenda(int faction_id_1, int faction_id_2, uint32_t status, bool add);   // WP8
 bool can_build_base(int x, int y, int faction_id, int triad);           // WP6 (Thinker move.cpp)
 void __cdecl balance();                                                 // exe-only, skipped by default
 extern int* GameVictoryType;                                            // WP8 victory

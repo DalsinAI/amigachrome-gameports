@@ -10,6 +10,8 @@
 #include "mapgen.h"
 #include "newgame.h"
 #include "setup.h"
+#include "turn.h"
+#include "integration.h"
 
 namespace alpha {
 namespace engine {
@@ -119,6 +121,7 @@ int engine_new_game(const NewGameSettings& s) {
     game_srand(s.seed);
     random_reseed(s.seed);
     next_rand_seed(s.seed, s.seed ^ 0x9E3779B9u);
+    engine_reset_runtime();
     *GameHalted = 1;
     *MultiplayerActive = 0;
     *PbemActive = 0;
