@@ -9,6 +9,7 @@
 #include "original_ui_text.h"
 #include "technology_browser.h"
 #include "cvr_infantry.h"
+#include "ui_mapview.h"
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
 #include "local_player.h"
 #include "world_base_accounting.h"
@@ -58,18 +59,27 @@ static alpha::UpkeepCitizenDefinitions forecast_citizens;
 static alpha::BaseBudgetResult forecast_budget;
 static bool forecast_citizens_ready=false,forecast_budget_ready=false;
 static bool forecast_resources_ready=false,forecast_open=false;
-static size_t forecast_base=0;
+static size_t forecast_base=0;static bool forecast_fresh=false;
 struct PlayerViewScope {
  ~PlayerViewScope(){forecast_open=false;forecast_resources_ready=false;player.close();visible_world=&preview_world;local_enabled=false;free(player_rules);player_rules=nullptr;player_rules_length=0;}
 };
 #endif
 static alpha::PcxImage terrain,sprites,faction_images[8];
+// Overlays, fog, assembled vehicles, minimap, message log and base window.
+static alpha::MapViewExtras extras;static bool messages_open=false;static char logged_status[180];
+static alpha::FacilityDefinitions view_facilities;static bool view_facilities_ready=false;
+static alpha::UiTextItem panel_items[96],message_items[24];static size_t panel_count=0,message_count=0;
+static uint8_t* extras_reader(void*,const char* name,size_t& size);
 static alpha::Rules technologies;static alpha::UnitDefinitions definitions;static alpha::BasicRules basic;static alpha::WorldRules world_rules;
 static const int W=928,H=480;static uint8_t* frame;static size_t selected=0;static int camera_x,camera_y,zoom=2;
 static uint8_t* read_file(const char* path,size_t& size){
  FILE* f=fopen(path,"rb");if(!f){fprintf(stderr,"Cannot open world asset %s: %s\n",path,strerror(errno));return nullptr;}if(fseek(f,0,SEEK_END)){fclose(f);return nullptr;}long n=ftell(f);rewind(f);
  if(n<=0 || n>64*1024*1024){fclose(f);return nullptr;}auto* p=(uint8_t*)malloc((size_t)n);if(!p){fclose(f);return nullptr;}
  bool ok=fread(p,1,(size_t)n,f)==(size_t)n;fclose(f);if(!ok){free(p);return nullptr;}size=(size_t)n;return p;
+}
+static uint8_t* extras_reader(void*,const char* name,size_t& size){
+ // Optional owner assets: absence is reported in the message log, not stderr.
+ FILE* f=fopen(name,"rb");if(!f)return nullptr;fclose(f);return read_file(name,size);
 }
 static bool load_image(const char* path,alpha::PcxImage& image){size_t n;auto* p=read_file(path,n);if(!p)return false;bool ok=image.load(p,n);free(p);return ok && image.width()==1024 && image.height()==768;}
 static bool transparent(const uint8_t* rgb,bool sprite){
@@ -139,12 +149,9 @@ static void draw_hud(struct Window* window){
  for(int y=0;y<HUD_H;++y)for(int x=0;x<W;++x){auto* dst=hud_frame+((size_t)y*W+x)*3;dst[0]=7;dst[1]=19;dst[2]=22;
   if(x>=HUD_X && x<HUD_X+800){const auto* c=console_image.rgb((unsigned)(x-HUD_X),(unsigned)y);if(c && !(c[0]==100 && c[1]==16 && c[2]==156) && !(c[0]==125 && c[1]==0 && c[2]==128) && !(c[0]==255 && c[1]==0 && c[2]==255)){dst[0]=c[0];dst[1]=c[1];dst[2]=c[2];}}
  }
- // Navigation thumbnail of the actual saved world, coloured from loaded terrain.
- const auto& map=world().game().map.info;
- for(int py=0;py<174;++py)for(int px=0;px<224;++px){int y=(int)((uint32_t)py*map.height/174),x=(int)((uint32_t)px*map.width/224);if((x+y)&1)x=x+1<(int)map.width?x+1:x-1;const auto*t=tile(x,y);if(!t)continue;
-  const auto*c=terrain.rgb((t->climate&0xe0)<0x60?308u:29u,(t->climate&0xe0)<0x60?105u:143u);auto*dst=hud_frame+((size_t)(52+py)*W+HUD_X+563+px)*3;if(c)for(int k=0;k<3;++k)dst[k]=c[k];
- }
- for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);int x=HUD_X+563+(int)((uint32_t)b.x*224/map.width),y=52+(int)((uint32_t)b.y*174/map.height);for(int dy=0;dy<3;++dy)for(int dx=0;dx<3;++dx){int px=x+dx,py=y+dy;if(px>=0 && px<W && py>=0 && py<HUD_H){auto*p=hud_frame+((size_t)py*W+px)*3;p[0]=230;p[1]=212;p[2]=144;}}}
+ // Navigation minimap of the saved world: terrain colours, territory, fog,
+ // bases, units and the current view box (ui_minimap.cpp).
+ extras.draw_minimap(hud_frame,W,HUD_H,{HUD_X+563,52,224,174},world(),&terrain,camera_x,camera_y,zoom,W,H);
  WritePixelArray(hud_frame,0,0,W*3,window->RPort,12,HUD_Y,W,HUD_H,RECTFMT_RGB);auto*rp=window->RPort;char line[180];
 
  if(world().game().vehicle_count){const auto&v=*world().vehicle(selected);const auto&p=*world().prototype((size_t)v.unit_id);
@@ -181,7 +188,9 @@ static void draw_hud(struct Window* window){
 }
 static void draw_base_details(struct Window* window){
  if(!base_open || !world().game().base_count)return;
- const auto&b=*world().base(selected_base);auto*rp=window->RPort;FillPixelArray(rp,104,120,744,398,0x00071316u);char line[160];
+ const auto&b=*world().base(selected_base);
+ if(panel_count){printf("BASE WINDOW index=%lu pop=%d items=%lu\n",(unsigned long)selected_base,b.pop_size,(unsigned long)panel_count);
+  printf("BASE SNAPSHOT index=%lu pop=%d nutrients=%ld minerals=%ld intake=%ld,%ld,%ld surplus=%ld,%ld,%ld\n",(unsigned long)selected_base,b.pop_size,(long)b.nutrients_accumulated,(long)b.minerals_accumulated,(long)b.nutrient_intake,(long)b.mineral_intake,(long)b.energy_intake,(long)b.nutrient_surplus,(long)b.mineral_surplus,(long)b.energy_surplus);fflush(stdout);return;}auto*rp=window->RPort;FillPixelArray(rp,104,120,744,398,0x00071316u);char line[160];
  ui_text.draw(rp,128,162,b.name,660,true,alpha::UiInk::title);ui_text.draw(rp,128,190,local_enabled?"Local base - P chooses a facility; ENTER confirms":"Original saved-turn snapshot - read only",660);
  snprintf(line,sizeof(line),"Population %d    Specialists %ld",b.pop_size,(long)b.specialist_total);ui_text.draw(rp,128,228,line,660);
  snprintf(line,sizeof(line),"Nutrients: stored %ld   intake %ld   surplus %+ld",(long)b.nutrients_accumulated,(long)b.nutrient_intake,(long)b.nutrient_surplus);ui_text.draw(rp,128,260,line,660);
@@ -231,7 +240,7 @@ static void open_forecast(){
   snprintf(action_status,sizeof(action_status),"%s",message);
   printf("RESOURCE FORECAST base=%lu error=%u dirty_before=%d dirty_after=%d\n",(unsigned long)selected_base,(unsigned)error,was_dirty,player.dirty());fflush(stdout);return;
  }
- forecast=next;forecast_base=selected_base;forecast_open=true;base_open=false;
+ forecast=next;forecast_base=selected_base;forecast_open=true;forecast_fresh=true;base_open=false;
  snprintf(action_status,sizeof(action_status),"Base resource forecast. F recalculates; ESC closes. Resources have not been added.");
  printf("RESOURCE FORECAST base=%lu support=%ld food=%ld,%ld minerals=%ld,%ld energy_before_trade=%ld dirty_before=%d dirty_after=%d\n",
   (unsigned long)forecast_base,(long)forecast.support.mineral_cost,(long)forecast.nutrient.intake,(long)forecast.nutrient.surplus,
@@ -265,6 +274,14 @@ static void draw_forecast(struct Window* window){
  ui_text.draw(rp,128,586,"ESC: close   |   F: recalculate",660);
 }
 #endif
+static bool base_proposal_pending(){
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+ // Facility proposals keep the original details panel with its confirm lines.
+ return local_enabled && player.proposal();
+#else
+ return false;
+#endif
+}
 static void text(struct RastPort* rp,int x,int y,const char* s){if(x>=0 && x<W)ui_text.draw(rp,x,y,s,W-x);}
 static void draw(struct Window* window){
  for(size_t i=0;i<(size_t)W*H;++i){frame[3*i]=6;frame[3*i+1]=15;frame[3*i+2]=24;}
@@ -277,37 +294,51 @@ static void draw(struct Window* window){
   else {tx=1+(int)(variation%4)*57;ty=((t->climate&0x18u)>=0x10?343:115)+(int)(variation/4)*57;}
   diamond(sx,sy,tx,ty,false);
   if(!ocean && (t->val3&0xc0u)>0x40)diamond(sx,sy,58,1,true);
-  if(t->items&0x200000u)diamond(sx,sy,697,177,true);
-  if(t->items&0x20u)diamond(sx,sy,ocean?679:451,687,true);
-  if(t->items&0x80u)diamond(sx,sy,451,430,true);
-  if(t->items&0x8000u)diamond(sx,sy,775,219,true);
  }
+ extras.draw_overlays(frame,W,H,world(),&terrain,camera_x,camera_y,zoom);
  // Painter order follows map rows, not record IDs: foreground bases must
  // occlude units behind them. Terrain remains the explicitly flat renderer.
  for(int map_y=camera_y-17;map_y<=camera_y+17;++map_y){
- for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);if(b.y!=map_y)continue;int sx,sy;if(position(b.x,b.y,sx,sy))base_sprite(sx,sy,b);}
- for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);if(v.y!=map_y)continue;int sx,sy;if(!position(v.x,v.y,sx,sy))continue;int row=-1,col=0;uint32_t morale;
+ for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);if(b.y!=map_y || !extras.tile_visible(world(),b.x,b.y))continue;int sx,sy;if(position(b.x,b.y,sx,sy))base_sprite(sx,sy,b);}
+ for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);if(v.y!=map_y || !extras.tile_visible(world(),v.x,v.y))continue;int sx,sy;if(!position(v.x,v.y,sx,sy))continue;int row=-1,col=0;uint32_t morale;
   if(alpha::world_effective_morale(world(),definitions,technologies,i,true,morale)==alpha::LogicError::ok)col=(int)morale;
   switch(v.unit_id){case 7:row=0;col=0;break;case 8:row=3;break;case 9:row=4;break;case 10:row=7;col=0;break;case 15:if(world().game().data_version>=11)row=5;break;}
   if(row>=0)sprite(sx,sy,row,col);
+  else if((extras.faction_colours() || !(infantry_profile(v) || speeder_profile(v))) && extras.draw_vehicle(frame,W,H,world(),i,sx,sy,zoom)){}
   else if(infantry_profile(v) || speeder_profile(v)){
    const unsigned facing=v.rotate_angle<0?0:(unsigned)v.rotate_angle&7u;
    if(sx>=0 && sx<W && sy>=0 && sy<H){bool drawn=(speeder_profile(v)?speeder:infantry).draw(frame,(size_t)W*H*3,W,H,sx,sy,(unsigned)zoom,facing);printf("%s DRAW unit=%lu facing=%u ok=%d\n",speeder_profile(v)?"SPEEDER":"INFANTRY",(unsigned long)i,facing,drawn);}
   }
  }
  }
+ panel_count=message_count=0;
+ if(base_open && world().game().base_count && !base_proposal_pending()){
+  const alpha::BaseWindowForecast* fc=nullptr;
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+  alpha::BaseWindowForecast fresh{};
+  if(local_enabled && forecast_fresh && forecast_base==selected_base){fresh.valid=true;
+   fresh.nutrient[0]=forecast.nutrient.intake;fresh.nutrient[1]=forecast.nutrient.consumption;fresh.nutrient[2]=forecast.nutrient.surplus;
+   fresh.mineral[0]=forecast.mineral.minerals.intake;fresh.mineral[1]=forecast.support.mineral_cost;fresh.mineral[2]=forecast.mineral.minerals.surplus;
+   fresh.energy[0]=forecast.energy.accounting.intake;fresh.energy[1]=forecast.energy.accounting.inefficiency;fresh.energy[2]=forecast.energy.accounting.surplus;fc=&fresh;}
+#endif
+  panel_count=extras.draw_base_window(frame,W,H,{92,50,744,398},world(),selected_base,view_facilities_ready?&view_facilities:nullptr,fc,panel_items,96);
+ }
+ if(messages_open)message_count=extras.draw_messages(frame,W,H,{8,H-178,560,170},message_items,24);
  auto* rp=window->RPort;WritePixelArray(frame,0,0,(UWORD)(W*3),rp,12,70,W,H,RECTFMT_RGB);
  FillPixelArray(rp,window->BorderLeft,window->BorderTop,window->Width-window->BorderRight-window->BorderLeft,64-window->BorderTop,0x00071316u);FillPixelArray(rp,window->BorderLeft,554,window->Width-window->BorderRight-window->BorderLeft,window->Height-window->BorderBottom-554,0x00071316u);
  SetAPen(rp,1);SetBPen(rp,0);SetDrMd(rp,JAM2);char line[180];
  snprintf(line,sizeof(line),"%.64s | Turn %ld | %lu x %lu | %lu units, %lu bases",source_label,(long)world().game().preferences.CurrentTurn,(unsigned long)world().game().map.info.width,(unsigned long)world().game().map.info.height,(unsigned long)world().game().vehicle_count,(unsigned long)world().game().base_count);text(rp,15,42,line);
- text(rp,15,62,local_enabled?"Local actions | Keypad: move | P: production | F: forecast | V: save | R: reload | No End Turn":"Read-only original world | Basic infantry/speeder CVR; other models pending | WASD scroll | TAB select | +/- zoom | Q quit");
- for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);int sx,sy;if(position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){snprintf(line,sizeof(line),"[Base] %.24s",b.name);ui_text.draw(rp,12+sx-24,70+sy+24,line,W-(12+sx-24),false,alpha::UiInk::map_label);}}
- for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);int sx,sy;if(!position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
-  const auto& p=*world().prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || infantry_profile(v) || speeder_profile(v);
+ text(rp,15,62,local_enabled?"Local actions | Keypad: move | P: production | F: forecast | V: save | R: reload | No End Turn":extras.viewer()<0?"Read-only original world (all tiles) | O: player view | M: messages | WASD scroll | TAB select | +/- zoom | Q quit":"Read-only original world (player view) | O: all tiles | M: messages | WASD scroll | TAB select | +/- zoom | Q quit");
+ for(size_t i=0;i<world().game().base_count;++i){const auto& b=*world().base(i);int sx,sy;if(!panel_count && extras.tile_visible(world(),b.x,b.y) && position(b.x,b.y,sx,sy) && sx>=30 && sx<W-180 && sy>0 && sy<H-32){alpha::MapViewExtras::base_label(b,line,sizeof(line));ui_text.draw(rp,12+sx-24,70+sy+24,line,W-(12+sx-24),false,alpha::UiInk::map_label);}}
+ for(size_t i=0;i<world().game().vehicle_count;++i){const auto& v=*world().vehicle(i);int sx,sy;if(panel_count || !extras.tile_visible(world(),v.x,v.y) || !position(v.x,v.y,sx,sy) || sy<0 || sy>=H)continue;
+  const auto& p=*world().prototype((size_t)v.unit_id);bool native=(v.unit_id>=7 && v.unit_id<=10) || infantry_profile(v) || speeder_profile(v) || extras.has_vehicle_model(world(),i);
   if(!native && sx>=30 && sx<W-180){snprintf(line,sizeof(line),"%.16s [CVR]",p.name[0]?p.name:"Saved design");text(rp,12+sx-25,70+sy-16,line);}
   if(i==selected){Move(rp,12+sx,70+sy-14);Draw(rp,12+sx+29,70+sy);Draw(rp,12+sx,70+sy+14);Draw(rp,12+sx-29,70+sy);Draw(rp,12+sx,70+sy-14);}
  }
+ for(size_t i=0;i<panel_count;++i)ui_text.draw(rp,12+panel_items[i].x,70+panel_items[i].baseline,panel_items[i].text,panel_items[i].width,panel_items[i].heading,(alpha::UiInk)panel_items[i].ink);
+ for(size_t i=0;i<message_count;++i)ui_text.draw(rp,12+message_items[i].x,70+message_items[i].baseline,message_items[i].text,message_items[i].width,message_items[i].heading,(alpha::UiInk)message_items[i].ink);
  draw_hud(window);draw_base_details(window);
+ if(action_status[0] && strcmp(action_status,logged_status)){snprintf(logged_status,sizeof(logged_status),"%s",action_status);extras.messages().add(world().game().preferences.CurrentTurn,alpha::MessageKind::action,action_status);}
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  draw_forecast(window);
 #endif
@@ -336,6 +367,7 @@ static void save_local(){
 }
 static bool local_key(UWORD code){
  if(!local_enabled)return false;
+ if(code!='f' && code!='F' && code!=27 && code!='i' && code!='b' && code!='B' && code!='m' && code!='M' && code!='o' && code!='O')forecast_fresh=false; // any action may change the base
  if(code=='f' || code=='F'){discard_pending=0;open_forecast();return true;}
  if(code==27 && forecast_open){forecast_open=false;snprintf(action_status,sizeof(action_status),"Resource forecast closed. F opens it again.");return true;}
  forecast_open=false;
@@ -386,6 +418,7 @@ int alpha_original_view(int argc,char** argv){
 #endif
  size_t n;auto* p=read_file(argv[2],n);if(!p)return 20;auto variant=strcmp(argv[1],"base")==0?alpha::Variant::base:alpha::Variant::alien_crossfire;
  bool ok=alpha::read_technologies(p,n,technologies)==alpha::Error::ok && alpha::read_unit_definitions(p,n,technologies,variant,definitions)==alpha::Error::ok && alpha::read_basic_rules(p,n,technologies,variant,basic,world_rules)==alpha::Error::ok;
+ view_facilities_ready=alpha::read_facility_definitions(p,n,technologies,variant,view_facilities)==alpha::Error::ok;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  if(local_enabled)forecast_resources_ready=alpha::read_resource_info(p,n,forecast_resources)==alpha::Error::ok;
  if(local_enabled)forecast_citizens_ready=alpha::read_citizens(p,n,technologies,forecast_citizens)==alpha::Error::ok;
@@ -406,6 +439,8 @@ int alpha_original_view(int argc,char** argv){
   if(!len || len>=24)return 20;
   memcpy(name+len,".pcx",5);if(!load_image(name,faction_images[f])){fprintf(stderr,"Missing faction art %s\n",name);return 20;}
  }
+ {const alpha::PcxImage* art[8]{};for(unsigned f=0;f<8;++f)if(needed[f])art[f]=&faction_images[f];
+  extras.open(world(),art,extras_reader,nullptr);extras.set_viewer(world().game().player);messages_open=false;logged_status[0]=0;}
  // Optional original models: missing/unsupported assets keep the explicit CVR
  // label instead of silently substituting a different chassis.
  size_t body_size=0,reactor_size=0;auto* body_data=read_file("VI.cvr",body_size);auto* reactor_data=read_file("Viptr00.cvr",reactor_size);
@@ -439,7 +474,7 @@ int alpha_original_view(int argc,char** argv){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
     discard_pending=0;forecast_open=false;
 #endif
-    if(mouse_x>=12+HUD_X+563 && mouse_x<12+HUD_X+787 && mouse_y>=HUD_Y+52 && mouse_y<HUD_Y+226){camera_x=(int)((uint32_t)(mouse_x-12-HUD_X-563)*world().game().map.info.width/224);camera_y=(int)((uint32_t)(mouse_y-HUD_Y-52)*world().game().map.info.height/174);}
+    int map_x,map_y;if(extras.minimap_click(world(),{12+HUD_X+563,HUD_Y+52,224,174},mouse_x,mouse_y,map_x,map_y)){camera_x=map_x;camera_y=map_y;}
     else for(size_t i=0;i<world().game().base_count;++i){int x,y;const auto&b=*world().base(i);if(position(b.x,b.y,x,y) && abs(mouse_x-12-x)<24*zoom && abs(mouse_y-70-y)<24*zoom){selected_base=i;base_open=true;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
      player.cancel_facility();discard_pending=false;
@@ -452,7 +487,8 @@ int alpha_original_view(int argc,char** argv){
     if(code=='q' || code=='Q'){quit=leave_local();if(!quit)draw(window);continue;}
     if(local_key(code)){printf("LOCAL ACTION key=%u status=%s dirty=%d\n",(unsigned)code,action_status,player.dirty());fflush(stdout);draw(window);continue;}
 #endif
-    switch(code){case 't':case 'T':{int rc=alpha_technology_browser(argv[2]);printf("WORLD TECHNOLOGY RC %d\n",rc);fflush(stdout);ActivateWindow(window);}break;case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world().game().base_count){selected_base=(selected_base+1)%world().game().base_count;camera_x=world().base(selected_base)->x;camera_y=world().base(selected_base)->y;}break;case 'i':if(world().game().base_count)base_open=!base_open;break;case 27:base_open=false;break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world().game().vehicle_count)selected=(selected+1)%world().game().vehicle_count;break;case 'c':if(world().game().vehicle_count){camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}break;}
+    switch(code){case 'm':case 'M':messages_open=!messages_open;break;case '<':extras.messages().scroll(1);break;case '>':extras.messages().scroll(-1);break;
+     case 'o':case 'O':extras.set_viewer(extras.viewer()<0?world().game().player:-1);break;case 't':case 'T':{int rc=alpha_technology_browser(argv[2]);printf("WORLD TECHNOLOGY RC %d\n",rc);fflush(stdout);ActivateWindow(window);}break;case 'q':case 'Q':quit=true;break;case 'w':camera_y-=2;break;case 's':camera_y+=2;break;case 'a':camera_x=wrap(camera_x-2);break;case 'd':camera_x=wrap(camera_x+2);break;case 'b':if(world().game().base_count){selected_base=(selected_base+1)%world().game().base_count;camera_x=world().base(selected_base)->x;camera_y=world().base(selected_base)->y;}break;case 'i':if(world().game().base_count)base_open=!base_open;break;case 27:base_open=false;break;case '+':case '=':zoom=2;break;case '-':zoom=1;break;case 9:if(world().game().vehicle_count)selected=(selected+1)%world().game().vehicle_count;break;case 'c':if(world().game().vehicle_count){camera_x=world().vehicle(selected)->x;camera_y=world().vehicle(selected)->y;}break;}
     if(camera_x<0)camera_x=0;
     if(camera_x>=(int)world().game().map.info.width)camera_x=(int)world().game().map.info.width-1;
     if(camera_y<0)camera_y=0;
@@ -466,7 +502,7 @@ int alpha_original_view(int argc,char** argv){
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
  player.close();visible_world=&preview_world;local_enabled=false;free(player_rules);player_rules=nullptr;player_rules_length=0;
 #endif
- free(frame);free(hud_frame);ui_text.close();printf("ORIGINAL VIEW RC %d\n",rc);return rc;
+ extras.close();free(frame);free(hud_frame);ui_text.close();printf("ORIGINAL VIEW RC %d\n",rc);return rc;
 }
 
 #ifndef ALPHA_EMBEDDED_VIEW
