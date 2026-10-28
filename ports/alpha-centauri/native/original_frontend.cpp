@@ -3,6 +3,7 @@
  */
 #define SDL_MAIN_HANDLED
 #include "pcx_image.h"
+#include "startup_movie.h"
 #include "technology_browser.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -80,14 +81,15 @@ static void draw(struct Window* w){
  button(w,45,244,462,audio_device?(music_on?"Original menu music: ON [M]":"Original menu music: OFF [M]"):"Original menu music unavailable");
  button(w,45,296,462,"Exit [Q]");
  button(w,45,348,462,"Technology discovery tree [T]");
+ button(w,45,400,462,"Play original intro [V]");
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
- if(!expansion){button(w,45,490,600,"Local actions: open world / checkpoint [L]");text(w->RPort,58,560,"Limited movement and facility orders; no End Turn.",true);}
+ if(!expansion){button(w,45,540,600,"Local actions: open world / checkpoint [L]");text(w->RPort,58,610,"Limited movement and facility orders; no End Turn.",true);}
 #endif
- FillPixelArray(w->RPort,45,410,600,64,0x00100905u);SetAPen(w->RPort,(ULONG)text_pen);SetDrMd(w->RPort,JAM1);text(w->RPort,58,434,status,true);
+ FillPixelArray(w->RPort,45,462,600,64,0x00100905u);SetAPen(w->RPort,(ULONG)text_pen);SetDrMd(w->RPort,JAM1);text(w->RPort,58,486,status,true);
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
- text(w->RPort,58,457,"Explore is read-only; L opens limited local actions.",true);
+ text(w->RPort,58,509,"Explore is read-only; L opens limited local actions.",true);
 #else
- text(w->RPort,58,457,"Read-only preview; campaign restoration in progress.",true);
+ text(w->RPort,58,509,"Read-only preview; campaign restoration in progress.",true);
 #endif
  printf("FRONTEND variant=%s music=%d device=%lu\n",expansion?"expansion":"base",music_on,(unsigned long)audio_device);fflush(stdout);
 }
@@ -116,6 +118,13 @@ static void open_technologies(struct Window* w){
  restore_menu_audio();
  snprintf(status,sizeof(status),rc==0?"Returned from technology discovery tree.":"Technology rules/browser could not be opened.");
  printf("FRONTEND TECHNOLOGY RC %d music_resumed=%d\n",rc,audio_device && music_on);fflush(stdout);ActivateWindow(w);draw(w);
+}
+static void play_intro(struct Window* w){
+ release_menu_audio();
+ int rc=alpha_startup_movie(expansion?"openingx.amov":"opening.amov");
+ restore_menu_audio();
+ snprintf(status,sizeof(status),rc==0?"Original intro completed.":rc==5?"Original intro skipped.":"Intro unavailable: prepare the selected original WVE cache first.");
+ printf("FRONTEND INTRO variant=%s RC %d music_resumed=%d\n",expansion?"expansion":"base",rc,audio_device && music_on);fflush(stdout);ActivateWindow(w);draw(w);
 }
 static void toggle_music(struct Window* w){if(audio_device){music_on=!music_on;SDL_PauseAudioDevice(audio_device,music_on?0:1);}draw(w);}
 int main(int argc,char**){
@@ -150,16 +159,16 @@ int main(int argc,char**){
    while((m=(struct IntuiMessage*)GetMsg(w->UserPort))){ULONG kind=m->Class;UWORD code=m->Code;WORD x=m->MouseX,y=m->MouseY;ReplyMsg((struct Message*)m);int action=0;
     if(kind==IDCMP_CLOSEWINDOW)quit=true;
     else if(kind==IDCMP_REFRESHWINDOW){BeginRefresh(w);draw(w);EndRefresh(w,TRUE);}
-    else if(kind==IDCMP_VANILLAKEY){switch(code){case 'a':case 'A':action=1;break;case 'x':case 'X':action=2;break;case 'e':case 'E':action=3;break;case 'o':case 'O':action=4;break;case 'm':case 'M':action=5;break;case 't':case 'T':action=6;break;case 'q':case 'Q':quit=true;break;
+    else if(kind==IDCMP_VANILLAKEY){switch(code){case 'a':case 'A':action=1;break;case 'x':case 'X':action=2;break;case 'e':case 'E':action=3;break;case 'o':case 'O':action=4;break;case 'm':case 'M':action=5;break;case 't':case 'T':action=6;break;case 'v':case 'V':action=8;break;case 'q':case 'Q':quit=true;break;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
     case 'l':case 'L':if(!expansion)action=7;break;
 #endif
     }}
-    else if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN){if(y>=78 && y<120){if(x>=45 && x<265)action=1;else if(x>=277 && x<507)action=2;}else if(x>=45 && x<507){if(y>=140 && y<182)action=3;else if(y>=192 && y<234)action=4;else if(y>=244 && y<286)action=5;else if(y>=296 && y<338)quit=true;else if(y>=348 && y<390)action=6;}}
+    else if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN){if(y>=78 && y<120){if(x>=45 && x<265)action=1;else if(x>=277 && x<507)action=2;}else if(x>=45 && x<507){if(y>=140 && y<182)action=3;else if(y>=192 && y<234)action=4;else if(y>=244 && y<286)action=5;else if(y>=296 && y<338)quit=true;else if(y>=348 && y<390)action=6;else if(y>=400 && y<442)action=8;}}
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
-    if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN && !expansion && x>=45 && x<645 && y>=490 && y<532)action=7;
+    if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN && !expansion && x>=45 && x<645 && y>=540 && y<582)action=7;
 #endif
-    switch(action){case 1:expansion=false;draw(w);break;case 2:if(expansion_available)expansion=true;else snprintf(status,sizeof(status),"Original Alien Crossfire title art is unavailable: xopeninga.pcx");draw(w);break;case 3:if(expansion || !tutorial_available)choose_map(w);else open_map(w,"Explore.SC");break;case 4:choose_map(w);break;case 5:toggle_music(w);break;case 6:open_technologies(w);break;
+    switch(action){case 1:expansion=false;draw(w);break;case 2:if(expansion_available)expansion=true;else snprintf(status,sizeof(status),"Original Alien Crossfire title art is unavailable: xopeninga.pcx");draw(w);break;case 3:if(expansion || !tutorial_available)choose_map(w);else open_map(w,"Explore.SC");break;case 4:choose_map(w);break;case 5:toggle_music(w);break;case 6:open_technologies(w);break;case 8:play_intro(w);break;
 #ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
     case 7:choose_map(w,true);break;
 #endif
