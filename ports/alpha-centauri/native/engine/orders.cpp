@@ -332,7 +332,8 @@ int order_terraform(int veh_id, int item_id) {
     && !has_tech(Terraform[FORMER_SOIL_ENR].preq_tech, Vehs[veh_id].faction_id)) {
         return 0;
     }
-    Vehs[veh_id].status_icon = Order[item_id + VehOrderFormerFirst].letter[0];
+    const char* letter = Order[item_id + VehOrderFormerFirst].letter;
+    Vehs[veh_id].status_icon = (letter ? letter[0] : 0);
     action_terraform(veh_id, item_id, 1);
     return 1;
 }

@@ -1793,6 +1793,19 @@ void __cdecl action_gate(int veh_id, int base_id) {
 }
 
 /*
+Fix: order_veh reads Factions[veh_fc_id].diplo_status[tgt_fc_id] with
+tgt_fc_id = -1 when the target tile is empty (for example a land unit
+stepping onto empty ocean). The original then read the field in front of
+the array; here an empty target has no diplomatic status.
+*/
+static inline uint32_t diplo_with(int faction_id, int other_id) {
+    if (other_id < 0 || other_id >= MaxPlayerNum) {
+        return 0;
+    }
+    return Factions[faction_id].diplo_status[other_id];
+}
+
+/*
 offset - Direction index [0-7] into BaseOffset representing the eight move directions.
 A negative value is normalised to 8 at the start. Values >= 8 signal a no-move action (skip/hold),
 which bypasses normal movement and can instead trigger the upkeep path or the aircraft home-return check.
@@ -2019,7 +2032,7 @@ int __cdecl order_veh(int veh_id, int offset, int flag) {
             bool check = true;
             if (*VehAttackFlags & 1) {
                 Vehs[veh_id].flags &= ~VFLAG_PROBE_PACT_OPERATIONS;
-                if (Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT) {
+                if (diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT) {
                     if (!move_delay && veh_fc_id == MapWin->cOwner) {
                         if (base_id < 0) {
                             if (stack_check(stack_veh_id, 2, PLAN_PROBE, tgt_fc_id, -1)) {
@@ -2044,7 +2057,7 @@ int __cdecl order_veh(int veh_id, int offset, int flag) {
             }
             if (check) {
                 if (base_id < 0) {
-                    if (!(Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT)
+                    if (!(diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT)
                     && (stack_veh_id < 0 || !stack_check(stack_veh_id, 2, PLAN_PROBE, -1, -1))) {
                         move_probe = 1;
                         if (probe(veh_id, -1, stack_veh_id, 1) && *MultiplayerActive
@@ -2061,7 +2074,7 @@ int __cdecl order_veh(int veh_id, int offset, int flag) {
                         }
                     }
                 } else if ((stack_veh_id < 0 || !stack_check(stack_veh_id, 2, PLAN_PROBE, -1, -1))
-                && (is_human(veh_fc_id) || !(Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT)
+                && (is_human(veh_fc_id) || !(diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT)
                 || (Vehs[veh_id].waypoint_x[0] == Bases[base_id].x && Vehs[veh_id].waypoint_y[0] == Bases[base_id].y))) {
                     if (tgt_fc_id == MapWin->cOwner) {
                         Console_focus(MapWin, veh_x, veh_y, veh_fc_id);
@@ -2084,7 +2097,7 @@ int __cdecl order_veh(int veh_id, int offset, int flag) {
             }
         }
         if (veh_triad == TRIAD_LAND && tgt_at_sea) {
-            if (veh_fc_id == tgt_fc_id || Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT) {
+            if (veh_fc_id == tgt_fc_id || diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT) {
                 if (stack_check(stack_veh_id, 8, veh_fc_id, -1, -1) <= 0) {
                     if (base_id < 0
                     || (!has_abil(Vehs[veh_id].unit_id, ABL_AMPHIBIOUS)
@@ -2272,7 +2285,7 @@ MOV_SPOT:
             goto MOV_NAVAL;
         }
         if (!(Vehs[stack_veh_id].flags & VFLAG_INVISIBLE)
-        && (veh_fc_id == tgt_fc_id || (Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT
+        && (veh_fc_id == tgt_fc_id || (diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT
         && (Vehs[veh_id].plan() != PLAN_PROBE || !(Vehs[veh_id].flags & VFLAG_PROBE_PACT_OPERATIONS))))) {
             goto MOV_NAVAL;
         }
@@ -2355,8 +2368,8 @@ MOV_SPOT:
             if (Vehs[stack_veh_id].plan() == PLAN_PROBE
             && stack_check(stack_veh_id, 1, -1, -1, -1) >= 1
             && !*MultiplayerActive
-            && (Factions[veh_fc_id].diplo_status[tgt_fc_id] & (DIPLO_TRUCE|DIPLO_TREATY))
-            && !(Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT)) {
+            && (diplo_with(veh_fc_id, tgt_fc_id) & (DIPLO_TRUCE|DIPLO_TREATY))
+            && !(diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT)) {
                 int near_base_id = base_find(tgt_x, tgt_y);
                 if (near_base_id < 0 || Bases[near_base_id].faction_id != veh_fc_id) {
                     if (veh_fc_id == MapWin->cOwner) {
@@ -2622,7 +2635,7 @@ MOV_NAVAL:
     // while loop ends here
     bool check_move;
     check_move = base_id < 0 || tgt_fc_id == veh_fc_id
-        || (Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT);
+        || (diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT);
     if (!check_move) {
         if (veh_triad == TRIAD_AIR) {
             if (Vehs[veh_id].range()) {
@@ -2653,7 +2666,7 @@ MOV_NAVAL:
             }
             goto MOV_END;
         }
-        if (!(Factions[veh_fc_id].diplo_status[tgt_fc_id] & (DIPLO_TRUCE|DIPLO_TREATY|DIPLO_PACT))) {
+        if (!(diplo_with(veh_fc_id, tgt_fc_id) & (DIPLO_TRUCE|DIPLO_TREATY|DIPLO_PACT))) {
             check_move = true;
         } else {
             if (!is_human(veh_fc_id)) {
@@ -2771,7 +2784,7 @@ MOV_NAVAL:
     Vehs[veh_id].moves_spent += cost_val;
     Vehs[veh_id].state &= ~(VSTATE_UNK_8000|VSTATE_UNK_40);
     if (base_id >= 0) {
-        if (tgt_fc_id != veh_fc_id && !(Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT)) {
+        if (tgt_fc_id != veh_fc_id && !(diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT)) {
             if (Factions[tgt_fc_id].diplo_status[veh_fc_id] & (DIPLO_TRUCE|DIPLO_TREATY|DIPLO_PACT)
             && tgt_fc_id == MapWin->cOwner) {
                 parse_says(0, get_title(veh_fc_id), -1, -1);
@@ -3027,7 +3040,7 @@ MOV_NAVAL:
                 }
             }
         }
-    } else if (veh_fc_id != tgt_fc_id && !(Factions[veh_fc_id].diplo_status[tgt_fc_id] & DIPLO_PACT)) {
+    } else if (veh_fc_id != tgt_fc_id && !(diplo_with(veh_fc_id, tgt_fc_id) & DIPLO_PACT)) {
         if (*ExpansionEnabled) {
             if (!is_battle_ogre(Vehs[veh_id].unit_id)) {
                 Vehs[veh_id].damage_taken = 0;
