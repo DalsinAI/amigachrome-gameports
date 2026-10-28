@@ -57,7 +57,7 @@ static char last_checkpoint[256];static char discard_pending=0;
 static alpha::FacilityDefinitions facility_labels;
 static alpha::ResourceInfo forecast_resources;
 static alpha::WorldAccountingResult forecast;
-static alpha::CitizenDefinitions forecast_citizens;
+static alpha::UpkeepCitizenDefinitions forecast_citizens;
 static alpha::BaseBudgetResult forecast_budget;
 static bool forecast_citizens_ready=false,forecast_budget_ready=false;
 static bool forecast_resources_ready=false,forecast_open=false;

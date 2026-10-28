@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 using namespace alpha;
-static OriginalWorld world;static Rules technologies;static BasicRules basic;static WorldRules world_rules;static CitizenDefinitions citizens;
+static OriginalWorld world;static Rules technologies;static BasicRules basic;static WorldRules world_rules;static UpkeepCitizenDefinitions citizens;
 static unsigned char*read(const char*path,size_t&n){FILE*f=fopen(path,"rb");if(!f)return nullptr;fseek(f,0,SEEK_END);long z=ftell(f);rewind(f);if(z<=0||z>64*1024*1024){fclose(f);return nullptr;}auto*b=(unsigned char*)malloc((size_t)z);if(!b){fclose(f);return nullptr;}bool ok=fread(b,1,(size_t)z,f)==(size_t)z;fclose(f);n=(size_t)z;if(!ok){free(b);return nullptr;}return b;}
 struct Range {const void*p;size_t n,off;};static Range ranges[11];static unsigned count;static unsigned char*copy;
 static bool capture(){const auto&g=world.game();Range inputs[]={{&world,sizeof world,0},{world.original_bytes(),world.original_size(),0},{world.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile),0},{world.base(0),(size_t)g.base_count*sizeof(OriginalBase),0},{world.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle),0},{world.prototype(0),512*sizeof(OriginalPrototype),0},{world.faction(0),8*sizeof(OriginalFactionState),0},{world.faction_definition(0),8*sizeof(OriginalFactionDefinition),0},{&technologies,sizeof technologies,0},{&basic,sizeof basic,0},{&citizens,sizeof citizens,0}};size_t total=0;for(const auto&r:inputs)if(r.n){ranges[count++]={r.p,r.n,total};total+=r.n;}copy=(unsigned char*)malloc(total);if(!copy)return false;for(unsigned i=0;i<count;++i)memcpy(copy+ranges[i].off,ranges[i].p,ranges[i].n);return true;}

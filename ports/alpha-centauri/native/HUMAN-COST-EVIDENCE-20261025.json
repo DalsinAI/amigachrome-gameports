@@ -1,0 +1,46 @@
+{
+  "scope": "Pure original HUMAN mineral/nutrient factors only. No AI/owned-world binding/production mutation/turn.",
+  "host": {
+    "cases": 9841,
+    "accepted": 9828,
+    "invalid": 8,
+    "overflow": 5,
+    "outputSHA256": "80a0e4743b294d069967e631a0f9ed1495f44dd883fda1ccc430020d1db33c78",
+    "inputSHA256": "0f8c724708ae3917e52c8055cb61a9e099488e825a3a0a53bb1a9a9c132a3063",
+    "binarySHA256": "41deb68b61ffe96312a16b47fd3054afc8baca8b0cd5baebc724876ebc067740"
+  },
+  "originalComparisons": [
+    {
+      "edition": "base",
+      "contexts": 9828,
+      "calls": 19656,
+      "outputSHA256": "ddd6cf546d6124b197d762fce986d4b001c85b7c1a32ddc65c2c57148b713ee2",
+      "originalCodePages": {
+        "0x4f9000": "ee2307e697672e633d4f81f9066e79585c65ba5353433b5f7b5c9aec47b2b3a6",
+        "0x51f000": "b59d3f2e1a3f53ae780c5891f93ff788e64f8a9b7098bdb009dcaaf8fd815da0"
+      },
+      "originalExeSHA256": "0a61eb3642df750c0d5e516c3e3efeb4ad5ae7e1ce3163617759449327952a01",
+      "rc": 0,
+      "scope": "Actual original human cost_factor plus original bitmask; explicit globals; no callback stubs, AI path, PE startup or full game."
+    },
+    {
+      "edition": "expansion",
+      "contexts": 9828,
+      "calls": 19656,
+      "outputSHA256": "ddd6cf546d6124b197d762fce986d4b001c85b7c1a32ddc65c2c57148b713ee2",
+      "originalCodePages": {
+        "0x4e4000": "c59b7634888e006ec6de39119502ca8d8a4609fff1a8b11dd3a81f082b2ec542",
+        "0x50b000": "ddecd57bf21837201c7b1b11ae59e2123f12f88134561282746e6fd6349b60ad"
+      },
+      "originalExeSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf",
+      "rc": 0,
+      "scope": "Actual original human cost_factor plus original bitmask; explicit globals; no callback stubs, AI path, PE startup or full game."
+    }
+  ],
+  "originalAndPortableAcceptedOutputsIdentical": true,
+  "normalSDK": {
+    "binarySHA256": "913291310c9701926568eb0372f6f09b08dba1ea8faaedac674a097472fa8d86",
+    "execution": "UNRUN"
+  },
+  "finalHeadCI": "UNRUN at evidence creation"
+}

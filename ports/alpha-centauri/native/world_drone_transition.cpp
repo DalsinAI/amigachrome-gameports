@@ -10,7 +10,7 @@ bool aliases(const OriginalWorld&w,const void*p,size_t n){
   overlap(p,n,w.base(0),g.base_count*sizeof(OriginalBase))||overlap(p,n,w.vehicle(0),g.vehicle_count*sizeof(OriginalVehicle))||
   overlap(p,n,w.prototype(0),512*sizeof(OriginalPrototype))||overlap(p,n,w.faction(0),8*sizeof(OriginalFactionState))||overlap(p,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
 }
-DroneTransitionError translate(PsychError e){switch(e){case PsychError::bad_buffer:return DroneTransitionError::bad_buffer;case PsychError::unsupported:return DroneTransitionError::unsupported;case PsychError::overflow:return DroneTransitionError::overflow;case PsychError::out_of_memory:return DroneTransitionError::out_of_memory;default:return DroneTransitionError::bad_state;}}
+DroneTransitionError translate(UpkeepPsychError e){switch(e){case UpkeepPsychError::bad_buffer:return DroneTransitionError::bad_buffer;case UpkeepPsychError::unsupported:return DroneTransitionError::unsupported;case UpkeepPsychError::overflow:return DroneTransitionError::overflow;case UpkeepPsychError::out_of_memory:return DroneTransitionError::out_of_memory;default:return DroneTransitionError::bad_state;}}
 }
 DroneTransitionError world_drone_transition(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const FacilityDefinitions&d,size_t id,const WorldDroneStage&s,CombatRandomState&rng,WorldDroneResult&out){
  const void* inputs[]={&t,&u,&b,&d,&s};const size_t sizes[]={sizeof t,sizeof u,sizeof b,sizeof d,sizeof s};
@@ -28,7 +28,7 @@ DroneTransitionError world_drone_transition(const OriginalWorld&w,const Rules&t,
  if((int32_t)workers+assignment.specialist_count!=assignment.population+1)return DroneTransitionError::bad_state;
  for(int32_t i=0;i<assignment.specialist_count&&i<16;++i)if(((assignment.specialist_types[i/8]>>(4*(i&7)))&15u)>6)return DroneTransitionError::bad_state;
  WorldDroneResult result{};const WorldPsychStage ps{assignment.specialist_count,s.fresh_psych};
- const auto psych=world_base_psych_policy(w,u,b,id,ps,result.psych);if(psych!=PsychError::ok)return translate(psych);
+ const auto psych=world_base_psych_policy(w,u,b,id,ps,result.psych);if(psych!=UpkeepPsychError::ok)return translate(psych);
  const auto*owner=w.faction((size_t)base->faction_id);const auto*definition=w.faction_definition((size_t)base->faction_id);
  if(!owner||!definition||definition->faction_bonus_count<0||definition->faction_bonus_count>8)return DroneTransitionError::bad_state;
  auto&f=result.facts;f.population=base->pop_size;f.talents=result.psych.psych.talents;f.drones=result.psych.psych.drones;f.superdrones=result.psych.psych.superdrones;

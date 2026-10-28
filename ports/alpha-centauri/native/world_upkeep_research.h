@@ -21,7 +21,7 @@ struct WorldUpkeepResearchResult {
  * persistent scheduler authority, research commit or turn advance is granted. */
 ResearchError world_upkeep_research(const OriginalWorld&,const Rules&,
  const UnitDefinitions&,const BasicRules&,const WorldRules&,const ResourceInfo&,
- const CitizenDefinitions&,size_t base,const WorkerResolutionStage&,
+ const UpkeepCitizenDefinitions&,size_t base,const WorkerResolutionStage&,
  const ResearchLedger&before,WorldUpkeepResearchResult&,
  uint32_t*projected_support_states,size_t capacity);
 }

@@ -7,7 +7,7 @@
 #include "world_unit_stats.h"
 namespace alpha {namespace {
 bool overlap(const void*a,size_t an,const void*b,size_t bn){if(!a||!b||!an||!bn)return false;const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;if(an>UINTPTR_MAX-x||bn>UINTPTR_MAX-y)return true;return x<=y?y-x<an:x-y<bn;}
-bool aliases(const OriginalWorld&w,const Rules&t,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const WorldMineralStage&s,const void*out,size_t n){
+bool aliases(const OriginalWorld&w,const Rules&t,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const UpkeepWorldMineralStage&s,const void*out,size_t n){
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&t,sizeof t)||overlap(out,n,&b,sizeof b)||overlap(out,n,&wr,sizeof wr)||overlap(out,n,&r,sizeof r)||overlap(out,n,&s,sizeof s))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();
@@ -17,7 +17,7 @@ bool built(const OriginalBase&b,unsigned id){return (b.facilities_built[id/8]&(1
 bool project(const OriginalWorld&w,unsigned id,int32_t faction,bool&out){const int32_t location=w.game().preferences.SecretProjects[id];return location>=-2&&world_has_project(w,id,faction,out)==LogicError::ok;}
 uint32_t le(const uint8_t*p){return(uint32_t)p[0]|(uint32_t)p[1]<<8|(uint32_t)p[2]<<16|(uint32_t)p[3]<<24;}
 }
-StableIntakeError world_base_minerals(const OriginalWorld&w,const Rules&t,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,size_t id,const WorldMineralStage&s,WorldMineralResult&output){
+StableIntakeError world_base_minerals(const OriginalWorld&w,const Rules&t,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,size_t id,const UpkeepWorldMineralStage&s,UpkeepWorldMineralResult&output){
  if(aliases(w,t,b,wr,r,s,&output,sizeof output))return StableIntakeError::bad_buffer;
  if(!w.loaded()||s.forces_maintenance<0||wr.sea_level_rises<1||wr.sea_level_rises>100||
     (s.intake.variant!=Variant::base&&s.intake.variant!=Variant::alien_crossfire)||
@@ -25,7 +25,7 @@ StableIntakeError world_base_minerals(const OriginalWorld&w,const Rules&t,const 
     (s.intake.variant==Variant::base&&s.intake.expansion_enabled))return StableIntakeError::bad_state;
  const auto*base=w.base(id);if(!base||base->faction_id<0||base->faction_id>7)return StableIntakeError::bad_state;
  const auto*owner=w.faction((size_t)base->faction_id);if(!owner)return StableIntakeError::bad_state;
- WorldMineralResult next{};
+ UpkeepWorldMineralResult next{};
  auto error=world_convoy_flows(w,t,b,r,id,s.intake,next.convoys);if(error!=StableIntakeError::ok)return error;
  auto intake=s.intake;intake.terraform_reduction_before=next.convoys.terraform_reduction_after;intake.base_energy_before=next.convoys.base_energy_after;
  error=world_stable_intake(w,t,b,r,id,intake,next.fresh);if(error!=StableIntakeError::ok)return error;

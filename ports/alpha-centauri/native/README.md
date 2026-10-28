@@ -1,5 +1,16 @@
 # Alpha Centauri native rules-reader prototype
 
+The [complete explicit energy composer](BASE-ENERGY.md) now combines both loss
+calculations, specialist output, bonuses, penalties, stockpiling and psych.
+Commerce, technologies and current-world facts still require caller bindings;
+no player accounting mutation or turn is added. Full CI and AmigaOS execution
+remain pending.
+
+The separate [five-phase psych proposal](BASE-PSYCH.md) now has host and
+independent68040 controls plus private original-code comparisons. It remains
+unconnected to player input, World accounting mutation and turn processing;
+AmigaOS execution and full CI are pending.
+
 A bounded first implementation for separate Alpha Centauri and Alien Crossfire
 ports. It reads **TECHNOLOGY, RULES, WORLDBUILDER, SOCIO and BONUSNAMES**. Technology has 89 records, case-insensitive
 keys, None/Disable sentinels, priorities, binary flags and resolved forward
@@ -1211,6 +1222,1307 @@ surplus and stored-food adjustments. `world_fresh_nutrients` binds it to actual
 owned records and fresh stable intake, with explicit convoy facts. The same
 normal worker inspection stage is retained; no upkeep or population growth is
 executed. See [BASE-NUTRIENTS.md](BASE-NUTRIENTS.md).
+Original per-base unit mineral support is a read-only aggregate with separate
+[scope and controls](UNIT-SUPPORT.md) and [evidence](UNIT-SUPPORT-EVIDENCE-20261025.json).
+Actual AmigaOS qualification remains pending; this does not execute upkeep.
+
+### Mineral/ecology numeric stage (draft, native gate pending)
+
+`base_minerals.h` exposes explicit pre-stage numeric accounting without mutating a world or advancing turns. [Scope and original instruction corrections](MINERAL-ACCOUNTING.md) and [evidence](MINERALS-EVIDENCE-20261025.json) distinguish the completed host/original-helper checks from pending native execution. Saved post-calculation intake is not a fresh yield input.
+
+Fresh mineral composition is documented in [WORLD-FRESH-MINERALS.md](WORLD-FRESH-MINERALS.md). It returns a bounded read-only proposal from fresh intake, actual convoys and pending support; native qualification remains UNRUN.
+
+### Fresh technology-effect tile/intake binding (local candidate)
+
+[WORLD-FRESH-TECHNOLOGY-YIELDS.md](WORLD-FRESH-TECHNOLOGY-YIELDS.md) connects the complete read-only technology-effects stage to original fungus leaves and stable/convoy nutrient proposals. Saved snapshot tile APIs remain unchanged. No cache/award/accounting commit or turn is added; native and publication remain held.
+
+The separate checked [energy inefficiency component](ENERGY-INEFFICIENCY.md) returns numeric loss/diagnostic proposals from explicit facts. Full owned energy accounting, CI and native qualification remain pending.
+
+[Plain energy allocation](ENERGY-ALLOCATION.md) preserves both original loss calculations and pre-commerce faction accumulation as explicit numeric proposals. World commerce/bonus/psych binding and all accounting commits remain pending; native qualification is UNRUN.
+
+
+### Owned offline base accounting refresh (local candidate, native held)
+
+`load_local_accounting` explicitly imports a new offline local session with its
+own unit, resource and citizen definitions parsed from the same rules text.
+Production-only imports do not gain accounting capability, and accounting imports
+do not enable movement. Admission retains the existing edition, selected human,
+active saved faction and rules validation. A failed import preserves the previous
+session. The capability is not wired to player input.
+
+`prepare_accounting` binds a selected owned base and complete resource context to
+the session lifetime and revision. `commit_accounting` recomputes the result and
+atomically updates the 23 declared base values in `local_accounting_fields.inc`.
+Suspension, successful reload, another changing command or address reuse makes
+an old plan unusable. Unsupported allocation and arithmetic failures reject
+without a partial patch. An unchanged repeated refresh preserves the revision.
+
+This refresh accepts only projection stage0. It updates second intake/accounting
+fields, food sign normalization, ecological damage and happiness, while preserving
+first intake fields used by the explicitly selected commerce phase. It does not
+apply faction turn totals, projections, support actor flags, worker reassignment,
+production completion, growth, research awards or turn progression. The inherited
+stable worker domain accepts coherent existing human specialists with adjustment0,
+and still rejects arrangements needing reassignment and automatic governors. An explicit
+alien scratch policy remains required; the default rejects undefined original
+paths, with no implicit zero-initialization policy selected by this session.
+
+`encode_local_accounting_snapshot` is a separate buffer encoder. It preserves the
+whole supported original container and combines the existing bounded movement /
+production wire scope with the explicit base accounting fields. Legacy BASE
+fields at modern offset0x98 and later shift by four bytes. All other decoded base
+and faction data are sealed; every validation precedes the first output write.
+Runtime RNG is returned separately from the unchanged footer tick. This supplies
+neither a filesystem save protocol nor evidence that the original executable can
+resume the encoded container. Changed binaries still require actual AmigaOS
+execution and normal exit before deployment or any native qualification claim.
+
+
+### Existing directed-human specialists (local candidate, native held)
+
+Fresh intake now accepts the original stable arrangement when selected first21
+worker tiles include the centre, all selected non-centre tiles are available,
+and worker count plus specialist count equals population plus one. Specialist
+count must be within0..population; a positive count requires adjustment0. This
+preserves an existing arrangement and does not choose workers or turn governor
+allocation into a successful fallback.
+
+Private unchanged full original base_yield execution in both editions confirms
+this path, including populations through127, centre-only arrangements, up to21
+workers, and positive specialists above16. Every seeded global and base byte is
+compared against the independent intake model; packed specialist types remain
+unchanged. The owned full energy path separately validates and computes actual
+specialist spending/obsolete replacement, and the existing session snapshot
+persists its packed fields. The dedicated specialist transaction controls cover
+fresh resources through income/happiness, stale-plan gates and full-container
+reload against the independent wire models. Actual AmigaOS execution remains
+unrun. Automatic worker reassignment, AI and complete turns remain unfinished.
+
+
+### Original human worker selection core (local candidate, native held)
+
+`human_worker_allocation` reconstructs the original directed-human branch with
+no governor priority weights. It takes explicit current yields for the ordinal
+21 tiles, unavailable mask, satellite contributions, population, requirement,
+mineral maintenance, queue item, existing workers/specialists, packed specialist
+types and actual prerequisite availability/spending of seven citizen rows.
+It returns a selection proposal. It does not call fake source callbacks, infer
+live authority from a save or mutate an owned world.
+
+The core retains existing available workers, fills missing slots using the
+original score and strict first-best ties, and preserves the original9999 worst
+sentinel. If the original starvation condition reaches the exchange branch, it
+attempts one swap and retains it only with the original population+1 food
+margin. Missing useful tiles become specialists with the original prerequisite-
+only fallback and packed first16 fields. Original project-weight thresholds
+are edition specific: strictly below-39 for SMAC and below-70 for SMAX.
+
+Population is checked within0..127, resource requirement1..99, satellite values
+within0..population and initial counts within the population budget. Active
+governor/AI priorities, damaged/overfull arrangements and specialist adjustment
+need separate original binding/fixup contracts. All source signed32 intermediate
+operations are checked. Failure and input/output overlap preserve the result.
+
+Synthetic controls compare the raw core with an independent integer model on
+host and independent68040. Private complete original base_yield observations
+also compare selected masks, counts, packed types and intakes, plus the seeded
+0x940000..0x9e0000 globals/base region, using real original farm/yield/technology
+helpers. Those observations do not independently qualify the transient current
+scratch page or a full original energy/psych/turn pipeline. No World/session
+allocation commit, worker persistence extension, player input, full governor,
+upkeep/AI/game or actual AmigaOS execution is supplied by this component.
+
+### Human worker yield-call sequence (local qualification)
+
+`human_worker_allocation_traced` returns the same selection proposal plus a
+bounded ordered record of candidate/add/remove tile visits. Candidate visits
+represent direct nutrient/mineral/energy calls; add/remove visits represent
+resource channels 0 through 3, including the scratch reset. Rejected exchanges
+retain the remove-new/add-old visits even though their intake change is reversed.
+Both outputs remain unchanged on invalid facts, overflow or overlapping storage.
+The original untraced API keeps its existing behavior.
+
+The trace controls execute 2,424 synthetic cases on the host and independent
+Linux m68040, including 162 rejected exchanges. Private complete original helper
+runs also compare externally logged yield-function entry order and final scratch
+words. Function order is observed directly; tile ordinals and add/remove direction
+are checked against the independent selector model and final state, without
+claiming that original stack arguments were observed. This boundary does not yet
+bind world facts, execute yield leaves, change workers, persist assignments,
+advance a turn, or qualify an AmigaOS executable. The complete workflow and
+native execution remain unrun. Build the isolated native trace probe with
+`build_human_allocation_trace_probe.sh`; run public controls with
+`test_human_allocation_trace.py`.
+
+### Manual human allocation from an imported world
+
+`world_human_allocation` binds the original manual-human selector to the owned
+world's actual first21 tile availability, fresh technology/yields, physical
+facilities/projects, capped satellites, unit-mineral support, current production
+item and prerequisite-qualified citizen bonuses. It accepts explicit worker
+inspection/upkeep and transient scratch values. Active governor scoring, specialist
+adjustment, malformed arrangements and mismatched editions are rejected.
+
+Coherent retained arrangements preserve real governor bit31: the original exits
+before consuming priority values. Missing-worker arrangements with bit31 remain
+unsupported; no flags are cleared or priorities synthesized.
+
+The proposal replays candidate and applied/removed tile visits in their original
+order, including reversed exchanges and resource channel3 resets. It checks
+unchanged numeric yields, signed overflow, the final intake, scratch values and
+ocean-worker flags. It preflights all available tiles, so an overflowing tile
+can conservatively reject a proposal even if selection would never visit it.
+Work buffers use bounded private heap storage. All world data, tables and RNG
+remain unchanged, and failure preserves the output. No callback supplies yields
+or authority. This does not commit workers, refresh full base accounting, persist
+assignments, execute a turn or expose player input. Native execution and full
+workflow/CI remain unrun. Public wire-model controls are in
+`test_world_human_allocation.py`; the isolated normal SDK build helper is
+`build_world_human_allocation_probe.sh`.
+
+### Owned worker and accounting transactions (local qualification)
+
+Accounting-enabled offline sessions can prepare and commit a
+`WorkerAccountingPlan`. Preparation allocates a private copy of the current
+movement/order/accounting union, computes actual worker selection and fresh
+first intake, then evaluates complete stage0 base accounting on that coherent
+copy. Commit recomputes the private plan against the same session identity and
+revision before applying one base patch. Failed calculations preserve the live
+world and output; suspension, reload, address reuse and changes by another action
+invalidate prior plans. An unchanged refresh keeps the revision unchanged.
+Temporary wire/decoded-world/plan allocations have an explicit work budget;
+called components retain their bounded internal scratch allocations.
+
+`load_local_worker_actions` explicitly imports the combined base-game bounded
+land-action and accounting capability from the same private rule tables. Existing
+accounting-only imports still disable movement. Expansion movement remains
+unsupported. The combined controls perform two bounded moves, three facility
+orders, worker/accounting commits, export/reload and continued exhausted-movement
+checks against an independently patched complete container. No turn refill is
+performed. The frontend does not instantiate these capabilities.
+
+`encode_local_workers_snapshot` separately encodes the existing movement/order/
+accounting union plus worked mask, specialist count/adjustment, first intake,
+unused intake and worker state bits. It seals all other decoded fields and all
+state bits outside 0x8100; changed worker counts must remain coherent. Explicit
+little-endian writes preserve opaque original bytes and the footer; runtime RNG
+is returned separately. Frozen accounting/action codecs remain sealed to their
+original field sets. These are buffer transactions, not a qualified filesystem
+save, original-executable compatibility claim, full upkeep or playable game.
+AmigaOS execution and complete final-head CI remain unrun.
+
+
+Original unit production pricing is a separate checked dependency. Its explicit
+facts distinguish stored design cost from the no-abilities component base cost,
+and use the design owner's difficulty and FREEPROTO flag. Prototype history and
+physical Skunkworks determine the surcharge; Skunkworks clears it only after the
+original intermediate calculation. Expansion-only Brood Pit pricing applies to
+predefined native designs; the base edition has no such discount. A producing
+base raises zero-cost colony designs to one before adding the surcharge.
+
+The pure API accepts current facts; it does not infer them from a saved world.
+`production_mineral_requirement` multiplies an already-qualified nonnegative
+unit/facility price and mineral factor, preserving original zero factors and
+rejecting signed overflow. Neither API grants build eligibility, advances
+minerals, creates a unit, completes a facility, refills movement or runs a turn.
+29,076 independent controls passed on the host with address/undefined-behavior
+checking and on independent big-endian 68040 Linux. Bounded executions of both
+original complete unit pricing routines, including their actual component-cost
+and bitmask helpers, matched 5,120 base and 4,579 expansion contexts. Original
+executable bytes and all private reference material remain outside this tree.
+Normal Amiga SDK builds are compilation evidence only; AmigaOS execution and
+complete final-head CI remain unrun. No new frontend controls are exposed.
+
+
+The current-world human production cost query binds the separate pricing
+calculation to the owned save records. The producing base owner's pending
+Industry and saved human mask determine the original human mineral factor;
+planet size comes from the saved map settings. Unfinished custom prototypes use
+the design owner's difficulty and FREEPROTO flag, the no-abilities component
+base price, and the producing base's physical Skunkworks. Expansion predefined
+native prices use the producing base's physical Brood Pit. Already prototyped
+custom designs retain the original short circuit past unused component fields.
+
+Both original editions and SC/SAV versions7..12 are supported within this human
+pricing scope. Facility IDs, current rule costs and signed overflow are checked;
+negative facility costs are unsupported. Zero original mineral factors remain
+zero. AI cost factors and runtime edition conversion remain unsupported. Output
+overlapping the world or input tables rejects, and failures preserve output,
+world records, opaque bytes and runtime RNG. This query grants no build
+eligibility and performs no accrual, spending, creation, completion or turn.
+
+The exact original human-factor source and its controls are imported unchanged
+from the frozen factor candidate. Independent host and big-endian controls cover
+current-world prices and malformed/unused fields. Private bounded original
+human-factor and unit-price routines are exercised sequentially with facts from
+controlled worlds and the owner's three tutorials; complete original production
+or save fixup is not executed. Normal Amiga builds do not qualify AmigaOS
+execution. Full final-head CI and native frontend integration remain unrun.
+
+
+The pre-production arithmetic prefix is a separate checked calculation. It
+clears only the production-done state bit and updates the faction's current phase
+mineral peak before checking negative accumulated food. That abort preserves
+mineral stock. Otherwise nonnegative surplus accrues only without active drone
+riots and outside Stockpile Energy, whose original item differs by edition.
+Every signed intermediate is checked, including doubled surplus; failure leaves
+the result unchanged instead of exposing an unsafe partial update.
+
+The world adapter reads current base accounting and the current faction phase accumulator. It does
+not certify that saved/current accounting is fresh and does not recompute it.
+The query preserves all owned wire and decoded records and runtime RNG; output
+aliases and edition/index errors reject. Its result is not a phase token, once
+per turn guarantee, accrual commit, production reset, threshold/completion,
+creation, queue or project effect. The frontend has no input binding for it.
+
+Independent host and big-endian controls cover the arithmetic and current-world
+binding. Private observations execute the original numeric prefix after its UI
+constructor and stop before cleanup or the next production stage, using two
+observation jumps outside the numeric window. Whole base bytes and all eight
+faction records match the independent expected state. No original full
+production or turn routine is executed. Normal Amiga SDK builds remain
+compilation evidence; actual AmigaOS execution and complete final-head CI are
+unrun. Explicit phase ownership and complete production effects are still
+required before any future mutation or End Turn control.
+
+
+The ordinary-facility settlement/install prefix is a checked pure dependency.
+For IDs2..33 in the base edition and2..64 in the expansion, it requires absent
+physical ownership of that facility and a nonnegative mineral requirement no
+greater than the current stock. It pays that requirement, caps human excess
+using the original surplus/retool limit, snapshots the remaining stock, updates
+the original production flags and installs the physical bit. Other bitmap bytes
+and state bits remain unchanged. Headquarters, satellites and projects are
+outside this API. An already-present bit or unsupported input rejects without
+changing the result.
+
+This is a prefix, not full facility completion. Network Node8 still requires its
+artifact-linked state and actor-order effects. Queue advancement/eligibility,
+notifications/audio, choice/reset, the surrounding upkeep sequence and all
+remaining effects must be implemented before a completion or turn commit. No
+live World mutation, player control or runtime phase authority invokes this
+calculation. Bounded original observations stop before those later effects and
+compare every current-base byte with an independent model. The owned host and
+big-endian results reproduce those byte patches. Amiga SDK builds remain
+compilation evidence; native execution and full final-head CI are unrun.
+
+
+The original outer production phase resets `best_mineral_output` to zero before
+iterating that faction's bases. This field is a per-phase maximum, not a lifetime
+record. The arithmetic prefix still computes max(supplied current accumulator,
+current base output); its future phase owner must perform that reset once, along
+with the other original faction-level initializations and effects. Earlier
+“historical peak” wording described the supplied accumulator too broadly.
+
+### Structural production queue iteration (local, unqualified on AmigaOS)
+
+`queue_shift` reproduces one original structural iteration before either real
+availability predicate. The saved `queue_size` counts waiting entries after the
+current item: supported sizes0..9 address ten stored slots. Size0 is unchanged.
+For positive size the old nonnegative unit ID's uint8 queue counter decrements
+with wraparound, items1..size move left, and size decrements. Remaining tail slots
+are preserved exactly. Old positive IDs outside0..511 and invalid sizes reject
+without changing output; negative IDs remain opaque and are never negated.
+
+This does not determine eligibility, retry unavailable candidates, invoke project
+speech/drawing, complete production or mutate an owned session/World. No player
+input invokes it. Actual original-code observations enter each queue routine and
+stop before the first availability branch for nonempty queues; empty queues use
+the actual normal return. Full current-base and all eight faction records match
+independent expected bytes in330 contexts per edition. Owned results match those
+observations on both host and independent68040 builds. Synthetic control suites
+cover21,724 cases including empty queues, counter underflow and malformed input.
+The normal SDK binary builds only; AmigaOS execution and full final-head CI remain
+unrun. Full queue advancement still requires real candidate admission and all
+source-backed completion effects.
+
+### Original unit availability (explicit facts, local only)
+
+`unit_availability` checks original unit admission from explicit qualified facts:
+active flag, faction obsolescence mask, predefined prerequisite technology,
+scenario colony-pod prohibition, coastal requirement for a sea chassis with a
+base, and faction ownership of custom design IDs. Prerequisite normalization
+retains faction0 rejection, None(-1), original ordinary technology range0..87,
+row prerequisite sentinels and technology ownership. The raw checked API accepts
+unit IDs0..511, factions0..7 and triads0..2; failure leaves output unchanged.
+
+Original SMAC has no expansion-component filtering. Original SMAX additionally
+rejects expansion armor/weapons/ability bits and predefined units14..20 whenever
+its explicit runtime expansion setting is false. That setting is not guessed
+from the executable/wire edition. Any bit in0x1f000000 rejects in that SMAX mode;
+a later source's equality-based ability formulation is not copied.
+
+Host and independent68040 suites pass31,520 cases. Complete unmodified original
+routines plus actual coast helpers/original radius offsets match14,788 SMAC and
+14,856 SMAX controlled contexts. The coast fixtures use an8x8 map, base(2,2),
+all land or one adjacent water tile, with actual map globals; this is not a full
+original World load or a general terrain qualification. An earlier additional
+set tests the full routines with no base, bypassing the coastal branch.
+
+The API has no owned World binding, authority, queue retry loop, production
+commit, completion, actor creation, turn or frontend input. Normal Amiga SDK
+builds are compilation only. Final-head CI and actual AmigaOS execution remain
+unrun; do not expose this query as restored gameplay.
+
+### Owned-world unit admission (read-only, local only)
+
+`world_unit_availability` binds the checked original leaf to the owned saved
+world's512 prototypes, active/obsolete flags, plan/component bytes, raw abilities,
+scenario rules and technology owners. Parsed technology prerequisites and chassis
+triads are used directly. Sea units with a base derive adjacent ocean access from
+actual tile climate bytes and the eight original neighbors, with horizontal wrap,
+flat-map bounds and vertical bounds. Base=-1 skips chassis/coast lookup as the
+original global query does. Invalid chassis references conservatively reject a
+base-present query, even if an earlier availability gate could have rejected it.
+
+Runtime edition must match the loaded wire edition and definition table profile.
+ExpansionEnabled remains explicit, including SMAX with expansion mode disabled;
+original SMAC ignores that flag. Factions0..7 and cross-owner base queries retain
+the original predicate semantics and grant no action authority. Aliases into the
+World object, owned decoded arrays, original container, rules or definitions
+reject before writes. Failure leaves the output unchanged. Full decoded/opaque
+World bytes, definition tables and runtime RNG stay unchanged through the suites.
+
+The corpus covers wire versions7..12, all512 designs/factions, global and base
+queries, both explicit expansion states, invalid inputs, inactive/obsolete/custom
+ownership, prerequisite sentinels, corrupt unused chassis and map edges under
+flat/wrapped geometry. Private runs also include the owner's three tutorials.
+The original routines/coast-helper differential evidence belongs to the unchanged
+parent leaf; this binding is tested against an independent wire-based model and
+is not execution of an original saved-world load or production turn.
+
+No queue mutation/retry loop, unit creation, owning session/phase authority,
+completion, save command, End Turn or frontend input is added. SDK compilation
+and local host/independent68040 checks do not qualify AmigaOS execution or full
+final-head CI, which remain unrun.
+
+### Original world production queue retry proposal (read-only, local only)
+
+`world_production_queue` composes the unchanged structural shift and actual World
+unit/facility admission predicates into the complete bounded retry portion of
+original `base_queue`. It copies the base queue and owner's512 unit counters,
+shifts, checks the new item and repeats until admission or exhaustion. Every
+removed nonnegative ID decrements its byte counter with original wraparound;
+unused tail slots remain exact. Facility admission uses original queue_count0,
+so waiting entries do not supply hypothetical prerequisite facilities. No
+callback booleans or fake original predicates are used.
+
+The proposal reports final queue/counters, iteration count, admission and whether
+the original project-initiation notification is still required. It never invokes
+or fakes audio/draw, installs a facility, creates a unit, commits queue state or
+grants session/phase authority. For post-completion use the actual World must
+already reflect completed installation/creation and its other effects; this
+query does not fabricate that state. Original saved queue sentinel-1 is rejected,
+as are faction0, invalid IDs/references and mismatched profiles. Errors preserve
+the entire output. SMAC expansion-enabled profiles reject conservatively to match
+the existing facility predicate contract.
+
+Host/independent68040 controls include mixed unit/facility queues, all queue sizes,
+exhaustion, repeated IDs and byte-counter underflow, project obligations, invalid
+future candidates, malformed references, alias guards, original tutorials and
+unchanged World/table/opaque bytes/RNG. Additional private actual-original queue
+observations execute the real unit predicate for unit-only queues, stopping only
+after admission before audio/draw; empty/exhausted paths return normally. This is
+not a full original facility queue loop or full production completion proof.
+Normal SDK compilation, local controls and bounded helper observations do not
+qualify final-head CI, actual AmigaOS execution, a full turn or playable game.
+
+### Offline Network Node artifact effect proposal (read-only, local only)
+
+`node_artifacts` describes the original post-install Node8 effect: clear base
+state bits0xc00 and set every plan12 artifact's order to0 in the actual tile
+stack. Original code has no actor-faction ownership check here; foreign artifacts
+are included. The mask includes already-order0 artifacts, while changed_orders
+reports only orders that would change. Empty stacks still clear the base flags.
+
+This requires a physically installed Node, an explicit owned offline runtime
+policy and coherent reciprocal stacks/vehicle-present map bits. Offline mode is
+not inferred from serialized flags or presented as an observation of a running
+original game. Original DirectPlay stack_fix repair and veh_at error/logging/bit
+rebuild paths remain unsupported. The proposal conservatively rejects corrupt
+stacks anywhere in the world instead of repairing or executing those paths.
+
+The result is bounded to32767 actors using a4096byte mask. Input/output aliases,
+wrong edition, network runtime, absent Node and corrupt topology/bits reject
+before any output write. Full owned/opaque World bytes and RNG remain unchanged.
+Host/independent68040 tests cover198 worlds, shuffled stacks, empty/two-location
+stacks, mixed factions, artifact/nonartifact designs and idempotent orders.
+
+Private original observations enter the actual Node branch and run real veh_at
+and stack_fix with explicit controlled offline globals and coherent8x6 fixtures.
+A single observation stop precedes draw_tile; whole current base,64 actor slots,
+512 designs and map bytes match independently expected changes in28 contexts per
+edition. Owned proposals reproduce those exact byte effects on both architectures.
+This is not the multiplayer repair branch, a complete original production action,
+queue/audio/notification behavior, a turn or full-game qualification.
+
+No live mutation, facility installation, queue commit, research award, player
+input or phase authority is added. Normal SDK binaries compile only; actual
+AmigaOS execution and final-head full CI remain unrun.
+
+### Ordinary completion tail dependencies (local only)
+
+`completion_tail` recovers two ordinary-facility tail dependencies without
+pretending that their intervening UI/monitor/reset behavior is implemented.
+Facilities13,14,31,32 increment the original clean-mineral modifier only when it
+is nonzero and clear faction player_flags0x4000. Zero stays zero. The later mod's
+optional forced increment is excluded. Signed overflow rejects before writes.
+
+The second fragment reports the original base_reset requirement: an AI faction,
+or a managing governor without an admitted queue, still needs the real reset.
+The result does not invoke a reset or supply a fake return value. An unmanaged
+human falls back to edition-correct Stockpile Energy(-38/-69) only when the
+POST-notification current item still equals the completed facility and its
+waiting queue is empty. A real user choice must be reflected before evaluation;
+a cached item from before that choice is not sufficient. Governor management
+requires both bits0x80000001. Ordinary IDs2..33/64 and queue sizes0..9 only.
+
+Host/independent68040 suites cover164,174 cases including zero/negative/overflow
+counters, partial governor flag combinations and post-choice item changes.
+Private original fragments cover1,280 SMAC and2,520 SMAX contexts, comparing the
+entire current base/selected faction and actual reset/fallback branch stops.
+The eco fragment starts after applicable monitor/interlude processing. Reset
+and redraw calls are stopped BEFORE execution; they are never stubbed. Those
+two staged observations are not execution of a combined original production
+function, its notifications, AI production choice or full turn.
+
+There is no World binding/mutation, facility-announcement acknowledgment, queue
+commit, original monitor/achievement execution, phase authority or frontend
+input. Normal SDK compilation and local controls do not qualify actual AmigaOS
+execution or final-head CI; both remain unrun.
+
+
+### Original facility and Preserve monument state (local candidate)
+
+`monument_effects` proposes event 4 or 12 in the original eight-record monument
+wire table. It preserves all unrelated bytes, handles nonzero legacy markers,
+copies the facility's base name with original 24-byte padding, and retains the
+SMAX alien exclusion absent from SMAC. The result reports the original local
+presentation-call obligation. It does not open/acknowledge a window, mutate the
+World, encode a player save, complete production or advance a turn.
+
+`test_monument_effects.py --out DIRECTORY` checks 2,064 cases against an independent
+byte oracle, plus null/overlap guards. Use `--cc m68k-linux-gnu-g++ --m68k-linux`
+for an independent big-endian runner. Private bounded original-helper comparisons
+are separate from public synthetic controls. Amiga SDK builds are not AmigaOS
+execution. This candidate has no published final-head CI or native qualification.
+
+
+### Original monument presentation entry (local candidate)
+
+`monument_presentation` checks original multiplayer, SMAX alien, preference,
+scenario and final-score gates against an explicit local monument record. Manual
+entry bypasses preference/state gates. It counts events 0–14 only and reports
+whether the original count global was written and window initialization must be
+attempted. The original initializer may fail; no visible window, modal response,
+audio, acknowledgment, completion transaction or game turn is implied.
+
+`test_monument_presentation.py --out DIRECTORY` checks 4,040 synthetic cases and
+three null/overlap guards. Pass `--cc m68k-linux-gnu-g++ --m68k-linux` for the
+independent big-endian runner. Private comparisons separately execute both
+original entries to the real window initializer boundary, including a nested
+milestone-update → original monument-entry comparison. No published final-head
+CI or AmigaOS execution qualifies this candidate.
+
+
+### Original facility announcement fragments (local candidate)
+
+`facility_notice` proposes original outer/first-announcement routing, the staged
+announced-bit write, voice-load and post-popup-fade obligations. Later-stage
+warning/preferences are explicit snapshots; calling this query does not simulate
+constructors, popups, user acknowledgment or audio. The original base-edition
+foreign threshold33 and expansion threshold40 differ. Expansion facility40 reports
+a separate Subspace-generator obligation whose interlude/generator path is not
+implemented here. Input is limited to IDs2..33/2..41; unused expansion slots and
+satellite/project production are outside scope. No World mutation, production
+completion, phase, player-save persistence or turn is added.
+
+`test_facility_notice.py --out DIRECTORY` checks 36,877 cases against an independent
+byte oracle; `--cc m68k-linux-gnu-g++ --m68k-linux` selects the independent runner.
+Private bounded original comparisons separately stage notification fragments and
+stop before actual GUI/audio calls. These are not combined original popup runs.
+Amiga SDK builds have no AmigaOS execution or published final-head CI yet.
+
+Announcement wire correction: both editions start `facility_announced` at0x458;
+legacy holds8 bytes, modern12. Legacy `clean_minerals_modifier` therefore starts
+at0x460, modern0x464. The existing importer already implements this correctly.
+An older private notification note claiming legacy announcement offset0x454 is
+superseded; no imported data or frozen production source was changed.
+
+
+### Original post-modal popup response (local candidate)
+
+`popup_response` proposes the original offline effects of a **confirmed** popup
+result. A checked disable-warning box takes precedence: clear the warning mask,
+mirror warnings, and require actual preferences persistence. Otherwise result0
+sets the deferred base-window request, result2 enables governor0x80000040, and
+result3 requires real nerve-stapling execution. Unknown raw signed results retain
+state. This function does not fabricate a modal result, call a fake callback,
+change production, open a base window, save preferences, staple a base, mutate
+the World or advance a turn. Network/PBEM behavior is outside its explicit owned
+offline policy. Real rendering/input/authority and dependent actions remain
+unimplemented and unqualified.
+
+`test_popup_response.py --out DIRECTORY` checks39,207 cases against an independent
+byte oracle. `--cc m68k-linux-gnu-g++ --m68k-linux` selects the independent runner.
+Private original comparisons execute only the post-modal response fragments,
+stopping before preferences-save, stapling and cleanup calls. They never execute
+or stub the modal. Amiga SDK builds have no AmigaOS execution; no final-head
+published CI or full production completion is claimed.
+
+
+### Original local facility notice arguments (local candidate)
+
+`notice_labels` returns ordinary local first/regular notification labels, queue
+count substitution, warning mask and human/alien facility icon selection. Queue Q
+precedes managing-governor G; managing requires both0x80000000 and0x1. It preserves
+the existing numeric substitution without an admitted queue. Ordinary IDs2..33/
+2..41 only, excluding special expansion Subspace40; queue_size0..9. The caller
+must supply actual current local route/queue facts. No popup, audio, modal
+response, World/global mutation, completion, phase or turn is performed.
+
+`test_notice_labels.py --out DIRECTORY` checks10,766 controls against an independent
+byte oracle. `--cc m68k-linux-gnu-g++ --m68k-linux` selects the independent runner.
+Private original comparisons execute real literal/string/parse-number helpers,
+stop before popb, and compare whole bases/all ten numeric slots. They do not
+execute or replace a modal callback. SDK builds have no AmigaOS execution;
+no final-head published CI or playable completion flow is claimed.
+
+
+### Staged facility notice decisions (local candidate)
+
+`facility_notice_entry`, `facility_notice_construction`, `facility_notice_voice`
+and `facility_notice_fade` accept only the facts needed at their respective
+original stages. Construction preserves the supplied current announcement vector,
+including intervening changes. Audio preferences and the human mask are read at
+voice selection; fade uses its own later preferences and has no human recheck.
+The combined diagnostic remains a composition of these functions for regression
+comparison. It must not be used to precompute future settings for a real window.
+
+The stage functions are pure proposals, not delivery capabilities or an owning
+notification controller. No constructor, renderer, modal response, audio playback,
+World mutation, completion or turn is supplied. SMAX40 remains a separate
+unsupported obligation. Local host sanitizer and independent Linux68040 controls
+pass; SDK builds are compile-only. No CI, AmigaOS or player-facing qualification.
+
+Run `python3 ports/alpha-centauri/native/test_notice_stages.py --out OUTPUT`;
+use `--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
+
+
+### Owned current monument storage (local candidate)
+
+`OriginalWorld::current_monuments()` exposes a read-only span of a separately
+owned current table. `game().monuments` continues to refer to the imported wire
+baseline. Import copies every original byte, including unknown fields; failed
+load preserves the old state, reload replaces both copies and clear frees both.
+The memory budget includes the extra table. This supplies storage only: imports
+do not award monuments or grant a completion/turn capability.
+
+The five existing snapshot encoders reject changed current monument bytes until
+an explicit qualified monument encoding scope exists. Their output and receipt
+buffers, and the accounting/worker result buffers, cannot alias the new storage.
+No public monument mutator, phase, notification, persistence extension, frontend
+control or original executable save-compatibility claim is added.
+
+`test_monument_storage.py` checks whole-container identity and alias/change
+rejection across all five encoders. Controlled test-only storage corruption is
+an unsupported-change test, not a simulated award or gameplay transaction.
+Local host/independent Linux68040 execution and SDK compile-only receipts remain
+separate from unrun AmigaOS validation. No publication or remote CI is claimed.
+
+
+### Original social-upkeep dependency (local candidate)
+
+`social_upkeep` proposes the original pending-to-active choice copy, three full
+social effect calculations and paid-upheaval reset. Its explicit current base
+modifiers remain authoritative; this operation does not recompute them from
+SOCIAL bonuses. The third original calculation changes an unused argument,
+not the quick-calculation flag. SMAX alone adds alien temple research.
+
+`world_social_upkeep` binds current pending choices/base modifiers/ordered
+bonuses from decoded faction records, project indices21/24/13/23 through actual
+base owners, and the original temple landmark/visibility/owner condition across
+the decoded map. Same-edition SOCIO rules are required. Output is disjoint from
+all World allocations, including separate current monument bytes. Neither API
+mutates World or authorizes a social, repair, production or turn phase.
+
+Local host sanitizer and independent Linux68040 controls pass. Private complete
+original social_upkeep executions include all three real social_calc calls,
+real has_temple/whose_territory and normal returns; the entire selected faction
+record is compared. Those bounded original helper observations are separate
+from AmigaOS validation, which remains unrun. No remote CI or publication claim.
+
+Run `test_social_upkeep.py` and `test_world_social_upkeep.py` with `--out OUTPUT`;
+the latter accepts optional private `--original RULES SAVE` pairs. Both accept
+`--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
+
+### Original repair actor prerequisite (local qualification only)
+
+`repair_vehicle` proposes the first-pass transition for one actor using explicit
+current facts. It retains SMAC/SMAX differences for Battle Ogres, Fungal Towers
+and air repair projects; timer decrement wraps as the original signed16 storage;
+periodic flag clearing uses faction-turn plus actor index. Healing includes
+terrain/territory/base/breed/repair facility and project/repair-bay/Nano Factory
+conditions and the original damage floor. Xenoempathy Dome is project index8;
+Pholus Mutagen is index16 and is not the fungus healing bonus here. Cargo means
+`veh_cargo` capacity, not occupied transport slots. Base breed uses base ownership.
+All unrelated vehicle fields are preserved. Invalid profile inputs and complete
+input/output overlap reject before writes; foreign actors preserve their record
+without inspecting unused design facts.
+
+The API does not bind a World, inspect stacks, reset faction ODP, render, deliver
+an event, advance a phase, refill player movement or authorize an end turn. Its
+`draw_requested` describes the later predicate, not a rendering acknowledgment.
+The caller must derive actual current facts and coherent stacks. SMAX FREEABIL
+resolution belongs to the qualified ability dependency, not a raw-only assumption.
+
+Local checks: 27,665 public cases (27,648 accepted,17 rejected), ASan/UBSan host
+and independent static Linux68040 output identical. Private owner observations
+execute the actual complete original actor first pass in8,192 contexts per edition,
+including real territory/base_at/breed_mod/bitmask/veh_cargo/has_abil helpers, two
+coherently linked actors, three controlled bases and one2x1tile. Every byte of both
+actor records and the faction ODP reset agrees; all other bytes of the mapped
+0x90000global region remain unchanged. One instrumented observation jump stops
+before the second rendering loop. The original routine does not return normally
+in these observations. These are bounded helper observations, not whole-game or
+complete repair-phase execution. Raw ability paths are observed; FREEABIL grants
+are not exercised here. Original owner inputs remain private.
+
+Run `python3 ports/alpha-centauri/native/test_repair_vehicle.py --out OUTPUT`;
+use `--cxx m68k-linux-gnu-g++ --runner qemu-m68k -cpu m68040` for independent
+big-endian execution. `build_repair_vehicle_probe.sh` builds with the normal Amiga
+SDK. Neither object compilation nor host/Linux execution qualifies AmigaOS. The
+candidate has no remote CI, PR, native execution or player input wiring.
+
+### Read-only owned-World repair binding (local qualification only)
+
+`world_repair_vehicle` derives the repair proposal from decoded current actors,
+designs, component tables, map tiles, bases, facilities, projects and technology
+owners. Its explicit phase and local faction arguments are query context, not
+turn authority; imported CurrentTurn only supplies the periodic flag arithmetic.
+Foreign actors preserve their complete record without evaluating unused design
+facts. Outputs cannot overlap the World, its owned buffers/records, or rule tables.
+
+The friendly-territory predicate is exactly positive owner==phase for the original
+`whose_territory(phase,x,y,null,0)` return test. The physical tile-base predicate
+remains distinct from `base_at`: a set base bit requires an actual matching base
+when healing reaches that lookup. Breed bonuses use the base OWNER and original
+physical facilities9/30/31/32 plus project indices8/16/31/17. Non-native physical
+repair facilities short-circuit the repair-project lookup as in the original.
+Negative project locations mean absent; inspected positive out-of-world locations
+reject. Cargo nonzero is equivalent to declared capacity nonzero even in native
+morale-expanded cargo cases. No occupancy approximation is used.
+
+When repair inspects a stack, links must be reciprocal, acyclic and coordinate
+consistent, and include every colocated actor. Broken stacks reject without fixup.
+Repair Bay0x200000 uses raw bits in SMAC and predefined designs. SMAX custom
+missing bits resolve FREEABIL21 through design-owner technology and the actual
+ability prerequisite. Raw-present bits retain their short-circuit. These helpers
+remain scoped to repair; this does not generalize unrelated ability queries.
+
+Local final host ASan/UBSan and independent Linux68040 checks pass293worlds,
+22,974queries (21,150accepted/1,824rejected),1,446healing attempts and6,442guards,
+including all3owner tutorials. Full decoded/opaque World state, current monument
+storage, rules, RNG and input files remain unchanged. Final output agrees across
+architectures. Additional private comparisons load384World fixtures reconstructed
+from archived actual original first-pass observations (192per edition); complete
+selected actor records match on both architectures. The irrelevant home-base
+field is normalized to-1 in both fixture/expected to satisfy World import bounds.
+Original helpers were not reexecuted for those binding comparisons. The archived
+observations stop before rendering; they do not qualify a complete repair phase.
+
+Run `python3 ports/alpha-centauri/native/test_world_repair_vehicle.py --out OUTPUT`;
+add `--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
+`build_world_repair_vehicle_probe.sh` uses the normal Amiga SDK. Fresh identical
+builds remain unexecuted on AmigaOS. No remote CI, PR, deployment, World mutation,
+faction ODP reset, event/render delivery, session/phase authority, movement refill,
+player End Turn or persistence is provided. Owning phase admission and ordered
+production-prefix/aggregate/debt dependencies still need implementation.
+
+### Original pre-base production setup (local qualification only)
+
+`world_production_prefix` proposes the complete original production setup before
+its first base iteration. It resets the four phase aggregates, recomputes the five
+technology-effect fields from actual rules/owners/bonuses, settles loans in
+ascending creditor1..7order, clears player flag0x20, proposes the pre-base energy
+scratch, and clears social support/psych/efficiency arrays plus the three unknown
+counters, nutrient and labs totals. The selected decoded faction's other fields
+survive; other factions only propose energy-credit changes. Legacy social arrays
+start0x68c; modern0x690. Explicit faction/profile are query context, not authority.
+
+`production_loans` retains original signed arithmetic: payment is the signed
+minimum of current reserves and scheduled payment, with no modern zero clamp or
+cap to principal. Negative reserves/payments/nonzero balances follow original
+branches. Alive bits are preferences.FactionStatus[1], separate from human bits;
+self and creditor0 are excluded; recipient sanctions must be exactly zero. War
+bit0x10adds scheduled payment to debt without transferring credits. Every signed
+intermediate is checked, and errors/aliases preserve output. No unchecked wrap
+or nonnegative-domain patch is introduced.
+
+Local ASan/UBSan host and independent Linux68040 checks agree:10,852loan contexts
+(7,721accepted,4invalid,3,127overflow), and203Worlds/2,030queries
+(1,565accepted,465rejected) with3,244guards, including3owner tutorials and empty
+Worlds. All decoded/opaque World state, monuments, rules, RNG and input files stay
+unchanged. The probe's explicit field encoding is test-only and checks every
+other decoded field; no native structure dump or production save writer is added.
+
+Private actual-original observations execute SMAC0x53b7a0 and SMAX0x526e70through
+254accepted contexts each, including the real complete tech_effects helper.
+One observation jump stops at the branch before base iteration (SMAC0x53b941,
+SMAX0x527024); no fake callbacks. Complete selected-faction records, all8energy
+balances and the energy scratch match; every other byte of mapped0x90000globals
+stays unchanged. Both changed owned executables reproduce those same observations.
+Overflow inputs are excluded from original execution and remain rejection tests.
+
+Run `test_production_loans.py --out OUTPUT` and
+`test_world_production_prefix.py --out OUTPUT`; add
+`--cc m68k-linux-gnu-g++ --m68k-linux` for big-endian Linux execution. Normal Amiga
+SDK scripts are `build_production_loans_probe.sh` and
+`build_world_production_prefix_probe.sh`. Fresh matching builds remain unexecuted
+on AmigaOS. No remote CI, PR, World/credits/cache mutation, base upkeep, phase
+admission, event pump, player End Turn, discovery, AI or save claim. Post-base
+maintenance discounts, interest, first-turn free advances and sanctions events
+are outside this prefix. Real phase identity and ordered event/base execution
+remain required before exposing any turn advancement.
+
+### Phase-field persistence prerequisite (local qualification only)
+
+`encode_phase_snapshot` extends the frozen worker/action/accounting buffer codec
+with explicit social-upkeep, ODP and pre-base production faction fields. The
+allowlist is in `phase_faction_fields.inc`: current4social choices, paid upheaval,
+pending/active/temporary11effect arrays, credits/loan balances,5technology caches,
+ODP deployed, phase aggregates and social/nutrient/labs accumulators. Player
+flag0x20may clear; setting it or changing other player flags rejects. Pending
+social choices, base social modifiers, loan schedules, diplomacy, tech owners,
+prototypes, definitions, monuments and all metadata remain sealed. The previous
+full map/actor storage and worker/action/accounting structural scope is retained;
+serialization does not establish movement legality or phase authority.
+
+The encoder uses a private owned World projection to retain the entire frozen
+union validator. Only that local allocation is modified; caller state stays
+unchanged. Additional allocation is explicitly bounded by `max_clone_bytes`.
+Validation and allocation finish before caller output writes. Legacy faction
+fields at/after0x464shift4bytes (social arrays0x68cvs modern0x690); earlier fields
+including ODP0x364retain their offsets. All patches are explicit little-endian.
+Complete original opaque bytes/footer survive; runtime RNG remains a separate
+receipt. No native structure dump, filesystem protocol, atomic-file assumption,
+player save UI or original executable compatibility is claimed.
+
+Final host ASan/UBSan and independent Linux68040 tests agree across11Worlds,
+395controls:107exports,288rejections and31continued exports after reload. They
+include all3owner tutorials, versions7..12, empty Worlds, complete independent
+Python byte comparisons, reload/idempotence, inherited union composition,
+clear/set flag boundaries, output/receipt/storage/wrap aliases, short buffers,
+clone exact-budget success and one-byte-short failure. Frozen workers encoding
+still rejects the newly allowed faction deltas. The independent wire oracle is
+an explicit offset list, not generated from the C++ allowlist. Historical flag
+oracle failure is retained privately; corrected final host3/BE3 are authoritative.
+
+Run `test_phase_snapshot.py --out OUTPUT`; add
+`--cc m68k-linux-gnu-g++ --m68k-linux` for independent big-endian execution.
+`build_phase_snapshot.sh` builds with the normal Amiga SDK; two fresh identical
+builds remain unexecuted on AmigaOS. No remote CI or PR is provided. This is a
+persistence prerequisite only: it does not implement an owning phase controller,
+commit social/repair/upkeep, admit a turn from a save, or enable player End Turn.
+A future controlling engine must block exports while real events are pending.
+
+Explicit decoded loader repairs are documented in [LOAD-REPAIRS.md](LOAD-REPAIRS.md).
+They preserve raw import behavior and grant no turn authority or frontend action.
+
+The complete original deficit-energy convoy cancellation proposal is documented
+in [ENERGY-CONVOY-ORDERS.md](ENERGY-CONVOY-ORDERS.md). Its current-stage input
+and immutable output do not establish turn authority or a player action.
+
+Exact original load-record repairs can be retained in a snapshot buffer through
+[INITIALIZED-SNAPSHOT.md](INITIALIZED-SNAPSHOT.md). This remains a structural
+persistence boundary, with no new engine/player action or filesystem save API.
+
+### Explicit repaired offline command resume
+
+`LocalProductionSession::load_resumed_commands` derives the sole local human
+from the saved MapWin owner and human mask, applies the verified original record
+repairs, requires that owner to survive those repairs, then selects that owner
+as CurrentFaction and clears the original PBEM-restart rule bit40 in a private
+normalized command baseline. Every other rule bit is preserved. This is the original
+offline resume selection; it does not refill movement or authorize upkeep.
+Raw `load_local*` imports retain their previous saved-current-faction requirement.
+The new import owns all accounting tables; its explicit base-actions option also
+owns the existing bounded base-game movement tables. Expansion movement remains
+unsupported. Existing private lifetime/revision command checks continue to apply.
+
+The external input stays unchanged. `world()->original_bytes()` now refers to the
+**repaired, owner-selected command baseline**, not the unmodified external source.
+Existing worker/action snapshot encoding preserves this baseline and subsequent
+supported commands; no filesystem save protocol or original executable acceptance
+is claimed. Private repair/normalization and session loading must all succeed
+before replacement; failed loads preserve the previous session and its revision.
+The memory limit covers each operation plus its live private staging allocations,
+excluding the old session, caller input and inherited validator scratch. The
+private rule table/repair World are destroyed before command-session loading.
+
+This remains backend integration only: no frontend controls, path/contour/cursor
+initialization, real modal/audio/render event delivery, phase admission, end turn,
+AI, combat or diplomacy. RuntimeMove zero, imported CurrentFaction and refreshed
+accounting never confer phase authority. Native execution and remote CI are unrun.
+
+```
+python3 ports/alpha-centauri/native/test_resumed_commands.py --out /tmp/resumed-host
+python3 ports/alpha-centauri/native/test_resumed_commands.py --out /tmp/resumed-be --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_resumed_commands_probe.sh /tmp/resumed-native
+```
+
+### Owned original unit skip command
+
+`prepare_skip_unit`/`commit_skip_unit` bind the original `veh_skip` assignment
+to an existing session lifetime/revision and locally owned actor. They use the
+session's own action or accounting unit tables and recovered original speed
+calculation. Production-only imports have no such capability. A successful
+changed commit writes only `moves_spent`, invalidates earlier plans, and reports
+repaint/persistence obligations. Repeating it is a no-op; suspend/reload and
+address reuse cannot revive old commands. Rendering is not performed here.
+
+The original function assigns speed rather than `max(old,speed)`, so an old
+larger spent byte can decrease to the computed maximum. It does not change
+orders, working/skip flags, actor state, position, RNG or advance a turn. The
+checked speed domain remains 0..255; original overflowing low-byte wraps are
+explicitly rejected before mutation. Thinker's additional skipped-unit flags,
+former working flags and monolith actions are not part of this original leaf.
+
+Existing whole-world worker/action buffer encoding preserves this single-byte
+command and the repaired resume baseline. The command is backend only, with no
+player input, real renderer/audio delivery, readiness confirmation, End Turn,
+upkeep, filesystem player save, native execution or full-game qualification.
+
+```
+python3 ports/alpha-centauri/native/test_local_unit_skip.py --out /tmp/skip-host
+python3 ports/alpha-centauri/native/test_local_unit_skip.py --out /tmp/skip-be --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_local_unit_skip_probe.sh /tmp/skip-native
+```
+
+### Original unit readiness and boarding inspection
+
+`world_unit_readiness` implements the original `veh_ready` short circuits and
+`veh_jail` boarding restriction. The const session binding uses its file-derived
+human and privately parsed tables; production-only sessions cannot inspect this
+capability. Both flag40 and flag400 together block readiness. Standing orders1,
+2 or3 block it unless state200 or4000 permits evaluation. A ground unit ordered
+aboard an air carrier is jailed unless its tile has a physical base with low
+faction nibble1..7 or a physical airbase. Planet0 bases remain unsafe in the
+original; no co-location, carrier-ownership or territory filter is invented.
+Invalid carrier indices reject before access. Movement remaining is evaluated
+only after these gates: readiness requires checked current speed > moves_spent.
+
+The result explicitly marks whether speed was evaluated. The API is immutable;
+errors preserve output, and outputs cannot alias world/session/owned tables.
+It accepts only the inherited checked speed domain0..255 and parity-valid map
+coordinates. A ready result is not a command-completion acknowledgement, genuine
+readiness confirmation, End Turn permission, event delivery or phase authority.
+No player input or preview control is added. Actual rendering/audio/modal loops,
+AI/upkeep/turns, native execution and remote CI remain unqualified.
+
+```
+python3 ports/alpha-centauri/native/test_unit_readiness.py --out /tmp/ready-host
+python3 ports/alpha-centauri/native/test_unit_readiness.py --out /tmp/ready-be --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_unit_readiness_probe.sh /tmp/ready-native
+```
+
+### Original offline ready-unit search transaction
+
+`world_ready_search` follows the offline branch of original
+`Console_ready_search`: up to three passes over original readiness, nearest
+unit by the original wrapped range metric, and current-unit preference on ties.
+Reference/current indices and cursor coordinates are spatial facts only. A local
+reference supplies its position; a foreign reference uses the supplied cursor.
+When no candidate is found, state bit2 is cleared across **all** actors. The
+first pass preserves current's bit2 when the reference is local, the second
+clears all, and the third may then find current. Neither movement spent nor
+orders, RNG or turn counters are reset. Online priority behavior is excluded.
+
+`prepare_ready_search`/`commit_ready_search` bind that proposal to the owning
+session's lifetime/revision and sole human. Commit re-evaluates the full result
+before atomically clearing only the proposed state bits. Any unsafe reference
+or unsupported readiness dependency aborts the whole proposal without partial
+clears. Original callback-free offline search is implemented here; original
+rendering, input/modal/audio and online Console paths are not substituted.
+Returned selection is for a future UI caller; no Console/UI cursor is changed.
+
+Whole-world buffer persistence retains these bit clears and all existing
+supported commands. Reload and repeat-search controls preserve the resulting
+bytes. No player input, End Turn, phase admission, command-completion signal,
+real event delivery, native execution, filesystem save or playable-game claim.
+
+```
+python3 ports/alpha-centauri/native/test_ready_search.py --out /tmp/search-host
+python3 ports/alpha-centauri/native/test_ready_search.py --out /tmp/search-be --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ ports/alpha-centauri/native/build_ready_search_probe.sh /tmp/search-native
+```
+
+Original opponent-specific native morale is available as a checked read-only
+leaf and saved-world query. See [NATIVE-COMBAT-MORALE.md](NATIVE-COMBAT-MORALE.md)
+for edition differences, absent version11 runtime rejection and remaining
+battle/command/native gates.
+
+The original riot-morale ordering is restored in this candidate; see
+[RIOT-MORALE-CORRECTION.md](RIOT-MORALE-CORRECTION.md). Earlier source-reference
+passes included an OpenSMACX gameplay change and do not qualify this correction.
+
+Original basic combat-strength composition now connects qualified prototype,
+psi, morale and physical-base dependencies. See [BASIC-COMBAT.md](BASIC-COMBAT.md)
+for original/mod differences, supported domain and remaining real-battle gates.
+
+Original read-only terrain defence and its saved-world binding: see [TERRAIN-DEFENSE.md](TERRAIN-DEFENSE.md). Native execution remains unrun; no attack/player command is added.
+
+Original conventional base combat stage: [BASE-COMBAT.md](BASE-COMBAT.md). Read-only incoming-strength adjustment; final battle/damage/actions and native execution remain incomplete.
+
+Original combat sensor stages: [SENSOR-COMBAT.md](SENSOR-COMBAT.md). Read-only actual World coverage and signed percentage adjustment; complete battle/player actions/native qualification remain open.
+
+Original ground mobility/road/elevation stages: [GROUND-MODIFIERS.md](GROUND-MODIFIERS.md). Explicit incoming strengths; final battle/actions/native qualification remain open.
+
+Late Pulse/Jammer/Tracking arithmetic: see [DEFENSE-ABILITIES.md](DEFENSE-ABILITIES.md); raw stage only, World/native/UI pending.
+
+Owned late defense ability binding: see [WORLD-DEFENSE-ABILITIES.md](WORLD-DEFENSE-ABILITIES.md); read-only current facts, native/UI pending.
+
+Original air/noncombat/In Port arithmetic: see [AIR-PORT-COMBAT.md](AIR-PORT-COMBAT.md); explicit conventional numeric stage only, World/native/UI pending.
+
+Owned air/noncombat/In Port binding: see [WORLD-AIR-PORT-COMBAT.md](WORLD-AIR-PORT-COMBAT.md); current conventional facts only, native/UI pending.
+
+Original artillery numeric modifiers: see [ARTILLERY-COMBAT.md](ARTILLERY-COMBAT.md); bit0x2 inspection only, World/native/UI pending.
+
+Owned artillery modifiers: see [WORLD-ARTILLERY-COMBAT.md](WORLD-ARTILLERY-COMBAT.md); actual map/unit facts, numeric inspection only, native/UI pending.
+
+Original psi ability phases: see [PSI-ABILITIES.md](PSI-ABILITIES.md); explicit early-offense/late-defense inputs, World/native/UI pending.
+
+Owned psi ability phases: see [WORLD-PSI-ABILITIES.md](WORLD-PSI-ABILITIES.md); actual component/grant/missile facts, separate early/late strengths, native/UI pending.
+
+Original airdrop/fanatic/faction/Planet combat phases: see [COMBAT-FACTIONS.md](COMBAT-FACTIONS.md); separate explicit numeric phase inputs, World/native/UI pending.
+
+Owned airdrop/faction/Planet binding: see [WORLD-COMBAT-FACTIONS.md](WORLD-COMBAT-FACTIONS.md); actual current actor/faction/design-owner technology facts, explicit phase strengths, native/UI pending.
+
+Original fungus attack phase and World binding: see [FUNGUS-COMBAT.md](FUNGUS-COMBAT.md); explicit incoming offense, numeric inspection only, native/UI pending.
+
+Coherent conventional land battle numbers: see [LAND-COMBAT.md](LAND-COMBAT.md); complete-original numeric comparisons within the stated domain, no attack/native/UI qualification.
+
+Original land retreat destination inspection: see [RETREAT-DESTINATION.md](RETREAT-DESTINATION.md); source-backed selection only, no relocation or native/UI qualification.
+
+Owned conventional LAND engagement staging: see [LAND-ENGAGEMENT.md](LAND-ENGAGEMENT.md); current-frame damage/retreat through pending casualty or post-storage boundary, no player attack/commit/native qualification.
+
+Checked vehicle-removal storage is documented in [VEHICLE-REMOVAL.md](VEHICLE-REMOVAL.md). It updates caller-owned dense arrays and explicit runtime references only; World/session commits, full casualty effects, native execution and player actions remain held. Synthetic controls: `python3 test_vehicle_removal.py --out /tmp/alpha-removal-host` and independent `--cc m68k-linux-gnu-g++ --m68k-linux`.
+
+[WORLD-VEHICLE-REMOVAL.md](WORLD-VEHICLE-REMOVAL.md) documents current-frame ownership around checked removal. Caller/session commits, full casualty effects and variable-length persistence remain held. Controls: `python3 test_world_vehicle_removal.py --out /tmp/alpha-world-removal-host` and independent `--cc m68k-linux-gnu-g++ --m68k-linux`.
+
+[WORLD-CASUALTY.md](WORLD-CASUALTY.md) documents owned ordinary/native casualty deletion and copied caller pools. Artifact/interlude and caller/session/native/full-game gates remain held.
+
+[ARTIFACT-CAPTURE.md](ARTIFACT-CAPTURE.md) documents owned LAND artifact transfer and its captured caller pool, before the interlude gate. Legal battle/session/delivery/native/full-game gates remain held.
+
+[LAND-RESOLUTION.md](LAND-RESOLUTION.md) documents the owned solitary conventional engagement/casualty/capture composition. Caller argument6 is explicit per branch; retreat has no RemovalRuntime claim. Full caller/event/session/persistence/native/gameplay gates remain held.
+
+Ordered caller-field dependency: [battle bookkeeping](BATTLE-BOOKKEEPING.md), with explicit offline runtime and an active-player monument UI hold. No World/session commit.
+
+[Owned current-world battle bookkeeping](WORLD-BATTLE-BOOKKEEPING.md) binds selected current faction/monument fields and explicit runtime statistics to a separate clone, with UI/profile holds. No attack/session/save commit.
+
+[Owned LAND body-state and bookkeeping composition](BATTLE-AFTERMATH.md) preserves pre-cleanup faction identity, with explicit runtime and held caller paths. No player attack/session/save commit.
+
+### Combat overlap validation order (local candidate, 27 October 2026)
+
+Direct engagement, resolution and artifact-capture APIs now check every known input/output and pairwise input range before reading input facts or existing output ownership. This prevents an overlapping later input from being interpreted as an output plan before rejection. Frozen parent branches remain unchanged.
+
+The regression uses live aligned input objects, poisons their bytes under host ASan and requires rejection without reads or writes at all four input positions for each API in save versions 7 and 12. The independent 68040 run checks rejection and unchanged bytes without ASan poisoning. The original parent reproduces an ASan premature-read failure; that diagnostic is not a passing result. Existing body, capture, engagement and aftermath suites qualify the changed dependency composition separately.
+
+This is a boundary correction only. Native execution, remote CI, frontend attack controls, promotions, final full-caller random state, persistence and complete turns remain unqualified. The battle summary random state covers numeric rounds; original caller promotion can consume additional draws before cleanup and bookkeeping.
+
+### Owned nonrandom selected-recipient promotion (local candidate, 27 October 2026)
+
+`stage_world_promotion` owns an independent CURRENT world frame and stages the original raw morale increment for an already selected recipient. It tests the original missile and unsigned-plan/signed-armor gates before the actual current-world morale calculation. The supported profile is nonnative, nonprobe, home -1 and matching edition; other profiles remain held. A needed random draw returns `random_required`. A needed current human-player effective-morale notification returns `notification_required`. Every failure preserves the old output. No random state or notification acknowledgment is fabricated.
+
+The new 576-world corpus covers versions7 through12,458 accepted frames and118 holds, independent full actor bytes, current collateral records/monuments/history/baseline preservation, continuation and source lifetime. Host ASan/UBSan and independent68040 outputs match. Known input overlaps reject before reading their poisoned bytes; invalid component domains and one-byte-short/exact clone budgets are controlled. All parent implementation cpp files remain byte-identical; two header friend declarations permit reuse of the qualified current-frame clone. All309 parent workflow commands remain plus2. Private whole-original promote+real-morale natural-return controls support the nonrandom helper behavior in both editions; that proof does not execute the random/notification branches.
+
+This stage does not choose a battle recipient, implement the source caller selection draw, establish legal attack authority, advance either RNG, serialize a save, enable frontend controls or finish combat/turns. Final normal SDK builds are byte-identical; actual AmigaOS and remote CI remain UNRUN. The memory limit covers the new candidate clone, excluding separately owned source and previous output.
+
+### Original caller promotion selection (local candidate, 27 October 2026)
+
+`inspect_promotion_selection` inspects supplied caller strengths, original pre-round health locals, current raw reactors/damage/plans, selected effective morale and target-base presence. It rescales exactly as the original 32-bit IMUL then signed division, checks the LOSER plan12 gate, and reports no-selection, promote or a required random call. The signed wrapped sum-minus-one branch is preserved. It never supplies a zero roll when the source would call the RNG. Zero divisors, unsupported scalar domains, missing observation and input/output overlaps reject without writes.
+
+Private bounded source prefixes51e193/50a1b3 execute4096 controlled contexts per edition with the actual original morale helper. Six explicit observer jumps stop at promote/random CALL sites or skip boundaries; there are no fake callee returns and this is not full battle execution. All1.1MB global bytes remain unchanged. Original output strength/intent/recipient bytes match the owned function. Additional signed arithmetic and invalid cases total4810 host/independent68040 checks with matching output; poisoned alias and missing-observation guards also pass. Final SDK builds are byte-identical, actual AmigaOS UNRUN.
+
+The owning combat caller still must retain genuine initial health, bind the current frame and strength locals, execute required draws and promote before casualty cleanup. No World mutation, notification acknowledgment, live attack controls, save, turn, AI or diplomacy is provided by this inspector. Some supplied arithmetic edge contexts are not claimed reachable complete battles. All311 parent workflow commands remain plus2; parent CPP files are byte-identical.
+
+### Promotion before casualty compaction (local candidate, 27 October 2026)
+
+`stage_promoted_land_body` retains actual initial health from the input World, stages the existing conventional engagement, resolves the original caller selection from the post-round frame, then stages the nonrandom morale helper before ordinary casualty removal. The survivor's promoted record passes through dense compaction; recipient identity is never recovered from an already deleted actor. The final frame independently owns current records, monuments, history and the immutable wire baseline. Intermediate heaps are budgeted and released in order; failed stages preserve the previous output. Branch argument6 values remain explicitly supplied per the original caller contract.
+
+The64-world corpus executes10368attempts:610accepted raw promotions then deletion (478attacker/132defender) and9758held/rejected. Both hostASanUBSan and independent68040 compare complete actor/tile/accounting/runtime/pool bytes against the independent wire model. Tests retain the initial health, verify runtime/input overlap rejections before reads, prove a first-clone-fit/later-clone-fail budget, and destroy all source inputs before checking the final frame. Failed initial coverage history is preserved: the first62-world run matched every row but covered only attacker deletion; two controlled strong-attacker variants supplied the missing route. Final SDK builds are byte-identical, actualAmigaOS UNRUN.
+
+This composition accepts selected nonrandom promotion bodies only. Selection random calls, notifications, no-selection intent, artifact/capture, retreat, bases, additional colocation and unsupported helper profiles stay held. Full caller friction/bookkeeping/movement/UI/random-state provenance, legal attack/session/event authority, variable-length persistence, turns, AI and diplomacy are not provided. There is no frontend hook or gameplay completion claim. All313parent workflow commands remain plus2; parent CPP files are byte-identical, with three header friend declarations only.
+
+### Promoted battle aftermath (local candidate, 27 October 2026)
+
+`stage_promoted_aftermath` composes the frozen promoted LAND body with selected original battle accounting. It captures both faction identities before casualty compaction, then stages the final combat counters and monument fields against the resulting owned World. Promotion still occurs before deletion. The final frame owns its storage; failed body, runtime, accounting or allocation checks preserve the previous output. Explicit observed offline runtime and present-zero source caller pools are required.
+
+All66synthetic worlds execute10692attempts:714accepted (466attacker deletions/248defender deletions), all with raw promotion, and9978held/rejected. HostASanUBSan and independent68040 output bytes match the independent wire and numeric models. The corpus exercises786selection-random,144promotion-notification and124monument-UI holds. Five poisoned input/output overlap positions reject before reading the aliased input; source lifetime, prior-output preservation, runtime/pool and tiny-budget guards pass. Two fresh normalSDK builds match; actualAmigaOS execution remains UNRUN. All334parent CPP files and315workflow commands remain unchanged/retained; two private friend declarations allow composition and two new workflow commands are added.
+
+This is a bounded owned combat stage. Required random draws and real notifications remain held, as do no-selection intent, retreat/capture/native/unsupported profiles. Remaining caller friction, movement, attack budget, complete original caller differential, legal session/event authority, variable-length save, turns, AI and diplomacy remain incomplete. The frontend is unchanged and there is no playable-game claim. See PROMOTED-AFTERMATH-EVIDENCE-20261027.json for final hashes and scope.
+
+### Original territorial combat prefix (local candidate, 27 October 2026)
+
+`inspect_territorial_combat` checks the original pre-promotion third-party territory condition. On a qualifying land tile it sets a zero attacker gift to1, subtracts1 from the owner's friction with the attacker using original signed32 wrap then clamp0..20, and subtracts1 with wrap from the active negotiation accumulator only when its explicitly supplied ordered faction IDs match. Existing nonzero gift values are preserved. Unowned or invalid land owners remain held before any index access; no unchecked original out-of-bounds read is reproduced. The transition is pure and publishes output only on success.
+
+HostASanUBSan and independent68040 match all8461cases, including4708applied transitions,93held/invalid/missing cases plus supported controls, and8461input/output overlap checks per architecture. Private original caller prefixes execute4096contexts per edition (157SMAC/154SMAXbytes) with the real cause_friction helper and one observer only at the pre-promotion boundary. Every high and low global byte matches the independent model. Owned gift/friction/negotiation output matches those8192checked original final global cells. Whole original helper evidence separately covers24576natural calls. Two fresh normalSDK builds are identical; native execution is UNRUN.
+
+This is a numeric dependency for the owned combat caller. It does not bind the World, infer active negotiation state, authorize an attack, consume a turn or provide player input, persistence or complete diplomacy. The frozen promoted aftermath is unchanged. All317parent workflow commands remain, with two additional commands; every336parent CPP file is unchanged. Required native and final remote CI remain unrun.
+
+### Owned territorial diplomacy stage (local candidate, 27 October 2026)
+
+`stage_world_territorial_combat` derives the target tile from the current defender record, reads actual climate/owner, ordered combat faction relations, attacker gifts and owner friction, and stages the verified original territorial transition in a private owned World. The returned negotiation accumulator uses explicitly observed active negotiation IDs/state; it never comes from a save or a zero default. Only the two selected faction cells may change. Original baseline bytes, current monuments/history, actors/map/bases/prototypes/definitions, preferences and World movement RNG remain unchanged. Caller-supplied post-round provenance and final session authority remain separate requirements.
+
+HostASanUBSan and independent68040 match96synthetic Worlds across versions7..12:2592attempts,1548accepted,864same-actor rejections and180unsupported land-owner holds. There are420applied transitions. Both architectures pass1548tiny-budget prior-output checks,516runtime guards,86input/output overlap checks and86source-destruction lifetime checks. All other typed faction fields and current records are compared in the probe. Two fresh normalSDK builds match; actualAmigaOS execution is UNRUN. All338parent CPP files are unchanged; only two private friend declarations enable cloning. All319parent workflow commands remain plus2.
+
+The new stage is not yet inserted between engagement and promotion/deletion in the combined body. It does not prove legal attack/session authority, consume movement or attack budget, initialize combat randomness, acknowledge notifications, save variable-length state, execute a turn or supply complete AI/diplomacy/gameplay. Unowned land and contradictory/unobserved/offline runtime remain held. No frontend hook or native qualification is claimed.
+
+### Territorial promoted battle aftermath (local candidate, 27 October 2026)
+
+`stage_territorial_aftermath` runs engagement, original territorial gift/friction, selected nonrandom promotion, ordinary casualty compaction and selected battle bookkeeping in source order. It retains initial health and pre-cleanup identities; territorial changes occur before promotion and survive all later clones. Actual current tile/faction facts bind the diplomacy stage, with active negotiation runtime supplied explicitly and returned separately. Each intermediate frame is independently owned and budgeted, and released before the next ownership transition when no longer needed. Failed stages preserve prior World, summaries and negotiation state.
+
+Both hostASanUBSan and independent68040 match72synthetic Worlds/11664attempts:962accepted (466attacker/496defender deletions),838territorial applications and10702held/rejected. The independent wire model compares actors, map, casualty accounting, all gift/friction fields, selected battle counters/monuments and returned runtimes. The corpus retains746selection-random,372promotion-notification,124monument-UI,256unowned-land and84same-faction rejection observations. Guards include six poisoned input/output positions, explicit diplomacy/runtime/pool preservation, source destruction, tiny budgets and a proved initial-engagement-fit/later-clone-fail budget. Initial model and harness failures remain documented in evidence. Two fresh final normalSDK builds match; actualAmigaOS execution is UNRUN. All340parent CPP files and321workflow commands remain unchanged/retained; five friend declarations permit private composition and two new workflow commands are added.
+
+This is still a bounded owned combat stage. The original caller's pre-round movement charge/hasty strength, later prototype combat-history fields and movement/global-cursor tail, complete random/notification lifecycle, legal session attack, variable-length persistence, turns, AI and diplomacy gameplay remain unfinished. There is no frontend attack control, native qualification or full-game completion claim. Required remote CI and publication remain unrun/held.
+
+### Saved-design combat history (local candidate, 27 October 2026)
+
+`stage_historical_aftermath` captures original attacker/defender design IDs and factions before casualty compaction, runs the frozen territorial/promoted deletion/bookkeeping body, then applies the original two prototype combat-history writes to the resulting owned World. It sets the defender faction bit in the saved attacker design and the attacker faction bit in the saved defender design. Shared design IDs merge both bits in source order. Actor IDs after deletion are never used to recover the witness. A direct `stage_world_combat_history` API also holds any required interlude. The combined ordinary nonbase/nonnative scope proves the sole original interlude trigger absent; it does not claim other caller events complete.
+
+Two private original instruction fragments (70SMAC/68SMAXbytes) match8192controlled observations, including2732shared-design contexts, with every byte of1.1MBglobal memory compared and a single boundary observer before the interlude decision. Original earlier witness stores are source-inspected, not separately executed. HostASanUBSan and independent68040 match74Worlds/11988attempts:1080accepted,10908held/rejected,956territorial changes and1080history edits; four accepted cases share a design. The model checks all512history bytes and saved witness metadata in addition to inherited actor/map/casualty/bookkeeping/runtime bytes. Direct idempotence, witness/runtime rejection, poisoned alias, later-clone budget failure and source-lifetime checks pass. Final normalSDK builds are identical; actualAmigaOS execution is UNRUN.
+
+All343parent CPP files and323workflow commands are unchanged/retained; three friend declarations allow private cloning/composition and two new workflow commands are added. Pre-round attack flags/hasty strength/movement charging, later current-actor cursor/movement handling, complete original caller/event/random authority, legal player attack, variable-length saves, turns, AI and complete diplomacy remain unfinished. No frontend, native, remote-CI or full-game completion claim is made.
+
+### Original battle-entry calculations (local candidate, 27 October 2026)
+
+`inspect_battle_charge` and `inspect_battle_hasty` implement two separate observed caller fragments. The first calculates the mode-dependent movement charge. The second calculates hasty offense before combat rounds, the byte-wrapped movement expenditure and the original actor state changes. SMAC exempts design 8 from hasty scaling; SMAX exempts designs 8 and 15. The existing speed implementation retains the separate edition difference for design 19. Integer multiplication and subtraction preserve original 32-bit wrap and signed division.
+
+The APIs require explicit observations, positive road and, for hasty handling, attack flags exactly 2. Caller speed, offense, charge, base presence and report count describe the respective original observation point. They do not establish a legal attack or continuity across the intervening `battle_compute` and caller work. Hasty handling returns the required string lookup and report append obligations, including a lookup when the computed penalty is zero. It does not invent a label or acknowledge a GUI event.
+
+Private unchanged original instructions pass 4096 hasty/state and 2048 earlier-charge observations per edition, comparing all 1,114,112 mapped global bytes and resulting frame values. The hasty fragments execute real speed, morale, ability and string-range helpers plus the original inline SMAC copy or complete SMAX copy routine. Original charge and hasty fragments are separate executions with supplied frame/register facts, not a complete caller run. Owner executables and extracted instruction bytes remain private. The checked owned calculations match all 12288 observations and independent integer controls under host sanitizers and independent Linux 68040 execution. Normal Amiga SDK compilation alone does not qualify AmigaOS execution.
+
+These calculations are not yet wired into the frozen owned engagement/aftermath stage. World mutation, complete caller flags, string/report lifecycle, legal session attack, remaining cursor/movement tail, persistence, turns, AI and diplomacy gameplay remain unfinished. No frontend attack control or completion claim is added. All parent production sources and workflow commands are retained; required remote CI and native execution remain UNRUN.
+
+### Owned World battle-entry inspection (local candidate, 27 October 2026)
+
+`inspect_world_battle_entry` binds the charge and hasty calculations to current owned actors, designs, faction facts, damage, effective morale, speed, basic rules and the existing conventional land-strength pipeline. It returns the strengths before hasty scaling and the proposed offense, movement and state results. It requires an explicit offline mode0/flags2/execute1 observation and an observed attacker report count. It refuses base targets, native factions, attacker abilities and expansion design-owner FREEABIL paths. These conservative limits retain unresolved original branches. A supplied actor pair does not establish best-defender selection or legal attack authority.
+
+Separate private continuity controls execute the contiguous original caller from charge calculation through genuine `battle_compute`, health and treaty/nerve guards, then hasty and movement/state handling. Both editions match 512 contexts against a separately executed genuine combat helper and later original fragment, comparing all 1,114,112 global bytes and final offense/charge. Those controlled fixtures use synthetic numerical sea terrain, mode0, flags2, execute1, no base, no abilities or grants and an offline runtime. They establish that bounded caller path, not whole-caller reachability, legal attacks or an independent full-game differential.
+
+Host sanitizer and independent Linux 68040 controls match 13 synthetic Worlds and 3159 queries: 1086 accepted, 600 scaled and 208 report appends. All 288 zero-penalty cases that require a string lookup retain that obligation. Guards preserve outputs on failure, reject overlapping or poisoned inputs before access, and preserve the imported bytes, decoded World records, monuments, history and runtime RNG. All parent production files and 327 parent workflow commands remain unchanged; two workflow commands are added. Amiga SDK compilation and actual AmigaOS execution remain distinct qualifications.
+
+This API is read-only. It does not update the battle modifier ledger, resolve original label339, mutate actor state, acknowledge events, run rounds with hasty strength, or expose an attack control. The original modifier ledger and string lookup must be bound before advancing the caller or staging the complete owned pre-round transition. Native execution, required remote CI and full gameplay remain unfinished.
+
+### Original attacker modifier ledger (local candidate, 27 October 2026)
+
+`attack_modifier_ledger` constructs symbolic attacker reporting for the conventional flags0, nonbase, nonnative ground scope with no attacker abilities or grants. It retains source order: Fungus, Fanatic, expansion OFFENSE rows, Mobile/Open, Road and Downhill. SMAC ignores expansion OFFENSE rows. Original count reset preserves unused prior slots. Displayed modifiers stop at four, while the ordered lookup obligations can reach thirteen. Factor100 still requests its label; saturated display slots do not suppress later lookups. Original factor-minus100 signed-word wrap is explicit.
+
+Private complete original `battle_compute` natural returns match 1024 controlled cases per edition, with no original instruction changes, boundary observers, fake helpers or imported callbacks. The independent model checks attacker count, four percentages and all320 label-buffer bytes including unused canaries; only named defense reporting and temporary morale/terrain caches are excluded from the other-global-write check. These synthetic numerical sea-terrain fixtures cover the bounded conventional path, not legal attacks or a full-game differential. Dynamic lookup order is source-inspected, not separately instrumented.
+
+Host sanitizer and independent Linux 68040 controls join all2048 original observations and check integer extremes, saturation, prior-slot preservation, rejected inputs and aliases. Labels remain unresolved original ordinal IDs. This API takes explicit current-stage facts; their automatic World binding and original label-file import/string lookup/copy remain unfinished. It neither fabricates a zero report count nor completes a string/GUI obligation. Pre-round mutation, combat-round integration, native execution, required remote CI and full gameplay are still held. All parent production files and329 workflow commands are retained, with two commands added.
+
+### Owned World battle reporting (local candidate, 27 October 2026)
+
+`inspect_world_battle_reporting` derives symbolic attacker modifiers from current basic strengths, fungus, faction and ground stages, then supplies the resulting report count to the frozen World entry inspection. It accepts no caller-supplied report count. Source-order expansion OFFENSE rows come from the actual attacker faction; SMAC omits them. The final symbolic ledger includes the conditional hasty label339 append. Zero-percent and saturated-slot lookup obligations remain pending, including the hasty lookup when no append occurs. Prior unused symbolic slots are preserved.
+
+Host ASan/UBSan and independent Linux68040 match 15 synthetic Worlds and1215 queries:426 accepted,820 pending lookups,32 saturated nonzero lookups,96 zero-percent lookups and105 hasty appends. Each result field is compared with an independent raw-container model. Full World fingerprints, exact imported and actor bytes, RNG and poisoned alias/error controls verify read-only behavior. Initial runs matched outputs but failed the saturation coverage assertion; a test-only factor corpus correction supplies a fifth nonzero modifier, and the final runs pass. Normal SDK builds are identical; actual AmigaOS execution and required remote CI remain UNRUN.
+
+This remains a conservative numeric inspection for an explicitly supplied offline mode0/flags2/execute1 pair, with inherited nonbase/nonnative/ordinary-plan/no-attacker-ability restrictions. It does not select a defender, establish attack legality, import or resolve label text, copy original report buffers, mutate actors, advance the caller, run rounds with hasty offense, acknowledge events, or add player controls. All parent production sources and331 workflow commands are retained; two commands are added. Original text handling and pre-round integration remain required before complete owned combat or gameplay claims. Publication is held.
+
+### Original label views and combat text (local candidate, 27 October 2026)
+
+`import_original_labels` reads a checked canonical #LABELS subset into caller-owned offsets over immutable, caller-owned source bytes. It accepts LF or explicit CRLF transport, trims ASCII spaces only, preserves physical blank labels and literal punctuation, and rejects unsupported headers/count forms, NUL, bare CR and rows that would split the original fgets buffer. Terminated content is limited to509 bytes; a final unterminated row may contain510. It stops after the declared rows, retaining ordinal IDs. Its edition tag is an explicit caller profile, not inferred or authenticated from file contents. The source must remain alive and immutable. This is not the complete original loader or original CRT text-mode execution.
+
+`resolve_combat_reporting` consumes the checked numeric reporting shape, resolves every source-order label lookup, and proposes the original four percentages and320 name bytes. It performs zero-percent and saturated-slot lookups too. The checked copy writes the label plus NUL and preserves unused slots and trailing buffer bytes. Appended names over79 bytes are refused before output; they are neither truncated nor allowed to overflow. Incoherent counts, append flags, final symbolic slots, missing labels, wrong edition and known aliases preserve output. No GUI/event acknowledgement or World mutation is performed.
+
+Private original kill_lf and purge_spaces helpers return naturally for1024 controlled strings per edition, using genuine closed CRT dependencies and no modified original instructions. All512 buffer bytes and64 fence bytes match an independent model, including tabs, punctuation, high-bit bytes, empty strings and maximal lengths. File loading, fgets, labels_init, CRT newline translation and PE startup were not executed. One owner's1131-row label file is imported and used under explicitly supplied profile tags; this does not establish distinct edition asset provenance.
+
+Host sanitizer and independent Linux68040 final controls match1524 cases,1468 successful reports and8022 completed owned lookups, including426 accepted numeric reports from the frozen World candidate. Those joins consume recorded symbolic events and remain separate from a live World-to-text call. The public corpus has1092 cases without owner data. Initial compilation caught probe indentation; initial model execution assigned the wrong code to an edition refusal, corrected before the authoritative final passes. Normal SDK builds are byte-identical and compile-only. All354 parent CPP files and333 workflow commands are retained, with two commands added. Native execution, required remote CI and publication remain held. Pre-round actor mutation, hasty offense before rounds, complete caller/selection/session/events/persistence/turns/AI/diplomacy and full gameplay remain unfinished.
+
+### Current World calculations and original combat report text (local candidate, 27 October 2026)
+
+`inspect_world_combat_text` joins the frozen current-World calculation and checked original label-view resolver in one call. It derives the actual symbolic ledger and report count, resolves every entered lookup, and proposes both numeric and original text results before exposing output. The label profile must match the World's edition. Existing prior report tails survive the checked copy. Missing labels and oversized appended names refuse the whole result; neither partial calculations nor partial text are committed. Known overlaps across the World, input records, borrowed label bytes and output are refused before relevant input reads.
+
+Host ASan/UBSan and independent Linux68040 match90 World/profile combinations and7290 queries:2143 accepted,3881 completed lookups,300 missing-label holds and113 oversized-name holds. Profiles include synthetic labels, literal punctuation/blank-label CRLF, missing ordinals, long hasty/fungus names and one supplied owner's original file. All numeric fields and all320 name bytes match an independent raw-container model. Full World fingerprints, imported bytes, actors, runtime RNG, labels, prior buffers,3323 guard checks and output preservation pass. The initial diagnostic compilation rejected new probe indentation; corrected before both authoritative host2/be2 executions. Normal SDK builds are byte-identical but actual AmigaOS execution remains UNRUN.
+
+This closes the bounded numeric-to-text inspection dependency, not the original battle caller. It preserves the inherited offline mode0/flags2/execute1 ordinary nonbase/nonnative/no-attacker-ability scope. A supplied pair is not best-defender selection or legal attack authority. There is no World mutation, event acknowledgement, player attack, combat-round integration, persistence or turn. Original source review shows difficulty adjustments, treaty/event handling and display/stack/input boundaries after hasty scaling and before retreat initialization/rounds. They must be implemented or actually proven absent in a qualified scope before composing a full pre-round transition; unknown globals must never be defaulted to zero. The original file loader/CRT semantics and separate edition asset provenance remain qualified only within the parent label reader's documented limits. All356 parent CPP files and335 workflow commands remain unchanged/retained, with two commands added. Required remote CI, native execution, publication and full gameplay remain held.
+
+### Original post-hasty combat difficulty (local candidate, 27 October 2026)
+
+`inspect_combat_difficulty` restores the original ordinary nonnative difficulty calculation at its distinct post-hasty/post-tutorial observation point. It requires explicit faction IDs, both faction difficulties, the human-status mask and the offense present there. If only the defender is human and its difficulty is below2, offense becomes the signed-word product of difficulty+1 and offense divided by4. If only the attacker is human and its difficulty is below2, offense becomes the signed-word product of4-difficulty and offense divided by2. Division truncates toward zero; addition, subtraction and products preserve original32-bit wrap. Both-human and both-nonhuman cases retain offense. Upper status bits are ignored. Native faction0 is held; it has additional later branches.
+
+Private unchanged original fragments match2048 supplied-frame observations per edition:207SMAC bytes and188SMAX bytes, with one appended boundary observer before native handling. Every512 frame bytes and every byte of eight original faction records plus the status global are compared in each execution. These fragments start after the tutorial boundary; they do not execute or acknowledge the preceding tutorial, treaty, hasty, label or GUI paths. They are bounded original instruction observations, not a complete helper, caller, game or native qualification.
+
+Host ASan/UBSan and independent Linux68040 match20491 cases including4096 joins to those actual original observations, with20480 accepted and11 held/rejected. Integer extremes, negative difficulties, status-bit combinations, both factions and known/poisoned aliases are covered. The public corpus has16395 cases. Applied flags report the checked source predicates, not newly instrumented original branches. An initial optimized probe build rejected a direct alias-test cast; the probe now uses the existing integer-address test helper without disabling strict-aliasing diagnostics. The production calculation did not change. Final normal SDK builds are byte-identical and compile-only.
+
+This calculation is not yet bound to the current World/text inspection or owned actor/round staging. It does not infer live status from saved data, supply guessed zeros, change report text, mutate the World, acknowledge events, establish legal attacks or run rounds. Difficulty adjustments alone do not complete the intervening original treaty/event/display/stack/input boundaries. All358 parent CPP files and337 workflow commands remain unchanged/retained; two commands are added. Native execution, required remote CI, publication, persistence, turns, AI/diplomacy gameplay and the complete games remain held.
+
+### Current World observed combat difficulty (local candidate, 27 October 2026)
+
+`inspect_world_combat_difficulty` derives each combatant's faction ID from the current owned actor and reads the corresponding current faction `diff_level`. The edition follows the imported World's version. The human-status mask and offense at the original post-hasty/post-tutorial observation point remain explicit runtime facts. No saved-mask fallback or implicit connection to the earlier World/text boundary exists. Distinct actors are required; native factions remain held. The frozen original difficulty leaf supplies exact arithmetic and predicate diagnostics.
+
+Host ASan/UBSan and independent Linux68040 match16 Worlds and71196 queries, including the owner's three unchanged tutorials:24528 accepted,2160 human-defender and2160 human-attacker adjustments. Six file versions, signed difficulty/offense extremes, status-bit combinations, native and invalid actors, an empty World, missing observations and364 alias/lifetime guards are covered. The public corpus has13 Worlds/61191 queries. All result bytes match an independent raw-container model. World fingerprints, imported bytes, runtime RNG, runtime inputs, failed outputs and owner-file hashes are preserved. Initial host1 failed a probe assertion that incorrectly expected the legitimate runtime input to be rejected; the test excludes that valid input from source-alias refusals. Production binding code was unchanged. Final host2/be2 and public controls pass; normal SDK builds are identical and compile-only.
+
+This remains an explicitly observed calculation, not original caller continuity or combat execution. It does not infer authority from a save, claim that treaty/nerve/tutorial/UI events completed, mutate actors, adjust a completed round summary or expose an attack control. Original pre-round event/diplomacy/display/stack/input paths still require source-backed implementation or a proven-absent scope before the proposed hasty and difficulty strengths can enter owned rounds. All360 parent CPP files and339 workflow commands remain unchanged/retained, with two commands added. Actual AmigaOS execution, required remote CI, publication, complete persistence/turns/AI/diplomacy and full gameplay remain unfinished.
+
+### Original observer prebattle aggression (local candidate, 27 October 2026)
+
+The original ordinary battle caller always invokes `act_of_aggression` after its surprise/observer branch, including when the factions already have war flags. `inspect_prebattle_aggression` restores a bounded proposal from that complete helper and its genuine `treaty_on(0x8010)` dependency. It updates both directional status words using original masks and canonical flags, and resets both combat counters when the forward status low7 is nonzero. It requires explicit faction IDs/current observer and actual directional statuses/counters. Native/same-faction inputs are held. Reverse low7 requires `double_cross`; a current faction participating in the fight requires the original audio/redraw handling. Those paths are held before output.
+
+Private execution of both complete original aggression and treaty helpers returns naturally for2048 controlled cases per edition, with no instruction changes, boundary observers or fake callbacks. Actual guards prove the betrayal/audio/redraw paths absent: the explicit current faction differs from both participants and reverse low7 is clear. Every byte of eight original faction records is compared internally against the independent expected image each context, while selector/UI flags/window canaries remain unchanged. Forward status combinations cover combat-counter reset and retained counters. This is a genuine complete-helper differential within its scope, not complete pre-round caller continuity.
+
+Host ASan/UBSan and independent Linux68040 pass12310 cases including4096 joins to those actual observations:12288 accepted,22 held/rejected,9043 counter resets and12288 idempotence checks. The public corpus has8214 cases. Known and poisoned aliases preserve inputs/outputs. Both original oracle executions and all owned control builds/runs passed on their first actual attempts. Normal SDK builds are identical and compile-only. All362 parent CPP files and341 workflow commands remain unchanged/retained, with two commands added.
+
+This proposes directional records only and does not mutate a World or acknowledge an event. The preceding SURPRISE parse/message and spoke-turn effects, observer display selection, full double-cross and participant UI paths, subsequent pre-round third-party territory/friction effects, nerve handling and original display/stack/input boundaries remain unfinished. Existing war must not be treated as a blanket no-op for the original caller. The frozen post-combat territory stage does not cover this distinct pre-round loop. Actor/movement staging, adjusted offense before rounds, full selection/legal/session/random/persistence/turn/AI/diplomacy gameplay, required remote CI, actual AmigaOS execution and publication remain held.
+
+### Bounded original prebattle notification selector
+
+`prebattle_notification.{h,cpp}` proposes the ordinary-plan surprise/observer
+selection from explicit current faction, human mask, popup/game flags, turn,
+prior local warning, prior diplomatic contact turn and full directional status
+matrix. It preserves prior contact on current-defender and remote-popup routes:
+notification completion is still required before the original later timestamp.
+Only the silent route proposes the immediate timestamp. No callbacks, World
+writes, stage acknowledgment, aggression, rounds, input or native qualification.
+
+Private owner-code comparisons executed 2,048 bounded contexts per edition,
+stopping before notifications, after the real silent timestamp, or before
+aggression. Copied original instructions were unchanged. Every faction and entry
+frame byte was compared, with five runtime words unchanged. This proves only
+those supplied-entry selector fragments, not the preceding outer plan/hasty
+stages or complete caller. The initial observation stub did not link; the fixed
+five-byte jump stubs passed on the second attempt. Both failed and passed
+harness histories remain private. No owner bytes are included here.
+
+Host ASan/UBSan and independent static 68040 tests pass 16,399 public controls
+(16,384 accepted, 15 held); the private joined suite passes 20,495 controls,
+including all 4,096 original observations. Both outputs match. SDK build only;
+actual AmigaOS and remote final-head CI remain UNRUN. The full game remains
+incomplete. `test_prebattle_notification.py` also checks immutable inputs,
+preserved failure output and every wholly overlapping four-byte output offset.
+
+### Current World prebattle diplomacy proposals
+
+`world_prebattle_diplomacy.{h,cpp}` independently binds the recovered notification
+selector and observer aggression proposal to actual current actor ownership and
+faction records. The notification query derives all directional statuses and
+prior defender contact turn; the aggression query derives both directional
+statuses and combat counters. Both use the current world's edition. Current
+viewer, human status, flags, popup state, turn and local warning remain explicit
+runtime observations, with no saved-state authority fallback. A successful query
+never acknowledges an earlier notification or advances the original caller.
+Double-cross and participant audio/redraw remain held by the aggression helper.
+
+The independent wire model checks both proposals, exact failure preservation,
+all borrowed World storage aliases, immutable decoded/source records and RNG.
+The joined host/68040 suite passes 176,316 queries across 28 worlds, including
+three unchanged original tutorials: 58,464 notification proposals cover all four
+routes; aggression reports 31,752 proposals, 16,128 double-cross holds and 10,584
+participant UI holds. There are 1,392 alias/empty-world guards. The first host
+model failed on invalid-current versus same-faction error precedence in Explore;
+only the model was corrected. Production code was unchanged for passing reruns.
+SDK build only; actual AmigaOS and remote CI remain UNRUN. No World mutation,
+legal attack, event completion, turns or playable-game qualification is claimed.
+
+### Original pre-round third-party treaty and friction
+
+`prebattle_territory.{h,cpp}` proposes the original third-party effects after
+ordinary aggression and before nerve-gas, difficulty, display and round setup.
+This differs from the post-combat territorial gift/friction prefix. The original caller uses the attacker's starting coordinates, not the defender's
+tile, for this signed map owner. It selects at most one of candidates 1..7. A qualifying weaker
+third party receives a two-way `0x2000` treaty marker; its subsequent status
+**toward the defender** selects friction applied **from defender toward owner**.
+The explicit ordered active negotiation pair also controls the wrapped runtime
+accumulator. Current viewer, relations, military values and negotiation state
+are supplied facts. An existing treaty marker does not suppress friction.
+
+Private execution matches 2,048 original contexts per edition with the actual
+unchanged caller loop, whole treaty helper and whole friction helper. Only one
+final observation jump is inserted before later display stages. Every byte of
+the 1,114,112-byte global image is compared, with map bytes and input frame words
+unchanged and stack/scratch checked. Each edition executes 340 treaty updates,
+184 friction updates and 75 matching negotiation updates. This supplied-entry
+proof excludes preceding aggression/notifications and the remainder of combat.
+The original harness first had a Python syntax error before execution; later
+passes strengthened the correct UI canary/map/input checks and existing-marker
+coverage. Historical attempts remain private. No owner code bytes are included.
+
+Final host ASan/UBSan and independent static 68040 controls pass 12,963 joined
+cases (12,944 accepted, 19 held), including all 4,096 original observations;
+1,056 treaty, 705 friction and 459 negotiation updates match the wire model.
+The public subset passes 8,867 controls on both processors. All input aliases and
+failure outputs are preserved. SDK build only; AmigaOS and remote final-head CI
+remain UNRUN. No World mutation, event completion, action authority, input,
+turns or playable-game qualification is claimed.
+
+### Current World attacker-origin prebattle territory
+
+`world_prebattle_territory.{h,cpp}` resolves the PRE-round effect from a supplied
+current pre-movement frame. It reads the attacker's starting tile owner, both
+participant factions, directional diplomacy, signed military strength and
+friction directly from the owned World, including legacy military offset
+`0x105c` versus modern `0x1060`. Current viewer and active negotiation state
+remain explicit runtime observations. It holds the original attacker-plan11 and
+defender-plan12 exclusions, invalid/native pairs and negative/out-of-domain
+owners before indexing. Owner0 and participant-owned tiles produce identity
+proposals from their actual records. No fabricated unused owner facts enter the
+leaf. The query cannot reconstruct an origin after relocation or establish that
+earlier notifications/aggression actually completed.
+
+Host ASan/UBSan and independent static 68040 joined controls cover 52 worlds,
+including three unchanged owner tutorials. They compare the complete proposal
+against an independent wire model, contrasting attacker/defender owners, both
+plan exclusions and their asymmetric allowed counterparts, no-ops, signed rank
+and friction boundaries, wrapped negotiation values, failure preservation,
+source/output aliases and unchanged whole World object/storage/records/RNG.
+The first host build stopped on harness indentation; only formatting changed.
+A later extension adds actual design-plan exclusions and reruns all final tests.
+SDK build only; AmigaOS and final-head remote CI remain UNRUN. This query writes
+no World state and grants no event acknowledgment, legal attack or round/turn
+advancement. Full games remain incomplete.
+
+### Owned original prebattle prefix frame
+
+`PrebattlePrefixPlan` owns a current World clone for the supported ordinary
+nonbase/nonnative ground prefix. It resolves source-order modifier/hasty report
+text, then stages actor state and move expenditure, callback-free observer or
+silent contact, actual observer aggression/status/counter effects and the
+attacker-origin third-party treaty/friction proposal. The later territory query
+reads the updated clone. Explicit viewer/human/flags/turn/negotiation facts remain
+caller observations. No active state is inferred from a save or guessed zeros.
+Notification, double-cross and participant audio/redraw paths return held errors.
+
+The immutable source World and prior ready output survive errors, held events,
+source/owned-frame/borrowed-label aliases and insufficient memory budget. Ready
+frames and copied report text own their storage after source destruction. The
+prefix stops before the remaining nerve-gas/tutorial/display/stack/input/retreat
+and round boundaries; it does not grant a legal attack, acknowledge a GUI event,
+run a round, draw random values, commit a session or implement filesystem saves.
+The returned offense must not be replaced by a later initial-strength recompute.
+
+The comparison probe emits full original containers with only the allowed actor
+and faction fields encoded; an independent Python model compares every byte and
+the complete numeric/text/diplomacy summary. The probe also compares every other
+decoded field/record and source RNG, tests prior-output preservation, tiny memory
+budgets, container/label aliases and owned source lifetime. Initial ASan execution
+caught a borrowed-label output-alias guard reading the output plan too early;
+the borrowed span check now precedes that read. Failed history remains private.
+No owner media/code bytes are in this checkout. AmigaOS and remote final-head CI
+remain UNRUN; the full games remain incomplete.
+
+Final host ASan/UBSan and independent static68040 comparisons pass 1,728 attempts
+across 36 world/label profiles: 48 complete owned prefix snapshots, 252 held
+notifications, 96 double-cross holds and 96 participant UI holds. The remaining
+attempts reject invalid or unsupported inputs. There are 768 tiny-budget/alias
+guards and source-lifetime checks on every profile. All 48 snapshots match every
+original-container byte, with original owner label text copied in its explicit
+edition profile. The single supplied owner labels file is not evidence of two
+distinct edition assets. Public controls pass 864 attempts/24 snapshots/384 guards
+on both processors. The second harness version matched every compared byte but
+failed final coverage because its selected pairs missed double-cross; version3
+fixes that fixture and is authoritative. These are owned prefix compositions,
+not a complete original-caller execution or playable combat qualification.
 ### Original global/faction colour mapping (core only; native/integration pending)
 
 The original CVR pixel stage writes **global game-palette indices**. The model's
@@ -1258,6 +2570,33 @@ container (RGB768, neutral6144, tint3), the latter reads raw PCX RGB768.
 selection and shared renderer cache binding remain required before this can be
 called a visible colour fix. This scope neither changes PR87 nor touches the
 user's lab session. See `PALETTE-EVIDENCE-20261025.json`.
+## Manual research choice field transition (draft, native unrun)
+
+`research_choice.h` provides the pure original post-chooser state transition for
+manual research changes: cancel/same/unset semantics, half-labs penalty when an
+existing target changes, and unchanged cached cost. It reports the unresolved
+synchronisation boundary without invoking it. This is not an owned-world or UI
+transaction: caller authority, eligibility/pool, stale-state and discovery
+effects remain outside its explicit scope. Public CI runs2,486 cases per
+architecture; normal SDK build and host controls pass, actual AmigaOS is unrun.
+See `RESEARCH-CHOICE.md` and its evidence JSON before integrating.
+## Normal human research pool (draft, native unrun)
+
+`research_pool.h` queries the original directed-human candidate pool using the
+PR86 owned eligibility API. It preserves original category ties, global first
+offer, modulo-three ranking rotation and starting-ID exceptions. Blind, AI and
+turn-zero paths explicitly require automatic selection; this addition does not
+implement that selection, discovery awards or turn advancement. No choice
+controls are exposed in the frontend. See `RESEARCH-POOL.md` and
+`RESEARCH-POOL-EVIDENCE-20261025.json` for source and qualification limits.
+
+CI runs 115 raw contexts plus two invalid snapshot controls and 64 owned worlds
+(512 faction queries) on both host sanitizers and independent 68040. Normal SDK
+raw/world builds pass; actual AmigaOS execution remains unrun and is a merge
+gate. This stacked draft depends on PR86 and preserves separate PR89 unchanged.
+Original human nutrient/mineral factors retain original zero/default-Industry
+behavior in a separate pure API: [scope](HUMAN-COST.md),
+[evidence](HUMAN-COST-EVIDENCE-20261025.json). Native execution remains pending.
 ### Static basic human speeder profile (native qualification pending)
 
 The actual original-world viewer can now render the base-game basic human
