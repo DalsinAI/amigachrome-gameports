@@ -511,6 +511,10 @@ static void test_determinism_and_resume() {
     synthetic_rules();
     CHECK_EQ(load_daemon_bytes(sa.data(), sa.size()), SAVE_LOAD_VALID);
     CHECK_EQ(*ControlTurnMove, 1);
+    // Integration: a saved game does not carry the random generators (as in
+    // the original), and WP6's computer players draw from them during the
+    // turn, so the loaded game continues from the original's generator state.
+    c->rng = a->rng;
     TurnResult rc = engine_end_turn();
     engine_bind(a.get());
     TurnResult ra = engine_end_turn();
@@ -575,6 +579,16 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         return 20;
     }
     synthetic_rules();
+    // Integration: unit speeds (WP3 veh_speed, called by the WP6 unit moves)
+    // divide by the road movement rate; alpha.txt gives 3.
+    Rules->move_rate_roads = 3;
+    // Integration: unit messages print the morale names (WP4), which the rules
+    // loader never leaves null.
+    static char morale_name[] = "";
+    for (int i = 0; i < MaxMoraleNum; i++) {
+        Morale[i].name = morale_name;
+        Morale[i].name_lifecycle = morale_name;
+    }
     // Integration: WP7's world_temperature divides the map height by these
     // #WORLDBUILDER values (as the original does); the synthetic maps are
     // smaller than any real one, so scale them down to the map height.
@@ -616,6 +630,8 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
     for (int i = 0; i < *BaseCount; i++) {
         BASE* b = &Bases[i];
         b->faction_id = b->faction_id & 7;
+        // Integration: WP6 plans_upkeep indexes diplomacy by the former owner.
+        b->faction_id_former = b->faction_id_former & 7;
         b->pop_size = b->pop_size & 15;
         // Integration: WP2's base messages print the base name; the patterned
         // names have no terminator, and reading on past them shows the
@@ -668,9 +684,27 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         FactionRankings[i] = FactionRankings[i] & 7;
     }
     *MapNativeLifeForms = *MapNativeLifeForms & 3;
+    // Integration: the WP6 route scores add up the continent counters.
+    for (int r = 0; r < MaxRegionNum; r++) {
+        Continent& c = Continents[r];
+        c.tile_count &= 0xFFFF;
+        c.open_terrain &= 0xFFFF;
+        c.world_site &= 0xF;
+        c.pods &= 0xFF;
+    }
     for (int i = 0; i < MaxPlayerNum; i++) {
         Faction* f = &Factions[i];
         f->major_atrocities = f->major_atrocities & 0xF;
+        // Integration: WP6 enemy_strategy scales turn thresholds by it.
+        f->diff_level = clamp(f->diff_level, 0, 6);
+        // Integration: WP3 supply pods (opened by WP6 unit moves) double these.
+        for (int32_t* p = &f->goody_opened; p <= &f->goody_tech; p++) {
+            *p = *p & 0xFF;
+        }
+        // Integration: WP6 mod_social_ai indexes the social models by the
+        // faction's priority choice (-1 = none, 0..3 as in the faction file).
+        MFactions[i].soc_priority_category = clamp(MFactions[i].soc_priority_category, -1, 3);
+        MFactions[i].soc_priority_model = clamp(MFactions[i].soc_priority_model, -1, 3);
         f->tech_ranking = f->tech_ranking & 0xFF;
         f->clean_minerals_modifier = f->clean_minerals_modifier & 0xF;
         f->tech_commerce_bonus = f->tech_commerce_bonus & 0xF;
