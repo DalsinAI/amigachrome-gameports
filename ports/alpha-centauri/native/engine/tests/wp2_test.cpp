@@ -16,10 +16,10 @@
 #include "../base_deps.h"
 
 #include "../../cost_factor.h"
-#include "../../base_psych.h"
+#include "../../upkeep_base_psych.h"
 #include "../../base_nutrients.h"
-#include "../../base_minerals.h"
-#include "../../base_energy.h"
+#include "../../upkeep_base_minerals.h"
+#include "../../upkeep_base_energy.h"
 #include "../../base_support.h"
 #include "../../base_commerce.h"
 
@@ -388,7 +388,7 @@ static void test_psych_oracle() {
         pf.clinical_immortality = has_project(FAC_CLINICAL_IMMORTALITY, faction);
         pf.pending_economics = f->SE_Economics_pending;
         alpha::PsychResult pr = {};
-        CHECK(alpha::base_psych_policy(pf, pr) == alpha::PsychError::ok);
+        CHECK(alpha::base_psych_policy(pf, pr) == alpha::UpkeepPsychError::ok);
         CHECK_EQ(base->talent_total, pr.talents);
         CHECK_EQ(base->drone_total, pr.drones);
         CHECK_EQ(base->superdrone_total, pr.superdrones);
@@ -590,7 +590,7 @@ static void test_accounting_oracles() {
             mf.centauri_preserve = has_fac_built(FAC_CENTAURI_PRESERVE, b);
             mf.temple = has_fac_built(FAC_TEMPLE_OF_PLANET, b);
             mf.human = is_human(faction);
-            alpha::MineralResult mr = {};
+            alpha::UpkeepMineralResult mr = {};
             CHECK(alpha::base_minerals(mf, mr) == alpha::MineralError::ok);
             // The oracle applies the multiplier to convoyed minerals as the
             // original did; with no convoys both orders agree (Thinker Fix).
