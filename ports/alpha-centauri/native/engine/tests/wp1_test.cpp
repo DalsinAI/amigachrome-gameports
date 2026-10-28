@@ -96,6 +96,9 @@ static void synthetic_rules() {
         Proposal[i].preq_tech = TECH_Disable;
     }
     Rules->tech_preq_economic_victory = TECH_Disable;
+    // Integration: WP2's base upkeep divides by these (alpha.txt gives 1/1).
+    Rules->freq_global_warming_numerator = 1;
+    Rules->freq_global_warming_denominator = 1;
 }
 
 /* width x height land map, all region 1, factions alive as given, humans as given. */
@@ -555,11 +558,40 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         if (v->unit_id < 0 || v->unit_id >= MaxProtoNum) {
             v->unit_id = BSC_SCOUT_PATROL;
         }
+        // Integration: WP2's unit support reads the tile of every supported unit.
+        if (!mapsq(v->x, v->y) && *MapAreaX >= 2 && *MapAreaY >= 1) {
+            v->y = (int16_t)(i % *MapAreaY);
+            v->x = (int16_t)((2 * i) % (*MapAreaX & ~1) + (v->y & 1));
+        }
+        if (v->home_base_id >= *BaseCount) {
+            v->home_base_id = -1;
+        }
+    }
+    // Integration: patterned stack links can form cycles, which WP3's real
+    // spot_all would walk forever; rebuild the stacks from the positions.
+    {
+        std::vector<std::pair<int, int>> pos;
+        for (int i = 0; i < *VehCount; i++) {
+            pos.push_back({Vehs[i].x, Vehs[i].y});
+            Vehs[i].x = -1;
+            Vehs[i].y = -1;
+            Vehs[i].next_veh_id_stack = -1;
+            Vehs[i].prev_veh_id_stack = -1;
+        }
+        for (int i = 0; i < *VehCount; i++) {
+            veh_drop(i, pos[i].first, pos[i].second);
+        }
     }
     for (int i = 0; i < *BaseCount; i++) {
         BASE* b = &Bases[i];
         b->faction_id = b->faction_id & 7;
         b->pop_size = b->pop_size & 15;
+        // Integration: production_phase now runs WP2's base upkeep, which needs the
+        // base on a map tile (its worked radius starts at the base tile).
+        if (!mapsq(b->x, b->y) && *MapAreaX >= 2 && *MapAreaY >= 1) {
+            b->y = i % *MapAreaY;
+            b->x = (2 * i) % (*MapAreaX & ~1) + (b->y & 1);
+        }
         b->specialist_adjust = b->specialist_adjust & 7;
         b->drone_total = b->drone_total & 7;
         b->talent_total = b->talent_total & 7;
@@ -594,6 +626,54 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         MFactions[i].rule_interest = MFactions[i].rule_interest % 100;
     }
     *ObjectiveAchievePts = *ObjectiveAchievePts & 0xFF;
+    // Integration: values WP2's base upkeep indexes or multiplies.
+    *DiffLevel = clamp(*DiffLevel, 0, 5);
+    *ClimateFutureChange = *ClimateFutureChange & 0xFF;
+    for (int i = 0; i < MaxPlayerNum; i++) {
+        FactionRankings[i] = FactionRankings[i] & 7;
+    }
+    *MapNativeLifeForms = *MapNativeLifeForms & 3;
+    for (int i = 0; i < MaxPlayerNum; i++) {
+        Faction* f = &Factions[i];
+        f->major_atrocities = f->major_atrocities & 0xF;
+        f->tech_ranking = f->tech_ranking & 0xFF;
+        f->clean_minerals_modifier = f->clean_minerals_modifier & 0xF;
+        f->tech_commerce_bonus = f->tech_commerce_bonus & 0xF;
+        f->satellites_nutrient = f->satellites_nutrient & 0xF;
+        f->satellites_mineral = f->satellites_mineral & 0xF;
+        f->satellites_energy = f->satellites_energy & 0xF;
+        f->satellites_ODP = f->satellites_ODP & 0xF;
+        f->tech_fungus_nutrient = f->tech_fungus_nutrient & 3;
+        f->tech_fungus_mineral = f->tech_fungus_mineral & 3;
+        f->tech_fungus_energy = f->tech_fungus_energy & 3;
+        // Social choices and effects (contiguous int32 fields).
+        for (int32_t* p = &f->SE_Politics_pending; p <= &f->SE_Future; p++) {
+            *p = *p & 3;
+        }
+        for (int32_t* p = &f->SE_economy_pending; p <= &f->SE_research_base; p++) {
+            *p = clamp(*p, -3, 3);
+        }
+        TectonicDetonationCount[i] = TectonicDetonationCount[i] & 0xF;
+    }
+    for (int i = 0; i < *BaseCount; i++) {
+        BASE* b = &Bases[i];
+        b->eco_damage = b->eco_damage & 0xFF;
+        b->queue_size = clamp(b->queue_size, 0, 9);
+        for (int& item : b->queue_items) {
+            if (item >= MaxProtoNum || item < -SP_ID_Last) {
+                item = -FAC_STOCKPILE_ENERGY;
+            }
+        }
+        if (b->production_id_last >= MaxProtoNum || b->production_id_last < -SP_ID_Last) {
+            b->production_id_last = b->queue_items[0];
+        }
+        b->minerals_accumulated = b->minerals_accumulated & 0xFFF;
+        b->nutrients_accumulated = b->nutrients_accumulated & 0xFFF;
+        // Last turn's yields; base_compute recomputes them, but other bases read them first.
+        for (int32_t* p = &b->nutrient_intake; p <= &b->unk_total; p++) {
+            *p = *p & 0xFF;
+        }
+    }
     *ClimateValueA = *ClimateValueA & 0xFFFF;
     *ClimateValueB = *ClimateValueB & 0xFFFF;
     *ClimateValueC = *ClimateValueC & 0xFFFF;
