@@ -158,7 +158,7 @@ int engine_attack_odds(int veh_id_atk, int x, int y, int* def_id) {
     int veh_id_def = stack_fix(veh_at(x, y));
     int offset, table_offset;
     if (veh_id_def < 0 || Vehs[veh_id_def].faction_id == Vehs[veh_id_atk].faction_id
-    || !Vehs[veh_id_atk].is_combat_unit()
+    || (!Vehs[veh_id_atk].is_combat_unit() && !Vehs[veh_id_atk].is_planet_buster())
     || !attack_offset(veh_id_atk, x, y, &offset, &table_offset)) {
         return 0;
     }
@@ -242,7 +242,7 @@ int engine_attack(int veh_id_atk, int x, int y, BattleResult* r, int attack_flag
         return r->outcome;
     }
     int offset, table_offset;
-    if (Vehs[veh_id_def].faction_id == veh->faction_id || !veh->is_combat_unit()
+    if (Vehs[veh_id_def].faction_id == veh->faction_id || (!veh->is_combat_unit() && !veh->is_planet_buster())
     || !attack_offset(veh_id_atk, x, y, &offset, &table_offset)) {
         r->outcome = BATTLE_NO_TARGET;
         return r->outcome;
