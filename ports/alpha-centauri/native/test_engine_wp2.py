@@ -20,7 +20,7 @@ from pathlib import Path
 
 SRC=Path(__file__).resolve().parent
 ENGINE=SRC/'engine'
-ORACLES=['cost_factor','base_psych','base_nutrients','base_minerals','base_energy','base_support','base_commerce']
+ORACLES=['cost_factor','upkeep_base_psych','base_nutrients','upkeep_base_minerals','upkeep_base_energy','base_support','base_commerce']
 
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--cc',default='c++')
