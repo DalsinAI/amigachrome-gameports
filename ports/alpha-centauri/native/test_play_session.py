@@ -10,8 +10,8 @@ game against a synthetic rules directory (test_engine_wp0b.make_dir, with
 the #RULES rows replaced by playable values; no original assets):
 new game, move units, found a base, set production and the queue, End Turn
 x TURNS, an attack (odds, then the battle), a research change, social
-engineering, a new design, hurry, save, load into a second session and
-continue both. After every step the view is rebuilt from the engine's own
+engineering, a new design, hurry, save, load the save into two new sessions and
+continue them (they must stay identical). After every step the view is rebuilt from the engine's own
 SAV bytes with OriginalWorld and compared with the engine.
 - the game is played twice and must give identical output and saves;
 - with --m68k-linux a plain host build plays the same game and its output
@@ -107,7 +107,7 @@ def main():
  produce=[l for l in lines if l.startswith('A CMD produce ') and l.endswith('-> ok')];assert produce,'production not set'
  attack=[l for l in lines if l.startswith('A CMD attack ')];assert attack and attack[0].endswith('-> ok'),attack
  research=[l for l in lines if l.startswith('A CMD research ') and l.endswith('-> ok')];assert research,'research not changed'
- cont=[l for l in lines if l.startswith('CONTINUE ')];assert len(cont)==3 and all(l.split()[2][2:]==l.split()[3][2:] for l in cont),cont
+ cont=[l for l in lines if l.startswith('CONTINUE ')];assert len(cont)==3 and all(l.split()[3][2:]==l.split()[4][2:] for l in cont),cont
  assert not [l for l in lines if l.startswith('FAIL')],[l for l in lines if l.startswith('FAIL')]
  views=[l for l in lines if ' VIEW ' in l];assert len(views)>=a.turns
  summary=[l for l in lines if l.startswith('FINAL ')][0]
