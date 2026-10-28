@@ -26,4 +26,11 @@ bool ui_text_item(UiTextItem* items,size_t capacity,size_t& count,int x,int base
  size_t n=0;for(;text[n] && n+1<sizeof(t.text);++n){const unsigned char c=(unsigned char)text[n];t.text[n]=(c<32 || c==127)?'?':(char)c;}
  t.text[n]=0;return true;
 }
+int ui_key_from_char(int c){
+ switch(c){case '8':return UIK_UP;case '2':return UIK_DOWN;case '4':return UIK_LEFT;case '6':return UIK_RIGHT;case 13:case 10:return UIK_ENTER;case 27:return UIK_BACK;default:return UIK_NONE;}
+}
+void ui_list_step(int& cursor,int count,int delta){
+ if(count<=0){cursor=0;return;}
+ cursor=((cursor+delta)%count+count)%count;
+}
 }
