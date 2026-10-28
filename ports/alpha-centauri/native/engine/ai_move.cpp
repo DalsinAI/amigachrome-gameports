@@ -168,7 +168,8 @@ static int cover_score(int x, int y) {
 static int target_priority(int x, int y, int faction_id, MAP* sq) {
     Faction& f = Factions[faction_id];
     AIPlans& p1 = plans[faction_id];
-    AIPlans& p2 = plans[sq->owner];
+    // Fix: unowned tiles (owner -1) indexed plans[-1]; p2 is only read for owned tiles.
+    AIPlans& p2 = plans[sq->owner >= 0 ? sq->owner : 0];
     int score = 0;
     if (sq->is_owned()) {
         if (sq->region == p2.main_region) {
