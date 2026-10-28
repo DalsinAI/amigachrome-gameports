@@ -778,7 +778,9 @@ static void test_capture() {
     CHECK_EQ(Vehs[va].x, 6);
     CHECK_EQ(Vehs[va].y, 6);
     CHECK_EQ(Vehs[va].moves_spent, Rules->move_rate_roads);
-    CHECK(not_implemented_count("mod_capture_base") > before); // WP2 stub reached
+    // Integration: WP2's mod_capture_base is linked now (was a stub): the base changed hands.
+    CHECK_EQ(not_implemented_count("mod_capture_base"), before);
+    CHECK(r->base_id >= 0 && r->base_id < *BaseCount && Bases[r->base_id].faction_id == 1);
     // Non-combat units and sea units cannot capture.
     setup();
     b = add_base(2, 6, 6, 2);
