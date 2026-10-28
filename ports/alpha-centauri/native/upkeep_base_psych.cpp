@@ -1,5 +1,5 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later. Policy attribution in base_psych.h. */
-#include "base_psych.h"
+/* SPDX-License-Identifier: GPL-3.0-or-later. Policy attribution in upkeep_base_psych.h. */
+#include "upkeep_base_psych.h"
 #include <stddef.h>
 namespace alpha {namespace {
 int32_t clamp(int32_t n,int32_t lo,int32_t hi){return n<lo?lo:n>hi?hi:n;}
@@ -17,20 +17,20 @@ void adjust(const PsychFacts&f,PsychResult&r,int32_t value,bool force){
 }
 void row(PsychResult&r,unsigned at){r.rows[at][0]=r.talents;r.rows[at][1]=r.drones;r.rows[at][2]=r.superdrones;}
 }
-PsychError base_psych_policy(const PsychFacts&f,PsychResult&output){
- if(overlap(&f,sizeof f,&output,sizeof output))return PsychError::bad_buffer;
- if(f.population<0||f.population>127||f.specialists<0||f.specialists>f.population||f.content_population<0||f.base_limit<0||f.base_index<0||f.base_index>=512||f.faction_base_count<1||f.faction_base_count>512||f.difficulty<0||f.difficulty>5||f.assimilation_turns<0||f.assimilation_turns>255||f.rule_drone<0||f.rule_talent<0||f.pending_talent< -100||f.pending_talent>100||f.pending_police< -100||f.pending_police>100||f.fresh_psych<0||f.genejack_drones<0||f.genejack_drones>100||f.pacifism_units<0)return PsychError::bad_state;
- for(unsigned i=0;i<3;++i)if(f.police_effects[i]<0||f.police_effects[i]>4||(i&&f.police_effects[i]>f.police_effects[i-1]))return PsychError::bad_state;
+UpkeepPsychError base_psych_policy(const PsychFacts&f,PsychResult&output){
+ if(overlap(&f,sizeof f,&output,sizeof output))return UpkeepPsychError::bad_buffer;
+ if(f.population<0||f.population>127||f.specialists<0||f.specialists>f.population||f.content_population<0||f.base_limit<0||f.base_index<0||f.base_index>=512||f.faction_base_count<1||f.faction_base_count>512||f.difficulty<0||f.difficulty>5||f.assimilation_turns<0||f.assimilation_turns>255||f.rule_drone<0||f.rule_talent<0||f.pending_talent< -100||f.pending_talent>100||f.pending_police< -100||f.pending_police>100||f.fresh_psych<0||f.genejack_drones<0||f.genejack_drones>100||f.pacifism_units<0)return UpkeepPsychError::bad_state;
+ for(unsigned i=0;i<3;++i)if(f.police_effects[i]<0||f.police_effects[i]>4||(i&&f.police_effects[i]>f.police_effects[i-1]))return UpkeepPsychError::bad_state;
  PsychResult r{};r.can_riot=!f.nerve_stapled&&!f.punishment_sphere&&!f.telepathic_matrix;
- if(f.specialists==f.population){output=r;return PsychError::ok;}
+ if(f.specialists==f.population){output=r;return UpkeepPsychError::ok;}
  int32_t drones=f.population>f.content_population?f.population-f.content_population:0,talents=0;
- if(f.base_limit){int32_t numerator;if(!put((int64_t)(f.base_index%f.base_limit)+f.faction_base_count-f.base_limit,numerator))return PsychError::overflow;r.efficiency_drones=clamp(numerator/f.base_limit,0,f.population);}
+ if(f.base_limit){int32_t numerator;if(!put((int64_t)(f.base_index%f.base_limit)+f.faction_base_count-f.base_limit,numerator))return UpkeepPsychError::overflow;r.efficiency_drones=clamp(numerator/f.base_limit,0,f.population);}
  if(f.assimilation_turns>0){const int32_t a=(f.population+f.difficulty-2)/4,b=(f.assimilation_turns+9)/10;r.capture_drones=clamp(a<b?a:b,0,f.population);drones+=r.capture_drones;}
  if(f.rule_drone)drones+=f.population/f.rule_drone;
- if(f.rule_talent){int32_t n;if(!put((int64_t)f.rule_talent+f.population-1,n))return PsychError::overflow;talents=n/f.rule_talent;}
- if(!put((int64_t)drones-f.no_drone_bonus,drones))return PsychError::overflow;
+ if(f.rule_talent){int32_t n;if(!put((int64_t)f.rule_talent+f.population-1,n))return UpkeepPsychError::overflow;talents=n/f.rule_talent;}
+ if(!put((int64_t)drones-f.no_drone_bonus,drones))return UpkeepPsychError::overflow;
  drones=drones<0?0:drones;
- if(f.pending_talent>=0)talents+=f.pending_talent;else if(!put((int64_t)drones-f.pending_talent,drones))return PsychError::overflow;
+ if(f.pending_talent>=0)talents+=f.pending_talent;else if(!put((int64_t)drones-f.pending_talent,drones))return UpkeepPsychError::overflow;
  r.talents=talents;r.drones=clamp(drones,0,f.population)+r.efficiency_drones;r.superdrones=clamp(r.drones-f.population,0,f.population);r.drones=clamp(r.drones,0,f.population);adjust(f,r,0,false);row(r,0);
  const int32_t psych=clamp(f.fresh_psych/2,0,f.population-r.talents);int32_t addon=f.fresh_psych/2-psych,cost=2;adjust(f,r,psych,false);
  const int32_t ordinary=f.population-f.specialists;
@@ -42,12 +42,12 @@ PsychError base_psych_policy(const PsychFacts&f,PsychResult&output){
  int32_t extra=0;
  if(f.pending_police==-3&&f.pacifism_units>1)extra=f.pacifism_units-1;
  else if(f.pending_police==-4&&f.pacifism_units>0)extra=f.pacifism_units;
- else if(f.pending_police<=-5&&f.pacifism_units>0){if(!put((int64_t)f.pacifism_units*2,extra))return PsychError::overflow;}
- if(!put((int64_t)r.drones+extra,r.drones))return PsychError::overflow;
+ else if(f.pending_police<=-5&&f.pacifism_units>0){if(!put((int64_t)f.pacifism_units*2,extra))return UpkeepPsychError::overflow;}
+ if(!put((int64_t)r.drones+extra,r.drones))return UpkeepPsychError::overflow;
  if(extra)r.drones=r.drones>f.population?f.population:r.drones;
  adjust(f,r,0,false);row(r,3);
  if(f.nerve_stapled||f.punishment_sphere){r.talents=0;r.drones=0;adjust(f,r,0,false);}
  else {if(f.longevity_vaccine){if(r.drones>0&&f.pending_economics==2)--r.drones;if(r.drones>0&&f.pending_economics!=1)--r.drones;}adjust(f,r,(f.human_genome?1:0)+(f.clinical_immortality?1:0),true);}
- row(r,4);r.will_riot=r.can_riot&&r.drones>r.talents;output=r;return PsychError::ok;
+ row(r,4);r.will_riot=r.can_riot&&r.drones>r.talents;output=r;return UpkeepPsychError::ok;
 }
 }

@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-#include "base_energy.h"
+#include "upkeep_base_energy.h"
 #include <stdio.h>
 #include <string.h>
 static bool read32(int32_t&out){unsigned char b[4];if(fread(b,1,4,stdin)!=4)return false;const uint32_t n=(uint32_t)b[0]|(uint32_t)b[1]<<8|(uint32_t)b[2]<<16|(uint32_t)b[3]<<24;memcpy(&out,&n,4);return true;}

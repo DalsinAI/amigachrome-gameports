@@ -3,7 +3,7 @@
 """Wire/technology/faction-bonus oracle for original facility upkeep proposals."""
 import argparse,hashlib,json,os,struct,subprocess
 from pathlib import Path
-import test_world_energy as energy
+import test_upkeep_world_energy as energy
 import test_world_stable_intake as intake
 from test_units import sections,material
 from test_facility_definitions import tables

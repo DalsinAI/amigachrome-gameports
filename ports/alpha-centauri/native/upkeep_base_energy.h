@@ -3,8 +3,8 @@
  * pin2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c. Gross/surplus composition
  * also follows Thinker mod_base_energy pin dabe62f2d1abba03de40f3dd3048494843f6a9af.
  */
-#ifndef ALPHA_BASE_ENERGY_H
-#define ALPHA_BASE_ENERGY_H
+#ifndef ALPHA_UPKEEP_BASE_ENERGY_H
+#define ALPHA_UPKEEP_BASE_ENERGY_H
 #include <stdint.h>
 namespace alpha {
 enum class EnergyError {ok,bad_state,bad_buffer,overflow};

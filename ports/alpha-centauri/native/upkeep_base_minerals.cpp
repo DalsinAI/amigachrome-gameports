@@ -1,18 +1,18 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in base_minerals.h. */
-#include "base_minerals.h"
+/* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in upkeep_base_minerals.h. */
+#include "upkeep_base_minerals.h"
 namespace alpha {namespace {
 bool put(int64_t n,int32_t& out){if(n<(-2147483647LL-1)||n>2147483647LL)return false;out=(int32_t)n;return true;}
 int32_t clamp(int32_t n,int32_t lo,int32_t hi){return n<lo?lo:n>hi?hi:n;}
 bool overlap(const void*a,unsigned an,const void*b,unsigned bn){const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;return x<=y?y-x<an:x-y<bn;}
 }
-MineralError base_minerals(const MineralFacts&f,MineralResult&output){
+MineralError base_minerals(const MineralFacts&f,UpkeepMineralResult&output){
  if(overlap(&f,sizeof f,&output,sizeof output))return MineralError::bad_buffer;
  if(f.fresh_intake<0||f.convoy_to<0||f.forces_maintenance<0||f.convoy_from<0||
     f.population<0||f.population>127||f.major_atrocities<0||f.tectonic_detonations<0||
     f.faction_difficulty<0||f.faction_difficulty>5||f.game_difficulty<0||f.game_difficulty>5||
     f.native_life<0||f.native_life>2||f.tech_ranking<0||f.transcendent_techs<0||
     f.transcendent_techs>f.tech_ranking)return MineralError::bad_state;
- MineralResult r{};int32_t value,clean,scaled;
+ UpkeepMineralResult r{};int32_t value,clean,scaled;
  const int32_t bonus=(f.quantum_converter||f.singularity_inductor)+f.robotic_assembly+
   f.genejack+f.nanoreplicator+f.bulk_matter;
  if(!put((int64_t)f.fresh_intake+f.convoy_to,value)||!put((int64_t)value*(bonus+2),scaled))return MineralError::overflow;

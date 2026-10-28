@@ -52,7 +52,7 @@ in the genuine demo. The table is owned, bounded, and committed only on success.
 
 ## Verification
 
-`test_energy_allocation.py` passes **5,410** independent integer-oracle cases
+`test_upkeep_energy_allocation.py` passes **5,410** independent integer-oracle cases
 under host ASan/UBSan. Every legal slider split is exercised with rounding
 boundaries and efficiency extremes; random specialist/facility/project mixes,
 invalid domains and late overflows are included. Complete 302,960-byte output
@@ -118,7 +118,7 @@ source `70895a4` and the final binary. Earlier native runs before the additional
 availability check do not qualify this version.
 
 ```
-python3 test_energy_allocation.py --out /tmp/alpha-allocation-leaf
+python3 test_upkeep_energy_allocation.py --out /tmp/alpha-allocation-leaf
 python3 test_world_energy_allocation.py --out /tmp/alpha-allocation-world
 CXX=m68k-amigaos-g++ ./build_energy_allocation_probe.sh leaf /tmp/allocation
 CXX=m68k-amigaos-g++ ./build_energy_allocation_probe.sh world /tmp/world-allocation

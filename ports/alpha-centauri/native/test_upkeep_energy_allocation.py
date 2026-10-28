@@ -78,7 +78,7 @@ def cases():
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--cc',default='c++');ap.add_argument('--binary',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False);exe=a.binary or a.out/'energy-allocation-probe';cmd=[]
  if not a.binary:
-  cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',str(HERE/'rules_text.cpp'),str(HERE/'energy_allocation.cpp'),str(HERE/'energy_allocation_probe.cpp'),'-o',str(exe)];subprocess.run(cmd,check=True)
+  cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',str(HERE/'rules_text.cpp'),str(HERE/'upkeep_energy_allocation.cpp'),str(HERE/'upkeep_energy_allocation_probe.cpp'),'-o',str(exe)];subprocess.run(cmd,check=True)
  rows=cases();input_path=a.out/'cases.bin';input_path.write_bytes(pack([len(rows)])+b''.join(pack(row)for row in rows));wanted=b''.join(pack(expected(row))for row in rows);run=subprocess.run([str(exe),str(input_path)],capture_output=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'),timeout=60);assert run.returncode==0,(run.returncode,run.stderr)
  if run.stdout!=wanted:
   for i,row in enumerate(rows):

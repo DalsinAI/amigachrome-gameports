@@ -95,7 +95,7 @@ def main():
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
     exe = args.out / 'base-minerals-probe'
-    command = [args.cc, '-std=c++17', '-O1', '-g', '-Wall', '-Wextra', '-Werror', '-fsanitize=address,undefined', '-fno-sanitize-recover=all', '-no-pie', str(HERE / 'base_minerals.cpp'), str(HERE / 'base_minerals_probe.cpp'), '-o', str(exe)]
+    command = [args.cc, '-std=c++17', '-O1', '-g', '-Wall', '-Wextra', '-Werror', '-fsanitize=address,undefined', '-fno-sanitize-recover=all', '-no-pie', str(HERE / 'upkeep_base_minerals.cpp'), str(HERE / 'upkeep_base_minerals_probe.cpp'), '-o', str(exe)]
     subprocess.run(command, check=True)
     rows = cases()
     data = b''.join(struct.pack('<31i', *r) for r in rows)

@@ -45,7 +45,7 @@ def cases():
 
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--cc',default='c++');a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- exe=a.out/'base-energy-probe';cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',str(HERE/'base_energy.cpp'),str(HERE/'base_energy_probe.cpp'),'-o',str(exe)];subprocess.run(cmd,check=True)
+ exe=a.out/'base-energy-probe';cmd=[a.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie',str(HERE/'upkeep_base_energy.cpp'),str(HERE/'upkeep_base_energy_probe.cpp'),'-o',str(exe)];subprocess.run(cmd,check=True)
  rows=cases();data=b''.join(struct.pack('<18i',*r)for r in rows);(a.out/'controls.bin').write_bytes(data)
  run=subprocess.run([str(exe)],input=data,capture_output=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'),timeout=60,check=True);assert len(run.stdout)==len(rows)*56
  counts={0:0,1:0,3:0}

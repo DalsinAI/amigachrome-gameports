@@ -118,7 +118,7 @@ def main():
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--out',type=Path,required=True);parser.add_argument('--source-root',type=Path,default=HERE);parser.add_argument('--cc',default='c++');parser.add_argument('--binary',type=Path);args=parser.parse_args();args.out.mkdir(parents=True,exist_ok=False)
  exe=args.binary.resolve() if args.binary else args.out/'base-psych-probe';command=[]
  if not args.binary:
-  command=[args.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie','-I',str(args.source_root),str(args.source_root/'base_psych.cpp'),str(HERE/'base_psych_probe.cpp'),'-o',str(exe)];subprocess.run(command,check=True)
+  command=[args.cc,'-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie','-I',str(args.source_root),str(args.source_root/'upkeep_base_psych.cpp'),str(HERE/'upkeep_base_psych_probe.cpp'),'-o',str(exe)];subprocess.run(command,check=True)
  rows=cases();raw=packet(rows);(args.out/'cases.bin').write_bytes(raw);want=b''.join(struct.pack('<24I',*(v&0xffffffff for v in expected(row))) for row in rows);(args.out/'expected.bin').write_bytes(want)
  run=subprocess.run([str(exe)],input=raw,capture_output=True,timeout=120,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'));assert run.returncode==0,(run.returncode,run.stderr)
  if run.stdout!=want:

@@ -14,7 +14,7 @@ availability query must accept every selected non-centre tile. The centre must
 contain a base marker for the actual owner. Missing assignments, specialist
 handling and stages requiring allocation reject explicitly. Selected fungus
 now uses the complete fresh technology-effects calculation, rather than saved
-fungus production totals; see `TECHNOLOGY-EFFECTS.md`.
+fungus production totals; see `WORLD-TECHNOLOGY-EFFECTS.md`.
 The caller supplies the runtime edition, expansion switch, worker inspection
 stage, ControlUpkeep branch and incoming scratch values. They are not inferred
 from saved flags or treated as live authority. Only normal worker inspection is

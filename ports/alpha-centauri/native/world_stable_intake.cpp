@@ -46,7 +46,7 @@ StableIntakeError world_stable_intake(const OriginalWorld&w,const Rules&t,const 
   size_t square;if(movement_tile_index(geometry,x,y,square)!=LogicError::ok)return StableIntakeError::needs_allocation;const auto*tile=w.tile(square);if(!tile)return StableIntakeError::bad_state;
   if((tile->climate&0xe0u)<0x60u)next.state_flags|=0x8000u;
   WorldTileYieldStage tile_stage{stage.variant,stage.expansion_enabled,false,stage.control_upkeep,(int32_t)id,reduction,next.base_energy_after};TileYieldResult value{};
-  const auto error=(tile->items&0x20u)?world_fresh_tile_yields(w,t,basic,resources,id,faction,x,y,tile_stage,value):world_tile_yields(w,t,basic,resources,id,faction,x,y,tile_stage,value);
+  const auto error=(tile->items&0x20u)?world_upkeep_fresh_tile_yields(w,t,basic,resources,id,faction,x,y,tile_stage,value):world_tile_yields(w,t,basic,resources,id,faction,x,y,tile_stage,value);
   if(error==TileYieldError::overflow)return StableIntakeError::overflow;
   if(error!=TileYieldError::ok)return StableIntakeError::bad_state;
   const int32_t yields[]={value.nutrient,value.mineral,value.energy};

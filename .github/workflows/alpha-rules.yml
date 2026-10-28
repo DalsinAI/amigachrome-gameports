@@ -219,7 +219,7 @@ jobs:
       - name: Host original nutrient accounting controls
         run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-host"
       - name: Host explicit-fact original mineral accounting controls
-        run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_base_minerals.py --out "$RUNNER_TEMP/base-minerals-host"
       - name: Big-endian original nutrient accounting controls
         run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host fresh owned nutrient composition controls
@@ -239,9 +239,9 @@ jobs:
       - name: Fresh support into mineral accounting controls
         run: python3 ports/alpha-centauri/native/test_world_supported_minerals.py --out "$RUNNER_TEMP/supported-minerals-host"
       - name: Original energy loss and fresh subtotal controls
-        run: python3 ports/alpha-centauri/native/test_base_energy.py --out "$RUNNER_TEMP/base-energy-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_base_energy.py --out "$RUNNER_TEMP/base-energy-host"
       - name: Owned-world fresh energy controls
-        run: python3 ports/alpha-centauri/native/test_world_energy.py --out "$RUNNER_TEMP/world-energy-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_world_energy.py --out "$RUNNER_TEMP/world-energy-host"
       - name: Original facility maintenance ledger controls
         run: python3 ports/alpha-centauri/native/test_facility_upkeep.py --out "$RUNNER_TEMP/facility-upkeep-host"
       - name: Owned-world facility maintenance controls
@@ -255,7 +255,7 @@ jobs:
       - name: Fresh support and cost factors into staged construction
         run: python3 ports/alpha-centauri/native/test_fresh_facility_materials.py --out "$RUNNER_TEMP/fresh-facility-materials-host"
       - name: Fresh energy distribution and specialist policy
-        run: python3 ports/alpha-centauri/native/test_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-host"
       - name: Current world energy allocation and citizen parsing
         run: python3 ports/alpha-centauri/native/test_world_energy_allocation.py --out "$RUNNER_TEMP/world-energy-allocation-host"
       - name: Energy from proposed citizen assignments
@@ -275,7 +275,7 @@ jobs:
       - name: Fresh human upkeep worker assignments
         run: python3 ports/alpha-centauri/native/test_world_worker_upkeep.py --out "$RUNNER_TEMP/world-worker-upkeep-host"
       - name: Fresh psych stages and riot predicates
-        run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_base_psych.py --out "$RUNNER_TEMP/base-psych-host"
       - name: Current world psych and police
         run: python3 ports/alpha-centauri/native/test_world_base_psych.py --out "$RUNNER_TEMP/world-base-psych-host"
       - name: Source commerce arithmetic

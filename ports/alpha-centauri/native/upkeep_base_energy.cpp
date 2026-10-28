@@ -1,5 +1,5 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in base_energy.h. */
-#include "base_energy.h"
+/* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in upkeep_base_energy.h. */
+#include "upkeep_base_energy.h"
 namespace alpha {namespace {
 bool put(int64_t n,int32_t&out){if(n<(-2147483647LL-1)||n>2147483647LL)return false;out=(int32_t)n;return true;}
 bool overlap(const void*a,unsigned an,const void*b,unsigned bn){const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;return x<=y?y-x<an:x-y<bn;}

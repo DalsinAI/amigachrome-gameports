@@ -36,8 +36,8 @@ int main(int argc,char**argv){
   putchar('\n');
   if(error==alpha::SupportError::ok)for(size_t i=0;i<g.vehicle_count;++i){const auto*v=world.vehicle(i);if(v->home_base_id==(int32_t)id&&v->faction_id==world.base(id)->faction_id)printf("STATE %lu %lu %08lx %08lx\n",(unsigned long)id,(unsigned long)i,(unsigned long)v->state,(unsigned long)states[i]);}
   if(error==alpha::SupportError::ok){
-   const alpha::WorldMineralStage stage{{alpha::Variant::base,false,false,{0,false},0,0},result.mineral_cost};
-   alpha::WorldMineralResult minerals{};
+   const alpha::UpkeepWorldMineralStage stage{{alpha::Variant::base,false,false,{0,false},0,0},result.mineral_cost};
+   alpha::UpkeepWorldMineralResult minerals{};
    const auto e=alpha::world_base_minerals(world,technologies,basic,world_rules,resources,id,stage,minerals);
    printf("MINERALS %lu %u",(unsigned long)id,(unsigned)e);
    if(e==alpha::StableIntakeError::ok){

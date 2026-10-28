@@ -4,11 +4,11 @@
  * Not recovered original base_psych: default diminishing returns and forced
  * talents are intentionally identified as Thinker policy, without mod knobs.
  */
-#ifndef ALPHA_BASE_PSYCH_H
-#define ALPHA_BASE_PSYCH_H
+#ifndef ALPHA_UPKEEP_BASE_PSYCH_H
+#define ALPHA_UPKEEP_BASE_PSYCH_H
 #include <stdint.h>
 namespace alpha {
-enum class PsychError {ok,bad_state,bad_buffer,unsupported,out_of_memory,overflow};
+enum class UpkeepPsychError {ok,bad_state,bad_buffer,unsupported,out_of_memory,overflow};
 struct PsychFacts {
  int32_t population,specialists,content_population,base_limit,base_index,faction_base_count;
  int32_t difficulty,assimilation_turns,rule_drone,rule_talent,no_drone_bonus;
@@ -31,6 +31,6 @@ struct PsychResult {
  * or faction hypothetical social_psych aggregate is performed. Bounded ordinary
  * population0..127 and pending TALENT/POLICE[-100,100] domain. Error leaves output.
  */
-PsychError base_psych_policy(const PsychFacts&,PsychResult&);
+UpkeepPsychError base_psych_policy(const PsychFacts&,PsychResult&);
 }
 #endif

@@ -59,5 +59,5 @@ poisoned saved psych/talent/drone fields; all outputs remain identical and the
 receipt records the changed source-world hashes. This supplements rather than
 overwrites the original 82-world evidence.
 
-Host checks are `test_base_psych.py` and `test_world_base_psych.py`. Native
+Host checks are `test_upkeep_base_psych.py` and `test_world_base_psych.py`. Native
 builds are `build_base_psych_probe.sh` and `build_world_base_psych_probe.sh`.

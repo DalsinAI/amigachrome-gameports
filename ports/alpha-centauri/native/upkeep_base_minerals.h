@@ -3,8 +3,8 @@
  * base.cpp::base_minerals, pin 2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c.
  * Original routine offset 004E9CB0. No original executable is required.
  */
-#ifndef ALPHA_BASE_MINERALS_H
-#define ALPHA_BASE_MINERALS_H
+#ifndef ALPHA_UPKEEP_BASE_MINERALS_H
+#define ALPHA_UPKEEP_BASE_MINERALS_H
 #include <stdint.h>
 namespace alpha {
 enum class MineralError {ok,bad_state,bad_buffer,overflow};
@@ -18,7 +18,7 @@ struct MineralFacts {
  bool bulk_matter,singularity_inductor,centauri_preserve,temple,pholus;
  bool human,ascending_transcendence,perihelion,space_elevator_orbital;
 };
-struct MineralResult {
+struct UpkeepMineralResult {
  int32_t intake,consumption,surplus,surplus_final,eco_damage;
 };
 /* A pure accounting leaf, not a turn, production completion or support engine.
@@ -30,6 +30,6 @@ struct MineralResult {
  * Normal nonnegative mineral/support/atrocity domains only. Each original signed
  * intermediate must fit int32; invalid/overflow/aliased inputs preserve output.
  */
-MineralError base_minerals(const MineralFacts&,MineralResult&);
+MineralError base_minerals(const MineralFacts&,UpkeepMineralResult&);
 }
 #endif

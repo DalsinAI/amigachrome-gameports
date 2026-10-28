@@ -1,5 +1,5 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in world_energy.h. */
-#include "world_energy.h"
+/* SPDX-License-Identifier: GPL-3.0-or-later. Attribution in upkeep_world_energy.h. */
+#include "upkeep_world_energy.h"
 #include "movement.h"
 namespace alpha {namespace {
 bool overlap(const void*a,size_t an,const void*b,size_t bn){if(!a||!b||!an||!bn)return false;const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;if(an>UINTPTR_MAX-x||bn>UINTPTR_MAX-y)return true;return x<=y?y-x<an:x-y<bn;}
@@ -14,7 +14,7 @@ bool geometry(const OriginalWorld&w,MapGeometry&g){if(!w.loaded())return false;c
  g={(int32_t)m.width,(int32_t)m.height,m.flat};return true;
 }
 }
-EnergyError world_energy_accounting(const OriginalWorld&w,size_t id,const WorldEnergyStage&s,WorldEnergyResult&output){
+EnergyError world_energy_accounting(const OriginalWorld&w,size_t id,const UpkeepWorldEnergyStage&s,UpkeepWorldEnergyResult&output){
  if(aliases(w,&s,sizeof s,&output,sizeof output))return EnergyError::bad_buffer;
  MapGeometry g;if(!geometry(w,g))return EnergyError::bad_state;const auto*b=w.base(id);if(!b||b->faction_id<0||b->faction_id>=8)return EnergyError::bad_state;
  const auto*f=w.faction((size_t)b->faction_id);if(!f)return EnergyError::bad_state;int32_t nearest=999;
@@ -23,7 +23,7 @@ EnergyError world_energy_accounting(const OriginalWorld&w,size_t id,const WorldE
   const int32_t y=h->y>b->y?h->y-b->y:b->y-h->y,hi=x>y?x:y,lo=x<y?x:y;
   const int32_t d=hi-(((x+y)/2-lo+1)/2);if(d<nearest)nearest=d;
  }
- WorldEnergyResult r{};r.headquarters_distance=nearest==999?-1:nearest;r.pending_efficiency=f->SE_effic_pending;r.physical_creche=(b->facilities_built[0]&4u)!=0;
+ UpkeepWorldEnergyResult r{};r.headquarters_distance=nearest==999?-1:nearest;r.pending_efficiency=f->SE_effic_pending;r.physical_creche=(b->facilities_built[0]&4u)!=0;
  EnergyFacts facts{s.fresh_intake,s.convoy_to,s.commerce,s.energy_grid,s.convoy_from,r.headquarters_distance,r.pending_efficiency,s.upkeep_stage,r.physical_creche,{}};
  for(unsigned j=0;j<9;++j)facts.social_efficiency_before[j]=f->social_effic[j];
  const auto e=base_energy_accounting(facts,r.accounting);if(e!=EnergyError::ok)return e;output=r;return EnergyError::ok;
