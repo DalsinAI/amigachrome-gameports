@@ -5,6 +5,8 @@ import argparse,json,os,re,struct,subprocess
 from pathlib import Path
 from test_original_world import valid_fixture
 from test_original_game import decode
+from test_cvr_infantry import model as cvr_model
+from test_cvr_palette import table as faction_table
 
 ROAD,TUBE,MINE,FUNGUS,SOLAR,RIVER,BUNKER,MONOLITH,FARM,AIRBASE,SOIL,FOREST,COND,MIRROR,BORE,POD,SENSOR,BASE=0x4,0x8,0x10,0x20,0x40,0x80,0x800,0x2000,0x8000,0x40000,0x80000,0x200000,0x400000,0x800000,0x1000000,0x10000000,0x80000000,0x1
 IMPROVEMENTS=[SOIL,MINE,SOLAR,COND,MIRROR,BORE,SENSOR,BUNKER,AIRBASE,MONOLITH,POD]
@@ -164,10 +166,10 @@ def main():
  out=Path(a.out);out.mkdir(parents=True,exist_ok=False);src=Path(__file__).resolve().parent
  flags=['-m68040','-static'] if a.m68k_linux else ['-g','-fsanitize=address,undefined']
  exe=out/'control'
- subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*[str(src/(n+'.cpp')) for n in ['original_map','original_game','original_faction','original_world','pcx_image','map_overlays','ui_panel','ui_minimap','ui_messages','ui_basewin','ui_render_control']],'-o',str(exe)],check=True)
+ subprocess.run([a.cc,'-std=c++17','-O1','-Wall','-Wextra','-Werror',*flags,*[str(src/(n+'.cpp')) for n in ['original_map','original_game','original_faction','original_world','pcx_image','cvr_model','cvr_raster','cvr_lighting','cvr_palette','cvr_vehicle','map_overlays','ui_panel','ui_minimap','ui_messages','ui_basewin','ui_mapview','ui_render_control']],'-o',str(exe)],check=True)
  def run(*args):
   cmd=(['qemu-m68k','-cpu','m68040'] if a.m68k_linux else [])+[str(exe),*map(str,args)]
-  p=subprocess.run(cmd,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'),capture_output=True,text=True)
+  p=subprocess.run(cmd,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0'),capture_output=True,text=True,errors='replace')
   assert p.returncode==0,(args,p.returncode,p.stdout,p.stderr);return p.stdout
  digests={};report={}
  def golden(name,digest):
@@ -306,6 +308,47 @@ def main():
   golden('basewin-'+cname,render.split('digest=')[1])
  assert 'BASEWIN rejected' in run('basewin',sp,2,-1,'-','-')
  report['baseWindowCases']=len(cases)+1
+ # ---- map view glue: owner assets, faction colours, assembled vehicles ----
+ save=bytearray(valid_fixture(7,vehicles=3,bases=2));_,off,_=decode(bytes(save))
+ for f in range(8):struct.pack_into('<i',save,off['faction_definitions']+f*0x59c+0x508,0)
+ for i,(chassis,weapon,armor,reactor) in enumerate([(0,0,0,1),(9,0,0,1),(1,0,0,1)]):
+  pp=off['prototypes']+(320+i)*52;struct.pack_into('<I4B',save,pp+0x20,0,chassis,weapon,armor,reactor)
+  vp=off['vehicles']+i*52;save[vp+0xe]=1;save[vp+0x29]=0
+ vsave=out/'view.sav';vsave.write_bytes(bytes(save))
+ P=bytes((i*13+7)%256 for i in range(768))
+ g=bytearray(768)
+ for i in range(8):
+  for c in range(3):g[i*3+c]=192 if i==7 else (128 if i&(1<<c) else 0);g[(248+i)*3+c]=128 if i==0 else (255 if i&(1<<c) else 0)
+ g[24]=8;g[27]=9;g[246*3]=245;g[247*3]=246
+ for i in range(708):g[30+i]=min(P[i],235)
+ raw=100;tint=tuple(g[((raw+10)&255)*3:((raw+10)&255)*3+3])
+ painted=faction_table(bytes(g),bytes(range(256))*24,tint)[5]
+ for variant in ['palette','model']:
+  d=out/f'view-{variant}';d.mkdir()
+  if variant=='palette':(d/'palette.pcx').write_bytes(pcx(4,4,lambda x,y:x+4*y,P))
+  art=lambda x,y:raw if (x,y)==(435,745) else (3 if (x,y)==(161,757) else 9)
+  (d/'faction1.pcx').write_bytes(pcx(1024,768,art,TEX_PAL))
+  (d/'vi.cvr').write_bytes(cvr_model((255,0,0),frames=15));(d/'viptr00.cvr').write_bytes(cvr_model((255,0,0),offset=(100,0,0)))
+  (d/'vb.cvr').write_bytes(cvr_model((0,255,0),frames=1));(d/'vbp.cvr').write_bytes(cvr_model((0,0,255),frames=1,offset=(0,150,0)))
+  (d/'cvr_units.txt').write_text('9 0 0 1 1.0 0 1 1000 : vb vbp*\n')
+  text=run('mapview',d,vsave).splitlines()
+  logs=[l for l in text if l.startswith('LOG')]
+  if variant=='palette':assert logs[0]=='LOG k0 |Faction unit colours ready for 1 factions.|',logs
+  else:assert logs[0]=='LOG k0 |palette.pcx not found: units keep model colours.|',logs
+  assert logs[1:]==['LOG k0 |cvr_units.txt: 1 extra unit recipes.|','LOG k0 |ter1.pcx not found: improvements use simple markers.|'],logs
+  vehicles={int(l.split()[1]):dict(re.findall(r'(\w+)=([\d,;]*)',l)) for l in text if l.startswith('VEHICLE')}
+  def rgbs(v):return {tuple(map(int,c.split(','))) for c in v['colours'].split(';') if c}
+  assert vehicles[0]['model']=='1' and vehicles[0]['drawn']=='1' and int(vehicles[0]['changed'])>0,vehicles
+  assert vehicles[1]['model']=='1' and vehicles[1]['drawn']=='1',vehicles
+  assert vehicles[2]['model']=='0' and vehicles[2]['drawn']=='0',vehicles   # speeder parts absent
+  if variant=='palette':assert rgbs(vehicles[0])=={(128,0,128)} and rgbs(vehicles[1])=={(128,0,128),tuple(g[painted*3:painted*3+3])},(vehicles,painted)
+  else:assert rgbs(vehicles[0])=={(255,0,0)} and rgbs(vehicles[1])=={(0,255,0),(0,0,255)},vehicles
+  assert 'OVERLAYS 1' in text and text[[i for i,l in enumerate(text) if l.startswith('MINIMAP')][0]].startswith('MINIMAP 1 ')
+  assert [l for l in text if l.startswith('CLICK')][0].startswith('CLICK 1 '),text
+  assert int([l for l in text if l.startswith('BASEWIN')][0].split('=')[1])>=10 and int([l for l in text if l.startswith('MESSAGES')][0].split('=')[1])>=4
+  assert [l for l in text if l.startswith('VIEWER -1')]==['VIEWER -1 bases_visible=2'],text
+  report.setdefault('mapViewVariants',0);report['mapViewVariants']+=1
+ report['paintedFactionIndex']=painted
  report['goldenDigests']=len(digests)
  if a.print_golden:print(json.dumps(digests,indent=1,sort_keys=True))
  (out/'receipt.json').write_text(json.dumps(dict(report=report,digests=digests),indent=2)+'\n');print('MAP RENDER',json.dumps(report),'PASS')

@@ -6,6 +6,7 @@
 #include "ui_minimap.h"
 #include "ui_messages.h"
 #include "ui_basewin.h"
+#include "ui_mapview.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -114,6 +115,37 @@ int main(int argc,char** argv){
   printf("RENDER items=%lu digest=%08x\n",(unsigned long)count,fnv(rgb,bytes));print_items(items,count);
   if(argc>=7)write_ppm(argv[6],rgb,fw,fh);
   free(rgb);return 0;
+ }
+ if(!strcmp(mode,"mapview") && argc==4){
+  // DIR SAVE: owner assets in DIR (palette.pcx, faction1.pcx, cvr_units.txt, *.cvr).
+  size_t n=0;uint8_t* save=read(argv[3],n);if(!save)return 20;alpha::OriginalWorld world;const bool loaded=world.load(save,n,0x12345678u)==alpha::WorldLoadError::ok;free(save);if(!loaded){puts("WORLD rejected");return 20;}
+  struct Ctx{const char* dir;} ctx{argv[2]};
+  auto reader=[](void* c,const char* name,size_t& size)->uint8_t*{char path[1024];snprintf(path,sizeof(path),"%s/%s",((Ctx*)c)->dir,name);return read(path,size);};
+  alpha::PcxImage art1;char path[1024];snprintf(path,sizeof(path),"%s/faction1.pcx",argv[2]);const bool has_art=load_pcx(path,art1);
+  const alpha::PcxImage* art[8]{};if(has_art)art[1]=&art1;
+  static alpha::MapViewExtras extras;extras.open(world,art,reader,&ctx);
+  for(size_t i=0;i<extras.messages().count();++i){const auto* m=extras.messages().newest(extras.messages().count()-1-i);printf("LOG k%u |%s|\n",(unsigned)m->kind,m->text);}
+  printf("COLOURS %d\n",(int)extras.faction_colours());
+  const unsigned fw=256,fh=256;const size_t bytes=(size_t)fw*fh*3;uint8_t* rgb=(uint8_t*)malloc(bytes);if(!rgb)return 20;
+  static const int viewers[3]={-1,1,2};
+  for(int viewer:viewers){extras.set_viewer(viewer);unsigned seen=0;for(size_t i=0;i<world.game().base_count;++i)seen+=extras.tile_visible(world,world.base(i)->x,world.base(i)->y);printf("VIEWER %d bases_visible=%u\n",viewer,seen);}
+  extras.set_viewer(-1);
+  for(size_t i=0;i<world.game().vehicle_count;++i){memset(rgb,19,bytes);const bool model=extras.has_vehicle_model(world,i);const bool drawn=extras.draw_vehicle(rgb,fw,fh,world,i,128,200,1);
+   unsigned changed=0,distinct=0;uint8_t colours[4][3]{};
+   for(size_t k=0;k<bytes;k+=3){if(rgb[k]==19 && rgb[k+1]==19 && rgb[k+2]==19)continue;++changed;
+    unsigned c=0;for(;c<distinct;++c)if(!memcmp(colours[c],rgb+k,3))break;if(c==distinct && distinct<4)memcpy(colours[distinct++],rgb+k,3);}
+   printf("VEHICLE %lu model=%d drawn=%d changed=%u colours=",(unsigned long)i,model,drawn,changed);
+   for(unsigned c=0;c<distinct;++c)printf("%s%u,%u,%u",c?";":"",colours[c][0],colours[c][1],colours[c][2]);
+   puts("");}
+  memset(rgb,19,bytes);printf("OVERLAYS %d\n",(int)extras.draw_overlays(rgb,fw,fh,world,nullptr,4,3,1));
+  memset(rgb,19,bytes);printf("MINIMAP %d digest=%08x\n",(int)extras.draw_minimap(rgb,fw,fh,{8,8,64,48},world,nullptr,4,3,1,fw,fh),fnv(rgb,bytes));
+  int mx=-1,my=-1;printf("CLICK %d %d,%d\n",(int)extras.minimap_click(world,{8,8,64,48},40,30,mx,my),mx,my);
+  free(rgb);
+  const unsigned bw=760,bh=420;const size_t bb=(size_t)bw*bh*3;rgb=(uint8_t*)malloc(bb);if(!rgb)return 20;memset(rgb,19,bb);
+  alpha::UiTextItem items[96];printf("BASEWIN items=%lu\n",(unsigned long)extras.draw_base_window(rgb,bw,bh,{8,8,744,398},world,0,nullptr,nullptr,items,96));
+  printf("MESSAGES items=%lu\n",(unsigned long)extras.draw_messages(rgb,bw,bh,{8,8,560,170},items,24));
+  char label[64];alpha::MapViewExtras::base_label(*world.base(0),label,sizeof(label));printf("LABEL |%s|\n",label);
+  free(rgb);extras.close();return 0;
  }
  return 20;
 }
