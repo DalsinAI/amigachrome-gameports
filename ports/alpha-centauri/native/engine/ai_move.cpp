@@ -832,6 +832,7 @@ void update_main_region(int faction_id) {
 }
 
 void move_upkeep(int faction_id, UpdateMode mode) {
+    stats.move_upkeeps++; // WP6 work counter (68040 budget), not in Thinker
     int tile_count[MaxRegionNum] = {};
     Faction& f = Factions[faction_id];
     AIPlans& p = plans[faction_id];

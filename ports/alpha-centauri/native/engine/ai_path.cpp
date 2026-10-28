@@ -122,6 +122,7 @@ Pathnodes are also used to keep track of the route to reach the current destinat
 
 MAP* TileSearch::get_next() {
     while (head < tail) {
+        stats.tile_search_steps++; // WP6 work counter (68040 budget), not in Thinker
         rx = paths[head].x;
         ry = paths[head].y;
         dist = paths[head].dist;

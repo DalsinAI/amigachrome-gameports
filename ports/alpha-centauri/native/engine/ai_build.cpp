@@ -614,6 +614,7 @@ static void push_item(score_max_queue_t& builds, int base_id, int item_id, int r
 
 int select_build(int base_id) {
     using namespace ai;
+    stats.build_choices++; // WP6 work counter (68040 budget), not in Thinker
     BASE* base = &Bases[base_id];
     int faction_id = base->faction_id;
     Faction* f = &Factions[faction_id];

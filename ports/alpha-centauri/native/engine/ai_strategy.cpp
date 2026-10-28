@@ -103,6 +103,7 @@ namespace ai {
 
 void __cdecl enemy_strategy(int faction_id) {
     using namespace ai;
+    stats.strategy_calls++; // WP6 work counter (68040 budget), not in Thinker
     Faction& plr = Factions[faction_id];
     int faction_bit = 1 << faction_id;
     int region_formers[MaxRegionNum];

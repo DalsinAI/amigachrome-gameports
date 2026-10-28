@@ -16,6 +16,7 @@ namespace ai {
 
 void __cdecl mod_enemy_turn(int faction_id) {
     using namespace ai;
+    stats.enemy_turns++; // WP6 work counter (68040 budget), not in Thinker
     debug("enemy_turn %d %d\n", *CurrentTurn, faction_id);
     for (int iter_type = 0; iter_type < 10; ++iter_type) {
         for (int veh_id = *VehCount - 1; veh_id >= 0; --veh_id) {
@@ -143,6 +144,7 @@ namespace ai {
 
 int __cdecl mod_enemy_move(int veh_id) {
     using namespace ai;
+    stats.veh_moves++; // WP6 work counter (68040 budget), not in Thinker
     assert(veh_id >= 0 && veh_id < *VehCount);
     if (veh_id < 0) {
         // Original: enemy_move(veh_id), the executable's own unit AI, is not ported.

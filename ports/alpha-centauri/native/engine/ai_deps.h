@@ -141,17 +141,14 @@ int __cdecl POP2(const char* label, const char* pcx_filename, int a3);
 int MapWin_focus(MapWindow* map_win, int x, int y);
 int Console_focus(Console* console, int x, int y, int faction_id);
 
-/* ---- ai_entry.cpp: per-turn work counters (68040 budget) ---- */
-struct AIStats {
-    uint32_t enemy_turns;       // mod_enemy_turn calls
-    uint32_t veh_moves;         // mod_enemy_move calls
-    uint32_t move_upkeeps;      // move_upkeep calls
-    uint32_t tile_search_steps; // TileSearch::get_next tiles visited
-    uint32_t path_find_calls;   // Path_find calls from the AI
-    uint32_t build_choices;     // select_build calls
-    uint32_t strategy_calls;    // enemy_strategy calls
-};
+/* ---- ai_entry.cpp: work counters (struct AIStats in ai_api.h) ---- */
 extern AIStats stats;
+
+/* Every AI route query goes through this counter to engine Path_find (WP3). */
+inline int Path_find(int x1, int y1, int x2, int y2, int unit_id, int faction_id, int flags, int unk) {
+    stats.path_find_calls++;
+    return alpha::engine::Path_find(x1, y1, x2, y2, unit_id, faction_id, flags, unk);
+}
 
 } // namespace ai
 } // namespace engine

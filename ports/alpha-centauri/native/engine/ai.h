@@ -14,6 +14,7 @@
 #pragma once
 
 #include "engine.h"
+#include "ai_api.h"
 #include "ai_deps.h"
 
 #include <queue>
