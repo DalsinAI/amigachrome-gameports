@@ -144,6 +144,25 @@ and found no difference so far (see Tests).
 `build_choices`, `strategy_calls`. `move_upkeep` and the tile searches
 dominate.
 
+Rough measure (2026-10-28, local merge with `team3/alpha-engine` `dbf8741`
+so that WP1-WP5 are real code; m68k-linux build `-O1 -g`, instructions
+counted with `qemu-m68k -cpu m68040 -one-insn-per-tb -d nochain,exec`,
+seed 1, synthetic expansion world, 7 factions):
+
+| Run | m68k instructions |
+| --- | --- |
+| setup only (rules load, map, factions) | 41.5 M |
+| setup + turn 1 (19 bases, 75 units) | 150.8 M |
+| setup + turns 1-5 (35 bases, 163 units at turn 5) | 787.7 M |
+
+That is about 109 M instructions for turn 1 and 159 M per turn on average
+for turns 2-5 (the counts include the test's own order executor and
+digest, which are small next to the AI). At an assumed 15-20 MIPS for a
+25 MHz 68040 this is roughly 8-11 s per full computer-player round at that
+size, and it grows with unit count (`tile_search_steps` per turn rose from
+24 k to 46 k over those turns). Wall times printed by the test under qemu
+or ASan are not 68040 times.
+
 ## Tests
 
 `engine/tests/wp6_test.cpp`, driven by `test_engine_wp6.py`:
