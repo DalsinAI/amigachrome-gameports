@@ -15,7 +15,6 @@
 #include "base_wp2.h"
 #include "base_deps.h"
 #include <queue>
-#include <strings.h>
 #include <ctype.h>
 
 #ifndef DEBUG
@@ -578,7 +577,7 @@ void __cdecl mod_capture_base(int base_id, int faction_id_atk, int is_probe) {
         const char* dir_label;
         int def_base_id = base_find_2(base_x, base_y, faction_id);
         if (def_base_id < 0) {
-            dir_label = "north" /* Original: label_get(TL_North) */;
+            dir_label = label_get(TL_North);
         } else {
             BASE* b = &Bases[def_base_id];
             int dx = b->x - base_x;
@@ -591,9 +590,9 @@ void __cdecl mod_capture_base(int base_id, int faction_id_atk, int is_probe) {
             }
             if (3 * dx / 2 < dy) {
                 if (base_y <= b->y) {
-                    dir_label = "south" /* Original: label_get(TL_South) */;
+                    dir_label = label_get(TL_South);
                 } else {
-                    dir_label = "north" /* Original: label_get(TL_North) */;
+                    dir_label = label_get(TL_North);
                 }
             } else {
                 int wx = base_x - b->x;
@@ -604,9 +603,9 @@ void __cdecl mod_capture_base(int base_id, int faction_id_atk, int is_probe) {
                     wx += *MapAreaX;
                 }
                 if (wx > 0) {
-                    dir_label = "west" /* Original: label_get(TL_West) */;
+                    dir_label = label_get(TL_West);
                 } else {
-                    dir_label = "east" /* Original: label_get(TL_East) */;
+                    dir_label = label_get(TL_East);
                 }
             }
         }
@@ -4219,7 +4218,7 @@ int __cdecl facility_avail(FacilityId item_id, int faction_id, int base_id, int 
     }
     if (item_id == FAC_ASCENT_TO_TRANSCENDENCE) { // at top since anyone can build it
         return voice_of_planet() && *GameRules & RULES_VICTORY_TRANSCENDENCE
-            && strcasecmp(MFactions[faction_id].filename, "CARETAKE"); // bug fix for Caretakers
+            && _stricmp(MFactions[faction_id].filename, "CARETAKE"); // bug fix for Caretakers
     }
     if (!has_tech(Facility[item_id].preq_tech, faction_id)) { // Check tech for facility + SP
         return false;
@@ -4229,7 +4228,7 @@ int __cdecl facility_avail(FacilityId item_id, int faction_id, int base_id, int 
     || item_id == FAC_CLOUDBASE_ACADEMY || item_id == FAC_PLANETARY_ENERGY_GRID)) {
         return false;
     }
-    if (item_id == FAC_VOICE_OF_PLANET && !strcasecmp(MFactions[faction_id].filename, "CARETAKE")) {
+    if (item_id == FAC_VOICE_OF_PLANET && !_stricmp(MFactions[faction_id].filename, "CARETAKE")) {
         return false; // shifted Caretaker Ascent check to top (never reached here)
     }
     if (item_id >= SP_ID_First) {

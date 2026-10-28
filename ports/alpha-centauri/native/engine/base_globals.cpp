@@ -40,8 +40,7 @@ int* dword_90EA40 = &base_compute_state.prototype_flag_a;
 int* dword_90EA3C = &base_compute_state.prototype_flag_b;
 
 void base_compute_state_reset() {
-    memset(&base_compute_state, 0, sizeof(base_compute_state));
-    base_compute_state.base_upkeep_draw_id = -1;
+    base_compute_state = BaseComputeState(); // zeroes, draw id -1
 }
 
 } // namespace engine

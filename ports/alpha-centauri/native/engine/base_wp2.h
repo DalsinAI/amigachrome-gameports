@@ -24,7 +24,7 @@ const uint32_t GOV_ALLOW_COMBAT =
  * can snapshot them; the Thinker names are pointers into it. */
 struct BaseComputeState {
     int32_t base_upkeep_state;        // BaseUpkeepState
-    int32_t base_upkeep_draw_id;      // BaseUpkeepDrawID
+    int32_t base_upkeep_draw_id = -1; // BaseUpkeepDrawID (no base window open)
     int32_t base_upkeep_flag;         // BaseUpkeepFlag
     int32_t control_upkeep_a;         // ControlUpkeepA
     int32_t base_growth_rate;         // BaseGrowthRate
