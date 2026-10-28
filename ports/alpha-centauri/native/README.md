@@ -1225,3 +1225,13 @@ CI runs 115 raw contexts plus two invalid snapshot controls and 64 owned worlds
 (512 faction queries) on both host sanitizers and independent 68040. Normal SDK
 raw/world builds pass; actual AmigaOS execution remains unrun and is a merge
 gate. This stacked draft depends on PR86 and preserves separate PR89 unchanged.
+## Manual research choice field transition (draft, native unrun)
+
+`research_choice.h` provides the pure original post-chooser state transition for
+manual research changes: cancel/same/unset semantics, half-labs penalty when an
+existing target changes, and unchanged cached cost. It reports the unresolved
+synchronisation boundary without invoking it. This is not an owned-world or UI
+transaction: caller authority, eligibility/pool, stale-state and discovery
+effects remain outside its explicit scope. Public CI runs2,486 cases per
+architecture; normal SDK build and host controls pass, actual AmigaOS is unrun.
+See `RESEARCH-CHOICE.md` and its evidence JSON before integrating.
