@@ -200,6 +200,7 @@ static int play_game(const char* rules,int exp,uint32_t seed,const char* out,int
 }
 
 int main(int argc,char** argv){
+ setvbuf(stdout,nullptr,_IOLBF,BUFSIZ); // progress stays visible in a redirected log on a slow target
  if(argc>=6 && !strcmp(argv[1],"play"))return play_game(argv[2],atoi(argv[3]),(uint32_t)strtoul(argv[4],nullptr,10),argv[5],argc>6?atoi(argv[6]):20);
  if(argc>=2 && !strcmp(argv[1],"parse")){
   for(int i=2;i<argc;++i){Command c;const bool ok=play::parse_command(argv[i],c);printf("PARSE %s -> %d %s %d %d %d %d %d |%s|\n",argv[i],(int)ok,play::command_name(c.kind),c.a,c.b,c.c,c.d,c.e,c.text);}
