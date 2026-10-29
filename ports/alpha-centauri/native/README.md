@@ -2803,3 +2803,37 @@ Not yet done:
 - The window and title-screen play mode is compile- and link-checked for
   AmigaOS in every build mode, but not yet run on a screen. The SDL2 SDK and
   the original assets are not available here.
+
+## Original research cost query — draft, native execution pending
+
+`research_cost.h` provides read-only original faction-level `tech_rate` cost and
+owned-world binding queries. The original name means the **points needed for a
+discovery**, not labs generated per turn. Saved cached costs are returned exactly;
+uncached costs use original rank/difficulty/social/rules/map/stagnation factors.
+Original integer `quick_root` recovers the map-size scalar from owned tiles.
+
+This keeps original signed32 safe-domain behaviour and scans rival rank in
+factions1–7. It rejects overflow instead of silently substituting Thinker's
+64-bit overflow fix or revised cost formula. A complete dependency/fidelity
+account is in `RESEARCH-COST.md`; aggregate evidence is in
+`RESEARCH-COST-EVIDENCE-20261025.json`. Original helper artifacts remain private.
+
+```sh
+python3 ports/alpha-centauri/native/test_research_cost.py --out /tmp/cost-host
+python3 ports/alpha-centauri/native/test_research_cost.py --out /tmp/cost-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+python3 ports/alpha-centauri/native/test_research_cost_world.py --out /tmp/cost-world-host
+python3 ports/alpha-centauri/native/test_research_cost_world.py --out /tmp/cost-world-m68k \
+  --cc m68k-linux-gnu-g++ --m68k-linux
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_research_cost_probe.sh raw /tmp/cost-raw
+CXX=m68k-amigaos-g++ sh ports/alpha-centauri/native/build_research_cost_probe.sh world /tmp/cost-world
+```
+
+CI runs 400 generated raw contexts, four shortcut/atomic checks, 10,003 root
+boundaries and 48 owned-world contexts/384 faction queries on both host sanitizers
+and independent big-endian68040. The private host qualification additionally uses
+original data and crosschecks: 1,197 raw contexts and 51 worlds/408 queries.
+Normal SDK probes build but **AmigaOS execution has not run**. The user's watch
+preview exclusively owns the lab and was not touched. These queries are not
+wired into research turns or discovery awards and must not be merged/deployed as
+native-qualified until remaining gates actually pass.
