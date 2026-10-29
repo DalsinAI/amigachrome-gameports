@@ -1,0 +1,13 @@
+{
+  "scope": "Pure explicit-fact mineral accounting; not turn/world integration",
+  "emulator": "FS-UAE3.2.35",
+  "guest": "AROS20261023-m68k",
+  "cpu": "68040/FPU",
+  "cases": 10300,
+  "rc": 0,
+  "bytes": 247200,
+  "outputSHA256": "a8990edeb9da709c84222436a229e093513174e4f36fe15b12a1741eeda7bac9",
+  "probeSHA256": "f2ed6475c97a7aa3b0a25c7e1dd4c966270b2687d37b001120d4d88144092689",
+  "originalExecutableComparison": "UNRUN",
+  "runtimeCompatibility": "Disposable libnix AFF_68881|AFF_FPU40 source patch, existing documented lab lane"
+}

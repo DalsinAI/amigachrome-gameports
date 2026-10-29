@@ -4,7 +4,8 @@
 #include "local_production_session.h"
 #include "local_actions_snapshot.h"
 namespace alpha {
-// UI adapter for the existing bounded, base-game local action controller.
+// UI adapter explicitly loading bounded base-game surface movement capability.
+// Ordinary clear land and qualified empty sea travel; no passenger movement.
 // Checkpoints are explicitly our format, not original-engine compatible saves.
 class LocalPlayer {
  public:

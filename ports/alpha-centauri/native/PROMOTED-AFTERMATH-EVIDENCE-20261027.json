@@ -1,0 +1,82 @@
+{
+  "scope": "Owned nonrandom promotion-before-deletion conventional solitary LAND body plus selected original battle bookkeeping. Retains PREcleanup faction identities. No full caller or legal attack.",
+  "host": {
+    "worlds": 66,
+    "counts": {
+      "accepted": 714,
+      "rejected": 9978,
+      "attacker_deleted": 466,
+      "defender_deleted": 248,
+      "rounds": 9674,
+      "draws": 19348,
+      "helper_called": 714,
+      "promoted": 714,
+      "selection_random": 786,
+      "promotion_random": 0,
+      "promotion_notification": 144,
+      "held_monument_ui": 124
+    },
+    "outputSHA256": "96cff901d89cc0c0bcc1cb9adcd2c8ed9bfa98a72cb4778f676e5a949f53b006",
+    "binarySHA256": "b812188084b0dfc328f46794c88d49d85c65c67dcbca0f4203722e51e3d8591a",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "worlds": 66,
+    "counts": {
+      "accepted": 714,
+      "rejected": 9978,
+      "attacker_deleted": 466,
+      "defender_deleted": 248,
+      "rounds": 9674,
+      "draws": 19348,
+      "helper_called": 714,
+      "promoted": 714,
+      "selection_random": 786,
+      "promotion_random": 0,
+      "promotion_notification": 144,
+      "held_monument_ui": 124
+    },
+    "outputSHA256": "96cff901d89cc0c0bcc1cb9adcd2c8ed9bfa98a72cb4778f676e5a949f53b006",
+    "binarySHA256": "90886a732e4cabe1c3929f7676552f15761484c972595dc7a634debe3be6c0d1",
+    "native": "UNRUN"
+  },
+  "additionalChecks": {
+    "acceptedWorlds": 8,
+    "sourceLifetimeChecks": 8,
+    "tinyBudgetRejectedWithPriorOutputIntact": 714,
+    "sourceOrInputOutputAliasChecks": 112,
+    "hostPoisonedInputNoReadChecks": 40,
+    "independentInputAliasNoWriteChecks": 40,
+    "badCallerAndNetworkFactsChecks": 24,
+    "explicitRuntimeAndPoolGuards": 64
+  },
+  "sdk": {
+    "sha256": "cc012c00eab7aba6ba533f936748e6b45964bfc66048833cec36d29852201a24",
+    "twoFreshFinalBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "sourceIdentity": {
+    "parent": "0345f00c697ce186820a8babc8bfc69807bb1af1",
+    "unchangedParentCpp": 334,
+    "parentHeaderChanges": "PromotedLandResolutionPlan and WorldBattleBookkeepingPlan add PromotedBattleAftermathPlan friend only",
+    "parentWorkflowCommands": 315,
+    "finalWorkflowCommands": 317,
+    "allParentCommandsRetained": true,
+    "unchangedParentNativeCpp": 314
+  },
+  "memoryBudget": "Outer object and simultaneous body/bookkeeping clone heaps. Body released after bookkeeping success. No claim of body-fit/book-clone-fail gap; tiny-budget hold preserves prior output. Frozen body inherited intermediate clone budget proof unchanged.",
+  "history": [
+    "host1/be1 before added poisoned-input guards passed all66worlds; host2/be2 are final probes. Row outputs unchanged. SDK1/2 final probes byte-identical."
+  ],
+  "held": [
+    "Selection random, helper random, promotion notification and monument UI; no zero-roll/ack substitution",
+    "Helper random hold is not exercised by this bounded body corpus",
+    "No-selection intent, capture/artifact/retreat/base/additional-colocation/cargo/native or unsupported helper profiles",
+    "Remaining caller friction/movement/attack budget/notification/random-state provenance and original full battle differential",
+    "Legal session attack/event lifecycle, variable-length save, turns, AI, diplomacy/full game",
+    "Native/frontend/remote CI/publication"
+  ],
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED"
+}

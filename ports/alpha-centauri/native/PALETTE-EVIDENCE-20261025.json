@@ -1,0 +1,13 @@
+{
+  "scope": "Default global palette and faction shade-table math; not integrated into viewer",
+  "status": "host and original-helper qualified; native execution pending",
+  "globalDefault": {"sourcePCXEntries": "0..235", "gameEntries": "10..245", "defaultGamma": 1, "channelCeiling": 235, "reservedSlots": "Normal indexed Windows path, procedurally generated", "alternateOSSystemPalette": false, "customGammaImplemented": false},
+  "factionMapping": {"tableBytes": 6144, "channelOperation": "floor(globalChannel*tintChannel/255)", "nearest": "unweighted squared RGB over256 entries; lowest index wins ties", "neutralSource": "VBP", "tintMetadataRawPixel": [435,745], "metadataIndexShift": "plus10 modulo256"},
+  "originalReference": {"originalPaletteInitAndDIBCopyExecuted": true, "originalGammaAndCRTPowCases": 5, "originalFactionInnerLoopAndNearestExecuted": true, "innerLoopControlTransferPatch": "Five-byte jump after complete256-entry loop; colour maths and nearest-search bodies unchanged", "syntheticOriginalFactionTables": 8, "ownerFactionTables": 7, "ownerFactionBytes": 43008, "allDefaultGlobalEntriesMatch": true, "allOwnerFactionBytesMatch": true, "fullPEStartupOrGameExecuted": false, "windowsImportsExecuted": false},
+  "portableHostControls": {"addressAndUndefinedSanitizers": true, "syntheticFactionTables": 24, "factionEntries": 147456, "invalidFactionInputs": 14, "syntheticGlobalPalettes": 3, "invalidGlobalInputs": 6},
+  "normalSDK": {"compiler": "OpenAmigaGCC16.2.0-open3 normal private SDK", "factionProbeSHA256": "8d70f1ed301c6c2e6441305712c16f57ff9284d007ceb7f8bd75cf1120041ff1", "globalProbeSHA256": "3f6038f51f6b9aecacb862646581cb1bb1875339e95c4968894ed0cba5ee726a", "executedOnAmigaOS": false},
+  "privateEvidence": "work/alpha-palette-control and work/alpha-original-reference-control/{global-palette-reference,palette-gamma-reference,faction-shade-reference}",
+  "labAccessPerformed": false,
+  "originalAssetsTablesCodeOrExecutableBytesIncluded": false,
+  "remaining": ["Actual AmigaOS execution", "Viewer global palette binding", "Faction metadata/default selection", "Renderer per-faction cache keys", "Custom gamma and alternate system-palette branch remain excluded", "No full original scene/palette fidelity claim"]
+}

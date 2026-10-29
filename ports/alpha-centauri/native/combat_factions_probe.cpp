@@ -1,0 +1,9 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include "combat_factions.h"
+#include <stdio.h>
+#include <string.h>
+using namespace alpha;
+static int32_t word(const unsigned char*p){uint32_t x=(uint32_t)p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);return x<=0x7fffffffu?(int32_t)x:-1-(int32_t)(~x);}
+static bool emit(uint32_t n){unsigned char b[4];for(unsigned i=0;i<4;++i){b[i]=(unsigned char)n;n>>=8;}return fwrite(b,1,4,stdout)==4;}
+template<class T>static T&alias(uintptr_t p){return *reinterpret_cast<T*>(p);}
+int main(){unsigned char b[124];while(true){size_t n=fread(b,1,sizeof b,stdin);if(!n)return ferror(stdin)?20:0;if(n!=sizeof b)return 20;int32_t x[31];for(unsigned i=0;i<31;++i)x[i]=word(b+4*i);CombatFactionContext c{};c.variant=(Variant)x[0];c.offense=x[1];c.defense=x[2];c.psi_mask=(uint32_t)x[3];c.attacker_plan=(uint32_t)x[4];c.made_airdrop=x[5]!=0;c.drop_pods=x[6]!=0;c.fanatic=x[7]!=0;c.attacker_faction=(uint32_t)x[8];c.active_planet=x[9];c.airdrop_penalty=x[10];c.fanatic_bonus=x[11];c.planet_percent=x[12];c.offense_count=(uint32_t)x[13];c.defense_count=(uint32_t)x[14];for(unsigned i=0;i<8;++i){c.offense_factors[i]=x[15+i];c.defense_factors[i]=x[23+i];}unsigned char before[sizeof c];memcpy(before,&c,sizeof c);CombatFactionStrengths out;memset(&out,0xa5,sizeof out);unsigned char initial[sizeof out];memcpy(initial,&out,sizeof out);auto e=combat_faction_modifiers(c,out);unsigned guards=1;if(memcmp(before,&c,sizeof c))return 21;if(e!=LogicError::ok){if(memcmp(initial,&out,sizeof out))return 22;++guards;}if(combat_faction_modifiers(c,alias<CombatFactionStrengths>((uintptr_t)&c))!=LogicError::bad_state||memcmp(before,&c,sizeof c))return 23;++guards;if(!emit(e==LogicError::ok?0:e==LogicError::overflow?2:1)||!emit(e==LogicError::ok?(uint32_t)out.offense:0)||!emit(e==LogicError::ok?(uint32_t)out.defense:0)||!emit(e==LogicError::ok?out.applied:0)||!emit(guards))return 24;}}

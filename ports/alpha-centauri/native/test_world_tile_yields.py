@@ -111,7 +111,7 @@ def expected(variant,text,data):
  return rows
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',required=True,type=Path);ap.add_argument('--cc',default='c++');ap.add_argument('--m68k-linux',action='store_true');ap.add_argument('--original',type=Path,action='append',default=[]);ap.add_argument('--original-rules',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','tile_yields.cpp','world_tile_yields.cpp','world_tile_yields_probe.cpp'];exe=a.out/'world-tile-yields-probe';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[a.cc,*flags,*[str(HERE/n) for n in names],'-o',str(exe)];subprocess.run(cmd,check=True)
+ names=['rules_text.cpp','original_map.cpp','original_game.cpp','original_faction.cpp','original_world.cpp','prototype.cpp','movement.cpp','saved_speed.cpp','world_unit_stats.cpp','tile_yields.cpp','world_technology_effects.cpp','world_upkeep_tile_yields.cpp','world_tile_yields.cpp','world_tile_yields_probe.cpp'];exe=a.out/'world-tile-yields-probe';flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror']+(['-m68040','-static'] if a.m68k_linux else ['-fsanitize=address,undefined','-fno-sanitize-recover=all','-no-pie']);cmd=[a.cc,*flags,*[str(HERE/n) for n in names],'-o',str(exe)];subprocess.run(cmd,check=True)
  cases=[]
  for version in range(7,13):
   for case in range(8):

@@ -1,0 +1,40 @@
+{
+  "scope": "Read-only original-world fresh mineral proposal, not a turn or accounting commit",
+  "host": {
+    "asanUbsan": true,
+    "worlds": 144,
+    "queriedBases": 174,
+    "accepted": 134,
+    "outputSHA256": "79b6fb05d0cd7ce206dd5b86d61f1bdb142cc022897d7a19edbe9b4ac5fdebd9",
+    "allWorldRulesStageAndOriginalBytesUnchanged": true,
+    "wholeAndPartialAliasesRejected": true
+  },
+  "nativeBoreholes": {
+    "emulator": "FS-UAE3.2.35",
+    "guest": "AROS20261023-m68k",
+    "cpu": "68040/FPU",
+    "runtimeCompatibility": "Existing disposable libnix AFF_68881|AFF_FPU40 source patch",
+    "probeBytes": 142416,
+    "probeSHA256": "a0a96454c3a2fd31bb2dfff6c9e2334d5f32efd5db36d3bb0428aaf8b48e662d",
+    "scenarioSHA256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+    "rulesSHA256": "38399e1d0b967455a9146b1c468b9ec9decda43dd168afd8c3c23e0f46e357d4",
+    "suppliedMaintenance": 3,
+    "maintenanceDerivation": "Explicit test input; not claimed as fresh support-engine calculation",
+    "queriedBases": 11,
+    "acceptedBases": [9, 10],
+    "otherBases": "All nine nonhuman bases reject unsupported_stage",
+    "rc": 0,
+    "outputBytes": 269,
+    "outputSHA256": "22215c0d338317e2d6e0a621e0a88c48756f94fa6ab8961758def44544fb12f4",
+    "hostAndIndependentOracleByteIdentical": true,
+    "worldAndOriginalBytesUnchanged": true
+  },
+  "unrun": [
+    "Original executable comparison",
+    "AmigaOS3.2 execution",
+    "Fresh support maintenance derivation",
+    "Actual upkeep worker allocation",
+    "World accounting mutation and persistence",
+    "Full turn progression"
+  ]
+}

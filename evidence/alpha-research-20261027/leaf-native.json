@@ -1,0 +1,12 @@
+{
+  "scope": "Genuine native68040/FPU AROS vanilla research cost and contribution proof",
+  "sourceRevision": "c322006; leaf arithmetic unchanged by later mode/event wrapper extension",
+  "research": {
+    "cases": 8142,
+    "bytes": 521088,
+    "sha256": "7a74deea772489c3dc60353096076401ca3633e57a0b9cb13b06b964dba4b9ea",
+    "binarySHA256": "987f9ee46a824e47b447465340bec23836cd80bf58c47cd1f1084ecc42b9e3d7",
+    "completeOracleMatch": true,
+    "guestReturnCode": 0
+  }
+}

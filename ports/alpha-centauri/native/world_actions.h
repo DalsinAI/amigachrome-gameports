@@ -18,6 +18,15 @@ class WorldActions {
  public:
  static StepResult clear_land_step(OriginalWorld& world,const UnitDefinitions& definitions,
    const Rules& technologies,size_t vehicle,int32_t player,int32_t road_rate,int32_t x,int32_t y);
+ /* Separate empty-sea capability: ordinary sea combat designs or empty naval
+  * transports, already-visible ocean <-> ocean/owned coastal base only.
+  * No abilities, native PSI, foreign neighborhood, encounters or boarding.
+  * Cargo capacity is NOT a loaded count: linked boarders and embarkation
+  * conditions are checked separately. Does not grant land-only callers sea
+  * permission, move passengers, reveal tiles or advance the turn.
+  */
+ static StepResult clear_sea_step(OriginalWorld& world,const UnitDefinitions& definitions,
+   const Rules& technologies,size_t vehicle,int32_t player,int32_t road_rate,int32_t x,int32_t y);
 };
 const char* step_status_name(StepStatus status);
 }
