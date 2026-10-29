@@ -1,0 +1,37 @@
+{
+  "scope": "Buffer-only production snapshot encoder; no filesystem/player save UI/original-executable compatibility claim",
+  "host": {
+    "cases": 204,
+    "publicCases": 192,
+    "originalTutorialCases": 12,
+    "outputSHA256": "ae83cac16d1bae673260393ec8158d2519c5d641a8bdc97979f2ec559d17b835",
+    "publicOutputSHA256": "912ad18d2a929c7bb266ad20ad19ec6b5b007a0f9732954571e0edd2230b4fd1",
+    "sanitizers": "ASan/UBSan"
+  },
+  "controls": {
+    "directBufferExports": 18,
+    "sealedUnsupportedChanges": 72,
+    "sessionContexts": 114,
+    "orderAttempts": 225,
+    "rejectedOrders": 95,
+    "acceptedOrders": 130,
+    "changedOrders": 106,
+    "noopOrders": 24,
+    "rejectedSessionLoads": 24
+  },
+  "normalSDK": {
+    "binarySHA256": "145153ef7ee339372894736bfc5fdc03d14bee689746618077450d080b4fe52d",
+    "nativeExecution": "UNRUN"
+  },
+  "wire": {
+    "baseCurrentMinerals": "LE int32 at0x40",
+    "baseQueueItem0": "LE int32 at0x50",
+    "factionUnitsQueue": "512 explicit bytes at0xa54 forv7..10,0xa58 forv11..12",
+    "baseStride": "304/308",
+    "factionStride": "0x20bc/0x20cc",
+    "otherDecodedChanges": "Rejected before writes",
+    "runtimeRNG": "Returned separately; footer tick unchanged"
+  },
+  "finalCI": "Pending at committed checkpoint",
+  "history": "Initial host1 control attempted to mutate vehicle0 in a zero-vehicle fixture; UBSan correctly rejected driver null access. Fixed fixture includes actual valid vehicle. host-final3 authoritative; production encoder unchanged by driver fix."
+}

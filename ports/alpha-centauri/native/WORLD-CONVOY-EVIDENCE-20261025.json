@@ -1,0 +1,40 @@
+{
+  "scope": "Read-only owned convoy flows composed with fresh stable-human intake/nutrients. No full support/actor state/accounting mutation, upkeep, turn, player input or save-file protocol.",
+  "base": "a5b0e6b16d74986a32514b02d50bde23a1673f99",
+  "unchangedParentProductionFiles": 150,
+  "retainedWorkflowCommands": 95,
+  "newWorkflowCommands": 97,
+  "localValidation": {
+    "syntheticWorlds": 436,
+    "accepted": 430,
+    "rejected": 6,
+    "architectures": [
+      "host-ASan-UBSan",
+      "independent-Linux-68040"
+    ],
+    "outputSHA256": "c1e3446926e6ea3c26eebd516760a30e0fd2da92362a7f0b6d4e14efb38c5555",
+    "allInputsAndWorldRecordsUnchanged": true
+  },
+  "privateOriginalComparison": {
+    "completeOriginalContexts": 128,
+    "ownedObservations": 256,
+    "fieldsComparedPerObservation": 18,
+    "outputSHA256": "da9bfa10cc1e50e7ed030da023ec18a710c05a19ccf56ac8258ad5d0d3357c5b",
+    "method": "Private unchanged original support, base_yield, nutrient and crop/mine/energy helpers; complete seeded-global comparison and direct owned result comparison. No original bytes/media/fixtures included in publication."
+  },
+  "privateSessionComposition": {
+    "worlds": 48,
+    "committedFacilityOrders": 96,
+    "completeBufferExportReloadAndNoopContinuation": true,
+    "outputSHA256": "70180eab0625e7e37b6c88335069484d03266f0472fa62c2d7797721a97a7a85",
+    "domain": "Two bases and seven noncombat supply actors, normal stable human inspection, no accounting mutation or turn."
+  },
+  "normalSDK": {
+    "convoyProbeSHA256": "c398492db4e57965b48571b4a563c645a3cc57a2f32fefc5ec2555b1e4ea4e70",
+    "freshBuildByteIdentical": true,
+    "sessionProbeSHA256": "df79a3bae061c214ca4d4f814f695242ec6aa685d08dcb594e7b8574d18ffb49",
+    "actualAmigaOS": "UNRUN"
+  },
+  "ci": "UNRUN: local unpublished integration; final-head required checks and actual AmigaOS qualification remain gates.",
+  "history": "Initial broad fixture construction manually stopped before any query/positive count; cached reduced Cartesian corpus passed431, then expanded signed-scratch/transfer controls passed436. Production C++/probe binary unchanged between those two suites. Private raw-original failures/history remain private."
+}

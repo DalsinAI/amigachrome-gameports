@@ -1,0 +1,88 @@
+{
+  "scope": "Owned territorial promoted ordinary LAND deletion/bookkeeping followed by original saved-design combat-history writes. Actual design/faction IDs captured before casualty; shared designs merge both faction bits. Not full caller or legal attack.",
+  "host": {
+    "worlds": 74,
+    "counts": {
+      "accepted": 1080,
+      "rejected": 10908,
+      "attacker_deleted": 466,
+      "defender_deleted": 614,
+      "applied": 956,
+      "selection_random": 746,
+      "promotion_notification": 490,
+      "monument_ui": 124,
+      "unowned_land": 256,
+      "same_faction": 90,
+      "history_accepted": 1080,
+      "shared_design_accepted": 4,
+      "changed_history": 1080
+    },
+    "outputSHA256": "ff4ac70b5e0d1d19f3e043516927be1b38633c3b7240bed96a2afae17d6dfd0d",
+    "binarySHA256": "68da66962a1d200a76b68554f757f0f04ece421ca209c5ff91cd9e0424df3c53",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "worlds": 74,
+    "counts": {
+      "accepted": 1080,
+      "rejected": 10908,
+      "attacker_deleted": 466,
+      "defender_deleted": 614,
+      "applied": 956,
+      "selection_random": 746,
+      "promotion_notification": 490,
+      "monument_ui": 124,
+      "unowned_land": 256,
+      "same_faction": 90,
+      "history_accepted": 1080,
+      "shared_design_accepted": 4,
+      "changed_history": 1080
+    },
+    "outputSHA256": "ff4ac70b5e0d1d19f3e043516927be1b38633c3b7240bed96a2afae17d6dfd0d",
+    "binarySHA256": "29a52db4baa0f1472a600f44b681659698a33129d110affb87d87774112fb4ed",
+    "native": "UNRUN"
+  },
+  "attempts": 11988,
+  "originalFragmentContexts": 8192,
+  "originalFragmentSharedDesignContexts": 2732,
+  "originalWitnessCapture": "Source inspection of SMAC51ba58..51ba76 and SMAX507970..507992 stores, not separate capture-range execution or whole caller proof. Actual original two-write prefix executes with supplied saved IDs/ordered faction registers.",
+  "additionalChecks": {
+    "acceptedWorlds": 14,
+    "tinyBudgetPriorOutputChecks": 1080,
+    "firstCloneFitsLaterCloneFails": 14,
+    "sixPoisonedWrapperInputsHostOrNoWriteBE": 84,
+    "runtimePoolPriorStateGuards": 196,
+    "sourceLifetimeChecks": 14,
+    "directHistoryIdempotentOwnedClones": 14,
+    "directHistoryWitnessRejectionGuards": 84,
+    "directHistoryPoisonedWitnessHostOrNoWriteBE": 14,
+    "directHistoryTinyBudgetPreservesPriorOutput": 14
+  },
+  "sdk": {
+    "sha256": "ef32a60fd121e9cd9cbf1bd122e02f4be9a8f0b3b211cf0508b6033c0b6e892b",
+    "twoFreshFinalBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "sourceIdentity": {
+    "parent": "afc20421b79aeab89487d9697a26708a61aafa84",
+    "unchangedParentCpp": 343,
+    "parentHeaderChanges": "WorldCombatHistoryPlan friend only in OriginalWorld and LandEngagementPlan; HistoricalBattleAftermathPlan friend only in TerritorialBattleAftermathPlan",
+    "parentWorkflowCommands": 323,
+    "finalWorkflowCommands": 325,
+    "allParentCommandsRetained": true
+  },
+  "interlude": "Original only setter requires native attacker and base; inherited successfully accepted body excludes both. Wrapper derives absence from checked scope, not a fake acknowledgment. Direct history API holds interlude_pending1. Other caller events are not qualified.",
+  "parentExpectedReuse": "Host1 optionally reuses frozen parent host4 expected bytes only when exact rules and full input container match; new prototype-byte model appended independently. Two added shared-design worlds use fresh independent parent model. Normal workflow has no private corpus dependency. Final host2/BE2 reuse exact-input host1 expectations.",
+  "history": [
+    "host1/BE1 passed complete74World corpus. Final host2/BE2 and SDK3/4 add direct poisoned history witness guard; earlier binaries remain historical. No failing implementation run in this candidate."
+  ],
+  "held": [
+    "Pre-round attack flags/movement charge/hasty strength and post-combat cursor/movement tail",
+    "Complete original caller reachability/differential, genuine random/TLS and notification lifecycle",
+    "Legal attack/session/event authority, variable-length save, turns/AI/diplomacy/full games",
+    "Native/frontend/remote CI/publication"
+  ],
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED"
+}

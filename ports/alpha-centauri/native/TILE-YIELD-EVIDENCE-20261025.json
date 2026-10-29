@@ -1,0 +1,59 @@
+{
+  "scope": "Checked original fresh base-relative tile nutrient/mineral/energy leaves plus original coordinate/map-seed resource bonus. No world binding/worker allocation/turn mutation/UI.",
+  "host": {
+    "cases": 66626,
+    "accepted": 66587,
+    "invalid": 18,
+    "overflow": 21,
+    "inputSHA256": "89043d1f9c7b954dd5111865f3c90506ef80c3e1a7847640c224d32964c35e4d",
+    "outputSHA256": "0aecdc5616a673756b3ab8ef3adfb1d9fc1a5aaafb4405bee9605d183024ada3",
+    "binarySHA256": "8d1ccdb26e9a25a4e1bbb5ab0081e86f8be336061bac49e285451579adaa5b80",
+    "nativeExecution": "UNRUN"
+  },
+  "bonusHost": {
+    "cases": 36415,
+    "accepted": 36400,
+    "invalid": 13,
+    "aliased": 2,
+    "inputSHA256": "42168399d7927753d94b998bbd2c4908269513c8719970604ba491f32eddab26",
+    "outputSHA256": "907b53dd0571df0ab4e5bed0b768ee5132ac6ad983ae6529c5b1c6bb174f04c5",
+    "binarySHA256": "98ed0564ee231514a71c6f44f86ee246670500d0d0596d538029e4b82ebbd71a",
+    "nativeExecution": "UNRUN"
+  },
+  "normalSDK": {
+    "yieldProbeSHA256": "dc20600891d740a87cb78d36c34bab8691f1e3e262fb02e265f83552a1a94e92",
+    "bonusProbeSHA256": "0a0e6dad1e0fed0df34f974e93537c21d6872085d1aa6047d1d090dc07625051",
+    "freshRebuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "workflow": {
+    "parentCommands": 57,
+    "finalCommands": 61,
+    "allParentCommandsRetained": true
+  },
+  "finalHeadCI": "UNRUN at committed evidence checkpoint",
+  "limits": [
+    "Explicit current-stage facts, physically built facilities and actual source profile; no saved-intake feedback.",
+    "Original helper observations are private explicit faction1/base0/position2,2 numeric contexts; bonus contexts additionally vary coordinates/maps/seeds. No PE/imports/full game or callback stubs.",
+    "Joint original comparison excludes unsupported signed overflow and inconsistent supplied resource bonuses.",
+    "No worker selection/support/convoy aggregation/upkeep/production completion/research/AI/input/turn/player save. User watch untouched."
+  ],
+  "originalComparison": {
+    "leafCases": 62420,
+    "joint": {
+      "base": {
+        "contexts": 31768,
+        "outputBytes": 1016576,
+        "outputSHA256": "f0d2e6e80da7cd0424710b4f95ff5d3e79a40e9554eff75cbc8b8300f883739c"
+      },
+      "expansion": {
+        "contexts": 31718,
+        "outputBytes": 1014976,
+        "outputSHA256": "427aabb5ec4e6d13c041ec0c815ed9d126fa9a1101898818cc328114835a4dcb"
+      }
+    },
+    "bonusCasesPerEdition": 36400,
+    "bonusValueSHA256": "44e7424e57d37feca75570db653c823eb2205d32be5aa3d99b2e24ee2e624d11",
+    "ownedComparisonOutputSHA256": "3322324d5c931deb68707ef844d2eea775fc5e1e0c43c93359a514128d73bf0b"
+  }
+}

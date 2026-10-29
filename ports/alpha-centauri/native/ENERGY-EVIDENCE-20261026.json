@@ -1,0 +1,710 @@
+{
+  "schema": 1,
+  "date": "2026-10-26",
+  "scope": "Read-only energy subtotal/originalHQloss/convoyshortfall/freshworker+convoycomposition; no turn or allocation authority",
+  "sourceCommit": "101a502",
+  "originalReference": "b-casey/OpenSMACX@2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c",
+  "host": {
+    "arithmeticCases": 10212,
+    "accepted": 9060,
+    "invalid": 964,
+    "overflow": 188,
+    "sanitizers": "ASan+UBSan",
+    "connectedWorldCases": 108,
+    "worldVersions": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "pureOutputSHA256": "a55bbf65b51672506b6816b496cf20092288a1d2365315d615443affbda976df"
+  },
+  "native": {
+    "environment": "FS-UAE3.2.35/AROS20261023/A1200/68040FPU",
+    "runtimeCompatibility": "Isolated documentedlibnixAFF_FPU40patch",
+    "compiler": "OpenAmigaGCC16.2.0-open3",
+    "leafBinarySHA256": "afe933056d5d0dcb303a68565320708d91782bd2ae75e9b2916dd090e5a2c6e9",
+    "worldBinarySHA256": "a063067e31aedec1102630cc6eec16269d65be62e3b63a61e220f893d5d5396f",
+    "leafReturnCode": 0,
+    "leafCases": 10212,
+    "leafFullOutputMatchesIndependentOracle": true,
+    "leafOutputSHA256": "a55bbf65b51672506b6816b496cf20092288a1d2365315d615443affbda976df",
+    "connectedWorldCases": 108,
+    "connectedWorldAllReturnCode0": true,
+    "connectedWorldAllIndependentOraclePassed": true,
+    "actualScenario": {
+      "name": "OfficialFiraxisBoreholes",
+      "base": 9,
+      "nameBase": "TheHive",
+      "freshEnergyIntake": 6,
+      "convoyTo": 0,
+      "convoyFrom": 0,
+      "explicitCommerce": 0,
+      "explicitAlienGrid": 0,
+      "headquartersDistance": 0,
+      "pendingEfficiency": 0,
+      "inefficiency": 0,
+      "preAllocationSurplus": 6,
+      "actualHunkReturnCode": 0,
+      "completeOutputMatchesHost": true,
+      "outputSHA256": "04f21ec405ce83f206b2838dc7d6c0733d3f14350fae7c59f371af6d9c0a89a5"
+    },
+    "cases": [
+      {
+        "name": "v7-0",
+        "sha256": "3adcac101a80768fb5db13e9bb4b1ea663fc7b320eb7cbb06111a22409b1f536",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-1",
+        "sha256": "ffeb95d2588a4c13096fc3431e75a751fb103d1f13a56e7346699990ded1c297",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-2",
+        "sha256": "8410670ffbd4f0c37d30bf9c4607ccf4f8c7f69886b54a82b19dba410d67d6ee",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-3",
+        "sha256": "860869ad53cae2763b00d3940f94cc806aff0058fe7dd6538286b1af3b3b8175",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-4",
+        "sha256": "4e19f95320e99b1a2d301efc4107c6b18c8f05bd78d66892aa8871ab205d08de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-5",
+        "sha256": "ff59140f3569a5f2f2f7fba93bac0604d5e55ae90ba18420a5d6ac18ce91c23c",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-6",
+        "sha256": "4a19a6a6cfd4c3375516d932336caac466b6b37d37d4211ca9914e7bc82b95e7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-7",
+        "sha256": "21802ac03aae5e0b3c018f5bea7cbdb697479188a44427326fc2f1281c662be7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-8",
+        "sha256": "b3ad587468994c5349fe619c1093fdbf41d473dd6f9cc90c532d0186638be192",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-9",
+        "sha256": "f4e86768117ceb129fc21663133eced416d59cf3c2099e363e8c5b0e77e25381",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-10",
+        "sha256": "a134720d43d7736094cbc48c36f13d07ea32f5b37b53223c6458c3c84aeea711",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-11",
+        "sha256": "c87da5d76d5dedb90f115f5aa17e12c16a633a67bef9edc4bc50168b0998383b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-12",
+        "sha256": "227b48ebc81f85951ff2119406c32755740fb68b4e379a0013aabc0d371983e6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-13",
+        "sha256": "d74e317d2175c857fc1cd320b4575844eda57b3e459bbc6afc0d72b30d69d9cb",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-14",
+        "sha256": "da31ee95a189114b8cb5a8f12849ec388129d9031f53bc5759f1d1bb0beca1de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-15",
+        "sha256": "0cc0da57b0be7d2f47304297e30af09bcee084a0f30ff3f4d9cce5a7f84b30f6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-16",
+        "sha256": "f1df685d35f753d920f31637a8214476b8bb0decad106d9e36dcc109c67390d1",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v7-17",
+        "sha256": "1b4872fdae9515f5387c266deb89bba97f40bdfbd833ac857a8f39a84666351b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-0",
+        "sha256": "3adcac101a80768fb5db13e9bb4b1ea663fc7b320eb7cbb06111a22409b1f536",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-1",
+        "sha256": "ffeb95d2588a4c13096fc3431e75a751fb103d1f13a56e7346699990ded1c297",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-2",
+        "sha256": "8410670ffbd4f0c37d30bf9c4607ccf4f8c7f69886b54a82b19dba410d67d6ee",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-3",
+        "sha256": "860869ad53cae2763b00d3940f94cc806aff0058fe7dd6538286b1af3b3b8175",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-4",
+        "sha256": "4e19f95320e99b1a2d301efc4107c6b18c8f05bd78d66892aa8871ab205d08de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-5",
+        "sha256": "ff59140f3569a5f2f2f7fba93bac0604d5e55ae90ba18420a5d6ac18ce91c23c",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-6",
+        "sha256": "4a19a6a6cfd4c3375516d932336caac466b6b37d37d4211ca9914e7bc82b95e7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-7",
+        "sha256": "21802ac03aae5e0b3c018f5bea7cbdb697479188a44427326fc2f1281c662be7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-8",
+        "sha256": "b3ad587468994c5349fe619c1093fdbf41d473dd6f9cc90c532d0186638be192",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-9",
+        "sha256": "f4e86768117ceb129fc21663133eced416d59cf3c2099e363e8c5b0e77e25381",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-10",
+        "sha256": "a134720d43d7736094cbc48c36f13d07ea32f5b37b53223c6458c3c84aeea711",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-11",
+        "sha256": "c87da5d76d5dedb90f115f5aa17e12c16a633a67bef9edc4bc50168b0998383b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-12",
+        "sha256": "227b48ebc81f85951ff2119406c32755740fb68b4e379a0013aabc0d371983e6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-13",
+        "sha256": "d74e317d2175c857fc1cd320b4575844eda57b3e459bbc6afc0d72b30d69d9cb",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-14",
+        "sha256": "da31ee95a189114b8cb5a8f12849ec388129d9031f53bc5759f1d1bb0beca1de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-15",
+        "sha256": "0cc0da57b0be7d2f47304297e30af09bcee084a0f30ff3f4d9cce5a7f84b30f6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-16",
+        "sha256": "f1df685d35f753d920f31637a8214476b8bb0decad106d9e36dcc109c67390d1",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v8-17",
+        "sha256": "1b4872fdae9515f5387c266deb89bba97f40bdfbd833ac857a8f39a84666351b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-0",
+        "sha256": "3adcac101a80768fb5db13e9bb4b1ea663fc7b320eb7cbb06111a22409b1f536",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-1",
+        "sha256": "ffeb95d2588a4c13096fc3431e75a751fb103d1f13a56e7346699990ded1c297",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-2",
+        "sha256": "8410670ffbd4f0c37d30bf9c4607ccf4f8c7f69886b54a82b19dba410d67d6ee",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-3",
+        "sha256": "860869ad53cae2763b00d3940f94cc806aff0058fe7dd6538286b1af3b3b8175",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-4",
+        "sha256": "4e19f95320e99b1a2d301efc4107c6b18c8f05bd78d66892aa8871ab205d08de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-5",
+        "sha256": "ff59140f3569a5f2f2f7fba93bac0604d5e55ae90ba18420a5d6ac18ce91c23c",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-6",
+        "sha256": "4a19a6a6cfd4c3375516d932336caac466b6b37d37d4211ca9914e7bc82b95e7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-7",
+        "sha256": "21802ac03aae5e0b3c018f5bea7cbdb697479188a44427326fc2f1281c662be7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-8",
+        "sha256": "b3ad587468994c5349fe619c1093fdbf41d473dd6f9cc90c532d0186638be192",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-9",
+        "sha256": "f4e86768117ceb129fc21663133eced416d59cf3c2099e363e8c5b0e77e25381",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-10",
+        "sha256": "a134720d43d7736094cbc48c36f13d07ea32f5b37b53223c6458c3c84aeea711",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-11",
+        "sha256": "c87da5d76d5dedb90f115f5aa17e12c16a633a67bef9edc4bc50168b0998383b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-12",
+        "sha256": "227b48ebc81f85951ff2119406c32755740fb68b4e379a0013aabc0d371983e6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-13",
+        "sha256": "d74e317d2175c857fc1cd320b4575844eda57b3e459bbc6afc0d72b30d69d9cb",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-14",
+        "sha256": "da31ee95a189114b8cb5a8f12849ec388129d9031f53bc5759f1d1bb0beca1de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-15",
+        "sha256": "0cc0da57b0be7d2f47304297e30af09bcee084a0f30ff3f4d9cce5a7f84b30f6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-16",
+        "sha256": "f1df685d35f753d920f31637a8214476b8bb0decad106d9e36dcc109c67390d1",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v9-17",
+        "sha256": "1b4872fdae9515f5387c266deb89bba97f40bdfbd833ac857a8f39a84666351b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-0",
+        "sha256": "3adcac101a80768fb5db13e9bb4b1ea663fc7b320eb7cbb06111a22409b1f536",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-1",
+        "sha256": "ffeb95d2588a4c13096fc3431e75a751fb103d1f13a56e7346699990ded1c297",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-2",
+        "sha256": "8410670ffbd4f0c37d30bf9c4607ccf4f8c7f69886b54a82b19dba410d67d6ee",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-3",
+        "sha256": "860869ad53cae2763b00d3940f94cc806aff0058fe7dd6538286b1af3b3b8175",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-4",
+        "sha256": "4e19f95320e99b1a2d301efc4107c6b18c8f05bd78d66892aa8871ab205d08de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-5",
+        "sha256": "ff59140f3569a5f2f2f7fba93bac0604d5e55ae90ba18420a5d6ac18ce91c23c",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-6",
+        "sha256": "4a19a6a6cfd4c3375516d932336caac466b6b37d37d4211ca9914e7bc82b95e7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-7",
+        "sha256": "21802ac03aae5e0b3c018f5bea7cbdb697479188a44427326fc2f1281c662be7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-8",
+        "sha256": "b3ad587468994c5349fe619c1093fdbf41d473dd6f9cc90c532d0186638be192",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-9",
+        "sha256": "f4e86768117ceb129fc21663133eced416d59cf3c2099e363e8c5b0e77e25381",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-10",
+        "sha256": "a134720d43d7736094cbc48c36f13d07ea32f5b37b53223c6458c3c84aeea711",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-11",
+        "sha256": "c87da5d76d5dedb90f115f5aa17e12c16a633a67bef9edc4bc50168b0998383b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-12",
+        "sha256": "227b48ebc81f85951ff2119406c32755740fb68b4e379a0013aabc0d371983e6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-13",
+        "sha256": "d74e317d2175c857fc1cd320b4575844eda57b3e459bbc6afc0d72b30d69d9cb",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-14",
+        "sha256": "da31ee95a189114b8cb5a8f12849ec388129d9031f53bc5759f1d1bb0beca1de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-15",
+        "sha256": "0cc0da57b0be7d2f47304297e30af09bcee084a0f30ff3f4d9cce5a7f84b30f6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-16",
+        "sha256": "f1df685d35f753d920f31637a8214476b8bb0decad106d9e36dcc109c67390d1",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v10-17",
+        "sha256": "1b4872fdae9515f5387c266deb89bba97f40bdfbd833ac857a8f39a84666351b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-0",
+        "sha256": "3adcac101a80768fb5db13e9bb4b1ea663fc7b320eb7cbb06111a22409b1f536",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-1",
+        "sha256": "ffeb95d2588a4c13096fc3431e75a751fb103d1f13a56e7346699990ded1c297",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-2",
+        "sha256": "8410670ffbd4f0c37d30bf9c4607ccf4f8c7f69886b54a82b19dba410d67d6ee",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-3",
+        "sha256": "860869ad53cae2763b00d3940f94cc806aff0058fe7dd6538286b1af3b3b8175",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-4",
+        "sha256": "4e19f95320e99b1a2d301efc4107c6b18c8f05bd78d66892aa8871ab205d08de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-5",
+        "sha256": "ff59140f3569a5f2f2f7fba93bac0604d5e55ae90ba18420a5d6ac18ce91c23c",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-6",
+        "sha256": "4a19a6a6cfd4c3375516d932336caac466b6b37d37d4211ca9914e7bc82b95e7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-7",
+        "sha256": "21802ac03aae5e0b3c018f5bea7cbdb697479188a44427326fc2f1281c662be7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-8",
+        "sha256": "b3ad587468994c5349fe619c1093fdbf41d473dd6f9cc90c532d0186638be192",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-9",
+        "sha256": "f4e86768117ceb129fc21663133eced416d59cf3c2099e363e8c5b0e77e25381",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-10",
+        "sha256": "a134720d43d7736094cbc48c36f13d07ea32f5b37b53223c6458c3c84aeea711",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-11",
+        "sha256": "c87da5d76d5dedb90f115f5aa17e12c16a633a67bef9edc4bc50168b0998383b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-12",
+        "sha256": "227b48ebc81f85951ff2119406c32755740fb68b4e379a0013aabc0d371983e6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-13",
+        "sha256": "d74e317d2175c857fc1cd320b4575844eda57b3e459bbc6afc0d72b30d69d9cb",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-14",
+        "sha256": "da31ee95a189114b8cb5a8f12849ec388129d9031f53bc5759f1d1bb0beca1de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-15",
+        "sha256": "0cc0da57b0be7d2f47304297e30af09bcee084a0f30ff3f4d9cce5a7f84b30f6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-16",
+        "sha256": "f1df685d35f753d920f31637a8214476b8bb0decad106d9e36dcc109c67390d1",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v11-17",
+        "sha256": "1b4872fdae9515f5387c266deb89bba97f40bdfbd833ac857a8f39a84666351b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-0",
+        "sha256": "3adcac101a80768fb5db13e9bb4b1ea663fc7b320eb7cbb06111a22409b1f536",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-1",
+        "sha256": "ffeb95d2588a4c13096fc3431e75a751fb103d1f13a56e7346699990ded1c297",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-2",
+        "sha256": "8410670ffbd4f0c37d30bf9c4607ccf4f8c7f69886b54a82b19dba410d67d6ee",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-3",
+        "sha256": "860869ad53cae2763b00d3940f94cc806aff0058fe7dd6538286b1af3b3b8175",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-4",
+        "sha256": "4e19f95320e99b1a2d301efc4107c6b18c8f05bd78d66892aa8871ab205d08de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-5",
+        "sha256": "ff59140f3569a5f2f2f7fba93bac0604d5e55ae90ba18420a5d6ac18ce91c23c",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-6",
+        "sha256": "4a19a6a6cfd4c3375516d932336caac466b6b37d37d4211ca9914e7bc82b95e7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-7",
+        "sha256": "21802ac03aae5e0b3c018f5bea7cbdb697479188a44427326fc2f1281c662be7",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-8",
+        "sha256": "b3ad587468994c5349fe619c1093fdbf41d473dd6f9cc90c532d0186638be192",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-9",
+        "sha256": "f4e86768117ceb129fc21663133eced416d59cf3c2099e363e8c5b0e77e25381",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-10",
+        "sha256": "a134720d43d7736094cbc48c36f13d07ea32f5b37b53223c6458c3c84aeea711",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-11",
+        "sha256": "c87da5d76d5dedb90f115f5aa17e12c16a633a67bef9edc4bc50168b0998383b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-12",
+        "sha256": "227b48ebc81f85951ff2119406c32755740fb68b4e379a0013aabc0d371983e6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-13",
+        "sha256": "d74e317d2175c857fc1cd320b4575844eda57b3e459bbc6afc0d72b30d69d9cb",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-14",
+        "sha256": "da31ee95a189114b8cb5a8f12849ec388129d9031f53bc5759f1d1bb0beca1de",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-15",
+        "sha256": "0cc0da57b0be7d2f47304297e30af09bcee084a0f30ff3f4d9cce5a7f84b30f6",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-16",
+        "sha256": "f1df685d35f753d920f31637a8214476b8bb0decad106d9e36dcc109c67390d1",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      },
+      {
+        "name": "v12-17",
+        "sha256": "1b4872fdae9515f5387c266deb89bba97f40bdfbd833ac857a8f39a84666351b",
+        "returnCode": 0,
+        "independentWireOraclePassed": true
+      }
+    ]
+  },
+  "limits": [
+    "No originalx86executableenergycomparison performed",
+    "AROS compatibility is not AmigaOS3.2qualification",
+    "Commerce generation,fullallocation,facilityupkeep and EndTurn remain excluded"
+  ]
+}

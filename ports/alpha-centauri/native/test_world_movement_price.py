@@ -26,7 +26,7 @@ def original_model(rules,data,variant):
   ch=p[36];weapon=p[37];triad=int(table[f'chassis.{ch}.triad']);offense=int(table[f'weapons.{weapon}.offense']);plan=struct.unpack_from('<b',p,42)[0];abilities=struct.unpack_from('<I',p,32)[0]
   xeno=baseid>=0 and s['bases'][baseid*bs+4]==faction
   planet=scalar(s['factions'][faction*fs:(faction+1)*fs],schema,'SE_planet')
-  if triad==0 and unit>=64:
+  if variant=='expansion' and triad==0 and unit>=64:
    owner=unit//64;definition=s['faction_definitions'][owner*0x59c:(owner+1)*0x59c]
    count=scalar(definition,SCHEMA['MFaction'],'faction_bonus_count');assert 0<=count<=8
    techrows=sections(rules)['TECHNOLOGY'];keys={r[1].lower():n for n,r in enumerate(techrows)};keys.update(none=-1,disable=-2)
@@ -134,7 +134,7 @@ def controls():
    b=bytearray(template[3]);_,o,_=decode(b);pref=o['preferences'] if variant=='expansion' else o['legacy'];shift=0 if variant=='expansion' else 0x7c
    b[o['vehicles']+14]=6;b[pref+0x1e0-shift]=(1<<owner) if known_ else 0
    definition=o['faction_definitions']+5*0x59c;struct.pack_into('<iii',b,definition+countoff,9 if kind=='bad-count' else 1,15,0);struct.pack_into('<i',b,definition+valoff,ability)
-   cleaned.append((variant+'-free-'+kind,variant,template[2],bytes(b),not kind.startswith('bad-')))
+   cleaned.append((variant+'-free-'+kind,variant,template[2],bytes(b),variant=='base' or not kind.startswith('bad-')))
  return cleaned
 
 def main():

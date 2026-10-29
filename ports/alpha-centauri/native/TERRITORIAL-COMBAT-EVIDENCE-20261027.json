@@ -1,0 +1,54 @@
+{
+  "scope": "Checked original pre-promotion territorial gift/friction numeric transition with explicit negotiation state; no World/session binding",
+  "host": {
+    "cases": 8461,
+    "statusCounts": {
+      "0": 8368,
+      "1": 9,
+      "2": 2,
+      "3": 82
+    },
+    "applied": 4708,
+    "poisonedAliasNoReadHostOrNoWriteBE": 8461,
+    "outputSHA256": "967be29722f75ff8c06b4b95a2d678b2890a4ad44b2bf00a0879f833d113767d",
+    "binarySHA256": "0aca4ddb358312f0329ef77015a6474641fa8fa9ab97f7904ac162b4523cfd1c",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "cases": 8461,
+    "statusCounts": {
+      "0": 8368,
+      "1": 9,
+      "2": 2,
+      "3": 82
+    },
+    "applied": 4708,
+    "poisonedAliasNoReadHostOrNoWriteBE": 8461,
+    "outputSHA256": "967be29722f75ff8c06b4b95a2d678b2890a4ad44b2bf00a0879f833d113767d",
+    "binarySHA256": "f54ed483765915c412631c5a8a525b533dd99e4366ebf096c1ce86721475cd9d",
+    "native": "UNRUN"
+  },
+  "originalCallerCorrespondenceContexts": 8192,
+  "originalHelperNaturalCalls": 24576,
+  "sdk": {
+    "sha256": "7444138cda669d0fa2c5985ae8d56ace5f582dcdfe28c774f62e466bb5d572c7",
+    "twoFreshBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "sourceIdentity": {
+    "parent": "00e13283dd8a2fd2bc59d0b251240961b6784ec5",
+    "unchangedParentCpp": 336,
+    "parentWorkflowCommands": 317,
+    "finalWorkflowCommands": 319,
+    "allParentCommandsRetained": true
+  },
+  "held": [
+    "Unowned/out-of-range land owner (original unchecked access not replayed)",
+    "Negotiation runtime must be explicitly observed; no save/default inference",
+    "Owned World pre-promotion composition, legal attack/session, events, variable-length save, turn/AI/diplomacy game loop",
+    "Native/frontend/remote CI/publication"
+  ],
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED"
+}

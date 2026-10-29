@@ -1,0 +1,18 @@
+{
+  "leaf_cases": 3403,
+  "world_cases": 87,
+  "source_policy": "Thinker default adaptation; original support routine parity unproven",
+  "leaf_sha256": "0a1b717ec3a679378694e4b898e670603cf704a58553a14b1dc296fafb6eb0f4",
+  "world_sha256": "aa78022423dde8afc8a4fe8b5a402f4e57f0751920bcde3ed25e7125327ad650",
+  "native_environment": "FS-UAE3.2.35, AROS20261023, 68040/FPU, isolated folder disks",
+  "native_leaf_rc": 0,
+  "native_world_rc": 0,
+  "native_leaf_output_bytes": 1943044,
+  "native_world_output_bytes": 132,
+  "native_binary_sha256": "d21911d50ccf371ef38bb5a9ea0ca255e2c8b55b5664789c5cf5e37c5120599d",
+  "limits": [
+    "Thinker default restoration policy, original support parity unproven",
+    "Calculation-only: no actor/faction/turn mutation",
+    "Human base-game connected adapter; AI and expansion rejected"
+  ]
+}

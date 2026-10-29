@@ -1,0 +1,472 @@
+{
+  "scope": "Genuine FS-UAE/AROS68040/FPU current stage1 coherent accounting proposals, including all source/both-output guards; not a completed turn or campaign.",
+  "binarySHA256": "757c3b58f5154c0c9bfdf2be796b446724d7044c524af3dfafdda1cddb1b2db2",
+  "cases": [
+    {
+      "index": 0,
+      "name": "base-1",
+      "bytes": 645,
+      "sha256": "cba4cfce2f39174aac1b104c6c7e7ada41a8ef5b63667f6acf59ea9a355bb74b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 1,
+      "name": "base-2",
+      "bytes": 653,
+      "sha256": "cd931b703b064a5f438ca41234bb3581bd3d6c221d3e146df8e2b46b1db76770",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 2,
+      "name": "base-3",
+      "bytes": 660,
+      "sha256": "419d5d2d9e7cbac19f7c39db74df2c25e4b7ae89c11e15f477af27d669c1e2db",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 3,
+      "name": "base-4",
+      "bytes": 651,
+      "sha256": "e35dc4a610975a039bfee1674eefb4ccb7191b81f5217d3dc618f3b4996821ee",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 4,
+      "name": "base-5",
+      "bytes": 662,
+      "sha256": "a7dd5f79cf0787efb6e0ca7db104bc081067bdbd5f7abf73a59798bfa5be73e1",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 5,
+      "name": "base-6",
+      "bytes": 663,
+      "sha256": "d51289e3d9697c7561c081afbd938c0596f81773c9d5383dd3ecc90ac6d4f700",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 6,
+      "name": "base-7",
+      "bytes": 665,
+      "sha256": "0543588eee56ed2a79adccaaa8602dbabc14cdbc655cd1b4dd74a9f972e50bed",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 7,
+      "name": "base-8",
+      "bytes": 666,
+      "sha256": "b92212e3e3811917b5edc39ac10afd025ccb48b59bf3b1a631e47e6ba059a8f0",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 8,
+      "name": "base-9",
+      "bytes": 668,
+      "sha256": "1e880d5d5e571b5edc73479e478787f03e88980365255ce1a321b474d2d7c6c6",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 9,
+      "name": "base-10",
+      "bytes": 644,
+      "sha256": "131e42f100fce81593379ea64039cd466be096446d98f08111ccebebba083e89",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 10,
+      "name": "base-11",
+      "bytes": 649,
+      "sha256": "575cd4aa370e3558691b088144721b3b77fbbc1d6e3fd8757dec1a2ac0e9cdce",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 11,
+      "name": "base-12",
+      "bytes": 646,
+      "sha256": "fa176ec56ad7944c2c7c2fc0bd1e3ae11acd724116291f097d697b0bfd2cf588",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 12,
+      "name": "base-13",
+      "bytes": 652,
+      "sha256": "b5e5125a3d0ee2adf127015f96b4c66010fd812cffcb8da64c9bce425e4d43fc",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 13,
+      "name": "base-14",
+      "bytes": 661,
+      "sha256": "1ef1878c11229ee0fdd8cf6b73df4be5c1cba92b518f77ed5ddb9fe64e3fc0b2",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 14,
+      "name": "base-15",
+      "bytes": 662,
+      "sha256": "9e656a56bfa62ad99b3d1283fb9b032a99ef5fe9d3fa400173b302802c3045b4",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 15,
+      "name": "base-16",
+      "bytes": 658,
+      "sha256": "b49dea645015dea64d973b1ab5ec7e3efc467dee699b1093359a0f897e277bf5",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 16,
+      "name": "base-17",
+      "bytes": 664,
+      "sha256": "dcc07d9d09cdefa87790a610a5c18b332af3da282a4c31e5d5e43bad7ca5ae42",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 17,
+      "name": "base-18",
+      "bytes": 665,
+      "sha256": "b1ccfb967039e99a81db01f9675daaf78f0287bb6534509582ce075178f0d6be",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 18,
+      "name": "base-19",
+      "bytes": 671,
+      "sha256": "0c112629e91bd9cefbba18775f3e70fbe5a303d9ac79341ca431fa41bf768342",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 19,
+      "name": "base-20",
+      "bytes": 649,
+      "sha256": "5c5df4c6748ee46f606bcb19476184714475358a0bfc683c965af94b27a2e945",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 20,
+      "name": "base-21",
+      "bytes": 644,
+      "sha256": "14ab5d0b101d898b24dac8355d405db025f5e58884fb2130503fd1a769022098",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 21,
+      "name": "base-22",
+      "bytes": 651,
+      "sha256": "509d533f11d6c763fca43aba51313f270f518471e228306bad5a310139d84a06",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 22,
+      "name": "base-23",
+      "bytes": 663,
+      "sha256": "bd6c6680af2fc93f49cdf4dc112800aaed72502884685d41aa62885e5e2c8401",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 23,
+      "name": "base-24",
+      "bytes": 653,
+      "sha256": "d0e1af814cb86fa81e7f88c5fd498afca76a8aba7968855412078e4b15adee0b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 24,
+      "name": "mode-inspection",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 25,
+      "name": "mode-editor",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 26,
+      "name": "mode-control",
+      "bytes": 666,
+      "sha256": "e096890fd63b9d5354e8990ebdc04b6b48d4f13c4f627dd6991c2fcfb501b026",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 27,
+      "name": "late-energy-overflow",
+      "bytes": 7,
+      "sha256": "b16f8971646c34f8ea16efefb0028d3a0545600c568fba42d3bbbd223a47bc81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 28,
+      "name": "negative-commerce",
+      "bytes": 7,
+      "sha256": "21bd735794206e8bac3dbadb7cc3378e32695fcccefbca6427e78541ea802d3b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 29,
+      "name": "negative-grid",
+      "bytes": 7,
+      "sha256": "21bd735794206e8bac3dbadb7cc3378e32695fcccefbca6427e78541ea802d3b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 30,
+      "name": "SMAX",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 31,
+      "name": "bad-base",
+      "bytes": 7,
+      "sha256": "21bd735794206e8bac3dbadb7cc3378e32695fcccefbca6427e78541ea802d3b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 32,
+      "name": "more-than16-specialists",
+      "bytes": 697,
+      "sha256": "074ddb468b979aebd214d84c71a0d796dad7c063fd012cc28ae2d78a40145f03",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 33,
+      "name": "overassigned",
+      "bytes": 649,
+      "sha256": "23393b1d7ccd68b1481a77e5dec28b7c55bb2b7f8d54fd3055735a658018fa24",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 34,
+      "name": "empty-mask",
+      "bytes": 665,
+      "sha256": "79044af227f225da514cf75cafa0976672d02eefc3c45f48b36286702b0f4a09",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 35,
+      "name": "post-growth-population",
+      "bytes": 671,
+      "sha256": "4805f149949f7582f0f2732b6b96f8742c1f8b6aadbb4abe7a1981dfe24a9231",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 36,
+      "name": "post-loss-population",
+      "bytes": 648,
+      "sha256": "80fd4ffda79eafdadc1c67739aa192694bc304992205a45cb3872cf1ec5fec82",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 37,
+      "name": "all-specialists",
+      "bytes": 656,
+      "sha256": "73a95a6029f6d6f5352682946b4666c3e10d4b275892b0b4c0a45e11d47722f4",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 38,
+      "name": "iterative-riot-trim",
+      "bytes": 626,
+      "sha256": "cf74d830a91bd6b2e4939a6f1e0e861a05260bae4967eeaa9e6bcc983ff5beb0",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 39,
+      "name": "old-displays-positive",
+      "bytes": 666,
+      "sha256": "e096890fd63b9d5354e8990ebdc04b6b48d4f13c4f627dd6991c2fcfb501b026",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 40,
+      "name": "old-displays-negative",
+      "bytes": 666,
+      "sha256": "e096890fd63b9d5354e8990ebdc04b6b48d4f13c4f627dd6991c2fcfb501b026",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 41,
+      "name": "late-mineral-overflow",
+      "bytes": 7,
+      "sha256": "b16f8971646c34f8ea16efefb0028d3a0545600c568fba42d3bbbd223a47bc81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 42,
+      "name": "late-food-aggregate-overflow",
+      "bytes": 7,
+      "sha256": "b16f8971646c34f8ea16efefb0028d3a0545600c568fba42d3bbbd223a47bc81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 43,
+      "name": "late-psych-invalid",
+      "bytes": 7,
+      "sha256": "21bd735794206e8bac3dbadb7cc3378e32695fcccefbca6427e78541ea802d3b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 44,
+      "name": "energy-shortfall",
+      "bytes": 658,
+      "sha256": "ae44fc96449cb02c326a0e130a291f8317a6d6b94f6cb5a394601fdce55ef7d1",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 45,
+      "name": "no-actors",
+      "bytes": 591,
+      "sha256": "78a123a8c6cb7a295ba758219dea60b76193fa47b2647576936101ad9ce7af69",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 46,
+      "name": "Boreholes-base-0",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 47,
+      "name": "Boreholes-base-1",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 48,
+      "name": "Boreholes-base-2",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 49,
+      "name": "Boreholes-base-3",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 50,
+      "name": "Boreholes-base-4",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 51,
+      "name": "Boreholes-base-5",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 52,
+      "name": "Boreholes-base-6",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 53,
+      "name": "Boreholes-base-7",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 54,
+      "name": "Boreholes-base-8",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 55,
+      "name": "Boreholes-base-9",
+      "bytes": 673,
+      "sha256": "6bf1b512b5c0f8abba5ca8377218323e199d0e180b332efffccbfb747465fe0b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 56,
+      "name": "Boreholes-base-10",
+      "bytes": 666,
+      "sha256": "6fabb8d644988b17c060e624fe655cdd3c86bf3beafb66e0c5b15af56edbabd5",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    }
+  ],
+  "count": 57,
+  "aggregateBytes": 25096,
+  "aggregateSHA256": "05e5699a2330946d6b90bc0938b4a226c2ede2bc517e675efa697dd2215f4c9f",
+  "status": "UPKEEP_0_RC 0\nUPKEEP_1_RC 0\nUPKEEP_2_RC 0\nUPKEEP_3_RC 0\nUPKEEP_4_RC 0\nUPKEEP_5_RC 0\nUPKEEP_6_RC 0\nUPKEEP_7_RC 0\nUPKEEP_8_RC 0\nUPKEEP_9_RC 0\nUPKEEP_10_RC 0\nUPKEEP_11_RC 0\nUPKEEP_12_RC 0\nUPKEEP_13_RC 0\nUPKEEP_14_RC 0\nUPKEEP_15_RC 0\nUPKEEP_16_RC 0\nUPKEEP_17_RC 0\nUPKEEP_18_RC 0\nUPKEEP_19_RC 0\nUPKEEP_20_RC 0\nUPKEEP_21_RC 0\nUPKEEP_22_RC 0\nUPKEEP_23_RC 0\nUPKEEP_24_RC 0\nUPKEEP_25_RC 0\nUPKEEP_26_RC 0\nUPKEEP_27_RC 0\nUPKEEP_28_RC 0\nUPKEEP_29_RC 0\nUPKEEP_30_RC 0\nUPKEEP_31_RC 0\nUPKEEP_32_RC 0\nUPKEEP_33_RC 0\nUPKEEP_34_RC 0\nUPKEEP_35_RC 0\nUPKEEP_36_RC 0\nUPKEEP_37_RC 0\nUPKEEP_38_RC 0\nUPKEEP_39_RC 0\nUPKEEP_40_RC 0\nUPKEEP_41_RC 0\nUPKEEP_42_RC 0\nUPKEEP_43_RC 0\nUPKEEP_44_RC 0\nUPKEEP_45_RC 0\nUPKEEP_46_RC 0\nUPKEEP_47_RC 0\nUPKEEP_48_RC 0\nUPKEEP_49_RC 0\nUPKEEP_50_RC 0\nUPKEEP_51_RC 0\nUPKEEP_52_RC 0\nUPKEEP_53_RC 0\nUPKEEP_54_RC 0\nUPKEEP_55_RC 0\nUPKEEP_56_RC 0\nBATCH_DONE\n",
+  "process": {
+    "batchComplete": true,
+    "emulatorReturnCode": 0,
+    "timedOut": false,
+    "aborted": false
+  }
+}
