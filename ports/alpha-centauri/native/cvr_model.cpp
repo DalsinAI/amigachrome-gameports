@@ -18,15 +18,15 @@ struct Cursor {
  bool next(Chunk& c){if(size<8)return false;uint32_t n=u32(p+4);if(n<8 || n>size)return false;c={u32(p),p+8,n-8};p+=n;size-=n;return true;}
 };
 bool name(const Chunk& c,char* out){if(!c.size || c.size>=64)return false;size_t n=c.size;if(c.data[n-1]==0)--n;for(size_t i=0;i<n;++i)if(c.data[i]<32 || c.data[i]>126)return false;memcpy(out,c.data,n);out[n]=0;return true;}
-bool geometry(const Chunk& c,CvrObject& o,uint32_t& total){
- // Only observed single geometry headers and offset-free jump groups.
- if(c.size<50 || (u32(c.data)!=8 && u32(c.data)!=10) || u32(c.data+4)!=c.size || u32(c.data+12)!=c.size || u32(c.data+16)!=c.size-1)return false;
+bool geometry_level(const Chunk& c,CvrObject& o,uint32_t& total){
+ // Decode one bounded geometry level; bit0 chaining is handled separately.
+ if(c.size<50 || (u32(c.data)!=0 && u32(c.data)!=8 && u32(c.data)!=10) || u32(c.data+4)!=c.size || u32(c.data+12)!=c.size || u32(c.data+16)!=c.size-1)return false;
  if(!real(c.data+8,o.units) || o.units<=0 || o.units>1024)return false;
  uint32_t declared=u32(c.data+38),flags=u32(c.data);
  if(!declared || declared>1000000)return false;
- uint32_t capacity=flags==8?declared-1:declared;
+ uint32_t capacity=(flags&8) && !(flags&2)?declared-1:declared;
  if(!capacity || total>2000000-capacity)return false;
- if(flags==8 && c.size!=42+(size_t)declared*3+5)return false;
+ if(!(flags&2) && c.size!=42+(size_t)declared*3+5)return false;
  for(size_t i=c.size-5;i<c.size;++i)if(c.data[i])return false;
  int scale[3],pos[3],at[3];
  for(int i=0;i<3;++i){scale[i]=s16(c.data+20+2*i);pos[i]=s16(c.data+26+2*i);at[i]=s16(c.data+32+2*i);if(scale[i]<=0)return false;}
@@ -45,7 +45,7 @@ bool geometry(const Chunk& c,CvrObject& o,uint32_t& total){
   if(++groups>4096 || !entries || entries>(end-offset)/3)return false;
   for(uint32_t i=0;i<entries;++i){
    const uint8_t* v=c.data+offset+(size_t)i*3;unsigned direction=v[0]>>3,normal=((unsigned)(v[0]&7)<<8)|v[1];
-   if(direction>26 || (direction==26)!=(i==entries-1))return false;
+   if(direction>26 || ((flags&8) && (direction==26)!=(i==entries-1)) || (!(flags&8) && direction==26))return false;
    if(direction==26)continue;
    unsigned d=direction>=13?direction+1:direction;
    at[0]+=(int)(d/9)-1;at[1]+=(int)((d/3)%3)-1;at[2]+=(int)(d%3)-1;
@@ -56,6 +56,27 @@ bool geometry(const Chunk& c,CvrObject& o,uint32_t& total){
   offset+=(size_t)entries*3;
  }
  if(offset!=end || o.count!=capacity)return false;
+ total+=o.count;return true;
+}
+bool geometry(const Chunk& c,CvrObject& o,uint32_t& total,float projected_scale){
+ // Chained levels are contiguous, with remaining-size and exact next-span fields.
+ // Validate every level, even when the original scale selector will not use it.
+ size_t offset=0;unsigned levels=0;bool can_select=true;float previous=0;
+ while(offset<c.size){
+  if(c.size-offset<50 || ++levels>16)return false;
+  const uint8_t* p=c.data+offset;const uint32_t flags=u32(p),span=u32(p+12);
+  if((flags&~11u) || (flags&2 && !(flags&8)) || u32(p+4)!=c.size-offset || span<50 || span>c.size-offset || u32(p+16)!=span-1 || ((flags&1)!=0)!=(span<c.size-offset))return false;
+  float units;if(!real(p+8,units) || units<=0 || units>1024 || (offset && units<=previous))return false;
+  uint8_t* data=(uint8_t*)malloc(span);if(!data)return false;memcpy(data,p,span);
+  // The level decoder expects a standalone header, without changing voxel data.
+  for(unsigned j=0;j<4;++j){data[j]=(uint8_t)((flags&~1u)>>(8*j));data[4+j]=(uint8_t)(span>>(8*j));}
+  CvrObject level{};uint32_t count=0;bool ok=geometry_level({c.tag,data,span},level,count);free(data);
+  if(!ok){free(level.voxels);return false;}
+  const bool use=offset==0 || (can_select && (double)previous*projected_scale<1.414199948310852 && (double)units*projected_scale<=1.414199948310852);
+  if(use){free(o.voxels);o.voxels=level.voxels;o.count=level.count;o.units=level.units;}else{can_select=false;free(level.voxels);}
+  previous=units;offset+=span;
+ }
+ if(offset!=c.size || total>2000000-o.count)return false;
  total+=o.count;return true;
 }
 bool animation(const Chunk& c,CvrObject& o,uint32_t frames){
@@ -71,11 +92,11 @@ bool animation(const Chunk& c,CvrObject& o,uint32_t frames){
  }
  return true;
 }
-bool parse_object(const Chunk& c,CvrObject& o,uint32_t frames,uint32_t& total){
+bool parse_object(const Chunk& c,CvrObject& o,uint32_t frames,uint32_t& total,float projected_scale){
  Cursor r{c.data,c.size};Chunk v{};unsigned seen=0;
  while(r.size){if(!r.next(v))return false;
   if(v.tag==0x04040100){if(seen&1 || !name(v,o.name))return false;seen|=1;}
-  else if(v.tag==0x04040200){if(seen&2)return false;seen|=2;Cursor g{v.data,v.size};Chunk geom{};if(!g.next(geom) || g.size || geom.tag!=0x04040201 || !geometry(geom,o,total))return false;}
+  else if(v.tag==0x04040200){if(seen&2)return false;seen|=2;Cursor g{v.data,v.size};Chunk geom{};if(!g.next(geom) || g.size || geom.tag!=0x04040201 || !geometry(geom,o,total,projected_scale))return false;}
   else if(v.tag==0x04040300){if(seen&4 || !animation(v,o,frames))return false;seen|=4;}
   else return false;
  }
@@ -86,16 +107,17 @@ CvrModel::CvrModel():items_(nullptr),objects_(0),frames_(0),voxels_(0){memset(pa
 CvrModel::~CvrModel(){clear();}
 void CvrModel::clear(){if(items_)for(uint32_t i=0;i<objects_;++i){free(items_[i].voxels);free(items_[i].frames);}free(items_);items_=nullptr;objects_=frames_=voxels_=0;}
 const uint8_t* CvrModel::rgb(uint8_t color,unsigned shade)const{return shade<24?palette_+3*shades_[shade*256+color]:nullptr;}
-bool CvrModel::load(const void* data,size_t size){
- if(!data || size>16*1024*1024 || size<8)return false;
- CvrModel tmp;if(!tmp.parse((const uint8_t*)data,size))return false;
+bool CvrModel::load(const void* data,size_t size){return load_at_scale(data,size,1.0f);}
+bool CvrModel::load_at_scale(const void* data,size_t size,float projected_scale){
+ if(!(projected_scale>0) || projected_scale>1024 || !data || size>16*1024*1024 || size<8)return false;
+ CvrModel tmp;if(!tmp.parse((const uint8_t*)data,size,projected_scale))return false;
  clear();items_=tmp.items_;objects_=tmp.objects_;frames_=tmp.frames_;voxels_=tmp.voxels_;memcpy(palette_,tmp.palette_,sizeof(palette_));memcpy(shades_,tmp.shades_,sizeof(shades_));tmp.items_=nullptr;tmp.objects_=0;return true;
 }
-bool CvrModel::parse(const uint8_t* data,size_t size){
+bool CvrModel::parse(const uint8_t* data,size_t size,float projected_scale){
  Cursor all{data,size};Chunk root{};if(!all.next(root) || all.size || root.tag!=0x00525643)return false;
- Cursor r{root.data,root.size};Chunk c{};unsigned seen=0;
+ Cursor r{root.data,root.size};Chunk c{};unsigned seen=0;uint32_t version=0;
  while(r.size){if(!r.next(c))return false;
-  if(c.tag==0x01000000){if(seen&1 || c.size!=4 || (u32(c.data)!=0x4121999au && u32(c.data)!=0x41233333u))return false;seen|=1;}
+  if(c.tag==0x01000000){if(seen&1 || c.size!=4 || (u32(c.data)!=0x41200000u && u32(c.data)!=0x4121999au && u32(c.data)!=0x41233333u))return false;seen|=1;version=u32(c.data);}
   else if(c.tag==0x02000000){char ignored[64];if(seen&2 || !name(c,ignored))return false;seen|=2;}
   else if(c.tag==0x03000000){
    if(seen&4)return false;
@@ -103,7 +125,7 @@ bool CvrModel::parse(const uint8_t* data,size_t size){
    while(p.size){if(!p.next(v))return false;
     if(v.tag==0x01010000){char ignored[64];if(fields&1 || !name(v,ignored))return false;fields|=1;}
     else if(v.tag==0x01020000){if(fields&2 || v.size!=6914 || v.data[0]>v.data[1])return false;fields|=2;memcpy(palette_,v.data+2,768);memcpy(shades_,v.data+770,6144);}
-    else if(v.tag==0x01030000){if(fields&4 || v.size!=12288)return false;fields|=4;}
+    else if(v.tag==0x01030000){if(fields&4 || (v.size!=12288 && !(version==0x41200000u && v.size==12292)))return false;fields|=4;}
     else return false;
    }if((fields&3)!=3)return false;
   }else if(c.tag==0x04000000){
@@ -113,7 +135,7 @@ bool CvrModel::parse(const uint8_t* data,size_t size){
     if(v.tag==0x04010000){char ignored[64];if(fields&1 || !name(v,ignored))return false;fields|=1;}
     else if(v.tag==0x04020000){if(fields&2 || v.size!=4 || items_)return false;fields|=2;objects_=u32(v.data);if(!objects_ || objects_>256)return false;items_=(CvrObject*)calloc(objects_,sizeof(CvrObject));if(!items_)return false;}
     else if(v.tag==0x04030000){if(fields&4 || v.size!=4 || actual)return false;fields|=4;frames_=u32(v.data);if(!frames_ || frames_>256)return false;}
-    else if(v.tag==0x04040000){if(!items_ || !frames_ || actual>=objects_ || !parse_object(v,items_[actual],frames_,voxels_))return false;++actual;}
+    else if(v.tag==0x04040000){if(!items_ || !frames_ || actual>=objects_ || !parse_object(v,items_[actual],frames_,voxels_,projected_scale))return false;++actual;}
     else return false;
    }if((fields&7)!=7 || actual!=objects_)return false;
   }else return false;

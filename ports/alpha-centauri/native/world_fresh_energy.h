@@ -2,10 +2,10 @@
 #ifndef ALPHA_WORLD_FRESH_ENERGY_H
 #define ALPHA_WORLD_FRESH_ENERGY_H
 #include "world_convoy_nutrients.h"
-#include "world_energy.h"
+#include "upkeep_world_energy.h"
 namespace alpha {
 struct FreshEnergyStage {StableIntakeStage intake;int32_t commerce,energy_grid;};
-struct FreshEnergyResult {WorldConvoyFlows convoys;StableIntakeResult intake;WorldEnergyResult energy;EnergyShortfallOrders shortfall;};
+struct FreshEnergyResult {WorldConvoyFlows convoys;StableIntakeResult intake;UpkeepWorldEnergyResult energy;EnergyShortfallOrders shortfall;};
 /* Actual actor-ordered energy convoys then freshly recomputed stable directed-
  * human worker intake then HQ loss and shortfall proposals. Saved energy fields
  * never stand in for either engine. Commerce/alien-grid generation remains an

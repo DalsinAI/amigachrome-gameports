@@ -11,7 +11,7 @@ bool overlap(const void*a,size_t an,const void*b,size_t bn){
 }
 bool aliases(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,
  const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,
- const CitizenDefinitions&c,const WorkerResolutionStage&s,const void*out,size_t n){
+ const UpkeepCitizenDefinitions&c,const WorkerResolutionStage&s,const void*out,size_t n){
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&t,sizeof t)||overlap(out,n,&u,sizeof u)||
   overlap(out,n,&b,sizeof b)||overlap(out,n,&wr,sizeof wr)||overlap(out,n,&r,sizeof r)||
   overlap(out,n,&c,sizeof c)||overlap(out,n,&s,sizeof s))return true;
@@ -34,7 +34,7 @@ struct States {uint32_t*p;~States(){free(p);}};
 }
 StableIntakeError world_upkeep_accounting(const OriginalWorld&w,const Rules&t,
  const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,
- const CitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,
+ const UpkeepCitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,
  WorldUpkeepAccountingResult&output,uint32_t*states,size_t capacity){
  if(capacity>SIZE_MAX/sizeof(uint32_t))return StableIntakeError::bad_buffer;
  const size_t bytes=capacity*sizeof(uint32_t);

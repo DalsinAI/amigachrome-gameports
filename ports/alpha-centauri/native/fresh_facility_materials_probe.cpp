@@ -59,10 +59,10 @@ int main(int argc,char** argv){
     stage.apply_fresh_materials(id,units,wr,resources,*reinterpret_cast<const StableIntakeStage*>(raw),result)!=FacilityProductionError::bad_buffer || result.base!=-123)return 21;
  StableIntakeStage rejected=intake;rejected.worker.upkeep_state=1;
  if(stage.apply_fresh_materials(id,units,wr,resources,rejected,result)!=FacilityProductionError::unsupported || result.base!=-123 || !alpha_test::same_world(world,prior,false))return 21;
- SupportResult supported{};WorldMineralResult mineral{};int32_t factor=-1;
+ SupportResult supported{};UpkeepWorldMineralResult mineral{};int32_t factor=-1;
  const auto support_error=world_base_support_policy(world,units,id,supported,states,world.game().vehicle_count);
  auto mineral_error=StableIntakeError::bad_state;
- if(support_error==SupportError::ok){const WorldMineralStage ms{intake,supported.mineral_cost};mineral_error=world_base_minerals(world,tech,basic,wr,resources,id,ms,mineral);}
+ if(support_error==SupportError::ok){const UpkeepWorldMineralStage ms{intake,supported.mineral_cost};mineral_error=world_base_minerals(world,tech,basic,wr,resources,id,ms,mineral);}
  const auto cost_error=world_base_cost_factor(world,basic,id,1,factor);
  uint8_t result_before[sizeof(result)];memcpy(result_before,&result,sizeof(result));
  const auto error=stage.apply_fresh_materials(id,units,wr,resources,intake,result);

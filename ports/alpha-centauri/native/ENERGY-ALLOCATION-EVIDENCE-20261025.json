@@ -1,0 +1,44 @@
+{
+  "scope": "Explicit plain prepsych energy accounting proposal; noWorld/psych/commit/upkeep/turn/UI",
+  "local": {
+    "allocation-host-1": {
+      "cases": 355,
+      "accepted": 304,
+      "invalid": 36,
+      "overflow": 15,
+      "aliasesPerCase": 3,
+      "outputSHA256": "9be0a87d3c572dfb324c01b4463d79b1fecc342aad535be2c3a9398a63d6df87",
+      "original256ProjectedOutputSHA256": "f76a45c5bdea8dc08a7012e5a6f2b7c13e9b83cb1ecf8426929bfaa249da1d12",
+      "binarySHA256": "5e2ef9acca377f78c7454d65bd74ea4ef008ca5f18bd8264b9ced05cb99a1e5c",
+      "native": "UNRUN",
+      "scope": "Explicit plain prepsych accounting only; commerce supplied, noWorldauthority/bonusfacilities/specialists/aliengrid/psych/commit/upkeep/turn."
+    },
+    "allocation-be-1": {
+      "cases": 355,
+      "accepted": 304,
+      "invalid": 36,
+      "overflow": 15,
+      "aliasesPerCase": 3,
+      "outputSHA256": "9be0a87d3c572dfb324c01b4463d79b1fecc342aad535be2c3a9398a63d6df87",
+      "original256ProjectedOutputSHA256": "f76a45c5bdea8dc08a7012e5a6f2b7c13e9b83cb1ecf8426929bfaa249da1d12",
+      "binarySHA256": "d9279e7b9d6a840f6604ccea66e83c3b2c00152159b0d477c0692d9242b56fa5",
+      "native": "UNRUN",
+      "scope": "Explicit plain prepsych accounting only; commerce supplied, noWorldauthority/bonusfacilities/specialists/aliengrid/psych/commit/upkeep/turn."
+    }
+  },
+  "originalComparison": {
+    "contextsEach": 256,
+    "bothOriginalEditions": true,
+    "bothOwnedArchitectures": true,
+    "bitExactFields": 18,
+    "SHA256": "f76a45c5bdea8dc08a7012e5a6f2b7c13e9b83cb1ecf8426929bfaa249da1d12",
+    "scope": "Original prepsych energy prefix only,1observationjump beforepsych, notfullroutine"
+  },
+  "normalSDK": {
+    "freshBuilds": 2,
+    "SHA256": "1f15268cfd967aa7400003b7ecb38fd5abfdd57f3f1200ccb59a3870c7eb263f",
+    "AmigaOS": "UNRUN"
+  },
+  "workflowEntries": 115,
+  "CI": "UNRUN"
+}
