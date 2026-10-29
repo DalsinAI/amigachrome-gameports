@@ -215,6 +215,25 @@ def build(output=None, quiet=True):
     return out
 
 
+def sources():
+    """Every source file the library is built from (for staleness checks)."""
+    out = [PYTHON_DIR / 'asmac.cpp', PYTHON_DIR / 'asmac.h', PYTHON_DIR / 'build_python.sh']
+    out += sorted((NATIVE_DIR / 'engine').glob('*.cpp')) + sorted((NATIVE_DIR / 'engine').glob('*.h'))
+    out += sorted((NATIVE_DIR / 'engine' / 'stubs').glob('*.cpp'))
+    out += sorted(NATIVE_DIR.glob('play_session.*')) + sorted(NATIVE_DIR.glob('ui_*.cpp')) + sorted(NATIVE_DIR.glob('ui_*.h'))
+    out += sorted(NATIVE_DIR.glob('original_*.cpp')) + sorted(NATIVE_DIR.glob('original_*.h'))
+    return out
+
+
+def stale(path=None):
+    """True if the library is missing or older than one of its sources."""
+    p = Path(path) if path else lib_path()
+    if not p.exists():
+        return True
+    t = p.stat().st_mtime
+    return any(s.exists() and s.stat().st_mtime > t for s in sources())
+
+
 def lib_path():
     env = os.environ.get('ALPHA_SMAC_LIB')
     return Path(env) if env else DEFAULT_LIB

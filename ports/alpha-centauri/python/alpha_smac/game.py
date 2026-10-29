@@ -239,6 +239,7 @@ class World:
         fr = L.Frame(C.cast(arr, C.POINTER(C.c_uint8)), len(frame_buf), width, height)
         items = (L.TextItem * capacity)()
         n = lib().asmac_world_render_base_window(self._h, base, viewer, C.byref(fr), C.byref(L.Rect(*rect)), items, capacity)
+        self.last_items = [(it.x, it.baseline, it.width, it.ink, bool(it.heading), text(it.text)) for it in items[:max(0, min(n, capacity))]]
         return n
 
     def close(self):
