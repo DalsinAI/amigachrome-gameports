@@ -16,6 +16,8 @@
  *   live windows, so loading keeps them for the UI and saving writes them back.
  */
 #include "engine.h"
+#include "turn.h"
+#include "integration.h"
 
 #include <memory>
 
@@ -635,6 +637,7 @@ int load_daemon_bytes(const uint8_t* data, size_t length) {
         engine_notify(EV_GAME_LOADED, SAVE_LOAD_ERROR, error);
         return error == SAVE_ERR_SECURITY ? SAVE_LOAD_SECURITY : SAVE_LOAD_ERROR;
     }
+    engine_reset_runtime();
     fix_prototype_ids();
     fixup_landmarks(); // map_read
     engine_notify(EV_MAP_CHANGED);

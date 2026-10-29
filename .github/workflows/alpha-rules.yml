@@ -844,3 +844,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_speeder.py --out "$RUNNER_TEMP/speeder-host"
       - name: Ten-part speeder composition on independent big-endian 68040
         run: python3 ports/alpha-centauri/native/test_cvr_speeder.py --out "$RUNNER_TEMP/speeder-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Generic CVR vehicle assembly and faction colours on host
+        run: python3 ports/alpha-centauri/native/test_cvr_vehicle.py --out "$RUNNER_TEMP/cvr-vehicle-host"
+      - name: Generic CVR vehicle assembly and faction colours on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_cvr_vehicle.py --out "$RUNNER_TEMP/cvr-vehicle-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Map overlays, minimap, message log and base window on host
+        run: python3 ports/alpha-centauri/native/test_map_render.py --out "$RUNNER_TEMP/map-render-host"
+      - name: Map overlays, minimap, message log and base window on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_map_render.py --out "$RUNNER_TEMP/map-render-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
