@@ -99,6 +99,27 @@ static void synthetic_rules() {
     // Integration: WP2's base upkeep divides by these (alpha.txt gives 1/1).
     Rules->freq_global_warming_numerator = 1;
     Rules->freq_global_warming_denominator = 1;
+    // Integration: WP7's world_climate (turn hook) divides by the
+    // #WORLDBUILDER values; these are the alpha.txt defaults.
+    CWorldbuilder& w = *WorldBuilder;
+    w.land_base = 384; w.land_mod = 256; w.continent_base = 12; w.continent_mod = 24;
+    w.hills_base = 1; w.hills_mod = 2; w.plateau_base = 4; w.plateau_mod = 8;
+    w.rivers_base = 8; w.rivers_rain_mod = 12; w.solar_energy = 14; w.thermal_band = 14;
+    w.thermal_deviance = 8; w.global_warming = 8; w.sea_level_rises = 5;
+    w.cloudmass_peaks = 5; w.cloudmass_hills = 3; w.rainfall_coeff = 1;
+    w.deep_water = 15; w.shelf = 10; w.plains = 15; w.beach = 10; w.hills = 10; w.peaks = 25;
+    w.fungus = 1;
+}
+
+/* Integration: WP8's mod_eliminate_player (Thinker rule) removes a faction
+ * that has neither a base nor a colony pod, so every alive faction of the
+ * turn-order tests gets a colony pod. */
+static void add_colony_pods(uint32_t alive) {
+    for (int i = 1; i < MaxPlayerNum; i++) {
+        if ((alive >> i) & 1) {
+            CHECK(veh_init(BSC_COLONY_POD, i, 0, 2 * i) >= 0);
+        }
+    }
 }
 
 /* width x height land map, all region 1, factions alive as given, humans as given. */
@@ -161,6 +182,7 @@ static void test_single_human() {
     auto s = new_state();
     engine_bind(s.get());
     setup_world(0x0E, 0x02); // factions 1..3 alive, 1 human
+    add_colony_pods(0x0E);
     int v1 = veh_init(BSC_SCOUT_PATROL, 1, 2, 2);
     int v2 = veh_init(BSC_SCOUT_PATROL, 2, 8, 8);
     int v3 = veh_init(BSC_SCOUT_PATROL, 3, 12, 12);
@@ -236,6 +258,7 @@ static void test_all_ai() {
     auto s = new_state();
     engine_bind(s.get());
     setup_world(0x0F, 0x00); // natives + 1..3, no human
+    add_colony_pods(0x0F);
     int v = veh_init(BSC_SCOUT_PATROL, 2, 4, 4);
     for (int t = 1; t <= 6; t++) {
         Vehs[v].moves_spent = 5;
@@ -266,6 +289,7 @@ static void test_hotseat() {
     auto s = new_state();
     engine_bind(s.get());
     setup_world(0x0E, 0x06); // 1 and 2 human, 3 AI
+    add_colony_pods(0x0E);
     HeadlessSink* sink = headless_sink();
     sink->clear();
     TurnResult r = engine_end_turn();
@@ -487,6 +511,10 @@ static void test_determinism_and_resume() {
     synthetic_rules();
     CHECK_EQ(load_daemon_bytes(sa.data(), sa.size()), SAVE_LOAD_VALID);
     CHECK_EQ(*ControlTurnMove, 1);
+    // Integration: a saved game does not carry the random generators (as in
+    // the original), and WP6's computer players draw from them during the
+    // turn, so the loaded game continues from the original's generator state.
+    c->rng = a->rng;
     TurnResult rc = engine_end_turn();
     engine_bind(a.get());
     TurnResult ra = engine_end_turn();
@@ -551,6 +579,23 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         return 20;
     }
     synthetic_rules();
+    // Integration: unit speeds (WP3 veh_speed, called by the WP6 unit moves)
+    // divide by the road movement rate; alpha.txt gives 3.
+    Rules->move_rate_roads = 3;
+    // Integration: unit messages print the morale names (WP4), which the rules
+    // loader never leaves null.
+    static char morale_name[] = "";
+    for (int i = 0; i < MaxMoraleNum; i++) {
+        Morale[i].name = morale_name;
+        Morale[i].name_lifecycle = morale_name;
+    }
+    // Integration: WP7's world_temperature divides the map height by these
+    // #WORLDBUILDER values (as the original does); the synthetic maps are
+    // smaller than any real one, so scale them down to the map height.
+    for (int32_t* v : {&WorldBuilder->solar_energy, &WorldBuilder->thermal_band,
+            &WorldBuilder->thermal_deviance, &WorldBuilder->global_warming}) {
+        *v = clamp(*v, 1, max(1, *MapAreaY));
+    }
     // Patterned bytes: keep every record inside the ranges the turn code indexes.
     for (int i = 0; i < *VehCount; i++) {
         VEH* v = &Vehs[i];
@@ -585,7 +630,13 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
     for (int i = 0; i < *BaseCount; i++) {
         BASE* b = &Bases[i];
         b->faction_id = b->faction_id & 7;
+        // Integration: WP6 plans_upkeep indexes diplomacy by the former owner.
+        b->faction_id_former = b->faction_id_former & 7;
         b->pop_size = b->pop_size & 15;
+        // Integration: WP2's base messages print the base name; the patterned
+        // names have no terminator, and reading on past them shows the
+        // following fields in host byte order.
+        b->name[sizeof(b->name) - 1] = '\0';
         // Integration: production_phase now runs WP2's base upkeep, which needs the
         // base on a map tile (its worked radius starts at the base tile).
         if (!mapsq(b->x, b->y) && *MapAreaX >= 2 && *MapAreaY >= 1) {
@@ -633,9 +684,27 @@ static int run_turns(const char* in, const char* out, int turns, int human) {
         FactionRankings[i] = FactionRankings[i] & 7;
     }
     *MapNativeLifeForms = *MapNativeLifeForms & 3;
+    // Integration: the WP6 route scores add up the continent counters.
+    for (int r = 0; r < MaxRegionNum; r++) {
+        Continent& c = Continents[r];
+        c.tile_count &= 0xFFFF;
+        c.open_terrain &= 0xFFFF;
+        c.world_site &= 0xF;
+        c.pods &= 0xFF;
+    }
     for (int i = 0; i < MaxPlayerNum; i++) {
         Faction* f = &Factions[i];
         f->major_atrocities = f->major_atrocities & 0xF;
+        // Integration: WP6 enemy_strategy scales turn thresholds by it.
+        f->diff_level = clamp(f->diff_level, 0, 6);
+        // Integration: WP3 supply pods (opened by WP6 unit moves) double these.
+        for (int32_t* p = &f->goody_opened; p <= &f->goody_tech; p++) {
+            *p = *p & 0xFF;
+        }
+        // Integration: WP6 mod_social_ai indexes the social models by the
+        // faction's priority choice (-1 = none, 0..3 as in the faction file).
+        MFactions[i].soc_priority_category = clamp(MFactions[i].soc_priority_category, -1, 3);
+        MFactions[i].soc_priority_model = clamp(MFactions[i].soc_priority_model, -1, 3);
         f->tech_ranking = f->tech_ranking & 0xFF;
         f->clean_minerals_modifier = f->clean_minerals_modifier & 0xF;
         f->tech_commerce_bonus = f->tech_commerce_bonus & 0xF;

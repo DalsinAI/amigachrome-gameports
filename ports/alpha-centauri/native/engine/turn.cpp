@@ -12,6 +12,7 @@
 #include "base_wp2.h"
 #include "base_deps.h"
 #include "tech.h"
+#include "diplo.h"
 
 namespace alpha {
 namespace engine {
@@ -413,7 +414,7 @@ void __cdecl turn_upkeep() {
                 set_treaty(i, j, DIPLO_UNK_80000000|DIPLO_UNK_40000000|DIPLO_UNK_8000000|\
                     DIPLO_MAJOR_ATROCITY_VICTIM|DIPLO_ATROCITY_VICTIM|DIPLO_UNK_800|\
                     DIPLO_SHALL_BETRAY|DIPLO_WANT_REVENGE|DIPLO_VENDETTA|DIPLO_COMMLINK, 1);
-                wp1::set_agenda(i, j, AGENDA_PERMANENT|AGENDA_UNK_800|AGENDA_UNK_400|AGENDA_UNK_20|\
+                set_agenda(i, j, AGENDA_PERMANENT|AGENDA_UNK_800|AGENDA_UNK_400|AGENDA_UNK_20|\
                     AGENDA_FIGHT_TO_DEATH|AGENDA_UNK_4|AGENDA_UNK_1, 1);
                 Factions[i].diplo_spoke[j] = *CurrentTurn;
             }

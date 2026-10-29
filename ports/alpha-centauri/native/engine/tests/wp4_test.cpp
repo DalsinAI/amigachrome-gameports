@@ -84,6 +84,18 @@ static void set_rules() {
         Morale[i].name = morale_names[i];
         Morale[i].name_lifecycle = morale_names[i];
     }
+    // Integration: WP7's world_climate (run after terraforming that changes
+    // the altitude) divides by the #WORLDBUILDER values; alpha.txt defaults.
+    {
+        CWorldbuilder& w = *WorldBuilder;
+        w.land_base = 384; w.land_mod = 256; w.continent_base = 12; w.continent_mod = 24;
+        w.hills_base = 1; w.hills_mod = 2; w.plateau_base = 4; w.plateau_mod = 8;
+        w.rivers_base = 8; w.rivers_rain_mod = 12; w.solar_energy = 14; w.thermal_band = 14;
+        w.thermal_deviance = 8; w.global_warming = 8; w.sea_level_rises = 5;
+        w.cloudmass_peaks = 5; w.cloudmass_hills = 3; w.rainfall_coeff = 1;
+        w.deep_water = 15; w.shelf = 10; w.plains = 15; w.beach = 10; w.hills = 10; w.peaks = 25;
+        w.fungus = 1;
+    }
 }
 
 static int make_unit(int unit_id, int chassis, int weapon, int armor, int reactor,
