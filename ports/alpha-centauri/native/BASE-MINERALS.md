@@ -33,7 +33,7 @@ zero. Failure and partial aliases leave the complete output untouched.
 ## Validation
 
 ```sh
-python3 ports/alpha-centauri/native/test_base_minerals.py --out /new/output
+python3 ports/alpha-centauri/native/test_upkeep_base_minerals.py --out /new/output
 ```
 
 The independent Python integer model covers all 512 physical-facility/project

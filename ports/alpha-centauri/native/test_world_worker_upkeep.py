@@ -8,7 +8,7 @@ import test_world_stable_intake as intake
 import test_world_convoy_nutrients as convoy
 import test_base_support as support
 import test_worker_allocation as allocation
-from test_base_energy import expected as energy_expected
+from test_upkeep_base_energy import expected as energy_expected
 HERE=Path(__file__).resolve().parent
 SOURCES=list(dict.fromkeys([name for name in accounting.SOURCES if name!='world_base_accounting_probe']+'worker_allocation world_worker_upkeep world_worker_upkeep_probe'.split()))
 def fixture(case,version):

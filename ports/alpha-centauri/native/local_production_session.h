@@ -4,6 +4,13 @@
 #include "world_facility_options.h"
 #include "world_production_retool.h"
 #include "world_actions.h"
+#include "local_accounting.h"
+#include "local_workers.h"
+#include "local_unit_skip.h"
+#include "local_unit_wake.h"
+#include "local_unit_wait.h"
+#include "world_unit_readiness.h"
+#include "ready_search.h"
 namespace alpha {
 class LocalProductionSession;
 enum class LocalOrderError {ok,bad_state,bad_rules,bad_world,no_memory,not_human,not_owner,unavailable,
@@ -44,7 +51,8 @@ struct FacilityOrderReceipt {bool changed,repaint_required,persistence_required;
  * original turn/AI/network/modal runtime. A separate explicit base-only import
  * enables the bounded clear-land action under the same revision authority;
  * a separate explicit surface import additionally enables empty sea travel.
- * Both saved map owner and active turn faction must match the explicit human.
+ * Raw imports require saved map owner and active faction to match the human.
+ * The explicit repaired resume entry instead derives and selects MapWin owner.
  * Caller explicitly selects the saved current human faction and runtime
  * edition. Orders are limited to a local owned base with a single queue slot.
  * No unit-production eligibility, completion, upkeep or turn implementation.
@@ -67,12 +75,39 @@ class LocalProductionSession {
   LocalOrderError load_local_land_actions(const uint8_t* save,size_t save_length,const uint8_t* rules,size_t rules_length,
    Variant profile,bool expansion_enabled,int32_t local_human,uint32_t runtime_seed,
    size_t memory_limit=64u*1024u*1024u);
+  // Original record repairs + offline single-human resume to MapWin owner.
+  // Derives the owner from the file; rejects multiple humans/dead owner.
+  // base_actions enables only the existing base-game bounded commands.
+  // The owned immutable wire becomes the repaired, owner-selected command
+  // baseline; external input stays unchanged. No phase/end-turn authority.
+  // memory_limit bounds each stage plus its live private staging allocations,
+  // excluding the prior session, input, and inherited validator scratch.
+  LocalOrderError load_resumed_commands(const uint8_t*,size_t,const uint8_t*,size_t,
+   Variant,bool expansion_enabled,bool base_actions,uint32_t runtime_seed,
+   size_t memory_limit=64u*1024u*1024u);
   bool land_actions_enabled()const;
   // Explicit superset capability. The older land-only loader never grants
   // this, even when it imports a world containing sea vehicles.
   LocalOrderError load_local_surface_actions(const uint8_t*,size_t,const uint8_t*,size_t,
    Variant,bool,int32_t,uint32_t,size_t memory_limit=64u*1024u*1024u);
   bool surface_actions_enabled()const;
+  // Explicit table-owning, offline accounting capability. No movement is
+  // enabled by this import. Failure preserves the previous session entirely.
+  LocalOrderError load_local_accounting(const uint8_t*,size_t,const uint8_t*,size_t,
+   Variant,bool,int32_t,uint32_t,size_t memory_limit=64u*1024u*1024u);
+  bool accounting_enabled()const;
+  // Explicit combined base-game import, owning both same-input action and
+  // accounting tables. Existing accounting-only imports never gain movement.
+  LocalOrderError load_local_worker_actions(const uint8_t*,size_t,const uint8_t*,size_t,
+   Variant,bool,int32_t,uint32_t,size_t memory_limit=64u*1024u*1024u);
+  LocalOrderError prepare_accounting(size_t,const WorldEnergyStage&,BaseAccountingPlan&)const;
+  LocalOrderError commit_accounting(const BaseAccountingPlan&,BaseAccountingReceipt&);
+  // Offline accounting imports also own the tables for worker allocation.
+  // work_limit bounds current wire + decoded clone + private plan workspace;
+  // called yield/accounting components retain their own bounded scratch.
+  LocalOrderError prepare_workers(size_t,const WorldEnergyStage&,WorkerAccountingPlan&,
+   size_t work_limit=64u*1024u*1024u)const;
+  LocalOrderError commit_workers(const WorkerAccountingPlan&,WorkerAccountingReceipt&);
   // Preparation binds an intent to this session lifetime/revision; it does
   // not certify a legal move or quote a price. LocalOrderError::ok from commit
   // means evaluated; StepResult may explicitly reject the move without writes.
@@ -80,6 +115,15 @@ class LocalProductionSession {
   LocalOrderError commit_clear_land_step(const LocalStepCommand&,LocalStepReceipt&);
   LocalOrderError prepare_surface_step(size_t vehicle,int32_t x,int32_t y,LocalStepCommand&)const;
   LocalOrderError commit_surface_step(const LocalStepCommand&,LocalStepReceipt&);
+  LocalOrderError prepare_ready_search(const ReadySearchFacts&,ReadySearchPlan&)const;
+  LocalOrderError commit_ready_search(const ReadySearchPlan&,ReadySearchReceipt&);
+  LocalOrderError unit_readiness(size_t,UnitReadiness&)const;
+  LocalOrderError prepare_wait_unit(size_t,int32_t cursor_x,int32_t cursor_y,LocalWaitCommand&)const;
+  LocalOrderError commit_wait_unit(const LocalWaitCommand&,LocalWaitReceipt&);
+  LocalOrderError prepare_wake_unit(size_t,LocalWakeCommand&)const;
+  LocalOrderError commit_wake_unit(const LocalWakeCommand&,LocalWakeReceipt&);
+  LocalOrderError prepare_skip_unit(size_t,LocalSkipCommand&)const;
+  LocalOrderError commit_skip_unit(const LocalSkipCommand&,LocalSkipReceipt&);
   void close();
   const OriginalWorld* world()const;
   uint64_t revision()const{return revision_;}

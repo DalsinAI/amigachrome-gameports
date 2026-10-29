@@ -8,7 +8,7 @@
 #define ALPHA_WORKER_ALLOCATION_H
 #include <stdint.h>
 namespace alpha {
-enum class WorkerAllocationError {ok,bad_state,bad_buffer,overflow};
+enum class UpkeepWorkerAllocationError {ok,bad_state,bad_buffer,overflow};
 struct WorkerAllocationFacts {
  uint32_t available,worked;
  int32_t population,specialists,nutrient_before,mineral_before,energy_before;
@@ -31,6 +31,6 @@ struct WorkerAllocationResult {
  * before values contain satellite/convoy income less food/support consumption,
  * before adding worked tiles. No mutation, output unchanged on every error.
  */
-WorkerAllocationError worker_allocation_candidate(const WorkerAllocationFacts&,WorkerAllocationResult&);
+UpkeepWorkerAllocationError worker_allocation_candidate(const WorkerAllocationFacts&,WorkerAllocationResult&);
 }
 #endif

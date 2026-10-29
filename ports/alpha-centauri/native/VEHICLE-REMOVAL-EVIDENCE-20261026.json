@@ -1,0 +1,86 @@
+{
+  "parent": "a9c2067931a346729d43cca28247ed6c8f960e50",
+  "scope": "Checked borrowed decoded vehicle-removal storage primitive; no owning World/session count commit",
+  "host": {
+    "cases": 1158,
+    "rejections": 13896,
+    "versions": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "physicalActorCounts": [
+      1,
+      2,
+      9,
+      2048
+    ],
+    "outputSHA256": "92d171e1465e50f7339b78101ff39fb1764f506176cd22dc6ddcb7a495e5aac4",
+    "binarySHA256": "5ba2504afb00d9730926797a8723b4b27d9b91ca30788f77e22f2e2780b49d71"
+  },
+  "independent68040": {
+    "cases": 1158,
+    "rejections": 13896,
+    "versions": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "physicalActorCounts": [
+      1,
+      2,
+      9,
+      2048
+    ],
+    "outputSHA256": "92d171e1465e50f7339b78101ff39fb1764f506176cd22dc6ddcb7a495e5aac4",
+    "binarySHA256": "9e5085fee59ac96fc78f66871ba7ef1237fa681fa1bfcde0e7d94a54c02d7c9d"
+  },
+  "privateOriginalMatchedHost": {
+    "cases": 864,
+    "rejections": 10368,
+    "outputSHA256": "920b70dc748d298de752cc34cb753636dc225d771863a24d6908f885f44f20e9",
+    "binarySHA256": "5ba2504afb00d9730926797a8723b4b27d9b91ca30788f77e22f2e2780b49d71",
+    "scope": "Exact original-verified full physical actor slots and map tiles, faction counters/runtime refs; other faction fields and immutable baseline/World RNG unchanged; checked post-removal topology."
+  },
+  "privateOriginalMatched68040": {
+    "cases": 864,
+    "rejections": 10368,
+    "outputSHA256": "920b70dc748d298de752cc34cb753636dc225d771863a24d6908f885f44f20e9",
+    "binarySHA256": "9e5085fee59ac96fc78f66871ba7ef1237fa681fa1bfcde0e7d94a54c02d7c9d",
+    "scope": "Exact original-verified full physical actor slots and map tiles, faction counters/runtime refs; other faction fields and immutable baseline/World RNG unchanged; checked post-removal topology."
+  },
+  "originalReference": "432 complete natural-return original veh_kill observations per edition;864total; privately compared every byte in1114112-byte global range",
+  "sdk": {
+    "sha256": "cfb5543032d65039a6baa7165175c7132c38464b151054de90ed2bbdfbc68442",
+    "twoFreshBuildsByteIdentical": true,
+    "AmigaOS": "UNRUN"
+  },
+  "workflow": {
+    "parentCommandsRetained": 291,
+    "totalDeclaredCommands": 293,
+    "remoteFinalHeadCI": "UNRUN; local unpublished candidate"
+  },
+  "held": [
+    "World/session count authority and commit",
+    "full kill/battle_kill and casualty caller tails",
+    "combat CRT initialization/persistence",
+    "UI/turn/AI/diplomacy",
+    "native/front-end qualification"
+  ],
+  "failures": [
+    {
+      "stage": "host1 build",
+      "result": "Werror misleading-indentation in probe serializer; no executable run. Split two for loops onto separate source lines; production implementation unchanged. host2 authoritative."
+    },
+    {
+      "stage": "public-host1/public-be1",
+      "result": "1152 cases PASS; superseded final1158 expanded2048-actor cases; production/binaries unchanged."
+    }
+  ]
+}

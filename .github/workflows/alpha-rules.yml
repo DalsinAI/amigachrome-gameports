@@ -152,6 +152,14 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_production_retool.py --out "$RUNNER_TEMP/world-retool-host"
       - name: Big-endian saved-world production retool controls
         run: python3 ports/alpha-centauri/native/test_world_production_retool.py --out "$RUNNER_TEMP/world-retool-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned-world unit mineral support controls
+        run: python3 ports/alpha-centauri/native/test_world_unit_support.py --out "$RUNNER_TEMP/world-unit-support-host"
+      - name: Big-endian owned-world unit mineral support controls
+        run: python3 ports/alpha-centauri/native/test_world_unit_support.py --out "$RUNNER_TEMP/world-unit-support-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original human cost controls
+        run: python3 ports/alpha-centauri/native/test_original_human_cost.py --out "$RUNNER_TEMP/human-cost-host"
+      - name: Big-endian original human cost controls
+        run: python3 ports/alpha-centauri/native/test_original_human_cost.py --out "$RUNNER_TEMP/human-cost-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host saved-world movement pricing controls
         run: python3 ports/alpha-centauri/native/test_world_movement_price.py --out "$RUNNER_TEMP/world-price-host"
       - name: Big-endian saved-world movement pricing controls
@@ -184,6 +192,10 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-host"
       - name: Big-endian procedural CVR lighting controls
         run: python3 ports/alpha-centauri/native/test_cvr_lighting.py --out "$RUNNER_TEMP/cvr-lighting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host startup movie cache and pixel controls
+        run: python3 ports/alpha-centauri/native/test_startup_movie.py --out "$RUNNER_TEMP/startup-movie-host"
+      - name: Big-endian startup movie cache and pixel controls
+        run: python3 ports/alpha-centauri/native/test_startup_movie.py --out "$RUNNER_TEMP/startup-movie-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
       - name: Host original vehicle-stack relocation controls
         run: python3 ports/alpha-centauri/native/test_vehicle_stack.py --out "$RUNNER_TEMP/vehicle-stack-host"
       - name: Big-endian original vehicle-stack relocation controls
@@ -231,9 +243,9 @@ jobs:
       - name: Fresh support into mineral accounting controls
         run: python3 ports/alpha-centauri/native/test_world_supported_minerals.py --out "$RUNNER_TEMP/supported-minerals-host"
       - name: Original energy loss and fresh subtotal controls
-        run: python3 ports/alpha-centauri/native/test_base_energy.py --out "$RUNNER_TEMP/base-energy-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_base_energy.py --out "$RUNNER_TEMP/base-energy-host"
       - name: Owned-world fresh energy controls
-        run: python3 ports/alpha-centauri/native/test_world_energy.py --out "$RUNNER_TEMP/world-energy-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_world_energy.py --out "$RUNNER_TEMP/world-energy-host"
       - name: Original facility maintenance ledger controls
         run: python3 ports/alpha-centauri/native/test_facility_upkeep.py --out "$RUNNER_TEMP/facility-upkeep-host"
       - name: Owned-world facility maintenance controls
@@ -247,7 +259,7 @@ jobs:
       - name: Fresh support and cost factors into staged construction
         run: python3 ports/alpha-centauri/native/test_fresh_facility_materials.py --out "$RUNNER_TEMP/fresh-facility-materials-host"
       - name: Fresh energy distribution and specialist policy
-        run: python3 ports/alpha-centauri/native/test_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-host"
       - name: Current world energy allocation and citizen parsing
         run: python3 ports/alpha-centauri/native/test_world_energy_allocation.py --out "$RUNNER_TEMP/world-energy-allocation-host"
       - name: Energy from proposed citizen assignments
@@ -267,7 +279,7 @@ jobs:
       - name: Fresh human upkeep worker assignments
         run: python3 ports/alpha-centauri/native/test_world_worker_upkeep.py --out "$RUNNER_TEMP/world-worker-upkeep-host"
       - name: Fresh psych stages and riot predicates
-        run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-host"
+        run: python3 ports/alpha-centauri/native/test_upkeep_base_psych.py --out "$RUNNER_TEMP/base-psych-host"
       - name: Current world psych and police
         run: python3 ports/alpha-centauri/native/test_world_base_psych.py --out "$RUNNER_TEMP/world-base-psych-host"
       - name: Source commerce arithmetic
@@ -300,3 +312,543 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_world_upkeep_research.py --out "$RUNNER_TEMP/world-upkeep-research-host"
       - name: Explicit empty-sea capability and checkpoint preservation
         run: python3 ports/alpha-centauri/native/test_surface_actions.py --out "$RUNNER_TEMP/surface-actions-host"
+      - name: Host original mineral and ecology accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-host"
+      - name: Big-endian original mineral and ecology accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_minerals.py --out "$RUNNER_TEMP/base-minerals-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh owned mineral composition controls
+        run: python3 ports/alpha-centauri/native/test_world_fresh_minerals.py --out "$RUNNER_TEMP/world-fresh-minerals-host"
+      - name: Big-endian fresh owned mineral composition controls
+        run: python3 ports/alpha-centauri/native/test_world_fresh_minerals.py --out "$RUNNER_TEMP/world-fresh-minerals-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host technology effects raw controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects.py --out "$RUNNER_TEMP/technology-effects-raw-host"
+      - name: Big-endian 68040 technology effects raw controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects.py --out "$RUNNER_TEMP/technology-effects-raw-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host technology effects owned-world controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects_world.py --out "$RUNNER_TEMP/technology-effects-owned-world-host"
+      - name: Big-endian 68040 technology effects owned-world controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects_world.py --out "$RUNNER_TEMP/technology-effects-owned-world-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host technology effects transactional alias controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects_alias.py --out "$RUNNER_TEMP/technology-effects-transactional-alias-host"
+      - name: Big-endian 68040 technology effects transactional alias controls
+        run: python3 ports/alpha-centauri/native/test_technology_effects_alias.py --out "$RUNNER_TEMP/technology-effects-transactional-alias-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh technology-effects tile binding
+        run: python3 ports/alpha-centauri/native/test_world_fresh_tile_yields.py --out "$RUNNER_TEMP/world-fresh-technology-yields-host"
+      - name: Big-endian 68040 fresh technology-effects tile binding
+        run: python3 ports/alpha-centauri/native/test_world_fresh_tile_yields.py --out "$RUNNER_TEMP/world-fresh-technology-yields-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original energy inefficiency controls
+        run: python3 ports/alpha-centauri/native/test_energy_inefficiency.py --out "$RUNNER_TEMP/energy-inefficiency-host"
+      - name: Big-endian original energy inefficiency controls
+        run: python3 ports/alpha-centauri/native/test_energy_inefficiency.py --out "$RUNNER_TEMP/energy-inefficiency-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host plain original energy allocation controls
+        run: python3 ports/alpha-centauri/native/test_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-host"
+      - name: Big-endian plain original energy allocation controls
+        run: python3 ports/alpha-centauri/native/test_energy_allocation.py --out "$RUNNER_TEMP/energy-allocation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original five-phase base psych controls
+        run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-host"
+      - name: Big-endian original five-phase base psych controls
+        run: python3 ports/alpha-centauri/native/test_base_psych.py --out "$RUNNER_TEMP/base-psych-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host complete explicit base energy controls
+        run: python3 ports/alpha-centauri/native/test_base_energy.py --out "$RUNNER_TEMP/base-energy-host"
+      - name: Big-endian complete explicit base energy controls
+        run: python3 ports/alpha-centauri/native/test_base_energy.py --out "$RUNNER_TEMP/base-energy-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original citizen definition controls
+        run: python3 ports/alpha-centauri/native/test_citizen_definitions.py --out "$RUNNER_TEMP/citizens-host"
+      - name: Big-endian original citizen definition controls
+        run: python3 ports/alpha-centauri/native/test_citizen_definitions.py --out "$RUNNER_TEMP/citizens-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host current world specialist availability
+        run: python3 ports/alpha-centauri/native/test_world_citizen_energy.py --out "$RUNNER_TEMP/world-citizens-host"
+      - name: Big-endian current world specialist availability
+        run: python3 ports/alpha-centauri/native/test_world_citizen_energy.py --out "$RUNNER_TEMP/world-citizens-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world commerce controls
+        run: python3 ports/alpha-centauri/native/test_world_commerce.py --out "$RUNNER_TEMP/world-commerce-host"
+      - name: Big-endian original world commerce controls
+        run: python3 ports/alpha-centauri/native/test_world_commerce.py --out "$RUNNER_TEMP/world-commerce-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original garrison and double-police controls
+        run: python3 ports/alpha-centauri/native/test_world_police.py --out "$RUNNER_TEMP/world-police-host"
+      - name: Big-endian original garrison and double-police controls
+        run: python3 ports/alpha-centauri/native/test_world_police.py --out "$RUNNER_TEMP/world-police-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh original pacifism controls
+        run: python3 ports/alpha-centauri/native/test_world_pacifism.py --out "$RUNNER_TEMP/world-pacifism-host"
+      - name: Big-endian fresh original pacifism controls
+        run: python3 ports/alpha-centauri/native/test_world_pacifism.py --out "$RUNNER_TEMP/world-pacifism-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host current world psych binding
+        run: python3 ports/alpha-centauri/native/test_world_psych.py --out "$RUNNER_TEMP/world-psych-host"
+      - name: Big-endian current world psych binding
+        run: python3 ports/alpha-centauri/native/test_world_psych.py --out "$RUNNER_TEMP/world-psych-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh complete world energy controls
+        run: python3 ports/alpha-centauri/native/test_world_energy.py --out "$RUNNER_TEMP/world-energy-host"
+      - name: Big-endian fresh complete world energy controls
+        run: python3 ports/alpha-centauri/native/test_world_energy.py --out "$RUNNER_TEMP/world-energy-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original headquarters scan controls
+        run: python3 ports/alpha-centauri/native/test_world_energy_hq.py --out "$RUNNER_TEMP/world-energy-hq-host"
+      - name: Big-endian original headquarters scan controls
+        run: python3 ports/alpha-centauri/native/test_world_energy_hq.py --out "$RUNNER_TEMP/world-energy-hq-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned base accounting transactions
+        run: python3 ports/alpha-centauri/native/test_local_accounting.py --out "$RUNNER_TEMP/local-accounting-host"
+      - name: Big-endian owned base accounting transactions
+        run: python3 ports/alpha-centauri/native/test_local_accounting.py --out "$RUNNER_TEMP/local-accounting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host accounting union snapshot controls
+        run: python3 ports/alpha-centauri/native/test_local_accounting_snapshot.py --out "$RUNNER_TEMP/accounting-snapshot-host"
+      - name: Big-endian accounting union snapshot controls
+        run: python3 ports/alpha-centauri/native/test_local_accounting_snapshot.py --out "$RUNNER_TEMP/accounting-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host stable specialist accounting transactions
+        run: python3 ports/alpha-centauri/native/test_stable_specialist_accounting.py --out "$RUNNER_TEMP/specialist-accounting-host"
+      - name: Big-endian stable specialist accounting transactions
+        run: python3 ports/alpha-centauri/native/test_stable_specialist_accounting.py --out "$RUNNER_TEMP/specialist-accounting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original human worker allocation controls
+        run: python3 ports/alpha-centauri/native/test_human_worker_allocation.py --out "$RUNNER_TEMP/human-worker-allocation-host"
+      - name: Big-endian original human worker allocation controls
+        run: python3 ports/alpha-centauri/native/test_human_worker_allocation.py --out "$RUNNER_TEMP/human-worker-allocation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Human worker leaf sequence host
+        run: python3 ports/alpha-centauri/native/test_human_allocation_trace.py --out "$RUNNER_TEMP/human-allocation-trace-host"
+      - name: Human worker leaf sequence m68040
+        run: python3 ports/alpha-centauri/native/test_human_allocation_trace.py --out "$RUNNER_TEMP/human-allocation-trace-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world human allocation and leaf replay
+        run: python3 ports/alpha-centauri/native/test_world_human_allocation.py --out "$RUNNER_TEMP/world-human-allocation-host"
+      - name: Big-endian original world human allocation and leaf replay
+        run: python3 ports/alpha-centauri/native/test_world_human_allocation.py --out "$RUNNER_TEMP/world-human-allocation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned worker accounting transactions
+        run: python3 ports/alpha-centauri/native/test_local_workers.py --out "$RUNNER_TEMP/local-workers-host"
+      - name: Big-endian owned worker accounting transactions
+        run: python3 ports/alpha-centauri/native/test_local_workers.py --out "$RUNNER_TEMP/local-workers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host worker union snapshot controls
+        run: python3 ports/alpha-centauri/native/test_local_workers_snapshot.py --out "$RUNNER_TEMP/worker-snapshot-host"
+      - name: Big-endian worker union snapshot controls
+        run: python3 ports/alpha-centauri/native/test_local_workers_snapshot.py --out "$RUNNER_TEMP/worker-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host movement production worker accounting composition
+        run: python3 ports/alpha-centauri/native/test_local_worker_actions.py --out "$RUNNER_TEMP/worker-actions-host"
+      - name: Big-endian movement production worker accounting composition
+        run: python3 ports/alpha-centauri/native/test_local_worker_actions.py --out "$RUNNER_TEMP/worker-actions-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original unit production costs and mineral requirements
+        run: python3 ports/alpha-centauri/native/test_production_cost.py --out "$RUNNER_TEMP/production-cost-host"
+      - name: Big-endian original unit production costs and mineral requirements
+        run: python3 ports/alpha-centauri/native/test_production_cost.py --out "$RUNNER_TEMP/production-cost-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original human production factors
+        run: python3 ports/alpha-centauri/native/test_original_human_cost.py --out "$RUNNER_TEMP/human-cost-host"
+      - name: Big-endian original human production factors
+        run: python3 ports/alpha-centauri/native/test_original_human_cost.py --out "$RUNNER_TEMP/human-cost-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host current world human production costs
+        run: python3 ports/alpha-centauri/native/test_world_production_cost.py --out "$RUNNER_TEMP/world-production-cost-host"
+      - name: Big-endian current world human production costs
+        run: python3 ports/alpha-centauri/native/test_world_production_cost.py --out "$RUNNER_TEMP/world-production-cost-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original pre-production arithmetic
+        run: python3 ports/alpha-centauri/native/test_production_accrual.py --out "$RUNNER_TEMP/production-accrual-host"
+      - name: Big-endian original pre-production arithmetic
+        run: python3 ports/alpha-centauri/native/test_production_accrual.py --out "$RUNNER_TEMP/production-accrual-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host current accounting pre-production binding
+        run: python3 ports/alpha-centauri/native/test_world_production_accrual.py --out "$RUNNER_TEMP/world-production-accrual-host"
+      - name: Big-endian current accounting pre-production binding
+        run: python3 ports/alpha-centauri/native/test_world_production_accrual.py --out "$RUNNER_TEMP/world-production-accrual-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host ordinary facility install prefix
+        run: python3 ports/alpha-centauri/native/test_facility_install_prefix.py --out "$RUNNER_TEMP/facility-install-prefix-host"
+      - name: Big-endian ordinary facility install prefix
+        run: python3 ports/alpha-centauri/native/test_facility_install_prefix.py --out "$RUNNER_TEMP/facility-install-prefix-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original queue structural shift
+        run: python3 ports/alpha-centauri/native/test_queue_shift.py --out "$RUNNER_TEMP/queue-shift-host"
+      - name: Big-endian original queue structural shift
+        run: python3 ports/alpha-centauri/native/test_queue_shift.py --out "$RUNNER_TEMP/queue-shift-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original unit availability
+        run: python3 ports/alpha-centauri/native/test_unit_availability.py --out "$RUNNER_TEMP/unit-availability-host"
+      - name: Big-endian original unit availability
+        run: python3 ports/alpha-centauri/native/test_unit_availability.py --out "$RUNNER_TEMP/unit-availability-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned world unit availability
+        run: python3 ports/alpha-centauri/native/test_world_unit_availability.py --out "$RUNNER_TEMP/world-unit-availability-host"
+      - name: Big-endian owned world unit availability
+        run: python3 ports/alpha-centauri/native/test_world_unit_availability.py --out "$RUNNER_TEMP/world-unit-availability-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world production queue proposal
+        run: python3 ports/alpha-centauri/native/test_world_production_queue.py --out "$RUNNER_TEMP/world-production-queue-host"
+      - name: Big-endian original world production queue proposal
+        run: python3 ports/alpha-centauri/native/test_world_production_queue.py --out "$RUNNER_TEMP/world-production-queue-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original Node artifact effect proposal
+        run: python3 ports/alpha-centauri/native/test_node_artifacts.py --out "$RUNNER_TEMP/node-artifacts-host"
+      - name: Big-endian original Node artifact effect proposal
+        run: python3 ports/alpha-centauri/native/test_node_artifacts.py --out "$RUNNER_TEMP/node-artifacts-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original ordinary completion tail fragments
+        run: python3 ports/alpha-centauri/native/test_completion_tail.py --out "$RUNNER_TEMP/completion-tail-host"
+      - name: Big-endian original ordinary completion tail fragments
+        run: python3 ports/alpha-centauri/native/test_completion_tail.py --out "$RUNNER_TEMP/completion-tail-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original facility and Preserve monument state
+        run: python3 ports/alpha-centauri/native/test_monument_effects.py --out "$RUNNER_TEMP/monument-effects-host"
+      - name: Big-endian original facility and Preserve monument state
+        run: python3 ports/alpha-centauri/native/test_monument_effects.py --out "$RUNNER_TEMP/monument-effects-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original monument suppression and initialization decision
+        run: python3 ports/alpha-centauri/native/test_monument_presentation.py --out "$RUNNER_TEMP/monument-presentation-host"
+      - name: Big-endian original monument suppression and initialization decision
+        run: python3 ports/alpha-centauri/native/test_monument_presentation.py --out "$RUNNER_TEMP/monument-presentation-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original facility notice fragments
+        run: python3 ports/alpha-centauri/native/test_facility_notice.py --out "$RUNNER_TEMP/facility-notice-host"
+      - name: Big-endian original facility notice fragments
+        run: python3 ports/alpha-centauri/native/test_facility_notice.py --out "$RUNNER_TEMP/facility-notice-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original popup post-modal response fragments
+        run: python3 ports/alpha-centauri/native/test_popup_response.py --out "$RUNNER_TEMP/popup-response-host"
+      - name: Big-endian original popup post-modal response fragments
+        run: python3 ports/alpha-centauri/native/test_popup_response.py --out "$RUNNER_TEMP/popup-response-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original local facility notice arguments
+        run: python3 ports/alpha-centauri/native/test_notice_labels.py --out "$RUNNER_TEMP/notice-labels-host"
+      - name: Big-endian original local facility notice arguments
+        run: python3 ports/alpha-centauri/native/test_notice_labels.py --out "$RUNNER_TEMP/notice-labels-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host staged facility notice decisions
+        run: python3 ports/alpha-centauri/native/test_notice_stages.py --out "$RUNNER_TEMP/notice-stages-host"
+      - name: Big-endian staged facility notice decisions
+        run: python3 ports/alpha-centauri/native/test_notice_stages.py --out "$RUNNER_TEMP/notice-stages-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned monument storage and snapshot guards
+        run: python3 ports/alpha-centauri/native/test_monument_storage.py --out "$RUNNER_TEMP/monument-storage-host"
+      - name: Big-endian owned monument storage and snapshot guards
+        run: python3 ports/alpha-centauri/native/test_monument_storage.py --out "$RUNNER_TEMP/monument-storage-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original social upkeep proposals
+        run: python3 ports/alpha-centauri/native/test_social_upkeep.py --out "$RUNNER_TEMP/social-upkeep-host"
+      - name: Big-endian original social upkeep proposals
+        run: python3 ports/alpha-centauri/native/test_social_upkeep.py --out "$RUNNER_TEMP/social-upkeep-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world social upkeep binding
+        run: python3 ports/alpha-centauri/native/test_world_social_upkeep.py --out "$RUNNER_TEMP/world-social-upkeep-host"
+      - name: Big-endian original world social upkeep binding
+        run: python3 ports/alpha-centauri/native/test_world_social_upkeep.py --out "$RUNNER_TEMP/world-social-upkeep-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original repair actor proposals
+        run: python3 ports/alpha-centauri/native/test_repair_vehicle.py --out "$RUNNER_TEMP/repair-vehicle-host"
+      - name: Big-endian original repair actor proposals
+        run: python3 ports/alpha-centauri/native/test_repair_vehicle.py --out "$RUNNER_TEMP/repair-vehicle-m68k" --cxx m68k-linux-gnu-g++ --runner qemu-m68k -cpu m68040
+      - name: Host original world repair binding
+        run: python3 ports/alpha-centauri/native/test_world_repair_vehicle.py --out "$RUNNER_TEMP/world-repair-host"
+      - name: Big-endian original world repair binding
+        run: python3 ports/alpha-centauri/native/test_world_repair_vehicle.py --out "$RUNNER_TEMP/world-repair-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original production loan settlement
+        run: python3 ports/alpha-centauri/native/test_production_loans.py --out "$RUNNER_TEMP/production-loans-host"
+      - name: Big-endian original production loan settlement
+        run: python3 ports/alpha-centauri/native/test_production_loans.py --out "$RUNNER_TEMP/production-loans-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original world production prefix
+        run: python3 ports/alpha-centauri/native/test_world_production_prefix.py --out "$RUNNER_TEMP/world-production-prefix-host"
+      - name: Big-endian original world production prefix
+        run: python3 ports/alpha-centauri/native/test_world_production_prefix.py --out "$RUNNER_TEMP/world-production-prefix-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host phase-field snapshot extension
+        run: python3 ports/alpha-centauri/native/test_phase_snapshot.py --out "$RUNNER_TEMP/phase-snapshot-host"
+      - name: Big-endian phase-field snapshot extension
+        run: python3 ports/alpha-centauri/native/test_phase_snapshot.py --out "$RUNNER_TEMP/phase-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original loader record repairs
+        run: python3 ports/alpha-centauri/native/test_load_record_repairs.py --out "$RUNNER_TEMP/load-repairs-host"
+      - name: Big-endian original loader record repairs
+        run: python3 ports/alpha-centauri/native/test_load_record_repairs.py --out "$RUNNER_TEMP/load-repairs-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original deficit energy convoy orders
+        run: python3 ports/alpha-centauri/native/test_energy_convoy_orders.py --out "$RUNNER_TEMP/energy-convoy-orders-host"
+      - name: Big-endian original deficit energy convoy orders
+        run: python3 ports/alpha-centauri/native/test_energy_convoy_orders.py --out "$RUNNER_TEMP/energy-convoy-orders-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host load repaired world snapshot
+        run: python3 ports/alpha-centauri/native/test_initialized_snapshot.py --out "$RUNNER_TEMP/initialized-snapshot-host"
+      - name: Big-endian load repaired world snapshot
+        run: python3 ports/alpha-centauri/native/test_initialized_snapshot.py --out "$RUNNER_TEMP/initialized-snapshot-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host repaired offline command resume
+        run: python3 ports/alpha-centauri/native/test_resumed_commands.py --out "$RUNNER_TEMP/resumed-commands-host"
+      - name: Big-endian repaired offline command resume
+        run: python3 ports/alpha-centauri/native/test_resumed_commands.py --out "$RUNNER_TEMP/resumed-commands-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned original unit skip
+        run: python3 ports/alpha-centauri/native/test_local_unit_skip.py --out "$RUNNER_TEMP/unit-skip-host"
+      - name: Big-endian owned original unit skip
+        run: python3 ports/alpha-centauri/native/test_local_unit_skip.py --out "$RUNNER_TEMP/unit-skip-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original unit readiness and boarding
+        run: python3 ports/alpha-centauri/native/test_unit_readiness.py --out "$RUNNER_TEMP/readiness-host"
+      - name: Big-endian original unit readiness and boarding
+        run: python3 ports/alpha-centauri/native/test_unit_readiness.py --out "$RUNNER_TEMP/readiness-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned original offline ready search
+        run: python3 ports/alpha-centauri/native/test_ready_search.py --out "$RUNNER_TEMP/ready-search-host"
+      - name: Big-endian owned original offline ready search
+        run: python3 ports/alpha-centauri/native/test_ready_search.py --out "$RUNNER_TEMP/ready-search-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned original unit wake and terraform contribution
+        run: python3 ports/alpha-centauri/native/test_local_unit_wake.py --out "$RUNNER_TEMP/unit-wake-host"
+      - name: Big-endian owned original unit wake and terraform contribution
+        run: python3 ports/alpha-centauri/native/test_local_unit_wake.py --out "$RUNNER_TEMP/unit-wake-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned deferred selection state
+        run: python3 ports/alpha-centauri/native/test_local_unit_wait.py --out "$RUNNER_TEMP/unit-wait-host"
+      - name: Big-endian owned deferred selection state
+        run: python3 ports/alpha-centauri/native/test_local_unit_wait.py --out "$RUNNER_TEMP/unit-wait-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original combat prototype and psi factors
+        run: python3 ports/alpha-centauri/native/test_combat_prototype.py --out "$RUNNER_TEMP/combat-prototype-host"
+      - name: Big-endian original combat prototype and psi factors
+        run: python3 ports/alpha-centauri/native/test_combat_prototype.py --out "$RUNNER_TEMP/combat-prototype-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host saved-world combat prototype binding
+        run: python3 ports/alpha-centauri/native/test_world_combat_prototype.py --out "$RUNNER_TEMP/world-combat-prototype-host"
+      - name: Big-endian saved-world combat prototype binding
+        run: python3 ports/alpha-centauri/native/test_world_combat_prototype.py --out "$RUNNER_TEMP/world-combat-prototype-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original opponent native morale
+        run: python3 ports/alpha-centauri/native/test_native_combat_morale.py --out "$RUNNER_TEMP/native-combat-morale-host"
+      - name: Big-endian original opponent native morale
+        run: python3 ports/alpha-centauri/native/test_native_combat_morale.py --out "$RUNNER_TEMP/native-combat-morale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host saved-world native combat morale
+        run: python3 ports/alpha-centauri/native/test_world_native_combat_morale.py --out "$RUNNER_TEMP/world-native-combat-morale-host"
+      - name: Big-endian saved-world native combat morale
+        run: python3 ports/alpha-centauri/native/test_world_native_combat_morale.py --out "$RUNNER_TEMP/world-native-combat-morale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original riot morale ordering and dependent speed
+        run: python3 ports/alpha-centauri/native/test_riot_morale.py --out "$RUNNER_TEMP/riot-morale-host"
+      - name: Big-endian original riot morale ordering and dependent speed
+        run: python3 ports/alpha-centauri/native/test_riot_morale.py --out "$RUNNER_TEMP/riot-morale-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original basic combat strength composition
+        run: python3 ports/alpha-centauri/native/test_basic_combat.py --out "$RUNNER_TEMP/basic-combat-host"
+      - name: Big-endian original basic combat strength composition
+        run: python3 ports/alpha-centauri/native/test_basic_combat.py --out "$RUNNER_TEMP/basic-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host saved-world basic combat binding
+        run: python3 ports/alpha-centauri/native/test_world_basic_combat.py --out "$RUNNER_TEMP/world-basic-combat-host"
+      - name: Big-endian saved-world basic combat binding
+        run: python3 ports/alpha-centauri/native/test_world_basic_combat.py --out "$RUNNER_TEMP/world-basic-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original terrain defence host controls
+        run: python3 ports/alpha-centauri/native/test_terrain_defense.py --out "$RUNNER_TEMP/terrain-defense-host"
+      - name: Original terrain defence independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_terrain_defense.py --out "$RUNNER_TEMP/terrain-defense-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned terrain defence host controls
+        run: python3 ports/alpha-centauri/native/test_world_terrain_defense.py --out "$RUNNER_TEMP/world-terrain-defense-host"
+      - name: Owned terrain defence independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_terrain_defense.py --out "$RUNNER_TEMP/world-terrain-defense-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original base combat stage host controls
+        run: python3 ports/alpha-centauri/native/test_base_combat.py --out "$RUNNER_TEMP/base-combat-host"
+      - name: Original base combat stage independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_base_combat.py --out "$RUNNER_TEMP/base-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned base combat stage host controls
+        run: python3 ports/alpha-centauri/native/test_world_base_combat.py --out "$RUNNER_TEMP/world-base-combat-host"
+      - name: Owned base combat stage independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_base_combat.py --out "$RUNNER_TEMP/world-base-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original combat sensor percentage host controls
+        run: python3 ports/alpha-centauri/native/test_sensor_combat.py --out "$RUNNER_TEMP/sensor-combat-host"
+      - name: Original combat sensor percentage independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_sensor_combat.py --out "$RUNNER_TEMP/sensor-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned combat sensor coverage host controls
+        run: python3 ports/alpha-centauri/native/test_world_sensor_combat.py --out "$RUNNER_TEMP/world-sensor-combat-host"
+      - name: Owned combat sensor coverage independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_sensor_combat.py --out "$RUNNER_TEMP/world-sensor-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original ground combat modifier host controls
+        run: python3 ports/alpha-centauri/native/test_ground_modifiers.py --out "$RUNNER_TEMP/ground-modifiers-host"
+      - name: Original ground combat modifier independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_ground_modifiers.py --out "$RUNNER_TEMP/ground-modifiers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned ground combat modifier host controls
+        run: python3 ports/alpha-centauri/native/test_world_ground_modifiers.py --out "$RUNNER_TEMP/world-ground-modifiers-host"
+      - name: Owned ground combat modifier independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_ground_modifiers.py --out "$RUNNER_TEMP/world-ground-modifiers-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original late defense abilities host controls
+        run: python3 ports/alpha-centauri/native/test_defense_abilities.py --out "$RUNNER_TEMP/defense-abilities-host"
+      - name: Original late defense abilities independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_defense_abilities.py --out "$RUNNER_TEMP/defense-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned late defense abilities host controls
+        run: python3 ports/alpha-centauri/native/test_world_defense_abilities.py --out "$RUNNER_TEMP/world-defense-abilities-host"
+      - name: Owned late defense abilities independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_defense_abilities.py --out "$RUNNER_TEMP/world-defense-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original air and port combat host controls
+        run: python3 ports/alpha-centauri/native/test_air_port_combat.py --out "$RUNNER_TEMP/air-port-combat-host"
+      - name: Original air and port combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_air_port_combat.py --out "$RUNNER_TEMP/air-port-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned air and port combat host controls
+        run: python3 ports/alpha-centauri/native/test_world_air_port_combat.py --out "$RUNNER_TEMP/world-air-port-host"
+      - name: Owned air and port combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_air_port_combat.py --out "$RUNNER_TEMP/world-air-port-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original artillery combat host controls
+        run: python3 ports/alpha-centauri/native/test_artillery_combat.py --out "$RUNNER_TEMP/artillery-combat-host"
+      - name: Original artillery combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_artillery_combat.py --out "$RUNNER_TEMP/artillery-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned artillery combat host controls
+        run: python3 ports/alpha-centauri/native/test_world_artillery_combat.py --out "$RUNNER_TEMP/world-artillery-host"
+      - name: Owned artillery combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_artillery_combat.py --out "$RUNNER_TEMP/world-artillery-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original psi abilities host controls
+        run: python3 ports/alpha-centauri/native/test_psi_abilities.py --out "$RUNNER_TEMP/psi-abilities-host"
+      - name: Original psi abilities independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_psi_abilities.py --out "$RUNNER_TEMP/psi-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned psi abilities host controls
+        run: python3 ports/alpha-centauri/native/test_world_psi_abilities.py --out "$RUNNER_TEMP/world-psi-abilities-host"
+      - name: Owned psi abilities independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_psi_abilities.py --out "$RUNNER_TEMP/world-psi-abilities-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original combat faction host controls
+        run: python3 ports/alpha-centauri/native/test_combat_factions.py --out "$RUNNER_TEMP/combat-factions-host"
+      - name: Original combat faction independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_combat_factions.py --out "$RUNNER_TEMP/combat-factions-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned combat faction host controls
+        run: python3 ports/alpha-centauri/native/test_world_combat_factions.py --out "$RUNNER_TEMP/world-combat-factions-host"
+      - name: Owned combat faction independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_combat_factions.py --out "$RUNNER_TEMP/world-combat-factions-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original fungus combat host controls
+        run: python3 ports/alpha-centauri/native/test_fungus_combat.py --out "$RUNNER_TEMP/fungus-combat-host"
+      - name: Original fungus combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_fungus_combat.py --out "$RUNNER_TEMP/fungus-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned fungus combat host controls
+        run: python3 ports/alpha-centauri/native/test_world_fungus_combat.py --out "$RUNNER_TEMP/world-fungus-combat-host"
+      - name: Owned fungus combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_fungus_combat.py --out "$RUNNER_TEMP/world-fungus-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Coherent land combat host controls
+        run: python3 ports/alpha-centauri/native/test_land_combat.py --out "$RUNNER_TEMP/land-combat-host"
+      - name: Coherent land combat independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_land_combat.py --out "$RUNNER_TEMP/land-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Combat round host controls
+        run: python3 ports/alpha-centauri/native/test_combat_round.py --out "$RUNNER_TEMP/combat-round-host"
+      - name: Combat round independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_combat_round.py --out "$RUNNER_TEMP/combat-round-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned retreat initialization host controls
+        run: python3 ports/alpha-centauri/native/test_retreat_init.py --out "$RUNNER_TEMP/retreat-init-host"
+      - name: Owned retreat initialization independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_retreat_init.py --out "$RUNNER_TEMP/retreat-init-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original World ZOC host controls
+        run: python3 ports/alpha-centauri/native/test_world_zoc.py --out "$RUNNER_TEMP/world-zoc-host"
+      - name: Original World ZOC independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_world_zoc.py --out "$RUNNER_TEMP/world-zoc-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original supply pods host controls
+        run: python3 ports/alpha-centauri/native/test_supply_pods.py --out "$RUNNER_TEMP/supply-pods-host"
+      - name: Original supply pods independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_supply_pods.py --out "$RUNNER_TEMP/supply-pods-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original land retreat destination host controls
+        run: python3 ports/alpha-centauri/native/test_retreat_destination.py --out "$RUNNER_TEMP/retreat-destination-host"
+      - name: Original land retreat destination independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_retreat_destination.py --out "$RUNNER_TEMP/retreat-destination-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned conventional land engagement host controls
+        run: python3 ports/alpha-centauri/native/test_land_engagement.py --out "$RUNNER_TEMP/land-engagement-host"
+      - name: Owned conventional land engagement independent68040 controls
+        run: python3 ports/alpha-centauri/native/test_land_engagement.py --out "$RUNNER_TEMP/land-engagement-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host checked vehicle-removal storage controls
+        run: python3 ports/alpha-centauri/native/test_vehicle_removal.py --out "$RUNNER_TEMP/vehicle-removal-host"
+      - name: Big-endian checked vehicle-removal storage controls
+        run: python3 ports/alpha-centauri/native/test_vehicle_removal.py --out "$RUNNER_TEMP/vehicle-removal-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned current-world removal frame controls
+        run: python3 ports/alpha-centauri/native/test_world_vehicle_removal.py --out "$RUNNER_TEMP/world-vehicle-removal-host"
+      - name: Big-endian owned current-world removal frame controls
+        run: python3 ports/alpha-centauri/native/test_world_vehicle_removal.py --out "$RUNNER_TEMP/world-vehicle-removal-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned casualty frame and caller-pool controls
+        run: python3 ports/alpha-centauri/native/test_world_casualty.py --out "$RUNNER_TEMP/world-casualty-host"
+      - name: Big-endian owned casualty frame and caller-pool controls
+        run: python3 ports/alpha-centauri/native/test_world_casualty.py --out "$RUNNER_TEMP/world-casualty-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned LAND artifact capture controls
+        run: python3 ports/alpha-centauri/native/test_artifact_capture.py --out "$RUNNER_TEMP/artifact-capture-host"
+      - name: Big-endian owned LAND artifact capture controls
+        run: python3 ports/alpha-centauri/native/test_artifact_capture.py --out "$RUNNER_TEMP/artifact-capture-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned LAND engagement casualty composition controls
+        run: python3 ports/alpha-centauri/native/test_land_resolution.py --out "$RUNNER_TEMP/land-resolution-host"
+      - name: Big-endian owned LAND engagement casualty composition controls
+        run: python3 ports/alpha-centauri/native/test_land_resolution.py --out "$RUNNER_TEMP/land-resolution-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original ordered battle bookkeeping controls
+        run: python3 ports/alpha-centauri/native/test_battle_bookkeeping.py --out "$RUNNER_TEMP/battle-bookkeeping-host"
+      - name: Big-endian original ordered battle bookkeeping controls
+        run: python3 ports/alpha-centauri/native/test_battle_bookkeeping.py --out "$RUNNER_TEMP/battle-bookkeeping-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned current-world battle bookkeeping controls
+        run: python3 ports/alpha-centauri/native/test_world_battle_bookkeeping.py --out "$RUNNER_TEMP/world-battle-bookkeeping-host"
+      - name: Big-endian owned current-world battle bookkeeping controls
+        run: python3 ports/alpha-centauri/native/test_world_battle_bookkeeping.py --out "$RUNNER_TEMP/world-battle-bookkeeping-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned LAND body-state and bookkeeping composition
+        run: python3 ports/alpha-centauri/native/test_battle_aftermath.py --out "$RUNNER_TEMP/battle-aftermath-host"
+      - name: Big-endian owned LAND body-state and bookkeeping composition
+        run: python3 ports/alpha-centauri/native/test_battle_aftermath.py --out "$RUNNER_TEMP/battle-aftermath-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host combat alias rejection before input reads
+        run: python3 ports/alpha-centauri/native/test_combat_alias_order.py --out "$RUNNER_TEMP/combat-alias-host"
+      - name: Big-endian combat alias rejection before input reads
+        run: python3 ports/alpha-centauri/native/test_combat_alias_order.py --out "$RUNNER_TEMP/combat-alias-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned nonrandom promotion frame controls
+        run: python3 ports/alpha-centauri/native/test_world_promotion.py --out "$RUNNER_TEMP/world-promotion-host"
+      - name: Big-endian owned nonrandom promotion frame controls
+        run: python3 ports/alpha-centauri/native/test_world_promotion.py --out "$RUNNER_TEMP/world-promotion-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original promotion caller selection controls
+        run: python3 ports/alpha-centauri/native/test_promotion_selection.py --out "$RUNNER_TEMP/promotion-selection-host"
+      - name: Big-endian original promotion caller selection controls
+        run: python3 ports/alpha-centauri/native/test_promotion_selection.py --out "$RUNNER_TEMP/promotion-selection-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host promotion-before-casualty LAND body controls
+        run: python3 ports/alpha-centauri/native/test_promoted_land_body.py --out "$RUNNER_TEMP/promoted-land-body-host"
+      - name: Big-endian promotion-before-casualty LAND body controls
+        run: python3 ports/alpha-centauri/native/test_promoted_land_body.py --out "$RUNNER_TEMP/promoted-land-body-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Promoted battle aftermath host
+        run: python3 ports/alpha-centauri/native/test_promoted_aftermath.py --out "$RUNNER_TEMP/promoted-aftermath-host"
+      - name: Promoted battle aftermath independent 68040
+        run: python3 ports/alpha-centauri/native/test_promoted_aftermath.py --out "$RUNNER_TEMP/promoted-aftermath-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original territorial combat prefix host
+        run: python3 ports/alpha-centauri/native/test_territorial_combat.py --out "$RUNNER_TEMP/territorial-combat-host"
+      - name: Original territorial combat prefix independent 68040
+        run: python3 ports/alpha-centauri/native/test_territorial_combat.py --out "$RUNNER_TEMP/territorial-combat-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned territorial combat World host
+        run: python3 ports/alpha-centauri/native/test_world_territorial_combat.py --out "$RUNNER_TEMP/world-territorial-host"
+      - name: Owned territorial combat World independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_territorial_combat.py --out "$RUNNER_TEMP/world-territorial-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Territorial promotion casualty aftermath host
+        run: python3 ports/alpha-centauri/native/test_territorial_aftermath.py --out "$RUNNER_TEMP/territorial-aftermath-host"
+      - name: Territorial promotion casualty aftermath independent 68040
+        run: python3 ports/alpha-centauri/native/test_territorial_aftermath.py --out "$RUNNER_TEMP/territorial-aftermath-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Saved design history aftermath host
+        run: python3 ports/alpha-centauri/native/test_historical_aftermath.py --out "$RUNNER_TEMP/design-history-host"
+      - name: Saved design history aftermath independent 68040
+        run: python3 ports/alpha-centauri/native/test_historical_aftermath.py --out "$RUNNER_TEMP/design-history-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original battle entry calculations host
+        run: python3 ports/alpha-centauri/native/test_battle_entry.py --output "$RUNNER_TEMP/battle-entry-host"
+      - name: Original battle entry calculations independent 68040
+        run: python3 ports/alpha-centauri/native/test_battle_entry.py --output "$RUNNER_TEMP/battle-entry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned World battle entry inspection host
+        run: python3 ports/alpha-centauri/native/test_world_battle_entry.py --out "$RUNNER_TEMP/world-battle-entry-host"
+      - name: Owned World battle entry inspection independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_battle_entry.py --out "$RUNNER_TEMP/world-battle-entry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original attacker modifier ledger host
+        run: python3 ports/alpha-centauri/native/test_attack_modifier_ledger.py --out "$RUNNER_TEMP/attack-ledger-host"
+      - name: Original attacker modifier ledger independent 68040
+        run: python3 ports/alpha-centauri/native/test_attack_modifier_ledger.py --out "$RUNNER_TEMP/attack-ledger-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned World battle reporting host
+        run: python3 ports/alpha-centauri/native/test_world_battle_reporting.py --out "$RUNNER_TEMP/world-battle-reporting-host"
+      - name: Owned World battle reporting independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_battle_reporting.py --out "$RUNNER_TEMP/world-battle-reporting-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original combat labels and report text host
+        run: python3 ports/alpha-centauri/native/test_combat_labels.py --out "$RUNNER_TEMP/combat-labels-host"
+      - name: Original combat labels and report text independent 68040
+        run: python3 ports/alpha-centauri/native/test_combat_labels.py --out "$RUNNER_TEMP/combat-labels-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Current World combat calculations and original report text host
+        run: python3 ports/alpha-centauri/native/test_world_combat_text.py --out "$RUNNER_TEMP/world-combat-text-host"
+      - name: Current World combat calculations and original report text independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_combat_text.py --out "$RUNNER_TEMP/world-combat-text-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original post-hasty nonnative combat difficulty host
+        run: python3 ports/alpha-centauri/native/test_combat_difficulty.py --out "$RUNNER_TEMP/combat-difficulty-host"
+      - name: Original post-hasty nonnative combat difficulty independent 68040
+        run: python3 ports/alpha-centauri/native/test_combat_difficulty.py --out "$RUNNER_TEMP/combat-difficulty-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Current World observed combat difficulty host
+        run: python3 ports/alpha-centauri/native/test_world_combat_difficulty.py --out "$RUNNER_TEMP/world-combat-difficulty-host"
+      - name: Current World observed combat difficulty independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_combat_difficulty.py --out "$RUNNER_TEMP/world-combat-difficulty-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original observer prebattle aggression host
+        run: python3 ports/alpha-centauri/native/test_prebattle_aggression.py --out "$RUNNER_TEMP/prebattle-aggression-host"
+      - name: Original observer prebattle aggression independent 68040
+        run: python3 ports/alpha-centauri/native/test_prebattle_aggression.py --out "$RUNNER_TEMP/prebattle-aggression-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original prebattle notification selector host
+        run: python3 ports/alpha-centauri/native/test_prebattle_notification.py --out "$RUNNER_TEMP/prebattle-notification-host"
+      - name: Original prebattle notification selector independent 68040
+        run: python3 ports/alpha-centauri/native/test_prebattle_notification.py --out "$RUNNER_TEMP/prebattle-notification-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Current World prebattle diplomacy host
+        run: python3 ports/alpha-centauri/native/test_world_prebattle_diplomacy.py --out "$RUNNER_TEMP/world-prebattle-diplomacy-host"
+      - name: Current World prebattle diplomacy independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_prebattle_diplomacy.py --out "$RUNNER_TEMP/world-prebattle-diplomacy-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Original pre-round third-party treaty and friction host
+        run: python3 ports/alpha-centauri/native/test_prebattle_territory.py --out "$RUNNER_TEMP/prebattle-territory-host"
+      - name: Original pre-round third-party treaty and friction independent 68040
+        run: python3 ports/alpha-centauri/native/test_prebattle_territory.py --out "$RUNNER_TEMP/prebattle-territory-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Current World attacker-origin prebattle territory host
+        run: python3 ports/alpha-centauri/native/test_world_prebattle_territory.py --out "$RUNNER_TEMP/world-prebattle-territory-host"
+      - name: Current World attacker-origin prebattle territory independent 68040
+        run: python3 ports/alpha-centauri/native/test_world_prebattle_territory.py --out "$RUNNER_TEMP/world-prebattle-territory-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Owned original prebattle prefix host
+        run: python3 ports/alpha-centauri/native/test_prebattle_prefix.py --out "$RUNNER_TEMP/prebattle-prefix-host"
+      - name: Owned original prebattle prefix independent 68040
+        run: python3 ports/alpha-centauri/native/test_prebattle_prefix.py --out "$RUNNER_TEMP/prebattle-prefix-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Default global and faction CVR palette controls on host
+        run: python3 ports/alpha-centauri/native/test_cvr_palette.py --out "$RUNNER_TEMP/cvr-palette-host"
+      - name: Default global and faction CVR palette controls on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_cvr_palette.py --out "$RUNNER_TEMP/cvr-palette-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host manual research choice controls
+        run: python3 ports/alpha-centauri/native/test_research_choice.py --out "$RUNNER_TEMP/research-choice-host"
+      - name: Big-endian manual research choice controls
+        run: python3 ports/alpha-centauri/native/test_research_choice.py --out "$RUNNER_TEMP/research-choice-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host normal human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool.py --out "$RUNNER_TEMP/research-pool-host"
+      - name: Big-endian normal human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool.py --out "$RUNNER_TEMP/research-pool-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned-world human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool_world.py --out "$RUNNER_TEMP/research-pool-world-host"
+      - name: Big-endian owned-world human research pool controls
+        run: python3 ports/alpha-centauri/native/test_research_pool_world.py --out "$RUNNER_TEMP/research-pool-world-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Synthetic chained CVR LOD controls on host
+        run: python3 ports/alpha-centauri/native/test_cvr_lod.py --out "$RUNNER_TEMP/cvr-lod-host"
+      - name: Synthetic chained CVR LOD controls on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_cvr_lod.py --out "$RUNNER_TEMP/cvr-lod-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Ten-part speeder composition on host
+        run: python3 ports/alpha-centauri/native/test_cvr_speeder.py --out "$RUNNER_TEMP/speeder-host"
+      - name: Ten-part speeder composition on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_cvr_speeder.py --out "$RUNNER_TEMP/speeder-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Generic CVR vehicle assembly and faction colours on host
+        run: python3 ports/alpha-centauri/native/test_cvr_vehicle.py --out "$RUNNER_TEMP/cvr-vehicle-host"
+      - name: Generic CVR vehicle assembly and faction colours on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_cvr_vehicle.py --out "$RUNNER_TEMP/cvr-vehicle-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Map overlays, minimap, message log and base window on host
+        run: python3 ports/alpha-centauri/native/test_map_render.py --out "$RUNNER_TEMP/map-render-host"
+      - name: Map overlays, minimap, message log and base window on independent big-endian 68040
+        run: python3 ports/alpha-centauri/native/test_map_render.py --out "$RUNNER_TEMP/map-render-m68k" --cc m68k-linux-gnu-g++ --m68k-linux

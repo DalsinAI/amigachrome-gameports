@@ -4,7 +4,7 @@
 #include "world_base_budget.h"
 #include "world_base_commerce.h"
 namespace alpha {
-struct TradedBudgetResult {WorldCommerceResult trade;BaseBudgetResult budget;};
+struct TradedBudgetResult {UpkeepWorldCommerceResult trade;BaseBudgetResult budget;};
 /* Connected trade -> energy distribution -> economy income -> maintenance.
  * Stage commerce/grid must be zero: commerce is generated here from the full
  * fresh pre-convoy energy vector and current diplomacy/technology. The selected
@@ -16,7 +16,7 @@ struct TradedBudgetResult {WorldCommerceResult trade;BaseBudgetResult budget;};
  * persistence prerequisites of world_base_budget; it grants no turn authority.
  */
 BudgetError world_traded_budget(const OriginalWorld&,const Rules&,const UnitDefinitions&,
- const BasicRules&,const WorldRules&,const ResourceInfo&,const CitizenDefinitions&,
+ const BasicRules&,const WorldRules&,const ResourceInfo&,const UpkeepCitizenDefinitions&,
  const FacilityDefinitions&,size_t base,const int32_t*fresh_allbase_energy,size_t count,
  const BaseBudgetStage&,TradedBudgetResult&,uint32_t*projected_support_states,size_t capacity);
 }
