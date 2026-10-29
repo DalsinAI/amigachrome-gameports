@@ -2837,3 +2837,19 @@ Normal SDK probes build but **AmigaOS execution has not run**. The user's watch
 preview exclusively owns the lab and was not touched. These queries are not
 wired into research turns or discovery awards and must not be merged/deployed as
 native-qualified until remaining gates actually pass.
+
+## Complete technology commerce/fungus effects (local draft, native unrun)
+
+`technology_effects.h` provides the complete checked original callback-free
+recomputation and an owned-world binding using real ownership/rules/bonuses and
+pending SE economy. Saved effect counters are not reused. Both original base and
+expansion helpers agree on1,248 contexts each; host raw285/world512-query public
+controls and expanded original-file controls pass. Normal SDK builds pass;
+native/independent68040 remain unrun. This returns five fresh values without
+awarding a technology or mutating world/wire/turn state. See
+`TECHNOLOGY-EFFECTS.md` and its evidence for the full discovery dependencies.
+
+The separate alias correction rejects complete Result-range overlap with Rules,
+Facts and every raw/decoded World allocation before writes.32 pure/96 world
+aliases,16 adjacent outputs and40 boundary controls pass; frozen3ef0e6b remains
+unchanged as the regression reference. Native execution is still unrun.
