@@ -69,8 +69,12 @@ def start_game(a, emit=print):
 
 def main(argv=None):
     a = build_parser().parse_args(argv)
-    _lib.load(a.lib, auto_build=a.build)
-    g = start_game(a)
+    try:
+        _lib.load(a.lib, auto_build=a.build)
+        g = start_game(a)
+    except (FileNotFoundError, GameError) as e:
+        print(f'alpha_smac: {e}', file=sys.stderr)
+        return 2
     if a.headless is not None:
         from .headless import play_headless
         res = play_headless(g, a.headless, keep_player=a.keep_player)

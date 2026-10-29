@@ -551,6 +551,8 @@ class App:
                     pg.draw.polygon(scr, FACTION_RGB[t.owner % 8], poly, 1)
         # bases
         for b in self.bases:
+            if not (0 <= b.x < self.mw and 0 <= b.y < self.mh):
+                continue
             t = self.tiles[b.y * self.mw + b.x]
             if not self.visible(t):
                 continue
@@ -569,7 +571,7 @@ class App:
         for u in self.units:
             if (u.x, u.y) in shown and u.id != self.selected:
                 continue
-            t = self.tiles[u.y * self.mw + u.x] if 0 <= u.y < self.mh else None
+            t = self.tiles[u.y * self.mw + u.x] if 0 <= u.y < self.mh and 0 <= u.x < self.mw else None
             if t is None or not t.valid or not self.visible(t):
                 continue
             shown.add((u.x, u.y))

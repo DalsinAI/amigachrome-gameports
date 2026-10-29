@@ -49,6 +49,33 @@ def test_frontend_frames_and_png(rules, artifacts_dir, tmp_path):
         g.close()
 
 
+def test_frontend_random_keys(rules):
+    """400 frames of random keys and clicks (fixed seed): every key path of
+    the window runs against the engine without an exception."""
+    import random
+    rnd = random.Random(1234)
+    keys = list('123467895 nNeEbBiIpPtTkKxXgGRrfFmsSlhHjwDuUMoOcC+-') + [13, 27, 9, 13, 27]
+    g = ac.new_game(rules, seed=31, map_size=1)
+    app = App(g, save_dir='/nonexistent-dir-for-test')
+    try:
+        app.save_dir = None  # V must not write anywhere in this test
+        app.save = lambda: None
+        script = []
+        for _ in range(400):
+            if rnd.random() < 0.15:
+                script.append((rnd.randrange(0, 1024), rnd.randrange(0, 768)))
+            else:
+                k = rnd.choice(keys)
+                script.append(k if isinstance(k, int) else k)
+        script = [s for s in script if s not in ('q', 'Q')]
+        app.loop(max_frames=len(script), script=script, fps=0)
+        assert app.frames == len(script)
+        assert g.turn > 1
+    finally:
+        app.close()
+        g.close()
+
+
 def test_cli_screenshot(rules, artifacts_dir):
     shot = artifacts_dir / 'alpha_smac_cli.png'
     env = dict(os.environ, PYTHONPATH=str(PYTHON_DIR), SDL_VIDEODRIVER='dummy', SDL_AUDIODRIVER='dummy')

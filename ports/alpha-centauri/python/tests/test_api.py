@@ -96,6 +96,17 @@ def test_commands_and_errors(rules, tmp_path):
     g.close()
 
 
+def test_data_folder_detection(rules, tmp_path):
+    # A folder laid out like an installation (here the synthetic one) is found as --data.
+    found = ac.find_rules(rules.path)
+    assert found.expansion and not found.synthetic
+    with pytest.raises(FileNotFoundError):
+        ac.find_rules(rules.path, expansion=False)  # no alpha.txt there
+    (tmp_path / 'ALPHAX.TXT').write_bytes(b'')
+    with pytest.raises(FileNotFoundError, match='labels.txt'):
+        ac.find_rules(tmp_path)
+
+
 def test_panels_render(game):
     buf = bytearray(640 * 480 * 3)
     items, n = ac.render_panel('research', game.research_panel(), buf, 640, 480, (0, 0, 560, 420))
