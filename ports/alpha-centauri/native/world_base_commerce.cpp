@@ -10,7 +10,7 @@ bool world_alias(const OriginalWorld&w,const void*p,size_t n){
 bool put(int64_t n,int32_t&out){if(n<(-2147483647LL-1)||n>2147483647LL)return false;out=(int32_t)n;return true;}
 CommerceError effect(const OriginalWorld&w,const Rules&t,int faction,int32_t&out){TechnologyEffects e{};const auto error=world_technology_effects(w,t,faction,e);if(error==TechnologyEffectsError::overflow)return CommerceError::overflow;if(error!=TechnologyEffectsError::ok)return CommerceError::bad_state;out=e.commerce;return CommerceError::ok;}
 }
-CommerceError world_base_commerce(const OriginalWorld&w,const Rules&t,size_t id,const int32_t*energy,size_t count,WorldCommerceResult&out){
+CommerceError world_base_commerce(const OriginalWorld&w,const Rules&t,size_t id,const int32_t*energy,size_t count,UpkeepWorldCommerceResult&out){
  if(count>512)return CommerceError::bad_state;
  const size_t bytes=count*sizeof(int32_t);
  if(world_alias(w,&out,sizeof out)||overlap(&out,sizeof out,&t,sizeof t)||overlap(&out,sizeof out,energy,bytes)||world_alias(w,energy,bytes)||overlap(energy,bytes,&t,sizeof t))return CommerceError::bad_buffer;
@@ -21,7 +21,7 @@ CommerceError world_base_commerce(const OriginalWorld&w,const Rules&t,size_t id,
  const int32_t governor=w.game().preferences.GovernorFaction;if(governor< -1||governor>7)return CommerceError::bad_state;
  int32_t scores[512];uint16_t counts[8]{};
  for(size_t i=0;i<count;++i){const auto*b=w.base(i);if(!b||b->faction_id<0||b->faction_id>7||energy[i]<0)return CommerceError::bad_state;if(!put(512LL*energy[i]+(int64_t)i,scores[i]))return CommerceError::overflow;++counts[(unsigned)b->faction_id];}
- WorldCommerceResult next{};for(auto&partner:next.partner_base)partner=-1;
+ UpkeepWorldCommerceResult next{};for(auto&partner:next.partner_base)partner=-1;
  for(unsigned i=0;i<89;++i){const auto&tech=t.technologies[i];if(tech.prerequisites[0]< -2||tech.prerequisites[0]>=89||tech.prerequisites[1]< -2||tech.prerequisites[1]>=89)return CommerceError::bad_state;if(tech.prerequisites[0]!=-2&&tech.prerequisites[1]!=-2&&(tech.flags&4u))++next.technology_count;}
  for(size_t i=0;i<count;++i)if(w.base(i)->faction_id==faction&&scores[i]>scores[id])++next.rank;
  const bool global=w.game().preferences.ProposalPassCount[4]<w.game().preferences.ProposalPassCount[3];bool our_effect=false;

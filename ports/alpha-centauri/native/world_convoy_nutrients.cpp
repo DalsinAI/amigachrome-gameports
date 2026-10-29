@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "world_convoy_nutrients.h"
 #include "movement.h"
+#include "world_fresh_tile_yields.h"
 namespace alpha {namespace {
 bool overlap(const void*a,size_t an,const void*b,size_t bn){
  if(!a||!b||!an||!bn)return false;
@@ -12,7 +13,7 @@ bool alias(const OriginalWorld&w,const Rules&t,const BasicRules&b,const Resource
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&t,sizeof t)||overlap(out,n,&b,sizeof b)||overlap(out,n,&r,sizeof r)||overlap(out,n,&s,sizeof s))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();
- return overlap(out,n,w.original_bytes(),w.original_size())||overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile))||overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase))||overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle))||overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype))||overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState))||overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
+ return w.overlaps_byte_storage(out,n)||overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile))||overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase))||overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle))||overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype))||overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState))||overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
 }
 bool add(int32_t&v,int32_t x){const int64_t n=(int64_t)v+x;if(n<(-2147483647LL-1)||n>2147483647LL)return false;v=(int32_t)n;return true;}
 }
@@ -26,7 +27,9 @@ StableIntakeError world_convoy_flows(const OriginalWorld&w,const Rules&t,const B
  WorldTileYieldStage ts{s.variant,s.expansion_enabled,false,s.control_upkeep,(int32_t)id,s.terraform_reduction_before,s.base_energy_before};
  // Validate the complete context even for an empty or non-convoy world.
  TileYieldContext check{};
- if(world_tile_yield_context(w,t,b,r,id,base->faction_id,base->x,base->y,ts,check)!=TileYieldError::ok)return StableIntakeError::bad_state;
+ const auto initial=world_fresh_tile_yield_context(w,t,b,r,id,base->faction_id,base->x,base->y,ts,check);
+ if(initial==TileYieldError::overflow)return StableIntakeError::overflow;
+ if(initial!=TileYieldError::ok)return StableIntakeError::bad_state;
  WorldConvoyFlows next{};next.terraform_reduction_after=s.terraform_reduction_before;next.base_energy_after=s.base_energy_before;
  for(size_t i=0;i<g.vehicle_count;++i){
   const auto*v=w.vehicle(i);size_t tile_id;
@@ -41,7 +44,7 @@ StableIntakeError world_convoy_flows(const OriginalWorld&w,const Rules&t,const B
    if(!add(next.harvesters,1))return StableIntakeError::overflow;
    if(channel==3){next.terraform_reduction_after=0;continue;}
    ts.terraform_reduction_before=next.terraform_reduction_after;ts.base_energy_before=next.base_energy_after;
-   TileYieldResult value{};const auto e=(tile->items&0x20u)?world_fresh_tile_yields(w,t,b,r,id,base->faction_id,v->x,v->y,ts,value):world_tile_yields(w,t,b,r,id,base->faction_id,v->x,v->y,ts,value);
+   TileYieldResult value{};const auto e=world_fresh_tile_yields(w,t,b,r,id,base->faction_id,v->x,v->y,ts,value);
    if(e==TileYieldError::overflow)return StableIntakeError::overflow;
    if(e!=TileYieldError::ok)return StableIntakeError::bad_state;
    const int32_t yields[]={value.nutrient,value.mineral,value.energy};

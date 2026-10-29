@@ -1,0 +1,12 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
+set -eu
+if [ "$#" -ne 1 ]; then
+  echo "Usage: CXX=m68k-amigaos-g++ $0 OUTPUT" >&2
+  exit 2
+fi
+src=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+mkdir -p -- "$(dirname -- "$1")"
+"${CXX:-m68k-amigaos-g++}" -m68040 -m68881 -std=c++17 -O2 -Wall -Wextra -Werror \
+  -fno-exceptions -fno-rtti -fno-builtin -fno-tree-loop-distribute-patterns \
+  "$src/rules_text.cpp" "$src/original_map.cpp" "$src/original_game.cpp" "$src/original_faction.cpp" "$src/original_world.cpp" "$src/prototype.cpp" "$src/movement.cpp" "$src/saved_speed.cpp" "$src/world_unit_stats.cpp" "$src/combat_prototype.cpp" "$src/world_combat_prototype.cpp" "$src/native_combat_morale.cpp" "$src/world_native_combat_morale.cpp" "$src/basic_combat.cpp" "$src/world_basic_combat.cpp" "$src/fungus_combat.cpp" "$src/world_fungus_combat.cpp" "$src/combat_factions.cpp" "$src/world_combat_factions.cpp" "$src/terrain_defense.cpp" "$src/world_terrain_defense.cpp" "$src/ground_modifiers.cpp" "$src/world_ground_modifiers.cpp" "$src/base_combat.cpp" "$src/world_base_combat.cpp" "$src/sensor_combat.cpp" "$src/world_sensor_combat.cpp" "$src/air_port_combat.cpp" "$src/world_air_port_combat.cpp" "$src/defense_abilities.cpp" "$src/world_defense_abilities.cpp" "$src/land_combat.cpp" "$src/battle_entry.cpp" "$src/world_battle_entry.cpp" "$src/world_battle_entry_probe.cpp" -o "$1"

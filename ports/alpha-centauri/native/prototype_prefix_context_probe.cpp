@@ -1,0 +1,16 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+#include "prototype_prefix_context.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+static uint32_t get(const uint8_t* p){return (uint32_t)p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);}
+static bool emit(uint32_t n){uint8_t b[4];for(unsigned i=0;i<4;++i){b[i]=(uint8_t)n;n>>=8;}return fwrite(b,1,4,stdout)==4;}
+static uint8_t* read(const char* path,size_t& n){FILE* f=fopen(path,"rb");if(!f)return nullptr;fseek(f,0,SEEK_END);long k=ftell(f);rewind(f);if(k<=0 || k>64*1024*1024){fclose(f);return nullptr;}auto* b=(uint8_t*)malloc((size_t)k);if(!b){fclose(f);return nullptr;}n=(size_t)k;if(fread(b,1,n,f)!=n){free(b);b=nullptr;}fclose(f);return b;}
+static uint32_t whole(const alpha::OriginalWorld& w,const alpha::PrototypePrefixFact& q,const uint8_t* term,size_t length){uint32_t h=2166136261u;auto add=[&](const void* data,size_t n){const auto* p=(const uint8_t*)data;for(size_t i=0;i<n;++i)h=(h^p[i])*16777619u;};add(&w,sizeof w);add(w.original_bytes(),w.original_size());add(w.current_monuments().data,w.current_monuments().size);add(w.tile(0),w.game().map.info.tile_count*sizeof(alpha::OriginalMapTile));add(w.vehicle(0),w.game().vehicle_count*sizeof(alpha::OriginalVehicle));add(w.base(0),w.game().base_count*sizeof(alpha::OriginalBase));add(w.prototype(0),512*sizeof(alpha::OriginalPrototype));add(w.faction(0),8*sizeof(alpha::OriginalFactionState));add(w.faction_definition(0),8*sizeof(alpha::OriginalFactionDefinition));add(&q,sizeof q);add(term,length);return h;}
+int main(int argc,char** argv){if(argc!=4)return 20;size_t n;auto* bytes=read(argv[1],n);if(!bytes)return 20;alpha::OriginalWorld w;if(w.load(bytes,n,123)!=alpha::WorldLoadError::ok)return 20;free(bytes);bytes=read(argv[2],n);if(!bytes || n<60)return 20;const size_t length=get(bytes+56);if(length!=n-60)return 20;alpha::PrototypePrefixFact fact{};memcpy(fact.bytes,bytes,52);fact.observation=(alpha::PrototypePrefixObservation)get(bytes+52);const auto variant=(alpha::Variant)atoi(argv[3]);const auto before=whole(w,fact,bytes+60,length);alpha::PrototypePrefixComparison result;memset(&result,0x5a,sizeof result);const auto error=alpha::world_prototype_prefix_compare(w,variant,fact,bytes+60,length,result);if(!emit((uint32_t)error))return 20;
+ if(error==alpha::PrototypePrefixError::ok){if(!emit((uint32_t)result.sign) || !emit(result.logicalBytesCompared) || !emit(result.fromOwnedHistory?1:0))return 20;const auto old=result;if(alpha::world_prototype_prefix_compare(w,(alpha::Variant)99,fact,bytes+60,length,result)!=alpha::PrototypePrefixError::bad_state || memcmp(&old,&result,sizeof result))return 21;}
+ else{const auto* p=(const uint8_t*)&result;for(size_t i=0;i<sizeof result;++i)if(p[i]!=0x5a)return 21;}
+ if(whole(w,fact,bytes+60,length)!=before)return 21;
+ const void* aliases[]={&w,&fact,bytes+60,w.original_bytes(),w.current_monuments().data,w.tile(0),w.vehicle(0),w.base(0),w.prototype(0),w.faction(0),w.faction_definition(0)};
+ for(const auto* a:aliases)if(a){auto& out=*(alpha::PrototypePrefixComparison*)const_cast<void*>(a);if(alpha::world_prototype_prefix_compare(w,variant,fact,bytes+60,length,out)!=alpha::PrototypePrefixError::bad_state)return 21;}
+ const bool same=whole(w,fact,bytes+60,length)==before;free(bytes);return same?0:21;}

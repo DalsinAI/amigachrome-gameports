@@ -14,7 +14,7 @@ StableIntakeError world_fresh_energy(const OriginalWorld&w,const Rules&t,const B
  FreshEnergyResult next{};auto e=world_convoy_flows(w,t,b,r,id,s.intake,next.convoys);if(e!=StableIntakeError::ok)return e;
  auto stage=s.intake;stage.terraform_reduction_before=next.convoys.terraform_reduction_after;stage.base_energy_before=next.convoys.base_energy_after;
  e=world_stable_intake(w,t,b,r,id,stage,next.intake);if(e!=StableIntakeError::ok)return e;
- WorldEnergyStage accounting{next.intake.intake[2],next.convoys.to[2],s.commerce,s.energy_grid,next.convoys.from[2],s.intake.worker.upkeep_state};
+ UpkeepWorldEnergyStage accounting{next.intake.intake[2],next.convoys.to[2],s.commerce,s.energy_grid,next.convoys.from[2],s.intake.worker.upkeep_state};
  auto error=world_energy_accounting(w,id,accounting,next.energy);if(error!=EnergyError::ok)return convert(error);
  error=world_energy_shortfall_orders(w,id,next.energy.accounting.surplus,next.shortfall);if(error!=EnergyError::ok)return convert(error);
  output=next;return StableIntakeError::ok;
