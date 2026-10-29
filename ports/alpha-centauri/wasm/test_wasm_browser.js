@@ -99,9 +99,22 @@ function serve(root) {
       await page.waitForTimeout(300);
       if (!/FRONTEND MAP RC/.test(await logText())) await key('q'); // first Q may warn about unsaved turns
       step('back to title', await waitLog(/FRONTEND MAP RC \d+[^\n]*/));
+      // Play a saved game: the Amiga file requester is a page dialog.
+      const draws = (await logText()).match(/DRAW selected=/g).length;
+      await key('p');
+      await page.waitForSelector('#requester[open]', { timeout: 30000 });
+      await shot('06-requester.png');
+      await page.click('#requester-list button:text-matches("AlphaPlay-001\\\\.SAV", "i")');
+      await page.waitForFunction((n) => (Module.alphaLog.join('\n').match(/DRAW selected=/g) || []).length > n, draws, { timeout: 120000 });
+      step('saved game reopened', (await logText()).split('\n').filter((l) => /Turn \d+, mission year/.test(l) || /^PLAY /.test(l)).slice(-1)[0] || 'map drawn');
+      await page.waitForTimeout(500);
+      await canvasShot('07-saved-game.png');
+      await key('q');
+      await page.waitForFunction(() => (Module.alphaLog.join('\n').match(/FRONTEND MAP RC/g) || []).length >= 2, null, { timeout: 30000 });
+      step('back to title again', 'FRONTEND MAP RC');
       await key('q');
       step('exit', await waitLog(/FRONTEND EXIT RC \d+/));
-      await shot('06-exited.png');
+      await shot('08-exited.png');
     }
   } catch (e) {
     errors.push('test: ' + e.message);

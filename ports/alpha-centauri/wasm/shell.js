@@ -329,6 +329,7 @@
     $('start').disabled = true;
     status('Running. Click the game to give it the keyboard.');
     FS.chdir(GAME);
+    $('game').scrollIntoView();
     canvas.focus();
     try { Module.callMain([]); } catch (e) { if (!(e && e.name === 'ExitStatus')) { out(String(e), true); status('The game stopped: ' + e); } }
   });
