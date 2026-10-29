@@ -1,0 +1,33 @@
+{
+  "scope": "Explicit original five-phase psych/social proposal only; no World/authority/accounting mutation/upkeep/turn/UI/save",
+  "hostAndIndependent68040": {
+    "cases": 3121,
+    "accepted": 3080,
+    "invalid": 32,
+    "overflow": 9,
+    "outputSHA256": "5af91162845c91cca3e2c3f631abce0d153e3f06b6b8e876ec4d3cd36b52fba7"
+  },
+  "directBufferAndCapacityControls": 6,
+  "originalDifferential": {
+    "contextsEachEdition": 1536,
+    "fieldsPerContext": 100,
+    "instructionPatches": 0,
+    "importsOrCallbackStubs": 0,
+    "wholeSeededMemoryCompared": true,
+    "limits": "Raw-ability design-owner0 prototypes0..6and15, stackrepairflag0; no FREEABIL or broken-stack repair"
+  },
+  "normalSDK": {
+    "builds": 2,
+    "byteIdentical": true,
+    "SHA256": "9ba14dbb99484b3b464c26283458dbf9634bb95d5c71d8abf6b587f192b179a4",
+    "AmigaOS": "UNRUN"
+  },
+  "CI": "UNRUN",
+  "inheritance": {
+    "parent": "db44ada225293398ada1000b44a361b597dca7c9",
+    "coreFilesUnchanged": 178,
+    "parentWorkflowCommands": 115,
+    "currentWorkflowCommands": 117,
+    "missingParentCommands": []
+  }
+}

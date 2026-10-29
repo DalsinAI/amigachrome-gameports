@@ -1,0 +1,185 @@
+{
+  "scope": "Reject every known combat input/output overlap before reading input facts or output-owned storage",
+  "suites": {
+    "alias": {
+      "host": {
+        "cases": 24,
+        "poisonedInputNoRead": true,
+        "inputBytesUnchanged": true,
+        "outputSHA256": "83619056087be9152e51c31bed9deb17ad442d2b05fadeb7d09045e5c77b216e",
+        "binarySHA256": "14523cbd9e1f7f5f6ce492eb96f922a42573684879f8ef0736c9ad8ec24e22fe",
+        "native": "UNRUN"
+      },
+      "independent68040": {
+        "cases": 24,
+        "poisonedInputNoRead": false,
+        "inputBytesUnchanged": true,
+        "outputSHA256": "83619056087be9152e51c31bed9deb17ad442d2b05fadeb7d09045e5c77b216e",
+        "binarySHA256": "2ce3a11c4813c6f8b3b2905ded3bc49a85a0cff8c068ac5e2df31f7529328b07",
+        "native": "UNRUN"
+      }
+    },
+    "resolution": {
+      "host": {
+        "worlds": 28,
+        "counts": {
+          "accepted": 532,
+          "rejected": 4004,
+          "retreated": 44,
+          "attacker_deleted": 234,
+          "defender_deleted": 222,
+          "defender_captured": 32,
+          "held_interlude": 12,
+          "rounds": 7914,
+          "draws": 15828
+        },
+        "outputSHA256": "43343fb1290fcf080b043033a947af24800723a1535a570678085d0864d23ab0",
+        "binarySHA256": "ea2fcfc6d334f54249c50f677772f1a4cd6a8656eaad8b5a6f2ad68cae48f53c",
+        "native": "UNRUN"
+      },
+      "independent68040": {
+        "worlds": 28,
+        "counts": {
+          "accepted": 532,
+          "rejected": 4004,
+          "retreated": 44,
+          "attacker_deleted": 234,
+          "defender_deleted": 222,
+          "defender_captured": 32,
+          "held_interlude": 12,
+          "rounds": 7914,
+          "draws": 15828
+        },
+        "outputSHA256": "43343fb1290fcf080b043033a947af24800723a1535a570678085d0864d23ab0",
+        "binarySHA256": "a0912f164cca53e6ad08c4ff0ec35a2de2e3fd8974fedabae8a4645277bf717a",
+        "native": "UNRUN"
+      }
+    },
+    "artifact": {
+      "host": {
+        "cases": 1062,
+        "rejectionGuards": 24426,
+        "heldRouteChecks": 7434,
+        "outputSHA256": "2f397b3826ff15dd4e092a8c0ac6668d04dae165140454355f979f3fe8248ba1",
+        "binarySHA256": "03c9efb7b17b784cf811cf3c4df5c0048f3d9d138ec0e7d9108456d947d1d634",
+        "native": "UNRUN"
+      },
+      "independent68040": {
+        "cases": 1062,
+        "rejectionGuards": 24426,
+        "heldRouteChecks": 7434,
+        "outputSHA256": "2f397b3826ff15dd4e092a8c0ac6668d04dae165140454355f979f3fe8248ba1",
+        "binarySHA256": "a5b83ba84cfc436a89ed3fd1730bda2f2e4ce7d2d920c519a3604aac21779964",
+        "native": "UNRUN"
+      }
+    },
+    "engagement": {
+      "host": {
+        "worlds": 26,
+        "counts": {
+          "accepted": 2352,
+          "rejected": 1860,
+          "retreated": 28,
+          "attacker_casualty": 1339,
+          "defender_casualty": 985,
+          "rounds": 22559,
+          "draws": 39730
+        },
+        "outputSHA256": "ff9086903642f2a94932f7d312b7827ac44d58eddfd64a65de2273cbe8efbcdf",
+        "binarySHA256": "7ebfc287a9a8dd17f5d92452322e7697cf6b967a64a5c8134658fb776847fa61"
+      },
+      "independent68040": {
+        "worlds": 26,
+        "counts": {
+          "accepted": 2352,
+          "rejected": 1860,
+          "retreated": 28,
+          "attacker_casualty": 1339,
+          "defender_casualty": 985,
+          "rounds": 22559,
+          "draws": 39730
+        },
+        "outputSHA256": "ff9086903642f2a94932f7d312b7827ac44d58eddfd64a65de2273cbe8efbcdf",
+        "binarySHA256": "ae78f4eada1f359972e8a62edf1eb7b019b1f60b8762d1856611313e7590517e"
+      }
+    },
+    "aftermath": {
+      "host": {
+        "worlds": 30,
+        "counts": {
+          "accepted": 299,
+          "rejected": 4561,
+          "held_scope": 308,
+          "held_retreat_capture": 76,
+          "held_monument_ui": 133,
+          "attacker_deleted": 222,
+          "defender_deleted": 77,
+          "rounds": 5006,
+          "draws": 10012,
+          "runtime_no_write_guards": 32
+        },
+        "outputSHA256": "fa4518382078cb432167f6e0ed2d62f50eb527608970e6815ccca191386f09cc",
+        "binarySHA256": "76a9a117c878f6de645fabf5e0b6c7809e12af117720107367b546ac5ead885c",
+        "native": "UNRUN"
+      },
+      "independent68040": {
+        "worlds": 30,
+        "counts": {
+          "accepted": 299,
+          "rejected": 4561,
+          "held_scope": 308,
+          "held_retreat_capture": 76,
+          "held_monument_ui": 133,
+          "attacker_deleted": 222,
+          "defender_deleted": 77,
+          "rounds": 5006,
+          "draws": 10012,
+          "runtime_no_write_guards": 32
+        },
+        "outputSHA256": "fa4518382078cb432167f6e0ed2d62f50eb527608970e6815ccca191386f09cc",
+        "binarySHA256": "48c67f29615194be5bb93779bacbf5e379d3cdf6b4c59c23435470a675de87cd",
+        "native": "UNRUN"
+      }
+    }
+  },
+  "sdk": {
+    "alias": {
+      "sha256": "09f44f0c7bb670413973147eb209ece6f307fb0a04f3391b485de28f103d05b4",
+      "freshBuildsByteIdentical": true,
+      "execution": "UNRUN"
+    },
+    "aftermath": {
+      "sha256": "9da9abb7f4a5966cac8a07468cb3a6bfa5765472a6d90295ac9922da6aa3afec",
+      "freshBuildsByteIdentical": true,
+      "execution": "UNRUN"
+    }
+  },
+  "sourceIdentity": {
+    "parent": "8b16ce63ad2775c2483e271a1918162833f27680",
+    "unchangedParentCpp": 324,
+    "changedParentCpp": [
+      "ports/alpha-centauri/native/artifact_capture.cpp",
+      "ports/alpha-centauri/native/land_engagement.cpp",
+      "ports/alpha-centauri/native/land_resolution.cpp"
+    ],
+    "parentCommands": 307,
+    "finalCommands": 309,
+    "allParentCommandsRetained": true
+  },
+  "baselineFailure": {
+    "diagnostic": "Expected old alias-order bug reproduced; not a passing candidate",
+    "exitCode": 1,
+    "stderrSHA256": "9109125c8f41174ff417d08fe5c4299f620c1ddd52df708e6778f960571c4f8c",
+    "binarySHA256": "4a200e688b411d835dc75aba2d3f64ef5917a13945d911f6ce0fd99cb14cec42"
+  },
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED",
+  "held": [
+    "full caller promotion/random state",
+    "legal attack/session/event lifecycle",
+    "native/frontend",
+    "variable-length save",
+    "upkeep/AI/diplomacy/full game"
+  ]
+}

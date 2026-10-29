@@ -4,7 +4,7 @@
 #include "base_commerce.h"
 #include "world_technology_effects.h"
 namespace alpha {
-struct WorldCommerceResult {
+struct UpkeepWorldCommerceResult {
  int32_t rank,technology_count,total;
  int32_t partner_base[8],import_value[8],export_value[8],fresh_technology_bonus[8];
 };
@@ -19,6 +19,6 @@ struct WorldCommerceResult {
  * All failure paths/aliases preserve output and all inputs. No world mutation,
  * alien grid, foreign worker allocation or full-turn claim. */
 CommerceError world_base_commerce(const OriginalWorld&,const Rules&,size_t base,
- const int32_t*fresh_allbase_energy,size_t count,WorldCommerceResult&);
+ const int32_t*fresh_allbase_energy,size_t count,UpkeepWorldCommerceResult&);
 }
 #endif

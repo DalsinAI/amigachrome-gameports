@@ -8,7 +8,7 @@ maintenance routine. Raw energy surplus never substitutes for economy income.
 
 The resource and maintenance components retain their existing recovered-source
 attribution. Energy distribution is the explicitly documented pinned Thinker
-default restoration policy in `ENERGY-ALLOCATION.md`, rather than a claim that
+default restoration policy in `UPKEEP-ENERGY-ALLOCATION.md`, rather than a claim that
 the missing original energy-allocation body has been recovered.
 
 The caller supplies the current running pre-base credit ledger, maintenance

@@ -8,13 +8,13 @@ import test_world_base_psych as psych_world
 import test_world_energy_allocation as energy_world
 import test_proposed_energy_allocation as proposed
 import test_world_base_minerals as minerals
-import test_base_minerals as mineral_leaf
+import test_upkeep_base_minerals as mineral_leaf
 import test_world_convoy_nutrients as convoy
 from test_base_nutrients import expected as nutrient_expected
-from test_base_energy import expected as energy_expected
+from test_upkeep_base_energy import expected as energy_expected
 intake=worker.intake
 HERE=Path(__file__).resolve().parent
-SOURCES=list(dict.fromkeys([n for n in worker.SOURCES if n!='world_worker_upkeep_probe']+'energy_allocation world_energy_allocation base_psych world_base_psych world_worker_resolution world_worker_resolution_probe'.split()))
+SOURCES=list(dict.fromkeys([n for n in worker.SOURCES if n!='world_worker_upkeep_probe']+'upkeep_energy_allocation world_energy_allocation upkeep_base_psych world_base_psych world_worker_resolution world_worker_resolution_probe'.split()))
 def rules():
  t=intake.sections(energy_world.rules());row,col,_=intake.ROW['nutrient_req_citizen'];t['RULES'][row][col]='2';t['CITIZENS']=[['Technician','Technicians','None','Disable','3','0','0'],['Doctor','Doctors','None','Disable','0','2','0'],['Librarian','Librarians','None','Disable','0','0','3'],['Empath','Empaths','T4','Disable','2','2','0'],['Engineer','Engineers','T5','Disable','3','0','3'],['Transcend','Transcends','T6','Disable','4','2','4'],['Other','Others','T7','Disable','3','3','3'],['Drone','Drones'],['Worker','Workers'],['Talent','Talents']];return intake.material(t)
 def fixture(case,version=9):

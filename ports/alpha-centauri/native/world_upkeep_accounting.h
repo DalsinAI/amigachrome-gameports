@@ -25,7 +25,7 @@ struct WorldUpkeepAccountingResult {
  */
 StableIntakeError world_upkeep_accounting(const OriginalWorld&,const Rules&,
  const UnitDefinitions&,const BasicRules&,const WorldRules&,const ResourceInfo&,
- const CitizenDefinitions&,size_t base,const WorkerResolutionStage&,
+ const UpkeepCitizenDefinitions&,size_t base,const WorkerResolutionStage&,
  WorldUpkeepAccountingResult&,uint32_t* projected_support_states,size_t capacity);
 }
 #endif
