@@ -5,7 +5,7 @@
  * Integration: mod_bases_reset, unit_support_plan, base_can_riot,
  * mon_secrets_of_tech and dword_90EA3C are WP2's and full_game_turn is in
  * WP2's base_deps.cpp, so those weak copies were removed; SkipTechScreenB is
- * defined here (WP2 no longer has a copy). need_police stays weak for WP6.
+ * defined here (WP2 no longer has a copy). need_police is WP6's (integration.cpp).
  * Copyright (c) Thinker Mod authors, MIT licence; see engine/THINKER-LICENSE.
  */
 #include "engine.h"
@@ -17,11 +17,6 @@ namespace engine {
 
 static int s_skip_tech_screen_b = 0;
 int* SkipTechScreenB = &s_skip_tech_screen_b;
-
-__attribute__((weak)) bool need_police(int faction_id) {
-    Faction& f = Factions[faction_id];
-    return f.SE_police > -2 && f.SE_police < 3 && !has_project(FAC_TELEPATHIC_MATRIX, faction_id);
-}
 
 } // namespace engine
 } // namespace alpha

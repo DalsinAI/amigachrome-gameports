@@ -104,6 +104,18 @@ static void setup_rules() {
         Morale[i].name = morale_name;
         Morale[i].name_lifecycle = morale_name;
     }
+    // Integration: WP7's world_climate (run after terraforming that changes
+    // the altitude) divides by the #WORLDBUILDER values; alpha.txt defaults.
+    {
+        CWorldbuilder& w = *WorldBuilder;
+        w.land_base = 384; w.land_mod = 256; w.continent_base = 12; w.continent_mod = 24;
+        w.hills_base = 1; w.hills_mod = 2; w.plateau_base = 4; w.plateau_mod = 8;
+        w.rivers_base = 8; w.rivers_rain_mod = 12; w.solar_energy = 14; w.thermal_band = 14;
+        w.thermal_deviance = 8; w.global_warming = 8; w.sea_level_rises = 5;
+        w.cloudmass_peaks = 5; w.cloudmass_hills = 3; w.rainfall_coeff = 1;
+        w.deep_water = 15; w.shelf = 10; w.plains = 15; w.beach = 10; w.hills = 10; w.peaks = 25;
+        w.fungus = 1;
+    }
     Rules->move_rate_roads = RoadRate;
     Rules->max_airdrop_rng_wo_orbital_insert = 8;
     Rules->artillery_max_rng = 2;
@@ -214,6 +226,9 @@ static void set_tile(int x, int y, int alt, uint32_t items = 0, int rocky = 0) {
     sq->val3 = (uint8_t)((rocky << 6) | (sq->val3 & 0x3F));
     sq->items = (sq->items & (BIT_BASE_IN_TILE | BIT_VEH_IN_TILE)) | items;
     sq->region = (uint8_t)(alt >= ALT_SHORE_LINE ? 1 : 65);
+    // Integration: WP7's world_climate re-derives every altitude from the
+    // detail elevation (world_shorelines), so keep the two consistent.
+    alt_put_detail(x, y, (uint8_t)(*MapSeaLevel + AltNatural[alt] + 1));
 }
 
 /* Land world (alt 3, rolling, moist) with factions 1 (human), 2 and 3 (AI). */
@@ -222,9 +237,11 @@ static void setup_world(int width = 24, int height = 16) {
     *MapAreaX = width;
     *MapAreaY = height;
     CHECK_EQ(map_init(), 0);
+    memcpy(AltNatural, ElevDetail, sizeof(ElevDetail)); // as load_daemon_bytes
     for (int y = 0; y < height; y++) {
         for (int x = y & 1; x < width; x += 2) {
             MAP* sq = mapsq(x, y);
+            alt_put_detail(x, y, (uint8_t)(*MapSeaLevel + AltNatural[ALT_SHORE_LINE] + 1));
             sq->climate = (uint8_t)((ALT_SHORE_LINE << 5) | TILE_MOIST);
             sq->val3 = 0;
             sq->items = 0;
