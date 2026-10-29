@@ -1059,3 +1059,18 @@ execution passes those same 18,432/20 controls and all 498 original-tutorial
 relocations with RC0. The isolated lab is stopped and restored. Independent
 big-endian CI remains required before merge; evidence is recorded in
 `STACK-EVIDENCE-20261025.json`.
+
+## Normal human research pool (draft, native unrun)
+
+`research_pool.h` queries the original directed-human candidate pool using the
+PR86 owned eligibility API. It preserves original category ties, global first
+offer, modulo-three ranking rotation and starting-ID exceptions. Blind, AI and
+turn-zero paths explicitly require automatic selection; this addition does not
+implement that selection, discovery awards or turn advancement. No choice
+controls are exposed in the frontend. See `RESEARCH-POOL.md` and
+`RESEARCH-POOL-EVIDENCE-20261025.json` for source and qualification limits.
+
+CI runs 115 raw contexts plus two invalid snapshot controls and 64 owned worlds
+(512 faction queries) on both host sanitizers and independent 68040. Normal SDK
+raw/world builds pass; actual AmigaOS execution remains unrun and is a merge
+gate. This stacked draft depends on PR86 and preserves separate PR89 unchanged.
