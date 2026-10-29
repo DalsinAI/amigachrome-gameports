@@ -54,7 +54,10 @@ void original_body() {
     (*BaseCurrent)->mineral_inefficiency = 0; // ?
     (*BaseCurrent)->mineral_surplus -= (*BaseCurrent)->mineral_inefficiency; // ?
     (*BaseCurrent)->mineral_surplus_final = (*BaseCurrent)->mineral_surplus;
-    (*BaseCurrent)->eco_damage /= 8;
+    // Explicit instruction correction for signed raw ecology: original SAR3,
+    // not C++ signed division toward zero. Use a wide independent expression.
+    const int64_t raw_damage=(*BaseCurrent)->eco_damage;
+    (*BaseCurrent)->eco_damage=(int32_t)(raw_damage>=0 ? raw_damage/8 : -((-raw_damage+7)/8));
     int planet_eco_factor = PlayersData[faction_id].planet_ecology + 16;
     if ((*BaseCurrent)->eco_damage > 0) {
         int planet_modifier = (*BaseCurrent)->eco_damage;

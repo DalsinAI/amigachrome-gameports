@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Original mineral stage: source body plus independent checked integer model."""
-import argparse,hashlib,json,os,struct,subprocess
+import argparse,hashlib,json,os,random,struct,subprocess
 from pathlib import Path
 SRC=Path(__file__).resolve().parent
 FIELDS='intake convoy_to convoy_from maintenance raw_eco_damage population clean_minerals_modifier satellites atrocities tectonic_detonations sea_level sea_level_rises tech_ranking transcendent_techs planet native_life faction_difficulty global_difficulty queue_id'.split()
@@ -14,7 +14,7 @@ def checked(n):
 def divide(n,d):return (abs(n)//d)*(1 if n>=0 else -1)
 def model(values,flags):
  d=dict(zip(FIELDS,values));d.update((n,bool(flags&(1<<i))) for i,n in enumerate(FLAGS))
- invalid=flags&~0x7fff or any(d[n]<0 for n in ['intake','convoy_to','convoy_from','maintenance','raw_eco_damage','population','clean_minerals_modifier','atrocities','tectonic_detonations','tech_ranking','transcendent_techs']) or (not d['expansion'] and d['tectonic_detonations']!=0) or d['population']>127 or d['transcendent_techs']>d['tech_ranking'] or not(0<=d['native_life']<=2) or (d['human'] and not(0<=d['faction_difficulty']<=5)) or (not d['human'] and not(0<=d['global_difficulty']<=5))
+ invalid=flags&~0x7fff or any(d[n]<0 for n in ['intake','convoy_to','convoy_from','maintenance','population','clean_minerals_modifier','atrocities','tectonic_detonations','tech_ranking','transcendent_techs']) or (not d['expansion'] and d['tectonic_detonations']!=0) or d['population']>127 or d['transcendent_techs']>d['tech_ranking'] or not(0<=d['native_life']<=2) or (d['human'] and not(0<=d['faction_difficulty']<=5)) or (not d['human'] and not(0<=d['global_difficulty']<=5))
  if invalid:return [1]+[SENTINEL]*7
  try:
   bonus=int(d['quantum_converter'] or d['singularity_inductor'])+d['robotic_assembly']+d['genejack']+d['nanoreplicator']+d['bulk_matter']
@@ -76,6 +76,15 @@ def controls():
  assert model(v,(1<<4)|(1<<13))[1:5]==[18,3,15,15]
  rows.append((v,(1<<4)|(1<<13)))
  rows.append((baseline,0x8000))
+ # Original forest-derived raw ecology can be negative; initial SAR3 floors
+ # negative values, unlike the remaining signed divisions toward zero.
+ rng=random.Random(20261025)
+ for expansion in [False,True]:
+  for i in range(8192):
+   flags=rng.randrange(1<<14)|(0x4000 if expansion else 0);v=[rng.randrange(0,101),rng.randrange(9),rng.randrange(7),rng.randrange(7),-rng.randrange(1,1025),rng.randrange(128),rng.randrange(40),rng.randrange(-10,150),rng.randrange(5),rng.randrange(4) if expansion else 0,rng.randrange(-10,151),rng.randrange(-10,101),rng.randrange(1,1001),0,rng.randrange(-6,7),rng.randrange(3),rng.randrange(6),rng.randrange(6),rng.choice([0,-34,-37,-65,-68,320])];rows.append((v,flags))
+  for damage in [-2147483648,-2147483647,-4096,-257,-256,-169,-168,-167,-129,-128,-127,-65,-64,-63,-33,-32,-31,-25,-24,-23,-22,-21,-20,-17,-16,-15,-9,-8,-7,-2,-1,0]:
+   for f in [0,1,0x401,0x1801,0x3fff]:
+    flags=f|(0x4000 if expansion else 0);v=[60,3,2,1,damage,8,0,0,1,1 if expansion else 0,0,5,600,0,2,1,3,3,-65 if expansion else -34];rows.append((v,flags))
  return rows
 
 def main():
