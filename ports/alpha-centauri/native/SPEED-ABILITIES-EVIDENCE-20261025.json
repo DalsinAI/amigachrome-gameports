@@ -1,0 +1,98 @@
+{
+  "status": "DRAFT: edition-corrected host/both-original-helper checks passed; final-head CI and actual AmigaOS pending",
+  "scope": "Read-only saved-design speed ability resolution shared by vehicle speed and land movement pricing",
+  "source": {
+    "project": "OpenSMACX",
+    "pin": "2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c",
+    "functions": [
+      "has_abil",
+      "speed_proto",
+      "speed"
+    ],
+    "license": "GPL-3.0-or-later"
+  },
+  "host": {
+    "syntheticContexts": 462,
+    "accepted": 449,
+    "rejected": 13,
+    "sanitizers": [
+      "ASan",
+      "UBSan"
+    ],
+    "independentRawWirePython": true,
+    "adaptedGPLReference": true,
+    "originalTutorials": [
+      {
+        "name": "Explore.SC",
+        "inputSHA256": "7b828aa4c06772d0e961c66729a1d80a389e603b2dc58e09faa05ba2816668d0",
+        "expected": {
+          "version": "7",
+          "vehicles": "4",
+          "stats": "16",
+          "queries": "1248",
+          "digest": "3dcc5b95",
+          "rc": "0"
+        },
+        "unchanged": true
+      },
+      {
+        "name": "Build.SC",
+        "inputSHA256": "bf56d50d18866f715a036cc5322bef579455af5f953d1981a415fcf0dafde310",
+        "expected": {
+          "version": "7",
+          "vehicles": "7",
+          "stats": "28",
+          "queries": "1248",
+          "digest": "0bded644",
+          "rc": "0"
+        },
+        "unchanged": true
+      },
+      {
+        "name": "conquer.SC",
+        "inputSHA256": "d53a50102abbb3e58b634693b8136ec4ef2c5dca39d8723e97780fb9579e6b45",
+        "expected": {
+          "version": "7",
+          "vehicles": "9",
+          "stats": "36",
+          "queries": "1248",
+          "digest": "118a2054",
+          "rc": "0"
+        },
+        "unchanged": true
+      }
+    ],
+    "landPriceRegressionContexts": 248
+  },
+  "privateOriginalHelper": {
+    "worldContexts": 449,
+    "queries": 8883,
+    "outputSHA256": "3c7be60a2a77ac8b8ad47e86bd5236d4445cf4269c0a720bd769b917cef4af59",
+    "inputSHA256": "5d42550077341154bd0d5b2600aae58e77de33f315b560a0796fa02ea964c17a",
+    "rc": 0,
+    "originalHelper": "Original SMAC has_abil0x5d6310 or SMAX has_abil0x5bf1f0 + has_tech0x5b9f20, unchanged instructions, explicit fixture globals",
+    "unchangedCodePages": {
+      "tech": "7c32573c77177ff0cd507f2b6ac96304f6f6bc5ac82d6c8f5dfa708f4cea04a5",
+      "ability": "e9c8935ae9faf7e0e1d1a450c8f05c887a95d009cff8c897dd0f6dda81afb67d",
+      "baseability": "a32d82c6536cfb538f6e4a92c235d213c7f0281c8e2802cabb0efa1f78643f15"
+    },
+    "fullGameExecution": false,
+    "scope": "Both actual original engine ability helpers, only speed-related query bits; no Deep Radar/Nethack or full-game execution"
+  },
+  "native": {
+    "status": "Normal private SDK build only; actual AmigaOS UNRUN",
+    "probeSHA256": "27b6b6b3cb46e76b95066cb57eb2482b65d86155d4ecd190d686678465bf6692"
+  },
+  "limits": [
+    "Original Alpha Centauri has_abil checks raw design flags only; FREEABIL metadata is ignored in that component/engine profile. Expansion grants use design-owner technology.",
+    "Design owner is prototype_id/64; vehicle owner remains separate for morale/Maritime Control Center",
+    "Only speed queried bits are resolved: Slow, Antigrav, Air Superiority and expansion Fuel Nanocells; not a general Deep Radar/Nethack/other-ability API",
+    "Predefined designs bypass faction grants; existing raw flags bypass their own technology requirement; owner FREEABIL grants require prerequisite technology",
+    "Base/current component ID profiles remain explicit; no implicit base/SMAX ID migration or new runtime edition inference",
+    "Malformed bonus metadata and missing required technology context reject before output replacement; no unsafe original indexing emulated",
+    "Original speed byte overflow handling retained; no hidden mod maximum or wrapping",
+    "No world mutation, RNG consumption, legal movement exposure, turn advancement, combat or AI; clear-land action gates remain unchanged",
+    "Previous WORLD-UNIT-STATS evidence/native hashes are historical; no claim they qualify this updated artifact",
+    "Both actual engine ability helpers execute privately over controlled fixtures; original base speed_proto0x5d9400 also calls its raw-only helper0x5d6310. No original full-speed/morale/turn or full-game execution claimed."
+  ]
+}

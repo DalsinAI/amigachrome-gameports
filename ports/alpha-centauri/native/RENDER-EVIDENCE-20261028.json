@@ -1,0 +1,32 @@
+{
+  "status": "host, big-endian 68040 and AROS 68040 control-qualified; full viewer link/run pending (SDL2 SDK and owner assets unavailable here)",
+  "scope": "Generic CVR vehicle assembly with faction colours, map overlays and fog, minimap, message log and read-only base window; synthetic fixtures only",
+  "hostValidation": {
+    "addressAndUndefinedSanitizers": true,
+    "cvrVehicle": {"equivInfantryViews": 32, "equivSpeederViews": 32, "colourModeViews": 192, "rejectedAssemblies": 8, "recipeCases": 17, "tintCases": 7, "setControls": 6},
+    "mapRender": {"overlayRuns": 17, "overlayProbes": 61, "minimapRuns": 3, "messageChecks": 89, "baseWindowCases": 3, "mapViewVariants": 2, "goldenDigests": 26}
+  },
+  "bigEndianValidation": {"toolchain": "m68k-linux-gnu-g++ -m68040 -static under qemu-m68k -cpu m68040", "cvrVehicle": "PASS", "mapRender": "PASS, all 26 golden digests identical"},
+  "arosValidation": {
+    "toolchain": "m68k-amigaos-g++ 16.2.0 open3, -m68040 -m68881 -O2 -fno-exceptions -fno-rtti",
+    "machine": "FS-UAE 3.2.35, A1200, 68040/FPU, AROS m68k 20261027",
+    "commands": 9,
+    "outputLines": 208,
+    "comparison": "byte-identical to the sanitizer host build output for the same commands",
+    "digests": {
+      "overlay-viewer2-art": "fd2894c6",
+      "overlay-omniscient-glyphs": "59a18fb0",
+      "minimap-viewer2": "62d57b2d",
+      "messages": ["be558aed", "04aaa7e7", "817299e5", "2b9b047d"],
+      "basewin-saved-owner": "7bcdac41"
+    },
+    "equivalence": "infantry and speeder model-colour assembly identical to CvrUnitAssembly for 32 views each"
+  },
+  "notClaimed": [
+    "original atlas variant selection for rivers, roads and borders",
+    "ter1.pcx transparency keys on owner art",
+    "unit shadows, animation or original viewport",
+    "current-sight hiding of units",
+    "full viewer execution with owner assets"
+  ]
+}

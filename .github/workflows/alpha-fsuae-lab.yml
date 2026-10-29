@@ -1,0 +1,31 @@
+name: Alpha FS-UAE isolated Linux lab
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/alpha-fsuae-lab.yml'
+      - 'scripts/run_alpha_fsuae_lab.sh'
+      - 'scripts/fsuae_capture_swap.c'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  emulator:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install emulator and isolated software display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fs-uae libgl1-mesa-dri python3-pil
+      - name: Boot the actual emulator with its bundled AROS ROM
+        run: |
+          bash scripts/run_alpha_fsuae_lab.sh "$RUNNER_TEMP/fsuae-proof"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: alpha-fsuae-emulator-proof
+          path: ${{ runner.temp }}/fsuae-proof
+          if-no-files-found: error
+          retention-days: 14
+

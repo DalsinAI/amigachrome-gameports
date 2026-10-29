@@ -3,7 +3,10 @@
  */
 #define SDL_MAIN_HANDLED
 #include "pcx_image.h"
+#include "startup_movie.h"
 #include "technology_browser.h"
+#include "play_session.h"
+#include "ui_newgame.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <exec/types.h>
@@ -20,11 +23,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 extern struct IntuitionBase* IntuitionBase;extern struct GfxBase* GfxBase;extern struct Library* CyberGfxBase;
 struct Library* AslBase;
 int alpha_original_view(int argc,char** argv);
 static alpha::PcxImage base_title,expansion_title;
-static uint8_t* frame;static bool expansion=false,music_on=true;static SDL_AudioDeviceID audio_device;
+static uint8_t* frame;static bool expansion=false,expansion_available=false,tutorial_available=false,music_on=true;static SDL_AudioDeviceID audio_device;
 static bool menu_audio_ready=false;
 static uint8_t* audio_data;static Uint32 audio_length,audio_pos;
 static char status[160]="Select a game; open a tutorial, scenario or save.";
@@ -74,26 +78,38 @@ static void draw(struct Window* w){
  const auto& art=expansion?expansion_title:base_title;
  for(int y=0;y<HEIGHT;++y)for(int x=0;x<WIDTH;++x){const auto* rgb=art.rgb((uint32_t)x,(uint32_t)y);auto* p=frame+((size_t)y*WIDTH+x)*3;p[0]=rgb[0];p[1]=rgb[1];p[2]=rgb[2];}
  WritePixelArray(frame,0,0,WIDTH*3,w->RPort,10,24,WIDTH,HEIGHT,RECTFMT_RGB);
- button(w,45,78,220,"Alpha Centauri [A]",!expansion);button(w,277,78,230,"Alien Crossfire [X]",expansion);
- button(w,45,140,462,expansion?"Choose expansion scenario [E]":"Explore original tutorial [E]");
+ button(w,45,78,220,"Alpha Centauri [A]",!expansion);button(w,277,78,230,expansion_available?"Alien Crossfire [X]":"Crossfire unavailable",expansion);
+ button(w,45,140,462,expansion?"Choose expansion scenario [E]":tutorial_available?"Explore original tutorial [E]":"Choose original scenario [E]");
  button(w,45,192,462,"Open original scenario or save... [O]");
  button(w,45,244,462,audio_device?(music_on?"Original menu music: ON [M]":"Original menu music: OFF [M]"):"Original menu music unavailable");
  button(w,45,296,462,"Exit [Q]");
  button(w,45,348,462,"Technology discovery tree [T]");
- FillPixelArray(w->RPort,45,410,600,64,0x00100905u);SetAPen(w->RPort,(ULONG)text_pen);SetDrMd(w->RPort,JAM1);text(w->RPort,58,434,status,true);
- text(w->RPort,58,457,"Read-only preview; campaign restoration in progress.",true);
+ button(w,45,400,462,"Play original intro [V]");
+ button(w,45,640,462,"New game [N]");button(w,45,692,462,"Play a saved game [P]");
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+ if(!expansion){button(w,45,540,600,"Local actions: open world / checkpoint [L]");text(w->RPort,58,610,"Limited movement and facility orders; no End Turn.",true);}
+#endif
+ FillPixelArray(w->RPort,45,462,600,64,0x00100905u);SetAPen(w->RPort,(ULONG)text_pen);SetDrMd(w->RPort,JAM1);text(w->RPort,58,486,status,true);
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+ text(w->RPort,58,509,"Explore is read-only; L opens limited local actions.",true);
+#else
+ text(w->RPort,58,509,"N starts a new game, P plays on from a save; the others are read-only.",true);
+#endif
  printf("FRONTEND variant=%s music=%d device=%lu\n",expansion?"expansion":"base",music_on,(unsigned long)audio_device);fflush(stdout);
 }
-static void open_map(struct Window* w,const char* path){
- char* args[6]={const_cast<char*>("alpha-original-view"),const_cast<char*>(expansion?"expansion":"base"),const_cast<char*>(expansion?"alphax.txt":"alpha.txt"),const_cast<char*>(path),const_cast<char*>("texture.pcx"),const_cast<char*>("Units.pcx")};
+enum MapMode { MAP_VIEW=0,MAP_LOCAL=1,MAP_PLAY=2,MAP_PLAY_CURRENT=3 };
+static void open_map(struct Window* w,const char* path,int mode=MAP_VIEW){
+ static const char* const flags[4]={"","--local","--play","--play-current"};
+ char* args[7]={const_cast<char*>("alpha-original-view"),const_cast<char*>(expansion?"expansion":"base"),const_cast<char*>(expansion?"alphax.txt":"alpha.txt"),const_cast<char*>(path),const_cast<char*>("texture.pcx"),const_cast<char*>("Units.pcx"),const_cast<char*>(flags[mode&3])};
+ const bool local=mode!=MAP_VIEW;
  // The opening-menu loop belongs to this screen. Do not play it as a
  // substitute for the world's not-yet-restored ambient music system.
  release_menu_audio();
- int rc=alpha_original_view(6,args);
+ int rc=alpha_original_view(local?7:6,args);
  restore_menu_audio();
  snprintf(status,sizeof(status),rc==0?"Returned from the original world view.":"Could not open that game/rules profile or a required original asset.");printf("FRONTEND MAP RC %d music_resumed=%d\n",rc,audio_device && music_on);fflush(stdout);ActivateWindow(w);draw(w);
 }
-static void choose_map(struct Window* w){
+static void choose_map(struct Window* w,int mode=MAP_VIEW){
  if(!AslBase){snprintf(status,sizeof(status),"The file requester library is unavailable.");draw(w);return;}
  auto* req=(struct FileRequester*)AllocAslRequestTags(ASL_FileRequest,ASLFR_Window,(ULONG)w,ASLFR_TitleText,(ULONG)"Open an original Alpha scenario or save",ASLFR_InitialDrawer,(ULONG)"PROGDIR:",TAG_DONE);
  if(!req){snprintf(status,sizeof(status),"Could not open the file requester.");draw(w);return;}
@@ -101,7 +117,7 @@ static void choose_map(struct Window* w){
  if(AslRequestTags(req,TAG_DONE)){
   size_t n=strlen(req->fr_Drawer);int used=snprintf(path,sizeof(path),"%s%s%s",req->fr_Drawer,n && req->fr_Drawer[n-1]!=':' && req->fr_Drawer[n-1]!='/'?"/":"",req->fr_File);valid=used>0 && (size_t)used<sizeof(path);
  }
- FreeAslRequest(req);ActivateWindow(w);if(valid)open_map(w,path);else draw(w);
+ FreeAslRequest(req);ActivateWindow(w);if(valid)open_map(w,path,mode);else draw(w);
 }
 static void open_technologies(struct Window* w){
  release_menu_audio();
@@ -110,10 +126,57 @@ static void open_technologies(struct Window* w){
  snprintf(status,sizeof(status),rc==0?"Returned from technology discovery tree.":"Technology rules/browser could not be opened.");
  printf("FRONTEND TECHNOLOGY RC %d music_resumed=%d\n",rc,audio_device && music_on);fflush(stdout);ActivateWindow(w);draw(w);
 }
+/* New game: WP7's ui_newgame screens, drawn with this screen's fonts. */
+static void draw_new_game(struct Window* w,const alpha::ui::NewGameState& state){
+ const auto view=alpha::ui::newgame_view(state);
+ FillPixelArray(w->RPort,45,70,700,700,0x00100905u);SetAPen(w->RPort,(ULONG)text_pen);SetDrMd(w->RPort,JAM1);
+ text(w->RPort,70,112,view.title.c_str());
+ int y=150;
+ for(const auto& line:view.lines){if(y>740)break;
+  if(line.selected)FillPixelArray(w->RPort,60,(UWORD)(y-20),670,26,0x003b2c17u);
+  text(w->RPort,line.heading?70:90,y,line.text.c_str(),!line.heading);y+=line.heading?32:27;}
+ text(w->RPort,70,762,"Cursor keys or 8/2/4/6 choose, RETURN accepts, ESC goes back.",true);
+}
+static void new_game(struct Window* w){
+ auto& game=alpha::play::session();
+ if(!alpha::play::Session::new_game_available()){snprintf(status,sizeof(status),"New games are not in this build.");draw(w);return;}
+ if(game.load_rules("",expansion?1:0)!=alpha::play::PLAY_OK){snprintf(status,sizeof(status),"Rules: %.140s",game.rules_error());draw(w);return;}
+ game.bind();
+ alpha::ui::NewGameState state;alpha::ui::newgame_open(state,(uint32_t)time(nullptr));
+ printf("FRONTEND NEWGAME open\n");fflush(stdout);
+ draw_new_game(w,state);
+ while(!alpha::ui::newgame_done(state)){
+  WaitPort(w->UserPort);struct IntuiMessage* m;
+  while((m=(struct IntuiMessage*)GetMsg(w->UserPort))){const ULONG kind=m->Class;const UWORD code=m->Code;ReplyMsg((struct Message*)m);int key=-1;
+   if(kind==IDCMP_CLOSEWINDOW)key=alpha::ui::NGK_BACK;
+   else if(kind==IDCMP_REFRESHWINDOW){BeginRefresh(w);draw_new_game(w,state);EndRefresh(w,TRUE);}
+   else if(kind==IDCMP_RAWKEY)switch(code){case 0x4c:key=alpha::ui::NGK_UP;break;case 0x4d:key=alpha::ui::NGK_DOWN;break;case 0x4f:key=alpha::ui::NGK_LEFT;break;case 0x4e:key=alpha::ui::NGK_RIGHT;break;default:break;}
+   else if(kind==IDCMP_VANILLAKEY)switch(code){case '8':case 'w':key=alpha::ui::NGK_UP;break;case '2':case 's':key=alpha::ui::NGK_DOWN;break;case '4':case 'a':key=alpha::ui::NGK_LEFT;break;case '6':case 'd':key=alpha::ui::NGK_RIGHT;break;
+    case 13:case 10:key=alpha::ui::NGK_ENTER;break;case 27:case 8:key=alpha::ui::NGK_BACK;break;default:break;}
+   if(key>=0 && !alpha::ui::newgame_done(state) && alpha::ui::newgame_key(state,(alpha::ui::NewGameKey)key)){
+    printf("FRONTEND NEWGAME screen=%d row=%d start=%d\n",(int)state.screen,state.row,state.start_status);fflush(stdout);
+    if(!alpha::ui::newgame_done(state))draw_new_game(w,state);}
+  }
+ }
+ if(state.screen!=alpha::ui::NG_DONE){snprintf(status,sizeof(status),"New game cancelled.");draw(w);return;}
+ const int r=game.adopt_new_game();
+ printf("FRONTEND NEWGAME start=%s\n",alpha::play::play_status_name(r));fflush(stdout);
+ if(r!=alpha::play::PLAY_OK){snprintf(status,sizeof(status),"The new game could not start: %s",alpha::play::play_status_name(r));draw(w);return;}
+ open_map(w,"",MAP_PLAY_CURRENT);
+}
+static void play_intro(struct Window* w){
+ release_menu_audio();
+ int rc=alpha_startup_movie(expansion?"openingx.amov":"opening.amov");
+ restore_menu_audio();
+ snprintf(status,sizeof(status),rc==0?"Original intro completed.":rc==5?"Original intro skipped.":"Intro unavailable: prepare the selected original WVE cache first.");
+ printf("FRONTEND INTRO variant=%s RC %d music_resumed=%d\n",expansion?"expansion":"base",rc,audio_device && music_on);fflush(stdout);ActivateWindow(w);draw(w);
+}
 static void toggle_music(struct Window* w){if(audio_device){music_on=!music_on;SDL_PauseAudioDevice(audio_device,music_on?0:1);}draw(w);}
 int main(int argc,char**){
  if(argc!=1){puts("Run alpha-restoration from the directory containing original game assets.");return 20;}
- if(!image("openinga.pcx",base_title) || !image("xopeninga.pcx",expansion_title)){puts("Original title PCXs are required.");return 20;}
+ if(!image("openinga.pcx",base_title)){puts("Original Alpha Centauri title PCX is required: openinga.pcx");return 20;}
+ expansion_available=image("xopeninga.pcx",expansion_title);
+ FILE* tutorial=fopen("Explore.SC","rb");tutorial_available=tutorial!=nullptr;if(tutorial)fclose(tutorial);
  frame=(uint8_t*)malloc((size_t)WIDTH*HEIGHT*3);if(!frame)return 20;
  if(SDL_Init(SDL_INIT_AUDIO)==0){SDL_AudioSpec spec{};
   if(SDL_LoadWAV("opening menu.wav",&spec,&audio_data,&audio_length)){
@@ -132,7 +195,8 @@ int main(int argc,char**){
  printf("FRONTEND FONTS Alpha Centauri 20; Arial Narrow 18\n");
  IntuitionBase=(struct IntuitionBase*)OpenLibrary((STRPTR)"intuition.library",39);GfxBase=(struct GfxBase*)OpenLibrary((STRPTR)"graphics.library",39);CyberGfxBase=OpenLibrary((STRPTR)"cybergraphics.library",41);AslBase=OpenLibrary((STRPTR)"asl.library",39);
  struct Window* w=nullptr;int rc=20;
- if(IntuitionBase && GfxBase && CyberGfxBase)w=OpenWindowTags(nullptr,WA_Title,(ULONG)"Alpha Centauri / Alien Crossfire - restoration preview",WA_Width,1044,WA_Height,800,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
+ if(IntuitionBase && GfxBase && CyberGfxBase)w=OpenWindowTags(nullptr,WA_Title,(ULONG)"Alpha Centauri / Alien Crossfire - restoration preview",WA_Width,1044,WA_Height,800,WA_Flags,WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_SMART_REFRESH,WA_IDCMP,IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_REFRESHWINDOW,TAG_DONE);
+ if(!w)fprintf(stderr,"Cannot open menu window (1044x800): intuition=%d graphics=%d cybergraphics=%d\n",IntuitionBase!=nullptr,GfxBase!=nullptr,CyberGfxBase!=nullptr);
  if(w){
   auto* colors=w->WScreen->ViewPort.ColorMap;text_pen=ObtainBestPen(colors,0xeeeeeeee,0xdddddddd,0xaaaaaaaa,TAG_DONE);border_pen=ObtainBestPen(colors,0xaaaaaaaau,0x88888888u,0x44444444u,TAG_DONE);text_pen_owned=text_pen>=0;border_pen_owned=border_pen>=0;if(text_pen<0)text_pen=1;if(border_pen<0)border_pen=1;
   draw(w);bool quit=false;
@@ -140,9 +204,20 @@ int main(int argc,char**){
    while((m=(struct IntuiMessage*)GetMsg(w->UserPort))){ULONG kind=m->Class;UWORD code=m->Code;WORD x=m->MouseX,y=m->MouseY;ReplyMsg((struct Message*)m);int action=0;
     if(kind==IDCMP_CLOSEWINDOW)quit=true;
     else if(kind==IDCMP_REFRESHWINDOW){BeginRefresh(w);draw(w);EndRefresh(w,TRUE);}
-    else if(kind==IDCMP_VANILLAKEY){switch(code){case 'a':case 'A':action=1;break;case 'x':case 'X':action=2;break;case 'e':case 'E':action=3;break;case 'o':case 'O':action=4;break;case 'm':case 'M':action=5;break;case 't':case 'T':action=6;break;case 'q':case 'Q':quit=true;break;}}
-    else if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN){if(y>=78 && y<120){if(x>=45 && x<265)action=1;else if(x>=277 && x<507)action=2;}else if(x>=45 && x<507){if(y>=140 && y<182)action=3;else if(y>=192 && y<234)action=4;else if(y>=244 && y<286)action=5;else if(y>=296 && y<338)quit=true;else if(y>=348 && y<390)action=6;}}
-    switch(action){case 1:expansion=false;draw(w);break;case 2:expansion=true;draw(w);break;case 3:if(expansion)choose_map(w);else open_map(w,"Explore.SC");break;case 4:choose_map(w);break;case 5:toggle_music(w);break;case 6:open_technologies(w);break;}
+    else if(kind==IDCMP_VANILLAKEY){switch(code){case 'a':case 'A':action=1;break;case 'x':case 'X':action=2;break;case 'e':case 'E':action=3;break;case 'o':case 'O':action=4;break;case 'm':case 'M':action=5;break;case 't':case 'T':action=6;break;case 'n':case 'N':action=8;break;case 'p':case 'P':action=9;break;case 'v':case 'V':action=10;break;case 'q':case 'Q':quit=true;break;
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+    case 'l':case 'L':if(!expansion)action=7;break;
+#endif
+    }}
+    else if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN){if(y>=78 && y<120){if(x>=45 && x<265)action=1;else if(x>=277 && x<507)action=2;}else if(x>=45 && x<507){if(y>=140 && y<182)action=3;else if(y>=192 && y<234)action=4;else if(y>=244 && y<286)action=5;else if(y>=296 && y<338)quit=true;else if(y>=348 && y<390)action=6;else if(y>=400 && y<442)action=10;else if(y>=640 && y<682)action=8;else if(y>=692 && y<734)action=9;}}
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+    if(kind==IDCMP_MOUSEBUTTONS && code==SELECTDOWN && !expansion && x>=45 && x<645 && y>=540 && y<582)action=7;
+#endif
+    switch(action){case 1:expansion=false;draw(w);break;case 2:if(expansion_available)expansion=true;else snprintf(status,sizeof(status),"Original Alien Crossfire title art is unavailable: xopeninga.pcx");draw(w);break;case 3:if(expansion || !tutorial_available)choose_map(w);else open_map(w,"Explore.SC");break;case 4:choose_map(w);break;case 5:toggle_music(w);break;case 6:open_technologies(w);break;case 8:new_game(w);break;case 9:choose_map(w,MAP_PLAY);break;case 10:play_intro(w);break;
+#ifdef ALPHA_LOCAL_PLAYER_CANDIDATE
+    case 7:choose_map(w,MAP_LOCAL);break;
+#endif
+    }
    }
   }
   if(text_pen_owned)ReleasePen(colors,(ULONG)text_pen);

@@ -1,0 +1,18 @@
+{
+  "scope": "Draft original-container movement buffer encoding, not full save compatibility or filesystem commit",
+  "host": {
+    "syntheticCases": 93,
+    "originalTutorialCases": 42,
+    "totalCases": 135,
+    "addressAndUndefinedSanitizers": "passed",
+    "independentExpectedBytes": "passed"
+  },
+  "sdk": {
+    "build": "passed",
+    "binarySHA256": "e0471589ddc0b7cedd0f077f1face37d9250ae63bfa38b7c5b0acf11c43d5ec0"
+  },
+  "nativeExecution": "UNRUN: shared lab belongs to user watch preview",
+  "independentBigEndian": "PENDING final-head CI",
+  "runtimeRng": "Returned separately; original footer tick unchanged",
+  "originalAssetsUploaded": false
+}

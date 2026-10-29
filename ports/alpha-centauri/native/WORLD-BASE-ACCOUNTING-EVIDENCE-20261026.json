@@ -1,0 +1,40 @@
+{
+  "normal": {
+    "bytes": 991,
+    "sha256": "118b9986388d5d5c80d539e72376a836da1f8dd309575aa62737259cb7e4e541",
+    "rc": 0,
+    "hostByteIdentical": true
+  },
+  "overflow": {
+    "bytes": 100,
+    "sha256": "7c93c2c1b05439cc5c08d841295c5e46d745519bf08c317686552b55fc09bfc3",
+    "rc": 0,
+    "hostByteIdentical": true
+  },
+  "upkeep": {
+    "bytes": 100,
+    "sha256": "53afbf7ec80e0f0699e05ba0aa5f08761f81d307b4303b0b540546977d302570",
+    "rc": 0,
+    "hostByteIdentical": true
+  },
+  "probeSHA256": "15619dbcc31bb6c76623f30bca55d4bc241289d015b6fae401f39fd51fa48ce3",
+  "probeBytes": 156488,
+  "scope": "Actual unchanged Boreholes world connected readonly accounting; explicit commerce/grid0, no mutation or EndTurn",
+  "host": {
+    "worlds": 77,
+    "baseQueries": 107,
+    "accepted": 67,
+    "outputSHA256": "7f7e1e578bb315f4a69aedf4cc42b5f1d07eda16d07f08a4a770070935902438"
+  },
+  "nativeUI": {
+    "guestReturnCode": 0,
+    "worldScenarioUnchanged": true,
+    "dirtyBefore": 0,
+    "dirtyAfter": 0,
+    "resourceForecast": "The Hive food12/net2,minerals6/support2/net4,energy6beforetrade",
+    "screenshotSHA256": "c1d6b61e2d746e2a3dbe98ba93ca7c871174a25d5e47cc71e642d3dfd766f9e7",
+    "worldBinarySHA256": "3da1ebf205b2d48d64983bdbe632fce7a815a69c61041f94070b1535e50e6d5f",
+    "candidateMenuSHA256": "9a92228247fdd4c08acf397786fd4df336fe60aa54607540ddf736eb8cf574fa",
+    "ordinaryFrontendSHA256": "1682aabcca2237f29cf4d893305433dbbabc1ec8586f433930d284cf98174e98"
+  }
+}

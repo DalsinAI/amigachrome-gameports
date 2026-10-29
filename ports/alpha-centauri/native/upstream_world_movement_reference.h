@@ -35,6 +35,7 @@ static int get_proto_offense_rating(int id){return definitions->weapons[VehProto
 static bool has_abil(int id,uint32_t flag){
  if(flag!=0x400u && flag!=0x800000u){unexpected=true;return false;}
  if(VehPrototypes[id].ability_flags&flag)return true;
+ if(definitions->weapon_count==21)return false; // Original base has_abil is raw-only.
  const unsigned owner=(unsigned)id/64;if(!owner)return false;
  const auto* f=world->faction_definition(owner);if(!f || f->faction_bonus_count<0 || f->faction_bonus_count>8){unexpected=true;return false;}
  for(int i=0;i<f->faction_bonus_count;++i)if(f->faction_bonus_id[i]==15){
