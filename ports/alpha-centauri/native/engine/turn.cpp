@@ -9,6 +9,10 @@
  */
 #include "engine.h"
 #include "turn.h"
+#include "base_wp2.h"
+#include "base_deps.h"
+#include "tech.h"
+#include "diplo.h"
 
 namespace alpha {
 namespace engine {
@@ -18,7 +22,6 @@ namespace engine {
 static int s_control_turn_a = 0;  // ControlTurnA: quit/load requested, leave control_turn
 static int s_control_upkeep_a = 0; // ControlUpkeepA: 1 while faction_upkeep runs
 static int s_energy_credits = 0;  // EnergyCredits: credits before this turn's base upkeep
-static int s_skip_tech_screen_a = 0; // SkipTechScreenA
 static int s_net_upkeep_state = 0; // NetUpkeepState (network only, always 0)
 static int s_dword_93A940 = 0;
 static int s_dword_93A950 = 0;
@@ -411,7 +414,7 @@ void __cdecl turn_upkeep() {
                 set_treaty(i, j, DIPLO_UNK_80000000|DIPLO_UNK_40000000|DIPLO_UNK_8000000|\
                     DIPLO_MAJOR_ATROCITY_VICTIM|DIPLO_ATROCITY_VICTIM|DIPLO_UNK_800|\
                     DIPLO_SHALL_BETRAY|DIPLO_WANT_REVENGE|DIPLO_VENDETTA|DIPLO_COMMLINK, 1);
-                wp1::set_agenda(i, j, AGENDA_PERMANENT|AGENDA_UNK_800|AGENDA_UNK_400|AGENDA_UNK_20|\
+                set_agenda(i, j, AGENDA_PERMANENT|AGENDA_UNK_800|AGENDA_UNK_400|AGENDA_UNK_20|\
                     AGENDA_FIGHT_TO_DEATH|AGENDA_UNK_4|AGENDA_UNK_1, 1);
                 Factions[i].diplo_spoke[j] = *CurrentTurn;
             }
@@ -423,7 +426,7 @@ void __cdecl turn_upkeep() {
             s_hooks.interlude(1, 0, 1, 0);
         }
     }
-    if (wp1::voice_of_planet()) {
+    if (voice_of_planet()) {
         Faction& plr = Factions[*CurrentPlayerFaction];
         if (!(plr.player_flags & PFLAG_UNK_2000)) {
             plr.player_flags |= PFLAG_UNK_2000;
@@ -451,7 +454,7 @@ void __cdecl faction_upkeep(int faction_id) {
     social_upkeep(faction_id);
     repair_phase(faction_id);
     production_phase(faction_id);
-    if (wp1::full_game_turn()) {
+    if (full_game_turn()) {
         allocate_energy(faction_id);
         enemy_diplomacy(faction_id);
         enemy_strategy(faction_id);
@@ -472,7 +475,7 @@ void __cdecl faction_upkeep(int faction_id) {
         if (!is_human(faction_id) && *GameRules & RULES_VICTORY_ECONOMIC
         && has_tech(Rules->tech_preq_economic_victory, faction_id)) {
             int cost = corner_market(faction_id);
-            if (!wp1::victory_done() && f->corner_market_cost <= 0 && f->energy_credits > cost) {
+            if (!victory_done() && f->corner_market_cost <= 0 && f->energy_credits > cost) {
                 f->corner_market_turn = *CurrentTurn + Rules->turns_corner_global_energy_market;
                 f->corner_market_cost = cost;
                 f->energy_credits -= cost;
@@ -507,7 +510,7 @@ void __cdecl faction_upkeep(int faction_id) {
     s_control_upkeep_a = 0;
     // Original: Paths->xDst = -1; Paths->yDst = -1; (path cache, owned by WP3)
 
-    if (wp1::full_game_turn()) {
+    if (full_game_turn()) {
         if (faction_id == MapWin->cOwner
         && !(*GameState & (STATE_COUNCIL_HAS_CONVENED | STATE_DISPLAYED_COUNCIL_AVAIL_MSG))
         && s_hooks.can_call_council && s_hooks.can_call_council(faction_id, 0)
@@ -610,7 +613,7 @@ void __cdecl repair_phase(int faction_id) {
                 || (triad == TRIAD_AIR && has_facility(FAC_AEROSPACE_COMPLEX, base_id))) {
                     value += conf.repair_base_facility;
                 }
-            } else if (wp1::breed_mod(base_id, faction_id)) {
+            } else if (breed_mod(base_id, faction_id)) {
                 value += conf.repair_base_native;
             }
         }
@@ -762,13 +765,13 @@ void __cdecl production_phase(int faction_id) {
 
     if (*CurrentTurn == 1) {
         int techs = m->rule_tech_selected;
-        s_skip_tech_screen_a = 1;
+        *SkipTechScreenA = 1;
         while (--techs >= 0) {
             tech_advance(faction_id);
         }
-        s_skip_tech_screen_a = 0;
+        *SkipTechScreenA = 0;
     }
-    if (wp1::full_game_turn()) {
+    if (full_game_turn()) {
         if (f->sanction_turns) {
             f->sanction_turns--;
             if (!f->sanction_turns && faction_id == MapWin->cOwner) {
@@ -828,7 +831,7 @@ void __cdecl allocate_energy(int faction_id) {
         int pop_score = 0;
         for (int base_id = 0; base_id < *BaseCount; base_id++) {
             BASE* b = &Bases[base_id];
-            if (b->faction_id == faction_id && wp1::base_can_riot(base_id, true)) {
+            if (b->faction_id == faction_id && base_can_riot(base_id, true)) {
                 int coeff_psych = 4;
                 if (has_fac_built(FAC_HOLOGRAM_THEATRE, base_id)
                 || (has_project(FAC_VIRTUAL_WORLD, faction_id)
@@ -905,7 +908,7 @@ void __cdecl allocate_energy(int faction_id) {
                 sum += Bases[i].unk_total;
                 for (int fc = 0; fc <= Fac_ID_Last; fc++) {
                     if (has_fac_built((FacilityId)fc, i)) {
-                        sum -= wp1::fac_maint(fc, faction_id);
+                        sum -= fac_maint(fc, faction_id);
                     }
                 }
             }

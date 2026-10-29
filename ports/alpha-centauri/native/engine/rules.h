@@ -64,6 +64,15 @@ int engine_load_rules(const char* dir, int expansion);
  * (Thinker read_rules(tgl_all_rules)). */
 int engine_load_rules_ex(const char* dir, int expansion, int all_rules);
 const char* engine_rules_error();
+/* Base name lists for name_base (WP2 base_name_lists): #BASES and
+ * #WATERBASES of each MFactions[i].filename file (i = 0..7, as the faction
+ * files or a saved game name them) and #GENERIC of basename.txt, read from
+ * directory `dir` the way the original name_base reads them. A missing file
+ * or section leaves that list empty (the original's text_open failure).
+ * engine_load_rules calls it after reading the faction files; call it again
+ * after loading a saved game, whose factions can differ. Returns the number
+ * of names read. */
+int engine_load_base_names(const char* dir);
 /* Faction files that could not be opened during the last load (Thinker shows
  * PLAYERFILE and continues with the cleared faction). */
 int engine_rules_missing_factions();
