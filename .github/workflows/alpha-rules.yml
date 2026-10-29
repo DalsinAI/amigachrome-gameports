@@ -148,3 +148,19 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-host"
       - name: Native infantry composition big-endian 68040 controls
         run: python3 ports/alpha-centauri/native/test_cvr_infantry.py --out "$RUNNER_TEMP/infantry-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned terraforming ecology controls
+        run: python3 ports/alpha-centauri/native/test_world_terraform_ecology.py --out "$RUNNER_TEMP/world-terraform-ecology-host"
+      - name: Big-endian owned terraforming ecology controls
+        run: python3 ports/alpha-centauri/native/test_world_terraform_ecology.py --out "$RUNNER_TEMP/world-terraform-ecology-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh stable-human intake controls
+        run: python3 ports/alpha-centauri/native/test_world_stable_intake.py --out "$RUNNER_TEMP/world-stable-intake-host"
+      - name: Big-endian fresh stable-human intake controls
+        run: python3 ports/alpha-centauri/native/test_world_stable_intake.py --out "$RUNNER_TEMP/world-stable-intake-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original nutrient accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-host"
+      - name: Big-endian original nutrient accounting controls
+        run: python3 ports/alpha-centauri/native/test_base_nutrients.py --out "$RUNNER_TEMP/base-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host fresh owned nutrient composition controls
+        run: python3 ports/alpha-centauri/native/test_world_fresh_nutrients.py --out "$RUNNER_TEMP/world-fresh-nutrients-host"
+      - name: Big-endian fresh owned nutrient composition controls
+        run: python3 ports/alpha-centauri/native/test_world_fresh_nutrients.py --out "$RUNNER_TEMP/world-fresh-nutrients-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
