@@ -174,6 +174,14 @@ int* ParseStrGender = nullptr;
 int* ParseStrPlurality = nullptr;
 int* GenderDefault = nullptr;
 int* PluralDefault = nullptr;
+int* VehAttackFlags = nullptr;
+int* ControlTurnC = nullptr;
+int* MapBaseSubmergedCount = nullptr;
+int* MapBaseIdClosestSubmergedVeh = nullptr;
+int* WorldSkipTerritory = nullptr;
+int* dword_9B22E0 = nullptr;
+int* dword_90DB84 = nullptr;
+char* StrBuffer = nullptr;
 
 static_assert(sizeof(int) == 4, "engine assumes 32-bit int like the original");
 
@@ -290,6 +298,16 @@ void engine_reset(EngineState& s) {
     zero(s.parse_str_plurality);
     s.gender_default = 0;
     s.plural_default = 0;
+    s.veh_attack_flags = 0;
+    s.control_turn_c = 0;
+    zero(s.map_base_submerged_count);
+    for (int i = 0; i < MaxPlayerNum; i++) {
+        s.map_base_id_closest_submerged_veh[i] = -1;
+    }
+    s.world_skip_territory = 0;
+    s.climate_terraform_base_id = -1;
+    s.terraform_tutorial_done = 0;
+    zero(s.str_buffer);
     s.rng = RandomState();
     if (bound == &s) {
         engine_bind(&s);
@@ -461,6 +479,14 @@ EngineState* engine_bind(EngineState* s) {
     ParseStrPlurality = s->parse_str_plurality;
     GenderDefault = &s->gender_default;
     PluralDefault = &s->plural_default;
+    VehAttackFlags = &s->veh_attack_flags;
+    ControlTurnC = &s->control_turn_c;
+    MapBaseSubmergedCount = s->map_base_submerged_count;
+    MapBaseIdClosestSubmergedVeh = s->map_base_id_closest_submerged_veh;
+    WorldSkipTerritory = &s->world_skip_territory;
+    dword_9B22E0 = &s->climate_terraform_base_id;
+    dword_90DB84 = &s->terraform_tutorial_done;
+    StrBuffer = s->str_buffer;
     random_bind(&s->rng);
     return previous;
 }
@@ -615,7 +641,7 @@ void config_vanilla(Config& c) {
     c.planetpearls = 2;
     c.tile_output_limit[0] = c.tile_output_limit[1] = c.tile_output_limit[2] = 2;
     c.soil_improve_value = 0;
-    const int lifecycle[6] = {45, 90, 170, 250, 0, 330};
+    const int lifecycle[6] = {45, 90, 170, 250, 330, 330}; // original: 4 until turn 330, then 6
     memcpy(c.native_lifecycle_levels, lifecycle, sizeof(lifecycle));
     const int talent[4] = {0, 2, 1, 2};
     memcpy(c.facility_talent_value, talent, sizeof(talent));
