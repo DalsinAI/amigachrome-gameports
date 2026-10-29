@@ -1,0 +1,32 @@
+{
+  "scope": "Pure externally supplied manual research choice field transition; no world/UI/chooser/sync/discovery",
+  "publicHostCases": 2486,
+  "combinedHostCases": 7038,
+  "originalSupportedCases": 4552,
+  "excludedUnsupportedPositiveOriginalCases": 504,
+  "hostSanitizers": "PASS ASan/UBSan",
+  "hostCombinedSHA256": "18253c779c771e946ee0090c727362633164d2b69e4a558fbea23859eb5cd472",
+  "originalEvidence": {
+    "executedBytes": 41,
+    "boundary": "Post-chooser0x51508a..0x5150b2 only; stop before synchronisation",
+    "allSupportedResultFieldsMatch": true,
+    "proprietaryArtifacts": "private; not uploaded"
+  },
+  "normalSDK": {
+    "built": true,
+    "SHA256": "fca8cf40d224f8db65255b7a5c9c66a4bec6c8bed68848a7840b3940c7125bf7",
+    "executed": false
+  },
+  "independentBigEndian": "Pending draft CI",
+  "nativeExecution": "UNRUN",
+  "labInteractions": 0,
+  "notImplemented": [
+    "Caller/player/offline/blind authority",
+    "Eligibility/offered-pool/fresh world binding",
+    "Actual chooser/confirmation UI",
+    "Synchronisation",
+    "Discovery/accounting/turn callbacks",
+    "Owned world/wire writes"
+  ],
+  "publication": "Scoped draft candidate; no merge/native qualification"
+}

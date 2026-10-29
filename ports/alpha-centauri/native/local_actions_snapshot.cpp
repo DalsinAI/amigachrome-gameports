@@ -15,7 +15,7 @@ bool overlaps(const void* a,size_t n,const void* b,size_t m){
  return x<y+m && y<x+n;
 }
 bool disjoint(const OriginalWorld& w,const void* p,size_t n){
- if(overlaps(p,n,&w,sizeof(w)) || overlaps(p,n,w.original_bytes(),w.original_size()) ||
+ if(overlaps(p,n,&w,sizeof(w)) || w.overlaps_byte_storage(p,n) ||
     overlaps(p,n,w.tile(0),w.game().map.info.tile_count*sizeof(OriginalMapTile)) ||
     overlaps(p,n,w.vehicle(0),w.game().vehicle_count*sizeof(OriginalVehicle)) ||
     overlaps(p,n,w.base(0),w.game().base_count*sizeof(OriginalBase)) ||
@@ -140,6 +140,9 @@ LocalSnapshotError encode_local_actions_snapshot(const OriginalWorld& w,void* ou
  OriginalGameView baseline{};
  if(read_original_game(w.original_bytes(),n,baseline)!=GameReadError::ok)return LocalSnapshotError::bad_world;
  if(!same_view(baseline,w.game()))return LocalSnapshotError::unsupported_change;
+ const auto monuments=w.current_monuments();
+ if(monuments.size!=baseline.monuments.size || !monuments.data ||
+    memcmp(monuments.data,baseline.monuments.data,monuments.size))return LocalSnapshotError::unsupported_change;
  const auto& live=w.game();
  if(baseline.map.metadata!=live.map.metadata || baseline.map.tiles!=live.map.tiles || baseline.map.abstract!=live.map.abstract)return LocalSnapshotError::unsupported_change;
 #define CHECK_SPAN(name) if(baseline.name.data!=live.name.data || baseline.name.size!=live.name.size)return LocalSnapshotError::unsupported_change;

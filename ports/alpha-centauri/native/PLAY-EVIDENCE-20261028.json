@@ -1,0 +1,30 @@
+{
+ "what": "Scripted headless play test (play_control.cpp) through the play command layer: new game, colony pod and second base, production/queue/hurry, terraform, End Turn x20, attack (odds, battle), research change with confirmation, social engineering, unit design, comm-link proposal, save, two independent loads continued 3 turns. Synthetic rules from test_play_session.py; no original assets.",
+ "host_asan_ubsan": {
+  "command": "python3 test_play_session.py --out DIR",
+  "summary": "FINAL turn=26 units=108 bases=30 digest=4d78325a failures=0",
+  "output_sha256": "2329e96cd01dc64031f38cf16e0fa3f5f0f1a8161bd23895bdbbf1a3cfa5848b",
+  "save_sha256": "a7bfd3c28a8fb4ebe9b5e5682fdae686c6bec2301ba35dae3c0b420c842f691b",
+  "final_sha256": "2e8183cf3bf663930c1fdf891de0d4d8192a0cdf81815083f6c69335a2abce13"
+ },
+ "m68k_linux_qemu": {
+  "command": "python3 test_play_session.py --cc m68k-linux-gnu-g++ --m68k-linux --out DIR",
+  "summary": "FINAL turn=26 units=108 bases=30 digest=4d78325a failures=0",
+  "host_equal": true,
+  "save_sha256": "a7bfd3c28a8fb4ebe9b5e5682fdae686c6bec2301ba35dae3c0b420c842f691b",
+  "final_sha256": "2e8183cf3bf663930c1fdf891de0d4d8192a0cdf81815083f6c69335a2abce13"
+ },
+ "aros_fsuae_native": {
+  "build": "m68k-amigaos-g++ (gcc-open3-fpu40) -std=c++17 -Wall -Wextra -Werror -m68040 -m68881 -O2 -fno-exceptions -fno-rtti -fno-builtin -fno-tree-loop-distribute-patterns -pthread engine/*.cpp + play layer sources",
+  "command": "DH1:play_control play DH1:rules 1 777 DH1:out 20",
+  "emulator": "FS-UAE 3.2.35, A1200, 68040/FPU, AROS m68k (run-aros-cli.py)",
+  "guestRC": 0,
+  "seconds": 1085.5,
+  "binary_sha256": "30a4a54bdffbd2d0443ed287b3df12bcd7d22399cd688854078bd99f8a909fc3",
+  "stdout_sha256": "2329e96cd01dc64031f38cf16e0fa3f5f0f1a8161bd23895bdbbf1a3cfa5848b",
+  "stdout_equal_host_and_qemu": true,
+  "play_sav_sha256": "a7bfd3c28a8fb4ebe9b5e5682fdae686c6bec2301ba35dae3c0b420c842f691b",
+  "final_sav_sha256": "2e8183cf3bf663930c1fdf891de0d4d8192a0cdf81815083f6c69335a2abce13",
+  "saves_equal_host_and_qemu": true
+ }
+}

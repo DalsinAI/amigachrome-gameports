@@ -1,0 +1,54 @@
+{
+  "status": "engine core + rules loader + engine tests link for m68k-amigaos 68040/FPU and run in FS-UAE/AROS 68040 with output byte-identical to the host sanitizer build",
+  "scope": "engine/*.cpp, engine/stubs/*.cpp with engine/tests/engine_test.cpp and engine/tests/wp0b_test.cpp; synthetic fixtures from test_engine.py and test_engine_wp0b.py only (no original assets)",
+  "cause": {
+    "symptom": "final link fails: libstdc++.a(eh_globals.o), libstdc++.a(guard.o), libgcc.a(unwind-dw2.o, unwind-dw2-fde.o) have undefined pthread_key_create, pthread_once, pthread_getspecific, pthread_setspecific, pthread_key_delete, pthread_mutex_lock, pthread_mutex_unlock, pthread_cancel",
+    "chain": "the engine uses std::string, std::map, std::unordered_map and operator new; string-inst.o, hashtable and new_op reference std::__throw_* (functexcept.o) and __cxa_begin_catch (eh_catch.o) because libstdc++ itself is built with exceptions; these pull eh_globals.o, eh_throw.o, eh_personality.o and the unwinder, which the toolchain built for POSIX threads with direct (not weak) pthread_* calls. -fno-exceptions and -fno-rtti on our sources cannot remove these archive members; -fno-threadsafe-statics only removes guard.o.",
+    "whyNotStubs": "a single-threaded __cxa_get_globals would still leave unwind-dw2/unwind-dw2-fde needing pthread_mutex_*/pthread_once/pthread_cancel; stubbing all of them means shadowing toolchain runtime internals in engine code."
+  },
+  "fix": {
+    "file": "ports/alpha-centauri/native/build_engine.sh",
+    "change": "add -pthread to the default m68k-amigaos flags",
+    "effect": "the toolchain spec turns -pthread into -lpthread inside its own -( libc -lamiga -lgcc -lpthread -) link group; no thread is created by the engine",
+    "flags": "-std=c++17 -Wall -Wextra -Werror -m68040 -m68881 -O2 -fno-exceptions -fno-rtti -fno-builtin -fno-tree-loop-distribute-patterns -pthread",
+    "runtime": "default C runtime of the other Alpha native build scripts (no -noixemul, no -mcrt)",
+    "engineSourceChanges": 0
+  },
+  "toolchains": {
+    "gcc-open3-fpu40": {"path": "/opt/alpha-lab/gcc-open3-fpu40/bin/m68k-amigaos-g++", "version": "16.2.0b open3 + local libnix FPU40 patch", "linked": true, "libpthreadSha256": "a5f790d1173b2bb3feb4e2c6d98853e1f64217bcf76db8e63de78573c21bf1b4"},
+    "openamigagcc-pristine": {"path": "/opt/alpha-lab/openamigagcc/openamigagcc-16.2.0-open3-x86_64-linux/bin/m68k-amigaos-g++", "linked": true, "engineTestSha256": "deb493a3b68e7749c00ba0244076d136b67f3311e236792d81c7ac86dcb8dc80"},
+    "beforeFix": "both fail the link with the pthread_* undefined references above"
+  },
+  "binaries": {
+    "engine-test": {"bytes": 492176, "format": "Amiga HUNK", "sha256": "5f870375e4c89d9cf11401c37a8272ce5267beff69c00484751c575c8e4c67a5"},
+    "wp0b-test": {"bytes": 491224, "format": "Amiga HUNK", "sha256": "01d3da2251b1b2cb34a731920878a82764400c896d2e8c860e366ff9d4b7e480"}
+  },
+  "arosValidation": {
+    "runner": "/opt/alpha-lab/bin/run-aros-cli.py --dh1 DH1 --command 'Execute DH1:run.script' --out NEW --seconds 3000 (stack 524288)",
+    "machine": "FS-UAE 3.2.35, A1200, 68040/FPU, 64 MiB motherboard RAM, AROS m68k 20261027",
+    "fsUAESHA256": "b6d7199d181a061fe3bbcbca244d861d8924073d8124dc26d082e537f040fe6a",
+    "arosROMSHA256": "ed6805f4a34a53dcff249e32194bda49f4dff858b34216db1e5574d57904886e",
+    "arosExtSHA256": "66c7c8294dbab579a82c717f9677e040e037763556ea01b0521c0b2958aa58da",
+    "guestFinished": true,
+    "guestRC": 0,
+    "seconds": 95.9,
+    "commands": 125,
+    "engineTest": {"unitChecks": 2793, "validRoundTrips": 18, "daemonCycles": 18, "rejections": 60, "noSeedFooter": 1},
+    "wp0bTest": {"unitChecks": 34, "loads": 9, "rejections": 17},
+    "returnCodes": {"rc0": 48, "rc20": 77},
+    "stdout": {"bytes": 873581, "sha256": "71e3b36e2a41c58db1bd28708e293693a56522f780884389daffe20a9f940993"},
+    "writtenFiles": {"count": 37, "bytes": 5955538, "combinedSha256": "b3db34557cd9105c23b3d44b301ad08d7a3e22b0d232dba5d6f252217e146e51"}
+  },
+  "comparison": {
+    "host": "g++ -std=c++17 -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all, same commands from the same relative paths",
+    "bigEndianLinux": "m68k-linux-gnu-g++ -O1 -g -m68040 -static under qemu-m68k -cpu m68040",
+    "arosVsHost": "stdout+RC log byte-identical (873581 bytes); all 37 written SAV/daemon files byte-identical; same set of files written",
+    "qemuVsHost": "byte-identical stdout and files"
+  },
+  "notClaimed": [
+    "AmigaOS 3.2 (only AROS m68k in FS-UAE)",
+    "work-package code beyond engine core and the rules loader (stubs/wp1..wp8 linked as stubs)",
+    "original saves or rules files (synthetic fixtures only)",
+    "behaviour of a libstdc++ throw at run time: with -fno-exceptions it terminates the program"
+  ]
+}

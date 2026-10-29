@@ -4,7 +4,7 @@
  */
 #ifndef ALPHA_FACILITY_UPKEEP_H
 #define ALPHA_FACILITY_UPKEEP_H
-#include "base_energy.h"
+#include "upkeep_base_energy.h"
 namespace alpha {
 struct FacilityUpkeepFacts {
  int32_t first_project,difficulty,best_reactor,credits_before,maintenance_before,mineral_cost_factor,queue_item;

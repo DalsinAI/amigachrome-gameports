@@ -9,7 +9,7 @@ from test_base_nutrients import expected as nutrient
 from test_cost_factor import expected as cost
 from test_world_base_minerals import normalized
 HERE=Path(__file__).resolve().parent
-SOURCES='rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats vehicle_stack tile_yields world_technology_effects world_tile_yields world_worker_radius world_terraform_ecology world_stable_intake base_nutrients world_fresh_nutrients world_convoy_nutrients game_logic colony cost_factor world_cost_factor world_population world_population_probe'.split()
+SOURCES='rules_text original_map original_game original_faction original_world prototype movement saved_speed world_unit_stats vehicle_stack tile_yields world_technology_effects world_upkeep_tile_yields world_tile_yields technology_effects world_fresh_tile_yields world_worker_radius world_terraform_ecology world_stable_intake base_nutrients world_fresh_nutrients world_convoy_nutrients game_logic colony cost_factor world_cost_factor world_population world_population_probe'.split()
 
 def decode(data):
  info,off,spans=intake.decode(data);legacy=int(info['version'])<11

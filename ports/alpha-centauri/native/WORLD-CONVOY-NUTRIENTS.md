@@ -47,3 +47,5 @@ does not acquire a physical facility's growth bonus.
 Local host and Linux 68040 evidence is additional to final-head CI and AmigaOS
 execution. This local integration has no published CI or native qualification.
 No proprietary files or original executable bytes are included in the source.
+
+Fresh technology-effects integration supersedes the earlier selected/harvested-fungus refusal; see [WORLD-FRESH-TECHNOLOGY-YIELDS.md](WORLD-FRESH-TECHNOLOGY-YIELDS.md). All other stable-domain and mutation exclusions remain.

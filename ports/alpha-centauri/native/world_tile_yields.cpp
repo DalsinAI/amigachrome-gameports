@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "world_tile_yields.h"
 #include "world_unit_stats.h"
-#include "world_technology_effects.h"
 #include "movement.h"
 namespace alpha { namespace {
 bool overlap(const void* a,size_t an,const void* b,size_t bn){
@@ -18,7 +17,7 @@ bool aliases(const OriginalWorld& w,const Rules& t,const BasicRules& b,const Res
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&t,sizeof t)||overlap(out,n,&b,sizeof b)||overlap(out,n,&r,sizeof r)||overlap(out,n,&s,sizeof s))return true;
  if(!w.loaded())return false;
  const auto& g=w.game();
- return overlap(out,n,w.original_bytes(),w.original_size()) ||
+ return w.overlaps_byte_storage(out,n) ||
   overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) ||
   overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) ||
   overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) ||
@@ -84,20 +83,6 @@ TileYieldError world_tile_yields(const OriginalWorld& w,const Rules& t,const Bas
  if(aliases(w,t,b,r,stage,&output,sizeof output))return TileYieldError::bad_buffer;
  TileYieldContext context{};const auto error=world_tile_yield_context(w,t,b,r,base,faction,x,y,stage,context);
  if(error!=TileYieldError::ok)return error;
- return calculate_tile_yields(context,output);
-}
-TileYieldError world_fresh_tile_yields(const OriginalWorld&w,const Rules&t,const BasicRules&b,
- const ResourceInfo&r,size_t base,int32_t faction,int32_t x,int32_t y,
- const WorldTileYieldStage&stage,TileYieldResult&output){
- if(!shape(w))return TileYieldError::bad_state;
- if(aliases(w,t,b,r,stage,&output,sizeof output))return TileYieldError::bad_buffer;
- TileYieldContext context{};
- const auto e=world_tile_yield_context(w,t,b,r,base,faction,x,y,stage,context);
- if(e!=TileYieldError::ok)return e;
- TechnologyEffects effects{};const auto te=world_technology_effects(w,t,faction,effects);
- if(te==TechnologyEffectsError::overflow)return TileYieldError::overflow;
- if(te!=TechnologyEffectsError::ok)return TileYieldError::bad_state;
- for(unsigned i=0;i<3;++i)context.fungus[i]=effects.fungus[i];
  return calculate_tile_yields(context,output);
 }
 }

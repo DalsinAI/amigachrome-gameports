@@ -63,3 +63,5 @@ Run `test_world_stable_intake.py --out NEW_DIRECTORY` for host sanitizers, or ad
 `--cc m68k-linux-gnu-g++ --m68k-linux` for independent Linux 68040 execution.
 `build_world_stable_intake_probe.sh OUTPUT` builds with the normal Amiga SDK.
 Actual AmigaOS execution remains unrun and is required before merge or UI use.
+
+Fresh technology-effects integration supersedes the earlier selected/harvested-fungus refusal; see [WORLD-FRESH-TECHNOLOGY-YIELDS.md](WORLD-FRESH-TECHNOLOGY-YIELDS.md). All other stable-domain and mutation exclusions remain.
