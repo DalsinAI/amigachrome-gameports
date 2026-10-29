@@ -4,7 +4,7 @@
 import argparse,hashlib,json,os,random,struct,subprocess
 from pathlib import Path
 import test_world_energy_allocation as world
-from test_energy_allocation import expected,SENTINEL
+from test_upkeep_energy_allocation import expected,SENTINEL
 HERE=Path(__file__).resolve().parent
 NAMES=world.NAMES[:-1]+['proposed_energy_allocation_probe']
 def proposed_fixture(version,case):

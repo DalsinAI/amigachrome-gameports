@@ -68,7 +68,7 @@ FacilityProductionError FacilityProductionStage::apply_fresh_materials(size_t id
  SupportResult support{};
  const auto supported=world_base_support_policy(world_,units,id,support,states.p,count);
  if(supported!=SupportError::ok)return support_failure(supported);
- const WorldMineralStage mineral_stage{intake,support.mineral_cost};WorldMineralResult mineral{};
+ const UpkeepWorldMineralStage mineral_stage{intake,support.mineral_cost};UpkeepWorldMineralResult mineral{};
  const auto budget=world_base_minerals(world_,technologies_,rules_,world_rules,resources,id,mineral_stage,mineral);
  if(budget!=StableIntakeError::ok)return mineral_failure(budget);
  int32_t factor=0;const auto cost=world_base_cost_factor(world_,rules_,id,1,factor);

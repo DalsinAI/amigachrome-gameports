@@ -27,7 +27,7 @@ TileYieldError world_tile_yields(const OriginalWorld&,const Rules&,
  * technology-effects calculation before evaluating the same tile leaves.
  * Saved-query behavior above is retained for snapshot inspection callers.
  */
-TileYieldError world_fresh_tile_yields(const OriginalWorld&,const Rules&,
+TileYieldError world_upkeep_fresh_tile_yields(const OriginalWorld&,const Rules&,
  const BasicRules&,const ResourceInfo&,size_t base,int32_t querying_faction,
  int32_t x,int32_t y,const WorldTileYieldStage&,TileYieldResult& output);
 }

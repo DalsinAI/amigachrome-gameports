@@ -10,7 +10,7 @@ bool aliases(const OriginalWorld&w,const WorkerRadiusStage&s,const void*out,size
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&s,sizeof s))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();
- return overlap(out,n,w.original_bytes(),w.original_size()) || overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) || overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) || overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) || overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype)) || overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState)) || overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
+ return w.overlaps_byte_storage(out,n) || overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) || overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) || overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) || overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype)) || overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState)) || overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
 }
 int32_t wrap(const MapGeometry&g,int32_t x){if(!g.flat){if(x<0)x+=g.width;else if(x>=g.width)x-=g.width;}return x;}
 int32_t distance(const MapGeometry&g,int32_t ax,int32_t ay,int32_t bx,int32_t by){

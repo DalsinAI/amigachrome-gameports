@@ -10,7 +10,7 @@ alignas(WorldUpkeepAccountingResult) static UnitDefinitions units;
 alignas(WorldUpkeepAccountingResult) static BasicRules basic;
 alignas(WorldUpkeepAccountingResult) static WorldRules world_rules;
 alignas(WorldUpkeepAccountingResult) static ResourceInfo resources;
-alignas(WorldUpkeepAccountingResult) static CitizenDefinitions citizens;
+alignas(WorldUpkeepAccountingResult) static UpkeepCitizenDefinitions citizens;
 alignas(WorldUpkeepAccountingResult) static OriginalWorld world;
 struct Range {const void*p;size_t n,offset;};
 static Range ranges[16];static size_t range_count;static uint8_t*baseline;
