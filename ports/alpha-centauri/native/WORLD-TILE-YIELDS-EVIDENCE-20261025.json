@@ -1,0 +1,43 @@
+{
+  "publicHost": {
+    "worlds": 122,
+    "queries": 101360,
+    "accepted": 27264,
+    "rejected": 74096,
+    "outputSHA256": "c5e1384bea2f73ff1f5bc44ab360129175c151373362b5c13f99e113af98daf6",
+    "perWorldDirectInvalidControls": 5,
+    "perNonemptyWorldAliasingControls": 22,
+    "mirrorNeighborCountsExercised": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "source": "verified prefix of host-original-final-3; same probe and source as public CI",
+    "nativeExecution": "UNRUN"
+  },
+  "privateOwnerTutorials": {
+    "worlds": 3,
+    "queries": 4200,
+    "filesUnchanged": true
+  },
+  "allHost": {
+    "worlds": 125,
+    "queries": 105560,
+    "accepted": 28800,
+    "rejected": 76760,
+    "outputSHA256": "231f82f374d101aa1416281ca3a1588290ee5807b663b7bd2b821c6aea841f04"
+  },
+  "normalSDK": {
+    "SHA256": "7532fa34519a1fcc783572e011f4f8bd9c5142605c23548688e1836c73b51a73",
+    "actualAmigaOS": "UNRUN"
+  },
+  "CI": "NOT YET RUN at this prepublication checkpoint",
+  "workflow": {
+    "parentCommands": 61,
+    "currentCommands": 63,
+    "allParentCommandsRetained": true
+  },
+  "limits": "Pure snapshot binding; saved fungus effects explicit. No worker/upkeep/turn/UI. Source files/assets private; user watch untouched."
+}

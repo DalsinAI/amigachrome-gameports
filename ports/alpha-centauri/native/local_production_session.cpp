@@ -19,16 +19,22 @@ const OriginalWorld* LocalProductionSession::world()const{return data_?&data_->w
 int32_t LocalProductionSession::local_human()const{return data_?data_->local_human:-1;}
 LocalOrderError LocalProductionSession::load_local(const uint8_t* save,size_t length,const uint8_t* text,size_t text_length,
  Variant profile,bool expansion,int32_t human,uint32_t seed,size_t memory_limit){
- return load_impl(save,length,text,text_length,profile,expansion,human,seed,memory_limit,false);
+ return load_impl(save,length,text,text_length,profile,expansion,human,seed,memory_limit,false,false);
 }
 LocalOrderError LocalProductionSession::load_local_land_actions(const uint8_t* save,size_t length,const uint8_t* text,size_t text_length,
  Variant profile,bool expansion,int32_t human,uint32_t seed,size_t memory_limit){
  if(profile!=Variant::base || expansion)return LocalOrderError::unsupported;
- return load_impl(save,length,text,text_length,profile,expansion,human,seed,memory_limit,true);
+ return load_impl(save,length,text,text_length,profile,expansion,human,seed,memory_limit,true,false);
 }
 bool LocalProductionSession::land_actions_enabled()const{return data_ && data_->units;}
+bool LocalProductionSession::surface_actions_enabled()const{return data_ && data_->units && data_->surface_actions;}
+LocalOrderError LocalProductionSession::load_local_surface_actions(const uint8_t* save,size_t length,const uint8_t* text,size_t text_length,
+ Variant profile,bool expansion,int32_t human,uint32_t seed,size_t memory_limit){
+ if(profile!=Variant::base || expansion)return LocalOrderError::unsupported;
+ return load_impl(save,length,text,text_length,profile,expansion,human,seed,memory_limit,true,true);
+}
 LocalOrderError LocalProductionSession::load_impl(const uint8_t* save,size_t length,const uint8_t* text,size_t text_length,
- Variant profile,bool expansion,int32_t human,uint32_t seed,size_t memory_limit,bool actions){
+ Variant profile,bool expansion,int32_t human,uint32_t seed,size_t memory_limit,bool actions,bool surface){
  if(!save || !text || !length || !text_length || (profile!=Variant::base && profile!=Variant::alien_crossfire) ||
     (profile==Variant::base && expansion) || human<1 || human>7)return LocalOrderError::bad_state;
  if(!identity_ || at_limit(revision_))return LocalOrderError::overflow;
@@ -59,7 +65,7 @@ LocalOrderError LocalProductionSession::load_impl(const uint8_t* save,size_t len
   else {WorldFacilityOptions options;const auto e=world_facility_options(next->world,next->technology,next->facilities,profile,expansion,human,-1,0,options);if(e!=LogicError::ok)result=translate(e);}
  }
  if(result!=LocalOrderError::ok){next->~Data();free(next);return result;}
- next->profile=profile;next->expansion_enabled=expansion;next->local_human=human;
+ next->profile=profile;next->expansion_enabled=expansion;next->local_human=human;next->surface_actions=surface;
  Data* previous=data_;data_=next;++revision_;suspended_=false;
  if(previous){previous->~Data();free(previous);}
  return LocalOrderError::ok;

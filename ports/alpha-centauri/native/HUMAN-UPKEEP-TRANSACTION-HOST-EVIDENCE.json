@@ -1,0 +1,259 @@
+{
+  "cases": 20,
+  "records": [
+    {
+      "index": 0,
+      "name": "stable-checked",
+      "mode": 1,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 4,
+        "food_checked": true,
+        "specialists_pending": false,
+        "riots_pending": false
+      },
+      "log": "HUMAN status=0 repeat=8 phase=4 food_checked=1 specialists_pending=0 riots_pending=0 before_pop=2 next_pop=2 before_food=0 next_food=2 worked=7 bytes=297420\n",
+      "checkpointSHA256": "dc8d37871678efe696fcc3a127e4b67043a6202b94239e5bc70de7ea55afa78d"
+    },
+    {
+      "index": 1,
+      "name": "stable-riots-pending",
+      "mode": 1,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 3,
+        "food_checked": true,
+        "specialists_pending": false,
+        "riots_pending": true
+      },
+      "log": "HUMAN status=0 repeat=8 phase=3 food_checked=1 specialists_pending=0 riots_pending=1 before_pop=2 next_pop=2 before_food=0 next_food=2 worked=7 bytes=297420\n",
+      "checkpointSHA256": "d6ea073984e95f60cd1b977cc36277e2cf452660f48991a20aae429b8325f888"
+    },
+    {
+      "index": 2,
+      "name": "growth-specialists-pending",
+      "mode": 1,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 2,
+        "food_checked": true,
+        "specialists_pending": true,
+        "riots_pending": false
+      },
+      "log": "HUMAN status=0 repeat=8 phase=2 food_checked=1 specialists_pending=1 riots_pending=0 before_pop=2 next_pop=3 before_food=100 next_food=22 worked=15 bytes=297420\n",
+      "checkpointSHA256": "cc5400108c43b5f6ac07f1d9d52549177566c57f3605eaad6c7fcfb4b57f67a8"
+    },
+    {
+      "index": 3,
+      "name": "boom-pending",
+      "mode": 1,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 2,
+        "food_checked": true,
+        "specialists_pending": true,
+        "riots_pending": true
+      },
+      "log": "HUMAN status=0 repeat=8 phase=2 food_checked=1 specialists_pending=1 riots_pending=1 before_pop=2 next_pop=3 before_food=0 next_food=0 worked=15 bytes=297420\n",
+      "checkpointSHA256": "0ad0cbd395cb97a29bd02bf17bc016a8ada84e1c9c7dfc5bfff2214a80d4a398"
+    },
+    {
+      "index": 4,
+      "name": "starvation",
+      "mode": 1,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 2,
+        "food_checked": true,
+        "specialists_pending": true,
+        "riots_pending": false
+      },
+      "log": "HUMAN status=0 repeat=8 phase=2 food_checked=1 specialists_pending=1 riots_pending=0 before_pop=2 next_pop=1 before_food=-1 next_food=-4 worked=3 bytes=297420\n",
+      "checkpointSHA256": "cee37b976741d994a2fa7b5ac840dd6045c2df5985dffdb34c8dc84fe82430ea"
+    },
+    {
+      "index": 5,
+      "name": "last-citizen-removal",
+      "mode": 1,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 1,
+        "food_checked": false,
+        "specialists_pending": false,
+        "riots_pending": false
+      },
+      "log": "HUMAN status=0 repeat=8 phase=1 food_checked=0 specialists_pending=0 riots_pending=0 before_pop=1 next_pop=1 before_food=-1 next_food=-1 worked=3 bytes=297420\n",
+      "checkpointSHA256": "3d5c9e673ed299d3502feabf6439a5434dfa2d1a7f3b0c59f6be2cb24f10d052"
+    },
+    {
+      "index": 6,
+      "name": "partial-starvation",
+      "mode": 0,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 3,
+        "food_checked": true,
+        "specialists_pending": false,
+        "riots_pending": true
+      },
+      "log": "HUMAN status=0 repeat=8 phase=3 food_checked=1 specialists_pending=0 riots_pending=1 before_pop=2 next_pop=2 before_food=-1 next_food=-8 worked=7 bytes=297420\n",
+      "checkpointSHA256": "2eab8a345240729734d3a136966f35188ce82c5bc25131f9365e73c10c272b84"
+    },
+    {
+      "index": 7,
+      "name": "late-worker-failure",
+      "mode": 1,
+      "base": 0,
+      "status": 4,
+      "flags": null,
+      "log": "HUMAN status=4 repeat=4 phase=0 food_checked=0 specialists_pending=0 riots_pending=0 before_pop=2 next_pop=2 before_food=0 next_food=0 worked=7 bytes=297420\n",
+      "checkpointSHA256": "a047969725385db289b0bd9ced700a1cac3674f337bfee185c776f35f1b6a58f"
+    },
+    {
+      "index": 8,
+      "name": "legacy7",
+      "mode": 1,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 4,
+        "food_checked": true,
+        "specialists_pending": false,
+        "riots_pending": false
+      },
+      "log": "HUMAN status=0 repeat=8 phase=4 food_checked=1 specialists_pending=0 riots_pending=0 before_pop=2 next_pop=2 before_food=0 next_food=2 worked=7 bytes=297420\n",
+      "checkpointSHA256": "b6c950d980990f2e709e232a663ecefdf346a3dcaeaeb3722ec616a4ee0a5676"
+    },
+    {
+      "index": 9,
+      "name": "legacy10",
+      "mode": 1,
+      "base": 0,
+      "status": 0,
+      "flags": {
+        "phase": 4,
+        "food_checked": true,
+        "specialists_pending": false,
+        "riots_pending": false
+      },
+      "log": "HUMAN status=0 repeat=8 phase=4 food_checked=1 specialists_pending=0 riots_pending=0 before_pop=2 next_pop=2 before_food=0 next_food=2 worked=7 bytes=297420\n",
+      "checkpointSHA256": "06596642e53d6ef905bae4f6aea9b0b5027b6becaab64ed6319776e522ac44e9"
+    },
+    {
+      "index": 10,
+      "name": "encoder-v9-mode10",
+      "mode": 10,
+      "base": 0,
+      "status": 0,
+      "flags": null,
+      "log": "ENCODE status=0 bytes=148678\n",
+      "checkpointSHA256": "8fd59912164312e063534482c6c79790c4e1bd4794a93ab412d45c0a9cf8b8d1"
+    },
+    {
+      "index": 11,
+      "name": "encoder-v9-mode11",
+      "mode": 11,
+      "base": 0,
+      "status": 3,
+      "flags": null,
+      "log": "ENCODE status=3 bytes=148678\n",
+      "checkpointSHA256": "ff5f0933129cd164a15ad7269706023041e7aefb575da39ab16e0a10dbf158d7"
+    },
+    {
+      "index": 12,
+      "name": "encoder-v9-mode12",
+      "mode": 12,
+      "base": 0,
+      "status": 3,
+      "flags": null,
+      "log": "ENCODE status=3 bytes=148678\n",
+      "checkpointSHA256": "ff5f0933129cd164a15ad7269706023041e7aefb575da39ab16e0a10dbf158d7"
+    },
+    {
+      "index": 13,
+      "name": "encoder-v9-mode13",
+      "mode": 13,
+      "base": 0,
+      "status": 3,
+      "flags": null,
+      "log": "ENCODE status=3 bytes=148678\n",
+      "checkpointSHA256": "ff5f0933129cd164a15ad7269706023041e7aefb575da39ab16e0a10dbf158d7"
+    },
+    {
+      "index": 14,
+      "name": "encoder-v9-mode14",
+      "mode": 14,
+      "base": 0,
+      "status": 3,
+      "flags": null,
+      "log": "ENCODE status=3 bytes=148678\n",
+      "checkpointSHA256": "ff5f0933129cd164a15ad7269706023041e7aefb575da39ab16e0a10dbf158d7"
+    },
+    {
+      "index": 15,
+      "name": "encoder-v9-mode15",
+      "mode": 15,
+      "base": 0,
+      "status": 3,
+      "flags": null,
+      "log": "ENCODE status=3 bytes=148678\n",
+      "checkpointSHA256": "ff5f0933129cd164a15ad7269706023041e7aefb575da39ab16e0a10dbf158d7"
+    },
+    {
+      "index": 16,
+      "name": "encoder-v9-mode16",
+      "mode": 16,
+      "base": 0,
+      "status": 3,
+      "flags": null,
+      "log": "ENCODE status=3 bytes=148678\n",
+      "checkpointSHA256": "ff5f0933129cd164a15ad7269706023041e7aefb575da39ab16e0a10dbf158d7"
+    },
+    {
+      "index": 17,
+      "name": "encoder-v9-mode17",
+      "mode": 17,
+      "base": 0,
+      "status": 3,
+      "flags": null,
+      "log": "ENCODE status=3 bytes=148678\n",
+      "checkpointSHA256": "ff5f0933129cd164a15ad7269706023041e7aefb575da39ab16e0a10dbf158d7"
+    },
+    {
+      "index": 18,
+      "name": "encoder-v7-mode10",
+      "mode": 10,
+      "base": 0,
+      "status": 0,
+      "flags": null,
+      "log": "ENCODE status=0 bytes=148678\n",
+      "checkpointSHA256": "96bb209262462ed1df184612c1f1e60250058103eafb0c0075a74ac02987b76f"
+    },
+    {
+      "index": 19,
+      "name": "encoder-v10-mode10",
+      "mode": 10,
+      "base": 0,
+      "status": 0,
+      "flags": null,
+      "log": "ENCODE status=0 bytes=148678\n",
+      "checkpointSHA256": "de15f1821541c262ea00bb7705a4ed1f5f5ce99a6a810c5bbd48ad990a471a43"
+    }
+  ],
+  "command": [
+    "python3",
+    "test_human_upkeep_transaction.py",
+    "--out",
+    "NEW_DIRECTORY"
+  ],
+  "binarySHA256": "cbd4a40a518bfadce030127511fca496ececd9c9c898938be74bc5bcf4747006",
+  "scope": "Private population/worker prefix; explicit specialist/riot/base-removal events; no public commit or full turn.",
+  "sanitizers": "AddressSanitizer and UndefinedBehaviorSanitizer; LeakSanitizer disabled for isolated /proc restrictions."
+}

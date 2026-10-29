@@ -1,0 +1,35 @@
+{
+  "scope": "Read-only stable directed-human fresh intake from current owned worker mask; no allocation/upkeep/turn/UI",
+  "publicSynthetic": {
+    "worlds": 160,
+    "accepted": 146,
+    "rejected": 14,
+    "outputSHA256": "3856cbedc310f65d58d03994589b2921249734a42fbeeb0b062741ff05cb5b2f"
+  },
+  "privateHostAndIndependent68040": {
+    "worlds": 163,
+    "accepted": 149,
+    "rejected": 14,
+    "actualFullOriginalComparisons": 128,
+    "outputSHA256": "3a6eda501a0d1dda7ca3005cc1595cddc07332216ae7a56bf06c09168ce34a50",
+    "allWorldInputsAndWireUnchanged": true
+  },
+  "hostBinarySHA256": "09eedeb49d427542225cc03e005991d78f4d1247bf7ef56db372d05349db6a68",
+  "linux68040BinarySHA256": "bf6a37d7c965020cf12498ad80b83aafe9c38c116b1ec7d78e155106ac380922",
+  "normalSDK": {
+    "binarySHA256": "1b13d8a463658e38d594e1062743d6afa1320c11d1f8eb485a1ead972019c3ca",
+    "freshRebuildByteIdentical": true,
+    "nativeExecution": "UNRUN"
+  },
+  "originalEvidence": "128 complete unchanged actual original base_yield observations, 64 per edition; real helper entries, no callbacks/imports/PE startup. Whole seeded globals and base independently checked; scratch page not fully independently modeled. Owned output compares four intake channels, worked mask and signed raw ecology.",
+  "remainingGates": [
+    "Final-head required CI actual execution and review",
+    "Actual normal-SDK AmigaOS execution",
+    "No UI or gameplay exposure until qualified"
+  ],
+  "failureHistory": [
+    "SDK1 misleading-indentation warning; fixed formatting",
+    "Host1 fixture incorrectly removed scenario wire flag; independent decoder rejected length; fixture corrected, production source unchanged"
+  ],
+  "qualificationBoundary": "Normal directed human, already valid pop+1 assignment, no specialists/governor/selected fungus. Negative satellite counts explicitly rejected. All transient stage facts explicit."
+}

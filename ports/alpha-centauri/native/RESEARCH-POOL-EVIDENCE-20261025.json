@@ -1,0 +1,71 @@
+{
+  "scope": "Normal directed human tech_pick deterministic candidate pool only; no choice/discovery mutation",
+  "dependency": "PR86 research_options API, preserved head420921edf0b6e57ec0d6adf14e66f282ff770651",
+  "hostASanUBSan": {
+    "contexts": 299,
+    "publicGeneratedContexts": 115,
+    "originalDecisionContexts": 184,
+    "additionalInvalidControls": 2,
+    "outputSHA256": "2af3cf2b3aeaa9e03e7d3486cd99e32e42fe31ee2f38b4d0bfb46c1ebbd82be0"
+  },
+  "ownedWorldBindings": {
+    "savedWorlds": 131,
+    "factionQueries": 1048,
+    "independentWireMatches": true,
+    "outputSHA256": "d0cda995f2282ca9d53139bd90ed86d9861c17104f1cd8d38e3326aecfa6034a"
+  },
+  "originalDataScope": {
+    "originalBaseTutorials": 3,
+    "originalBaseRulesSyntheticContexts": 32,
+    "originalExpansionRulesSyntheticContexts": 32,
+    "originalExpansionSave": false
+  },
+  "privateOriginalDecisionSummary": {
+    "contexts": 184,
+    "offers": 1693,
+    "allOrderedPoolsMatch": true,
+    "helpers": "Unchanged original decision predicate plus original eligibility/category helpers, owned observation continuations",
+    "notExecuted": [
+      "GUI",
+      "Valuation/RNG",
+      "Automatic selection entry",
+      "Full game"
+    ],
+    "artifacts": "Kept private, not uploaded"
+  },
+  "normalSDK": {
+    "version": "OpenAmigaGCC16.2.0-open3 normal SDK",
+    "rawSHA256": "6d9289934241b1a2d8b1df0b3b564acd2ffc6a5d0936c36fb5c4d6ad5d0cdfaa",
+    "worldSHA256": "1bebd03d45a06f55c16f0e67c41294914d7cea7f985d19a80cfb64b77a83d78c",
+    "built": true,
+    "executed": false
+  },
+  "independentBigEndianExecution": "PASS public generated corpus, code_review reader121184253964",
+  "nativeExecution": "UNRUN",
+  "labInteraction": false,
+  "watchPreviewUntouched": true,
+  "publication": "Draft PR92 targeting PR86; dependency/native gates held; final revision must retain passing CI",
+  "notImplemented": [
+    "Blind/AI selection",
+    "Trade/steal/forced-dialog modes",
+    "Valuation/default highlighting/RNG",
+    "Exact GUI rendering",
+    "Research point updates/discovery awards/network callbacks"
+  ],
+  "publicCI": {
+    "rawContexts": 115,
+    "additionalInvalidControls": 2,
+    "savedWorlds": 64,
+    "factionQueries": 512,
+    "architectures": [
+      "host ASan/UBSan",
+      "independent big-endian68040"
+    ],
+    "verifiedHead": "26cf884c394878f8bf1acd6fbafc5bf4cbe89d95",
+    "readerJob": 121184253964,
+    "workflowRun": 40198439667,
+    "rawOutputSHA256": "db0f7429a8122f3f872210b3c8312b5ae0f852b0e8b3cdf4ee193a3b744d9b9b",
+    "worldOutputSHA256": "e9bc5c147fcb843f1fe551217b319356cf2891bb6ac68bae7243d3d638adf782",
+    "bothArchitecturesActuallyExecuted": true
+  }
+}

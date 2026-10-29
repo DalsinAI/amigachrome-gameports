@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "description": "Read-only verification of two checkpoints created by native AROS/FS-UAE SDL production UI",
+  "original": {
+    "name": "Borehole.SC",
+    "sha256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+    "byteLength": 199286,
+    "saveVersion": 9
+  },
+  "rules": {
+    "name": "alpha.txt from official Alien Crossfire demo",
+    "sha256": "38399e1d0b967455a9146b1c468b9ec9decda43dd168afd8c3c23e0f46e357d4"
+  },
+  "action": {
+    "base": 9,
+    "name": "The Hive",
+    "humanFaction": 2,
+    "facility": 38,
+    "facilityName": "Stockpile Energy",
+    "queueBefore": 130,
+    "queueAfter": -38,
+    "mineralsBefore": 12,
+    "mineralsAfter": 11,
+    "mineralSwitchLoss": 1,
+    "factionUnitQueue130Before": 4,
+    "factionUnitQueue130After": 3
+  },
+  "explicitBytePatches": [
+    {
+      "offset": 20346,
+      "before": 4,
+      "after": 3
+    },
+    {
+      "offset": 187686,
+      "before": 12,
+      "after": 11
+    },
+    {
+      "offset": 187702,
+      "before": 130,
+      "after": 218
+    },
+    {
+      "offset": 187703,
+      "before": 0,
+      "after": 255
+    },
+    {
+      "offset": 187704,
+      "before": 0,
+      "after": 255
+    },
+    {
+      "offset": 187705,
+      "before": 0,
+      "after": 255
+    }
+  ],
+  "checkpoints": [
+    {
+      "checkpoint": "AlphaLocal-3800-1-1108-0/session.aclocal",
+      "byteLength": 199314,
+      "payloadLength": 199286,
+      "sha256": "a7090967f9d01f699b2cc772a32f401c621cd41859acbc87e99db444b61d3e33",
+      "payloadSHA256": "f08d10cbaf4defc8a6d8375c776927e8b03169a739337eebd59d44d41a81ebb0",
+      "headerCRC32": "ca7c6c75",
+      "payloadCRC32": "d389a516",
+      "rulesCRC32": "9620b258",
+      "runtimeSeed": "12345678",
+      "allCRCsPassed": true,
+      "actualLocalPlayerResumePassed": true,
+      "resumeSummary": "resume=0 player=2 units=30 bases=11 dirty=0 seed=305419896",
+      "wholeCheckpointMatchesHost": true,
+      "wholePayloadMatchesIndependentExplicitPatches": true,
+      "originalPayloadByteChangeCount": 6,
+      "unchangedPayloadByteCount": 199280,
+      "allUnrelatedBytesPreserved": true
+    },
+    {
+      "checkpoint": "AlphaLocal-3800-1-797-0/session.aclocal",
+      "byteLength": 199314,
+      "payloadLength": 199286,
+      "sha256": "a7090967f9d01f699b2cc772a32f401c621cd41859acbc87e99db444b61d3e33",
+      "payloadSHA256": "f08d10cbaf4defc8a6d8375c776927e8b03169a739337eebd59d44d41a81ebb0",
+      "headerCRC32": "ca7c6c75",
+      "payloadCRC32": "d389a516",
+      "rulesCRC32": "9620b258",
+      "runtimeSeed": "12345678",
+      "allCRCsPassed": true,
+      "actualLocalPlayerResumePassed": true,
+      "resumeSummary": "resume=0 player=2 units=30 bases=11 dirty=0 seed=305419896",
+      "wholeCheckpointMatchesHost": true,
+      "wholePayloadMatchesIndependentExplicitPatches": true,
+      "originalPayloadByteChangeCount": 6,
+      "unchangedPayloadByteCount": 199280,
+      "allUnrelatedBytesPreserved": true
+    }
+  ],
+  "limits": [
+    "Native AROS compatibility evidence; not AmigaOS3.2 qualification",
+    "No next-turn or production-completion behavior claimed"
+  ]
+}

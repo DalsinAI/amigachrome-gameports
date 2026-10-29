@@ -6,6 +6,11 @@
 static uint32_t digest(const uint8_t* p,size_t n){uint32_t h=2166136261u;for(size_t i=0;i<n;++i)h=(h^p[i])*16777619u;return h;}
 static bool same_decoded(const alpha::OriginalWorld& w){
  const auto& v=w.game();
+ const auto current=w.current_monuments();
+ if(!current.data || current.size!=0x27a0 || current.size!=v.monuments.size ||
+    memcmp(current.data,v.monuments.data,current.size))return false;
+ const uintptr_t at=(uintptr_t)current.data,raw=(uintptr_t)w.original_bytes();
+ if(at<raw+w.original_size() && raw<at+current.size)return false;
  for(size_t i=0;i<v.vehicle_count;++i){alpha::OriginalVehicle r;if(alpha::original_vehicle(v,i,r)!=alpha::GameReadError::ok)return false;const auto& s=*w.vehicle(i);
 #define WIRE_SCALAR(type,name,off) if(s.name!=r.name)return false;
 #define WIRE_ARRAY(type,name,count,off) for(unsigned j=0;j<count;++j)if(s.name[j]!=r.name[j])return false;
@@ -79,7 +84,7 @@ int main(int argc,char** argv){
  const uint32_t hash=digest(data,(size_t)n);alpha::OriginalWorld w;
  const size_t limit=argc==3?(size_t)strtoul(argv[2],nullptr,0):64u*1024u*1024u;
  auto error=w.load(data,(size_t)n,0x12345678u,limit);
- if(error!=alpha::WorldLoadError::ok){if(w.loaded() || w.original_size() || w.memory_bytes() || w.runtime_seed() || w.vehicle(0) || w.faction(0))return 21;printf("ERROR %s\n",alpha::world_load_error_name(error));free(data);return 20;}
+ if(error!=alpha::WorldLoadError::ok){if(w.loaded() || w.original_size() || w.memory_bytes() || w.runtime_seed() || w.vehicle(0) || w.faction(0) || w.current_monuments().data || w.current_monuments().size)return 21;printf("ERROR %s\n",alpha::world_load_error_name(error));free(data);return 20;}
  if(!w.loaded() || w.original_size()!=(size_t)n || !w.memory_bytes() || w.memory_bytes()>limit || w.runtime_seed()!=0x12345678u || w.original_bytes()==data || memcmp(w.original_bytes(),data,(size_t)n) || !same_decoded(w))return 21;
  memset(data,0,(size_t)n);free(data);data=nullptr;
  // Caller memory is gone: all borrowed spans now point into the owned snapshot.
@@ -93,9 +98,12 @@ int main(int argc,char** argv){
   error=w.load(corrupt,w.original_size(),999);free(corrupt);
   if(error!=alpha::WorldLoadError::bad_reference || w.original_bytes()!=snapshot || w.memory_bytes()!=memory || w.runtime_seed()!=0x12345678u || !same_decoded(w))return 21;
  }
+ // The separate table participates in the declared World memory budget.
+ if(w.load(snapshot,w.original_size(),999,memory-1)!=alpha::WorldLoadError::memory_limit ||
+    w.original_bytes()!=snapshot || w.memory_bytes()!=memory || !same_decoded(w))return 21;
  // Reload from our own snapshot without freeing it before the replacement owns it.
- if(w.load(w.original_bytes(),w.original_size(),0xabcdef01u)!=alpha::WorldLoadError::ok || w.runtime_seed()!=0xabcdef01u || digest(w.original_bytes(),w.original_size())!=hash || !same_decoded(w))return 21;
- printf("version=%lu vehicles=%lu bases=%lu tiles=%lu bytes=%lu snapshot=%08lx seed=%08lx ownership=1 transactional=1 rc=0\n",(unsigned long)w.game().data_version,(unsigned long)w.game().vehicle_count,(unsigned long)w.game().base_count,(unsigned long)w.game().map.info.tile_count,(unsigned long)w.original_size(),(unsigned long)hash,(unsigned long)w.runtime_seed());
- w.clear();w.clear();if(w.loaded() || w.original_size() || w.memory_bytes() || w.runtime_seed() || w.faction(0))return 21;
+ if(w.load(w.original_bytes(),w.original_size(),0xabcdef01u,memory)!=alpha::WorldLoadError::ok || w.runtime_seed()!=0xabcdef01u || digest(w.original_bytes(),w.original_size())!=hash || !same_decoded(w))return 21;
+ printf("version=%lu vehicles=%lu bases=%lu tiles=%lu bytes=%lu snapshot=%08lx seed=%08lx ownership=1 transactional=1 monuments=%08lx rc=0\n",(unsigned long)w.game().data_version,(unsigned long)w.game().vehicle_count,(unsigned long)w.game().base_count,(unsigned long)w.game().map.info.tile_count,(unsigned long)w.original_size(),(unsigned long)hash,(unsigned long)w.runtime_seed(),(unsigned long)digest(w.current_monuments().data,w.current_monuments().size));
+ w.clear();w.clear();if(w.loaded() || w.original_size() || w.memory_bytes() || w.runtime_seed() || w.faction(0) || w.current_monuments().data || w.current_monuments().size)return 21;
  return 0;
 }
