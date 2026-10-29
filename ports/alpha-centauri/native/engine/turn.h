@@ -97,22 +97,13 @@ struct TurnHooks {
 TurnHooks& turn_hooks();
 
 /* ---- WP1-local copies of small Thinker helpers owned by other files ----
- * Kept in their own namespace so they never clash with the owning package. */
+ * Kept in their own namespace so they never clash with the owning package.
+ * Integration: helpers WP2 provides (breed_mod, base_can_riot, fac_maint in
+ * base_wp2.h; victory_done, full_game_turn, voice_of_planet, climactic_battle,
+ * council_votes, aah_ooga, great_beelzebub, great_satan in base_deps.h) are
+ * used from there, and reputation, set_agenda, num_objectives from WP8
+ * (diplo.h); the rest have no owner in the engine yet. */
 namespace wp1 {
-bool full_game_turn();
-bool victory_done();
-bool voice_of_planet();
-int climactic_battle();
-int council_votes(int faction_id);
-int aah_ooga(int faction_id, int pact_faction_id);
-int great_beelzebub(int faction_id, int is_aggressive);
-int great_satan(int faction_id, int is_aggressive);
-int reputation(int faction_id, int faction_id_with);
-void set_agenda(int faction_id_1, int faction_id_2, uint32_t status, bool add);
-int num_objectives(int faction_id, int incl_pact);
-int breed_mod(int base_id, int faction_id);
-bool base_can_riot(int base_id, bool allow_staple);
-int fac_maint(int facility_id, int faction_id);
 int energy_limit(int faction_id);
 void init_save_game(int faction_id);
 int pop2(const char* label, const char* pcx_filename, int base_id);

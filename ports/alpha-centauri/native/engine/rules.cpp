@@ -19,6 +19,7 @@
  * - no user-interface side effects (load_faction_art, edit-map buttons).
  */
 #include "engine.h"
+#include "base_wp2.h"
 
 #include <ctype.h>
 #include <memory>
@@ -1820,7 +1821,60 @@ int engine_load_rules_ex(const char* dir, int expansion, int all_rules) {
         RulesError = buf;
     }
     RulesFailed = false;
+    if (!result && all_rules) {
+        engine_load_base_names(dir);
+    }
     return result ? 1 : 0;
+}
+
+/*
+Read one base name section the way the original name_base (0x4E4090, see
+OpenSMACX src/base.cpp) walks it: the lines after the header up to an empty
+line or "#END", the first comma item of each, at most 23 characters
+(strncpy_s(name_out, 25, text_item(), 24); name_out[23] = 0).
+Fix: the list also ends at the next "#" section header, as in Thinker's
+reader_path, so a file without a blank line before the next section does not
+add that header as a name.
+*/
+static void read_base_name_list(const char* filename, const char* label,
+std::vector<std::string>& names) {
+    names.clear();
+    if (!filename || !*filename || text_open(filename, label)) {
+        text_close();
+        return;
+    }
+    while (names.size() < (size_t)MaxBaseNum) {
+        char* line = text_get();
+        if (!line || !strlen(line) || !_strnicmp(line, "#END", 4) || line[0] == '#') {
+            break;
+        }
+        std::string name = text_item();
+        if (name.size() > 23) {
+            name.resize(23);
+        }
+        names.push_back(name);
+    }
+    text_close();
+}
+
+int engine_load_base_names(const char* dir) {
+    if (!engine_state() || !MFactions) {
+        return 0;
+    }
+    RulesDir = dir ? dir : "";
+    RulesFailed = false;
+    int count = 0;
+    for (int i = 0; i < MaxPlayerNum; i++) {
+        char filename[sizeof(MFactions[i].filename) + 1];
+        memcpy(filename, MFactions[i].filename, sizeof(MFactions[i].filename));
+        filename[sizeof(MFactions[i].filename)] = '\0';
+        read_base_name_list(filename, "BASES", base_name_lists.land[i]);
+        read_base_name_list(filename, "WATERBASES", base_name_lists.sea[i]);
+        count += (int)(base_name_lists.land[i].size() + base_name_lists.sea[i].size());
+    }
+    read_base_name_list("basename", "GENERIC", base_name_lists.generic);
+    count += (int)base_name_lists.generic.size();
+    return count;
 }
 
 int engine_load_rules(const char* dir, int expansion) {
