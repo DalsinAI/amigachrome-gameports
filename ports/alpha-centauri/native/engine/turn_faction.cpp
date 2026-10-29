@@ -7,12 +7,14 @@
  * The wp1:: helpers are copies of small Thinker functions whose files belong to
  * packages that have not landed (game.cpp, faction.cpp, score.cpp); they keep the
  * Thinker bodies. Integration: the copies of base.cpp, game.cpp and faction.cpp
- * helpers that WP2 provides (base_wp2.h, base_deps.h) were removed in favour of those. Deviations are marked "Fix:" or "Original:".
+ * helpers that WP2 provides (base_wp2.h, base_deps.h) and of the faction.cpp and
+ * score.cpp helpers that WP8 provides (diplo.h) were removed in favour of those. Deviations are marked "Fix:" or "Original:".
  */
 #include "engine.h"
 #include "turn.h"
 #include "base_wp2.h"
 #include "base_deps.h"
+#include "diplo.h"
 
 
 namespace alpha {
@@ -20,126 +22,6 @@ namespace engine {
 
 /* ---- wp1:: local helpers ---- */
 namespace wp1 {
-
-int reputation(int faction_id, int faction_id_with) {
-    return clamp(Factions[faction_id].integrity_blemishes
-        - Factions[faction_id].diplo_gifts[faction_id_with], 0, 99);
-}
-
-void set_agenda(int faction_id_1, int faction_id_2, uint32_t status, bool add) {
-    if (faction_id_1 >= 0 && faction_id_1 < MaxPlayerNum
-    && faction_id_2 >= 0 && faction_id_2 < MaxPlayerNum) {
-        if (add) {
-            Factions[faction_id_1].diplo_agenda[faction_id_2] |= status;
-        } else {
-            Factions[faction_id_1].diplo_agenda[faction_id_2] &= ~status;
-        }
-    }
-}
-
-int num_objectives(int faction_id, int incl_pact) {
-    if (!is_alive(faction_id)) {
-        return 0;
-    }
-    int score = Factions[faction_id].unk_101;
-    for (int i = 0; i < *VehCount; i++) {
-        if (Vehs[i].faction_id != faction_id || !(Vehs[i].flags & VFLAG_IS_OBJECTIVE)) {
-            continue;
-        }
-        if (*GameRules & RULES_SCN_VICT_OBJ_UNITS_REACH_FRIEND_OBJ_BASE) {
-            int base_id = base_at(Vehs[i].x, Vehs[i].y);
-            if (base_id < 0 || !is_objective(base_id)) {
-                continue;
-            }
-            int owner = Bases[base_id].faction_id;
-            if (owner == faction_id || ((Factions[faction_id].diplo_status[owner] & DIPLO_PACT)
-            && (*GameRules & RULES_VICTORY_COOPERATIVE))) {
-                score++;
-            }
-        } else if (*GameRules & RULES_SCN_VICT_OBJ_UNITS_REACH_FRIEND_HQ_BASE) {
-            int base_id = base_at(Vehs[i].x, Vehs[i].y);
-            if (base_id < 0 || !has_fac_built(FAC_HEADQUARTERS, base_id)) {
-                continue;
-            }
-            int owner = Bases[base_id].faction_id;
-            if (owner == faction_id || ((Factions[faction_id].diplo_status[owner] & DIPLO_PACT)
-            && (*GameRules & RULES_VICTORY_COOPERATIVE))) {
-                score++;
-            }
-        } else {
-            score++;
-        }
-    }
-    for (int i = 0; i < *BaseCount; i++) {
-        if (Bases[i].faction_id != faction_id) {
-            continue;
-        }
-        if (*GameState & STATE_SCN_VICT_POPULATION_COUNT_OBJ) {
-            score += Bases[i].pop_size;
-        }
-        if ((*GameRules & RULES_SCN_VICT_ALL_BASE_COUNT_OBJ)
-        || (Bases[i].event_flags & BEVENT_OBJECTIVE)) {
-            score++;
-        }
-    }
-    if (*GameState & STATE_SCN_VICT_TECH_COUNT_OBJ) {
-        for (int tech_id = 0; tech_id < MaxTechnologyNum; tech_id++) {
-            if (has_tech(tech_id, faction_id)) {
-                score++;
-            }
-        }
-        score += Factions[faction_id].tech_count_transcendent;
-    }
-    if (*GameState & STATE_SCN_VICT_CREDITS_COUNT_OBJ) {
-        score += Factions[faction_id].energy_credits;
-    }
-    if (*GameState & STATE_SCN_VICT_BASE_FACIL_COUNT_OBJ) {
-        for (int i = 0; i < *BaseCount; i++) {
-            if (Bases[i].faction_id == faction_id
-            && *ScnVictFacilityObj >= 0 // Fix: lower bound check
-            && *ScnVictFacilityObj <= Fac_ID_Last
-            && has_fac_built((FacilityId)*ScnVictFacilityObj, i)) {
-                score++;
-            }
-        }
-    }
-    if (*GameState & STATE_SCN_VICT_TERRAIN_ENH_COUNT_OBJ) {
-        for (int y = 0; y < *MapAreaY; y++) {
-            for (int x = y & 1; x < *MapAreaX; x += 2) {
-                MAP* sq = mapsq(x, y);
-                if (sq && sq->owner == faction_id) {
-                    score += bit_count(sq->items & (BIT_SENSOR|BIT_THERMAL_BORE|BIT_ECH_MIRROR|BIT_CONDENSER|\
-                        BIT_FOREST|BIT_AIRBASE|BIT_FARM|BIT_BUNKER|BIT_SOLAR|BIT_MINE|BIT_MAGTUBE|BIT_ROAD));
-                }
-            }
-        }
-    }
-    if (*GameState & STATE_SCN_VICT_TERRITORY_COUNT_OBJ) {
-        for (int y = 0; y < *MapAreaY; y++) {
-            for (int x = y & 1; x < *MapAreaX; x += 2) {
-                MAP* sq = mapsq(x, y);
-                if (sq && sq->owner == faction_id) {
-                    score++;
-                }
-            }
-        }
-    }
-    if (*GameRules & RULES_SCN_VICT_SP_COUNT_OBJ) {
-        for (int i = 0; i < MaxSecretProjectNum; i++) {
-            if (SecretProjects[i] >= 0 && Bases[SecretProjects[i]].faction_id == faction_id) {
-                score++;
-            }
-        }
-    }
-    if (incl_pact && (*GameRules & RULES_VICTORY_COOPERATIVE)) {
-        for (int i = 1; i < MaxPlayerNum; i++) {
-            if (i != faction_id && (Factions[faction_id].diplo_status[i] & DIPLO_PACT)) {
-                score += num_objectives(i, 0);
-            }
-        }
-    }
-    return score;
-}
 
 /*
 Original: energy_limit is terranx.exe 0x445440 and is in no upstream source.
@@ -325,7 +207,7 @@ void __cdecl rankings(int flag) {
             score = 0;
         } else if ((*ObjectiveReqVictory < 9000 || *ObjectivesSuddenDeathVictory < 9000)
         && !*ObjectiveAchievePts) {
-            score = 10 * wp1::num_objectives(fc_id, 0);
+            score = 10 * num_objectives(fc_id, 0);
         } else {
             score = 4 * (plr->pop_total + plr->tech_count_transcendent);
             for (int tech_id = 0; tech_id < MaxTechnologyNum; tech_id++) {
@@ -339,7 +221,7 @@ void __cdecl rankings(int flag) {
                     score += 10;
                 }
             }
-            score += *ObjectiveAchievePts * wp1::num_objectives(fc_id, 0);
+            score += *ObjectiveAchievePts * num_objectives(fc_id, 0);
             // Fix: original version considered plr->units_active[unit_id] when the count
             // is 250 or below and otherwise excludes unit_id from scoring but this does not
             // properly handle plr->units_active wrapping to zero when it reaches 256.
@@ -449,7 +331,7 @@ void __cdecl rankings(int flag) {
         int chance = difficulty * ((wants_revenge ? 4 : 0)
             + ((Factions[i].player_flags_ext & PFLAG_EXT_SHAMELESS_BETRAY_HUMANS) ? 4 : 0)
             + (climactic_battle() ? 4 : 0)
-            + wp1::reputation(leader_faction, i));
+            + reputation(leader_faction, i));
         int roll_range = (vendetta_count - Factions[i].AI_fight + 2) << 8;
         int roll = roll_range > 1 ? game_rand() % roll_range : 0;
         if (roll < chance) {

@@ -101,11 +101,9 @@ TurnHooks& turn_hooks();
  * Integration: helpers WP2 provides (breed_mod, base_can_riot, fac_maint in
  * base_wp2.h; victory_done, full_game_turn, voice_of_planet, climactic_battle,
  * council_votes, aah_ooga, great_beelzebub, great_satan in base_deps.h) are
- * used from there; the rest have no owner in the engine yet. */
+ * used from there, and reputation, set_agenda, num_objectives from WP8
+ * (diplo.h); the rest have no owner in the engine yet. */
 namespace wp1 {
-int reputation(int faction_id, int faction_id_with);
-void set_agenda(int faction_id_1, int faction_id_2, uint32_t status, bool add);
-int num_objectives(int faction_id, int incl_pact);
 int energy_limit(int faction_id);
 void init_save_game(int faction_id);
 int pop2(const char* label, const char* pcx_filename, int base_id);

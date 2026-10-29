@@ -35,7 +35,7 @@ int* BasePsychNDrones = base_compute_state.base_psych_ndrones;
 int* BasePsychSDrones = base_compute_state.base_psych_sdrones;
 int* BaseTileFlags = base_compute_state.base_tile_flags;
 // Integration: SkipTechScreenB is defined by WP5 (wp5_deps.cpp).
-__attribute__((weak)) int* GameVictoryType = &base_compute_state.game_victory_type;
+// Integration: GameVictoryType is defined by WP8 (diplo.cpp).
 int* dword_90EA40 = &base_compute_state.prototype_flag_a;
 int* dword_90EA3C = &base_compute_state.prototype_flag_b;
 
