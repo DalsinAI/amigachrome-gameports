@@ -1,0 +1,14 @@
+{
+  "scope": "Genuine native68040/FPU AROS energy allocation HUNK leaf proof; not full turn",
+  "energyLeaf": {
+    "cases": 5410,
+    "bytes": 302960,
+    "sha256": "703917c0907df292ab9d3631499d21c09f2c310117d9cad8aed5b2b74fdaa43f",
+    "binarySHA256": "dbc8004b76601c20b8e1c939ed49cd9d8b9084ee8cd787b348fcdc387d649bb8",
+    "completeOracleMatch": true,
+    "guestReturnCode": 0
+  },
+  "status": "ENERGY_RC 0",
+  "sourceRevision": "f73cfb8",
+  "runtimeRecipe": "scripts/run_alpha_native_world.py / native FS-UAE+AROS; real HUNK execution, full output independent-oracle match"
+}

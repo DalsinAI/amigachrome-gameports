@@ -1,0 +1,18 @@
+{
+  "control": "local-player checks=145 checkpoint=144918",
+  "checkpointSHA256": "843665734047b513c4900a2fae0dc3acc714d3ad135ca3b55537c30e1793661a",
+  "nativeAmigaOS": "UNRUN",
+  "independentContainerBytes": 144890,
+  "passed": true,
+  "base": "1f7a3ed2b68fb654a4a87ec97ff572db98e93da4",
+  "host": "ASan/UBSan PASS; leak detector unavailable in this process sandbox",
+  "inheritedLocalActions": {
+    "cases": 43,
+    "passed": true,
+    "outputSHA256": "faf47cf990a5135a9cd505e8353e5af7f167c0465ce3d8310c6c73709cabf38a"
+  },
+  "independentLinux68040": "PENDING CI",
+  "normalAmigaSDKBuild": "UNRUN: installed SDK unavailable here",
+  "nativeUI": "UNRUN: daletop reported offline",
+  "deployed": false
+}

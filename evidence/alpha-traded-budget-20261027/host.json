@@ -1,0 +1,435 @@
+{
+  "cases": 25,
+  "accepted": 16,
+  "positiveTrade": 15,
+  "command": [
+    "c++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "-fno-sanitize-recover=all",
+    "-no-pie",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/rules_text.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/original_map.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/original_game.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/original_faction.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/original_world.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/prototype.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/movement.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/saved_speed.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_unit_stats.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/vehicle_stack.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/tile_yields.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_technology_effects.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_tile_yields.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_worker_radius.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_terraform_ecology.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_stable_intake.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/base_nutrients.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_fresh_nutrients.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_convoy_nutrients.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/base_minerals.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_base_minerals.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/base_support.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_base_support.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/base_energy.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_energy.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_base_accounting.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/energy_allocation.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_energy_allocation.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/facility_upkeep.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_facility_upkeep.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/cost_factor.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_cost_factor.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_base_budget.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/base_commerce.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_base_commerce.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_traded_budget.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-upkeep/ports/alpha-centauri/native/world_base_budget_probe.cpp",
+    "-o",
+    "/tmp/alpha-traded-budget-host-1/world-traded-budget-probe"
+  ],
+  "aggregateSHA256": "56a3059a6bc4b9aac55a701b2914fc28d6662e9bb5641d8bc127dac50f86e3cd",
+  "casesDetail": [
+    {
+      "name": "case-0.SC",
+      "energyFile": "energy-0.bin",
+      "args": [
+        0,
+        0,
+        7,
+        512,
+        0
+      ],
+      "status": 0,
+      "commerce": 1,
+      "passed": true,
+      "outputSHA256": "76966bac59cbe68c2fccc619f734e557952cfd54ee75ee4876e647547acd79d8"
+    },
+    {
+      "name": "case-1.SC",
+      "energyFile": "energy-1.bin",
+      "args": [
+        0,
+        100,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 7,
+      "passed": true,
+      "outputSHA256": "1f863a06100b2a5b084aba1b022979ad3ca6cc37191a082a683b5fb1e868b888"
+    },
+    {
+      "name": "case-2.SC",
+      "energyFile": "energy-2.bin",
+      "args": [
+        0,
+        0,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 3,
+      "passed": true,
+      "outputSHA256": "8cfd9335c81005613e82625579e67b755b1dff7968d65cff7a016979a02d4be8"
+    },
+    {
+      "name": "case-3.SC",
+      "energyFile": "energy-3.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        0
+      ],
+      "status": 0,
+      "commerce": 5,
+      "passed": true,
+      "outputSHA256": "1869731cd680a6f37fe33637b17d8c755bc7fa90b5cfd458d094865a55fd23f2"
+    },
+    {
+      "name": "case-4.SC",
+      "energyFile": "energy-4.bin",
+      "args": [
+        0,
+        0,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 4,
+      "passed": true,
+      "outputSHA256": "bb3658aa963b5e010b72a04c8a050649c3dcb8f91aed816fc54bfbaaf7b541af"
+    },
+    {
+      "name": "case-5.SC",
+      "energyFile": "energy-5.bin",
+      "args": [
+        0,
+        100,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 14,
+      "passed": true,
+      "outputSHA256": "23aadf2f66111297d2590357b9d0801c9e90154136f0d03e806280284c75db7a"
+    },
+    {
+      "name": "case-6.SC",
+      "energyFile": "energy-6.bin",
+      "args": [
+        0,
+        0,
+        7,
+        512,
+        0
+      ],
+      "status": 0,
+      "commerce": 2,
+      "passed": true,
+      "outputSHA256": "46a2842274e55ef53f4db7c8c29e2c260ba7a20af1cb2de3d28f6a9ad2b75e9b"
+    },
+    {
+      "name": "case-7.SC",
+      "energyFile": "energy-7.bin",
+      "args": [
+        0,
+        100,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 6,
+      "passed": true,
+      "outputSHA256": "cf376422ba8ca98f751ee27baa17ee72679cbdf9c6d28ef187819a7ca217b200"
+    },
+    {
+      "name": "case-8.SC",
+      "energyFile": "energy-8.bin",
+      "args": [
+        0,
+        0,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 3,
+      "passed": true,
+      "outputSHA256": "c2c3bf6baa743a37866e4b190a5be88cb0827f6813cd6659ebbb92edad00d317"
+    },
+    {
+      "name": "case-9.SC",
+      "energyFile": "energy-9.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        0
+      ],
+      "status": 0,
+      "commerce": 7,
+      "passed": true,
+      "outputSHA256": "d255fd8f0e86c80edee66ef089f590ec2d6c35d12f0d7a578726938528d09ff0"
+    },
+    {
+      "name": "case-10.SC",
+      "energyFile": "energy-10.bin",
+      "args": [
+        0,
+        0,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 8,
+      "passed": true,
+      "outputSHA256": "86976427a66e80791d0bd05e36e1fb04f127fecbbd015def104191fcd02f0c3d"
+    },
+    {
+      "name": "case-11.SC",
+      "energyFile": "energy-11.bin",
+      "args": [
+        0,
+        100,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 19,
+      "passed": true,
+      "outputSHA256": "931887159d264a573883d348725c39543157c0c0db49910081984a6a45fd6bed"
+    },
+    {
+      "name": "case-12.SC",
+      "energyFile": "energy-12.bin",
+      "args": [
+        0,
+        0,
+        7,
+        512,
+        0
+      ],
+      "status": 0,
+      "commerce": 3,
+      "passed": true,
+      "outputSHA256": "7f5d977358b1de2c950a9992f7644335b4287266f77ab6834bd5a6ea56c83c50"
+    },
+    {
+      "name": "case-13.SC",
+      "energyFile": "energy-13.bin",
+      "args": [
+        0,
+        100,
+        7,
+        544,
+        0
+      ],
+      "status": 0,
+      "commerce": 0,
+      "passed": true,
+      "outputSHA256": "d1e4fa85acf3f211b9f37c47f3286edbf861e7f1bb4416588cc716d6dc15a248"
+    },
+    {
+      "name": "case-14.SC",
+      "energyFile": "energy-14.bin",
+      "args": [
+        0,
+        0,
+        7,
+        544,
+        0
+      ],
+      "status": 1,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+    },
+    {
+      "name": "case-15.SC",
+      "energyFile": "energy-15.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        0
+      ],
+      "status": 0,
+      "commerce": 8,
+      "passed": true,
+      "outputSHA256": "3abb6d36d12e4c945f0d2484315b71472851c0314b2ad737116aeb8d538abb07"
+    },
+    {
+      "name": "case-16.SC",
+      "energyFile": "energy-16.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        0
+      ],
+      "status": 1,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+    },
+    {
+      "name": "case-17.SC",
+      "energyFile": "energy-17.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        0
+      ],
+      "status": 1,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+    },
+    {
+      "name": "case-18.SC",
+      "energyFile": "energy-18.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        0
+      ],
+      "status": 5,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910"
+    },
+    {
+      "name": "case-19.SC",
+      "energyFile": "energy-19.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        0
+      ],
+      "status": 1,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+    },
+    {
+      "name": "case-20.SC",
+      "energyFile": "energy-20.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        1
+      ],
+      "status": 3,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "9d9f290527a6be626a8f5985b26e19b237b44872b03631811df4416fc1713178"
+    },
+    {
+      "name": "case-21.SC",
+      "energyFile": "energy-21.bin",
+      "args": [
+        0,
+        100,
+        7,
+        512,
+        2
+      ],
+      "status": 1,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+    },
+    {
+      "name": "case-22.SC",
+      "energyFile": "energy-22.bin",
+      "args": [
+        0,
+        2147483647,
+        7,
+        512,
+        0
+      ],
+      "status": 5,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910"
+    },
+    {
+      "name": "case-23.SC",
+      "energyFile": "energy-23.bin",
+      "args": [
+        0,
+        1,
+        2147483647,
+        512,
+        0
+      ],
+      "status": 0,
+      "commerce": 6,
+      "passed": true,
+      "outputSHA256": "a09273bb2925652b8775e36695e82cb6d3a9783b0cce2c0ea3ddb26f60011e0c"
+    },
+    {
+      "name": "case-24.SC",
+      "energyFile": "energy-24.bin",
+      "args": [
+        0,
+        -1,
+        7,
+        512,
+        0
+      ],
+      "status": 1,
+      "commerce": null,
+      "passed": true,
+      "outputSHA256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+    }
+  ],
+  "native": "UNRUN"
+}

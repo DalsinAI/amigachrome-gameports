@@ -1,0 +1,89 @@
+{
+  "scope": "Owned selected-recipient nonrandom promotion frame only; not caller selection or legal attack",
+  "host": {
+    "worlds": 576,
+    "statuses": {
+      "0": 458,
+      "1": 0,
+      "2": 50,
+      "3": 54,
+      "4": 14
+    },
+    "outputSHA256": "7502925fda5f4e2b36742a272dbea3c6f49e9652b0dab8ff563f09ccca65f8b8",
+    "binarySHA256": "7225d636ef3e24baadbe949d80cbe1eef506451bcd0410830afb37b18536eadd",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "worlds": 576,
+    "statuses": {
+      "0": 458,
+      "1": 0,
+      "2": 50,
+      "3": 54,
+      "4": 14
+    },
+    "outputSHA256": "7502925fda5f4e2b36742a272dbea3c6f49e9652b0dab8ff563f09ccca65f8b8",
+    "binarySHA256": "822b5e001c9ea7949793255491f0216b252834a6ea0a2cb030cc3d22df1d3a50",
+    "native": "UNRUN"
+  },
+  "additionalControls": {
+    "promoted": 71,
+    "continuationStatuses": {
+      "0": 441,
+      "3": 17
+    },
+    "directRejectedGuards": 6412,
+    "exactBudgetAccepts": 458,
+    "sourceLifetimeChecks": 458,
+    "hostPoisonedInputNoReadChecks": 1374,
+    "independentInputAliasChecks": 1374,
+    "priorOutputPreservedOnOrdinaryHolds": 118
+  },
+  "sdk": {
+    "sha256": "67180aa1c53a98d74eca25d7bcfd6574fe065ecaa316b824e5c73ae40547fb01",
+    "freshFinalBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "sourceIdentity": {
+    "parent": "16f124359f2cfa426984aff888fe1059f998779e",
+    "unchangedParentCpp": 328,
+    "parentHeaderChanges": "OriginalWorld and LandEngagementPlan add WorldPromotionPlan friend only",
+    "parentWorkflowCommands": 309,
+    "finalWorkflowCommands": 311,
+    "allParentCommandsRetained": true
+  },
+  "originalReference": "Whole original promote+real morale,2048 controlled cases per edition/256 promotions each; full1.1MB global comparison, no instruction patch/observer/fake callbacks. Original random/notification paths UNRUN. See private original handoff88bca194.",
+  "inheritedAlias": {
+    "host": {
+      "cases": 24,
+      "poisonedInputNoRead": true,
+      "inputBytesUnchanged": true,
+      "outputSHA256": "83619056087be9152e51c31bed9deb17ad442d2b05fadeb7d09045e5c77b216e",
+      "binarySHA256": "5fce07999a18c6715461bd946aebbda6839efe76fa7aefebd9f2a62c5cdbc1ba",
+      "native": "UNRUN"
+    },
+    "independent68040": {
+      "cases": 24,
+      "poisonedInputNoRead": false,
+      "inputBytesUnchanged": true,
+      "outputSHA256": "83619056087be9152e51c31bed9deb17ad442d2b05fadeb7d09045e5c77b216e",
+      "binarySHA256": "2ce3a11c4813c6f8b3b2905ded3bc49a85a0cff8c068ac5e2df31f7529328b07",
+      "native": "UNRUN"
+    }
+  },
+  "history": [
+    "host1 compiler rejected test-driver same-line if/const as misleading indentation; driver split; no passing runtime claimed. Source scalar range guards finalized before authoritative host2/be1.",
+    "host2/be1 and SDK1/2 cover initial probe. Final host3/be2 and SDK3/4 include invalid component domains and exact budget boundary controls; production behavior unchanged."
+  ],
+  "held": [
+    "Native faction/probe/home-facility promotion profiles",
+    "Actual RNG path and TLS initialization provenance",
+    "Active human-player effective morale notification",
+    "Caller recipient selection and pre-promotion selection draws/strength arithmetic",
+    "Attack/session/event commit, variable-length persistence, turn/AI/diplomacy/full game",
+    "Native/frontend/remote CI/publication"
+  ],
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED"
+}

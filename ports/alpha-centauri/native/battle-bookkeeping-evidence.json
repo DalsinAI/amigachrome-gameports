@@ -1,0 +1,47 @@
+{
+  "scope": "Explicit offline before/after-cleanup numeric battle statistics and nonactive-player enemy-destroyed monument fields; no World/caller/session commit",
+  "host": {
+    "cases": 17380,
+    "statuses": {
+      "0": 15836,
+      "1": 17,
+      "2": 1,
+      "3": 2,
+      "4": 1524
+    },
+    "overlapGuards": 17380,
+    "outputSHA256": "d414698565153e805e6d2a96c7e499a690cee28adb05aa98e1f794b7b99be411",
+    "binarySHA256": "a12aeec309532d05f92a2c4865738d157ba5afccb004d60e36d7f44add54f260",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "cases": 17380,
+    "statuses": {
+      "0": 15836,
+      "1": 17,
+      "2": 1,
+      "3": 2,
+      "4": 1524
+    },
+    "overlapGuards": 17380,
+    "outputSHA256": "d414698565153e805e6d2a96c7e499a690cee28adb05aa98e1f794b7b99be411",
+    "binarySHA256": "7e6354a23ac5c375484ade61a0acf73a430d9f5e55dd071d9f8f41e30ba9dc2c",
+    "native": "UNRUN"
+  },
+  "sdk": {
+    "sha256": "82ab70ee6f25cfe7f4b35595468771c0020c09da9f03642942571abb438d1fc5",
+    "twoFreshBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "originalReference": "Private alpha-combat-statistics-control/handoff.json SHA256 3accfe08d9b8869954ec6a0211259ceb24b2c3b63fb10caf8635c909979c6a39",
+  "native": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED",
+  "held": [
+    "network/PBEM notifications",
+    "active-player monument UI",
+    "World/caller/session/attack authority",
+    "artifact friction/treaty",
+    "base/cargo caller",
+    "persistence/AI/turn/full game"
+  ]
+}

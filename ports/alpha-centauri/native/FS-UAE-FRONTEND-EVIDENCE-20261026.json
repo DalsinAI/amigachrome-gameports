@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-26",
+  "scope": "Real native Alpha frontend and restricted actions in FS-UAE/AROS; not a complete campaign or AmigaOS3.2.3 qualification",
+  "machine": {
+    "model": "A1200",
+    "cpu": "68040",
+    "fpu": "68040",
+    "chipMiB": 2,
+    "motherboardFastMiB": 64,
+    "z2FastMiB": 0,
+    "rtg": "UAEGFX Z2 4MiB",
+    "screen": "1280x1024x16 P96 mode0x10071400"
+  },
+  "dependencies": {
+    "fsUAE": {
+      "bytes": 12428896,
+      "sha256": "b6d7199d181a061fe3bbcbca244d861d8924073d8124dc26d082e537f040fe6a"
+    },
+    "gccRelease": "16.2.0-open3",
+    "runtimePatch": "toolchain/libnix-fpu40-check.patch, isolated extracted compiler only",
+    "NDK": "3.2, installed with official script",
+    "openamigartgCommit": "fb9b556f15f73dc9b6fb1f3dc8f461508efb34fe",
+    "SDL2": "2.32.10",
+    "SDLttf": "2.24.0",
+    "FreeType": "2.14.3",
+    "SDLModule": {
+      "bytes": 1001352,
+      "sha256": "2bc785a1528ff814ea019b47b9f02e36c7a606ac43e20437780d508bdb14fc88"
+    }
+  },
+  "binaries": {
+    "menu": {
+      "bytes": 881196,
+      "sha256": "faffb486d18d61799809aa92d6a7f7d97781c5448181efb11ada260ffc818ae0"
+    },
+    "world": {
+      "bytes": 872008,
+      "sha256": "133f3db9ebdb5940d7f8d435925a144f29125ad85d2fb2d3b378204619b26788"
+    }
+  },
+  "assets": {
+    "source": "Original freely distributed Alien Crossfire demo and official Firaxis Boreholes scenario; originals not committed",
+    "scenarioSHA256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+    "scenarioVersion": 9,
+    "vehicles": 30,
+    "bases": 11,
+    "tiles": 1152,
+    "script": "scripts/stage_alpha_demo_assets.py"
+  },
+  "build": {
+    "nativeStrictFlags": "-m68040 -m68881 -std=c++17 -O2 -Wall -Wextra -Werror",
+    "ordinaryFrontend": "passed",
+    "candidateFrontend": "passed",
+    "candidateStandaloneWorld": "passed",
+    "portableLocalPlayerControls": 145
+  },
+  "menu": {
+    "actualGuestReturnCode": 0,
+    "baseArtAndOriginalFontsRendered": true,
+    "crossfireArtSelectedWithActualSDLKey": true,
+    "missingTutorialChooserFallbackBuilt": true,
+    "scenarioRequesterRuntimeExercised": false
+  },
+  "movement": {
+    "nativeActions": [
+      "LOCAL ACTION key=55 status=Move: moved (cost 3) dirty=1",
+      "LOCAL ACTION key=118 status=Saved PROGDIR:AlphaLocal-3800-1-2169-0 dirty=0",
+      "LOCAL ACTION key=114 status=Reload: ok dirty=0"
+    ],
+    "actualGuestReturnCode": 0,
+    "smokePassed": true,
+    "vehicle": 21,
+    "fromXY": [
+      18,
+      34
+    ],
+    "toXY": [
+      17,
+      33
+    ],
+    "movementSpent": 3,
+    "checkpointBytes": 199314,
+    "checkpointSHA256": "37193617e69433cd9afe44c6ffb1f01d71bc9f993c2de5a4dea3851b4fdc0981",
+    "changedPayloadBytes": 12,
+    "allOtherPayloadBytesPreserved": true,
+    "wholeCheckpointMatchesIndependentHost": true,
+    "headerAndPayloadCRCs": true,
+    "hostNativeResume": true
+  },
+  "capture": {
+    "method": "Actual FS-UAE GL framebuffer read before real SDL swap; no substitute rendering",
+    "originalWindowScreenshots": {
+      "Alpha_Centauri_Native_Menu_Final.png": {
+        "bytes": 496605,
+        "sha256": "889432408682898130fde219c2302fcf3e5f18653f4476ec531473cc43e510c7"
+      },
+      "Alpha_Centauri_Native_Crossfire_Menu.png": {
+        "bytes": 546413,
+        "sha256": "86122f99e4b9331509fba59eb57875d89fadefe49d2fc03556741fab529d63c1"
+      },
+      "Alpha_Centauri_Native_Local_World.png": {
+        "bytes": 361669,
+        "sha256": "f9bfc36d248ada745acecdd32732ab18b3a2cfa8641e24cf80b09aa78dfd511e"
+      },
+      "Alpha_Centauri_Native_Facility_Order.png": {
+        "bytes": 196797,
+        "sha256": "f2ee17b22a97f3e417cd65402f8dde73999bd4c7a01147dd79834270239adf81"
+      }
+    }
+  },
+  "limits": [
+    "Complete turn loop, AI, combat, diplomacy, research awards and production completion remain absent",
+    "Expansion scenario gameplay not qualified; selected original expansion title screen only",
+    "Menu music absent from freely distributed demo inputs",
+    "Arial Narrow fallback used because original Arial not in demo",
+    "Native AmigaOS3.2.3 and user Daletop installation not exercised",
+    "This flat projection and bounded CVR profile are restoration preview behavior, not original engine parity",
+    "Hosted CI previously blocked before starting by GitHub billing lock; proof executed locally"
+  ],
+  "facility": {
+    "base": 9,
+    "name": "The Hive",
+    "facility": 38,
+    "facilityName": "Stockpile Energy",
+    "priorQueue": 130,
+    "newQueue": -38,
+    "mineralsBefore": 12,
+    "mineralsAfter": 11,
+    "changedPayloadBytes": 6,
+    "allOtherPayloadBytesPreserved": true,
+    "nativeActions": [
+      "LOCAL ACTION key=112 status=P selects another available facility. ENTER confirms; ESC cancels. dirty=0",
+      "LOCAL ACTION key=13 status=Production: ok dirty=1",
+      "LOCAL ACTION key=118 status=Saved PROGDIR:AlphaLocal-3800-1-797-0 dirty=0",
+      "LOCAL ACTION key=118 status=Saved PROGDIR:AlphaLocal-3800-1-1108-0 dirty=0",
+      "LOCAL ACTION key=114 status=Reload: ok dirty=0"
+    ],
+    "actualGuestReturnCode": 0,
+    "smokePassed": true,
+    "checkpointBytes": 199314,
+    "checkpointSHA256": "a7090967f9d01f699b2cc772a32f401c621cd41859acbc87e99db444b61d3e33",
+    "wholeCheckpointMatchesIndependentHost": true,
+    "headerPayloadAndRulesCRCs": true,
+    "hostNativeResume": true
+  }
+}

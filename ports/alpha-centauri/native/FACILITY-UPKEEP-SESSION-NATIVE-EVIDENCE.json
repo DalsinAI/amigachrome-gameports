@@ -1,0 +1,387 @@
+{
+  "scope": "GenuineAROS68040/FPU native persistentfacilitysession; not fullturn",
+  "binarySHA256": "e9ebc5fabf0e6b658f4d5c6015c9eb204a335c2bb962bed7e063cdeee9f952e8",
+  "cases": [
+    {
+      "index": 0,
+      "name": "v7-i-8",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=1 choice=1 complete=1 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "bca865b77ca89cfba7b9d6e1c1d6969f85e2433cc4392d992b2bf2eb970cb670"
+    },
+    {
+      "index": 1,
+      "name": "v7-i-8-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=1 choice=1 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "bca865b77ca89cfba7b9d6e1c1d6969f85e2433cc4392d992b2bf2eb970cb670"
+    },
+    {
+      "index": 2,
+      "name": "v7-i0",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "64d72ef615f6ca67dcc81f4077ef9458ad65355735d4336f43277d14f2907fd5"
+    },
+    {
+      "index": 3,
+      "name": "v7-i0-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "64d72ef615f6ca67dcc81f4077ef9458ad65355735d4336f43277d14f2907fd5"
+    },
+    {
+      "index": 4,
+      "name": "v7-i2",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "6d0d5e990292b167318f481c6fd61eade7509493c8e2ab4c86bfeeb9be10e7f5"
+    },
+    {
+      "index": 5,
+      "name": "v7-i2-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "6d0d5e990292b167318f481c6fd61eade7509493c8e2ab4c86bfeeb9be10e7f5"
+    },
+    {
+      "index": 6,
+      "name": "v7-i5",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=1 choice=1 complete=1 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "e7083b3fa23269ddb873f94f37acc8ced89e060ff44333aae9763c1cd79b2a36"
+    },
+    {
+      "index": 7,
+      "name": "v7-i5-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=1 choice=1 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "e7083b3fa23269ddb873f94f37acc8ced89e060ff44333aae9763c1cd79b2a36"
+    },
+    {
+      "index": 8,
+      "name": "v9-i-8",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=1 choice=1 complete=1 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "c6c5075b945f72424f28ff3038a64e3ffbbee8e545587d9ccd816fb2bf546b3d"
+    },
+    {
+      "index": 9,
+      "name": "v9-i-8-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=1 choice=1 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "c6c5075b945f72424f28ff3038a64e3ffbbee8e545587d9ccd816fb2bf546b3d"
+    },
+    {
+      "index": 10,
+      "name": "v9-i0",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "f15a8c85b69c05b62790ad094d36edd85e89ed6b1eec74eecf47d2f332b95bb4"
+    },
+    {
+      "index": 11,
+      "name": "v9-i0-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "f15a8c85b69c05b62790ad094d36edd85e89ed6b1eec74eecf47d2f332b95bb4"
+    },
+    {
+      "index": 12,
+      "name": "v9-i2",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "b2f4e5e1a2d3a689d4ebec40c0a3308a90b00022f0741e23bdf683c4a427db45"
+    },
+    {
+      "index": 13,
+      "name": "v9-i2-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "b2f4e5e1a2d3a689d4ebec40c0a3308a90b00022f0741e23bdf683c4a427db45"
+    },
+    {
+      "index": 14,
+      "name": "v9-i5",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=1 choice=1 complete=1 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "481d5dfe1dc34f1813784216ede322344f342ae5d47a025e27c2a9d9a2196908"
+    },
+    {
+      "index": 15,
+      "name": "v9-i5-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=1 choice=1 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "481d5dfe1dc34f1813784216ede322344f342ae5d47a025e27c2a9d9a2196908"
+    },
+    {
+      "index": 16,
+      "name": "v10-i-8",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=1 choice=1 complete=1 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "0392abd16254161834567c8a1b50d8be4fbc98a1919d99bd40c42fadf5c52000"
+    },
+    {
+      "index": 17,
+      "name": "v10-i-8-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=1 choice=1 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "0392abd16254161834567c8a1b50d8be4fbc98a1919d99bd40c42fadf5c52000"
+    },
+    {
+      "index": 18,
+      "name": "v10-i0",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "b51b73cc4b91770bb36ad2bb9627de5d671f3fe61d1e3c887a98b128eb6ab82e"
+    },
+    {
+      "index": 19,
+      "name": "v10-i0-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "b51b73cc4b91770bb36ad2bb9627de5d671f3fe61d1e3c887a98b128eb6ab82e"
+    },
+    {
+      "index": 20,
+      "name": "v10-i2",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "7382111743a4ff441959866e0605d2e2b9eb34cabe28e6c8c53d954b86b04df6"
+    },
+    {
+      "index": 21,
+      "name": "v10-i2-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "7382111743a4ff441959866e0605d2e2b9eb34cabe28e6c8c53d954b86b04df6"
+    },
+    {
+      "index": 22,
+      "name": "v10-i5",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=1 choice=1 complete=1 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "2cc363d6ea8bcf41f881515802f8188ee769f72e732ff09fdcba013ca43e5836"
+    },
+    {
+      "index": 23,
+      "name": "v10-i5-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=1 choice=1 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "2cc363d6ea8bcf41f881515802f8188ee769f72e732ff09fdcba013ca43e5836"
+    },
+    {
+      "index": 24,
+      "name": "waiting",
+      "guestReturnCode": 0,
+      "log": "SESSION status=ok repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "ebdac660251988ee8ecf25123859ff5894c18d5c8238f17cd890a0d16986c573"
+    },
+    {
+      "index": 25,
+      "name": "waiting-resumed-again",
+      "guestReturnCode": 0,
+      "log": "SESSION status=already_processed repeat=already_processed processed=1 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "ebdac660251988ee8ecf25123859ff5894c18d5c8238f17cd890a0d16986c573"
+    },
+    {
+      "index": 26,
+      "name": "upkeep1-rejected",
+      "guestReturnCode": 0,
+      "log": "SESSION status=unsupported repeat=unsupported processed=0 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "70a8b51c0496609c39f95b845c1ededb5cc556acf26f6d4b50a450c1b95c1c02"
+    },
+    {
+      "index": 27,
+      "name": "bad-workers",
+      "guestReturnCode": 0,
+      "log": "SESSION status=unsupported repeat=unsupported processed=0 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "82dbd2b201bca1697df4ecef552619fd884d011027f9cd054e17a8ea1dce6616"
+    },
+    {
+      "index": 28,
+      "name": "bad-facility",
+      "guestReturnCode": 0,
+      "log": "SESSION status=unsupported repeat=unsupported processed=0 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "b0bdaadbf35966b8c16a3d7cdea55b879018c6e7ff6c81f1b924f3fe2b3706cd"
+    },
+    {
+      "index": 29,
+      "name": "disabled-tech",
+      "guestReturnCode": 0,
+      "log": "SESSION status=unavailable repeat=unavailable processed=0 recompute=0 choice=0 complete=0 bytes=148934\n",
+      "checkpointExists": true,
+      "completeOracleMatch": true,
+      "bytes": 148934,
+      "sha256": "06de938e5638d027439088f54295aa72ffd529575b8e52175629ced39116601d"
+    },
+    {
+      "index": 30,
+      "name": "missing-processed",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    },
+    {
+      "index": 31,
+      "name": "choice-mismatch",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    },
+    {
+      "index": 32,
+      "name": "unowned-base",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    },
+    {
+      "index": 33,
+      "name": "outside-base-count",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    },
+    {
+      "index": 34,
+      "name": "reserved-byte",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    },
+    {
+      "index": 35,
+      "name": "wrong-phase",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    },
+    {
+      "index": 36,
+      "name": "wrong-base-count",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    },
+    {
+      "index": 37,
+      "name": "wrong-human",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    },
+    {
+      "index": 38,
+      "name": "completion-without-built-facility",
+      "guestReturnCode": 0,
+      "log": "OPEN 4\n",
+      "checkpointExists": false,
+      "completeOracleMatch": true
+    }
+  ],
+  "count": 39,
+  "aggregateCheckpointBytes": 4468020,
+  "aggregateCheckpointSHA256": "e66bf29e690bcf4210d9ed7e371b234672866cff3f686f72b713b4fbb20b7cca",
+  "status": "POP_0_RC 0\nPOP_1_RC 0\nPOP_2_RC 0\nPOP_3_RC 0\nPOP_4_RC 0\nPOP_5_RC 0\nPOP_6_RC 0\nPOP_7_RC 0\nPOP_8_RC 0\nPOP_9_RC 0\nPOP_10_RC 0\nPOP_11_RC 0\nPOP_12_RC 0\nPOP_13_RC 0\nPOP_14_RC 0\nPOP_15_RC 0\nPOP_16_RC 0\nPOP_17_RC 0\nPOP_18_RC 0\nPOP_19_RC 0\nPOP_20_RC 0\nPOP_21_RC 0\nPOP_22_RC 0\nUPKEEP_0_RC 0\nUPKEEP_1_RC 0\nUPKEEP_2_RC 0\nUPKEEP_3_RC 0\nUPKEEP_4_RC 0\nUPKEEP_5_RC 0\nUPKEEP_6_RC 0\nUPKEEP_7_RC 0\nUPKEEP_8_RC 0\nUPKEEP_9_RC 0\nUPKEEP_10_RC 0\nUPKEEP_11_RC 0\nUPKEEP_12_RC 0\nUPKEEP_13_RC 0\nUPKEEP_14_RC 0\nUPKEEP_15_RC 0\nUPKEEP_16_RC 0\nUPKEEP_17_RC 0\nUPKEEP_18_RC 0\nUPKEEP_19_RC 0\nUPKEEP_20_RC 0\nUPKEEP_21_RC 0\nUPKEEP_22_RC 0\nUPKEEP_23_RC 0\nUPKEEP_24_RC 0\nUPKEEP_25_RC 0\nUPKEEP_26_RC 0\nUPKEEP_27_RC 0\nUPKEEP_28_RC 0\nUPKEEP_29_RC 0\nUPKEEP_30_RC 0\nUPKEEP_31_RC 0\nUPKEEP_32_RC 0\nUPKEEP_33_RC 0\nUPKEEP_34_RC 0\nUPKEEP_35_RC 0\nUPKEEP_36_RC 0\nUPKEEP_37_RC 0\nUPKEEP_38_RC 0\nBATCH_DONE\n",
+  "process": {
+    "batchComplete": true,
+    "emulatorReturnCode": 0,
+    "timedOut": false
+  }
+}

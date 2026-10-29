@@ -1,0 +1,36 @@
+{
+  "host": {
+    "worlds": 301,
+    "queries": 18753,
+    "acceptedQueries": 16575,
+    "rejectedQueries": 2178,
+    "invalidArgumentControls": 1806,
+    "emptyWorldControls": 301,
+    "outputSHA256": "e1ebe4a4b9b1ee70e0ae9bdf43f0f14ccdb45cc6af26cec278201f9683025891",
+    "sanitizers": "ASan/UBSan"
+  },
+  "publicCorpus": {
+    "worlds": 298,
+    "queries": 18438,
+    "outputSHA256": "562e2ee183d7cf1bd893663c2bcd30bf6ae9aa3bcc16b36ad902460b0a45fdcb"
+  },
+  "originalData": "Three owner SMAC tutorials,315queries; original files unchanged. No original expansion save claim.",
+  "originalCoastHelpers": {
+    "base": {
+      "contexts": 280,
+      "outputSHA256": "81decf2196c36af093284e5e4893d0db7723aafd8d088511bbf519f9e2d1bbb1"
+    },
+    "expansion": {
+      "contexts": 280,
+      "outputSHA256": "4c8299b58b2093d4c89f14bda6f1259f6ad8d59939765ce4b1950731beb67673"
+    },
+    "fullGameExecution": false,
+    "callbackStubs": false
+  },
+  "normalSDK": {
+    "binarySHA256": "c25d68c82f38fb94b7cad5928fa60055c989793ef97b818606e11a3a80626cf1",
+    "nativeExecution": "UNRUN"
+  },
+  "finalCI": "Pending at committed checkpoint",
+  "scope": "Read-only owned-world original facility options; no active authority, orders, production mutations, upkeep, turn or UI."
+}
