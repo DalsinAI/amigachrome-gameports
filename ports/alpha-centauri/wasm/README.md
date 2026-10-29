@@ -120,7 +120,7 @@ with the fixture: title screen, Crossfire, New game through its screens, the
 map, End Turn, save, back to the title, Play a saved game through the file
 dialog, and exit, with no console or page errors.
 
-The fixture is synthetic (generated PCX patterns, the play test's rules, a
+The fixture is synthetic (computed PCX patterns, the play test's rules, a
 free system font under the original font names). It shows that the code path
 works, not what the original art looks like.
 

@@ -6,7 +6,7 @@ browser build without original files. Nothing here is Firaxis data:
 - alphax.txt, labels.txt and faction files: the synthetic playable rules of
   native/test_play_session.py (expansion row layout);
 - openinga.pcx / xopeninga.pcx (1024x768), texture.pcx, Units.pcx
-  (1024x768) and console.pcx (800x257): generated 8-bit PCX patterns;
+  (1024x768) and console.pcx (800x257): computed 8-bit PCX patterns;
 - ALPHC___.TTF, arialn.ttf, Arial.ttf: copies of a free system font (Liberation
   Sans or DejaVu Sans) under the names the program asks for.
 
