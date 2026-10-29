@@ -18,7 +18,7 @@ from test_local_actions_snapshot import moved_model
 
 HERE = Path(__file__).resolve().parent
 SOURCES = ACTION_SOURCES[:-1] + ['facility_production.cpp', 'facility_production_stage.cpp',
-                                  'facility_production_snapshot.cpp', 'facility_production_probe.cpp'] + [name + '.cpp' for name in 'tile_yields world_technology_effects world_upkeep_tile_yields world_tile_yields world_worker_radius world_terraform_ecology world_stable_intake base_nutrients world_fresh_nutrients world_convoy_nutrients upkeep_base_minerals world_base_minerals base_support world_base_support cost_factor world_cost_factor'.split()]
+                                  'facility_production_snapshot.cpp', 'facility_production_probe.cpp'] + [name + '.cpp' for name in 'tile_yields world_technology_effects world_upkeep_tile_yields world_tile_yields technology_effects world_fresh_tile_yields world_worker_radius world_terraform_ecology world_stable_intake base_nutrients world_fresh_nutrients world_convoy_nutrients upkeep_base_minerals world_base_minerals base_support world_base_support cost_factor world_cost_factor'.split()]
 SENTINEL = 0x5a5a5a5a
 
 

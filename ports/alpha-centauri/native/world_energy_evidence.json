@@ -1,0 +1,27 @@
+{
+  "component": "world_energy",
+  "status": "LOCAL UNPUBLISHED; CI and actual AmigaOS UNRUN",
+  "validation": {
+    "worlds": 259,
+    "queries": 1036,
+    "accepted": 910,
+    "rejected": 126,
+    "guards": 21756,
+    "publicOutputSHA256": "7aafc04e6cbf48b2c8740d849bef6df896697fdce9c8b5a75fb396f81e8c1d5b",
+    "outputSHA256": "3f8bfe65a3aa9a4e31c950e8dc83b55cd25f378133fb0a53eaf991c59b971839"
+  },
+  "normalSDKEnergySHA256": "7b5440744e9dba35004d22de3e706248646231df4e5e17c56da52501a4912164",
+  "normalSDKRefactoredPsychSHA256": "6ee9b235df94dff4011863a151897cc90f44391d6b03f8c22cded11afc505134",
+  "scope": "Fresh stable directedhuman World resources through full income/happiness proposal only",
+  "limits": [
+    "No specialists/governor/worker reassignment in fresh resource provider; reject rather than invent allocation",
+    "No support actor/faction side effects or authority/accounting/persistence/upkeep/turn/UI",
+    "No injected OOM qualification",
+    "Alien reject_uninitialized default and explicit initialize_zero port fix remain separate;30paired cases eacharchitecture rejectdefault/acceptfix",
+    "All3owner tutorials tested at firstbase only,4 stage/policy contexts each,all12 accepted",
+    "No PR/export retry; pending original explicit human export permission"
+  ],
+  "headquartersWorldsPerArchitecture": 128,
+  "headquartersOutputSHA256": "45f0b1c9dfdcb1ba880cef91959a31afa549a24ba444ed80629ab079e6721afc",
+  "originalComposition": "UNRUN; original receipts only apply to frozen numeric components"
+}

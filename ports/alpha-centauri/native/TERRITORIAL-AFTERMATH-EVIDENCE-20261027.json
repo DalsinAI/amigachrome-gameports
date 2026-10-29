@@ -1,0 +1,80 @@
+{
+  "scope": "Owned conventional solitary LAND engagement -> original territorial gift/friction -> selected nonrandom promotion -> ordinary casualty cleanup -> selected original bookkeeping. Retains initial health and PREcleanup faction/actor identities. Not complete original caller or legal attack.",
+  "host": {
+    "worlds": 72,
+    "counts": {
+      "accepted": 962,
+      "rejected": 10702,
+      "attacker_deleted": 466,
+      "defender_deleted": 496,
+      "applied": 838,
+      "selection_random": 746,
+      "promotion_notification": 372,
+      "monument_ui": 124,
+      "unowned_land": 256,
+      "same_faction": 84
+    },
+    "outputSHA256": "c864568555d742351d62e58a11d09cf13f3f8e3026a6ac61b86be64bd84b95ea",
+    "binarySHA256": "06f7a3217bf301a24b85c68a2daf2709e43e02c2c600e09143a361f028259083",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "worlds": 72,
+    "counts": {
+      "accepted": 962,
+      "rejected": 10702,
+      "attacker_deleted": 466,
+      "defender_deleted": 496,
+      "applied": 838,
+      "selection_random": 746,
+      "promotion_notification": 372,
+      "monument_ui": 124,
+      "unowned_land": 256,
+      "same_faction": 84
+    },
+    "outputSHA256": "c864568555d742351d62e58a11d09cf13f3f8e3026a6ac61b86be64bd84b95ea",
+    "binarySHA256": "471538b97cf53c9ff6fc45ca32fe42e6dc24b62fa90af3024459deff23a1ca9d",
+    "native": "UNRUN"
+  },
+  "attempts": 11664,
+  "additionalChecks": {
+    "acceptedWorlds": 12,
+    "sourceLifetimeChecks": 12,
+    "sourceOrInputOutputAliases": 168,
+    "sixPoisonedInputsHostOrNoWriteBE": 72,
+    "explicitRuntimeAndPoolPriorStateGuards": 168,
+    "badCallerAndNetworkFactsChecks": 36,
+    "tinyBudgetPriorOutputChecks": 962,
+    "initialEngagementCloneFitsLaterCloneFails": 12
+  },
+  "sdk": {
+    "sha256": "3937519e58922c85b569ba2e1187372a0f97b818f41cb9c9da5a761bc18f9bb0",
+    "twoFreshFinalBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "sourceIdentity": {
+    "parent": "36c4e35e305e99c268682b791955ade5df7816b2",
+    "unchangedParentCpp": 340,
+    "headerChanges": "TerritorialPromotedLandPlan friend only in LandEngagementPlan, WorldPromotionPlan, CasualtyPlan, WorldTerritorialCombatPlan; TerritorialBattleAftermathPlan friend only in WorldBattleBookkeepingPlan",
+    "parentWorkflowCommands": 321,
+    "finalWorkflowCommands": 323,
+    "allParentCommandsRetained": true
+  },
+  "memoryBudget": "Outer object plus simultaneous intermediate clone heaps. Engagement released after territorial stage, territorial frame released after promotion, promotion released after deletion, body released after bookkeeping. Source and separately owned prior output excluded. Actual first-clone-fit/later-fail checks preserve full previous frame and negotiation summaries.",
+  "history": [
+    "host1 failed expected rejection boundary for same-faction pair: old model expected later notification, owned territorial stage correctly rejects earlier. Model corrected, production unchanged.",
+    "host2 ASan caught probe-only null actor access in deliberately stale actor-ID alias test helper; guarded invalid harness helper. Production unchanged.",
+    "host3/be1 passed all72Worlds with final runtime guards; host4/be2 are final probes adding actual first-engagement-clone-fit/later-clone-fail proof. SDK1..4 are historical; SDK5/6 final."
+  ],
+  "held": [
+    "746selection-random,372promotion-notification,124monument UI contexts; no substitute zero draws/acknowledgments",
+    "No-selection intent, helper random (not exercised in this bounded composition corpus), retreat/artifact/capture/native/base/additional-colocation/cargo/FREEABIL/unsupported helper profiles",
+    "Unowned/out-of-range land owner and same-faction combat rejected before later promotion/notifications",
+    "Pre-round attack flag/hasty/movement charging, later prototype combat_factions and caller movement-tail/global cursor updates",
+    "Complete original battle caller differential, TLS/random initialization, legal attack/session/event authority, variable-length persistence, turn/AI/diplomacy/full game",
+    "Native/frontend/remote CI/publication"
+  ],
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED"
+}

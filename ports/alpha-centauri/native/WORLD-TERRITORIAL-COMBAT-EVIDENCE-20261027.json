@@ -1,0 +1,77 @@
+{
+  "scope": "Owned current World territorial gift/friction stage; runtime negotiation is explicitly observed, returned separately and never inferred. Intended post-round pre-promotion caller stage, not yet wired into combined combat.",
+  "host": {
+    "worlds": 96,
+    "attempts": 2592,
+    "statusCounts": {
+      "0": 1548,
+      "1": 864,
+      "2": 0,
+      "3": 180,
+      "4": 0
+    },
+    "applied": 420,
+    "acceptedWorlds": 86,
+    "tinyBudgetPriorOutputGuards": 1548,
+    "runtimeGuards": 516,
+    "poisonedRuntimeAliasHostOrNoWriteBE": 86,
+    "sourceLifetimeChecks": 86,
+    "outputSHA256": "829806219c62dd181fa2282287bba9873c30c96e9ba808ef37dae922d0f00167",
+    "binarySHA256": "14dfa84668d7ecf6e9075244cb4c44de5aa70e9e533fe3714a87ffc9fbed0050",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "worlds": 96,
+    "attempts": 2592,
+    "statusCounts": {
+      "0": 1548,
+      "1": 864,
+      "2": 0,
+      "3": 180,
+      "4": 0
+    },
+    "applied": 420,
+    "acceptedWorlds": 86,
+    "tinyBudgetPriorOutputGuards": 1548,
+    "runtimeGuards": 516,
+    "poisonedRuntimeAliasHostOrNoWriteBE": 86,
+    "sourceLifetimeChecks": 86,
+    "outputSHA256": "829806219c62dd181fa2282287bba9873c30c96e9ba808ef37dae922d0f00167",
+    "binarySHA256": "289f83dd1e49103c5c58fccd125929427626fe35dbbd9c8951facd340f8ce9b4",
+    "native": "UNRUN"
+  },
+  "sdk": {
+    "sha256": "cc3cbf0908092c1e27f43b67660e94d245abc4d8251d6dbd2cb1da23500a5b1b",
+    "twoFreshNormalBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "sourceIdentity": {
+    "parent": "6c71ebb5341c48ce982e08db34b0c95de8b5ab4c",
+    "unchangedParentCpp": 338,
+    "headerChanges": "WorldTerritorialCombatPlan friend only in OriginalWorld and LandEngagementPlan",
+    "parentWorkflowCommands": 319,
+    "finalWorkflowCommands": 321,
+    "allParentCommandsRetained": true
+  },
+  "changedFields": [
+    "attacker faction diplo_gifts[territory owner] only when source condition applies",
+    "territory owner diplo_friction[attacker] only when source condition applies",
+    "returned explicit runtime negotiation accumulator, original World runtime RNG unchanged"
+  ],
+  "preserved": [
+    "Entire wire baseline/opaque bytes, current map/actors/bases/prototypes/faction definitions",
+    "Current monuments/history/preferences and every other faction field",
+    "Input World and prior accepted output on rejected/stale/alias/memory/runtime branches",
+    "Owned clone survives destruction of source World and source input bytes"
+  ],
+  "held": [
+    "Unowned/out-of-range land owner; original unsafe access not reproduced",
+    "Offline edition/runtime must be explicitly observed; no save/default-derived negotiation state",
+    "Combined engagement/promotion/deletion/aftermath integration and attack/session authority",
+    "Random/event lifecycle, variable-length save, movement/attack-budget, turns/AI/diplomacy game loop",
+    "Native/frontend/remote CI/publication"
+  ],
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED"
+}
