@@ -1,0 +1,22 @@
+{
+  "cases": 7132,
+  "bytes": 114112,
+  "sha256": "168aac30aa2656bfb14abaa4369d572bf533d124b7fb58b145f73756d2371bdb",
+  "command": [
+    "c++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "-fno-sanitize-recover=all",
+    "-no-pie",
+    "/workspace/scratch/3fb17fb3c5da/alpha-energy-next/ports/alpha-centauri/native/base_commerce.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-energy-next/ports/alpha-centauri/native/base_commerce_probe.cpp",
+    "-o",
+    "/workspace/scratch/3fb17fb3c5da/base-commerce-test-1/base-commerce-probe"
+  ],
+  "native": "UNRUN"
+}

@@ -1,0 +1,576 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later
+ * Written by engine/tools/gen_save_fields.py from the engine headers.
+ * Do not edit. Field order and types are Thinker Mod's packed records
+ * (dabe62f2d1abba03de40f3dd3048494843f6a9af, MIT; see engine/THINKER-LICENSE).
+ * Included by savegame.cpp inside namespace alpha::engine.
+ */
+
+const size_t WireSize_Landmark = 0x28;
+const size_t WireSize_Continent = 0x1c;
+const size_t WireSize_Goal = 0x10;
+const size_t WireSize_MAP = 0x2c;
+const size_t WireSize_MFaction = 0x59c;
+const size_t WireSize_Faction = 0x20cc;
+const size_t WireSizeLegacy_Faction = 0x20bc;
+const size_t WireSize_UNIT = 0x34;
+const size_t WireSize_VEH = 0x34;
+const size_t WireSize_BASE = 0x134;
+const size_t WireSizeLegacy_BASE = 0x130;
+const size_t WireSize_GamePrefs = 0x398;
+const size_t WireSizeLegacy_GamePrefs = 0x31c;
+const size_t WireSize_MonumentEvent = 0x38;
+const size_t WireSize_Monument = 0x4f4;
+const size_t WireSize_ReplayEvent = 0x8;
+const size_t WireSize_MapMeta = 0xaa4;
+const size_t WireSize_MapWindow = 0x18;
+
+template <class F> void io_fields(F& f, Landmark& s, bool UNUSED(legacy)) {
+    io(f, s.x);
+    io(f, s.y);
+    io(f, s.name);
+}
+
+template <class F> void io_fields(F& f, Continent& s, bool UNUSED(legacy)) {
+    io(f, s.tile_count);
+    io(f, s.open_terrain);
+    io(f, s.world_site);
+    io(f, s.pods);
+    io(f, s.unk_5);
+    io(f, s.sea_coasts);
+}
+
+template <class F> void io_fields(F& f, Goal& s, bool UNUSED(legacy)) {
+    io(f, s.type);
+    io(f, s.priority);
+    io(f, s.x);
+    io(f, s.y);
+    io(f, s.base_id);
+}
+
+template <class F> void io_fields(F& f, MAP& s, bool UNUSED(legacy)) {
+    io(f, s.climate);
+    io(f, s.contour);
+    io(f, s.val2);
+    io(f, s.region);
+    io(f, s.visibility);
+    io(f, s.val3);
+    io(f, s.unk_1);
+    io(f, s.owner);
+    io(f, s.items);
+    io(f, s.landmarks);
+    io(f, s.visible_items);
+}
+
+template <class F> void io_fields(F& f, MFaction& s, bool UNUSED(legacy)) {
+    io(f, s.is_leader_female);
+    io(f, s.filename);
+    io(f, s.search_key);
+    io(f, s.name_leader);
+    io(f, s.title_leader);
+    io(f, s.adj_leader);
+    io(f, s.adj_insult_leader);
+    io(f, s.adj_faction);
+    io(f, s.adj_insult_faction);
+    io(f, s.thinker_unused);
+    io(f, s.thinker_probe_lost);
+    io(f, s.thinker_probe_renew);
+    io(f, s.thinker_last_mc_turn);
+    io(f, s.thinker_probe_end_turn);
+    io(f, s.pad_1);
+    io(f, s.noun_faction);
+    io(f, s.noun_gender);
+    io(f, s.is_noun_plural);
+    io(f, s.adj_name_faction);
+    io(f, s.formal_name_faction);
+    io(f, s.insult_leader);
+    io(f, s.desc_name_faction);
+    io(f, s.assistant_name);
+    io(f, s.scientist_name);
+    io(f, s.assistant_city);
+    io(f, s.pad_2);
+    io(f, s.rule_tech_selected);
+    io(f, s.rule_morale);
+    io(f, s.rule_research);
+    io(f, s.rule_drone);
+    io(f, s.rule_talent);
+    io(f, s.rule_energy);
+    io(f, s.rule_interest);
+    io(f, s.rule_population);
+    io(f, s.rule_hurry);
+    io(f, s.rule_techcost);
+    io(f, s.rule_psi);
+    io(f, s.rule_sharetech);
+    io(f, s.rule_commerce);
+    io(f, s.rule_flags);
+    io(f, s.faction_bonus_count);
+    io(f, s.faction_bonus_id);
+    io(f, s.faction_bonus_val1);
+    io(f, s.faction_bonus_val2);
+    io(f, s.AI_fight);
+    io(f, s.AI_growth);
+    io(f, s.AI_tech);
+    io(f, s.AI_wealth);
+    io(f, s.AI_power);
+    io(f, s.soc_priority_category);
+    io(f, s.soc_opposition_category);
+    io(f, s.soc_priority_model);
+    io(f, s.soc_opposition_model);
+    io(f, s.soc_priority_effect);
+    io(f, s.soc_opposition_effect);
+}
+
+template <class F> void io_fields(F& f, Faction& s, bool legacy) {
+    io(f, s.player_flags);
+    io(f, s.ranking);
+    io(f, s.diff_level);
+    io(f, s.base_name_offset);
+    io(f, s.base_sea_name_offset);
+    io(f, s.last_base_turn);
+    io(f, s.diplo_status);
+    io(f, s.diplo_agenda);
+    io(f, s.diplo_friction);
+    io(f, s.diplo_spoke);
+    io(f, s.diplo_merc);
+    io(f, s.diplo_patience);
+    io(f, s.sanction_turns);
+    io(f, s.loan_balance);
+    io(f, s.loan_payment);
+    io(f, s.unk_1);
+    io(f, s.integrity_blemishes);
+    io(f, s.diplo_reputation);
+    io(f, s.diplo_gifts);
+    io(f, s.diplo_wrongs);
+    io(f, s.diplo_betrayed);
+    io(f, s.diplo_combat_total);
+    io(f, s.diplo_combat_count);
+    io(f, s.traded_maps);
+    io(f, s.base_governor_adv);
+    io(f, s.atrocities);
+    io(f, s.major_atrocities);
+    io(f, s.mind_control_total);
+    io(f, s.diplo_mind_control);
+    io(f, s.diplo_stolen_techs);
+    io(f, s.energy_credits);
+    io(f, s.hurry_cost_total);
+    io(f, s.SE_Politics_pending);
+    io(f, s.SE_Economics_pending);
+    io(f, s.SE_Values_pending);
+    io(f, s.SE_Future_pending);
+    io(f, s.SE_Politics);
+    io(f, s.SE_Economics);
+    io(f, s.SE_Values);
+    io(f, s.SE_Future);
+    io(f, s.SE_upheaval_cost_paid);
+    io(f, s.SE_economy_pending);
+    io(f, s.SE_effic_pending);
+    io(f, s.SE_support_pending);
+    io(f, s.SE_talent_pending);
+    io(f, s.SE_morale_pending);
+    io(f, s.SE_police_pending);
+    io(f, s.SE_growth_pending);
+    io(f, s.SE_planet_pending);
+    io(f, s.SE_probe_pending);
+    io(f, s.SE_industry_pending);
+    io(f, s.SE_research_pending);
+    io(f, s.SE_economy);
+    io(f, s.SE_effic);
+    io(f, s.SE_support);
+    io(f, s.SE_talent);
+    io(f, s.SE_morale);
+    io(f, s.SE_police);
+    io(f, s.SE_growth);
+    io(f, s.SE_planet);
+    io(f, s.SE_probe);
+    io(f, s.SE_industry);
+    io(f, s.SE_research);
+    io(f, s.SE_economy_2);
+    io(f, s.SE_effic_2);
+    io(f, s.SE_support_2);
+    io(f, s.SE_talent_2);
+    io(f, s.SE_morale_2);
+    io(f, s.SE_police_2);
+    io(f, s.SE_growth_2);
+    io(f, s.SE_planet_2);
+    io(f, s.SE_probe_2);
+    io(f, s.SE_industry_2);
+    io(f, s.SE_research_2);
+    io(f, s.SE_economy_base);
+    io(f, s.SE_effic_base);
+    io(f, s.SE_support_base);
+    io(f, s.SE_talent_base);
+    io(f, s.SE_morale_base);
+    io(f, s.SE_police_base);
+    io(f, s.SE_growth_base);
+    io(f, s.SE_planet_base);
+    io(f, s.SE_probe_base);
+    io(f, s.SE_industry_base);
+    io(f, s.SE_research_base);
+    io(f, s.energy_surplus_total);
+    io(f, s.facility_maint_total);
+    io(f, s.tech_commerce_bonus);
+    io(f, s.turn_commerce_income);
+    io(f, s.unk_17);
+    io(f, s.unk_18);
+    io(f, s.tech_fungus_nutrient);
+    io(f, s.tech_fungus_mineral);
+    io(f, s.tech_fungus_energy);
+    io(f, s.tech_fungus_unused);
+    io(f, s.SE_alloc_psych);
+    io(f, s.SE_alloc_labs);
+    io(f, s.tech_pact_shared_goals);
+    io(f, s.tech_ranking);
+    io(f, s.unk_27);
+    io(f, s.ODP_deployed);
+    io(f, s.tech_count_transcendent);
+    io(f, s.tech_trade_source);
+    io(f, s.tech_accumulated);
+    io(f, s.tech_research_id);
+    io(f, s.tech_cost);
+    io(f, s.earned_techs_saved);
+    io(f, s.net_random_event);
+    io(f, s.AI_fight);
+    io(f, s.AI_growth);
+    io(f, s.AI_tech);
+    io(f, s.AI_wealth);
+    io(f, s.AI_power);
+    io(f, s.target_x);
+    io(f, s.target_y);
+    io(f, s.best_mineral_output);
+    io(f, s.council_call_turn);
+    io(f, s.unk_29);
+    io(f, s.unk_30);
+    if (legacy) { io_prefix(f, s.facility_announced, 8); } else { io(f, s.facility_announced); }
+    io(f, s.clean_minerals_modifier);
+    io(f, s.base_id_attack_target);
+    io(f, s.unk_37);
+    io(f, s.saved_queue_name);
+    io(f, s.saved_queue_size);
+    io(f, s.saved_queue_items);
+    io(f, s.social_support);
+    io(f, s.social_psych);
+    io(f, s.social_effic);
+    io(f, s.unk_45);
+    io(f, s.unk_46);
+    io(f, s.unk_47);
+    io(f, s.nutrient_surplus_total);
+    io(f, s.labs_total);
+    io(f, s.satellites_nutrient);
+    io(f, s.satellites_mineral);
+    io(f, s.satellites_energy);
+    io(f, s.satellites_ODP);
+    io(f, s.best_weapon_value);
+    io(f, s.best_psi_land_offense);
+    io(f, s.best_psi_land_defense);
+    io(f, s.best_armor_value);
+    io(f, s.best_land_speed);
+    io(f, s.enemy_best_weapon_value);
+    io(f, s.enemy_best_armor_value);
+    io(f, s.enemy_best_land_speed);
+    io(f, s.enemy_best_psi_land_offense);
+    io(f, s.enemy_best_psi_land_defense);
+    io(f, s.unk_64);
+    io(f, s.unk_65);
+    io(f, s.unk_66);
+    io(f, s.unk_67);
+    io(f, s.unk_68);
+    io(f, s.unk_69);
+    io(f, s.units_active);
+    io(f, s.units_queue);
+    io(f, s.units_lost);
+    io(f, s.total_combat_units);
+    io(f, s.base_count);
+    io(f, s.mil_strength_1);
+    io(f, s.mil_strength_2);
+    io(f, s.pop_total);
+    io(f, s.unk_70);
+    io(f, s.planet_busters);
+    io(f, s.unk_71);
+    io(f, s.unk_72);
+    io(f, s.region_total_combat_units);
+    io(f, s.region_total_bases);
+    io(f, s.region_total_offensive_units);
+    io(f, s.region_force_rating);
+    io(f, s.region_flags);
+    io(f, s.region_territory_tiles);
+    io(f, s.region_visible_tiles);
+    io(f, s.region_good_tiles);
+    io(f, s.region_unk_5);
+    io(f, s.region_unk_6);
+    io(f, s.region_territory_pods);
+    io(f, s.region_base_plan);
+    io(f, s.goals);
+    io(f, s.sites);
+    io(f, s.unk_93);
+    io(f, s.goody_opened);
+    io(f, s.goody_artifact);
+    io(f, s.goody_earthquake);
+    io(f, s.goody_tech);
+    io(f, s.tech_achieved);
+    io(f, s.time_bonus_count);
+    io(f, s.unk_99);
+    if (legacy) { io_prefix(f, s.secret_project_intel, 5); } else { io(f, s.secret_project_intel); }
+    io(f, s.corner_market_turn);
+    io(f, s.corner_market_cost);
+    io(f, s.unk_101);
+    io(f, s.unk_102);
+    io(f, s.unk_103);
+    io(f, s.player_flags_ext);
+    io(f, s.unk_105);
+    io(f, s.unk_106);
+    io(f, s.unk_107);
+    io(f, s.eliminated_count);
+    io(f, s.unk_109);
+    io(f, s.unk_110);
+    io(f, s.unk_111);
+    io(f, s.unk_112);
+    io(f, s.unk_113);
+    io(f, s.unk_114);
+    io(f, s.unk_115);
+    io(f, s.unk_116);
+    io(f, s.unk_117);
+    io(f, s.unk_118);
+}
+
+template <class F> void io_fields(F& f, UNIT& s, bool UNUSED(legacy)) {
+    io(f, s.name);
+    io(f, s.ability_flags);
+    io(f, s.chassis_id);
+    io(f, s.weapon_id);
+    io(f, s.armor_id);
+    io(f, s.reactor_id);
+    io(f, s.carry_capacity);
+    io(f, s.cost);
+    io(f, s.plan);
+    io(f, s.group_id);
+    io(f, s.obsolete_factions);
+    io(f, s.combat_factions);
+    io(f, s.icon_offset);
+    io(f, s.pad_1);
+    io(f, s.unit_flags);
+    io(f, s.preq_tech);
+}
+
+template <class F> void io_fields(F& f, VEH& s, bool UNUSED(legacy)) {
+    io(f, s.x);
+    io(f, s.y);
+    io(f, s.state);
+    io(f, s.flags);
+    io(f, s.unit_id);
+    io(f, s.pad_0);
+    io(f, s.faction_id);
+    io(f, s.year_end_lurking);
+    io(f, s.damage_taken);
+    io(f, s.order);
+    io(f, s.waypoint_count);
+    io(f, s.patrol_current_point);
+    io(f, s.waypoint_x);
+    io(f, s.waypoint_y);
+    io(f, s.morale);
+    io(f, s.movement_turns);
+    io(f, s.order_auto_type);
+    io(f, s.visibility);
+    io(f, s.moves_spent);
+    io(f, s.rotate_angle);
+    io(f, s.iter_count);
+    io(f, s.status_icon);
+    io(f, s.probe_action);
+    io(f, s.probe_sabotage_id);
+    io(f, s.home_base_id);
+    io(f, s.next_veh_id_stack);
+    io(f, s.prev_veh_id_stack);
+}
+
+template <class F> void io_fields(F& f, BASE& s, bool legacy) {
+    io(f, s.x);
+    io(f, s.y);
+    io(f, s.faction_id);
+    io(f, s.faction_id_former);
+    io(f, s.pop_size);
+    io(f, s.assimilation_turns_left);
+    io(f, s.nerve_staple_turns_left);
+    io(f, s.ai_plan_status);
+    io(f, s.visibility);
+    io(f, s.factions_pop_size_intel);
+    io(f, s.name);
+    io(f, s.unk_x);
+    io(f, s.unk_y);
+    io(f, s.state_flags);
+    io(f, s.event_flags);
+    io(f, s.governor_flags);
+    io(f, s.nutrients_accumulated);
+    io(f, s.minerals_accumulated);
+    io(f, s.production_id_last);
+    io(f, s.eco_damage);
+    io(f, s.queue_size);
+    io(f, s.queue_items);
+    io(f, s.worked_tiles);
+    io(f, s.specialist_total);
+    io(f, s.specialist_adjust);
+    io(f, s.specialist_types);
+    if (legacy) { io_prefix(f, s.facilities_built, 8); } else { io(f, s.facilities_built); }
+    io(f, s.mineral_surplus_final);
+    io(f, s.minerals_accumulated_2);
+    io(f, s.pad_1);
+    io(f, s.pad_2);
+    io(f, s.pad_3);
+    io(f, s.pad_4);
+    io(f, s.nutrient_intake);
+    io(f, s.mineral_intake);
+    io(f, s.energy_intake);
+    io(f, s.unused_intake);
+    io(f, s.nutrient_intake_2);
+    io(f, s.mineral_intake_2);
+    io(f, s.energy_intake_2);
+    io(f, s.unused_intake_2);
+    io(f, s.nutrient_surplus);
+    io(f, s.mineral_surplus);
+    io(f, s.energy_surplus);
+    io(f, s.unused_surplus);
+    io(f, s.nutrient_inefficiency);
+    io(f, s.mineral_inefficiency);
+    io(f, s.energy_inefficiency);
+    io(f, s.unused_inefficiency);
+    io(f, s.nutrient_consumption);
+    io(f, s.mineral_consumption);
+    io(f, s.energy_consumption);
+    io(f, s.unused_consumption);
+    io(f, s.economy_total);
+    io(f, s.psych_total);
+    io(f, s.labs_total);
+    io(f, s.unk_total);
+    io(f, s.autoforward_land_base_id);
+    io(f, s.autoforward_sea_base_id);
+    io(f, s.autoforward_air_base_id);
+    io(f, s.pad_5);
+    io(f, s.talent_total);
+    io(f, s.drone_total);
+    io(f, s.superdrone_total);
+    io(f, s.random_event_turns);
+    io(f, s.nerve_staple_count);
+    io(f, s.defend_goal);
+    io(f, s.defend_range);
+    io(f, s.pad_6);
+    io(f, s.pad_7);
+    io(f, s.pad_8);
+}
+
+template <class F> void io_fields(F& f, GamePrefs& s, bool legacy) {
+    io(f, s.GamePreferences);
+    io(f, s.GameMorePreferences);
+    io(f, s.GameWarnings);
+    io(f, s.GameRules);
+    io(f, s.dword_9A64A0);
+    io(f, s.GameInterludeState);
+    io(f, s.dword_9A64AC);
+    io(f, s.dword_9A64B0);
+    io(f, s.TutWinMapState);
+    io(f, s.dword_9A64BC);
+    io(f, s.GameState);
+    io(f, s.DiffLevel);
+    io(f, s.VehCount);
+    io(f, s.BaseCount);
+    io(f, s.dword_9A64D0);
+    io(f, s.CurrentTurn);
+    io(f, s.CurrentMissionYear);
+    io(f, s.CurrentVehID);
+    io(f, s.GameTimeControl);
+    io(f, s.FactionStatus);
+    io(f, s.FactionRankings);
+    io(f, s.RankingFactionIDUnk1);
+    io(f, s.RankingFactionIDUnk2);
+    if (legacy) { io_prefix(f, s.SecretProjects, 33); } else { io(f, s.SecretProjects); }
+    io(f, s.GovernorFaction);
+    io(f, s.ProposalPassCount);
+    io(f, s.ProposalCallTurn);
+    io(f, s.TechOwners);
+    io(f, s.LastSavePath);
+    io(f, s.pad0);
+    io(f, s.ClimateValueA);
+    io(f, s.ClimateValueB);
+    io(f, s.ClimateValueC);
+    io(f, s.ClimateFutureChange);
+    io(f, s.ScoreBonusPts);
+    io(f, s.ScorePopTotal);
+    io(f, s.SunspotDuration);
+    io(f, s.MountPlanetX);
+    io(f, s.MountPlanetY);
+    io(f, s.DustCloudDuration);
+    io(f, s.SaveFileVersion);
+    io(f, s.ScnVictFacilityObj);
+    io(f, s.SolarFlaresEvent);
+    io(f, s.GameMoreRules);
+    io(f, s.CurrentFaction);
+    io(f, s.ClimateLevel);
+}
+
+template <class F> void io_fields(F& f, MonumentEvent& s, bool UNUSED(legacy)) {
+    io(f, s.year);
+    io(f, s.param1);
+    io(f, s.param2);
+    io(f, s.faction_id);
+    io(f, s.achieved);
+    io(f, s.prev_count);
+    io(f, s.field_18);
+    io(f, s.field_1C);
+    io(f, s.field_20);
+    io(f, s.field_24);
+    io(f, s.field_28);
+    io(f, s.field_2C);
+    io(f, s.field_30);
+    io(f, s.field_34);
+}
+
+template <class F> void io_fields(F& f, Monument& s, bool UNUSED(legacy)) {
+    io(f, s.events);
+    io(f, s.latest_event_id);
+    io(f, s.field_49C);
+    io(f, s.field_4A0);
+    io(f, s.field_4A4);
+    io(f, s.field_4A8);
+    io(f, s.base_name);
+    io(f, s.facility_name);
+    io(f, s.enemy_base_name);
+}
+
+template <class F> void io_fields(F& f, ReplayEvent& s, bool UNUSED(legacy)) {
+    io(f, s.event);
+    io(f, s.faction_id);
+    io(f, s.turn);
+    io(f, s.x);
+    io(f, s.y);
+}
+
+template <class F> void io_fields(F& f, MapMeta& s, bool UNUSED(legacy)) {
+    io(f, s.MapAreaX);
+    io(f, s.MapAreaY);
+    io(f, s.MapRandomSeed);
+    io(f, s.MapSeaLevel);
+    io(f, s.MapSeaLevelCouncil);
+    io(f, s.MapAreaTiles);
+    io(f, s.MapAreaSqRoot);
+    io(f, s.MapToggleFlat);
+    io(f, s.MapLandmarkCount);
+    io(f, s.Landmarks);
+    io(f, s.MapAbstractX);
+    io(f, s.MapAbstractY);
+    io(f, s.MapAbstractCount);
+    io(f, s.MapSizePlanet);
+    io(f, s.MapOceanCoverage);
+    io(f, s.MapLandCoverage);
+    io(f, s.MapErosiveForces);
+    io(f, s.MapPlanetaryOrbit);
+    io(f, s.MapCloudCover);
+    io(f, s.MapNativeLifeForms);
+    io(f, s.MapFilePath);
+    io(f, s.MapTilesPtr);
+    io(f, s.MapAbstractPtr);
+}
+
+template <class F> void io_fields(F& f, MapWindow& s, bool UNUSED(legacy)) {
+    io(f, s.DrawToggleB);
+    io(f, s.DrawToggleA);
+    io(f, s.DrawFlags);
+    io(f, s.ZoomFactor);
+    io(f, s.TileX);
+    io(f, s.TileY);
+}

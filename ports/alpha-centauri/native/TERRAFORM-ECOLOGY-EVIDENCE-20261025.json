@@ -1,0 +1,47 @@
+{
+  "status": "DRAFT pre-CI checkpoint: host/private original comparisons and normal SDK build passed; changed-head independent BE CI and actual native execution pending",
+  "scope": "Fresh raw radius terraforming ecology from current owned records; no worker allocation/full base_yield/upkeep/turn/UI",
+  "host": {
+    "worlds": 530,
+    "publicWorlds": 527,
+    "originalCompared": 512,
+    "wholeWorldAndWireUnchanged": true,
+    "partialAliasesAndInvalidIDsAndUnloadedAndCoordinatesPerWorld": true,
+    "originalTotalsSHA256": "ef7932841fd75641e9b18172e27e12f7d43492289c783dbcfcc0b41c44c5c35b",
+    "outputSHA256": "c51f781babc439b7528684181e84c305750ea6fe9af8354f292664a94cee61b9",
+    "binarySHA256": "ba88608450ae691d1e595f28c39226596d2538ff85f0f0cc8b3d804ae1620742",
+    "native": "UNRUN"
+  },
+  "originalSuffix": {
+    "contextsPerEdition": 4096,
+    "bytesPerEdition": 16384,
+    "outputSHA256": "65448b9cb901714a4119583727394ae16b0ce67cb19386df9eaa6e278478cce4",
+    "ownedWorldDirectComparisonsPerEdition": 512,
+    "ownedTotalsSHA256": "ef7932841fd75641e9b18172e27e12f7d43492289c783dbcfcc0b41c44c5c35b",
+    "onlyPermittedOriginalMutation": "base.eco_damage; seeded globals0x940000..0x9e0000 otherwise byte-identical",
+    "limits": "Corresponding entry frame supplied; unchanged final suffix plus real bitmask/popcount and original radius tables, original prefix/worker allocation/intake NOT executed. No callback stubs/imports/PE startup/fullgame."
+  },
+  "SDK": {
+    "SHA256": "9ec0f10f64281f2dcd559789e0e6ba0f359c2dd1a3cfb946cff2720669ad8e57",
+    "freshRebuildByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "parent": {
+    "head": "9a376d167ce50cb2e28969496f45f2671f28e6b2",
+    "unchangedCoreFiles": 114,
+    "retainedWorkflowCommands": 65,
+    "addedWorkflowCommands": 2
+  },
+  "history": [
+    "Initial build missed required existing prototype.cpp linkage; actual dependency added, no stubs.",
+    "Second host run caught misaligned tail reference in alias test; fixed test to use aligned overlapping position. Production ecology calculation unchanged.",
+    "Final third host run530 contexts authoritative. Native builds final3/final4 byte-identical; neither executed on AmigaOS."
+  ],
+  "limits": [
+    "Reads physical facilities/current worked mask; does not establish newly allocated workers or loader fixups.",
+    "Saved ecological damage and intake values are deliberately poisoned in controls; never feed them back as fresh input.",
+    "No visibility/availability filtering, centre forcing or wrapped-position deduplication.",
+    "Per-tile signed halving occurs before summation; negative forests retained.",
+    "Private owner files/executables/decompiles remain private; no proprietary code/data included."
+  ]
+}

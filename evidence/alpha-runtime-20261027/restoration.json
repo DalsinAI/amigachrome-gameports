@@ -1,0 +1,45 @@
+{
+  "scope": "Restored genuine native build and emulator lab; not full-game or AmigaOS3.2 qualification",
+  "compilerArchiveSHA256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+  "compilerSourceArchiveSHA256": "d8b7cf2101cf70df1cf719d199230260790420f43ec6e899f3d061a85ff3bcda",
+  "arosArchiveSHA256": "0fb7def333c4aa7e497c58c7beda810b46d4bacb467303391ce642d7bd21b67d",
+  "arosExtractedFiles": 23579,
+  "sdk": [
+    {
+      "name": "SDL2.module",
+      "bytes": 1001352,
+      "sha256": "2bc785a1528ff814ea019b47b9f02e36c7a606ac43e20437780d508bdb14fc88"
+    },
+    {
+      "name": "libSDL2.a",
+      "bytes": 116388,
+      "sha256": "1496a3ec8ebfa0dfb7d4f8817e50f22f4220a7a5b476826ba4fcc472df9da35b"
+    },
+    {
+      "name": "libSDL2_ttf.a",
+      "bytes": 595260,
+      "sha256": "e2ac90da496ab300344604895e64897d6ab0f15d1ca3973ae001c46836a11b49"
+    }
+  ],
+  "controller": {
+    "checks": 145,
+    "guestReturnCode": 0,
+    "checkpointBytes": 144918,
+    "checkpointSHA256": "843665734047b513c4900a2fae0dc3acc714d3ad135ca3b55537c30e1793661a",
+    "independentWholeCheckpointOracleMatch": true
+  },
+  "assets": {
+    "files": 572,
+    "defaultUrllibAgent": "HTTP403 on public scenario URL",
+    "namedAgent": "Alpha-native-lab/1.0",
+    "namedAgentFreshScenarioDownloadSHA256": "d4e05604605752ed9660cd85a9b7bec6ed31c3d8e2b72ac24a36b339b6ef7fa5"
+  },
+  "fpu40Compatibility": {
+    "scope": "Only disposable compiler libm020/libnix.a __fpucheck.o",
+    "originalArchivePreserved": true,
+    "cpuGuardRetained": true,
+    "acceptedFpuMask": "0x50",
+    "noFpuAlertRetained": true,
+    "fpcrInitializationRetained": true
+  }
+}

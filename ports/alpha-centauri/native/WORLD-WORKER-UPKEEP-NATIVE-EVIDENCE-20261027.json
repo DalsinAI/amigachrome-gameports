@@ -1,0 +1,463 @@
+{
+  "scope": "GenuineAROS68040/FPU nativeworkercandidates; notfullturnorcommittedallocation",
+  "binarySHA256": "20aa5530e5f7e21cb288c2faf82c92704dfdc67d64ea5ccbc50b73abbac2cfbb",
+  "cases": [
+    {
+      "index": 0,
+      "name": "directed-1",
+      "bytes": 836,
+      "sha256": "157bedf9112871cd97683feb719f9d9664d8d6162409b70940e5036978bc2bbd",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 1,
+      "name": "directed-2",
+      "bytes": 834,
+      "sha256": "11af2be8bf843930455727d779c712d5f823bc6aff8d70c76d497125d4304747",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 2,
+      "name": "directed-3",
+      "bytes": 844,
+      "sha256": "f0f9ef45910da27a439dadf2187b8c05faae8d6b1cdb07d6e04f77f02ca6dadb",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 3,
+      "name": "directed-4",
+      "bytes": 843,
+      "sha256": "92165c277b89c7970ee1e0558feca1195c0d98472ec2a3534c49d8d9ddcf4ccc",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 4,
+      "name": "directed-5",
+      "bytes": 838,
+      "sha256": "b51f607f92d5241899d983eb4562298068c0ce731749b6ab9ce551faffb2832b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 5,
+      "name": "directed-6",
+      "bytes": 835,
+      "sha256": "3d55014bfe943af33ffb3d5c40e90d7ddd4c12e93573514df05022dd673de945",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 6,
+      "name": "directed-7",
+      "bytes": 834,
+      "sha256": "37c98b7ac4194316b6ba5639c6e3135e8f646cb9020ec6cb785af56026f23081",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 7,
+      "name": "directed-8",
+      "bytes": 840,
+      "sha256": "d203c639f454716035d75b25f995b70cc0fd717d9beb8f68218a818a0c99dfa2",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 8,
+      "name": "directed-9",
+      "bytes": 841,
+      "sha256": "0e7fd7234401a11bc8eda6a2c97ff44fbbd6ae3fb8288750cf983220b547c7df",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 9,
+      "name": "directed-10",
+      "bytes": 837,
+      "sha256": "d5ebd0f2879b53740f65b5f11fd27e578bb44e256554ff93c9540e52e57cbb9b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 10,
+      "name": "directed-11",
+      "bytes": 838,
+      "sha256": "6d92b223e4f379b4357c7f6e6d9bddd3d5a3f72e4cfa51701b2387d73716f754",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 11,
+      "name": "directed-12",
+      "bytes": 836,
+      "sha256": "fc59a6c39b34f5a3ecca571ee74f0a1f9aecff71b642003472263a4de8fd7553",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 12,
+      "name": "directed-13",
+      "bytes": 837,
+      "sha256": "00c931f83114bf51bb4501b1917dac48f5c5297d465483d0dc244aa7ab02b5d4",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 13,
+      "name": "directed-14",
+      "bytes": 837,
+      "sha256": "8b46e8ad993c22cc5d55a7f632788cf11cc5a8116208827056e81994d5a4e864",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 14,
+      "name": "directed-15",
+      "bytes": 838,
+      "sha256": "620cdec2bd5aafcec14935604412b96c74a88a950e94124aa24b21b64b07b098",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 15,
+      "name": "directed-16",
+      "bytes": 840,
+      "sha256": "6d70bc8dc4395c7466096b1ad77a3c7b9e2c0d1025c687ae2a091de54bbb3058",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 16,
+      "name": "directed-17",
+      "bytes": 838,
+      "sha256": "8f7b7160cccae6c74268675305293c994c8d380d31154bcbb3a6773ee7559760",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 17,
+      "name": "directed-18",
+      "bytes": 837,
+      "sha256": "9a44b7435121e5b06fbe12c809ea4a839addb5525e910c9c0ad68370bfc7168a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 18,
+      "name": "directed-19",
+      "bytes": 837,
+      "sha256": "87345bea9e44d2ff32541b33611b21dbca6f80dec922a1d6eb15a4c3865ead4e",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 19,
+      "name": "directed-20",
+      "bytes": 833,
+      "sha256": "c5b70a199701ccdb6c3cf93ccbd1506a90a40021941758ae15b619063ced7c24",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 20,
+      "name": "directed-21",
+      "bytes": 838,
+      "sha256": "407240c970288926f5656e81b8ad532fa9802b8e0c926cb7ee2249dc6547c522",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 21,
+      "name": "directed-22",
+      "bytes": 839,
+      "sha256": "4fb4b3caf03e2c568314040f0d195ae6fe2a65e3b02c0a377cbd73a54c6f8935",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 22,
+      "name": "directed-23",
+      "bytes": 845,
+      "sha256": "2cbcb12cb818966815fc697c85220a9a944bc8e6baa73737145f8be8a1042557",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 23,
+      "name": "directed-24",
+      "bytes": 840,
+      "sha256": "504b7b3d821b7c9ede066422e84713084ab97ad5bcdce199d8084322ab008890",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 24,
+      "name": "directed-25",
+      "bytes": 836,
+      "sha256": "3b4f7c36d224d4d6ecc719c1538fe8feea3ce027c75d174cf22d337b28587364",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 25,
+      "name": "directed-26",
+      "bytes": 838,
+      "sha256": "0d23ebb7d30492e86e12ecc84af62adc78a1a83d7e2ec935f2623dbaa1d976d4",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 26,
+      "name": "directed-27",
+      "bytes": 838,
+      "sha256": "e1689f47612148c12ebc686c20f3562d94738593ae899e83d2bdef46d7cb1376",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 27,
+      "name": "directed-28",
+      "bytes": 842,
+      "sha256": "f4d50fbff9ac966032572667943eb473cf35ceaf9bb5f8f54028f35e9ee64d7b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 28,
+      "name": "directed-29",
+      "bytes": 843,
+      "sha256": "bb528d5743edc796b578427eba3344acbe00c7b23db493930f03486787d37309",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 29,
+      "name": "directed-30",
+      "bytes": 835,
+      "sha256": "0b9325be841d4cfd3ebe9a556ca874743eba779346984bd7b63e476b710d4f2f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 30,
+      "name": "directed-31",
+      "bytes": 834,
+      "sha256": "37c98b7ac4194316b6ba5639c6e3135e8f646cb9020ec6cb785af56026f23081",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 31,
+      "name": "directed-32",
+      "bytes": 840,
+      "sha256": "fad09fde9941d1ef93e3f6368462bf4a8f38adfa0d6cffc4c27336da5f8691d0",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 32,
+      "name": "directed-33",
+      "bytes": 842,
+      "sha256": "d15f4068aefc5b2b9fe6ab8275ad93a5935a3fe9d36522dc8f5b71e448513d93",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 33,
+      "name": "directed-34",
+      "bytes": 843,
+      "sha256": "ef536aed663ca75b25ae298b4c9933652af567c93eaac247745dbe96c7dfd255",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 34,
+      "name": "directed-35",
+      "bytes": 838,
+      "sha256": "81417ab1b299e5cc0d11093acc26d11c6bea204a810dedd94dde3e715b22f1c0",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 35,
+      "name": "directed-36",
+      "bytes": 836,
+      "sha256": "050a5b6e417dd7ed20dd4cfeb44e49925aa96419b38c026a5e715331b5cc93c6",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 36,
+      "name": "directed-37",
+      "bytes": 836,
+      "sha256": "d1599378402af89c6e4799727dcc9d63744ffef36287327f7c36de6c7de2f850",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 37,
+      "name": "directed-38",
+      "bytes": 835,
+      "sha256": "d3e9424260c5e27d497564f9cbc416e12900b232666194a7e855f605b8469494",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 38,
+      "name": "directed-39",
+      "bytes": 843,
+      "sha256": "9137459bb30a391e8d76365c4c47e2144c9789ded8096aa615f5df5abf2a824f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 39,
+      "name": "directed-40",
+      "bytes": 840,
+      "sha256": "9aacb9bb30061eb6b8d41821dce9715bc602995fe5fb20790bd5a6908eca972b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 40,
+      "name": "new-worker",
+      "bytes": 835,
+      "sha256": "84ee8d60a0c0abf1ecbfc1928872466c221ff924042961b8429dbfb1a839ea14",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 41,
+      "name": "overassigned",
+      "bytes": 841,
+      "sha256": "f0798d66aadd339dc82ed19efba3d9e8377992ea936e8933291e700ac1fcf104",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 42,
+      "name": "high-bits",
+      "bytes": 844,
+      "sha256": "bc5a52e983da210f1459e73314d984f814ecbb69e208a5559177fd00ce27a399",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 43,
+      "name": "specialists",
+      "bytes": 835,
+      "sha256": "185bf33631558e65d9b01504d9876f8fa782ae2f0633aee021a5fc7979858464",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 44,
+      "name": "large-pop",
+      "bytes": 846,
+      "sha256": "118ea6a0ff583c398ae46a984aa114757d04b9cc0571f62512f96acf0a62cc73",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 45,
+      "name": "zero-pop",
+      "bytes": 835,
+      "sha256": "c9926821a4ab504775b047501b399685c9016450b5e818230fd01626ad011b53",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 46,
+      "name": "empty-mask",
+      "bytes": 835,
+      "sha256": "594a4f6da652d8df7db90db97746725a13f1629ea7522b47fb520e5fe3cc77dc",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 47,
+      "name": "inspection",
+      "bytes": 18,
+      "sha256": "de04a4c1275b7563b3746c08d399b3692cb2599c5a9415216f4d76dce0df96e4",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 48,
+      "name": "editor",
+      "bytes": 18,
+      "sha256": "de04a4c1275b7563b3746c08d399b3692cb2599c5a9415216f4d76dce0df96e4",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 49,
+      "name": "control",
+      "bytes": 834,
+      "sha256": "37c98b7ac4194316b6ba5639c6e3135e8f646cb9020ec6cb785af56026f23081",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 50,
+      "name": "bad-special",
+      "bytes": 426,
+      "sha256": "87d665a25e155b7ed1f53070948268fe408144ed06c9205656adb3f931aa829d",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 51,
+      "name": "governor",
+      "bytes": 426,
+      "sha256": "7ff22b2412b38b41dbfcf293f33d454badf08bd9316e141ca4431eaafebbd162",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 52,
+      "name": "riot-immune",
+      "bytes": 834,
+      "sha256": "ecf0118f5f2f3659b800010ec503b69f73cb2f8739e8b069573aaad676178697",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 53,
+      "name": "SMAX",
+      "bytes": 18,
+      "sha256": "de04a4c1275b7563b3746c08d399b3692cb2599c5a9415216f4d76dce0df96e4",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 54,
+      "name": "fungus",
+      "bytes": 834,
+      "sha256": "37c98b7ac4194316b6ba5639c6e3135e8f646cb9020ec6cb785af56026f23081",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 55,
+      "name": "fresh-tech-overflow",
+      "bytes": 426,
+      "sha256": "f36740945fad16ccdc1e70e1fd43deb1af958ba407a768b0c16e7b45acebe616",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    }
+  ],
+  "count": 56,
+  "aggregateBytes": 43239,
+  "aggregateSHA256": "2bb51f98ab3acac6e53fe09449b4a8e4bad37aaf0ef48c5c964a6fedb1ae258c",
+  "status": "PSYCH_RC 0\nWORKER_0_RC 0\nWORKER_1_RC 0\nWORKER_2_RC 0\nWORKER_3_RC 0\nWORKER_4_RC 0\nWORKER_5_RC 0\nWORKER_6_RC 0\nWORKER_7_RC 0\nWORKER_8_RC 0\nWORKER_9_RC 0\nWORKER_10_RC 0\nWORKER_11_RC 0\nWORKER_12_RC 0\nWORKER_13_RC 0\nWORKER_14_RC 0\nWORKER_15_RC 0\nWORKER_16_RC 0\nWORKER_17_RC 0\nWORKER_18_RC 0\nWORKER_19_RC 0\nWORKER_20_RC 0\nWORKER_21_RC 0\nWORKER_22_RC 0\nWORKER_23_RC 0\nWORKER_24_RC 0\nWORKER_25_RC 0\nWORKER_26_RC 0\nWORKER_27_RC 0\nWORKER_28_RC 0\nWORKER_29_RC 0\nWORKER_30_RC 0\nWORKER_31_RC 0\nWORKER_32_RC 0\nWORKER_33_RC 0\nWORKER_34_RC 0\nWORKER_35_RC 0\nWORKER_36_RC 0\nWORKER_37_RC 0\nWORKER_38_RC 0\nWORKER_39_RC 0\nWORKER_40_RC 0\nWORKER_41_RC 0\nWORKER_42_RC 0\nWORKER_43_RC 0\nWORKER_44_RC 0\nWORKER_45_RC 0\nWORKER_46_RC 0\nWORKER_47_RC 0\nWORKER_48_RC 0\nWORKER_49_RC 0\nWORKER_50_RC 0\nWORKER_51_RC 0\nWORKER_52_RC 0\nWORKER_53_RC 0\nWORKER_54_RC 0\nWORKER_55_RC 0\nBATCH_DONE\n",
+  "process": {
+    "batchComplete": true,
+    "emulatorReturnCode": 0,
+    "timedOut": false
+  }
+}

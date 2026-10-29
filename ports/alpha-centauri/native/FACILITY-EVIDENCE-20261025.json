@@ -1,0 +1,55 @@
+{
+  "scope": "Bounded caller-owned original ordinal facility/project definitions, not build eligibility/production/upkeep/gameplay.",
+  "host": {
+    "syntheticCases": 254,
+    "accepted": 30,
+    "rejected": 224,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "completeOutputBytesCompared": true,
+    "unitsRegressionCases": 157,
+    "technologyRegressionPassed": true
+  },
+  "originalOwnedInputs": [
+    {
+      "name": "original-alpha.txt",
+      "variant": "base",
+      "valid": true,
+      "passed": true,
+      "outputSHA256": "8a884fa7b64bb51a460e64729277c06150dbe3e2db6549a29a7d23d5732ff245"
+    },
+    {
+      "name": "original-alphax.txt",
+      "variant": "expansion",
+      "valid": true,
+      "passed": true,
+      "outputSHA256": "bfe82a6e5a8af478b5bf761810d914fa593a530be865797e595c33932cd50b75"
+    }
+  ],
+  "originalTableRows": {
+    "base": 71,
+    "expansion": 133
+  },
+  "fidelityFacts": {
+    "originalFreeTechnologyAlwaysDisable": true,
+    "configuredFreeTechnologyRetainedSeparately": true,
+    "literalSemicolons": true,
+    "extraAnnotationColumnsIgnored": true,
+    "projectAIFileOrder": [
+      "fight",
+      "power",
+      "tech",
+      "wealth",
+      "growth"
+    ]
+  },
+  "originalLoaderExecution": "NOT RUN. GPL source plus original disassembly inspected only.",
+  "normalSDK": {
+    "binarySHA256": "6cad388524baeefb55d70033100dddd98eb326aa875ec38aed038864df7372e1",
+    "execution": "UNRUN"
+  },
+  "finalHeadCI": "UNRUN at evidence creation",
+  "historicalFailure": "Initial local host1 exposed semicolon/annotation assumptions; fixed before final host2. Failed files retained privately."
+}

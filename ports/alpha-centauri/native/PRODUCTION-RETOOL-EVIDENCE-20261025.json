@@ -1,0 +1,60 @@
+{
+  "scope": "Read-only original production-switch classification and mineral-loss preview; explicit raw context and owned saved-base binding. No eligibility/orders/production completion/upkeep/turn.",
+  "host": {
+    "cases": 93339,
+    "accepted": 91966,
+    "invalid": 9,
+    "overflow": 1364,
+    "inputSHA256": "61d88e9fc64f31ee7158a4f1514479c8792a242785e9dfdaaa4e02ac5c150409",
+    "outputSHA256": "831db58e571aa952c0d4dbcc8366e95ee609d475e7d7eb657a2328c4f4a9fd5c",
+    "binarySHA256": "d1f5ee619712705f2685b75297cdbbe1530a037a02ad5069e039381d0edc740a"
+  },
+  "worldHost": {
+    "cases": 744,
+    "versions": "7..12",
+    "originalTutorialPreviews": 21
+  },
+  "originalHelpers": [
+    {
+      "edition": "base",
+      "contexts": 45992,
+      "outputSHA256": "52f73c6f271695784f26cf58c91680d7be5620778af2c13db416f1bd680fffeb",
+      "originalCodePages": {
+        "0x4fa000": "3ca1a80de5aa701668a27eafaae48832d27456a24c54a719804231c58be93ea7",
+        "0x51f000": "b59d3f2e1a3f53ae780c5891f93ff788e64f8a9b7098bdb009dcaaf8fd815da0"
+      },
+      "originalExeSHA256": "0a61eb3642df750c0d5e516c3e3efeb4ad5ae7e1ce3163617759449327952a01",
+      "helpers": [
+        "0x4fa010",
+        "0x4fa120"
+      ],
+      "rc": 0,
+      "scope": "Actual original base_making/base_lose_minerals plus actual bitmask, explicit globals, accepted signed32 domain. No callback stubs, queue mutation, PE startup or full game."
+    },
+    {
+      "edition": "expansion",
+      "contexts": 45974,
+      "outputSHA256": "08429ec9f1c5fd2ed06e6e9bf70c4a2855c414b98a52160789777bd71d837cdb",
+      "originalCodePages": {
+        "0x4e4000": "c59b7634888e006ec6de39119502ca8d8a4609fff1a8b11dd3a81f082b2ec542",
+        "0x50b000": "ddecd57bf21837201c7b1b11ae59e2123f12f88134561282746e6fd6349b60ad"
+      },
+      "originalExeSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf",
+      "helpers": [
+        "0x4e4700",
+        "0x4e4810"
+      ],
+      "rc": 0,
+      "scope": "Actual original base_making/base_lose_minerals plus actual bitmask, explicit globals, accepted signed32 domain. No callback stubs, queue mutation, PE startup or full game."
+    }
+  ],
+  "portableAcceptedTriplesIdenticalToOriginalOutputs": true,
+  "normalSDK": {
+    "probes": {
+      "retool-probe": "49cf7143fb1055f00e226b3ba922bf6607d2ac8b761ed6eb74110c3d01429d17",
+      "world-retool-probe": "2c3586ab4ff0a700847b5f99281de412acb5dcfb56a9a33c10452f6854ee4c29"
+    },
+    "execution": "UNRUN"
+  },
+  "finalHeadCI": "UNRUN at evidence creation"
+}

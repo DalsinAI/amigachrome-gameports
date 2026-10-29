@@ -16,8 +16,8 @@ def valid_fixture(version=7,vehicles=3,bases=2):
  return bytes(b)
 
 def model(data):
- info,_,_=decode(data)
- return dict(version=info['version'],vehicles=info['vehicles'],bases=info['bases'],tiles=str(int(info['width'])//2*int(info['height'])),bytes=str(len(data)),snapshot=f'{fnv(data):08x}',seed='abcdef01',ownership='1',transactional='1',rc='0')
+ info,offsets,_=decode(data)
+ return dict(version=info['version'],vehicles=info['vehicles'],bases=info['bases'],tiles=str(int(info['width'])//2*int(info['height'])),bytes=str(len(data)),snapshot=f'{fnv(data):08x}',seed='abcdef01',ownership='1',transactional='1',monuments=f'{fnv(data[offsets["monuments"]:offsets["monuments"]+0x27a0]):08x}',rc='0')
 
 def controls():
  result=[(f'owned-v{v}',valid_fixture(v),True,None) for v in range(7,13)]

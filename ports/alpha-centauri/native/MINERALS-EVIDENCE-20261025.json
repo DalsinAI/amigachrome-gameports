@@ -1,0 +1,79 @@
+{
+  "status": "DRAFT signed-raw extension: final host and private original helper controls passed; changed-head independent big-endian CI and actual AmigaOS execution pending",
+  "scope": "Explicit-input mineral and ecological-damage numeric stage only; no owned-world binding or turn execution",
+  "source": {
+    "project": "OpenSMACX",
+    "pin": "2f7f4e24faddbaa5b97ee76d5e3dccfd855e4a8c",
+    "function": "base.cpp::base_minerals",
+    "license": "GPL-3.0-or-later"
+  },
+  "host": {
+    "cases": 49747,
+    "valid": 49653,
+    "badState": 79,
+    "overflow": 15,
+    "outputSHA256": "f573e79e5e87fb7321ef6498794729f598481897ed0c4b8415c25bf992267a63",
+    "binarySHA256": "98ff7d3df45bcee32ab0c773eda870d0ef16fc27ff5435e78b789aeb2df1d3c4",
+    "stdout": "mineral_cases=49747 rejected=94 aliases=29 adjacent=2 digest=420dd9e9 rc=0\n"
+  },
+  "native": {
+    "status": "Normal SDK build only; actual AmigaOS execution UNRUN",
+    "binarySHA256": "7b8c647388e84f6ffc951e048dc2bdc29c227e686f3a7007cbc80549bfc3dbeb"
+  },
+  "limits": [
+    "Pre-stage intake/support/convoy/terraforming eco and facility/project facts must be supplied by source-backed stages; saved calculated intake is not a fresh yield input",
+    "Signed32 raw terraforming ecological damage; nonnegative intake/convoys/support/clean/atrocity/tectonic/technology counts; original satellite/planet/sea clamps; other domains unchanged. Representable original signed32 intermediates only; overlapping input/output ranges rejected before writes.",
+    "Original incoming convoy amplification, Nanoreplicator OR Singularity ecological reduction, and pre-Space-Elevator final surplus intentionally preserved",
+    "Recovered-source unsigned temporaries corrected to original signed instructions; human atrocity and tectonic penalties divided separately as original instructions do Initial signed raw ecological damage uses original SAR3 floor rounding, safely handling INT32_MIN.",
+    "No production completion, support/yield generation, base upkeep, ecology events, turn advancement, AI or savewriter",
+    "No proprietary executable bytes, decompile text or owner assets included; only private bounded helper executed, not original PE startup/imports/full game",
+    "Explicit runtime edition controls raw satellite production IDs: base34..37 versus expansion65..68; nonzero tectonic counts rejected in base mode. Both original edition helpers compared independently."
+  ],
+  "privateOriginalHelpers": [
+    {
+      "originalHelper": "base_minerals 0x4ff1e0 with original has_fac and bitmask helpers",
+      "contexts": 16559,
+      "outputBytes": 397416,
+      "outputSHA256": "c9c26c7f79ea3938b03b18116fd185ff5c84ea70e278bde861f32a45b4bb9b98",
+      "unchangedCodePages": {
+        "0x421000": "36feaf99b4ffdf9bb6cf1bed82ac438ab7f707407f11bbe4a3e205ce748bea88",
+        "0x4ff000": "d2b82c347162eac6fb3c6d45614e4a7df41aa2bed71e33da00bc77dffaf29652",
+        "0x51f000": "b59d3f2e1a3f53ae780c5891f93ff788e64f8a9b7098bdb009dcaaf8fd815da0"
+      },
+      "rc": 0,
+      "fullGameExecution": false,
+      "limits": "Bounded numeric helper with seeded explicit globals; no PE startup/imports, original world upkeep or full economy execution",
+      "edition": "base",
+      "inputSHA256": "0a61eb3642df750c0d5e516c3e3efeb4ad5ae7e1ce3163617759449327952a01"
+    },
+    {
+      "originalHelper": "base_minerals 0x4e9cb0 with original has_fac and bitmask helpers",
+      "contexts": 16386,
+      "outputBytes": 393264,
+      "outputSHA256": "1b601259c5d3a29f5a9c37614fe7e1d152c24bd84e0302c132e6a6944bf16334",
+      "unchangedCodePages": {
+        "0x421000": "3765030273f2e77e1fc0dce3f36acbbe9cdf350928dee2f37b52ca1d4d9bab04",
+        "0x4e9000": "9f139d3964a13640287fb2bebb5d1604646497666faaf1b667f7a370684ccac2",
+        "0x50b000": "ddecd57bf21837201c7b1b11ae59e2123f12f88134561282746e6fd6349b60ad"
+      },
+      "rc": 0,
+      "fullGameExecution": false,
+      "limits": "Bounded numeric helper with seeded explicit globals; no PE startup/imports, original world upkeep or full economy execution",
+      "edition": "expansion",
+      "inputSHA256": "01901cbf7196b0c5d0df9540a029520f5df8fd9a6b343deef8b5663872805fcf"
+    }
+  ],
+  "signedRawExtension": {
+    "additionalContexts": 16704,
+    "contextsPerEdition": 8352,
+    "baseOutputSHA256": "4eb385014ecac5dcb467f8bd83ee89011a3845f64be2930db46f2e4fc8c60fa7",
+    "expansionOutputSHA256": "3dba3a8ca29cc24f21ed3bd818b97c936bc9966a8dea797de764ebe63879ccff",
+    "parentAcceptedOutputsUnchanged": 32945,
+    "parentUnsupportedNegativeInputsNowAccepted": 4,
+    "aliasRejects": 29,
+    "adjacentOutputs": 2,
+    "oldSourceAliasRegressionExit": 21,
+    "native": "UNRUN",
+    "changedHeadCI": "UNRUN at committed evidence checkpoint"
+  }
+}

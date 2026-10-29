@@ -1,0 +1,848 @@
+{
+  "leafCases": 10914,
+  "worldCases": 55,
+  "leafInputSHA256": "9c147bdc7c2df5b1a9751e063d4558feddd576813ea3e6abb6dd3317d1375051",
+  "leafOutputSHA256": "1c0fa214be6d6de384bf6fcd7dda85b6ede2c5a0172de4d31afb8ac043af4aa2",
+  "leafOutputBytes": 698496,
+  "worldOutputSHA256": "fb95e3faee22aafbd91c46f404dd6b3b459bf5bfcb3454d25116b234f83d34c1",
+  "binarySHA256": "cc2c9d35e346d04a22a400e37dc318c3e16ace8093fb5ba14f7c838b5d10f50b",
+  "records": [
+    {
+      "index": 0,
+      "name": "world-1",
+      "base": 0,
+      "seed": 305419897,
+      "psych": 2,
+      "specialists": 1,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 305419897\nFACTS 2 0 0 0 4294967290 0 2 5 1 2 2147483712 3141109308 199 4 0 0 0 305419897\nTRANS 0 305419897 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "97c4199824ef9d020aad37535154046374de84493d1083a025e819c458e4ba51"
+    },
+    {
+      "index": 1,
+      "name": "world-2",
+      "base": 0,
+      "seed": 610839794,
+      "psych": 20,
+      "specialists": 2,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 610839794\nFACTS 3 1 0 0 4294967290 0 2 5 2 4 0 3141109308 199 4 0 0 0 610839794\nTRANS 0 610839794 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "6fb504f62cadf5670d2afccdc9a7bcfeac004ce78e6de969dd2670d7440136cb"
+    },
+    {
+      "index": 2,
+      "name": "world-3",
+      "base": 0,
+      "seed": 916259691,
+      "psych": 1000,
+      "specialists": 3,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 916259691\nFACTS 4 1 0 0 0 0 2 5 3 6 2147483712 3141109308 199 4 0 0 0 916259691\nTRANS 0 916259691 0 0 0 3141109308 199 4294967295 2 2 6 0 0 0 1 1\n",
+      "outputSHA256": "d752a22032ff07b2f6e9fa26f020d43de84a4be38cb82ef32fa55febc61e36da"
+    },
+    {
+      "index": 3,
+      "name": "world-4",
+      "base": 0,
+      "seed": 1221679588,
+      "psych": 0,
+      "specialists": 4,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1221679588\nFACTS 5 0 1 0 4294967290 0 2 5 4 0 0 3141109308 199 4 0 0 0 1221679588\nTRANS 0 1221679588 2 0 0 3141109308 199 4294967295 1 3 0 0 0 1 1 1\n",
+      "outputSHA256": "bc5dc90c2a3243729f1919960b958aad23f14ad8b67f58eda3ca68ceef0e529c"
+    },
+    {
+      "index": 4,
+      "name": "world-5",
+      "base": 0,
+      "seed": 1527099485,
+      "psych": 2,
+      "specialists": 5,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1527099485\nFACTS 6 0 0 0 4294967290 0 2 5 5 2 2147483712 3141109308 199 4 0 0 0 1527099485\nTRANS 0 1527099485 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "2e5f0cdc52a711e4b03d3e1d80ad6595127075a71f4a39648af21664a9bcdddb"
+    },
+    {
+      "index": 5,
+      "name": "world-6",
+      "base": 0,
+      "seed": 1832519382,
+      "psych": 20,
+      "specialists": 6,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1832519382\nFACTS 7 1 0 0 0 0 2 5 6 4 0 3141109308 199 4 0 0 0 1832519382\nTRANS 0 1832519382 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "8c96c93f962c91d15403ff8ba44d357db23ec676eee7582a2620bc06472526f1"
+    },
+    {
+      "index": 6,
+      "name": "world-7",
+      "base": 0,
+      "seed": 2137939279,
+      "psych": 1000,
+      "specialists": 7,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 2137939279\nFACTS 8 1 0 0 4294967290 0 2 5 7 6 2147483712 3141109308 199 4 0 0 0 2137939279\nTRANS 0 2137939279 0 0 0 3141109308 199 4294967295 2 2 6 0 0 0 1 1\n",
+      "outputSHA256": "ef57640d176571fb7e50c724861c5c463a72ca85b02c5d0447f54a7ff8b5c954"
+    },
+    {
+      "index": 7,
+      "name": "world-8",
+      "base": 0,
+      "seed": 2443359176,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 2443359176\nFACTS 1 0 0 0 4294967290 0 2 5 0 0 0 3141109308 199 4 0 0 0 2443359176\nTRANS 0 2443359176 0 0 0 3141109308 199 4294967295 0 0 0 0 0 0 0 0\n",
+      "outputSHA256": "fcdf8aeab9776fd54be04e45b2e54de98dae1c563b9aaa4803a8e53bd566e21a"
+    },
+    {
+      "index": 8,
+      "name": "world-9",
+      "base": 0,
+      "seed": 2748779073,
+      "psych": 2,
+      "specialists": 0,
+      "mask": 7,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 2748779073\nFACTS 2 1 1 0 0 0 2 5 1 2 2147483712 3141109308 199 4 0 0 0 2748779073\nTRANS 0 2748779073 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "6080937e0e4521fedd4f75b269bebdcb8a6f9f627e756e55349d684cc14d6775"
+    },
+    {
+      "index": 9,
+      "name": "world-10",
+      "base": 0,
+      "seed": 3054198970,
+      "psych": 20,
+      "specialists": 2,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3054198970\nFACTS 3 1 0 0 4294967290 0 2 5 2 4 0 3141109308 199 4 0 0 0 3054198970\nTRANS 0 3054198970 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "ba4c5227a5e6ade522799ff4d466669414b2d1c24cf3a87d8889f6b5cb945a44"
+    },
+    {
+      "index": 10,
+      "name": "world-11",
+      "base": 0,
+      "seed": 3359618867,
+      "psych": 1000,
+      "specialists": 1,
+      "mask": 15,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3359618867\nFACTS 4 3 0 0 4294967290 0 2 5 3 6 2147483712 3141109308 199 4 0 0 0 3359618867\nTRANS 0 3359618867 4 0 0 3141109308 199 4294967295 0 0 0 0 1 0 1 1\n",
+      "outputSHA256": "fb8ec5e63e1c16f793bcc87bfc1d306935219574345d869d0d80e13c1d9dc7aa"
+    },
+    {
+      "index": 11,
+      "name": "world-12",
+      "base": 0,
+      "seed": 3665038764,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 63,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3665038764\nFACTS 5 0 4 0 0 0 2 5 4 0 0 3141109308 199 4 0 0 0 3665038764\nTRANS 0 3665038764 2 0 0 3141109308 199 4294967295 1 3 0 0 0 1 1 1\n",
+      "outputSHA256": "a8c580fa0eb4ff462dc78b90eda5d2e6c8a251487e3bb3b719fce0b43d8967aa"
+    },
+    {
+      "index": 12,
+      "name": "world-13",
+      "base": 0,
+      "seed": 3970458661,
+      "psych": 2,
+      "specialists": 6,
+      "mask": 1,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3970458661\nFACTS 6 0 0 0 4294967290 0 2 5 5 2 2147483712 3141109308 199 4 0 0 0 3970458661\nTRANS 0 3970458661 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "44c824c7720c782e6e68bb63822214d4e5a832876fa0c4997a30e4a24906fde1"
+    },
+    {
+      "index": 13,
+      "name": "world-14",
+      "base": 0,
+      "seed": 4275878558,
+      "psych": 20,
+      "specialists": 6,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4275878558\nFACTS 7 1 0 0 4294967290 0 2 5 6 4 0 3141109308 199 4 0 0 0 4275878558\nTRANS 0 4275878558 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "4680cab2a2d6fc8d481dc401215b8c7087e25cda3eeeb49bec609f47d63329b3"
+    },
+    {
+      "index": 14,
+      "name": "world-15",
+      "base": 0,
+      "seed": 286331159,
+      "psych": 1000,
+      "specialists": 6,
+      "mask": 7,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 286331159\nFACTS 8 2 0 0 0 0 2 5 7 6 2147483712 3141109308 199 4 0 0 0 286331159\nTRANS 0 286331159 0 0 0 3141109308 199 4294967295 2 2 6 0 0 0 1 1\n",
+      "outputSHA256": "6b4d11dc8da378e96c833156544dee47c2db05ee688fe2cd8d4d9c123f0dbccd"
+    },
+    {
+      "index": 15,
+      "name": "world-16",
+      "base": 0,
+      "seed": 591751056,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 591751056\nFACTS 1 0 0 0 4294967290 0 2 5 0 0 0 3141109308 199 4 0 0 0 591751056\nTRANS 0 591751056 0 0 0 3141109308 199 4294967295 0 0 0 0 0 0 0 0\n",
+      "outputSHA256": "56a72246e36cc7c36fdd15c73553c580adb3e2c2b2cd3f705e1b3fa16ada1454"
+    },
+    {
+      "index": 16,
+      "name": "world-17",
+      "base": 0,
+      "seed": 897170953,
+      "psych": 2,
+      "specialists": 2,
+      "mask": 1,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 897170953\nFACTS 2 0 0 0 4294967290 0 2 5 1 2 2147483712 3141109308 199 4 0 0 0 897170953\nTRANS 0 897170953 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "c3644533e686982208eecb9dceee510b9e4a18f18a98b8634a67de5c75cf92f0"
+    },
+    {
+      "index": 17,
+      "name": "world-18",
+      "base": 0,
+      "seed": 1202590850,
+      "psych": 20,
+      "specialists": 2,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1202590850\nFACTS 3 1 0 0 0 0 2 5 2 4 0 3141109308 199 4 0 0 0 1202590850\nTRANS 0 1202590850 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "75dd385ec389d824338fac15b08168a01030bf95c8f135b150c52aa69933ed2a"
+    },
+    {
+      "index": 18,
+      "name": "world-19",
+      "base": 0,
+      "seed": 1508010747,
+      "psych": 1000,
+      "specialists": 4,
+      "mask": 1,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1508010747\nFACTS 4 0 0 0 4294967290 0 2 5 3 6 2147483712 3141109308 199 4 0 0 0 1508010747\nTRANS 0 1508010747 0 0 0 3141109308 199 4294967295 2 2 6 0 0 0 1 1\n",
+      "outputSHA256": "bbc517e3be9d15f344de38880b1cdf5d4eabb1f437869a9f7c85e96567d38cd7"
+    },
+    {
+      "index": 19,
+      "name": "world-20",
+      "base": 0,
+      "seed": 1813430644,
+      "psych": 0,
+      "specialists": 2,
+      "mask": 15,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1813430644\nFACTS 5 0 3 0 4294967290 0 2 5 4 0 0 3141109308 199 4 0 0 0 1813430644\nTRANS 0 1813430644 2 0 0 3141109308 199 4294967295 1 3 0 0 0 1 1 1\n",
+      "outputSHA256": "a3ef40168a6e49cc23b779c411b562cc1379199a58fa157c2744ea57680d656f"
+    },
+    {
+      "index": 20,
+      "name": "world-21",
+      "base": 0,
+      "seed": 2118850541,
+      "psych": 2,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3211217660\nFACTS 6 1 5 0 0 0 2 5 5 2 2147483712 3141109308 199 4 0 0 0 2118850541\nTRANS 0 3211217660 2 1 0 3141109308 199 4294967295 1 3 0 0 0 1 0 0\n",
+      "outputSHA256": "7bd8b532a29dc4cb9d77d112ce0a7040f35ef8b643f55871ffc37500929a3fb0"
+    },
+    {
+      "index": 21,
+      "name": "world-22",
+      "base": 0,
+      "seed": 2424270438,
+      "psych": 20,
+      "specialists": 6,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 2424270438\nFACTS 7 1 0 0 4294967290 0 2 5 6 4 0 3141109308 199 4 0 0 0 2424270438\nTRANS 0 2424270438 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "fcb4c1e3d7dbb3314c2729a67e0bd1ceaf1cf0e5b966c00ab92878afd6ac323b"
+    },
+    {
+      "index": 22,
+      "name": "world-23",
+      "base": 0,
+      "seed": 2729690335,
+      "psych": 1000,
+      "specialists": 5,
+      "mask": 15,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 2729690335\nFACTS 8 3 0 0 4294967290 0 2 5 7 6 2147483712 3141109308 199 4 0 0 0 2729690335\nTRANS 0 2729690335 0 0 0 3141109308 199 4294967295 2 2 6 0 0 0 1 1\n",
+      "outputSHA256": "d84c4a07d3755c8b628bf6bac70df5875db66b56c028207325edc327e97b2a87"
+    },
+    {
+      "index": 23,
+      "name": "world-24",
+      "base": 0,
+      "seed": 3035110232,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3035110232\nFACTS 1 0 0 0 0 0 2 5 0 0 0 3141109308 199 4 0 0 0 3035110232\nTRANS 0 3035110232 0 0 0 3141109308 199 4294967295 0 0 0 0 0 0 0 0\n",
+      "outputSHA256": "e5945d302e55096532f3cbb0a355de9baa010164ce3b4894757caaf387b6a9cc"
+    },
+    {
+      "index": 24,
+      "name": "world-25",
+      "base": 0,
+      "seed": 3340530129,
+      "psych": 2,
+      "specialists": 1,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3340530129\nFACTS 2 0 0 0 4294967290 0 2 5 1 2 2147483712 3141109308 199 4 0 0 0 3340530129\nTRANS 0 3340530129 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "520e697267c7860fa62e5a94cc3ad3edd1621a9cf27d0849e745379e968b04d3"
+    },
+    {
+      "index": 25,
+      "name": "world-26",
+      "base": 0,
+      "seed": 3645950026,
+      "psych": 20,
+      "specialists": 2,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3645950026\nFACTS 3 1 0 0 4294967290 0 2 5 2 4 0 3141109308 199 4 0 0 0 3645950026\nTRANS 0 3645950026 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "316bb863d9df8edf5fe9325ff77e779a87222f98fe606228f00a5e0565b243bd"
+    },
+    {
+      "index": 26,
+      "name": "world-27",
+      "base": 0,
+      "seed": 3951369923,
+      "psych": 1000,
+      "specialists": 2,
+      "mask": 7,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 3951369923\nFACTS 4 2 0 0 0 0 2 5 3 6 2147483712 3141109308 199 4 0 0 0 3951369923\nTRANS 0 3951369923 4 0 0 3141109308 199 4294967295 0 0 0 0 1 0 1 1\n",
+      "outputSHA256": "09dfe571888b5e85d6b030b77cdcd8aa44fec2fb9f58249bf27cd2f7f60cb67a"
+    },
+    {
+      "index": 27,
+      "name": "world-28",
+      "base": 0,
+      "seed": 4256789820,
+      "psych": 0,
+      "specialists": 4,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4256789820\nFACTS 5 0 1 0 4294967290 0 2 5 4 0 0 3141109308 199 4 0 0 0 4256789820\nTRANS 0 4256789820 2 0 0 3141109308 199 4294967295 1 3 0 0 0 1 1 1\n",
+      "outputSHA256": "a98d69256381c3b4f1d6f0c9e0fc6477a4f01cfa136431c612b580a384308c8a"
+    },
+    {
+      "index": 28,
+      "name": "world-29",
+      "base": 0,
+      "seed": 267242421,
+      "psych": 2,
+      "specialists": 1,
+      "mask": 63,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4065131326\nFACTS 6 0 4 0 4294967290 0 2 5 5 2 2147483712 3141109308 199 4 0 0 0 267242421\nTRANS 0 4065131326 2 3 3 3141108284 199 10 2 3 7 0 0 1 1 1\n",
+      "outputSHA256": "3e1c12cdfdb59fea5e93acde4e19e396bcf762019376c1b877c83dfbcd9c5f63"
+    },
+    {
+      "index": 29,
+      "name": "world-30",
+      "base": 0,
+      "seed": 572662318,
+      "psych": 20,
+      "specialists": 6,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 572662318\nFACTS 7 1 0 0 0 0 2 5 6 4 0 3141109308 199 4 0 0 0 572662318\nTRANS 0 572662318 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "61231e7cbcba9cd15690224e18afb6f99bcbdb71db4dadcf31a0ce0eab9a5c28"
+    },
+    {
+      "index": 30,
+      "name": "world-31",
+      "base": 0,
+      "seed": 878082215,
+      "psych": 1000,
+      "specialists": 4,
+      "mask": 31,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 878082215\nFACTS 8 4 0 0 4294967290 0 2 5 7 6 2147483712 3141109308 199 4 0 0 0 878082215\nTRANS 0 878082215 4 0 0 3141109308 199 4294967295 0 0 0 0 1 0 1 1\n",
+      "outputSHA256": "425d6c4207a68699107e013ddaf4fdc7f0023f039d5d372747c03227707372ee"
+    },
+    {
+      "index": 31,
+      "name": "world-32",
+      "base": 0,
+      "seed": 1183502112,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 3,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1183502112\nFACTS 1 0 0 0 4294967290 0 2 5 0 0 0 3141109308 199 4 0 0 0 1183502112\nTRANS 0 1183502112 0 0 0 3141109308 199 4294967295 0 0 0 0 0 0 0 0\n",
+      "outputSHA256": "72b698c3f9c37e229eb7d330a40ebe90a0a6d830ab59ada3fc783dd1cf12248d"
+    },
+    {
+      "index": 32,
+      "name": "golden-start",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 1000,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 6 6 0 0 4294967290 0 2 5 5 2 2147483712 3141109308 199 4 0 0 0 4294967295\nTRANS 0 4294967295 4 0 0 3141109308 199 4294967295 1 1 0 0 1 0 1 1\n",
+      "outputSHA256": "bdd766511de013940e943c0a6f6a120c0b474321145238c21e311648c6d020d9"
+    },
+    {
+      "index": 33,
+      "name": "golden-end",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 6 0 5 0 4294967290 0 2 5 5 4 2147483712 3141109308 199 4 0 0 0 4294967295\nTRANS 0 4294967295 2 0 0 3141109308 199 4294967295 1 4 0 0 0 1 1 1\n",
+      "outputSHA256": "f41d6f5a5b3b638007c2d1f15066bbf67a2ac7560f26997964e2c8880f68386d"
+    },
+    {
+      "index": 34,
+      "name": "riot-start",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 6 0 5 0 4294967290 0 2 5 5 0 2147483712 3141109308 199 4 0 0 0 4294967295\nTRANS 0 4294967295 2 0 0 3141109308 199 4294967295 1 4 0 0 0 1 1 1\n",
+      "outputSHA256": "a887c5f9f580fb9ada76d2488a1fb47b1272ba6a5695e8d78079f9d5aba590d1"
+    },
+    {
+      "index": 35,
+      "name": "riot-ongoing",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1948984945\nFACTS 6 0 5 0 4294967290 0 2 5 5 2 2147483712 3141109308 199 4 0 0 0 4294967295\nTRANS 0 1948984945 2 2 2 3139012156 199 21 2 3 7 0 0 1 1 1\n",
+      "outputSHA256": "872e729e95dd76ad36e469caf22ab63949d1ffd7f9c56577c86a9382bd5285fc"
+    },
+    {
+      "index": 36,
+      "name": "nerve-end",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 6 0 0 0 4294967290 0 2 5 5 2 2147483712 3141109308 199 4 0 1 0 4294967295\nTRANS 0 4294967295 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "b62fdd1a04acb499f3e7019854ee8bd94cb2753ac01e31732379233483aacf3c"
+    },
+    {
+      "index": 37,
+      "name": "matrix-end",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 6 0 5 0 4294967290 0 2 5 5 2 2147483712 3141109308 199 4 0 0 1 4294967295\nTRANS 0 4294967295 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "916cbf19a93c850316d2cefee23e5c0e30f454698b63202e806231fe6cc310f9"
+    },
+    {
+      "index": 38,
+      "name": "hq-auto-gate",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 6 0 5 0 4294967290 0 2 5 5 2 2147483712 3141109310 199 4 0 0 0 4294967295\nTRANS 0 4294967295 2 0 0 3141109310 199 4294967295 1 3 0 0 0 1 0 0\n",
+      "outputSHA256": "efe119e4d559330b2364bf751c6fd4a5666a484e423e9449ef14c0a193431c0c"
+    },
+    {
+      "index": 39,
+      "name": "recent-capture",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 6 0 6 0 4294967290 45 2 5 5 2 2147483712 3141109308 199 4 0 0 0 4294967295\nTRANS 0 4294967295 2 0 0 3141109308 199 4294967295 1 3 0 0 0 1 0 0\n",
+      "outputSHA256": "b2e4af3ba464bb39ff5e5f22ac1ebf7d41187630a79c15f271e0cbfc38b74c71"
+    },
+    {
+      "index": 40,
+      "name": "freefac-not-known",
+      "base": 0,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 1948984945\nFACTS 6 0 5 0 4294967290 0 2 5 5 2 2147483712 3141109308 199 4 0 0 0 4294967295\nTRANS 0 1948984945 2 2 2 3139012156 199 21 2 3 7 0 0 1 1 1\n",
+      "outputSHA256": "872e729e95dd76ad36e469caf22ab63949d1ffd7f9c56577c86a9382bd5285fc"
+    },
+    {
+      "index": 41,
+      "name": "quiet-golden-ended",
+      "base": 0,
+      "seed": 123,
+      "psych": 2,
+      "specialists": 0,
+      "mask": 7,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 123\nFACTS 2 1 1 0 4294967290 0 2 5 1 4 2147483712 3141109308 199 4 0 0 0 123\nTRANS 0 123 0 0 0 3141109308 199 4294967295 1 2 0 0 0 0 1 0\n",
+      "outputSHA256": "21087d02ba3badfbb3df3ae36dcd939c36be51d5159d3699cda50be0e7b14e3e"
+    },
+    {
+      "index": 42,
+      "name": "managed-riot-ended",
+      "base": 0,
+      "seed": 123,
+      "psych": 2,
+      "specialists": 0,
+      "mask": 7,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 123\nFACTS 2 1 1 0 4294967290 0 2 5 1 2 2147483712 3141109308 199 4 0 0 0 123\nTRANS 0 123 0 0 0 3141109308 199 4294967295 1 6 0 0 0 0 1 1\n",
+      "outputSHA256": "17a6f50b58ce46966e75f80672a8d9525201db0e2b6e7ed0064a273d7ec14507"
+    },
+    {
+      "index": 43,
+      "name": "golden-and-riot-ended",
+      "base": 0,
+      "seed": 123,
+      "psych": 2,
+      "specialists": 0,
+      "mask": 7,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 123\nFACTS 2 1 1 0 4294967290 0 2 5 1 6 2147483712 3141109308 199 4 0 0 0 123\nTRANS 0 123 0 0 0 3141109308 199 4294967295 2 2 6 0 0 0 1 1\n",
+      "outputSHA256": "4cc8aa0fc45c9e3a093cebe507bfc93b948d9b84dcc0c715143973b678b8da11"
+    },
+    {
+      "index": 44,
+      "name": "late-psych-overflow",
+      "base": 0,
+      "seed": 123,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 4 123\n",
+      "outputSHA256": "b5190cf17ccde1beb8dd2a9a15b4af64523776cdbc69d490c47402e70876d476"
+    },
+    {
+      "index": 45,
+      "name": "negative-psych",
+      "base": 0,
+      "seed": 123,
+      "psych": -1,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 1 123\n",
+      "outputSHA256": "9baa04b05d59c5e14d8ec576fd81e23da518c07805685ef133b52d14c97bfe12"
+    },
+    {
+      "index": 46,
+      "name": "bad-specialists",
+      "base": 0,
+      "seed": 123,
+      "psych": 0,
+      "specialists": 7,
+      "mask": 1,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 1 123\n",
+      "outputSHA256": "9baa04b05d59c5e14d8ec576fd81e23da518c07805685ef133b52d14c97bfe12"
+    },
+    {
+      "index": 47,
+      "name": "missing-centre",
+      "base": 0,
+      "seed": 123,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 126,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 1 123\n",
+      "outputSHA256": "9baa04b05d59c5e14d8ec576fd81e23da518c07805685ef133b52d14c97bfe12"
+    },
+    {
+      "index": 48,
+      "name": "outside-radius",
+      "base": 0,
+      "seed": 123,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 4194303,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 1 123\n",
+      "outputSHA256": "9baa04b05d59c5e14d8ec576fd81e23da518c07805685ef133b52d14c97bfe12"
+    },
+    {
+      "index": 49,
+      "name": "bad-specialist-type",
+      "base": 0,
+      "seed": 123,
+      "psych": 0,
+      "specialists": 1,
+      "mask": 63,
+      "types": [
+        7,
+        0
+      ],
+      "expectedLog": "WORLD 1 123\n",
+      "outputSHA256": "9baa04b05d59c5e14d8ec576fd81e23da518c07805685ef133b52d14c97bfe12"
+    },
+    {
+      "index": 50,
+      "name": "SMAX-rejected",
+      "base": 0,
+      "seed": 1,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 127,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 3 1\n",
+      "outputSHA256": "8c1155a34d7ca0492443006cd226eaab4ed9712b5d9daa6e8fe2f05f5fcc1004"
+    },
+    {
+      "index": 51,
+      "name": "actual-base-9-psych-0",
+      "base": 9,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 1573569,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 5 0 0 0 0 0 2 5 5 2147483648 14663169 201329114 0 16 0 0 0 4294967295\nTRANS 0 4294967295 2147483648 0 0 201329114 0 4294967295 0 0 0 0 0 0 0 0\n",
+      "outputSHA256": "583aa7c6bb12252507b237e447f29d0f7c6c7a02b5e188390933bfad009c0e40"
+    },
+    {
+      "index": 52,
+      "name": "actual-base-9-psych-1000",
+      "base": 9,
+      "seed": 4294967295,
+      "psych": 1000,
+      "specialists": 0,
+      "mask": 1573569,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 5 5 0 0 0 0 2 5 5 2147483648 14663169 201329114 0 16 0 0 0 4294967295\nTRANS 0 4294967295 2147483652 0 0 201329114 0 4294967295 1 1 0 0 1 0 1 0\n",
+      "outputSHA256": "e46e0818c0ffec66f2da0c0f004abdc99e615b12354e8c971ec78c2f1e6dde12"
+    },
+    {
+      "index": 53,
+      "name": "actual-base-10-psych-0",
+      "base": 10,
+      "seed": 4294967295,
+      "psych": 0,
+      "specialists": 0,
+      "mask": 8997,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 5 0 0 0 0 0 2 5 5 2147483648 14663169 134220248 0 16 0 0 0 4294967295\nTRANS 0 4294967295 2147483648 0 0 134220248 0 4294967295 0 0 0 0 0 0 0 0\n",
+      "outputSHA256": "2ddd9a66394deeb0ba08287ee899a999145461aa6358107c911dd70c345f71ab"
+    },
+    {
+      "index": 54,
+      "name": "actual-base-10-psych-1000",
+      "base": 10,
+      "seed": 4294967295,
+      "psych": 1000,
+      "specialists": 0,
+      "mask": 8997,
+      "types": [
+        0,
+        0
+      ],
+      "expectedLog": "WORLD 0 4294967295\nFACTS 5 5 0 0 0 0 2 5 5 2147483648 14663169 134220248 0 16 0 0 0 4294967295\nTRANS 0 4294967295 2147483652 0 0 134220248 0 4294967295 1 1 0 0 1 0 1 0\n",
+      "outputSHA256": "1cd2fb8e3f98e5dc7339d0fef4ad581d4659a9e41fdc050c8334fe818e50f360"
+    }
+  ],
+  "command": [
+    "python3",
+    "test_drone_transition.py",
+    "--out",
+    "NEW_DIRECTORY",
+    "--original",
+    "PRIVATE_BOREHOLES.SC",
+    "--original-rules",
+    "PRIVATE_ALPHA.TXT"
+  ],
+  "scope": "Thinker default human base-game riot/GoldenAge policy; %39 base ordinal adaptation; separate CRT; no original revolt claim.",
+  "sanitizers": "AddressSanitizer and UndefinedBehaviorSanitizer; LeakSanitizer disabled for isolated /proc restriction."
+}

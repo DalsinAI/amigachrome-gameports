@@ -1,0 +1,12 @@
+--- a/sources/nix/misc/__fpucheck.c
++++ b/sources/nix/misc/__fpucheck.c
+@@ -15,7 +15,8 @@
+ "	btst	#1,d0;"
+ "	jeq	error;"
+ "	move.l	#0x68881,d1;"
+-"	btst	#4,d0;"
++/* Accept the original AFF_68881 bit or the 68040 internal FPU bit. */
++"	andi.w	#0x50,d0;"
+ "	jeq	error;"
+ );
+ 

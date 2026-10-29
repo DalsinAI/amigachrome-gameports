@@ -45,12 +45,14 @@ bool Text::section(const char* name) {
   if (error_ == Error::ok) error_ = Error::missing_section;
   return false;
 }
-bool Text::item(char* output, size_t capacity) {
+bool Text::item(char* output,size_t capacity){return item_impl(output,capacity,true);}
+bool Text::item_literal(char* output,size_t capacity){return item_impl(output,capacity,false);}
+bool Text::item_impl(char* output, size_t capacity,bool semicolon_comments) {
   if (!capacity || error_ != Error::ok) return false;
   size_t first = cursor_;
   while (line_[first] && space((unsigned char)line_[first])) ++first;
   size_t end = first;
-  while (line_[end] && line_[end] != ',' && line_[end] != ';') ++end;
+  while (line_[end] && line_[end] != ',' && (!semicolon_comments || line_[end] != ';')) ++end;
   cursor_ = line_[end] == ',' ? end+1 : end;
   size_t last = end;
   while (last > first && space((unsigned char)line_[last-1])) --last;
@@ -556,7 +558,7 @@ Error read_faction(const uint8_t* bytes, size_t length, const char* search_secti
 }
 class DefinitionInput {
  public:
-  DefinitionInput(Text& text, const Rules& technology) : text_(text), technology_(technology), error_(Error::ok) {}
+  DefinitionInput(Text& text, const Rules& technology,bool literal=false) : text_(text), technology_(technology), error_(Error::ok), literal_(literal) {}
   Error error() const { return error_; }
   bool section(const char* name) {
     if (!text_.section(name)) { error_ = text_.error(); return false; }
@@ -569,12 +571,15 @@ class DefinitionInput {
   }
   bool finish() {
     if (!end()) return false;
+    return finish_rows();
+  }
+  bool finish_rows() {
     if (data_line(text_) && text_.line()[0] != '#') { error_ = Error::bad_row; return false; }
     if (text_.error() != Error::ok) { error_ = text_.error(); return false; }
     return true;
   }
   template<size_t N> bool string(char (&value)[N], bool required = true) {
-    if (!text_.item(value, N) || (required && !*value)) { error_ = Error::bad_row; return false; }
+    if (!(literal_?text_.item_literal(value,N):text_.item(value,N)) || (required && !*value)) { error_ = Error::bad_row; return false; }
     return true;
   }
   bool numeric(int32_t& value, int32_t low, int32_t high) {
@@ -607,6 +612,7 @@ class DefinitionInput {
   Text& text_;
   const Rules& technology_;
   Error error_;
+  bool literal_;
 };
 Error read_unit_definitions(const uint8_t* bytes, size_t length, const Rules& technologies,
                             Variant variant, UnitDefinitions& out) {
@@ -685,6 +691,33 @@ Error read_unit_definitions(const uint8_t* bytes, size_t length, const Rules& te
     if (!input.end()) return input.error();
   }
   return input.finish() ? Error::ok : input.error();
+}
+Error read_facility_definitions(const uint8_t* bytes,size_t length,const Rules& technologies,
+                                Variant variant,FacilityDefinitions& out) {
+  out=FacilityDefinitions{};
+  if(!bytes || !length)return Error::missing_section;
+  if(technologies.count!=technology_count)return Error::wrong_count;
+  if(variant!=Variant::base && variant!=Variant::alien_crossfire)return Error::bad_row;
+  const size_t slots=variant==Variant::base?72:134;
+  const size_t project=variant==Variant::base?39:70;
+  Text text(bytes,length);DefinitionInput input(text,technologies,true);
+  if(!input.section("FACILITIES"))return input.error();
+  for(size_t id=1;id<slots;++id){
+    auto& f=out.slots[id];
+    if(!input.row() || !input.string(f.name,false) ||
+       !input.numeric(f.cost,(-2147483647-1),2147483647) ||
+       !input.numeric(f.maintenance,(-2147483647-1),2147483647) ||
+       !input.technology(f.prerequisite) || !input.technology(f.declared_free_technology) ||
+       !input.string(f.effect,false))return input.error();
+    f.effective_free_technology=-2;
+    if(id>=project)for(auto& priority:f.priorities)
+      if(!input.numeric(priority,(-2147483647-1),2147483647))return input.error();
+    // Original text_get discards the unconsumed annotation columns.
+  }
+  if(!input.finish_rows())return input.error();
+  out.slot_count=slots;out.first_repeatable=variant==Variant::base?34:65;
+  out.first_project=project;out.project_count=slots-project;
+  return Error::ok;
 }
 const char* error_name(Error e) {
   switch(e) {
