@@ -1,0 +1,46 @@
+{
+  "scope": "Checked original nutrient accounting and read-only composition after fresh owned stable intake; no allocation/growth accumulation/upkeep/turn/UI",
+  "rawHostAndIndependent68040": {
+    "cases": 2630,
+    "accepted": 1286,
+    "invalid": 4,
+    "overflow": 1340,
+    "directOriginalAcceptedComparisons": {
+      "base": 1284,
+      "expansion": 1284
+    },
+    "outputSHA256": "7cb022162137032173e52bfb08aeaefc9a3fa3c0f08a9c731efcdfa55db2c080"
+  },
+  "privateWorldHostAndIndependent68040": {
+    "worlds": 158,
+    "accepted": 146,
+    "rejected": 12,
+    "outputSHA256": "eb610877dee1716a1ed8e4580f27b9f5272f614da29f647365f54fb2f88f0c8d",
+    "allWorldInputsAndWireUnchanged": true
+  },
+  "publicSyntheticWorlds": {
+    "worlds": 155,
+    "accepted": 143,
+    "rejected": 12,
+    "outputSHA256": "1ba3fdfc568e62afff605f6c5ba6345e10ba1cc2bc19a5701bcb038614762450"
+  },
+  "normalSDK": {
+    "base-nutrients": "4cdc4c30778fafe16cf069641d3f319370df51880df433335e95ec95362db2c0",
+    "world-fresh-nutrients": "36671777cdc94a9738752c3d1dc6ead9fd417423186d3fbc46174a5080d1afcf"
+  },
+  "nativeExecution": "UNRUN",
+  "freshSdkRebuildsByteIdentical": true,
+  "originals": "Complete unchanged actual nutrient helpers2624contexts each edition; selected entirebase/faction and growth scratch match independent model.1340overflow observations peredition intentionally rejected in checked API;1284accepted comparisons each. Realbitmask; no patches/callbacks/imports/PEstartup/fullgame.",
+  "inheritedCoreFilesByteIdentical": 112,
+  "parentWorkflowCommandsRetained": 69,
+  "finalWorkflowCommands": 73,
+  "gates": [
+    "Actual final-head required CI and review",
+    "Normal-SDK actual AmigaOS execution",
+    "No gameplay exposure until qualified"
+  ],
+  "failureHistory": [
+    "Initial private linker spacing failed before execution; final2 original receipts authoritative",
+    "New probe syntax lacked initializer-list header and had reused local name; corrected using fixed arrays and distinct names before probe execution"
+  ]
+}
