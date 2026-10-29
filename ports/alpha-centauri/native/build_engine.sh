@@ -26,6 +26,8 @@ out=$1
 shift
 mkdir -p -- "$(dirname -- "$out")"
 default_flags="-m68040 -m68881 -O2 -fno-exceptions -fno-rtti -fno-builtin -fno-tree-loop-distribute-patterns -pthread"
+# Integration: engine/stubs/ is empty (and absent) once every package has landed.
+stubs=$(ls "$src"/engine/stubs/*.cpp 2>/dev/null || true)
 # shellcheck disable=SC2086
 "${CXX:-m68k-amigaos-g++}" -std=c++17 -Wall -Wextra -Werror ${CXXFLAGS:-$default_flags} \
-  -I"$src/engine" "$src"/engine/*.cpp "$src"/engine/stubs/*.cpp "$@" -o "$out"
+  -I"$src/engine" "$src"/engine/*.cpp $stubs "$@" -o "$out"

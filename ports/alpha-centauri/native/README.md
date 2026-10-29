@@ -780,8 +780,8 @@ its original inputs restored. Assets and captured screens remain private.
 selectors, their original title PCXs, original TrueType lettering, the original
 menu WAV, a base Explore tutorial shortcut and an original scenario/save file
 requester. It embeds the qualified read-only world viewer and restores keyboard
-focus when that view or the requester closes. This is a restoration preview;
-it does not offer an implemented full campaign behind a New Game button.
+focus when that view or the requester closes. New game (N) and Play a saved
+game (P) start the engine game; see "Playing the engine game" below.
 
 Build with `CXX=.../m68k-amigaos-g++ sh build_original_frontend.sh OUTPUT`.
 This uses the normal SDK SDL2_ttf and SDL2 libraries. In addition to the world
@@ -969,6 +969,9 @@ human CVR assembly and faction colours remain separate renderer work.
 The opening-menu WAV pauses while the world is open. Returning resumes it only
 if the user had enabled music. The world remains silent until its own audio
 system is restored; the opening loop is not used as substitute ambient music.
+The world now has its own audio service: effects, voice-over and an
+owner-prepared music playlist. See `AUDIO.md`. That service has host and
+qemu-m68k evidence only; native AmigaOS qualification is still pending.
 Actual native PCM capture verifies nonzero menu output, zero output inside the
 world, automatic resume, preservation of user mute through a second world visit,
 and manual re-enable. The complete frontend exits normally. The isolated lab
@@ -2635,3 +2638,168 @@ our viewer's64px tiles; the foot anchor is our own UI wiring. No gameplay or
 full-scene equivalence claim. Native execution and integrated original tutorial
 qualification are **pending**; the user's live watch session is untouched.
 See `SPEEDER-EVIDENCE-20261025.json` for the explicit current validation bounds.
+
+## World-view rendering: vehicles, overlays, fog, minimap, messages, base window
+
+These modules are platform-free. Pixels go into the viewer's RGB frames, and
+text comes back as items that the viewer draws with the original fonts. They
+are wired into the original-world viewer with small hook calls through
+`ui_mapview.cpp`. All art is read at run time from the owner's game folder;
+nothing original is committed. GLSMAC was consulted only for texture-sheet
+cell coordinates and faction-art pixel positions (layout facts); no GLSMAC
+code is used.
+
+- `cvr_vehicle.h/cpp`: generic chassis/weapon/armour/reactor assembly of up to
+  twelve CVR parts on one depth surface. It reuses the qualified projection,
+  lighting, LOD and pixel stage. With model colours it is byte-identical to the
+  infantry and speeder profiles. With the owner's `palette.pcx` it writes global
+  palette indices and remaps painted parts (VGMCP and VBP for the speeder)
+  through `build_cvr_faction_palette`, using the faction tint from the faction
+  art. Built-in recipes cover basic human infantry and the speeder. Other
+  designs come from an optional owner `cvr_units.txt` (`chassis weapon armour
+  reactor scale root_x body_frames voxel_limit : stem stem* ...`, where `*`
+  marks painted parts). Designs without a recipe, or with missing parts, keep
+  the explicit CVR label.
+- `map_overlays.h/cpp`: draws rivers, roads/mag tubes, farms, forest, fungus,
+  soil enrichers, mines, solar collectors, condensers, mirrors, boreholes,
+  sensors, bunkers, airbases, monoliths, pods and territory borders from saved
+  tile bits. Fog comes from the viewing faction's visibility bit and its
+  last-seen improvement bits. Rivers, roads and borders are connection strokes
+  (new presentation, not the original atlas variant selection).
+  Farm/forest/fungus use `texture.pcx` cells, and improvements use `ter1.pcx`
+  cells when present, with simple markers otherwise. The `ter1.pcx` transparency
+  keys are not yet qualified against owner art.
+- `ui_minimap.h/cpp`: terrain, territory tint, fog, base and unit markers and
+  the camera box. Clicks map back to tiles. It replaces the HUD thumbnail.
+- `ui_messages.h/cpp`: a bounded 64-entry log with repeat folding and
+  scrolling. The viewer logs asset status and every action status.
+- `ui_basewin.h/cpp`: a read-only base window with the 21-tile radius and worked
+  tiles, nutrient/mineral/energy bars (intake split into consumption and
+  surplus), stored resources, economy/labs/psych, the production queue and built
+  facilities. In local mode, a fresh `world_base_accounting` forecast (F)
+  replaces the saved numbers until the next action. Facility proposals keep the
+  previous details panel.
+
+New viewer keys: O switches between the player view and all tiles (the default
+is the saved current player's view), M toggles the message log, and < > scroll
+it. In player view, bases and units on unexplored tiles are hidden. Units
+outside current sight are not yet hidden.
+
+```sh
+python3 ports/alpha-centauri/native/test_cvr_vehicle.py --out /tmp/vehicle-host
+python3 ports/alpha-centauri/native/test_cvr_vehicle.py --out /tmp/vehicle-m68k --cc m68k-linux-gnu-g++ --m68k-linux
+python3 ports/alpha-centauri/native/test_map_render.py --out /tmp/render-host
+python3 ports/alpha-centauri/native/test_map_render.py --out /tmp/render-m68k --cc m68k-linux-gnu-g++ --m68k-linux
+```
+
+`test_cvr_vehicle.py` checks:
+- 64 views for byte equality with the existing infantry/speeder profiles;
+- 192 colour-mode views against an independent faction-table oracle;
+- rejected assemblies, the recipe parser, tint metadata and the design-keyed
+  vehicle set.
+
+`test_map_render.py` checks:
+- overlay counts against an independent Python model of the rules;
+- 61 probe pixels;
+- minimap, message log and base window structure;
+- 26 golden frame digests, which the sanitizer host and the big-endian 68040
+  must both reproduce.
+
+The same control binaries, built with the AmigaOS cross compiler, reproduce
+those digests and all other outputs under AROS 68040 in FS-UAE
+(`RENDER-EVIDENCE-20261028.json`).
+
+Not yet done:
+- The full viewer was not linked or run here, because the SDL2 SDK and the
+  owner's assets are not available in this environment.
+- Original slope terrain and coast blending.
+- Atlas-accurate river/road variants.
+- Unit shadows and animation.
+- Hiding enemy units outside current sight.
+- Worked-tile editing, hurry, and the other report screens.
+
+## Playing the engine game (play mode)
+
+The map window and the title screen can now play a game on the shared engine
+(`engine/`, the Thinker port). `play_session.h/.cpp` is the command layer
+between the window and the engine. Every action is a `Command` run by
+`alpha::play::Session`. The window and the headless test use the same calls.
+
+- **Load:** a save is loaded with `load_daemon_bytes`, and the rules with
+  `engine_load_rules` from the folder that holds `alpha.txt`/`alphax.txt`.
+- **View:** after every command, the view is rebuilt from the engine's own SAV
+  bytes (`game_write_bytes`) with `OriginalWorld`. V writes the engine's save
+  (`save_daemon_bytes`) to a new `PROGDIR:AlphaPlay-NNN.SAV`.
+- **End Turn:** the E key or the HUD button runs `engine_end_turn()`. The turn
+  hooks are installed by `engine_install_turn_hooks()`. Every event of the
+  turn is listed in the message log: popups, units built or lost, bases
+  founded, AI turns, and game over.
+- **Units:** all unit orders use the order API (`order_*`); the old local move
+  paths are not used in play mode. Moving onto an enemy tile opens the battle
+  panel with the odds (`engine_attack_odds`). RETURN attacks
+  (`engine_attack`), and the panel then shows the result.
+- **Panels:**
+  - The production panel sets production, adds to and removes from the queue,
+    and hurries (`base_hurry_quote` / `base_hurry_player`).
+  - Research uses the tech chooser hooks. A change that halves progress asks
+    to be confirmed.
+  - Social engineering.
+  - Unit design, with a live name and cost preview.
+  - A comm-link dialog uses the diplomacy model (`ui_diplo`).
+- **New game:** New game on the title screen runs the `ui_newgame` screens
+  (faction, settings, planetfall), then opens the map.
+
+Start:
+- **New game:** N, or the New game button, on the title screen.
+- **Saved game:** P plays on from a saved game.
+- **From the command line:**
+  `alpha-original-view base|expansion alpha.txt|alphax.txt GAME.SAV texture.pcx Units.pcx --play`.
+
+Keys in play mode:
+- Units:
+  - Keypad 1-9 move, or attack an enemy tile. 5 or Space skips; TAB or N
+    selects the next unit.
+  - G go to, then click the destination.
+  - R road to, then click; r builds a road here.
+  - f farm, F forest, m mine, s solar, S sensor.
+  - B builds a base with a colony unit (otherwise B selects the next base).
+  - L sentry, h hold, w wake, H set home, j return home, U upgrade, D disband.
+- E or the button: End Turn.
+- Screens:
+  - I opens the base window, and P inside it opens production. In the
+    production panel: 8/2 choose, RETURN set, A add to the queue, X remove
+    the last item, H hurry, ESC close.
+  - T or F2 research, P or F3 social, K or F4 design, X or F5 comm link.
+  - Panels: cursor keys or 8/2/4/6, RETURN applies, ESC closes.
+- Clicks: a click selects your unit, opens your base, or shows the odds
+  against an enemy.
+- Files: V saves; Ctrl+L reloads the last save made in this session.
+- Q quits, and warns once if turns are unsaved.
+
+Builds: `build_original_map_window.sh` and `build_original_frontend.sh`
+compile `engine/*.cpp`, the play layer and its panels, and add `-pthread`
+(see `build_engine.sh`).
+
+Test without a window: `python3 test_play_session.py --out DIR` builds
+`play_control.cpp` with ASan/UBSan. It then plays one game on synthetic rules
+(no original assets), twice, through the same command layer:
+1. Start a new game.
+2. Build a colony pod and found a base. Set production and the queue, hurry,
+   and terraform.
+3. End Turn x20, with the view rebuilt and checked after every turn.
+4. An attack, with odds first and then the battle.
+5. A research change with confirmation, social engineering, a new design,
+   and a comm-link proposal.
+6. Save, load into two new sessions, and continue three turns. The two loads
+   must stay identical.
+
+`--cc m68k-linux-gnu-g++ --m68k-linux` runs the same game on a big-endian 68040
+under qemu. Its output and saves must be byte-identical to a host build.
+
+Not yet done:
+- Worked-tile editing: the engine's base package does not expose it.
+- Probe-team and air actions, artillery, supply-crawler convoys.
+- Mouse play is limited to select, go to, road to and attack.
+- The window and title-screen play mode is compile- and link-checked for
+  AmigaOS in every build mode, but not yet run on a screen. The SDL2 SDK and
+  the original assets are not available here.

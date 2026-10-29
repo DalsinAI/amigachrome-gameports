@@ -132,6 +132,38 @@ say so.
 | WP7 new game | `world_generate`, `mod_world_build`, `find_start`, `mod_setup_player`, `setup_game`, `fixup_landmarks`, `world_linearize_contours` | `load_daemon_bytes` calls `fixup_landmarks`. |
 | WP8 diplomacy and victory | `treaty_on/off`, `set_treaty`, `atrocity`, `encounter`, `enemy_diplomacy`, `end_of_game`, `mod_eliminate_player`, `is_objective` | |
 
+## Integration
+
+All eight packages are merged and `engine/stubs/` is empty. What joins them:
+
+- `integration.cpp` installs the WP1 turn hooks of the other packages
+  (`mon_tech_discovered`, `consider_designs`, `world_climate`, `crash_landing`,
+  the WP8 council hooks, and WP6 `plans_upkeep`, `probe_upkeep`,
+  `move_upkeep`). `interlude`, `energy_limit` and `random_base_event` stay
+  null. It also forwards the WP6 routines other packages call in
+  `alpha::engine` (`add_goal`, `clear_goals`, `contiguous`, `need_police`,
+  `reset_state`) to their `alpha::engine::ai` bodies.
+- `engine_reset_runtime()` clears the state that is not saved (WP8 diplomacy
+  runtime, WP6 caches); `load_daemon_bytes()` and `engine_new_game()` call it.
+- The rules loader also reads the faction `#BASES`/`#WATERBASES` lists and
+  `basename.txt` `#GENERIC` (`engine_load_base_names`); the save loader
+  repairs out-of-range prototype part ids (`fix_prototype_ids`).
+- The `*_deps.cpp` files keep weak definitions only where no package has a
+  strong one in `alpha::engine`: executable-only routines (`probe`,
+  `prefs_save`, `boom_*`, `clear_bunglist`, `balance`) and Thinker helpers
+  that WP2/WP7 ported for their own use (`has_wmode`, `satellite_count`,
+  `satellite_goal`, `defender_count`, `garrison_count`, `consider_staple`,
+  `steal_energy`, `bitmask`, `can_build_base`). WP6 keeps its own copies of
+  several of these, and of other packages' helpers, in `alpha::engine::ai`
+  (table in `ENGINE-WP6.md`).
+- A saved game does not carry the random generators, as in the original, so
+  a loaded game does not replay a continued one draw for draw.
+
+`test_engine_integration.py` plays a synthetic saved game for 24 End Turns
+(human faction 1, computer factions 2 and 3, bases producing, scripted
+attacks) twice, and with `--m68k-linux` also on the host, and requires
+identical output and saved bytes.
+
 ## Building and testing
 
 ```sh
