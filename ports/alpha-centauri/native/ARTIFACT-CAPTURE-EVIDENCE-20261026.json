@@ -1,0 +1,52 @@
+{
+  "parent": "5f9b46c111ef52c81f7f1d1b01ca1eede9b31f66",
+  "scope": "Owned LAND artifact capture0 before interlude; source count/cursors stable, captured caller pool only",
+  "host": {
+    "cases": 1062,
+    "rejectionGuards": 24426,
+    "heldRouteChecks": 7434,
+    "outputSHA256": "2f397b3826ff15dd4e092a8c0ac6668d04dae165140454355f979f3fe8248ba1",
+    "binarySHA256": "f95e8eb1d23457ee71ac3de69ef32aeccddb86b0ce301c5588e9af025685f79b",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "cases": 1062,
+    "rejectionGuards": 24426,
+    "heldRouteChecks": 7434,
+    "outputSHA256": "2f397b3826ff15dd4e092a8c0ac6668d04dae165140454355f979f3fe8248ba1",
+    "binarySHA256": "653edc6eb9df7ee255f5a028b59080fb0035b7bc39438b92eb1277f3c7148c5d",
+    "native": "UNRUN"
+  },
+  "parentHost": {
+    "cases": 2220,
+    "guards": 48840,
+    "outputSHA256": "e5699e275a9dbd9a8cfa9c846421fc646c74e29c3df24160dffaabd5af07f032",
+    "binarySHA256": "9979a1993e596014b9d0c5bae7b4a1747d0a32ecf59c0712dec91102c42f18db",
+    "native": "UNRUN"
+  },
+  "parent68040": {
+    "cases": 2220,
+    "guards": 48840,
+    "outputSHA256": "e5699e275a9dbd9a8cfa9c846421fc646c74e29c3df24160dffaabd5af07f032",
+    "binarySHA256": "069804f358493474b5c7f5c071b1f53ab6257903b8a5c12246398ce4afc21b5e",
+    "native": "UNRUN"
+  },
+  "sdkSHA256": "8adb7fb52daa95d7a929f314c125ca8ab3f1fcf523fb6f8c07aeae4992ced154",
+  "twoFreshSDKBuildsByteIdentical": true,
+  "native": "UNRUN",
+  "remoteCI": "UNRUN; local unpublished source-export gate retained",
+  "originalReferenceContractSHA256": "02ebc6df7c91e6f9337795592e2f88d643e72514bc2ee5fb9b96943f549a1ce8",
+  "completeOriginalCaptureContexts": 864,
+  "originalReferenceScope": "Separate complete source calls with controlled speed3 and captured pool42. Owned tests also cover qualified composed speed1..4/road1..3/new-owner morale0..6 and inspected ADD wrap.",
+  "failureHistory": {
+    "host1": "Probe-only -Werror=misleading-indentation compile failure at serializer lines64/66. Added line breaks, production implementation unchanged; host2 authoritative. Input/model corpus retained; no executable pass claimed for host1."
+  },
+  "sourceIdentity": {
+    "parent": "5f9b46c111ef52c81f7f1d1b01ca1eede9b31f66",
+    "unchangedParentCppCount": 297,
+    "parentWorkflowRunSteps": 297,
+    "candidateWorkflowRunSteps": 299,
+    "workflowRetention": "Entire parent remains byte-identical prefix",
+    "headerChanges": "ArtifactCapturePlan friend only in OriginalWorld and VehicleRemovalPlan"
+  }
+}

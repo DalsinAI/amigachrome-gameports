@@ -1,0 +1,58 @@
+{
+  "scope": "Connected Creche2/Recycling3 restoration production subset; pinned Thinker policy; original parity unproven; no UI/EndTurn or persistent phase authority",
+  "sourcePin": "dabe62f2d1abba03de40f3dd3048494843f6a9af",
+  "host": {
+    "leafCases": 6200,
+    "leafSHA256": "3b66651880c6069f2b8317cf0476fc3b22e6d6c860f53800e74470f3eff62862",
+    "worldCases": 86,
+    "binarySHA256": "266a0ef97a991c7ec98d89f96deecd701b467def818d31fb241021e25bd6c396"
+  },
+  "native": {
+    "executed": true,
+    "environment": "FS-UAE3.2.35, AROS m68k2026-10-23, 68040/FPU; disposable libnix FPU40 compatibility patch",
+    "binaryBytes": 184188,
+    "binarySHA256": "c8e157b49d21dca5e7b537a8305d4c4b3e27bede93db72814c30277af0f851cf",
+    "status": [
+      "LEAF_RC 0",
+      "COMPLETE_RC 0",
+      "MOVED_RC 0",
+      "ORIGINAL_RC 22"
+    ],
+    "outputs": {
+      "leaf-output.bin": {
+        "bytes": 198400,
+        "sha256": "3b66651880c6069f2b8317cf0476fc3b22e6d6c860f53800e74470f3eff62862"
+      },
+      "complete.SC": {
+        "bytes": 144890,
+        "sha256": "7afe16fffb1029e3f71075ab597a7207931c9a1780fb9b53cd52853a504c4f8b"
+      },
+      "moved.SC": {
+        "bytes": 144890,
+        "sha256": "bacc8db071039d8db9d647847e2a40164a53478e0d6436d098ab6c3d91782055"
+      }
+    },
+    "completionLog": [
+      "STAGE status=ok facility=3 completed=1 before=32 after=0 baseline=0 cost=40 credited=8 best=36 flags=00800000 repeat=already_processed recompute=1 choice=1 bytes=144890"
+    ],
+    "movementAndCompletionLog": [
+      "MOVE status=moved cost=3",
+      "STAGE status=ok facility=3 completed=1 before=32 after=0 baseline=0 cost=40 credited=8 best=36 flags=00800000 repeat=already_processed recompute=1 choice=1 bytes=144890"
+    ],
+    "actualBoreholeOrderLog": [
+      "ORDER facility=2 status=unavailable"
+    ],
+    "actualBoreholeOutputCreated": false,
+    "fsUAESHA256": "b6d7199d181a061fe3bbcbca244d861d8924073d8124dc26d082e537f040fe6a",
+    "arosROMSHA256": "490fbef1dfa66ce497c74951abcebddd734b0d6483f30fb01f5fd6a9a36541bb",
+    "arosExtROMSHA256": "42f35aede7725e18b1c426ff0a90067bde7d08a92909811e89337e865a3f2e82"
+  },
+  "limits": [
+    "Fresh intake/surplus/cost-factor inputs are engine-owned explicit facts; no support/upkeep scheduler integration",
+    "Ledger is per-stage object only; not a persistent replay guarantee",
+    "Constructed states are controlled original-container fixtures, not original Borehole gameplay progress",
+    "Actual Borehole legal Creche orders rejected; existing Recycling facilities preserved",
+    "Audio/announcement/monument effects and player production choice remain external events",
+    "AmigaOS3.2 and original Windows executable differential remain unrun"
+  ]
+}

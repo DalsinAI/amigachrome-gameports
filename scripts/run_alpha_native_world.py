@@ -11,6 +11,7 @@ import shutil
 import struct
 import subprocess
 import sys
+import time
 
 
 DEFAULT_KEYS = (
@@ -159,20 +160,30 @@ joystick_port_0_mode = mouse
                LD_PRELOAD=f"{inputs}:{capture}")
     with (out / "emulator.log").open("wb") as log:
         child = subprocess.Popen([str(args.fs_uae), str(config)], cwd=out, env=env, stdout=log, stderr=subprocess.STDOUT)
-        try:
-            returncode = child.wait(timeout=args.seconds)
-            timed_out = False
-        except subprocess.TimeoutExpired:
-            timed_out = True
+        deadline = time.monotonic() + args.seconds
+        guest_finished = False
+        while child.poll() is None and time.monotonic() < deadline:
+            # The guest shell writes this only after the native application
+            # returns. Stop our child when complete instead of burning CPU on
+            # an idle desktop until the hard deadline.
+            if re.search(r"^WORLD_RC \d+\s*$", guest_log_path.read_text(errors="replace"), re.MULTILINE):
+                guest_finished = True
+                break
+            time.sleep(0.25)
+        timed_out = child.poll() is None and not guest_finished
+        if child.poll() is None:
             child.terminate()
             try:
                 returncode = child.wait(timeout=2)
             except subprocess.TimeoutExpired:
                 child.kill()
                 returncode = child.wait()
+        else:
+            returncode = child.returncode
     guest_log = guest_log_path.read_text(errors="replace")
     matches = re.findall(r"^WORLD_RC (\d+)\s*$", guest_log, re.MULTILINE)
     receipt.update(emulatorReturnCode=returncode, emulatorTimedOut=timed_out,
+                   emulatorStoppedAfterGuest=guest_finished,
                    guestReturnCode=int(matches[-1]) if matches else None,
                    worldDrawObserved="DRAW selected=" in guest_log,
                    localActions=[line for line in guest_log.splitlines() if line.startswith("LOCAL ACTION ")],

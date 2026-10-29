@@ -1,0 +1,25 @@
+{
+  "component": "world_psych",
+  "status": "LOCAL UNPUBLISHED, CI and AmigaOS UNRUN",
+  "validation": {
+    "worlds": 259,
+    "accepted": 818,
+    "rejected": 166,
+    "overflow": 32,
+    "guards": 4291,
+    "publicOutputSHA256": "9db0f628f9dcd5f984c090888421758c0cfeda7822ea4ae8d808ef6cc00c19fb",
+    "outputSHA256": "c7af10cb577146ce5ae39d9de28729e4dd41c384e73a57a9831f3f5c6b7cb81f"
+  },
+  "normalSDKSHA256": "6ee9b235df94dff4011863a151897cc90f44391d6b03f8c22cded11afc505134",
+  "scope": "Read-only complete five-phase owned World psych proposal, no accounting commit or turn",
+  "limitations": [
+    "No owning authority/session commit/accounting/persistence/upkeep/turn/AI/UI",
+    "OOM reported but allocator-failure injection UNRUN",
+    "All full inherited workflow commands preserved, complete workflow UNRUN",
+    "Normal SDK builds only; user watch exclusively owned; no lab operations"
+  ],
+  "previousFrozenProbeSHA256": "36181a4d554be7662ba7da042639a194f82c3e873a227ad48c110e41d9912cc1",
+  "sharedExtractionRegression": "New refactored host+independent68040 each259worlds exactprioroutput; nativeUNRUN; garrison storage still private per call",
+  "historicalOriginalRootContextsPerEdition": 73459,
+  "historicalOriginalRootOutputSHA256": "3394ff6d5b65d1fa23e4f0bff5032f80698b18053deeef5bffb87bab693f2393"
+}

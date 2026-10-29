@@ -92,3 +92,60 @@ all completed with return code 0. This checks restoration with cached inputs;
 it is not a second independent clean build. A successful compile does
 not qualify the game UI or AmigaOS 3.2.3 runtime. Record actual execution and
 screenshots separately in the FS-UAE lab evidence.
+
+## Fresh restoration on 27 October 2026
+
+The compiler and matching source release were downloaded and hash checked
+again into a fresh workspace. The real SDK recipe completed with return code
+zero; all three output hashes above matched the earlier build exactly. The
+genuine AROS archive was hash checked and 23,579 files extracted. A rebuilt
+native local-player controller executed in FS-UAE with 145 checks and guest
+return code zero. Its complete 144,918-byte checkpoint matched the independent
+host oracle, SHA256
+`843665734047b513c4900a2fae0dc3acc714d3ad135ca3b55537c30e1793661a`.
+
+The public scenario mirror returned HTTP403 to urllib's default User-Agent.
+`stage_alpha_demo_assets.py` now identifies itself as `Alpha-native-lab/1.0`;
+a fresh scenario download then matched the pinned digest and all 572 original
+demo/scenario files were staged. The archive digest gates remain unchanged.
+
+The native-world runner now observes the guest shell's `WORLD_RC` completion
+marker and stops its own emulator child promptly. The hard execution deadline
+still applies when the guest does not finish. Neither the input helper nor
+the game executable is changed by this process-control adjustment. Recorded
+receipts distinguish a completed guest from an emulator timeout.
+
+## Linking the C++ engine for AmigaOS (28 October 2026)
+
+Every program that links `ports/alpha-centauri/native/engine/` for
+m68k-amigaos must add **`-pthread`** to the usual Alpha 68040 flags:
+
+```sh
+m68k-amigaos-g++ -std=c++17 -Wall -Wextra -Werror -m68040 -m68881 -O2 \
+  -fno-exceptions -fno-rtti -fno-builtin -fno-tree-loop-distribute-patterns \
+  -pthread ...
+```
+
+`build_engine.sh` uses exactly this set by default. A caller that replaces
+`CXXFLAGS` for an Amiga build must keep `-pthread`. Keep the default C runtime
+used by the other Alpha scripts (no `-noixemul`/`-mcrt`).
+
+Why: the engine uses `std::string` and the standard containers. The
+toolchain's `libstdc++.a` is itself built with exceptions, so `string-inst.o`,
+the hashtable and `operator new` pull `functexcept.o`, `eh_catch.o`,
+`eh_globals.o`, `eh_throw.o` and the libgcc unwinder, whatever flags our own
+sources use. Those members call `pthread_once`, `pthread_key_create`,
+`pthread_mutex_*` and similar directly (OpenAmigaGCC 16.2.0-open3 has POSIX
+threads enabled and no weak fallbacks), so the link fails with undefined
+`pthread_*` references. `-pthread` makes the compiler driver add its own
+`-lpthread` to the `-lamiga -lgcc` link group. The engine creates no thread.
+`-fno-threadsafe-statics` alone is not enough, and replacing the runtime's
+exception globals in engine code would shadow toolchain internals.
+
+Both `/opt/alpha-lab/gcc-open3-fpu40` and the pristine OpenAmigaGCC prefix fail
+without the flag and link with it. With the FPU40 compiler, `engine_test` and
+`wp0b_test` ran all 125 `test_engine.py`/`test_engine_wp0b.py` cases in
+FS-UAE/AROS 68040 (`run-aros-cli.py`, guest RC 0). Their stdout, return codes
+and all 37 written SAV/daemon files were byte-identical to the host
+ASan/UBSan build and to qemu m68k-linux. See
+`ports/alpha-centauri/native/ENGINE-AMIGA-LINK-EVIDENCE-20261028.json`.
