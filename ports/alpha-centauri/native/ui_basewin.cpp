@@ -98,4 +98,39 @@ size_t render_base_window(const BaseWindowModel& m,const UiFrame& f,const UiRect
   ui_text_item(items,capacity,n,bx+col*col_w,list_top+line_h*row,col_w-6,0,false,m.facilities[i]);}
  return n;
 }
+size_t render_base_production(const BaseProductionModel& m,const UiFrame& f,const UiRect& r,UiTextItem* items,size_t capacity){
+ size_t n=0;if(!m.valid || !ui_frame_valid(f) || r.w<360 || r.h<300)return 0;
+ static const uint8_t pfill[3]={7,19,22},pedge[3]={92,128,112},pcursor[3]={36,64,58};
+ ui_panel(f,r,pfill,pedge);char line[96];const int w=r.w-24;
+ snprintf(line,sizeof(line),"%.25s - PRODUCTION",m.name);ui_text_item(items,capacity,n,r.x+12,r.y+24,w,3,true,line);
+ snprintf(line,sizeof(line),"Building %.31s: %d / %d minerals, %+d per turn%s",m.current_name,m.minerals,m.cost,m.surplus,m.turns>0?"":" (stalled)");
+ ui_text_item(items,capacity,n,r.x+12,r.y+48,w,2,false,line);
+ if(m.hurried)snprintf(line,sizeof(line),"Production already hurried this turn. Reserves %d.",m.credits);
+ else if(m.hurry_cost>0)snprintf(line,sizeof(line),"H: hurry for %d energy (reserves %d)",m.hurry_cost,m.credits);
+ else snprintf(line,sizeof(line),"Nothing to hurry. Reserves %d.",m.credits);
+ ui_text_item(items,capacity,n,r.x+12,r.y+68,w,m.hurry_cost>m.credits?5:0,false,line);
+ const int half=r.w/2;
+ ui_text_item(items,capacity,n,r.x+12,r.y+94,half-20,1,false,"QUEUE");
+ for(int q=0;q<m.queue_count && q<10;++q){snprintf(line,sizeof(line),"%s%.31s",q?"  ":"> ",m.queue_names[q]);ui_text_item(items,capacity,n,r.x+12,r.y+114+q*18,half-20,q?0:2,false,line);}
+ ui_text_item(items,capacity,n,r.x+half,r.y+94,half-12,1,false,"CAN BUILD (cost, turns)");
+ const int line_h=18,top=r.y+100,rows=(r.y+r.h-30-top)/line_h;int first=m.selected-rows+1;if(first<0)first=0;
+ for(int i=first;i<m.count && i<first+rows;++i){const int y=top+(i-first)*line_h;
+  if(i==m.selected)ui_fill(f,{r.x+half-4,y+4,half-8,line_h},pcursor);
+  if(m.items[i].turns>0)snprintf(line,sizeof(line),"%.30s  %d, %d",m.items[i].name,m.items[i].cost,m.items[i].turns);
+  else snprintf(line,sizeof(line),"%.30s  %d, -",m.items[i].name,m.items[i].cost);
+  ui_text_item(items,capacity,n,r.x+half,y+18,half-16,i==m.selected?2:0,false,line);}
+ ui_text_item(items,capacity,n,r.x+12,r.y+r.h-10,w,0,false,"8/2 select  RETURN build now  A add to queue  X drop last  H hurry  ESC close");
+ return n;
+}
+int base_production_key(BaseProductionModel& m,int c){
+ switch(c){
+ case '8':ui_list_step(m.selected,m.count,-1);return BASE_EDIT_MOVED;
+ case '2':ui_list_step(m.selected,m.count,1);return BASE_EDIT_MOVED;
+ case 13:case 10:return m.count?BASE_EDIT_SET:BASE_EDIT_NONE;
+ case 'a':case 'A':return m.count?BASE_EDIT_QUEUE_ADD:BASE_EDIT_NONE;
+ case 'x':case 'X':return m.queue_count>1?BASE_EDIT_QUEUE_REMOVE:BASE_EDIT_NONE;
+ case 'h':case 'H':return BASE_EDIT_HURRY;
+ case 27:return BASE_EDIT_CLOSE;
+ default:return BASE_EDIT_NONE;}
+}
 }
