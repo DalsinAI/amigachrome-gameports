@@ -5,7 +5,7 @@
 #include "base_nutrients.h"
 namespace alpha {
 struct FreshNutrientStage {StableIntakeStage intake;int32_t convoy_to,convoy_from;};
-struct FreshNutrientResult {StableIntakeResult intake;NutrientResult nutrients;};
+struct FreshNutrientResult {StableIntakeResult intake;BaseNutrientResult nutrients;};
 // Derives owner/population/pending growth/physical Creche/GoldenAge/stored food
 // and faction total from the owned snapshot; requirement from actual BasicRules.
 // Intake is freshly computed, never the saved intake. Convoys remain explicit
