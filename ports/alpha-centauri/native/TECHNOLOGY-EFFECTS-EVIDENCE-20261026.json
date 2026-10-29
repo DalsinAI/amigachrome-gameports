@@ -1,0 +1,96 @@
+{
+  "scope": "Fresh owned-world technology effects and fungus intake; no turn mutation",
+  "host": {
+    "worlds": 98,
+    "factionQueries": 980,
+    "errorCounts": {
+      "1": 450,
+      "0": 308,
+      "3": 222
+    },
+    "allWorldInputsAndWireUnchanged": true,
+    "outputSHA256": "4e6bf778d94d395f05c533d7892b42de45c47b6fa4929daa25f1fbbf175eeee3",
+    "binarySHA256": "51d9c2c0310c7b99e7f229dfdb7abe835c3603a5b6676ce50d5fd178d2932836",
+    "native": "UNRUN"
+  },
+  "native": {
+    "guest": "AROS20261023m68k",
+    "emulator": "FS-UAE3.2.35",
+    "cpu": "68040/FPU",
+    "queries": 980,
+    "worlds": 98,
+    "rc": 0,
+    "outputBytes": 23520,
+    "outputSHA256": "4e6bf778d94d395f05c533d7892b42de45c47b6fa4929daa25f1fbbf175eeee3",
+    "binarySHA256": "befb3cc1b31971fd205b5c0278d7143cb840435391908803dac222133ff48170",
+    "runtime": "Isolated documented libnix AFF_FPU40 fix; genuine AROS mathieeedoubbas/mathieeedoubtrans libraries required by batch fscanf helper"
+  },
+  "nativeFreshFungusIntegration": [
+    {
+      "case": "intake-base-False",
+      "bytes": 316,
+      "sha256": "2be8197a92a5cd5abe8ad9c8ce7401a194c9edb098bf0c54d3f10be93d0d17bf",
+      "rc": 0,
+      "independentOracleMatches": true
+    },
+    {
+      "case": "convoy-base-False",
+      "bytes": 384,
+      "sha256": "5504b83bfb145648bdc7522362fcc9370dd37f29eab848c134fec2f30604ff9b",
+      "rc": 0,
+      "independentOracleMatches": true
+    },
+    {
+      "case": "intake-base-True",
+      "bytes": 316,
+      "sha256": "335f451dc2a09c26e604bdc2cae67ceb06b6910e3773bfaf05c95652f8ea828d",
+      "rc": 0,
+      "independentOracleMatches": true
+    },
+    {
+      "case": "convoy-base-True",
+      "bytes": 384,
+      "sha256": "666fcb5430bff2b20c883ff20000ea2e7fdbd890621b8b2477ea197f67502fd3",
+      "rc": 0,
+      "independentOracleMatches": true
+    },
+    {
+      "case": "intake-expansion-False",
+      "bytes": 316,
+      "sha256": "2be8197a92a5cd5abe8ad9c8ce7401a194c9edb098bf0c54d3f10be93d0d17bf",
+      "rc": 0,
+      "independentOracleMatches": true
+    },
+    {
+      "case": "convoy-expansion-False",
+      "bytes": 384,
+      "sha256": "5504b83bfb145648bdc7522362fcc9370dd37f29eab848c134fec2f30604ff9b",
+      "rc": 0,
+      "independentOracleMatches": true
+    },
+    {
+      "case": "intake-expansion-True",
+      "bytes": 316,
+      "sha256": "335f451dc2a09c26e604bdc2cae67ceb06b6910e3773bfaf05c95652f8ea828d",
+      "rc": 0,
+      "independentOracleMatches": true
+    },
+    {
+      "case": "convoy-expansion-True",
+      "bytes": 384,
+      "sha256": "666fcb5430bff2b20c883ff20000ea2e7fdbd890621b8b2477ea197f67502fd3",
+      "rc": 0,
+      "independentOracleMatches": true
+    }
+  ],
+  "hostFreshFungusIntake": {
+    "worlds": 164,
+    "accepted": 148,
+    "rejected": 16
+  },
+  "hostFreshFungusConvoys": {
+    "worlds": 440,
+    "accepted": 432,
+    "rejected": 8
+  }
+}

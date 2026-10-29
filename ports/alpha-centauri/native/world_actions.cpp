@@ -106,6 +106,98 @@ StepResult WorldActions::clear_land_step(OriginalWorld& w,const UnitDefinitions&
  v->rotate_angle=(int8_t)direction;w.random_seed_=budget.budget.random_seed;
  return {StepStatus::moved,price};
 }
+StepResult WorldActions::clear_sea_step(OriginalWorld& w,const UnitDefinitions& d,const Rules& tech,
+ size_t id,int32_t player,int32_t road,int32_t x,int32_t y){
+ if(!w.loaded() || player<1 || player>7 || road<1 || road>100 || tech.count!=89)return {StepStatus::bad_state,0};
+ auto* v=id<w.view_.vehicle_count?w.vehicles_+id:nullptr;
+ if(!v || v->unit_id<0 || v->unit_id>=512)return {StepStatus::bad_state,0};
+ if(player!=w.game().player || v->faction_id!=player)return {StepStatus::not_owner,0};
+ if(w.game().data_version>=11 || d.weapon_count!=21 ||
+    !(w.game().preferences.FactionStatus[0]&(1u<<player)) ||
+    w.game().preferences.CurrentFaction!=player)return {StepStatus::unsupported,0};
+ const auto& p=w.prototypes_[v->unit_id];uint32_t speed=0;
+ if(world_vehicle_speed(w,d,tech,id,road,false,speed)!=LogicError::ok)return {StepStatus::bad_state,0};
+ const bool transport=p.plan==7 && d.weapons[p.weapon_id].mode==7 && p.carry_capacity>0;
+ const bool combat=p.plan>=0 && p.plan<=3 && d.weapons[p.weapon_id].mode==0 && !p.carry_capacity;
+ if(d.chassis[p.chassis_id].triad!=1 || p.ability_flags || (!transport && !combat) ||
+    d.weapons[p.weapon_id].offense<0 || (v->state&0x0b004201u) || v->order || v->waypoint_count)
+  return {StepStatus::unsupported,0};
+ if(w.definitions_[player].rule_flags&0x80u)return {StepStatus::unsupported,0};
+ const int owners[2]={player,v->unit_id/64};
+ for(int owner:owners){const auto& rules=w.definitions_[owner];
+  if(rules.faction_bonus_count<0 || rules.faction_bonus_count>8)return {StepStatus::unsupported,0};
+  for(int i=0;i<rules.faction_bonus_count;++i)if(rules.faction_bonus_id[i]==15)return {StepStatus::unsupported,0};
+ }
+ MapGeometry g{(int32_t)w.view_.map.info.width,(int32_t)w.view_.map.info.height,w.view_.map.info.flat};
+ size_t from,to;int direction=-1;
+ if(movement_tile_index(g,v->x,v->y,from)!=LogicError::ok || movement_tile_index(g,x,y,to)!=LogicError::ok)
+  return {StepStatus::bad_state,0};
+ for(int i=0;i<8;++i){int32_t wrapped;
+  if(movement_wrap_x(g,v->x+dx[i],wrapped)==LogicError::ok && wrapped==x && v->y+dy[i]==y){direction=i;break;}}
+ if(direction<0)return {StepStatus::bad_state,0};
+ const auto& a=w.tiles_[from];const auto& b=w.tiles_[to];
+ bool at_base[2]{};
+ for(int point=0;point<2;++point){const int cx=point?x:v->x,cy=point?y:v->y;const auto& tile=point?b:a;
+  int bases=0;for(size_t i=0;i<w.view_.base_count;++i){const auto& base=w.bases_[i];
+   if(base.x==cx && base.y==cy){if(base.faction_id!=player)return {StepStatus::unsupported,0};++bases;}}
+  if(bases>1 || ((tile.items&1u)!=0)!=(bases==1))return {StepStatus::bad_state,0};
+  at_base[point]=bases==1;
+  if((tile.climate&0xe0u)>=0x60u){
+   if(!at_base[point])return {StepStatus::unsupported,0};
+   bool coastal=false;for(int i=0;i<8;++i){int32_t px;size_t tile_index;
+    if(movement_wrap_x(g,cx+dx[i],px)==LogicError::ok &&
+       movement_tile_index(g,px,cy+dy[i],tile_index)==LogicError::ok &&
+       (w.tiles_[tile_index].climate&0xe0u)<0x60u)coastal=true;}
+   if(!coastal)return {StepStatus::unsupported,0};
+  }
+  if((tile.items&(0x20u|0x2000u)) || (tile.owner>=0 && tile.owner!=player))return {StepStatus::unsupported,0};
+  for(int i=-1;i<8;++i){int32_t px=cx;int py=cy;
+   if(i>=0){if(movement_wrap_x(g,cx+dx[i],px)!=LogicError::ok)return {StepStatus::bad_state,0};py+=dy[i];}
+   size_t ti;if(movement_tile_index(g,px,py,ti)!=LogicError::ok)continue;
+   if(!(w.tiles_[ti].visibility&(1u<<player)))return {StepStatus::unsupported,0};
+  }
+ }
+ // Water/base edges only; this does not implement land-base canal chains.
+ if((a.climate&0xe0u)>=0x60u && (b.climate&0xe0u)>=0x60u)return {StepStatus::unsupported,0};
+ if(has_pod(b,x,y,w.view_.map.info.random_seed,w.view_.preferences.GameRules))return {StepStatus::unsupported,0};
+ for(size_t i=0;i<w.view_.vehicle_count;++i){const auto& other=w.vehicles_[i];
+  if(other.faction_id!=player && (nearby(g,v->x,v->y,other.x,other.y) || nearby(g,x,y,other.x,other.y)))
+   return {StepStatus::unsupported,0};
+  if(i==id)continue;
+  // Source stack_veh/set_board_to encode a boarder using order1 and the
+  // transport ID in waypoint_x[0]; VSTATE_IN_TRANSPORT is state bit0.
+  // veh_cargo reports CAPACITY, not passengers. Never infer emptiness from it.
+  if((other.order==1 || (other.state&1u)) && other.waypoint_x[0]==(int32_t)id)
+   return {StepStatus::unsupported,0};
+  const bool source=other.x==v->x && other.y==v->y,destination=other.x==x && other.y==y;
+  if(!source && !destination)continue;
+  if((other.state&1u) || other.order==1)return {StepStatus::unsupported,0};
+  if(other.unit_id<0 || other.unit_id>=512 || w.prototypes_[other.unit_id].chassis_id>=9)
+   return {StepStatus::bad_state,0};
+  // At open sea the source auto-loads co-located land passengers. Defer that
+  // entire mixed stack. Ordinary unembarked base garrisons may remain behind;
+  // human ships with ON_ALERT are already excluded above.
+  if(d.chassis[w.prototypes_[other.unit_id].chassis_id].triad!=1 &&
+     ((source && !at_base[0]) || (destination && !at_base[1])))return {StepStatus::unsupported,0};
+ }
+ for(size_t i=0;i<w.view_.base_count;++i){const auto& base=w.bases_[i];
+  if(base.faction_id!=player && (nearby(g,v->x,v->y,base.x,base.y) || nearby(g,x,y,base.x,base.y)))
+   return {StepStatus::unsupported,0};}
+ uint32_t price=0;if(world_movement_price(w,d,tech,id,road,x,y,false,price)!=LogicError::ok)return {StepStatus::bad_state,0};
+ if(v->moves_spent>=speed)return {StepStatus::exhausted,price};
+ if(price>speed-v->moves_spent)return {StepStatus::unsupported,price};
+ MoveBudgetResult budget;
+ const MoveBudget before{speed,v->moves_spent,v->state|4u,w.random_seed_};
+ const MoveBudgetInput input{price,(uint32_t)road,false,false,false,false,(b.items&2u)!=0,true,true,true};
+ if(resolve_move_budget(before,input,budget)!=LogicError::ok || budget.outcome!=MoveBudgetOutcome::move)
+  return {StepStatus::bad_state,price};
+ VehicleStackStorage storage{g.width,g.height,w.tiles_,w.view_.map.info.tile_count,w.vehicles_,w.view_.vehicle_count};
+ const auto error=relocate_vehicle_storage(storage,id,x,y,1);
+ if(error!=StackError::ok)return {error==StackError::out_of_memory?StepStatus::out_of_memory:StepStatus::bad_state,price};
+ v->moves_spent=(uint8_t)budget.budget.spent;v->state=budget.budget.state;
+ v->rotate_angle=(int8_t)direction;w.random_seed_=budget.budget.random_seed;
+ return {StepStatus::moved,price};
+}
 const char* step_status_name(StepStatus s){switch(s){
  case StepStatus::moved:return "moved";case StepStatus::exhausted:return "exhausted";
  case StepStatus::not_owner:return "not_owner";case StepStatus::unsupported:return "unsupported";

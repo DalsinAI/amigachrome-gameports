@@ -1,0 +1,25 @@
+{
+  "guestReturnCode": 0,
+  "movementObserved": true,
+  "reloadObserved": true,
+  "emulatorStoppedAfterGuest": true,
+  "emulatorTimedOut": false,
+  "checkpointBytes": 199314,
+  "checkpointSHA256": "37193617e69433cd9afe44c6ffb1f01d71bc9f993c2de5a4dea3851b4fdc0981",
+  "payloadBytesChanged": 12,
+  "payloadChangedOffsets": [
+    117298,
+    117304,
+    117306,
+    184416,
+    184417,
+    184418,
+    184420,
+    184422,
+    184458,
+    184459,
+    184466,
+    184467
+  ],
+  "matchesPriorIndependentWholeCheckpointOracle": true
+}

@@ -13,13 +13,13 @@ template<class T>static T* allocate(size_t count){
  return p;
 }
 void OriginalWorld::clear(){
- free(raw_);free(tiles_);free(vehicles_);free(bases_);free(prototypes_);free(factions_);free(definitions_);
- raw_=nullptr;tiles_=nullptr;vehicles_=nullptr;bases_=nullptr;prototypes_=nullptr;factions_=nullptr;definitions_=nullptr;
+ free(raw_);free(monuments_);free(tiles_);free(vehicles_);free(bases_);free(prototypes_);free(factions_);free(definitions_);
+ raw_=nullptr;monuments_=nullptr;tiles_=nullptr;vehicles_=nullptr;bases_=nullptr;prototypes_=nullptr;factions_=nullptr;definitions_=nullptr;
  view_={};length_=memory_=0;random_seed_=0;
 }
 void OriginalWorld::swap(OriginalWorld& other){
  using std::swap;
- swap(raw_,other.raw_);swap(tiles_,other.tiles_);swap(vehicles_,other.vehicles_);swap(bases_,other.bases_);
+ swap(raw_,other.raw_);swap(monuments_,other.monuments_);swap(tiles_,other.tiles_);swap(vehicles_,other.vehicles_);swap(bases_,other.bases_);
  swap(prototypes_,other.prototypes_);swap(factions_,other.factions_);swap(definitions_,other.definitions_);
  swap(view_,other.view_);swap(length_,other.length_);swap(memory_,other.memory_);swap(random_seed_,other.random_seed_);
 }
@@ -28,22 +28,24 @@ static bool reference(int32_t value,uint32_t count){return value==-1 || (value>=
 WorldLoadError OriginalWorld::load(const uint8_t* bytes,size_t length,uint32_t runtime_seed,size_t limit){
  OriginalGameView source;
  if(read_original_game(bytes,length,source)!=GameReadError::ok)return WorldLoadError::bad_format;
- const uint64_t required=(uint64_t)sizeof(OriginalWorld)+length+(uint64_t)source.map.info.tile_count*sizeof(OriginalMapTile)+
+ const uint64_t required=(uint64_t)sizeof(OriginalWorld)+length+source.monuments.size+(uint64_t)source.map.info.tile_count*sizeof(OriginalMapTile)+
   (uint64_t)source.vehicle_count*sizeof(OriginalVehicle)+(uint64_t)source.base_count*sizeof(OriginalBase)+
   512u*(uint64_t)sizeof(OriginalPrototype)+8u*(uint64_t)(sizeof(OriginalFactionState)+sizeof(OriginalFactionDefinition));
  if(required>limit)return WorldLoadError::memory_limit;
  OriginalWorld next;next.length_=length;next.memory_=(size_t)required;next.random_seed_=runtime_seed;
  next.raw_=(uint8_t*)malloc(length);
+ next.monuments_=(uint8_t*)malloc(source.monuments.size);
  next.tiles_=allocate<OriginalMapTile>(source.map.info.tile_count);
  next.vehicles_=allocate<OriginalVehicle>(source.vehicle_count);
  next.bases_=allocate<OriginalBase>(source.base_count);
  next.prototypes_=allocate<OriginalPrototype>(512);
  next.factions_=allocate<OriginalFactionState>(8);
  next.definitions_=allocate<OriginalFactionDefinition>(8);
- if(!next.raw_ || !next.tiles_ || !next.prototypes_ || !next.factions_ || !next.definitions_ ||
+ if(!next.raw_ || !next.monuments_ || !next.tiles_ || !next.prototypes_ || !next.factions_ || !next.definitions_ ||
     (source.vehicle_count && !next.vehicles_) || (source.base_count && !next.bases_))return WorldLoadError::out_of_memory;
  memcpy(next.raw_,bytes,length);
  if(read_original_game(next.raw_,length,next.view_)!=GameReadError::ok)return WorldLoadError::bad_format;
+ memcpy(next.monuments_,next.view_.monuments.data,next.view_.monuments.size);
  for(size_t i=0;i<source.map.info.tile_count;++i)if(original_map_tile(next.view_.map,i,next.tiles_[i])!=MapReadError::ok)return WorldLoadError::bad_format;
  for(size_t i=0;i<512;++i)if(original_prototype(next.view_,i,next.prototypes_[i])!=GameReadError::ok)return WorldLoadError::bad_format;
  for(size_t i=0;i<source.vehicle_count;++i){

@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-26",
+  "scope": "AROS m68k ABI/controller qualification under actual FS-UAE; not AmigaOS 3.2 or game UI qualification",
+  "emulator": {
+    "version": "3.2.35",
+    "sha256": "b6d7199d181a061fe3bbcbca244d861d8924073d8124dc26d082e537f040fe6a",
+    "display": "SDL offscreen / EGL surfaceless / Mesa llvmpipe; actual GL framebuffer captures"
+  },
+  "machine": {
+    "model": "A1200",
+    "cpu": "68040",
+    "fpu": "68040",
+    "chipKiB": 2048,
+    "motherboardKiB": 65536,
+    "z2FastKiB": 0,
+    "rtg": "UAEGFX Z2, 4 MiB; no RTG-mode qualification claim"
+  },
+  "aros": {
+    "build": "2026-10-23",
+    "git": "b8f4b11c34",
+    "archiveSHA256": "0fb7def333c4aa7e497c58c7beda810b46d4bacb467303391ce642d7bd21b67d",
+    "romSHA256": "490fbef1dfa66ce497c74951abcebddd734b0d6483f30fb01f5fd6a9a36541bb",
+    "extSHA256": "42f35aede7725e18b1c426ff0a90067bde7d08a92909811e89337e865a3f2e82",
+    "desktopBooted": true
+  },
+  "compiler": {
+    "version": "OpenAmigaGCC 16.2.0-open3",
+    "releaseSHA256": "9fcc136ab59e3bb5b91d2764d0bf290b709d72d7380be4ce0cdf005edf8eff21",
+    "sourceReleaseSHA256": "d8b7cf2101cf70df1cf719d199230260790420f43ec6e899f3d061a85ff3bcda",
+    "flags": "-m68040 -m68881 -std=c++17 -O2; original build_local_player_control.sh",
+    "isolatedRuntimeSourceFix": "libnix __fpucheck accepts AFF_68881 or AFF_FPU40; see toolchain/libnix-fpu40-check.patch"
+  },
+  "baseline": {
+    "programSHA256": "f5f43280b81bee47d85e574695efa4298f370690dcba5aa56fafb91e5c509f9a",
+    "result": "AROS startup Alert 0x00068881 before main",
+    "execAttnFlags": "0xa04f",
+    "reason": "AFF_FPU40 present; original check only tests AFF_68881",
+    "originalRebuiltCheckTextMatchesRelease": true
+  },
+  "positive": {
+    "programSHA256": "8233adcf826285c789ee006575e805398f0946747ae75664fbc61b61c12ce013",
+    "changedExecutableBytes": 3,
+    "sourceHead": "4cbbbb23c924df371eb4b364b8058bc22e195b17",
+    "controllerSourcesUnchanged": true,
+    "controlCount": 145,
+    "returnCode": 0,
+    "freshOutput": true,
+    "checkpointBytes": 144918,
+    "checkpointSHA256": "843665734047b513c4900a2fae0dc3acc714d3ad135ca3b55537c30e1793661a",
+    "wholeCheckpointIdenticalToHost": true,
+    "consoleCaptureSHA256": "0d9c2b8438bd367de697d64c39956d8445fecb72418e69adb50ff1946b294543"
+  },
+  "negative": {
+    "model": "68LC040/no FPU",
+    "sameProgramSHA256": "8233adcf826285c789ee006575e805398f0946747ae75664fbc61b61c12ce013",
+    "execAttnFlags": "0x200f",
+    "result": "Startup Alert 0x00068881 retained; main not reached",
+    "checkpointCreated": false,
+    "captureSHA256": "48eb3494d49cc0c0e0fcbab7ee7abc1cd6011ecf794f46e2775c548f47b291f3"
+  },
+  "limits": [
+    "No game assets or proprietary ROM are committed",
+    "No native game UI, movies or audio tested",
+    "AROS ABI execution does not qualify AmigaOS 3.2.3",
+    "No original-executable gameplay, complete turns, AI or combat claim",
+    "Hosted job 40371958331 never started because GitHub reported an account billing lock; this evidence is a local workspace run"
+  ]
+}

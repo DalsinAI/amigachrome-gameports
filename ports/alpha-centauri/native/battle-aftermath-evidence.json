@@ -1,0 +1,71 @@
+{
+  "scope": "Owned conventional solitary LAND deletion body-state plus selected original caller bookkeeping; no full caller or attack/session commit",
+  "host": {
+    "worlds": 30,
+    "counts": {
+      "accepted": 299,
+      "rejected": 4561,
+      "held_scope": 308,
+      "held_retreat_capture": 76,
+      "held_monument_ui": 133,
+      "attacker_deleted": 222,
+      "defender_deleted": 77,
+      "rounds": 5006,
+      "draws": 10012,
+      "runtime_no_write_guards": 32
+    },
+    "outputSHA256": "fa4518382078cb432167f6e0ed2d62f50eb527608970e6815ccca191386f09cc",
+    "binarySHA256": "003e9b4bc24238097ec753d2ce041f8cc68e1ffc1354232f8462cf18b4b43019",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "worlds": 30,
+    "counts": {
+      "accepted": 299,
+      "rejected": 4561,
+      "held_scope": 308,
+      "held_retreat_capture": 76,
+      "held_monument_ui": 133,
+      "attacker_deleted": 222,
+      "defender_deleted": 77,
+      "rounds": 5006,
+      "draws": 10012,
+      "runtime_no_write_guards": 32
+    },
+    "outputSHA256": "fa4518382078cb432167f6e0ed2d62f50eb527608970e6815ccca191386f09cc",
+    "binarySHA256": "db31bdfe906d1065b414510b170362d3fe7427ba092205fedd5a18aab2ce94e3",
+    "native": "UNRUN"
+  },
+  "sdk": {
+    "sha256": "d4199215ac4c7436c969c1de922381230a52ab49d1c157c5836f63244b047c23",
+    "twoFreshBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "sourceIdentity": {
+    "parent": "e8ac0a68378a7f28dab7d07520865dd443dd0b59",
+    "unchangedParentCpp": 305,
+    "parentWorkflowCommands": 305,
+    "finalWorkflowCommands": 307,
+    "allParentCommandsRetained": true,
+    "parentHeaderChanges": "LandResolutionPlan and WorldBattleBookkeepingPlan add BattleAftermathPlan friend only"
+  },
+  "history": [
+    "host1 retained all-one-faction fixtures and failed required opposing-faction coverage assertion; all observed rows matched. Controlled fixtures corrected to distinct supported factions/non-base positions; parent code unchanged.",
+    "host2 passes controlled numeric composition before added direct runtime guards. host3/be1 and SDK2 precede final output alias ordering correction. host4/be2 and SDK3/4 authoritative.",
+    "Final composition validates all input/output overlap ranges before any output-frame inspection. Frozen parent implementation files remain unchanged."
+  ],
+  "native": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED",
+  "held": [
+    "active-player monument UI",
+    "retreat caller/runtime",
+    "artifact capture diplomacy",
+    "base/cargo/additional colocation",
+    "network/PBEM and legacy cross-edition runtime",
+    "later caller movement/budget/promotion/diplomacy/rendering",
+    "legal attack/session/revision/event commit",
+    "variable-length persistence",
+    "remote CI/native/frontend",
+    "turn/AI/full game"
+  ]
+}

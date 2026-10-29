@@ -17,6 +17,7 @@ def fixture(mode=8,geom=None,frame=None,**changes):
  obj=chunk(0x4040100,b'test')+chunk(0x4040200,chunk(0x4040201,geom))+chunk(0x4040300,frame)
  scene=chunk(0x4010000,b'test')+chunk(0x4020000,struct.pack('<I',changes.get('objects',1)))+chunk(0x4030000,struct.pack('<I',changes.get('frames',1)))+chunk(0x4040000,obj)
  pal=chunk(0x1010000,b'palette')+chunk(0x1020000,palette)
+ if 'alternate_palette_size' in changes:pal+=chunk(0x1030000,b'\0'*changes['alternate_palette_size'])
  root=chunk(0x1000000,struct.pack('<I',changes.get('version',0x4121999a)))+chunk(0x2000000,b'test')+chunk(0x3000000,pal)+chunk(0x4000000,scene)
  return chunk(0x525643,root)
 

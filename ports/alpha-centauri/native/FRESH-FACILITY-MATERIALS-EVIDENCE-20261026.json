@@ -1,0 +1,478 @@
+{
+  "scope": "Fresh construction materials only; pinned existing restoration construction policy; no fresh starvation/riots or persistent turn/replay authority",
+  "host": {
+    "cases": 72,
+    "binarySHA256": "e3915bb8b7a300f0e27d2693175c98412fcde3941a92dbe407ec14e976956774",
+    "asanUBsanPassed": true,
+    "wholeContainerIndependentOracle": true
+  },
+  "existingRegression": {
+    "leafCases": 6200,
+    "worldCases": 86,
+    "leafSHA256": "3b66651880c6069f2b8317cf0476fc3b22e6d6c860f53800e74470f3eff62862",
+    "binarySHA256": "d15bf12edb3380e6e3c601d2e7dd3d3fd445c029040fc8abbff83a8a53a18616"
+  },
+  "native": {
+    "executed": true,
+    "environment": "FS-UAE3.2.35, AROS m68k2026-10-23,68040/FPU; documented disposable libnix FPU40 compatibility patch",
+    "cases": 72,
+    "allReturnCodesZero": true,
+    "allWholeSnapshotsAndLogsIdenticalToHost": true,
+    "allInputFilesUnchanged": true,
+    "aggregateSnapshotSHA256": "22114f80d67ec8dbcf02057da4e23f6c2e1f8b7eca876e35eedda104fa1f8b57",
+    "binarySHA256": "21456faabaf9f7d9d4228849e26908059024c437bda76b308a757ddffea6ec40",
+    "binaryBytes": 223392,
+    "liveRehomeLog": [
+      "MATERIALS support_error=0 support=0 mineral_error=0 intake=3 surplus=3 cost_error=0 factor=8",
+      "FRESH status=ok complete=1 credited=3 cost=32 after=1 best=9 repeat=already_processed bytes=148678"
+    ],
+    "zeroCostFactorLog": [
+      "MATERIALS support_error=0 support=4 mineral_error=0 intake=3 surplus=-1 cost_error=0 factor=0",
+      "FRESH status=unsupported complete=0 credited=0 cost=0 after=0 best=0 repeat=unsupported bytes=148678"
+    ],
+    "genuineBoreholeBase9Log": [
+      "MATERIALS support_error=0 support=2 mineral_error=0 intake=6 surplus=4 cost_error=0 factor=8",
+      "FRESH status=unsupported complete=0 credited=0 cost=0 after=0 best=0 repeat=unsupported bytes=199286"
+    ],
+    "records": [
+      {
+        "case": "v7-case0-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "4709ffdcb98e3649e83668a64ceb712814819910c9d565f1cb9a8575d64abd27"
+      },
+      {
+        "case": "v7-case0-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "668216e9678b743d9124ec0402d22ecb39f7547c2162521d21312aba817749c6"
+      },
+      {
+        "case": "v7-case0-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "cb8095c335218d585841ae49d5b6d2d96ab50d59fc9373fc55dea7cae7fb023f"
+      },
+      {
+        "case": "v7-case0-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "f980803c4d25de301aa8b050db83083a9b5d9c3d55410e2a4faaf98e15acc3dc"
+      },
+      {
+        "case": "v7-case0-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "117cf60b51a5279591a955aabb9bb8e25658f3dc6f35b8884ac5a313fdad1efc"
+      },
+      {
+        "case": "v7-case1-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "c50a3e7bc71b0cfe12f84fb244cc8f5b7a866c20291789eaf1a1a23e2fa7d67a"
+      },
+      {
+        "case": "v7-case1-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "34b3c32499e4c173ea26ab79476522a3ad3975a074e3e502bfca399355edc03f"
+      },
+      {
+        "case": "v7-case1-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "4a76cefe7063c78da239f1be4df4734f91f41e32f08ea41e364f0979ae812da0"
+      },
+      {
+        "case": "v7-case1-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "671d3aef0815fd12607fa571446f9835f5955008121c2ac593ef15e220a1c589"
+      },
+      {
+        "case": "v7-case1-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "d5028871bf5b80fe1df42899ef62f59477729cfa10cbc25f01f668822254432c"
+      },
+      {
+        "case": "v7-case3-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "41bcd21f8d502147f1c991ce429f190ca785805ff12936871e58acdb210eb5bc"
+      },
+      {
+        "case": "v7-case3-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "1eedcc82fa165fb4c1332e87584c1bcdf2bb7cac8707834140c5e0c1ceebe815"
+      },
+      {
+        "case": "v7-case3-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "eb8e8333881953df9c50e077f035f13e460e98f4f0d48361085c26083236cba9"
+      },
+      {
+        "case": "v7-case3-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "30481d72172a64b419d3bfe213a79c1583ec4defada88cb707451fa886aedbe0"
+      },
+      {
+        "case": "v7-case3-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "644c88d1b81d456f036468b2b70bdc6f371761dd080cfcadf74d7432f596bb1a"
+      },
+      {
+        "case": "v7-case5-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "7230dd2895aadc991c66c61c23700bc688091d76ea42b99e8a871d0f03a3884e"
+      },
+      {
+        "case": "v7-case5-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "1f60376c3745332222a9848c896f9fca5879b36a0895f4996bc060136b0939d1"
+      },
+      {
+        "case": "v7-case5-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "6fefc78d3d9050f46d23f28b7ac1553b634d498805a5061388368abf96b7b7c1"
+      },
+      {
+        "case": "v7-case5-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "041115086d367ba5b78b409fb692d732ef4ffd61f402354d2bd4ee0b7a80ba48"
+      },
+      {
+        "case": "v7-case5-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "9ca3f6ebc78096789bb87aa2cd515c6103e3188560561340467017219390f6f6"
+      },
+      {
+        "case": "v9-case0-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "0a4c56f9679eac2a8a48598cb06c98e1fc23d2b187f39753dc9b4af66c8bc420"
+      },
+      {
+        "case": "v9-case0-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "fbdab78e0b9660a08c6b7529ee566372d9e75497fe3cfd716f5c30e0b05975da"
+      },
+      {
+        "case": "v9-case0-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "0fad77cead4f6fd07bc8b5b3b161294b1e80e5e7076290993907808ccad3e88b"
+      },
+      {
+        "case": "v9-case0-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "dcdd4b06bb3dc51da101f7d135da788b680dd63352e045d54577f67a9f0aaa60"
+      },
+      {
+        "case": "v9-case0-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "0ab0c6f96e23cf68b3eaf522adf2a5e6b928902d5bf81eecf83904902825f9ac"
+      },
+      {
+        "case": "v9-case1-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "877b1894123dd7d5c650e17a1077c9092bbf7ee3ff352dfaf67d29dafb5a6142"
+      },
+      {
+        "case": "v9-case1-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "20ad0388e0d9d762484662c63ac691f250a02bdd96148840b61d18ee9fc6d6aa"
+      },
+      {
+        "case": "v9-case1-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "ede2772c283d235eb92219a826624b3a7469a6470fd482f727ee61930aae83b5"
+      },
+      {
+        "case": "v9-case1-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "15a58f1f2e7f82c985130ec0d54414816f3eff732921da410bc2ad0cf7c5d692"
+      },
+      {
+        "case": "v9-case1-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "7a189f36906f8712cb928f150af9aac351f16af706aec4c96660d7f01467a443"
+      },
+      {
+        "case": "v9-case3-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "8213af566d14a5d1b9cfc2055f75cb5df9dc601cb5c49e6a063cccbd1b25bd7f"
+      },
+      {
+        "case": "v9-case3-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "9e87609fb9bbcb186b567a3e64eca7160672e7861302d9de041bca9ba8954512"
+      },
+      {
+        "case": "v9-case3-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "74115ab55105a569e82abcf45afbc8e914f3256f96ebdf6682174d2d6b755251"
+      },
+      {
+        "case": "v9-case3-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "7c87319bf84546a077617188187632b833ab49e9d4f31fb74260a8289254befc"
+      },
+      {
+        "case": "v9-case3-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "5c5484faa604cacbb471ec02293d8e65903153320e13553bf9230d0d4ad622c3"
+      },
+      {
+        "case": "v9-case5-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "8d9f0d3057271d23c76d0767663bdcd2ee4238f451114bb267f329e4b08a7be2"
+      },
+      {
+        "case": "v9-case5-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "1edf8a7632be795e157e70c572ab9d22190d6417df6721b3156a845d6c7e3560"
+      },
+      {
+        "case": "v9-case5-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "8d04fe1567de1721bb321814b19d6f0918f45da8871d05aba813fba01b347964"
+      },
+      {
+        "case": "v9-case5-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "936b498eac69977adaae68f5d23536bf1edfcb9b0fd24d6cd5e4b4c8524be70f"
+      },
+      {
+        "case": "v9-case5-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "d3d4c8b7440dc3b5cc93eecbf4952c4b65fff88883759f971ace28f601aa6f60"
+      },
+      {
+        "case": "v10-case0-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "e2499402e466ffa26d10ec6d643b5d208784d73b892b29b9e0992bb2b5e4c691"
+      },
+      {
+        "case": "v10-case0-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "aae5950847cfc0b0f5d4d3afd90d97a542779592c3e4b532efe05cf57b8b5ac6"
+      },
+      {
+        "case": "v10-case0-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "cada2b50ffb70ef06ceb5ca17f65be0c846489ddc14d417f88ee8cf9601d771c"
+      },
+      {
+        "case": "v10-case0-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "806dd899622023a53c6dca4e0fb017e97d39bd37f11de844083c1f106526c295"
+      },
+      {
+        "case": "v10-case0-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "eaf149a26df09fcc8b75ae2258b5ea0eb791bbb4e4cc9d2077855730a26e0bd4"
+      },
+      {
+        "case": "v10-case1-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "ed4b3fdfa9af920f92f0728a873a4984cfb51c15fc680753b70698a009368ad2"
+      },
+      {
+        "case": "v10-case1-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "7999945a77f1c8f53e94ca27de727e413dc12f7d0caaffcc99b8daa99669816b"
+      },
+      {
+        "case": "v10-case1-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "46494490af8693dc648b1e1c6150f52a6bcc4791de3af12337c471d4b195cb2d"
+      },
+      {
+        "case": "v10-case1-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "7247f9252be4c18cc78c187f7b87f2c63d56019e520f3a3f0acd099fb80c4e01"
+      },
+      {
+        "case": "v10-case1-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "3662334a7f022e51e3dbb9af65a554e88fb88f63b5bbc7577dccd0f56605c808"
+      },
+      {
+        "case": "v10-case3-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "bc55806805fa8d19bda4b9ce6d959c55a5f180736b4e52c1f8275041ee706967"
+      },
+      {
+        "case": "v10-case3-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "62d5d422ebfb6f2c5e3036777e1871d14866b2a1c31a8ba7a75843c15f9eab03"
+      },
+      {
+        "case": "v10-case3-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "d73068cc71c54fff2a3a635ff78738c9ad663ad1576621f61d9eeddf8ac81e68"
+      },
+      {
+        "case": "v10-case3-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "f98387df1428839239363d54082ecffc528c85970cf5042a23167fbcc4296a5e"
+      },
+      {
+        "case": "v10-case3-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "3ca7a7c33824b2ddb52fdf0bd5464be6823d4b22f9fa6e87f8815372dad4ea09"
+      },
+      {
+        "case": "v10-case5-industry-8",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "8f353c2d651053810ce64a912601a1d0b5a0be48dba5938221db9f3665c54ee0"
+      },
+      {
+        "case": "v10-case5-industry-1",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "c538024b9fee4c3d4cde99a28e6cbc77d85f9786bcb4b91ff97ba07dfbc92c38"
+      },
+      {
+        "case": "v10-case5-industry0",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "ce79476d1f4f29ce8a2019e8a334ad8bde7d4713cb2f2e99f4569835a36bc584"
+      },
+      {
+        "case": "v10-case5-industry2",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "bc8c4f06f9f0e34e39c94fd2b1d7cf33cb4bd0a1151c39844fa17de181073445"
+      },
+      {
+        "case": "v10-case5-industry5",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "60586620910c2855ad7d3ef14701a7ed1e051ddddef8df4ccab2125f195a7c96"
+      },
+      {
+        "case": "paid",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "15a58f1f2e7f82c985130ec0d54414816f3eff732921da410bc2ad0cf7c5d692"
+      },
+      {
+        "case": "free-clean",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "22316e1fac05ea28409e94bc0023c35603fe4c0ad601a9ade93e81ece73fc9cd"
+      },
+      {
+        "case": "high-support-cost",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "63867b06ae71350285636d6c1ac2caa9a3b2abf8b5fb2a34e99cf32adf8168c8"
+      },
+      {
+        "case": "creche",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "aad1c69ad0c574b50c00132dd805e1c97b51435a9f805254c694841e2e0ecc2f"
+      },
+      {
+        "case": "workers-unavailable",
+        "status": "unsupported",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "d1871f8aba7a29075c2b352067d1880e1409c5fd9db6b54500101de5930a7b47"
+      },
+      {
+        "case": "live-rehome",
+        "status": "ok",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "4ff926bba75fcabef1e9b1c31f962678adc158bf1c2b82768b7a38ab236fa68b"
+      },
+      {
+        "case": "upkeep-stage",
+        "status": "unsupported",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "6a1af611ee31077922b51fafa19beb9c44de319bccc2c0db8518f8b42c63027c"
+      },
+      {
+        "case": "editor-stage",
+        "status": "unsupported",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "6a1af611ee31077922b51fafa19beb9c44de319bccc2c0db8518f8b42c63027c"
+      },
+      {
+        "case": "zero-cost-factor",
+        "status": "unsupported",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "d1bffdfb2f11b32d869e783571d60fdde931ee29cc575e46fde86e3dd2dffc4b"
+      },
+      {
+        "case": "missing-tech",
+        "status": "unavailable",
+        "snapshotBytes": 148678,
+        "snapshotSHA256": "6a1af611ee31077922b51fafa19beb9c44de319bccc2c0db8518f8b42c63027c"
+      },
+      {
+        "case": "actual-Borehole-9",
+        "status": "unsupported",
+        "snapshotBytes": 199286,
+        "snapshotSHA256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d"
+      },
+      {
+        "case": "actual-Borehole-10",
+        "status": "unsupported",
+        "snapshotBytes": 199286,
+        "snapshotSHA256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d"
+      }
+    ]
+  },
+  "limits": [
+    "Controlled successful state progression uses valid synthetic original containers; not manufactured original-scenario screenshots",
+    "Genuine Borehole queues remain correctly unsupported and unchanged",
+    "No live UI action, EndTurn, worker allocation, projection-state application or persistent scheduler is added",
+    "AmigaOS3.2 and complete original executable differential remain outside this proof"
+  ]
+}
