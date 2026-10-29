@@ -31,7 +31,7 @@ struct BaseBudgetResult {
  * and actor-state buffers are committed together after the last stage succeeds.
  */
 BudgetError world_base_budget(const OriginalWorld&,const Rules&,const UnitDefinitions&,
- const BasicRules&,const WorldRules&,const ResourceInfo&,const CitizenDefinitions&,
+ const BasicRules&,const WorldRules&,const ResourceInfo&,const UpkeepCitizenDefinitions&,
  const FacilityDefinitions&,size_t base,const BaseBudgetStage&,BaseBudgetResult&,
  uint32_t* projected_support_states,size_t capacity);
 }

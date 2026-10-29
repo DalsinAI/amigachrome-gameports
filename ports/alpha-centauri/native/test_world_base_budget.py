@@ -18,7 +18,7 @@ from test_facility_definitions import tables
 
 HERE = Path(__file__).resolve().parent
 NAMES = list(dict.fromkeys([name for name in accounting.SOURCES if name != 'world_base_accounting_probe'] +
-    'energy_allocation world_energy_allocation facility_upkeep world_facility_upkeep cost_factor world_cost_factor world_base_budget base_commerce world_base_commerce world_traded_budget world_base_budget_probe'.split()))
+    'upkeep_energy_allocation world_energy_allocation facility_upkeep world_facility_upkeep cost_factor world_cost_factor world_base_budget base_commerce world_base_commerce world_traded_budget world_base_budget_probe'.split()))
 
 def rules():
     rows = sections(allocation.rules())

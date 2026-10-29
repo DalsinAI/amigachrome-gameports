@@ -1,0 +1,51 @@
+{
+  "parent": "93d739f78cf8b035781c8504acb75cd680c5a629",
+  "scope": "Owned current-world removal staging; no caller/session commit",
+  "host": {
+    "cases": 1158,
+    "noWriteGuards": 23160,
+    "outputSHA256": "e6254ae5ac6b17653b0a0351135107740ac24aff2e0c91086cb66825a3c40742",
+    "binarySHA256": "c09bde65fe35d759970f10495a7b8839ac8f699abd06d99d55654d01e54d9137",
+    "scope": "Current-record clone/removal/count, unchanged caller/runtime/movementRNG/immutable baseline, all other decoded records/current monuments/history preserved; independent second removal and replacement; survives source destruction."
+  },
+  "independent68040": {
+    "cases": 1158,
+    "noWriteGuards": 23160,
+    "outputSHA256": "e6254ae5ac6b17653b0a0351135107740ac24aff2e0c91086cb66825a3c40742",
+    "binarySHA256": "998e53628fe64859f6afb7fdcffeb4fea3405035453ae26a545010ad1e8bb134",
+    "scope": "Current-record clone/removal/count, unchanged caller/runtime/movementRNG/immutable baseline, all other decoded records/current monuments/history preserved; independent second removal and replacement; survives source destruction."
+  },
+  "ownershipRegression": {
+    "hostCases": 64,
+    "independent68040Cases": 64,
+    "status": "PASS"
+  },
+  "frozenProduction": "Parent vehicle_removal.cpp and every inherited production .cpp unchanged; OriginalWorld header adds only VehicleRemovalPlan friend. LandEngagementPlan remains frozen.",
+  "workflow": {
+    "retainedParentCommands": 293,
+    "totalDeclaredCommands": 295,
+    "remoteCI": "UNRUN"
+  },
+  "sdk": {
+    "finalProbeSHA256": "95486e2dc9155191b97198b69b65b48c0e603dd896334d416e873fa5f00b21d9",
+    "finalBuilds": [
+      "probe-native2",
+      "probe-native3"
+    ],
+    "byteIdentical": true,
+    "status": "BUILD ONLY; AmigaOS UNRUN"
+  },
+  "failureHistory": [
+    {
+      "directory": "host1",
+      "result": "Probe-only UBSan rejection before output: memcmp called with null empty-span pointer. Added size guard to collateral comparator; production world capture/removal code unchanged. host2/BE1 authoritative. SDK1 predates final probe guard and is not the final candidate probe."
+    }
+  ],
+  "held": [
+    "Actual legal casualty/attack and active owning session commit",
+    "Full kill/battle_kill/caller effects/events/rewards",
+    "Combat CRT initialization/session persistence",
+    "Variable-length original save encoding",
+    "Player UI/native/turn/AI/diplomacy"
+  ]
+}
