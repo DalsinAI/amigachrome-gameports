@@ -1,0 +1,29 @@
+{
+  "host": {
+    "cases": 27946,
+    "accepted": 27902,
+    "rejected": 44,
+    "outputSHA256": "d3ec1c2937eb99885da20ba4202d9434cc4b7c4a20e0c1fbfff6dbf5c388bb24",
+    "sanitizers": "ASan/UBSan"
+  },
+  "privateOriginalBase": {
+    "contexts": 10976,
+    "completeAvailabilityHelper": true,
+    "actualDependencies": [
+      "has_fac",
+      "bitmask",
+      "has_project",
+      "is_coast"
+    ],
+    "outputSHA256": "9e8f8600034c72498821ad65a19a19fe331a6e486d8d24976e0f5a5ea77ced14",
+    "callbackStubs": false,
+    "fullGame": false
+  },
+  "originalExpansion": "Instruction/source inspection only, full original helper NOT executed",
+  "normalSDK": {
+    "binarySHA256": "4855e983cea2d3b7ea5f010d9335440a1e626bf0c23a6ef02f5c1f53a626aac2",
+    "nativeExecution": "UNRUN"
+  },
+  "independentBigEndianCI": "Pending at committed checkpoint",
+  "scope": "Pure explicit-fact facility predicate only; no owned-world binding, production orders, UI, upkeep or turns"
+}

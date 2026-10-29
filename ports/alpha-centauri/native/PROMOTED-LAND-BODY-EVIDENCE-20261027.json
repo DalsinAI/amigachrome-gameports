@@ -1,0 +1,87 @@
+{
+  "scope": "Owned nonrandom promoted conventional solitary LAND deletion body. Retained genuine pre-round health -> current engagement -> original caller selection -> promotion BEFORE dense casualty compaction. Not full original caller or legal attack.",
+  "host": {
+    "worlds": 64,
+    "counts": {
+      "accepted": 610,
+      "rejected": 9758,
+      "retreated": 0,
+      "attacker_deleted": 478,
+      "defender_deleted": 132,
+      "defender_captured": 0,
+      "held_interlude": 0,
+      "rounds": 8602,
+      "draws": 17204,
+      "helper_called": 610,
+      "promoted": 610,
+      "selection_random": 786,
+      "promotion_random": 0,
+      "promotion_notification": 144
+    },
+    "outputSHA256": "570e6acad40fb22b1002e56c433898ccb15ff76d8f823b1a38baa3b1be15fc11",
+    "binarySHA256": "4418c98da0aa8bc2d06ea15909a7b76bbcdc063e8b09900437fc99308672862e",
+    "native": "UNRUN"
+  },
+  "independent68040": {
+    "worlds": 64,
+    "counts": {
+      "accepted": 610,
+      "rejected": 9758,
+      "retreated": 0,
+      "attacker_deleted": 478,
+      "defender_deleted": 132,
+      "defender_captured": 0,
+      "held_interlude": 0,
+      "rounds": 8602,
+      "draws": 17204,
+      "helper_called": 610,
+      "promoted": 610,
+      "selection_random": 786,
+      "promotion_random": 0,
+      "promotion_notification": 144
+    },
+    "outputSHA256": "570e6acad40fb22b1002e56c433898ccb15ff76d8f823b1a38baa3b1be15fc11",
+    "binarySHA256": "b232b058ad3bd579ea6540652b104b9c42f31ae57bff208c0905ea2f992ab691",
+    "native": "UNRUN"
+  },
+  "additionalChecks": {
+    "acceptedWorlds": 6,
+    "acceptedBothBranchSourceLifetimeChecks": 6,
+    "firstCloneFitsLaterCloneBudgetHolds": 6,
+    "tinyBudgetRejectedWithPriorOutputIntact": 610,
+    "priorSourceOrInputAliasChecks": 84,
+    "newHostPoisonedInputNoReadChecks": 30,
+    "newIndependentInputAliasNoWriteChecks": 30,
+    "badCallerAndNetworkFactsChecks": 18,
+    "badPromotionRuntimeChecks": 24
+  },
+  "sdk": {
+    "sha256": "2afb9fce271c0dc26750339bc91fa3d6d5ab0ffd28dee72eb04073feb5e52140",
+    "twoFreshFinalBuildsByteIdentical": true,
+    "execution": "UNRUN"
+  },
+  "sourceIdentity": {
+    "parent": "4dfd3175270a9ad35fd58897fcb2ea68d5cdda90",
+    "unchangedParentCpp": 332,
+    "parentHeaderChanges": "LandEngagementPlan, WorldPromotionPlan and CasualtyPlan add PromotedLandResolutionPlan friend only",
+    "parentWorkflowCommands": 313,
+    "finalWorkflowCommands": 315,
+    "allParentCommandsRetained": true
+  },
+  "memoryBudget": "New outer object plus simultaneous intermediate/final clone heaps; promotion-stage engagement frame released before casualty clone. Source and separately owned previous output excluded.",
+  "history": [
+    "host1 all62 world row outputs matched independent model, but end coverage assertion FAILED:478attacker deletions,zero defender deletions. Preserved failed history. Added2synthetic strong-attacker rule variants; host2 covers64worlds610promotions/478attacker+132defender deletions. Existing production source unchanged by fixture correction.",
+    "Final host3/be1 and SDK3/4 include explicit runtime guards, five poisoned input alias positions and a conservative no-selection intent hold. SDK1/2 and host2 are historical earlier probes."
+  ],
+  "held": [
+    "Selection random786controls and notification144controls; no zero-roll/event-ack substitutions",
+    "No-selection intent, artifact/capture/retreat/base/additional-colocation/cargo/native or unsupported helper profiles",
+    "Required helper random branch delegated hold; not exercised by this bounded body corpus",
+    "Caller friction/bookkeeping/movement/remaining notifications, full original caller CRT state, original full battle differential",
+    "Owning legal attack/session/event commit, variable-length save, turn/AI/diplomacy/full game",
+    "Native/frontend/remote CI/publication"
+  ],
+  "native": "UNRUN",
+  "remoteCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED"
+}

@@ -1,0 +1,24 @@
+{
+  "cases": 5410,
+  "bytes": 302960,
+  "sha256": "703917c0907df292ab9d3631499d21c09f2c310117d9cad8aed5b2b74fdaa43f",
+  "command": [
+    "c++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "-fno-sanitize-recover=all",
+    "-no-pie",
+    "/workspace/scratch/3fb17fb3c5da/alpha-energy-next/ports/alpha-centauri/native/rules_text.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-energy-next/ports/alpha-centauri/native/energy_allocation.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-energy-next/ports/alpha-centauri/native/energy_allocation_probe.cpp",
+    "-o",
+    "/workspace/scratch/3fb17fb3c5da/energy-allocation-test-1/energy-allocation-probe"
+  ],
+  "native": "UNRUN",
+  "policy": "Thinker pinned default restoration, not recovered original base_energy"
+}

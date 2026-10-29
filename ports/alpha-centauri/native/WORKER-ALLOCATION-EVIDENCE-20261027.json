@@ -1,0 +1,25 @@
+{
+  "cases": 6015,
+  "accepted": 6004,
+  "outputSHA256": "bfedd5aba014d976270eb613ddad8c1ae15100dd1b64f0f9798d88c234da18ff",
+  "inputSHA256": "07834ad0b133b69741fdfa37b39a37eeea602b298cb08f6bdfeeeb00ea454630",
+  "command": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "-fno-sanitize-recover=all",
+    "-no-pie",
+    "/workspace/scratch/3fb17fb3c5da/alpha-worker-next/ports/alpha-centauri/native/worker_allocation.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-worker-next/ports/alpha-centauri/native/worker_allocation_probe.cpp",
+    "-o",
+    "/tmp/alpha-worker-allocation/probe"
+  ],
+  "native": "UNRUN",
+  "noInputMutationAndTransactionalOutput": true,
+  "preSpecialistProposalOnly": true
+}

@@ -1,0 +1,254 @@
+{
+  "worlds": 27,
+  "accepted": 22,
+  "trimmedWorkers": 7,
+  "outputSHA256": "f5fe224ca414fe00f4f19a2f001644c0adff1e70bfe0cd0b743891d0db67f718",
+  "allInputsAndOutputsTransactional": true,
+  "command": [],
+  "records": [
+    {
+      "name": "base-1",
+      "commerce": 1,
+      "grid": 1,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "4f7869bb9694ae7ca10ea18c0e5eaa987121ff8f53b940df3f3974b8b885226b"
+    },
+    {
+      "name": "base-2",
+      "commerce": 2,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "932f23243afadb7c979b581beceae9091f3740ae9d6b235f08aac12fc108f2f2"
+    },
+    {
+      "name": "base-3",
+      "commerce": 0,
+      "grid": 1,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "a1374dde176358c07c14d589708316ba5edcace16fc57182a00a24268b420f43"
+    },
+    {
+      "name": "base-4",
+      "commerce": 1,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "d1de2cb128b280959a034b5d764703599500c0f72c846764506ee074a3e33fc1"
+    },
+    {
+      "name": "base-5",
+      "commerce": 2,
+      "grid": 1,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "be903c43307f24fea945abee157e5386e845892932757ca793969591b8766769"
+    },
+    {
+      "name": "base-6",
+      "commerce": 0,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "e341bd01adc11ed6e771f7d12c2949fae238f1f86b862464ced50b4a0cb50286"
+    },
+    {
+      "name": "base-7",
+      "commerce": 1,
+      "grid": 1,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "a3e26bf46c35b5dc3086e94204f80d733624ad5a00394122b4028f33fc21a151"
+    },
+    {
+      "name": "base-8",
+      "commerce": 2,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "6ef1531ea35cad081829f5e745fd7290ab1a42b251e7cc15c936c3ed22a6bcb2"
+    },
+    {
+      "name": "base-9",
+      "commerce": 0,
+      "grid": 1,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "00ca58bafbab5431aa935efe6e80529dd8e4f5621524ca7204d5cfe21abd61c5"
+    },
+    {
+      "name": "base-10",
+      "commerce": 1,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "aff626bc0af4db4e2a4b23015a1038999363df854c33a8f25b10bf754d6459ea"
+    },
+    {
+      "name": "base-11",
+      "commerce": 2,
+      "grid": 1,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "f1dd90153e01c219e1b172692e46ea797801ea0d05057e8a92a933c22ea0660d"
+    },
+    {
+      "name": "base-12",
+      "commerce": 0,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "98a4cc72a5fc9292d204d752fcda3bea15f598cb6feb7fdcd695746f8c85b419"
+    },
+    {
+      "name": "base-13",
+      "commerce": 1,
+      "grid": 1,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "233ad208b632c35b92cd4081690ec86c006119e530728b493dc13f7d2df06421"
+    },
+    {
+      "name": "base-14",
+      "commerce": 2,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "9d4ba130030c2fab533812643482df64bab9bc9c9746b44a3d0965f1d5e17bc6"
+    },
+    {
+      "name": "base-15",
+      "commerce": 0,
+      "grid": 1,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "775a06d85402ead21aa3040f362ceac656e20daa37e8d7b7f9fbe63e83bd0bc0"
+    },
+    {
+      "name": "base-16",
+      "commerce": 1,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "20b25702f1a554d1d2bd473a5874c4a12fc0fc0a7dddd9fecbffa6cba5b418fd"
+    },
+    {
+      "name": "inspection",
+      "commerce": 0,
+      "grid": 0,
+      "mode": "inspection",
+      "accepted": false,
+      "trimmed": 0,
+      "outputSHA256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a"
+    },
+    {
+      "name": "editor",
+      "commerce": 0,
+      "grid": 0,
+      "mode": "editor",
+      "accepted": false,
+      "trimmed": 0,
+      "outputSHA256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a"
+    },
+    {
+      "name": "control",
+      "commerce": 0,
+      "grid": 0,
+      "mode": "control",
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "bf44f893b7ae71b156208bf3dafa5af04b42f3f4fd70c437522694847f9cd9aa"
+    },
+    {
+      "name": "late-commerce-overflow",
+      "commerce": 2147483647,
+      "grid": 0,
+      "mode": null,
+      "accepted": false,
+      "trimmed": 0,
+      "outputSHA256": "b16f8971646c34f8ea16efefb0028d3a0545600c568fba42d3bbbd223a47bc81"
+    },
+    {
+      "name": "negative-commerce",
+      "commerce": -1,
+      "grid": 0,
+      "mode": null,
+      "accepted": false,
+      "trimmed": 0,
+      "outputSHA256": "21bd735794206e8bac3dbadb7cc3378e32695fcccefbca6427e78541ea802d3b"
+    },
+    {
+      "name": "SMAX",
+      "commerce": 0,
+      "grid": 0,
+      "mode": null,
+      "accepted": false,
+      "trimmed": 0,
+      "outputSHA256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a"
+    },
+    {
+      "name": "more-than16-specialists",
+      "commerce": 0,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "54be8188a42e47d80e4f8677b732028f1cf42357d6d891805aaa498fc9f6dd94"
+    },
+    {
+      "name": "overassigned-doctors",
+      "commerce": 0,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "0470aac0df20b058068d23c8c909a42b9fedf6862c5b16acc33864548b51560b"
+    },
+    {
+      "name": "empty-mask-assign",
+      "commerce": 0,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 0,
+      "outputSHA256": "39744dea4ce731ee58c14758c3261179eb66cb2bf013472f167a03f92ac214b5"
+    },
+    {
+      "name": "iterative-riot-trim-preserves-technicians",
+      "commerce": 0,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 3,
+      "outputSHA256": "899fcac9179aaa70bf94f3cbfa771b38dbe659254d0a3e8607aa7304da30e203"
+    },
+    {
+      "name": "iterative-riot-trim-with-doctors",
+      "commerce": 0,
+      "grid": 0,
+      "mode": null,
+      "accepted": true,
+      "trimmed": 4,
+      "outputSHA256": "fd9edbf92c55c5f250c2624688e642500338bf2276de85093ab04b72f6bde1f8"
+    }
+  ],
+  "native": "UNRUN"
+}

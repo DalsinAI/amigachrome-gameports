@@ -1,0 +1,52 @@
+{
+  "scope": "Owning offline local planning controller with strict base clear-land actions, facility orders and union buffer snapshots. No frontend/player save/turn/AI completion.",
+  "actions": {
+    "hostCases": 203,
+    "publicCases": 43,
+    "originalTutorialEdges": 160,
+    "initialMoves": 51,
+    "publicInitialMoves": 6,
+    "originalInitialMoves": 45,
+    "prepareRejections": 76,
+    "checkedActionRejections": 75,
+    "loadRejections": 1,
+    "outputSHA256": "38a78a9d3fcd67deb29fd9715c06b2fe9173ad7042d2e8da247183498cdb1f72",
+    "publicOutputSHA256": "faf47cf990a5135a9cd505e8353e5af7f167c0465ce3d8310c6c73709cabf38a",
+    "coherentCase": "Two bounded moves, three facility switches, stale-plan checks, export/reload/continued production and no movement refill. Reset baseline before this sequence.",
+    "coherentContainerSHA256": "c7f90d413bc6fb356b9ab07bbcec383f28879438442c9564df91cf8b374df889"
+  },
+  "snapshots": {
+    "hostCases": 163,
+    "publicCases": 112,
+    "originalTutorialCodecCases": 51,
+    "outputBytes": 6137140,
+    "outputSHA256": "89e290398adf0369bc1701036519d4d067c3205b5d56756a8b120c15a27b4c16",
+    "publicOutputBytes": 3786956,
+    "publicOutputSHA256": "acecd911f6b6dac51d849153312b57de89ab2c8bff3bf45782d56f0ea6790b13"
+  },
+  "regressions": {
+    "productionWorlds": 153,
+    "productionAttempts": 5280,
+    "productionSHA256": "deeddeb6d294da39ce1b486c933a7f683a0ee879dca1c2828abda474abc0b12a",
+    "productionSnapshots": 204,
+    "productionSnapshotSHA256": "ae83cac16d1bae673260393ec8158d2519c5d641a8bdc97979f2ec559d17b835",
+    "rawActionControls": 46,
+    "statsControls": 462,
+    "priceControls": 248
+  },
+  "normalSDK": {
+    "local-actions-probe-native-final-3": "e45ef4e22b482d586677f81b1fc615018c978e3e21cdfbeeb26671383124a3ea",
+    "local-actions-snapshot-probe-native-1": "df4d7ba4a9cfbbc50f1fee71ffe9cef3e764c897f4fb7f24fda3c326978ac54b"
+  },
+  "nativeExecution": "UNRUN",
+  "finalHeadCI": "Pending at committed evidence checkpoint",
+  "frozenCoreSourceFiles": 13,
+  "requiredWorkflowCommandsRetained": 79,
+  "limits": [
+    "Base-game action-enabled import only; production-only imports have movement disabled.",
+    "The existing strict WorldActions subset is unchanged: no combat/contact/fog/transport/pods/fungus/orders/abilities/fractional/expansion moves.",
+    "No original order_veh/full-game differential. Reference wrapper tests use the frozen bounded core; independent Python checks statuses and complete synthetic mixed-state container.",
+    "Buffer snapshots preserve original7..12+opaque bytes, separate runtime RNG, unchanged footer; no filesystem/atomic creation/player save UI/original-executable save-compatibility claim.",
+    "No upkeep/production completion/AI/diplomacy/new turns. User watch untouched."
+  ]
+}

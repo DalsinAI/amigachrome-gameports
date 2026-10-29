@@ -1,0 +1,41 @@
+{
+  "scope": "Owned offline local facility-order controller, not original turn/AI/network/GUI runtime or player save implementation",
+  "host": {
+    "worldContexts": 153,
+    "orderAttempts": 5280,
+    "acceptedPlans": 904,
+    "changedInitialOrders": 858,
+    "noopPlans": 46,
+    "rejectedPlans": 4376,
+    "sequenceContinuations": 855,
+    "outputSHA256": "deeddeb6d294da39ce1b486c933a7f683a0ee879dca1c2828abda474abc0b12a",
+    "sanitizers": "ASan/UBSan"
+  },
+  "publicCorpus": {
+    "worldContexts": 150,
+    "orderAttempts": 4992,
+    "acceptedPlans": 892,
+    "rejectedPlans": 4100,
+    "sequenceContinuations": 845,
+    "outputSHA256": "135991bfb0559704367f780cc635a499655005c45401edfda97e0861070d9207"
+  },
+  "originalTutorials": {
+    "contexts": 3,
+    "attempts": 288,
+    "changedInitialOrders": 12,
+    "sequenceContinuations": 10,
+    "filesUnchanged": true
+  },
+  "privateOriginalPrefixContract": {
+    "baseContexts": 6699,
+    "expansionContexts": 6696,
+    "scope": "Original prefix through before draw_radius, plus real early-return epilogues/base_making/bitmask. Boundary stop only, no callback stubs/PE startup/full-game claim."
+  },
+  "normalSDK": {
+    "binarySHA256": "ba7ce871dd39a79d9043031a428c436e96c23d9edf5c6f97c8e66873d0e7d215",
+    "nativeExecution": "UNRUN"
+  },
+  "finalCI": "Pending at committed checkpoint",
+  "noFrontendOrLabInteraction": true,
+  "persistence": "Pending; raw wire remains baseline and movement-only encoder rejects these changed bases/factions."
+}

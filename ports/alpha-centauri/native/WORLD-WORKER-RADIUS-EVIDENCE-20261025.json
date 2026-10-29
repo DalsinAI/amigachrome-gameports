@@ -1,0 +1,45 @@
+{
+  "host": {
+    "worlds": 1280,
+    "originalFlagsBytes": 133120,
+    "originalFlagsSHA256": "5f87f2f869d31fcec7a899aa4ab7160ad934a044791de019c7f7bba86d1d5af0",
+    "outputSHA256": "b35fa4bc4c9fb39ad0d39da087b481b83dbc8b3ac5506e672d04a6bd6d623054",
+    "extraContexts": 24,
+    "extraAccepted": 19,
+    "extraRejected": 5,
+    "extraSHA256": "fab7a7f7e5dd277b992dc233ca0ac527d214c50d8b5f951a99aaa21fc09f2409",
+    "wholeWorldAndWireByteComparedUnchanged": true
+  },
+  "publicExtra": {
+    "contexts": 21,
+    "accepted": 16,
+    "rejected": 5,
+    "sortedNameOutputSHA256": "f58f1f4eb98da8c13e364ed458018c9bfd15e2fdda4a3bc4b0f15fb5c9d72138"
+  },
+  "privateOriginalTutorials": {
+    "contexts": 3,
+    "accepted": 3,
+    "sourceFilesUnchanged": true,
+    "sortedNameOutputSHA256": "e5f7ad154b121cc80da4fcf31bd07ab565c84cc8b0bc577e4b7ad051144349d2"
+  },
+  "originalHelpers": {
+    "contextsPerEdition": 1280,
+    "bytesPerEdition": 133120,
+    "outputSHA256": "5f87f2f869d31fcec7a899aa4ab7160ad934a044791de019c7f7bba86d1d5af0",
+    "fullHelperExecuted": true,
+    "upkeepState": 0,
+    "editor": false,
+    "noPEImportsOrFakeCallbacks": true
+  },
+  "normalSDK": {
+    "SHA256": "7725da644848d5dbc4cf57f7fe04a0105588394da3b70d9bc9a4ad2c4a8e3aa5",
+    "execution": "UNRUN"
+  },
+  "workflow": {
+    "parentCommands": 63,
+    "currentCommands": 65,
+    "allParentCommandsRetained": true
+  },
+  "CI": "UNRUN at prepublication checkpoint",
+  "limits": "Normal inspection branch only; no worker allocation/yield/AI-goal/editor repair/upkeep/turn/UI/player save. No proprietary files uploaded; user watch untouched."
+}

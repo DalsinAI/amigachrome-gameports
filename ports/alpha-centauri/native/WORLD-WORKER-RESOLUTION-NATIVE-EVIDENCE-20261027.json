@@ -1,0 +1,225 @@
+{
+  "scope": "GenuineAROS68040/FPU iterativeriotworkertrimproposal,notfullturn",
+  "binarySHA256": "62205a6078bf0cc05c531aa7fd54d2d47e596a98fa3dfd949093805362a834b2",
+  "cases": [
+    {
+      "index": 0,
+      "name": "base-1",
+      "bytes": 395,
+      "sha256": "4f7869bb9694ae7ca10ea18c0e5eaa987121ff8f53b940df3f3974b8b885226b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 1,
+      "name": "base-2",
+      "bytes": 403,
+      "sha256": "932f23243afadb7c979b581beceae9091f3740ae9d6b235f08aac12fc108f2f2",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 2,
+      "name": "base-3",
+      "bytes": 410,
+      "sha256": "a1374dde176358c07c14d589708316ba5edcace16fc57182a00a24268b420f43",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 3,
+      "name": "base-4",
+      "bytes": 401,
+      "sha256": "d1de2cb128b280959a034b5d764703599500c0f72c846764506ee074a3e33fc1",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 4,
+      "name": "base-5",
+      "bytes": 412,
+      "sha256": "be903c43307f24fea945abee157e5386e845892932757ca793969591b8766769",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 5,
+      "name": "base-6",
+      "bytes": 413,
+      "sha256": "e341bd01adc11ed6e771f7d12c2949fae238f1f86b862464ced50b4a0cb50286",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 6,
+      "name": "base-7",
+      "bytes": 415,
+      "sha256": "a3e26bf46c35b5dc3086e94204f80d733624ad5a00394122b4028f33fc21a151",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 7,
+      "name": "base-8",
+      "bytes": 416,
+      "sha256": "6ef1531ea35cad081829f5e745fd7290ab1a42b251e7cc15c936c3ed22a6bcb2",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 8,
+      "name": "base-9",
+      "bytes": 418,
+      "sha256": "00ca58bafbab5431aa935efe6e80529dd8e4f5621524ca7204d5cfe21abd61c5",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 9,
+      "name": "base-10",
+      "bytes": 394,
+      "sha256": "aff626bc0af4db4e2a4b23015a1038999363df854c33a8f25b10bf754d6459ea",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 10,
+      "name": "base-11",
+      "bytes": 399,
+      "sha256": "f1dd90153e01c219e1b172692e46ea797801ea0d05057e8a92a933c22ea0660d",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 11,
+      "name": "base-12",
+      "bytes": 396,
+      "sha256": "98a4cc72a5fc9292d204d752fcda3bea15f598cb6feb7fdcd695746f8c85b419",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 12,
+      "name": "base-13",
+      "bytes": 402,
+      "sha256": "233ad208b632c35b92cd4081690ec86c006119e530728b493dc13f7d2df06421",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 13,
+      "name": "base-14",
+      "bytes": 411,
+      "sha256": "9d4ba130030c2fab533812643482df64bab9bc9c9746b44a3d0965f1d5e17bc6",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 14,
+      "name": "base-15",
+      "bytes": 412,
+      "sha256": "775a06d85402ead21aa3040f362ceac656e20daa37e8d7b7f9fbe63e83bd0bc0",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 15,
+      "name": "base-16",
+      "bytes": 408,
+      "sha256": "20b25702f1a554d1d2bd473a5874c4a12fc0fc0a7dddd9fecbffa6cba5b418fd",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 16,
+      "name": "inspection",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 17,
+      "name": "editor",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 18,
+      "name": "control",
+      "bytes": 416,
+      "sha256": "bf44f893b7ae71b156208bf3dafa5af04b42f3f4fd70c437522694847f9cd9aa",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 19,
+      "name": "late-commerce-overflow",
+      "bytes": 7,
+      "sha256": "b16f8971646c34f8ea16efefb0028d3a0545600c568fba42d3bbbd223a47bc81",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 20,
+      "name": "negative-commerce",
+      "bytes": 7,
+      "sha256": "21bd735794206e8bac3dbadb7cc3378e32695fcccefbca6427e78541ea802d3b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 21,
+      "name": "SMAX",
+      "bytes": 7,
+      "sha256": "efa785588542b4afc96a8531f3c09d79bbfb907efc862a81b92720d06bcb748a",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 22,
+      "name": "more-than16-specialists",
+      "bytes": 444,
+      "sha256": "54be8188a42e47d80e4f8677b732028f1cf42357d6d891805aaa498fc9f6dd94",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 23,
+      "name": "overassigned-doctors",
+      "bytes": 399,
+      "sha256": "0470aac0df20b058068d23c8c909a42b9fedf6862c5b16acc33864548b51560b",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 24,
+      "name": "empty-mask-assign",
+      "bytes": 415,
+      "sha256": "39744dea4ce731ee58c14758c3261179eb66cb2bf013472f167a03f92ac214b5",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 25,
+      "name": "iterative-riot-trim-preserves-technicians",
+      "bytes": 376,
+      "sha256": "899fcac9179aaa70bf94f3cbfa771b38dbe659254d0a3e8607aa7304da30e203",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 26,
+      "name": "iterative-riot-trim-with-doctors",
+      "bytes": 406,
+      "sha256": "fd9edbf92c55c5f250c2624688e642500338bf2276de85093ab04b72f6bde1f8",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    }
+  ],
+  "count": 27,
+  "aggregateBytes": 8996,
+  "aggregateSHA256": "f5fe224ca414fe00f4f19a2f001644c0adff1e70bfe0cd0b743891d0db67f718"
+}

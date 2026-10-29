@@ -1,0 +1,52 @@
+{
+  "scope": "GenuineAROS68040/FPU4correctedlegacypsychcachepoisonfixtures; supplementsprior82worldproof",
+  "binarySHA256": "e1ecb0dde9b471fed4981b966c43b0d054e62545df815372e35054efc5550566",
+  "cases": [
+    {
+      "index": 0,
+      "name": "base-7",
+      "sourceWorldSHA256": "dfb5d1506c65cd7219bf12face3449c8e6a99f7313611828a6dc6c1d755ce7cf",
+      "bytes": 151,
+      "sha256": "47521bb7b631c28bf223d243fe748ea7ff77627b43339a951aea73ecc3d534a7",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 1,
+      "name": "base-13",
+      "sourceWorldSHA256": "fb7a3989d69cf6676daa95f856aba552b2e07f5ad8f650e68b1aad2f2c6b2d0f",
+      "bytes": 154,
+      "sha256": "f5a9cd1f7086c43d70229efc95f0bd0066b7f75dd3f7f26b28636f37108e5218",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 2,
+      "name": "strongest-police-including-foreign",
+      "sourceWorldSHA256": "cdb700c25260fca1015de643c6c0dd9fedbaf48bab9468fa0e8a7adb2ade5b0d",
+      "bytes": 287,
+      "sha256": "2ba1c30408c28a9ba1f4fd103281f9fa4564aefee7c29536944029021a374239",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "index": 3,
+      "name": "punishment-sphere",
+      "sourceWorldSHA256": "cdf0fdf950c026180b2fcecba291c1e8f0d833368ca0036104776b0adf50b1e7",
+      "bytes": 285,
+      "sha256": "67c8f7a356a74f40e356ad95ce05ac3439943c92baaa6787afb2bdce2ccdc3e3",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    }
+  ],
+  "count": 4,
+  "aggregateBytes": 877,
+  "aggregateSHA256": "45fb9994cb5d92ac6c5e1941bead109dc662c426bf8cf9fb6495e751be4c4acd",
+  "status": "PSYCH_0_RC 0\nPSYCH_1_RC 0\nPSYCH_2_RC 0\nPSYCH_3_RC 0\nBATCH_DONE\n",
+  "process": {
+    "batchComplete": true,
+    "emulatorReturnCode": 0,
+    "timedOut": false,
+    "aborted": false
+  }
+}
