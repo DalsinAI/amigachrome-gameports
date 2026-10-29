@@ -3,7 +3,7 @@
 #define ALPHA_WORLD_BASE_ACCOUNTING_H
 #include "world_base_minerals.h"
 #include "world_base_support.h"
-#include "world_energy.h"
+#include "upkeep_world_energy.h"
 #include "base_nutrients.h"
 namespace alpha {
 struct WorldAccountingStage {
@@ -12,9 +12,9 @@ struct WorldAccountingStage {
 };
 struct WorldAccountingResult {
  SupportResult support;
- WorldMineralResult mineral;
+ UpkeepWorldMineralResult mineral;
  BaseNutrientResult nutrient;
- WorldEnergyResult energy;
+ UpkeepWorldEnergyResult energy;
  EnergyShortfallOrders energy_shortfall;
 };
 /* One connected read-only accounting proposal for an owned HUMAN base-game

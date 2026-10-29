@@ -15,9 +15,9 @@ int main(int argc,char**argv){if(argc!=5)return 20;size_t n=0;auto*p=read(argv[1
   // The input vector occupies only its count, the remaining static capacity is
   // not an input alias. Other world/rules ranges are completely protected.
   if(i==count-1&&delta>=energy_count*sizeof(int32_t))continue;
-  if(world_base_commerce(world,technologies,base,energy,energy_count,*reinterpret_cast<WorldCommerceResult*>(out))!=CommerceError::bad_buffer||!unchanged())return 21;
+  if(world_base_commerce(world,technologies,base,energy,energy_count,*reinterpret_cast<UpkeepWorldCommerceResult*>(out))!=CommerceError::bad_buffer||!unchanged())return 21;
  }}
- WorldCommerceResult result,before;memset(&result,0x5a,sizeof result);memcpy(&before,&result,sizeof result);
+ UpkeepWorldCommerceResult result,before;memset(&result,0x5a,sizeof result);memcpy(&before,&result,sizeof result);
  if(world_base_commerce(world,technologies,base,reinterpret_cast<const int32_t*>(&technologies),energy_count,result)!=CommerceError::bad_buffer||memcmp(&result,&before,sizeof result)||!unchanged())return 21;
  if(world_base_commerce(world,technologies,base,&world.base(0)->energy_intake,energy_count,result)!=CommerceError::bad_buffer||memcmp(&result,&before,sizeof result)||!unchanged())return 21;
  const auto error=world_base_commerce(world,technologies,base,energy,energy_count,result);if(error!=CommerceError::ok&&memcmp(&result,&before,sizeof result))return 21;printf("%d %ld %ld %ld",(int)error,(long)result.rank,(long)result.technology_count,(long)result.total);for(int32_t v:result.partner_base)printf(" %ld",(long)v);for(int32_t v:result.import_value)printf(" %ld",(long)v);for(int32_t v:result.export_value)printf(" %ld",(long)v);for(int32_t v:result.fresh_technology_bonus)printf(" %ld",(long)v);puts("");const bool same=unchanged();free(copy);return same?0:21;

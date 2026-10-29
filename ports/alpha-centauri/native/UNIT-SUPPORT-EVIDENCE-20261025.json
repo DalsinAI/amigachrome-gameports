@@ -1,0 +1,54 @@
+{
+  "scope": "Read-only original per-base mineral support aggregate, no upkeep mutation or turn",
+  "baseDependency": "PR93 edition-corrected 6b049c16c7a374e3f70a6f99f6b9cd23910df2e8",
+  "host": {
+    "contexts": 558,
+    "accepted": 550,
+    "rejected": 8,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "independentWireModel": true,
+    "speedRegressions": 462,
+    "priceRegressions": 248,
+    "originalTutorials": 3
+  },
+  "originalHelperComparisons": [
+    {
+      "edition": "base",
+      "contexts": 276,
+      "outputBytes": 3312,
+      "outputSHA256": "3e0f2811d0deca2f0601e59b6ee6d63b54eb6fa84821d71d94011febb33b5cf3",
+      "originalCodePages": {
+        "0x4fe000": "51c50d7785cce8aabcd550a92a8c093630b67a23b195fb99ff3036b78c508b75",
+        "0x5d6000": "a32d82c6536cfb538f6e4a92c235d213c7f0281c8e2802cabb0efa1f78643f15"
+      },
+      "originalSupportHelper": "0x4feb20",
+      "rc": 0,
+      "fullGameExecution": false,
+      "scope": "Actual original support function under controlled non-convoy ground/base-marked fixtures, upkeepStage0. Observe supported count/maintained count/mineral cost only; no convoy/pacifism/social-projection or full-world qualification. No callback stubs."
+    },
+    {
+      "edition": "expansion",
+      "contexts": 274,
+      "outputBytes": 3288,
+      "outputSHA256": "77b9e96ae2553f0fd80391806be73f06bcd46de6299cdb402b2584e2cda615c9",
+      "originalCodePages": {
+        "0x4e9000": "2e86843965a8d8e0e8faa5f5654f5f657782b7aa2a0c752b9cda0e9013d5c758",
+        "0x5bf000": "e9c8935ae9faf7e0e1d1a450c8f05c887a95d009cff8c897dd0f6dda81afb67d",
+        "0x5b9000": "7c32573c77177ff0cd507f2b6ac96304f6f6bc5ac82d6c8f5dfa708f4cea04a5"
+      },
+      "originalSupportHelper": "0x4e9550",
+      "rc": 0,
+      "fullGameExecution": false,
+      "scope": "Actual original support function under controlled non-convoy ground/base-marked fixtures, upkeepStage0. Observe supported count/maintained count/mineral cost only; no convoy/pacifism/social-projection or full-world qualification. No callback stubs."
+    }
+  ],
+  "normalSDK": {
+    "probeSHA256": "52cf3530eaeeee17e1a3af5641179654aa4d4d25766d5d2a6c43bd64b28f74a8",
+    "execution": "UNRUN"
+  },
+  "finalHeadCI": "UNRUN at evidence creation",
+  "nativeGate": "UNRUN; user owns isolated watch preview. No lab writes/input."
+}

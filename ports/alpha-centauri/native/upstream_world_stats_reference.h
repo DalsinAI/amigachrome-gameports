@@ -161,8 +161,9 @@ uint32_t __cdecl morale_veh(uint32_t veh_id, BOOL check_drone_riot, int faction_
     }
     if (check_drone_riot && home_base_id >= 0
         && Bases[home_base_id].state & BSTATE_DRONE_RIOTS_ACTIVE && !morale_flag) {
-        // bug fix: removed premature range bounding negating negative morale effects
-        morale_modifier--;
+        // Original both-edition behavior; retain the early clamp rather than
+        // the later OpenSMACX gameplay change.
+        morale_modifier = range(morale_modifier - 1, 0, 6);
     }
     return range(Vehs[veh_id].morale + morale_modifier, 0, 6);
 }

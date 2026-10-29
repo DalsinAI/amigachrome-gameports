@@ -7,7 +7,7 @@ namespace alpha {namespace {
 const int32_t dx[21]={0,1,2,1,0,-1,-2,-1,0,2,2,-2,-2,1,3,3,1,-1,-3,-3,-1};
 const int32_t dy[21]={0,-1,0,1,2,1,0,-1,-2,-2,2,2,-2,-3,-1,1,3,3,1,-1,-3};
 bool overlap(const void*a,size_t an,const void*b,size_t bn){if(!a||!b||!an||!bn)return false;const uintptr_t x=(uintptr_t)a,y=(uintptr_t)b;if(an>UINTPTR_MAX-x||bn>UINTPTR_MAX-y)return true;return x<=y?y-x<an:x-y<bn;}
-bool aliases(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const CitizenDefinitions&c,const WorkerResolutionStage&s,const void*out,size_t n){
+bool aliases(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const UpkeepCitizenDefinitions&c,const WorkerResolutionStage&s,const void*out,size_t n){
  if(overlap(out,n,&w,sizeof w)||overlap(out,n,&t,sizeof t)||overlap(out,n,&u,sizeof u)||overlap(out,n,&b,sizeof b)||overlap(out,n,&wr,sizeof wr)||overlap(out,n,&r,sizeof r)||overlap(out,n,&c,sizeof c)||overlap(out,n,&s,sizeof s))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();return overlap(out,n,w.original_bytes(),w.original_size())||overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile))||overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase))||overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle))||overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype))||overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState))||overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
@@ -16,7 +16,7 @@ bool put(int64_t n,int32_t&out){if(n<(-2147483647LL-1)||n>2147483647LL)return fa
 unsigned bits(uint32_t mask){unsigned n=0;while(mask){mask&=mask-1;++n;}return n;}
 void set_type(ProposedCitizenAssignment&a,unsigned slot,uint32_t type){if(slot>=16)return;const unsigned shift=4*(slot&7);a.specialist_types[slot/8]=(a.specialist_types[slot/8]&~(15u<<shift))|(type<<shift);}
 StableIntakeError energy_error(EnergyError e){return e==EnergyError::overflow?StableIntakeError::overflow:e==EnergyError::bad_buffer?StableIntakeError::bad_buffer:StableIntakeError::bad_state;}
-StableIntakeError psych_error(PsychError e){return e==PsychError::overflow?StableIntakeError::overflow:e==PsychError::out_of_memory?StableIntakeError::out_of_memory:e==PsychError::unsupported?StableIntakeError::unsupported_stage:e==PsychError::bad_buffer?StableIntakeError::bad_buffer:StableIntakeError::bad_state;}
+StableIntakeError psych_error(UpkeepPsychError e){return e==UpkeepPsychError::overflow?StableIntakeError::overflow:e==UpkeepPsychError::out_of_memory?StableIntakeError::out_of_memory:e==UpkeepPsychError::unsupported?StableIntakeError::unsupported_stage:e==UpkeepPsychError::bad_buffer?StableIntakeError::bad_buffer:StableIntakeError::bad_state;}
 StableIntakeError intake_for(const OriginalWorld&w,const Rules&t,const BasicRules&b,const ResourceInfo&r,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&next){
  const auto*base=w.base(id);const auto&candidate=next.candidate;const auto&a=next.assignment;
  if(!base||!(a.worked_tiles&1u)||(a.worked_tiles&~candidate.facts.available)||(int32_t)bits(a.worked_tiles)+a.specialist_count!=a.population+1)return StableIntakeError::bad_state;
@@ -26,27 +26,27 @@ StableIntakeError intake_for(const OriginalWorld&w,const Rules&t,const BasicRule
   if(movement_tile_index(geometry,x,y,tile)!=LogicError::ok)return StableIntakeError::bad_state;
   if((w.tile(tile)->climate&0xe0u)<0x60u)fresh.state_flags|=0x8000u;
   WorldTileYieldStage ts{Variant::base,false,false,s.worker.control_upkeep,(int32_t)id,reduction,fresh.base_energy_after};TileYieldResult yield{};
-  const auto error=(w.tile(tile)->items&0x20u)?world_fresh_tile_yields(w,t,b,r,id,base->faction_id,x,y,ts,yield):world_tile_yields(w,t,b,r,id,base->faction_id,x,y,ts,yield);
+  const auto error=(w.tile(tile)->items&0x20u)?world_upkeep_fresh_tile_yields(w,t,b,r,id,base->faction_id,x,y,ts,yield):world_tile_yields(w,t,b,r,id,base->faction_id,x,y,ts,yield);
   if(error!=TileYieldError::ok)return error==TileYieldError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
   const int32_t values[]={yield.nutrient,yield.mineral,yield.energy};for(unsigned k=0;k<3;++k){fresh.tile_yields[i][k]=values[k];if(!put((int64_t)fresh.tiles[k]+values[k],fresh.tiles[k]))return StableIntakeError::overflow;}fresh.base_energy_after=yield.base_energy;reduction=0;
  }
  for(unsigned k=0;k<3;++k)if(!put((int64_t)fresh.satellites[k]+fresh.tiles[k],fresh.intake[k]))return StableIntakeError::overflow;
  fresh.terraform_reduction_after=reduction;TerraformEcologyResult ecology{};if(world_terraform_ecology_for_workers(w,id,a.worked_tiles,ecology)!=TerraformEcologyError::ok)return StableIntakeError::bad_state;fresh.raw_eco_damage=ecology.raw_damage;next.intake=fresh;return StableIntakeError::ok;
 }
-StableIntakeError evaluate(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const CitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&next){
+StableIntakeError evaluate(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const UpkeepCitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&next){
  auto error=intake_for(w,t,b,r,id,s,next);if(error!=StableIntakeError::ok)return error;
  const auto*base=w.base(id);const auto*owner=w.faction(base->faction_id);const auto&convoy=next.candidate.convoys;
  const CurrentMineralInputs mi{Variant::base,next.intake.intake[1],convoy.to[1],convoy.from[1],next.candidate.support.mineral_cost,next.intake.raw_eco_damage};error=world_mineral_accounting(w,wr,id,mi,next.mineral);if(error!=StableIntakeError::ok)return error;
  const NutrientFacts nf{base->pop_size,owner->SE_growth_pending,next.intake.intake[0],convoy.to[0],convoy.from[0],b.nutrient_req_citizen,base->nutrients_accumulated,owner->nutrient_surplus_total,1u,(base->facilities_built[0]&4u?1u:0u)|((uint32_t)base->state_flags&4u?2u:0u)};
  const auto food=base_nutrients(nf,next.nutrient);if(food!=NutrientError::ok)return food==NutrientError::overflow?StableIntakeError::overflow:StableIntakeError::bad_state;
- const WorldEnergyStage es{next.intake.intake[2],convoy.to[2],s.commerce,s.energy_grid,convoy.from[2],1};auto energy=world_energy_accounting(w,id,es,next.energy);if(energy!=EnergyError::ok)return energy_error(energy);
+ const UpkeepWorldEnergyStage es{next.intake.intake[2],convoy.to[2],s.commerce,s.energy_grid,convoy.from[2],1};auto energy=world_energy_accounting(w,id,es,next.energy);if(energy!=EnergyError::ok)return energy_error(energy);
  energy=world_energy_allocation_for_assignment(w,t,b,c,id,next.assignment,next.energy.accounting.surplus,s.commerce,next.allocation);if(energy!=EnergyError::ok)return energy_error(energy);
  next.assignment.specialist_types[0]=next.allocation.allocation.specialist_types[0];next.assignment.specialist_types[1]=next.allocation.allocation.specialist_types[1];
- const WorldPsychStage ps{next.assignment.specialist_count,next.allocation.allocation.psych};const auto psych=world_base_psych_policy(w,u,b,id,ps,next.psych);if(psych!=PsychError::ok)return psych_error(psych);
+ const WorldPsychStage ps{next.assignment.specialist_count,next.allocation.allocation.psych};const auto psych=world_base_psych_policy(w,u,b,id,ps,next.psych);if(psych!=UpkeepPsychError::ok)return psych_error(psych);
  next.requires_riot_event=next.psych.psych.will_riot;return StableIntakeError::ok;
 }
 }
-StableIntakeError world_worker_resolution(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const CitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&output){
+StableIntakeError world_worker_resolution(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const UpkeepCitizenDefinitions&c,size_t id,const WorkerResolutionStage&s,WorkerResolutionResult&output){
  if(aliases(w,t,u,b,wr,r,c,s,&output,sizeof output))return StableIntakeError::bad_buffer;
  if(s.commerce<0||s.energy_grid<0||c.count!=7)return StableIntakeError::bad_state;
  WorkerResolutionResult next{};auto error=world_worker_upkeep_candidate(w,t,u,b,r,id,s.worker,next.candidate);if(error!=StableIntakeError::ok)return error;

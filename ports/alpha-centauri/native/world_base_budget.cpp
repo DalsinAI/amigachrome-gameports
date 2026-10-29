@@ -33,7 +33,7 @@ BudgetError accounting_error(StableIntakeError e){switch(e){
 struct Scratch {uint32_t*p;~Scratch(){free(p);}};
 }
 BudgetError world_base_budget(const OriginalWorld&w,const Rules&t,const UnitDefinitions&u,
- const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const CitizenDefinitions&c,
+ const BasicRules&b,const WorldRules&wr,const ResourceInfo&r,const UpkeepCitizenDefinitions&c,
  const FacilityDefinitions&f,size_t id,const BaseBudgetStage&s,BaseBudgetResult&output,
  uint32_t*states,size_t capacity){
  if(capacity>SIZE_MAX/sizeof(uint32_t))return BudgetError::bad_buffer;

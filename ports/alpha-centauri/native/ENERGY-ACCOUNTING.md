@@ -50,11 +50,11 @@ policy are not silently treated as original behavior.
 
 ## Validation
 
-`test_base_energy.py --out NEW_DIRECTORY` builds the arithmetic leaf with
+`test_upkeep_base_energy.py --out NEW_DIRECTORY` builds the arithmetic leaf with
 ASan/UBSan, checks an independent integer oracle, all aligned partial input/
 output overlaps, and records the fixed binary corpus plus expected output.
 
-`test_world_energy.py --out NEW_DIRECTORY` builds connected queries with
+`test_upkeep_world_energy.py --out NEW_DIRECTORY` builds connected queries with
 ASan/UBSan. Its wire-derived oracle covers versions7..12, physical/current/
 remote/missing HQs, physical Creches, wrap distance, pending efficiency, fresh
 worker/convoy inputs, deliberately impossible saved energy totals, convoy

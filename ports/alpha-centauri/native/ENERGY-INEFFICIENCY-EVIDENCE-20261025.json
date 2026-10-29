@@ -1,0 +1,38 @@
+{
+  "scope": "Explicit numeric energy inefficiency/counter proposals only",
+  "originalContextsEach": 3024,
+  "originalOutputsSHA256": "eaffe608844e61fd40f3c384c73d16153d0ca5b42df4d07fd664360de535d865",
+  "local": {
+    "owned-host-1": {
+      "cases": 3350,
+      "accepted": 3270,
+      "invalid": 6,
+      "overflow": 74,
+      "aliasesPerCase": 3,
+      "outputSHA256": "fc8adcb83f3807e78967b6d2e54fc3789087836f9e9dffd97a323ffda5809f21",
+      "original3024ProjectedOutputSHA256": "eaffe608844e61fd40f3c384c73d16153d0ca5b42df4d07fd664360de535d865",
+      "binarySHA256": "f5df808b725fa86048b4c7ae01de87a821851430581b4a4d25d9402b1ec52f69",
+      "native": "UNRUN",
+      "scope": "Explicit numeric facts only; no HQ/world binding/accounting mutation/fullenergy/upkeep/turn."
+    },
+    "owned-be-1": {
+      "cases": 3350,
+      "accepted": 3270,
+      "invalid": 6,
+      "overflow": 74,
+      "aliasesPerCase": 3,
+      "outputSHA256": "fc8adcb83f3807e78967b6d2e54fc3789087836f9e9dffd97a323ffda5809f21",
+      "original3024ProjectedOutputSHA256": "eaffe608844e61fd40f3c384c73d16153d0ca5b42df4d07fd664360de535d865",
+      "binarySHA256": "77a193e3743bf5f173a82f7ce3acd95dc37b3d4fade4849bf64434149d91488b",
+      "native": "UNRUN",
+      "scope": "Explicit numeric facts only; no HQ/world binding/accounting mutation/fullenergy/upkeep/turn."
+    }
+  },
+  "normalSDK": {
+    "freshBuilds": 2,
+    "SHA256": "15c427bb55a178de3a7537294eb665eb585c3bf3de685a6bc884efe9cae2727e",
+    "AmigaOS": "UNRUN"
+  },
+  "workflowEntries": 113,
+  "CI": "UNRUN"
+}
