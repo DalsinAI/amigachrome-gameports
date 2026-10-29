@@ -6,6 +6,7 @@
  * Map/project/facility queries use actual owned data, not canned true/false
  * callbacks. Unknown accesses are errors. No original x86 executes.
  * Expansion-only tower/spore constants are disabled in the base profile.
+ * Base has_abil is raw-only, verified in original base helper0x5d6310.
  */
 #ifndef AC_ALPHA_UPSTREAM_WORLD_STATS_REFERENCE_H
 #define AC_ALPHA_UPSTREAM_WORLD_STATS_REFERENCE_H
@@ -160,13 +161,30 @@ uint32_t __cdecl morale_veh(uint32_t veh_id, BOOL check_drone_riot, int faction_
     }
     if (check_drone_riot && home_base_id >= 0
         && Bases[home_base_id].state & BSTATE_DRONE_RIOTS_ACTIVE && !morale_flag) {
-        // bug fix: removed premature range bounding negating negative morale effects
-        morale_modifier--;
+        // Original both-edition behavior; retain the early clamp rather than
+        // the later OpenSMACX gameplay change.
+        morale_modifier = range(morale_modifier - 1, 0, 6);
     }
     return range(Vehs[veh_id].morale + morale_modifier, 0, 6);
 }
 #undef __cdecl
+static int32_t ability_prerequisite[29];static unsigned ability_count;
+/* Adaptation of original has_abil for the four speed_proto query bits only.
+ * Alien Deep Radar and Nethack cannot answer these bits, so are outside scope.
+ * Production rejects invalid indexes before this original-domain reference. */
+static inline bool has_speed_ability(unsigned prototype,unsigned ability){
+ if(VehPrototypes[prototype].ability_flags&ability)return true;
+ if(ability_count==24)return false; // Original base executable tests raw flags only.
+ const unsigned faction=prototype/64;if(!faction)return false;
+ const auto& f=Players[faction];
+ for(int i=0;i<f.faction_bonus_count;++i)if(f.faction_bonus_id[i]==15){
+  int id=f.faction_bonus_val1[i];if(id<0 || (unsigned)id>=ability_count){unexpected=true;return false;}
+  if(has_tech(ability_prerequisite[id],(int)faction) && (ability&(1u<<id)))return true;
+ }
+ return false;
+}
 static void setup(const alpha::OriginalWorld& w,const alpha::UnitDefinitions& d,const alpha::Rules& tech,size_t index){
+ ability_count=(unsigned)d.ability_count;for(unsigned a=0;a<ability_count;++a)ability_prerequisite[a]=d.abilities[a].prerequisite;
  world=&w;unexpected=false;const auto* v=w.vehicle(index);Vehs[0]=v?Vehicle{v->x,v->y,v->unit_id,v->home_base_id,v->faction_id,v->morale,v->flags,v->state}:Vehicle{};
  for(size_t i=0;i<512;++i)VehPrototypes[i]=*w.prototype(i);
  for(size_t i=0;i<w.game().base_count;++i)Bases[i].state=(uint32_t)w.base(i)->state_flags;

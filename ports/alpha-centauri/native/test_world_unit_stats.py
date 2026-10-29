@@ -33,6 +33,20 @@ def original_model(rules,data,variant):
   if index<0 or index>=88:return False
   a,b=prereqs[index]
   return a!=-2 and not(b==-2 and a!=-1) and bool(owners[index]&(1<<faction))
+ def effective_flags(unit,p,triad):
+  raw=struct.unpack_from('<I',p,32)[0]
+  if variant=='base' or unit<64:return raw
+  requested=0x800420|(0x8000000 if variant=='expansion' else 0) if triad==2 else 0x800400
+  if raw&requested==requested:return raw
+  rules=definitions[unit//64];count=scalar(rules,FACTION_SCHEMA['MFaction'],'faction_bonus_count')
+  if not(0<=count<=8):raise ValueError('invalid bonus count')
+  for i in range(count):
+   if scalar(rules,FACTION_SCHEMA['MFaction'],'faction_bonus_id',i)!=15:continue
+   ability=scalar(rules,FACTION_SCHEMA['MFaction'],'faction_bonus_val1',i)
+   if not(0<=ability<(24 if variant=='base' else 29)):raise ValueError('invalid FREEABIL')
+   bit=1<<ability
+   if requested&bit and not raw&bit and technology(int(table[f'abilities.{ability}.prerequisite']),unit//64):raw|=bit
+  return raw
  def fac(b,index):return b>=0 and bool(bases[b][0x8c+index//8]&(1<<(index%8)))
  def morale(v,p,riots):
   unit=struct.unpack_from('<h',v,10)[0];faction=v[14];raw=v[36]
@@ -64,7 +78,7 @@ def original_model(rules,data,variant):
   if not(-2147483648<=n<=2147483647):raise ValueError('morale overflow')
   immune=bool(scalar(rules,FACTION_SCHEMA['MFaction'],'rule_flags')&0x8000)
   if immune:n=max(0,n)
-  if riots and home>=0 and (struct.unpack_from('<I',bases[home],48)[0]&2) and not immune:n-=1
+  if riots and home>=0 and (struct.unpack_from('<I',bases[home],48)[0]&2) and not immune:n=clamp(n-1,0,6)
   n+=raw
   if not(-2147483648<=n<=2147483647):raise ValueError('morale overflow')
   return clamp(n,0,6)
@@ -78,7 +92,7 @@ def original_model(rules,data,variant):
   triad=int(table[f'chassis.{p[36]}.triad']);tower=version>=11 and unit==19
   options=(int(project(35,unit//64)) if triad==2 and not tower else 0)+(2*int(project(10,v[14])) if triad==1 and not tower else 0)
   for skip in [False,True]:
-   row=[int(variant=='expansion'),unit,p[36],p[37],p[39],struct.unpack_from('<I',p,32)[0],struct.unpack_from('<b',p,42)[0],road,v[16],options+8*skip,m[1]]
+   row=[int(variant=='expansion'),unit,p[36],p[37],p[39],effective_flags(unit,p,triad),struct.unpack_from('<b',p,42)[0],road,v[16],options+8*skip,m[1]]
    _,speed=calculate(row,table)
    for value in [int(skip),speed,2 if speed>255 else 0]:digest=word(digest,value)
    count+=1
@@ -112,6 +126,7 @@ def world_fixture(version,case,vehicles=9,bases=2,narrow=False):
  fs=0x20cc if version>=11 else 0x20bc;bs=308 if version>=11 else 304;f_schema=FACTION_SCHEMA['Faction' if version>=11 else 'LegacyFactionV10']
  def fset(blob,schema,name,value):
   field=next(f for f in schema['fields'] if f['name']==name);struct.pack_into('<'+FORMATS[field['type']],b,blob+field['offset'],value)
+ for faction in range(8):fset(off['faction_definitions']+faction*0x59c,FACTION_SCHEMA['MFaction'],'faction_bonus_count',0)
  fset(off['factions']+5*fs,f_schema,'SE_morale',[-4,-3,-2,-1,0,1,2,3,4,50][case%10]);fset(off['factions']+5*fs,f_schema,'SE_probe',[-4,0,2,5][case//8%4])
  fset(off['faction_definitions']+5*0x59c,FACTION_SCHEMA['MFaction'],'rule_morale',[-7,-1,0,1,7][case%5]);fset(off['faction_definitions']+5*0x59c,FACTION_SCHEMA['MFaction'],'rule_flags',0x8000 if case&8 else 0)
  for i in range(bases):
@@ -149,6 +164,51 @@ def controls():
    result.append((variant+'-morale-overflow'+str(value),variant,rules,bytes(b),False))
   b=bytearray(data);struct.pack_into('<i',b,pref+0x84+10*4,512);result.append((variant+'-bad-project-reference',variant,rules,bytes(b),False))
   b=bytearray(data);b[off['prototypes']+320*52+37]=255;result.append((variant+'-bad-component',variant,rules,bytes(b),False))
+ # Faction-granted abilities are owned by prototype_id/64, not vehicle faction.
+ for variant,version in [('base',7),('expansion',12)]:
+  available=[5,10,23]+([27] if variant=='expansion' else [])
+  for triad in range(3):
+   for bits in range(1<<len(available)):
+    for ownership in range(4):
+     b=bytearray(world_fixture(version,0));_,o,_=decode(b)
+     fs=0x20cc if version>=11 else 0x20bc;f_schema=FACTION_SCHEMA['Faction' if version>=11 else 'LegacyFactionV10']
+     def setfield(blob,schema,name,value,index=0):
+      field=next(f for f in schema['fields'] if f['name']==name);struct.pack_into('<'+FORMATS[field['type']],b,blob+field['offset']+4*index,value)
+     owner=o['faction_definitions']+5*0x59c;other=o['faction_definitions']+6*0x59c
+     setfield(owner,FACTION_SCHEMA['MFaction'],'faction_bonus_count',len(available))
+     setfield(other,FACTION_SCHEMA['MFaction'],'faction_bonus_count',len(available))
+     for k,ability in enumerate(available):
+      for where,enabled in [(owner,bool(bits&(1<<k))),(other,not bool(bits&(1<<k)))]:
+       setfield(where,FACTION_SCHEMA['MFaction'],'faction_bonus_id',15 if enabled else 0,k)
+       setfield(where,FACTION_SCHEMA['MFaction'],'faction_bonus_val1',ability,k)
+     setfield(other,FACTION_SCHEMA['MFaction'],'rule_morale',0)
+     setfield(other,FACTION_SCHEMA['MFaction'],'rule_flags',0)
+     setfield(o['factions']+6*fs,f_schema,'SE_morale',0);setfield(o['factions']+6*fs,f_schema,'SE_probe',0)
+     b[o['vehicles']+14]=6
+     proto=o['prototypes']+320*52;b[proto+36]=triad
+     struct.pack_into('<I',b,proto+32,[0,0,1<<10,1<<23][ownership])
+     pref=o['preferences'] if version>=11 else o['legacy'];shift=0 if version>=11 else 0x7c
+     b[pref+0x1e0-shift]=[0,1<<5,1<<6,(1<<5)|(1<<6)][ownership]
+     result.append((f'{variant}-freeabil-triad{triad}-bits{bits}-owners{ownership}',variant,rules_fixture(variant),bytes(b),True))
+  # None/Disable prerequisites, duplicates, malformed ids/count and short circuit.
+  for prerequisite in ['None','Disable','T1','T2','T88']:
+   for direct in [False,True]:
+    b=bytearray(world_fixture(version,0));_,o,_=decode(b);owner=o['faction_definitions']+5*0x59c
+    struct.pack_into('<i',b,owner+1292,2)
+    for k in range(2):struct.pack_into('<i',b,owner+1296+4*k,15);struct.pack_into('<i',b,owner+1328+4*k,10)
+    pref=o['preferences'] if version>=11 else o['legacy'];shift=0 if version>=11 else 0x7c
+    b[pref+0x1e0-shift:pref+0x1e0-shift+89]=bytes([1<<5])*89
+    if direct:struct.pack_into('<I',b,o['prototypes']+320*52+32,0x800400)
+    t=sections(rules_fixture(variant));t['ABILITIES'][10][2]=prerequisite
+    result.append((f'{variant}-prerequisite-{prerequisite}-raw{direct}',variant,material(t),bytes(b),True))
+  b=bytearray(world_fixture(version,1));_,o,_=decode(b);owner=o['faction_definitions']+5*0x59c
+  struct.pack_into('<i',b,owner+1292,2)
+  for k,ability in enumerate([10,-1]):struct.pack_into('<i',b,owner+1296+4*k,15);struct.pack_into('<i',b,owner+1328+4*k,ability)
+  result.append((variant+'-grant-then-invalid-transaction',variant,rules_fixture(variant),bytes(b),variant=='base'))
+  for count,ability in [(-1,10),(9,10),(1,-1),(1,24 if variant=='base' else 29)]:
+   b=bytearray(world_fixture(version,0));_,o,_=decode(b);owner=o['faction_definitions']+5*0x59c
+   struct.pack_into('<i',b,owner+1292,count);struct.pack_into('<i',b,owner+1296,15);struct.pack_into('<i',b,owner+1328,ability)
+   result.append((f'{variant}-invalid-freeabil-count{count}-ability{ability}',variant,rules_fixture(variant),bytes(b),variant=='base'))
  return result
 
 def main():

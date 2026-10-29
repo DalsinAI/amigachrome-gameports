@@ -1,0 +1,17 @@
+{
+  "worlds": 1,
+  "accepted": 1,
+  "outputSHA256": "247029f0140a49ec2ad6e82dfe5f46b6ddf2f6cb8de34d2d4ee3b71bc1711fbd",
+  "command": [],
+  "records": [
+    {
+      "name": "proposed-mask-ecology",
+      "accepted": true,
+      "mode": null,
+      "outputSHA256": "247029f0140a49ec2ad6e82dfe5f46b6ddf2f6cb8de34d2d4ee3b71bc1711fbd"
+    }
+  ],
+  "native": "UNRUN",
+  "allWorldAndRulesAndOutputsTransactional": true,
+  "upkeep1PreSpecialistProposalOnly": true
+}

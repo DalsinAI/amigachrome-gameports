@@ -1,0 +1,9 @@
+{
+  "scope": "GenuineAROS68040/FPU nativepsychleaf,notfullturn",
+  "cases": 15356,
+  "bytes": 1474176,
+  "sha256": "b4b15a9bed57ce4c1ba130c9fcece87f9bc4a3e6175d1d6407effa7eb8ce6b16",
+  "binarySHA256": "cdcf02e4c7fd5ea3cdc644324cc909bbc8c400ed5ce0b57bbb950e37e926dedc",
+  "completeOracleMatch": true,
+  "guestReturnCode": 0
+}
