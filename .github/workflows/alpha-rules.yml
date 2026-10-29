@@ -852,3 +852,11 @@ jobs:
         run: python3 ports/alpha-centauri/native/test_map_render.py --out "$RUNNER_TEMP/map-render-host"
       - name: Map overlays, minimap, message log and base window on independent big-endian 68040
         run: python3 ports/alpha-centauri/native/test_map_render.py --out "$RUNNER_TEMP/map-render-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host original research cost controls
+        run: python3 ports/alpha-centauri/native/test_research_cost.py --out "$RUNNER_TEMP/research-cost-host"
+      - name: Big-endian original research cost controls
+        run: python3 ports/alpha-centauri/native/test_research_cost.py --out "$RUNNER_TEMP/research-cost-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
+      - name: Host owned-world research cost bindings
+        run: python3 ports/alpha-centauri/native/test_research_cost_world.py --out "$RUNNER_TEMP/research-cost-world-host"
+      - name: Big-endian owned-world research cost bindings
+        run: python3 ports/alpha-centauri/native/test_research_cost_world.py --out "$RUNNER_TEMP/research-cost-world-m68k" --cc m68k-linux-gnu-g++ --m68k-linux
