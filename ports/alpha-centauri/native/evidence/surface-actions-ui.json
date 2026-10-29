@@ -1,0 +1,201 @@
+{
+  "scope": "Actual native Alpha frontend in FS-UAE/AROS; not AmigaOS3.2 or complete turn/AI qualification",
+  "binarySHA256": "acb5cfc831e7a624c39980e6ee4e7aa943db546ab0da1635002db0f6a10fd842",
+  "sdlModuleSHA256": "2bc785a1528ff814ea019b47b9f02e36c7a606ac43e20437780d508bdb14fc88",
+  "fsUAESHA256": "b6d7199d181a061fe3bbcbca244d861d8924073d8124dc26d082e537f040fe6a",
+  "arosROMSHA256": "490fbef1dfa66ce497c74951abcebddd734b0d6483f30fb01f5fd6a9a36541bb",
+  "arosExtROMSHA256": "42f35aede7725e18b1c426ff0a90067bde7d08a92909811e89337e865a3f2e82",
+  "captureSourceSHA256": "47c21aa66dab1070c37dfd4c709ca64e3fb13d718a085f787da61f5a8f5a7e8f",
+  "inputSourceSHA256": "c6a26ec83d6a8b63d3a9ff0e2a99853cfc0f77b06bbf59c692a3ecefd7a2ce17",
+  "screenMode": {
+    "id": "0x10071400",
+    "width": 1280,
+    "height": 1024,
+    "depth": 16
+  },
+  "sequence": "1700:97:1073741921,2600:25:118,3500:21:114,4300:20:113",
+  "preparedOnly": false,
+  "assetsSHA256": {
+    "alpha.txt": "38399e1d0b967455a9146b1c468b9ec9decda43dd168afd8c3c23e0f46e357d4",
+    "Borehole.SC": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+    "texture.pcx": "3dfa56f9eaa2a13af4fac199a0ac9ff3bf59effed17871a24f15b1b553b7c0ab",
+    "Units.pcx": "1da9f262b4a90c6d26378e1421cc7bcc9dc561491337c1d8c111793a82b8285d",
+    "console.pcx": "5f2ab093fd882d8e43bbdaac5e771376ba2740ed78352bcd4c022f2693fc095a"
+  },
+  "emulatorReturnCode": 0,
+  "emulatorTimedOut": false,
+  "emulatorStoppedAfterGuest": true,
+  "guestReturnCode": 0,
+  "worldDrawObserved": true,
+  "localActions": [
+    "LOCAL ACTION key=57 status=Move: moved (cost 3) dirty=1",
+    "LOCAL ACTION key=57 status=Move: unsupported (cost 0) dirty=1",
+    "LOCAL ACTION key=118 status=Saved PROGDIR:AlphaLocal-3800-0-2586-0 dirty=0",
+    "LOCAL ACTION key=118 status=Saved PROGDIR:AlphaLocal-3800-0-2836-0 dirty=0",
+    "LOCAL ACTION key=114 status=Reload: ok dirty=0",
+    "LOCAL ACTION key=114 status=Reload: ok dirty=0"
+  ],
+  "newCheckpoints": [
+    {
+      "path": "game/AlphaLocal-3800-0-2586-0/session.aclocal",
+      "size": 199314,
+      "sha256": "4689daefa34471171b29fd3fc80a0a66f34a79a884ef6666a04a2758f425e90d"
+    },
+    {
+      "path": "game/AlphaLocal-3800-0-2836-0/session.aclocal",
+      "size": 199314,
+      "sha256": "4689daefa34471171b29fd3fc80a0a66f34a79a884ef6666a04a2758f425e90d"
+    }
+  ],
+  "movementObserved": true,
+  "reloadObserved": true,
+  "framebuffers": [
+    {
+      "path": "fsuae-frame-150.ppm",
+      "sha256": "8b11ff00193956f0e4a34bf6624c4332f0cc1c6ef12588845166617ed4ef5a22"
+    },
+    {
+      "path": "fsuae-frame-250.ppm",
+      "sha256": "8b11ff00193956f0e4a34bf6624c4332f0cc1c6ef12588845166617ed4ef5a22"
+    },
+    {
+      "path": "fsuae-frame-500.ppm",
+      "sha256": "9095adca904a669c108ac69765796df2b636642d5eb425bfde57f4bd6e9918ce"
+    },
+    {
+      "path": "fsuae-frame-750.ppm",
+      "sha256": "d99a40c0a9629f21fe6afd6a39700c4727216fdbf00dc45dff135c986e1343ad"
+    },
+    {
+      "path": "fsuae-frame-900.ppm",
+      "sha256": "e4dcdda4eeffdba935b666e48e2ef0ee86811596e8bc3100396c326db0be3394"
+    },
+    {
+      "path": "fsuae-frame-1000.ppm",
+      "sha256": "e4dcdda4eeffdba935b666e48e2ef0ee86811596e8bc3100396c326db0be3394"
+    },
+    {
+      "path": "fsuae-frame-1250.ppm",
+      "sha256": "e4dcdda4eeffdba935b666e48e2ef0ee86811596e8bc3100396c326db0be3394"
+    },
+    {
+      "path": "fsuae-frame-1500.ppm",
+      "sha256": "e4dcdda4eeffdba935b666e48e2ef0ee86811596e8bc3100396c326db0be3394"
+    },
+    {
+      "path": "fsuae-frame-1750.ppm",
+      "sha256": "e4dcdda4eeffdba935b666e48e2ef0ee86811596e8bc3100396c326db0be3394"
+    },
+    {
+      "path": "fsuae-frame-2000.ppm",
+      "sha256": "4dbc3df8ca467a265bbbfc568d22b43b669bb6447096942bd2a4d61af3dd5c10"
+    },
+    {
+      "path": "fsuae-frame-2250.ppm",
+      "sha256": "28c61b64bb640df7745af968b23803b7a9307a6b0df6a778887b2a453a66b119"
+    },
+    {
+      "path": "fsuae-frame-2500.ppm",
+      "sha256": "28c61b64bb640df7745af968b23803b7a9307a6b0df6a778887b2a453a66b119"
+    },
+    {
+      "path": "fsuae-frame-2750.ppm",
+      "sha256": "28c61b64bb640df7745af968b23803b7a9307a6b0df6a778887b2a453a66b119"
+    },
+    {
+      "path": "fsuae-frame-3000.ppm",
+      "sha256": "311f792348d42415d9c2750571e336816ea8c3225d0b01d4dd342087801e5476"
+    },
+    {
+      "path": "fsuae-frame-3250.ppm",
+      "sha256": "52a8a45b4c5f8f77d1c8930ae6b41ba1f213965bc94c913ffccbe4c4af03af6e"
+    },
+    {
+      "path": "fsuae-frame-3500.ppm",
+      "sha256": "52a8a45b4c5f8f77d1c8930ae6b41ba1f213965bc94c913ffccbe4c4af03af6e"
+    },
+    {
+      "path": "fsuae-frame-3750.ppm",
+      "sha256": "6a1252187281f5f430c311352e947745e97f2adf4a054f973f0e2eb41bd47bb3"
+    },
+    {
+      "path": "fsuae-frame-4000.ppm",
+      "sha256": "19615e79527bb7ba9fe8653b92d5ae4cc824b5fe4fc0012a7452fbde42533a76"
+    },
+    {
+      "path": "fsuae-frame-4250.ppm",
+      "sha256": "6a1252187281f5f430c311352e947745e97f2adf4a054f973f0e2eb41bd47bb3"
+    }
+  ],
+  "guestWorldSmokePassed": true,
+  "independentOracle": {
+    "scope": "RealnativeUIemptyTransportFoil19 move/save/reload;notturncompletion",
+    "vehicle": 19,
+    "from": [
+      18,
+      36
+    ],
+    "to": [
+      19,
+      35
+    ],
+    "price": 3,
+    "beforeMovesSpent": 0,
+    "afterMovesSpent": 3,
+    "opaqueBytesPreserved": 199278,
+    "changedPayloadOffsets": [
+      119454,
+      119460,
+      120516,
+      184314,
+      184316,
+      184318,
+      184354,
+      184355
+    ],
+    "checkpoints": [
+      {
+        "path": "game/AlphaLocal-3800-0-2586-0/session.aclocal",
+        "bytes": 199314,
+        "sha256": "4689daefa34471171b29fd3fc80a0a66f34a79a884ef6666a04a2758f425e90d",
+        "independentWholeCheckpointOracleMatch": true
+      },
+      {
+        "path": "game/AlphaLocal-3800-0-2836-0/session.aclocal",
+        "bytes": 199314,
+        "sha256": "4689daefa34471171b29fd3fc80a0a66f34a79a884ef6666a04a2758f425e90d",
+        "independentWholeCheckpointOracleMatch": true
+      }
+    ],
+    "originalScenarioSHA256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+    "afterPayloadSHA256": "7f5ac964e376d55838cf28eed144acb03279d9ed06f7e83ba4b78d903b8324cb",
+    "expectedCheckpointSHA256": "4689daefa34471171b29fd3fc80a0a66f34a79a884ef6666a04a2758f425e90d",
+    "screenshot": "fsuae-frame-4250.png",
+    "screenshotSHA256": "8083035251bd6c7d36a9c9b8b2e85d1831c49bae909983a7fe4336daf93ff161"
+  },
+  "guestLog": "INFANTRY PROFILE ready=1 base-human-basic-static; tile-foot anchor; no original viewport/shadows\nUI FONT fallback=Arial-Narrow13/title16; original Arial unavailable\nDRAW selected=19 camera=18,36 zoom=2\nLOCAL ACTION key=57 status=Move: moved (cost 3) dirty=1\nDRAW selected=19 camera=19,35 zoom=2\nLOCAL ACTION key=57 status=Move: unsupported (cost 0) dirty=1\nDRAW selected=19 camera=19,35 zoom=2\nLOCAL ACTION key=118 status=Saved PROGDIR:AlphaLocal-3800-0-2586-0 dirty=0\nDRAW selected=19 camera=19,35 zoom=2\nLOCAL ACTION key=118 status=Saved PROGDIR:AlphaLocal-3800-0-2836-0 dirty=0\nDRAW selected=19 camera=19,35 zoom=2\nLOCAL ACTION key=114 status=Reload: ok dirty=0\nDRAW selected=19 camera=19,35 zoom=2\nLOCAL ACTION key=114 status=Reload: ok dirty=0\nDRAW selected=19 camera=19,35 zoom=2\nORIGINAL VIEW RC 0\nWORLD_RC 0\n",
+  "strictBuilds": [
+    {
+      "name": "alpha-sea-world-final",
+      "bytes": 940236,
+      "sha256": "acb5cfc831e7a624c39980e6ee4e7aa943db546ab0da1635002db0f6a10fd842"
+    },
+    {
+      "name": "alpha-sea-menu-final",
+      "bytes": 949464,
+      "sha256": "7cf2d702da66bf77bd6f8dab212e10212ff059107b71f50d0321ff8be51bf2a8"
+    },
+    {
+      "name": "alpha-sea-ordinary-menu",
+      "bytes": 824468,
+      "sha256": "e17068e121956177ba2c1b46f4994a45f8380d15254835e8a5bb9ea5f523e756"
+    }
+  ],
+  "regressions": {
+    "localPlayerChecks": 145,
+    "localPlayerCheckpointSHA256": "843665734047b513c4900a2fae0dc3acc714d3ad135ca3b55537c30e1793661a",
+    "oldClearLandCases": 46,
+    "localActionCases": 43,
+    "localActionAggregateSHA256": "faf47cf990a5135a9cd505e8353e5af7f167c0465ce3d8310c6c73709cabf38a"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "cases": 6015,
+  "bytes": 438458,
+  "sha256": "bfedd5aba014d976270eb613ddad8c1ae15100dd1b64f0f9798d88c234da18ff",
+  "binarySHA256": "6bda3790bd3d2709ee38d6dcf9a36d1c96edfcc147574b68d236369ba56fee3a",
+  "inputSHA256": "07834ad0b133b69741fdfa37b39a37eeea602b298cb08f6bdfeeeb00ea454630",
+  "completeOracleMatch": true,
+  "guestReturnCode": 0
+}

@@ -1,0 +1,77 @@
+{
+  "scope": "Read-only ordinary nonmissile LAND retreat destination; no action/authority/relocation/UI/turn qualification.",
+  "host": {
+    "worlds": 38,
+    "queries": 5472,
+    "outputSHA256": "7a0275c65b42d1665db9d03326245086b25fedac6eac7b82a640c1c7f5874f14",
+    "binarySHA256": "34d35c7d13582d4d3205fed712eeadbae4af9bf6a3f4470a75b44a700e0d5433"
+  },
+  "independent68040": {
+    "worlds": 38,
+    "queries": 5472,
+    "outputSHA256": "7a0275c65b42d1665db9d03326245086b25fedac6eac7b82a640c1c7f5874f14",
+    "binarySHA256": "eb1e596c4a0fc2a4e46f752c24b8c9f71633482f9b40554231df445af063aa8a"
+  },
+  "counts": {
+    "rejected": 1440,
+    "accepted": 4032,
+    "none": 2752,
+    "selected": 1280
+  },
+  "eligibilityMaskUnion": 255,
+  "guardsPerWorld": 19,
+  "sdkSHA256": "3fcad59580b2dc78ff40c51dc7bcdd80410f720841a71a0869d7d21477447921",
+  "sdk": "Two final normal SDK builds byte identical; AmigaOS execution UNRUN",
+  "original": [
+    {
+      "edition": "base",
+      "contexts": 2016,
+      "worlds": 14,
+      "entry": "0x51d577",
+      "stop": "0x51d788",
+      "originalPrefixBytes": 529,
+      "prefixSHA256": "08b8b6185702b2807e6329ccc1be5346fa1d834da9f55c119f997694f3eb1af1",
+      "observerJumps": 1,
+      "helperPatches": 0,
+      "mappedGlobalsUnchangedEach": 851968,
+      "outputSHA256": "98ca2ff8f686f90f5ceb3033af1b1e50515757a600b62cd31a2203f0258bb254",
+      "scope": "Actual unchanged destination enumeration prefix with complete real ZOC/veh_at/goody_at; supplied valid synthetic World and frame facts. Stop before selection continuation/stack relocation. Compare direction only; mask and reconstructed coordinates independently tested on host/BE, not original output."
+    },
+    {
+      "edition": "expansion",
+      "contexts": 2016,
+      "worlds": 14,
+      "entry": "0x5093f1",
+      "stop": "0x509612",
+      "originalPrefixBytes": 545,
+      "prefixSHA256": "b0cacea69fdc8fe0fad8683c491ffbcb5a761e482345d14d5602bc33b3938bf9",
+      "observerJumps": 1,
+      "helperPatches": 0,
+      "mappedGlobalsUnchangedEach": 851968,
+      "outputSHA256": "6e49b145d79783b54b6c3bf8d5d9d8974ce83dd2d8440855e4cfe95437193e2f",
+      "scope": "Actual unchanged destination enumeration prefix with complete real ZOC/veh_at/goody_at; supplied valid synthetic World and frame facts. Stop before selection continuation/stack relocation. Compare direction only; mask and reconstructed coordinates independently tested on host/BE, not original output."
+    }
+  ],
+  "parentIdentity": {
+    "parent": "c35468b4803b0a22fa034fc319b391476e4fa172",
+    "allParentProductionFilesUnchanged": true,
+    "parentWorkflowCommands": 287,
+    "finalWorkflowCommands": 289,
+    "added": [
+      "run: python3 ports/alpha-centauri/native/test_retreat_destination.py --out \"$RUNNER_TEMP/retreat-destination-host\"",
+      "run: python3 ports/alpha-centauri/native/test_retreat_destination.py --out \"$RUNNER_TEMP/retreat-destination-m68k\" --cc m68k-linux-gnu-g++ --m68k-linux"
+    ],
+    "scope": "Source identity/workflow union proof; unchanged inherited tests not wholesale rerun."
+  },
+  "native": "UNRUN",
+  "remoteFinalHeadCI": "UNRUN",
+  "publication": "LOCAL UNPUBLISHED; source-export approval pending",
+  "limitations": [
+    "Map flat raw word restricted0/1 pending shared importer bit0 correction.",
+    "Source-original comparison observes direction only; host/BE independent model additionally validates mask and reconstructed coordinates.",
+    "Original supplied controlled World/frame facts, no startup/Windows imports/fake helper callbacks, one observer jump per edition before continuation.",
+    "No combat threshold/countdown, stack relocation, casualty, RNG authority/persistence, events/AI/turns.",
+    "Final normal SDK builds byte-identical; no AmigaOS execution.",
+    "Unchanged inherited workflow commands retained, not wholesale rerun."
+  ]
+}

@@ -1,0 +1,23 @@
+# Original existing-design proposal returns
+
+This read-only owned stage closes the complete original `propose_proto` early-return domain for a human faction with explicitly observed normal consideration mode. It evaluates the actual retired-design ring before the scout shortcut; scans predefined and the selected faction's custom designs in original order; respects original technology availability and obsolete-unused custom exclusion; distinguishes exact duplicates from compatible reuse. ID64 belongs to the custom domain.
+
+A reused design clears only the selected faction's obsolete bit and sets prototyped bit4 only for requested plan-2. Exact duplicate and retired-history refusal return-1 unchanged; scout shortcut returns2 unchanged. Reuse can select a predefined record, including its actual flag changes. Requested raw abilities must contain existing abilities and satisfy the original0x44ae1b difference mask. No granted ability bits are invented. Component comparison can visit a psi helper before the later human guard: such reached unsupported strength paths explicitly reject.
+
+Runtime observations are data, never evidence of trusted session ownership. Normal consideration mode must be supplied explicitly; SMAX runtime ExpansionEnabled must be observed independently of save edition. AI/design-consideration modes fail closed. No multiplayer state is guessed: these accepted paths return before original retirement/network/allocation branches and never query multiplayer. Snapshot human flags select the source branch, not player authority.
+
+Failure preserves the complete output and all owned/raw World, rules, definitions and request bytes; output overlapping any input range rejects. Allocation-needed, unsupported runtime/psi strength, and invalid input are typed failures rather than fake original returns. No World mutation, naming, slot allocation, award, presentation, turn or session control is exposed.
+
+## Controls
+
+`python3 test_existing_prototype_reuse.py --out OUTPUT` executes146 independently modelled synthetic worlds:42 genuine reuse results,8 retired,8 scout,8 duplicate,34 allocation-held,20 runtime-held,8 strength-held and18 structural guards. Successful probes also check12 alias ranges and failed-output preservation; all probes hash complete inputs before/after. Host ASan/UBSan and actual independent Linux68040/QEMU produce identical SHA256 `1f42575cef74daf36fed65ccde103f4e9f681e63c6ab16142f1d17ad7ff8b22a`.
+
+Private controls execute complete unchanged original proposal functions through real returns, with actual `is_bunged` and `has_tech` helpers as reached:24 cases per edition, including reuse and plan-2 flag/obsolete changes. They compare return values and all720896 runtime-global bytes. Zero patches, observation jumps, fake callbacks, name/retire/prune replacements, imports or PE startup. Base proposal0x597390/2524bytes and SMAX0x580860/2312bytes; trace76/80 blocks remain entirely within the three genuine helpers plus private driver. This qualifies only the supported returning domain, not unexecuted allocation branches.
+
+The initial extra-ability test fixture used masked bit0x400 and therefore did not exercise reuse. Replacing it with unmasked bit0x40 exposed a fixture oracle error: a technology0 owner bit had not been cleared. Both test architectures correctly selected the earlier predefined record. The fixture now explicitly clears that single owner bit. Production code was unchanged; failed host-2/be-2 proof is retained privately. Final reference script uses the final146-case receipt (earlier9-case catalogs exercised only non-reuse returns).
+
+`CXX=/normal/sdk/bin/m68k-amigaos-g++ sh build_existing_prototype_reuse_probe.sh OUTPUT` builds the normal SDK probe; native execution is UNRUN. All parent workflow commands remain byte-identical. No original assets or proprietary code bytes are public fixtures.
+
+## Remaining mandatory new-design path
+
+Original automatic `name_proto` is called when discovery passes a null name. Inspection finds actual localized Strings storage, component noun grammar/short forms, special ability prefixes, reactor choices, pre-existing design comparisons, and collision/suffix scanning over512 designs. It is not a generic fabricated name and remains unexecuted here. Runtime consideration fields, slot scores, retirement when active, construction, naming, pruning and same-group obsolete production replacement must remain ordered. Outer discovery reactor upgrades, Secrets and recursive sharing effects, callbacks and persistence remain mandatory. Neither this stage nor its construction/retirement ancestors constitute a complete discovery award.

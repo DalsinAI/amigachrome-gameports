@@ -1,0 +1,101 @@
+{
+  "scope": "Actual native Alpha frontend in FS-UAE/AROS; not AmigaOS3.2 or complete turn/AI qualification",
+  "binarySHA256": "60ab6bb98c6734400575b1717d60de5b92ddd026fc842775405e3bef4bdf1d3e",
+  "sdlModuleSHA256": "2bc785a1528ff814ea019b47b9f02e36c7a606ac43e20437780d508bdb14fc88",
+  "fsUAESHA256": "b6d7199d181a061fe3bbcbca244d861d8924073d8124dc26d082e537f040fe6a",
+  "arosROMSHA256": "490fbef1dfa66ce497c74951abcebddd734b0d6483f30fb01f5fd6a9a36541bb",
+  "arosExtROMSHA256": "42f35aede7725e18b1c426ff0a90067bde7d08a92909811e89337e865a3f2e82",
+  "captureSourceSHA256": "47c21aa66dab1070c37dfd4c709ca64e3fb13d718a085f787da61f5a8f5a7e8f",
+  "inputSourceSHA256": "c6a26ec83d6a8b63d3a9ff0e2a99853cfc0f77b06bbf59c692a3ecefd7a2ce17",
+  "screenMode": {
+    "id": "0x10071400",
+    "width": 1280,
+    "height": 1024,
+    "depth": 16
+  },
+  "sequence": "1700:9:102,2900:41:27,3300:20:113",
+  "preparedOnly": false,
+  "assetsSHA256": {
+    "alpha.txt": "38399e1d0b967455a9146b1c468b9ec9decda43dd168afd8c3c23e0f46e357d4",
+    "Borehole.SC": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+    "texture.pcx": "3dfa56f9eaa2a13af4fac199a0ac9ff3bf59effed17871a24f15b1b553b7c0ab",
+    "Units.pcx": "1da9f262b4a90c6d26378e1421cc7bcc9dc561491337c1d8c111793a82b8285d",
+    "console.pcx": "5f2ab093fd882d8e43bbdaac5e771376ba2740ed78352bcd4c022f2693fc095a"
+  },
+  "emulatorReturnCode": -11,
+  "emulatorTimedOut": false,
+  "emulatorStoppedAfterGuest": true,
+  "guestReturnCode": 0,
+  "worldDrawObserved": true,
+  "localActions": [
+    "LOCAL ACTION key=102 status=Base resource forecast. F recalculates; ESC closes. Resources have not been added. dirty=0",
+    "LOCAL ACTION key=102 status=Base resource forecast. F recalculates; ESC closes. Resources have not been added. dirty=0",
+    "LOCAL ACTION key=27 status=Resource forecast closed. F opens it again. dirty=0"
+  ],
+  "newCheckpoints": [],
+  "movementObserved": false,
+  "reloadObserved": false,
+  "framebuffers": [
+    {
+      "path": "fsuae-frame-150.ppm",
+      "sha256": "8b11ff00193956f0e4a34bf6624c4332f0cc1c6ef12588845166617ed4ef5a22"
+    },
+    {
+      "path": "fsuae-frame-250.ppm",
+      "sha256": "8b11ff00193956f0e4a34bf6624c4332f0cc1c6ef12588845166617ed4ef5a22"
+    },
+    {
+      "path": "fsuae-frame-500.ppm",
+      "sha256": "c580c998fe57fc7ed410dccb54eb5dcc303f844ed870ae0632f35d26a670db52"
+    },
+    {
+      "path": "fsuae-frame-750.ppm",
+      "sha256": "e4841ea2be266f97bc959b0f6628f854d3bbc56726b99f75beac380025339b96"
+    },
+    {
+      "path": "fsuae-frame-900.ppm",
+      "sha256": "ff0e7ff984c00384732aaedb2d0bab09b606969ca2186d0f6938f2574932ce35"
+    },
+    {
+      "path": "fsuae-frame-1000.ppm",
+      "sha256": "ff0e7ff984c00384732aaedb2d0bab09b606969ca2186d0f6938f2574932ce35"
+    },
+    {
+      "path": "fsuae-frame-1250.ppm",
+      "sha256": "ff0e7ff984c00384732aaedb2d0bab09b606969ca2186d0f6938f2574932ce35"
+    },
+    {
+      "path": "fsuae-frame-1500.ppm",
+      "sha256": "ff0e7ff984c00384732aaedb2d0bab09b606969ca2186d0f6938f2574932ce35"
+    },
+    {
+      "path": "fsuae-frame-1750.ppm",
+      "sha256": "ff0e7ff984c00384732aaedb2d0bab09b606969ca2186d0f6938f2574932ce35"
+    },
+    {
+      "path": "fsuae-frame-2000.ppm",
+      "sha256": "77d39ed83c9e426e631a0ad068efae0b2773642baa315b740d9c4f34a64ea19a"
+    },
+    {
+      "path": "fsuae-frame-2250.ppm",
+      "sha256": "77d39ed83c9e426e631a0ad068efae0b2773642baa315b740d9c4f34a64ea19a"
+    },
+    {
+      "path": "fsuae-frame-2500.ppm",
+      "sha256": "77d39ed83c9e426e631a0ad068efae0b2773642baa315b740d9c4f34a64ea19a"
+    },
+    {
+      "path": "fsuae-frame-2750.ppm",
+      "sha256": "77d39ed83c9e426e631a0ad068efae0b2773642baa315b740d9c4f34a64ea19a"
+    },
+    {
+      "path": "fsuae-frame-3000.ppm",
+      "sha256": "77d39ed83c9e426e631a0ad068efae0b2773642baa315b740d9c4f34a64ea19a"
+    },
+    {
+      "path": "fsuae-frame-3250.ppm",
+      "sha256": "949aa45329fca1b6907a923e8fa2d98ec564158a626faa5ae2df701923cf11d0"
+    }
+  ],
+  "guestWorldSmokePassed": true
+}

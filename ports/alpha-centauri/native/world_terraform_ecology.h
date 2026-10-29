@@ -24,5 +24,9 @@ struct TerraformEcologyResult {
  */
 TerraformEcologyError world_terraform_ecology(const OriginalWorld&,size_t base,
  TerraformEcologyResult&);
+/* Same current physical facts for a proposed first21 worker mask. No forcing
+ * centre, imported cache, mutation or assignment authority. Atomic output. */
+TerraformEcologyError world_terraform_ecology_for_workers(const OriginalWorld&,
+ size_t base,uint32_t worked_tiles,TerraformEcologyResult&);
 }
 #endif

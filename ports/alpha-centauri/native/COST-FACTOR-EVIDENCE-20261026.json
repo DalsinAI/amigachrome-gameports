@@ -1,0 +1,32 @@
+{
+  "leaf_cases": 40350,
+  "world_cases": 49,
+  "host_validation": "Strict warnings +ASan/UBSan; exact recovered source-body and independent integer/wire oracles",
+  "native_environment": "FS-UAE3.2.35 / AROS20261023 / 68040-FPU, separate folder disks; documented local libnix FPU40 patch",
+  "native_leaf_rc": 0,
+  "native_world_rc": 0,
+  "native_leaf_bytes": 322800,
+  "native_leaf_sha256": "3ec1d3a39c75872304cfb682eab9a22598b294b4d5b5f562d06822eace48df7c",
+  "native_world_report_bytes": 1320,
+  "native_world_report_sha256": "982a826bd664a6b69aae421da8dba6fd5c086784323ce98976129645dea2ff27",
+  "native_binary_sha256": "56f463d2b524f19e7c524365e305264fe8a5b592f06f205b8c7903ffa149258d",
+  "alpha_txt_sha256": "38399e1d0b967455a9146b1c468b9ec9decda43dd168afd8c3c23e0f46e357d4",
+  "borehole_sc_sha256": "fb6227852bf332e47b0e6eb80140d1e881844819b5196df1ee957d8f2eddfd1d",
+  "original_scenario_results": [
+    {
+      "base": 9,
+      "mineral_factor": 8,
+      "nutrient_factor": 8
+    },
+    {
+      "base": 10,
+      "mineral_factor": 8,
+      "nutrient_factor": 8
+    }
+  ],
+  "scope": [
+    "Complete original cost_factor leaf with explicit dependency facts",
+    "Connected human path fully derived from owned world and BasicRules; AI adapter unsupported",
+    "Original-game binary parity and AmigaOS3.2.3 execution unrun; no production/turn mutation"
+  ]
+}

@@ -1,0 +1,381 @@
+{
+  "scope": "Genuine FS-UAE/AROS 68040/FPU fresh population proposals and recomputation; no full turn claim",
+  "binarySHA256": "40f2f1cff2985db646b4a50dcf934a2183002fffc22c71bdef312bcba4811597",
+  "cases": [
+    {
+      "name": "begin-0",
+      "index": 0,
+      "bytes": 188,
+      "sha256": "a37fbe7a9c11242647f0a449c7a232e6c0fb8fa3cb8e1342b0177ffcf81a21b3",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "finish-0",
+      "index": 1,
+      "bytes": 188,
+      "sha256": "bd77cdf0afd91f45185e5c394c044400d7ab79c398ef7926d43c5adb3eedfd08",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "stale-world-0",
+      "index": 2,
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "begin-1",
+      "index": 3,
+      "bytes": 192,
+      "sha256": "2d796aba03f67fcfec564b8c8579f0f253b077985d5140cbff591f3807730b77",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "finish-1",
+      "index": 4,
+      "bytes": 192,
+      "sha256": "d1edbc08d3311c0fc41beebe09f7da2e64eef5e7c5c1f43a9865321b3733544d",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "stale-world-1",
+      "index": 5,
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "begin-20",
+      "index": 6,
+      "bytes": 192,
+      "sha256": "60f8957fa1544fcdd4370d08d2ffc8df42d3d506d1a6594605e073026b63c715",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "begin-25",
+      "index": 7,
+      "bytes": 190,
+      "sha256": "98556078371003f85b3c9c083b7920fc4d60b9c7a4b268a5e91b6ec421baf85e",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "begin-50",
+      "index": 8,
+      "bytes": 184,
+      "sha256": "2aad5707acded85b65ed4a0ca386e9e63e0e641ee184c3b0ebd011c295915b39",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "finish-50",
+      "index": 9,
+      "bytes": 184,
+      "sha256": "cafc378074077e5bb09e41e267b129e2e2fb813e2338729d2709b8d116b57b96",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "stale-world-50",
+      "index": 10,
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "begin-55",
+      "index": 11,
+      "bytes": 189,
+      "sha256": "474423178db62cb137bbe18fb313badd2cb3e929d3e8e795dceb2de2dccf4c46",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "begin-60",
+      "index": 12,
+      "bytes": 187,
+      "sha256": "326def26bd806139f9eb25123d5ac3ed472d919c226b87df6d096bd80b5d016e",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "finish-60",
+      "index": 13,
+      "bytes": 187,
+      "sha256": "7b32a736d14817fa95649e9480385e1d473d08f85b4188605d899e50cfe2b94f",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "stale-world-60",
+      "index": 14,
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "begin-70",
+      "index": 15,
+      "bytes": 190,
+      "sha256": "578bcd9038e0085ad1dcef2bad20cd32958de3eac087984c65673ed5a1666c36",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "finish-70",
+      "index": 16,
+      "bytes": 189,
+      "sha256": "d3f32265c51bc293170f1a13536b81cb1591aab01c2655c427954b473fd48244",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "stale-world-70",
+      "index": 17,
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "begin-100",
+      "index": 18,
+      "bytes": 185,
+      "sha256": "5a77d1dd40c495a99848b24029909ac7194a1894125591f2ab599d65978b6ac3",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "convoy-starvation-False",
+      "index": 19,
+      "bytes": 191,
+      "sha256": "00590c04a1050217c9a86ea38b627034350b309f81abe772e4f25362d7d8b930",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "convoy-starvation-True",
+      "index": 20,
+      "bytes": 191,
+      "sha256": "63cf40fea063bf310f7eeadb3665580a3f0a5b57e264592c74ea6867579c7678",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "actual-Boreholes-9",
+      "index": 21,
+      "bytes": 188,
+      "sha256": "dbeb3308aaa49764e142e7199c1482adc15479f970f7766222ea6c753cf6982c",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    },
+    {
+      "name": "actual-Boreholes-10",
+      "index": 22,
+      "bytes": 188,
+      "sha256": "02c1ff06d751c4666327b19a9c2fbf9334385a84d1e74d936b5a2f85ee170ec3",
+      "completeOracleMatch": true,
+      "guestReturnCode": 0
+    }
+  ],
+  "count": 23,
+  "finalProbeDifference": "Final expanded-alias-guard HUNK also executed: all23 complete outputs match independent oracle and each guestRC0; exact SHA5c0afebcf3403cb2b81d43928a9c785f3268183899b8fca613dae3e077e301fc.",
+  "finalProbe": {
+    "populationBinarySHA256": "5c0afebcf3403cb2b81d43928a9c785f3268183899b8fca613dae3e077e301fc",
+    "populationCases": [
+      {
+        "name": "begin-0",
+        "index": 0,
+        "bytes": 188,
+        "sha256": "a37fbe7a9c11242647f0a449c7a232e6c0fb8fa3cb8e1342b0177ffcf81a21b3",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "finish-0",
+        "index": 1,
+        "bytes": 188,
+        "sha256": "bd77cdf0afd91f45185e5c394c044400d7ab79c398ef7926d43c5adb3eedfd08",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "stale-world-0",
+        "index": 2,
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "begin-1",
+        "index": 3,
+        "bytes": 192,
+        "sha256": "2d796aba03f67fcfec564b8c8579f0f253b077985d5140cbff591f3807730b77",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "finish-1",
+        "index": 4,
+        "bytes": 192,
+        "sha256": "d1edbc08d3311c0fc41beebe09f7da2e64eef5e7c5c1f43a9865321b3733544d",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "stale-world-1",
+        "index": 5,
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "begin-20",
+        "index": 6,
+        "bytes": 192,
+        "sha256": "60f8957fa1544fcdd4370d08d2ffc8df42d3d506d1a6594605e073026b63c715",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "begin-25",
+        "index": 7,
+        "bytes": 190,
+        "sha256": "98556078371003f85b3c9c083b7920fc4d60b9c7a4b268a5e91b6ec421baf85e",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "begin-50",
+        "index": 8,
+        "bytes": 184,
+        "sha256": "2aad5707acded85b65ed4a0ca386e9e63e0e641ee184c3b0ebd011c295915b39",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "finish-50",
+        "index": 9,
+        "bytes": 184,
+        "sha256": "cafc378074077e5bb09e41e267b129e2e2fb813e2338729d2709b8d116b57b96",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "stale-world-50",
+        "index": 10,
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "begin-55",
+        "index": 11,
+        "bytes": 189,
+        "sha256": "474423178db62cb137bbe18fb313badd2cb3e929d3e8e795dceb2de2dccf4c46",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "begin-60",
+        "index": 12,
+        "bytes": 187,
+        "sha256": "326def26bd806139f9eb25123d5ac3ed472d919c226b87df6d096bd80b5d016e",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "finish-60",
+        "index": 13,
+        "bytes": 187,
+        "sha256": "7b32a736d14817fa95649e9480385e1d473d08f85b4188605d899e50cfe2b94f",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "stale-world-60",
+        "index": 14,
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "begin-70",
+        "index": 15,
+        "bytes": 190,
+        "sha256": "578bcd9038e0085ad1dcef2bad20cd32958de3eac087984c65673ed5a1666c36",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "finish-70",
+        "index": 16,
+        "bytes": 189,
+        "sha256": "d3f32265c51bc293170f1a13536b81cb1591aab01c2655c427954b473fd48244",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "stale-world-70",
+        "index": 17,
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "begin-100",
+        "index": 18,
+        "bytes": 185,
+        "sha256": "5a77d1dd40c495a99848b24029909ac7194a1894125591f2ab599d65978b6ac3",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "convoy-starvation-False",
+        "index": 19,
+        "bytes": 191,
+        "sha256": "00590c04a1050217c9a86ea38b627034350b309f81abe772e4f25362d7d8b930",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "convoy-starvation-True",
+        "index": 20,
+        "bytes": 191,
+        "sha256": "63cf40fea063bf310f7eeadb3665580a3f0a5b57e264592c74ea6867579c7678",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "actual-Boreholes-9",
+        "index": 21,
+        "bytes": 188,
+        "sha256": "dbeb3308aaa49764e142e7199c1482adc15479f970f7766222ea6c753cf6982c",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      },
+      {
+        "name": "actual-Boreholes-10",
+        "index": 22,
+        "bytes": 188,
+        "sha256": "02c1ff06d751c4666327b19a9c2fbf9334385a84d1e74d936b5a2f85ee170ec3",
+        "completeOracleMatch": true,
+        "guestReturnCode": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "cases": 8142,
+  "bytes": 521088,
+  "sha256": "7a74deea772489c3dc60353096076401ca3633e57a0b9cb13b06b964dba4b9ea",
+  "command": [
+    "c++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "-fno-sanitize-recover=all",
+    "-no-pie",
+    "/workspace/scratch/3fb17fb3c5da/alpha-energy-next/ports/alpha-centauri/native/research_progress.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-energy-next/ports/alpha-centauri/native/research_cost_reference.cpp",
+    "/workspace/scratch/3fb17fb3c5da/alpha-energy-next/ports/alpha-centauri/native/research_progress_probe.cpp",
+    "-o",
+    "/workspace/scratch/3fb17fb3c5da/research-progress-test-1/research-progress-probe"
+  ],
+  "compiledOriginalCostReference": true,
+  "native": "UNRUN"
+}

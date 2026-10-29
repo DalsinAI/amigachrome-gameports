@@ -9,13 +9,19 @@ bool aliases(const OriginalWorld&w,const void*out,size_t n){
  if(overlap(out,n,&w,sizeof w))return true;
  if(!w.loaded())return false;
  const auto&g=w.game();
- return overlap(out,n,w.original_bytes(),w.original_size()) || overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) || overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) || overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) || overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype)) || overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState)) || overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
+ return w.overlaps_byte_storage(out,n) || overlap(out,n,w.tile(0),(size_t)g.map.info.tile_count*sizeof(OriginalMapTile)) || overlap(out,n,w.vehicle(0),(size_t)g.vehicle_count*sizeof(OriginalVehicle)) || overlap(out,n,w.base(0),(size_t)g.base_count*sizeof(OriginalBase)) || overlap(out,n,w.prototype(0),512*sizeof(OriginalPrototype)) || overlap(out,n,w.faction(0),8*sizeof(OriginalFactionState)) || overlap(out,n,w.faction_definition(0),8*sizeof(OriginalFactionDefinition));
 }
 unsigned popcount(uint32_t n){unsigned count=0;while(n){n&=n-1;++count;}return count;}
 }
 TerraformEcologyError world_terraform_ecology(const OriginalWorld&w,size_t id,TerraformEcologyResult&output){
  if(aliases(w,&output,sizeof output))return TerraformEcologyError::bad_buffer;
  if(!w.loaded())return TerraformEcologyError::bad_state;
+ const auto*base=w.base(id);if(!base)return TerraformEcologyError::bad_state;
+ return world_terraform_ecology_for_workers(w,id,(uint32_t)base->worked_tiles&0x1fffffu,output);
+}
+TerraformEcologyError world_terraform_ecology_for_workers(const OriginalWorld&w,size_t id,uint32_t worked,TerraformEcologyResult&output){
+ if(aliases(w,&output,sizeof output))return TerraformEcologyError::bad_buffer;
+ if(!w.loaded()||(worked&~0x1fffffu))return TerraformEcologyError::bad_state;
  const auto&g=w.game();const auto&m=g.map.info;
  if(m.width<2||m.width>4096||(m.width&1u)||!m.height||m.height>4096||m.tile_count!=(m.width/2)*m.height||g.base_count>512 || (uint64_t)m.tile_count*sizeof(OriginalMapTile)>w.memory_bytes() || (uint64_t)g.base_count*sizeof(OriginalBase)>w.memory_bytes())return TerraformEcologyError::bad_state;
  const auto*base=w.base(id);if(!base)return TerraformEcologyError::bad_state;
@@ -30,7 +36,7 @@ TerraformEcologyError world_terraform_ecology(const OriginalWorld&w,size_t id,Te
   const auto*tile=w.tile(tile_id);if(!tile)return TerraformEcologyError::bad_state;
   next.valid_tiles|=1u<<i;const uint32_t items=tile->items;
   int32_t damage=(int32_t)popcount(items&0x1c8805cu);
-  if((uint32_t)base->worked_tiles&(1u<<i))damage*=2;
+  if(worked&(1u<<i))damage*=2;
   damage+=((items&0x1000000u)?8:0)+((items&0x800000u)?6:0)+((items&0x400000u)?4:0)-((items&0x200000u)?1:0);
   if(tree&&hybrid)damage=0;
   if(tree||hybrid)damage/=2;
