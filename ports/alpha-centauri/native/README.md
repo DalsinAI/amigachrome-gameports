@@ -1103,3 +1103,11 @@ valid directed-human assignment with explicit transient stage facts. Unsupported
 allocation, specialist and fungus branches reject. The owned world remains
 unchanged; no upkeep or player action is added. See
 [WORLD-STABLE-INTAKE.md](WORLD-STABLE-INTAKE.md).
+
+## Original nutrient accounting after fresh intake
+
+`base_nutrients` calculates checked original growth scratch, food consumption,
+surplus and stored-food adjustments. `world_fresh_nutrients` binds it to actual
+owned records and fresh stable intake, with explicit convoy facts. The same
+normal worker inspection stage is retained; no upkeep or population growth is
+executed. See [BASE-NUTRIENTS.md](BASE-NUTRIENTS.md).
