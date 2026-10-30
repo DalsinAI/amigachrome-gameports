@@ -1,0 +1,10 @@
+{
+  "name": "Civilization II MGE native wasm2c prototype",
+  "url": "https://github.com/richardpenman/civ2.git",
+  "commit": "e3c40da88689ed79903debf4bff436bd140b79fa",
+  "buildHostTools": {"wasi-sdk": "25.0", "wabt": "1.0.41"},
+  "targetCompiler": "OpenAmigaGCC 16.2.0-open3",
+  "target": "AmigaOS 3.x, 68040 + FPU, native SDL2/OpenGPU adapter",
+  "status": "experimental; not included in the release catalogue",
+  "contentPolicy": "Original game data, fonts and binary-derived/generated payloads stay outside git. Only the port's own compatibility tools and synthetic memory probe are included. Upstream's MIT notice does not relicense original game content."
+}
