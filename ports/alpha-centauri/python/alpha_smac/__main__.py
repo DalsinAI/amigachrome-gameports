@@ -1,15 +1,21 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """python -m alpha_smac: play the native engine from Python.
 
-  python -m alpha_smac --data ~/SMAX                   # pygame window, new game
+  python -m alpha_smac --data ~/SMAX                   # title screen: N new game, P saved game
+  python -m alpha_smac --data ~/SMAX --skip-title      # straight into a new game (--seed, --faction ...)
   python -m alpha_smac --data ~/SMAX --load game.SAV   # continue a save
-  python -m alpha_smac --synthetic                     # no original files: synthetic test rules
+  python -m alpha_smac --synthetic                     # no original files: synthetic rules, own drawing
   python -m alpha_smac --synthetic --headless 50       # 50 computer-only turns, then a summary
 
 --data is your own SMAC/SMAX folder (alpha.txt or alphax.txt, labels.txt and
 the faction .txt files); nothing from it is copied or shipped. Without it
 the engine has no rules: only --synthetic (the native play test's invented
 rules, no original text) can start a game then.
+
+The window uses the art, fonts and sounds of the --data folder (texture.pcx,
+Units.pcx, console.pcx, faction base art, CVR models, openinga.pcx, Arial /
+ALPHC___ fonts, fx/*.wav, music/*.wav, alpha-audio.cfg). Anything missing
+falls back to plain drawing or silence.
 """
 import argparse
 import sys
@@ -37,18 +43,15 @@ def build_parser():
     ap.add_argument('--frames', type=int, help='window: stop after N frames')
     ap.add_argument('--script', help='window: comma-separated keys fed one per frame (see frontend.parse_script)')
     ap.add_argument('--screenshot', metavar='PNG', help='window: save the last frame as PNG')
+    ap.add_argument('--skip-title', action='store_true', help='window: start a new game (or --load) without the title screen')
+    ap.add_argument('--no-audio', action='store_true', help='window: no sound effects or music')
     ap.add_argument('--lib', help='path of libasmac.so (default: alpha_smac/libasmac.so or $ALPHA_SMAC_LIB)')
     ap.add_argument('--build', action='store_true', help='build libasmac.so first if it is missing')
     return ap
 
 
 def start_game(a, emit=print):
-    if a.data:
-        rules = find_rules(a.data, False if a.base_game else None)
-    elif a.synthetic:
-        rules = synthetic_rules()
-    else:
-        raise SystemExit('No rules: pass --data PATH (your SMAC/SMAX folder) or --synthetic (test rules, no original files).')
+    rules = rules_of(a)
     emit(f'Rules: {rules.describe()}')
     g = Game()
     g.load_rules_checked(rules.path, rules.expansion)
@@ -67,11 +70,21 @@ def start_game(a, emit=print):
     return g
 
 
+def rules_of(a):
+    if a.data:
+        return find_rules(a.data, False if a.base_game else None)
+    if a.synthetic:
+        return synthetic_rules()
+    raise SystemExit('No rules: pass --data PATH (your SMAC/SMAX folder) or --synthetic (test rules, no original files).')
+
+
 def main(argv=None):
     a = build_parser().parse_args(argv)
+    title = a.headless is None and not a.skip_title and not a.load and not a.synthetic
     try:
         _lib.load(a.lib, auto_build=a.build)
-        g = start_game(a)
+        g = None if title else start_game(a)
+        rules = rules_of(a) if title else None
     except (FileNotFoundError, GameError) as e:
         print(f'alpha_smac: {e}', file=sys.stderr)
         return 2
@@ -84,7 +97,8 @@ def main(argv=None):
         return 0 if res['status'] in (Status.OK, Status.GAME_OVER) else 1
     from .frontend import parse_script, run_frontend
     frames, _ = run_frontend(g, frames=a.frames, script=parse_script(a.script) if a.script else None, screenshot=a.screenshot,
-                             save_dir=a.save_dir, fps=0 if a.frames else 30)
+                             save_dir=a.save_dir, fps=0 if a.frames else 30, rules=rules,
+                             data_dir=a.data if a.data else None, audio=not a.no_audio, start_title=title)
     if a.screenshot:
         print(f'Screenshot: {a.screenshot} ({frames} frames)')
     return 0

@@ -11,7 +11,7 @@ import os
 import subprocess
 from pathlib import Path
 
-ABI_VERSION = 1
+ABI_VERSION = 2
 HERE = Path(__file__).resolve().parent
 PYTHON_DIR = HERE.parent
 NATIVE_DIR = PYTHON_DIR.parent / 'native'
@@ -122,6 +122,10 @@ class WorldInfo(C.Structure):
     _fields_ = [(n, i32) for n in ('vehicle_count', 'base_count', 'current_turn', 'player')]
 
 
+class Line(C.Structure):
+    _fields_ = [('text', C.c_char * 96), ('selected', i32), ('heading', i32)]
+
+
 P = C.POINTER
 SESSION = C.c_void_p
 WORLD = C.c_void_p
@@ -202,6 +206,45 @@ _PROTOTYPES = {
     'asmac_world_vehicle': (i32, [WORLD, i32, P(i32), P(i32), P(i32)]),
     'asmac_world_base_faction': (i32, [WORLD, i32]),
     'asmac_world_render_base_window': (i32, [WORLD, i32, i32, P(Frame), P(Rect), P(TextItem), i32]),
+    # ABI 2: map view with original art, new game screens, audio catalog
+    'asmac_view_open': (C.c_void_p, [C.c_char_p, i32]),
+    'asmac_view_free': (None, [C.c_void_p]),
+    'asmac_view_assets': (C.c_uint, [C.c_void_p]),
+    'asmac_view_update': (i32, [C.c_void_p, SESSION, i32]),
+    'asmac_view_set_viewer': (None, [C.c_void_p, i32]),
+    'asmac_view_viewer': (i32, [C.c_void_p]),
+    'asmac_view_draw_map': (i32, [C.c_void_p, P(Frame), i32, i32, i32, i32, P(TextItem), i32]),
+    'asmac_view_draw_minimap': (i32, [C.c_void_p, P(Frame), P(Rect), i32, i32, i32, i32, i32]),
+    'asmac_view_minimap_click': (i32, [C.c_void_p, P(Rect), i32, i32, P(i32), P(i32)]),
+    'asmac_view_draw_base_window': (i32, [C.c_void_p, P(Frame), P(Rect), i32, P(TextItem), i32]),
+    'asmac_view_draw_console': (i32, [C.c_void_p, P(Frame), i32, i32]),
+    'asmac_view_screen_tile': (i32, [C.c_void_p, i32, i32, i32, i32, i32, i32, i32, P(i32), P(i32)]),
+    'asmac_view_tile_position': (i32, [C.c_void_p, i32, i32, i32, i32, i32, i32, i32, P(i32), P(i32)]),
+    'asmac_view_tile_visible': (i32, [C.c_void_p, i32, i32]),
+    'asmac_view_messages': (i32, [C.c_void_p, C.c_char_p, i32]),
+    'asmac_view_faction_stem': (i32, [C.c_void_p, i32, C.c_char_p, i32]),
+    'asmac_pcx_open': (C.c_void_p, [C.c_char_p, C.c_char_p]),
+    'asmac_pcx_free': (None, [C.c_void_p]),
+    'asmac_pcx_size': (i32, [C.c_void_p, P(i32), P(i32)]),
+    'asmac_pcx_rgb': (i32, [C.c_void_p, C.c_void_p, C.c_size_t]),
+    'asmac_find_file': (i32, [C.c_char_p, C.c_char_p, C.c_char_p, i32]),
+    'asmac_newgame_open': (i32, [SESSION, C.c_uint32]),
+    'asmac_newgame_key': (i32, [SESSION, i32]),
+    'asmac_newgame_screen': (i32, [SESSION]),
+    'asmac_newgame_row': (i32, [SESSION]),
+    'asmac_newgame_start_status': (i32, [SESSION]),
+    'asmac_newgame_view': (i32, [SESSION, C.c_char_p, i32, P(Line), i32]),
+    'asmac_adopt_new_game': (i32, [SESSION]),
+    'asmac_audio_event_count': (i32, []),
+    'asmac_audio_event_key': (C.c_char_p, [i32]),
+    'asmac_audio_event_file': (i32, [C.c_char_p, C.c_size_t, i32, C.c_char_p, i32]),
+    'asmac_audio_levels': (i32, [C.c_char_p, C.c_size_t, P(i32), i32]),
+    'asmac_faction_music_set': (C.c_char_p, [C.c_char_p]),
+    'asmac_music_set_count': (i32, []),
+    'asmac_music_set': (C.c_char_p, [i32]),
+    'asmac_technology_voice_path': (i32, [i32, C.c_char_p, i32]),
+    'asmac_facility_voice_path': (i32, [i32, C.c_char_p, i32]),
+    'asmac_faction_voice_path': (i32, [C.c_char_p, i32, C.c_char_p, i32]),
 }
 
 _lib = None
@@ -217,11 +260,10 @@ def build(output=None, quiet=True):
 
 def sources():
     """Every source file the library is built from (for staleness checks)."""
-    out = [PYTHON_DIR / 'asmac.cpp', PYTHON_DIR / 'asmac.h', PYTHON_DIR / 'build_python.sh']
+    out = [PYTHON_DIR / 'asmac.cpp', PYTHON_DIR / 'asmac_view.cpp', PYTHON_DIR / 'asmac.h', PYTHON_DIR / 'build_python.sh']
     out += sorted((NATIVE_DIR / 'engine').glob('*.cpp')) + sorted((NATIVE_DIR / 'engine').glob('*.h'))
     out += sorted((NATIVE_DIR / 'engine' / 'stubs').glob('*.cpp'))
-    out += sorted(NATIVE_DIR.glob('play_session.*')) + sorted(NATIVE_DIR.glob('ui_*.cpp')) + sorted(NATIVE_DIR.glob('ui_*.h'))
-    out += sorted(NATIVE_DIR.glob('original_*.cpp')) + sorted(NATIVE_DIR.glob('original_*.h'))
+    out += sorted(NATIVE_DIR.glob('*.cpp')) + sorted(NATIVE_DIR.glob('*.h')) + sorted(NATIVE_DIR.glob('*.inc'))
     return out
 
 

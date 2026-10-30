@@ -22,13 +22,15 @@ mkdir -p -- "$(dirname -- "$out")"
 stubs=$(ls "$native"/engine/stubs/*.cpp 2>/dev/null || true)
 extra=""
 for n in play_session ui_panel ui_research ui_social ui_design ui_battle ui_diplowin ui_basewin \
-         map_overlays original_map original_game original_faction original_world pcx_image ui_newgame ui_diplo; do
+         map_overlays original_map original_game original_faction original_world pcx_image ui_newgame ui_diplo \
+         rules_text prototype movement saved_speed world_unit_stats world_movement_price \
+         cvr_model cvr_lighting cvr_raster cvr_infantry cvr_palette cvr_vehicle ui_minimap ui_messages ui_mapview audio_events leader_speech; do
   if [ -f "$native/$n.cpp" ]; then extra="$extra $native/$n.cpp"; fi
 done
 tmp="$out.tmp.$$"
 # shellcheck disable=SC2086
-"${CXX:-g++}" -std=c++17 ${CXXFLAGS:--O2} -Wall -Wextra -Werror -Wno-format-truncation -fPIC -shared -fvisibility=hidden \
+"${CXX:-g++}" -std=c++17 ${CXXFLAGS:--O2} -Wall -Wextra -Werror -Wno-format-truncation -Wno-misleading-indentation -fPIC -shared -fvisibility=hidden \
   -I"$native/engine" -I"$native" -I"$here" \
-  "$native"/engine/*.cpp $stubs $extra "$here/asmac.cpp" -o "$tmp"
+  "$native"/engine/*.cpp $stubs $extra "$here/asmac.cpp" "$here/asmac_view.cpp" -o "$tmp"
 mv -f -- "$tmp" "$out"
 echo "built $out"

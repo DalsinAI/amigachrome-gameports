@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-#define ASMAC_ABI_VERSION 1
+#define ASMAC_ABI_VERSION 2
 
 enum {
  ASMAC_OK=0,ASMAC_REFUSED=1,ASMAC_BAD_ARGS=2,ASMAC_NO_GAME=3,ASMAC_UNAVAILABLE=4,ASMAC_IO=5,
@@ -199,6 +199,67 @@ ASMAC_API int asmac_world_vehicle(const asmac_world*,int i,int* x,int* y,int* un
 ASMAC_API int asmac_world_base_faction(const asmac_world*,int i);
 /* build_base_window + render_base_window; -1 if the model cannot be built. */
 ASMAC_API int asmac_world_render_base_window(const asmac_world*,int base,int viewer,const asmac_frame_t*,const asmac_rect_t*,asmac_text_item_t*,int cap);
+
+/* ---- ABI 2: map view with the user's original art (asmac_view.cpp) ---- */
+typedef struct asmac_view asmac_view;
+typedef struct asmac_pcx asmac_pcx;
+enum { ASMAC_ART_TERRAIN=1,ASMAC_ART_UNITS=2,ASMAC_ART_CONSOLE=4,ASMAC_ART_PALETTE=8,ASMAC_ART_INFANTRY=16,ASMAC_ART_SPEEDER=32,ASMAC_ART_RULES=64 };
+/* Reads texture.pcx, Units.pcx, console.pcx, the CVR models and the rules
+ * tables from dir (case-insensitive names). Missing files only disable the
+ * matching drawing; asmac_view_assets reports what was found (faction art
+ * mask in bits 16..23 after the first update). */
+ASMAC_API asmac_view* asmac_view_open(const char* dir,int expansion);
+ASMAC_API void asmac_view_free(asmac_view*);
+ASMAC_API unsigned asmac_view_assets(const asmac_view*);
+/* Rebuild the view from the session (OriginalWorld of view_bytes). reopen=1
+ * after a new game or a load: faction art and MapViewExtras are reopened. */
+ASMAC_API int asmac_view_update(asmac_view*,asmac_session*,int reopen);
+ASMAC_API void asmac_view_set_viewer(asmac_view*,int viewer); /* -1 all squares */
+ASMAC_API int asmac_view_viewer(const asmac_view*);
+/* The native map window's map drawing on an RGB24 frame of any size, the
+ * camera square at the frame centre, zoom 1 or 2 (64x32 / 128x64 squares).
+ * Returns the label text items (base names, designs without a model). */
+ASMAC_API int asmac_view_draw_map(asmac_view*,const asmac_frame_t*,int camera_x,int camera_y,int zoom,int selected_vehicle,asmac_text_item_t* labels,int cap);
+ASMAC_API int asmac_view_draw_minimap(asmac_view*,const asmac_frame_t*,const asmac_rect_t*,int camera_x,int camera_y,int zoom,int view_w,int view_h);
+ASMAC_API int asmac_view_minimap_click(const asmac_view*,const asmac_rect_t*,int px,int py,int* x,int* y);
+ASMAC_API int asmac_view_draw_base_window(asmac_view*,const asmac_frame_t*,const asmac_rect_t*,int base,asmac_text_item_t*,int cap);
+ASMAC_API int asmac_view_draw_console(const asmac_view*,const asmac_frame_t*,int x,int y);
+ASMAC_API int asmac_view_screen_tile(const asmac_view*,int camera_x,int camera_y,int zoom,int width,int height,int px,int py,int* x,int* y);
+ASMAC_API int asmac_view_tile_position(const asmac_view*,int camera_x,int camera_y,int zoom,int width,int height,int x,int y,int* sx,int* sy);
+ASMAC_API int asmac_view_tile_visible(const asmac_view*,int x,int y);
+ASMAC_API int asmac_view_messages(asmac_view*,char* out,int cap);
+ASMAC_API int asmac_view_faction_stem(const asmac_view*,int faction,char* out,int cap);
+ASMAC_API asmac_pcx* asmac_pcx_open(const char* dir,const char* name);
+ASMAC_API void asmac_pcx_free(asmac_pcx*);
+ASMAC_API int asmac_pcx_size(const asmac_pcx*,int* w,int* h);
+ASMAC_API int asmac_pcx_rgb(const asmac_pcx*,uint8_t* out,size_t cap);
+ASMAC_API int asmac_find_file(const char* dir,const char* name,char* out,int cap);
+
+/* New game screens (ui_newgame.h). Load the rules first; keys are NewGameKey
+ * (0 up, 1 down, 2 left, 3 right, 4 enter, 5 back); screens NG_FACTION 0,
+ * NG_SETTINGS 1, NG_PLANETFALL 2, NG_DONE 3, NG_CANCELLED 4. On NG_DONE,
+ * asmac_adopt_new_game starts turn 1 like the native frontend. */
+typedef struct asmac_line { char text[96];int selected,heading; } asmac_line_t;
+ASMAC_API int asmac_newgame_open(asmac_session*,uint32_t seed);
+ASMAC_API int asmac_newgame_key(asmac_session*,int key);
+ASMAC_API int asmac_newgame_screen(asmac_session*);
+ASMAC_API int asmac_newgame_row(asmac_session*);
+ASMAC_API int asmac_newgame_start_status(asmac_session*);
+ASMAC_API int asmac_newgame_view(asmac_session*,char* title,int title_cap,asmac_line_t* lines,int cap);
+ASMAC_API int asmac_adopt_new_game(asmac_session*);
+
+/* Audio catalog (audio_events.h): event keys, the fx file of each event under
+ * an optional alpha-audio.cfg text, mixer levels, music sets, voice paths. */
+ASMAC_API int asmac_audio_event_count(void);
+ASMAC_API const char* asmac_audio_event_key(int event);
+ASMAC_API int asmac_audio_event_file(const char* settings,size_t length,int event,char* out,int cap);
+ASMAC_API int asmac_audio_levels(const char* settings,size_t length,int* out,int count); /* master sfx voice music sfx_on voice_on music_on */
+ASMAC_API const char* asmac_faction_music_set(const char* stem);
+ASMAC_API int asmac_music_set_count(void);
+ASMAC_API const char* asmac_music_set(int i);
+ASMAC_API int asmac_technology_voice_path(int id,char* out,int cap);
+ASMAC_API int asmac_facility_voice_path(int id,char* out,int cap);
+ASMAC_API int asmac_faction_voice_path(const char* stem,int expansion,char* out,int cap);
 
 #ifdef __cplusplus
 }
