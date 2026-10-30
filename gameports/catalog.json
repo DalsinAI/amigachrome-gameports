@@ -275,6 +275,22 @@
         "directory": "data",
         "packaging": "audit-before-bundle"
       }
+    },
+    "fheroes2": {
+      "order": 20,
+      "title": "fheroes2 (Heroes of Might and Magic II engine)",
+      "source": {
+        "kind": "git",
+        "url": "https://github.com/ihhub/fheroes2.git",
+        "commit": "c0e8128701b29c46ad4f7f63dd31f874439981cd",
+        "submodules": false
+      },
+      "contentPolicy": "GPL-2.0-or-later engine; Heroes II demo or full data is fetched or supplied locally, never committed.",
+      "runtimeData": {
+        "mode": "auto-fetch",
+        "dataset": "homm2-demo",
+        "manifest": "gameports/runtime-data.json"
+      }
     }
   }
 }

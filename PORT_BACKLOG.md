@@ -59,7 +59,7 @@ the normal clean-build, provenance, packaging and AC090 runtime gates.
 | VVVVVV | CANDIDATE | SDL / OpenGPU | TBD | Mature SDL code and modest 2D workload. Review data packaging. |
 | Wolf4SDL | CANDIDATE | ACGame / SDL | TBD | Classic software renderer. Original Wolfenstein data external. |
 | Omnispeak | CANDIDATE | ACGame / SDL | TBD | Commander Keen reimplementation with a light software workload. |
-| fheroes2 | CANDIDATE | SDL / OpenGPU | TBD | Mature Heroes II recreation with many low-end ports; original data external. |
+| fheroes2 | COMPILED - runtime pending | SDL2 / OpenRTG / z.library | P1 | Pinned c0e8128; 68040 soft-float build from GitHub-only inputs (OpenNDK, OpenRTG SDL2/SDL2_mixer). Demo data fetched at build time, never shipped. Next: AC090 lab with the demo. [Port](ports/fheroes2/README.md). |
 | Fallout Community Edition | CANDIDATE | SDL / OpenGPU | TBD | Constrained 2D workload and strong game value. Original Fallout data required. |
 | OpenXcom | CANDIDATE | SDL / OpenGPU | TBD | Mature turn-based 2D engine; dependency/YAML review required. |
 | JFDuke3D | CANDIDATE | SDL / OpenGPU | TBD | Mature Build-engine port and useful 040 stress case; commercial data external. |
