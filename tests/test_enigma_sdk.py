@@ -30,3 +30,16 @@ class EnigmaSDKTests(unittest.TestCase):
             result = MODULE.inventory(sdk)
             self.assertEqual(result["missing"], ["Xerces-C: lib/libxerces-c.a"])
             self.assertIn("include/xercesc/util/PlatformUtils.hpp", result["found"]["Xerces-C"])
+
+    def test_explicit_overlay_supplies_curl_without_hiding_missing_xerces(self):
+        with tempfile.TemporaryDirectory() as directory:
+            sdk = Path(directory) / "sdk"
+            overlay = Path(directory) / "overlay"
+            for relative in MODULE.REQUIRED["curl"]:
+                p = overlay / relative
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_bytes(b"target curl fixture")
+            result = MODULE.inventory(sdk, overlay)
+            self.assertFalse(any(name.startswith("curl:") for name in result["missing"]))
+            self.assertIn("Xerces-C: lib/libxerces-c.a", result["missing"])
+            self.assertEqual(result["found"]["curl"]["lib/libcurl.a"]["path"], str(overlay / "lib/libcurl.a"))
