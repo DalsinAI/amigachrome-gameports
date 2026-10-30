@@ -1,6 +1,8 @@
 # fheroes2 (Heroes of Might and Magic II) for AmigaOS 3.x
 
-Status: **COMPILED**, not yet run on an Amiga. Not TESTING, not RELEASE.
+Status: **COMPILED**. On AROS m68k (FS-UAE, 68040), without game data, it starts, opens its window, takes a key
+and exits cleanly ([evidence](evidence/RUNTIME-AROS-20261030.md)). It has not yet run with game data or on AmigaOS
+3.2.3. Not TESTING, not RELEASE.
 
 fheroes2 is the free GPL-2.0-or-later engine for Heroes of Might and Magic II.
 The port builds it for **AmigaOS 3.x on a 68040, soft float**: the executable
@@ -90,6 +92,11 @@ python3 ports/fheroes2/stage_data.py --package /work/fheroes2-out/fheroes2 --gam
   the parent folder; `PROGDIR:` is searched for data; the case-insensitive path
   search is skipped, as AmigaDOS names are already case-insensitive.
 - `settings.cpp`: the build-time install path (a Unix path) is not searched.
+- `rand.cpp`: AmigaOS has no entropy device, so `std::random_device` throws
+  (it aborted the game before `main()`); the RNG is seeded from the clocks and
+  the thread's stack address instead.
+- `screen.cpp`: without opengpu.library SDL has no accelerated renderer; the
+  game falls back to SDL's software renderer instead of dropping its window.
 
 The port's own files:
 

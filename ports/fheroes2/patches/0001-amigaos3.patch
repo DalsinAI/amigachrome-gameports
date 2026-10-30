@@ -1,3 +1,55 @@
+diff --git a/src/engine/rand.cpp b/src/engine/rand.cpp
+index 8e17899..3240c18 100644
+--- a/src/engine/rand.cpp
++++ b/src/engine/rand.cpp
+@@ -26,6 +26,11 @@
+ #include <numeric>
+ #include <random>
+ 
++#if defined( __AMIGA__ )
++#include <chrono>
++#include <cstdint>
++#endif
++
+ namespace
+ {
+     // Implementation of Fast Random Integer Generation in an Interval (https://arxiv.org/abs/1805.10941)
+@@ -84,8 +89,17 @@ uint32_t Rand::uniformIntDistribution( const uint32_t from, const uint32_t to, P
+ 
+ Rand::PCG32 & Rand::CurrentThreadRandomDevice()
+ {
++#if defined( __AMIGA__ )
++    // AmigaOS has no entropy device, so std::random_device throws. Seed from
++    // the clocks and this thread's stack address instead.
++    thread_local const uint64_t seedStack = 0;
++    const uint64_t wall = static_cast<uint64_t>( std::chrono::system_clock::now().time_since_epoch().count() );
++    const uint64_t tick = static_cast<uint64_t>( std::chrono::steady_clock::now().time_since_epoch().count() );
++    thread_local PCG32 gen( wall ^ ( tick << 21 ), static_cast<uint64_t>( reinterpret_cast<uintptr_t>( &seedStack ) ) | 1 );
++#else
+     thread_local std::random_device rd;
+     thread_local PCG32 gen( rd );
++#endif
+ 
+     return gen;
+ }
+diff --git a/src/engine/screen.cpp b/src/engine/screen.cpp
+index ae9c06a..a80a0f9 100644
+--- a/src/engine/screen.cpp
++++ b/src/engine/screen.cpp
+@@ -1285,6 +1285,13 @@ namespace
+             _createPalette();
+ 
+             _renderer = SDL_CreateRenderer( _window, _driverIndex, SDL_RENDERER_ACCELERATED );
++#if defined( __AMIGA__ )
++            if ( _renderer == nullptr ) {
++                // Without opengpu.library SDL has only its software renderer.
++                _driverIndex = -1;
++                _renderer = SDL_CreateRenderer( _window, _driverIndex, 0 );
++            }
++#endif
+             if ( _renderer == nullptr ) {
+                 ERROR_LOG( "Failed to create a window renderer of " << resolutionInfo.gameWidth << " x " << resolutionInfo.gameHeight
+                                                                     << " size. The error: " << SDL_GetError() )
 diff --git a/src/engine/serialize.h b/src/engine/serialize.h
 index 9d31404..a7856a1 100644
 --- a/src/engine/serialize.h
