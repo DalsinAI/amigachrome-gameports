@@ -123,6 +123,7 @@ class App:
         self.frames = 0
         self.hover = None
         self.flow = None
+        self.newgame_seed = None      # None: the clock, like the native program
         self.load_list = []
         self.load_index = 0
         self.menu_status = f'Data folder: {self.data_dir}'
@@ -660,7 +661,7 @@ class App:
             else:
                 self.menu_status = 'Alien Crossfire rules (alphax.txt) are not in the data folder.'
         elif c in ('n', 'N'):
-            self.start_new_game()
+            self.start_new_game(self.newgame_seed)
         elif c in ('p', 'P'):
             self.open_load_list()
         elif c in ('m', 'M'):
