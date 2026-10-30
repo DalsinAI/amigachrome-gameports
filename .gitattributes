@@ -22,3 +22,6 @@ evidence/postmerge-20261013/*.txt -whitespace
 
 # Preserve unified-diff context required for exact OpenTyrian patching.
 ports/opentyrian/patches/0001-amiga-user-directory.patch -whitespace
+
+# Unified-diff context lines for the fheroes2 AmigaOS patch.
+ports/fheroes2/patches/*.patch -whitespace
