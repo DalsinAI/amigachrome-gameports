@@ -28,6 +28,8 @@ def prepare(source, client=False, *, pin=None, patches=None):
         if client:
             names.append("0002-opengpu-sdk-client-first-light.patch")
         names += ["0003-amiga-stream-single-definition.patch", "0004-match-mode-buffer-array-delete.patch"]
+        if client:
+            names.append("0005-amiga-default-display.patch")
         patches = [HERE / "patches" / name for name in names]
     def applicable(patch, reverse=False):
         args = ["git", "-C", str(repo), "apply", "--check"]
