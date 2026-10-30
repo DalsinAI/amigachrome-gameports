@@ -11,6 +11,7 @@
 #include "map.h"
 #include "base_wp2.h"
 #include "faction.h"
+#include "ui_newgame.h"
 #include <memory>
 #include <new>
 #include <stdio.h>
@@ -22,6 +23,7 @@ namespace E=alpha::engine;
 
 struct asmac_session {
  P::Session* s;bool owned;std::vector<uint8_t> buffer;
+ alpha::ui::NewGameState* ng=nullptr;
 };
 struct asmac_world { alpha::OriginalWorld w; };
 
@@ -51,7 +53,7 @@ asmac_session* asmac_session_new(void){
 asmac_session* asmac_session_shared(void){
  static asmac_session shared{&P::session(),false,{}};return &shared;
 }
-void asmac_session_free(asmac_session* h){if(!h || !h->owned)return;delete h->s;delete h;}
+void asmac_session_free(asmac_session* h){if(!h || !h->owned)return;delete h->ng;delete h->s;delete h;}
 int asmac_load_rules(asmac_session* h,const char* dir,int exp){return h->s->load_rules(dir?dir:"",exp);}
 const char* asmac_rules_error(asmac_session* h){return h->s->rules_error();}
 int asmac_new_game(asmac_session* h,uint32_t seed,int faction,int difficulty,int map_size){return h->s->new_game(seed,faction,difficulty,map_size);}
@@ -312,3 +314,29 @@ int asmac_world_render_base_window(const asmac_world* w,int base,int viewer,cons
  return render(f,r,out,cap,[&](const alpha::UiFrame& fr,const alpha::UiRect& re,alpha::UiTextItem* it,size_t c){return alpha::render_base_window(*m,fr,re,it,c);});
 }
 
+
+/* ---- new game screens (ui_newgame.h), as original_frontend.cpp new_game() ---- */
+int asmac_newgame_open(asmac_session* h,uint32_t seed){
+ if(!P::Session::new_game_available())return ASMAC_UNAVAILABLE;
+ delete h->ng;h->ng=new(std::nothrow) alpha::ui::NewGameState();if(!h->ng)return ASMAC_IO;
+ h->s->bind();alpha::ui::newgame_open(*h->ng,seed);return ASMAC_OK;
+}
+int asmac_newgame_key(asmac_session* h,int key){
+ if(!h->ng || key<0 || key>alpha::ui::NGK_BACK)return 0;
+ if(alpha::ui::newgame_done(*h->ng))return 0;
+ h->s->bind();return alpha::ui::newgame_key(*h->ng,(alpha::ui::NewGameKey)key)?1:0;
+}
+int asmac_newgame_screen(asmac_session* h){return h->ng?(int)h->ng->screen:-1;}
+int asmac_newgame_row(asmac_session* h){return h->ng?h->ng->row:-1;}
+int asmac_newgame_start_status(asmac_session* h){return h->ng?h->ng->start_status:-1;}
+int asmac_newgame_view(asmac_session* h,char* title,int title_cap,asmac_line_t* lines,int cap){
+ if(!h->ng)return -1;h->s->bind();
+ const auto v=alpha::ui::newgame_view(*h->ng);
+ if(title && title_cap>0)snprintf(title,(size_t)title_cap,"%s",v.title.c_str());
+ int n=0;for(const auto& l:v.lines){if(n<cap){snprintf(lines[n].text,sizeof(lines[n].text),"%s",l.text.c_str());lines[n].selected=l.selected;lines[n].heading=l.heading;}++n;}
+ return n;
+}
+int asmac_adopt_new_game(asmac_session* h){
+ if(!h->ng || h->ng->screen!=alpha::ui::NG_DONE)return ASMAC_REFUSED;
+ return h->s->adopt_new_game();
+}
