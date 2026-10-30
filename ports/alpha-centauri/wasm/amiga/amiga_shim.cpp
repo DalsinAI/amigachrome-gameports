@@ -40,6 +40,10 @@ EM_ASYNC_JS(int, alpha_js_ask_file, (const char* title, char* out, int out_size)
  return n > 0 && n < out_size - 1 ? 1 : 0;
 });
 
+extern "C" void alpha_wasm_tick();
+extern "C" void alpha_wasm_waiting(int now_waiting);
+extern "C" void alpha_wasm_yield_point();
+
 namespace {
 const int BORDER_LEFT = 4, BORDER_TOP = 20, BORDER_RIGHT = 4, BORDER_BOTTOM = 2;
 const int CLOSE_GADGET = 20;
@@ -117,6 +121,7 @@ void CloseLibrary(struct Library*) {}
 
 struct Message* GetMsg(struct MsgPort*) {
  pump();
+ alpha_wasm_tick();
  if (dirty) present();
  if (!head) return nullptr;
  Queued* q = head;
@@ -127,11 +132,13 @@ struct Message* GetMsg(struct MsgPort*) {
 }
 void ReplyMsg(struct Message* message) { free(message); }
 struct Message* WaitPort(struct MsgPort*) {
+ alpha_wasm_waiting(1);
  for (;;) {
   pump();
-  if (head) return &head->m.ExecMessage;
+  if (head) { alpha_wasm_waiting(0); return &head->m.ExecMessage; }
   if (dirty) present();
-  alpha_js_wait_event(50);
+  alpha_wasm_tick();
+  alpha_js_wait_event(40);
  }
 }
 
@@ -219,6 +226,7 @@ LONG ObtainBestPen(struct ColorMap*, ULONG r, ULONG g, ULONG b, ULONG, ...) {
 void ReleasePen(struct ColorMap*, ULONG pen) { if (pen >= 4 && pen < 256) pen_used[pen] = false; }
 
 ULONG WritePixelArray(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort* rp, UWORD dx, UWORD dy, UWORD width, UWORD height, UBYTE) {
+ alpha_wasm_yield_point(); /* long redraws (many text runs) also let the page breathe */
  if (!src || !rp || !rp->window) return 0;
  struct Window* w = rp->window;
  int x = dx, y = dy, wd = width, ht = height, sx = srcx, sy = srcy;
@@ -266,7 +274,9 @@ BOOL AslRequestTags(APTR request, ULONG, ...) {
  if (!r) return FALSE;
  present();
  r->file[0] = 0; r->drawer[0] = 0;
+ alpha_wasm_waiting(1);
  const int ok = alpha_js_ask_file(r->title, r->file, (int)sizeof(r->file));
+ alpha_wasm_waiting(0);
  drop_queue();
  return ok && r->file[0] ? TRUE : FALSE;
 }

@@ -27,7 +27,12 @@
  #game { display:none; }
  body.running #game { display:block; }
  body.running #setup .pickers { display:none; }
- #screen-wrap { background:#000; border:1px solid var(--line); overflow:auto; }
+ #screen-wrap { background:#000; border:1px solid var(--line); overflow:auto; position:relative; }
+ #busy { position:absolute; top:28px; right:12px; background:rgba(11,18,20,.88); border:1px solid var(--accent); border-radius:4px; padding:6px 10px; font-size:14px; display:flex; gap:8px; align-items:center; }
+ #busy[hidden] { display:none; }
+ #busy .spin { width:12px; height:12px; border:2px solid var(--accent); border-right-color:transparent; border-radius:50%; animation:spin .8s linear infinite; }
+ @keyframes spin { to { transform:rotate(360deg); } }
+ #sound { color:var(--muted); font-size:13px; }
  #screen { display:block; max-width:100%; height:auto; image-rendering:pixelated; outline:none; margin:0 auto; }
  #window-title { color:var(--muted); font-size:13px; }
  #log { max-height:180px; overflow:auto; font:12px/1.35 ui-monospace, monospace; color:var(--muted); background:#071012; padding:8px; margin:0; white-space:pre-wrap; }
@@ -51,7 +56,8 @@
    They are read into this tab's memory only; nothing is uploaded.</p>
   <p class="muted">The title screen needs <code>openinga.pcx</code>, <code>ALPHC___.TTF</code> and <code>arialn.ttf</code> (Arial Narrow, from your system fonts if your install does not have it).
    New games need <code>alpha.txt</code> (or <code>alphax.txt</code> for Crossfire) and the faction files; the map needs <code>texture.pcx</code>, <code>Units.pcx</code>, <code>console.pcx</code>, faction art and <code>Arial.ttf</code> or <code>arialn.ttf</code>.
-   Movies (<code>.wve</code>) are skipped. Names match regardless of case.</p>
+   Sound uses <code>opening menu.wav</code>, <code>fx/</code>, <code>voices/</code> (the original MP3s are converted in the browser) and <code>music/&lt;set&gt;.wav</code> or <code>.ogg/.mp3/.flac</code> renders, with optional <code>alpha-audio.cfg</code>.
+   The intro needs the prepared <code>opening.amov</code>/<code>openingx.amov</code>; <code>.wve</code> movies are skipped. Names match regardless of case.</p>
   <div class="row pickers">
    <label class="btn">Choose game folder&hellip;<input id="pick-folder" type="file" webkitdirectory directory multiple disabled></label>
    <label class="btn">Add files&hellip;<input id="pick-files" type="file" multiple disabled></label>
@@ -66,8 +72,10 @@
  <section id="game">
   <div class="row"><span id="window-title"></span>
    <button id="close-window" type="button" title="Same as the window's close gadget (top-left square)">Close window</button>
+   <span id="sound">Sound: none yet</span>
    <span class="muted">Keyboard and mouse go to the game when the picture has focus (click it). N new game, P play a saved game.</span></div>
-  <div id="screen-wrap"><canvas id="screen" width="1044" height="800" tabindex="0"></canvas></div>
+  <div id="screen-wrap"><canvas id="screen" width="1044" height="800" tabindex="0"></canvas>
+   <div id="busy" role="status" hidden><span class="spin"></span><span>AI turn in progress&hellip; <span id="busy-time"></span></span></div></div>
  </section>
  <section>
   <h2>Saved games</h2>
