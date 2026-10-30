@@ -233,4 +233,4 @@ original art or sound is like.
   build; the technology voice is heard from the `T` browser.
 - After End Turn the map redraw (saved-world refresh and full window draw)
   runs without a yield: with 10x CPU throttling the page waited up to about
-  350 ms at that point (about 35 ms at full speed).
+  360 ms at that point (about 36 ms at full speed).
