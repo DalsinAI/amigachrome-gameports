@@ -11,17 +11,21 @@
 (function () {
   const $ = (id) => document.getElementById(id);
   const GAME = '/game';
-  // Large media the Amiga build does not read (it uses prepared .amov caches).
+  // Media and programs the Amiga build does not read. Original .wve movies
+  // need the prepared .amov cache (native/prepare_startup_movie.py): their EA
+  // TQI video has no decoder in the browser.
   const SKIP = /\.(wve|avi|exe|dll|ico|lnk|url)$/i;
+  const MAX_FILE = 96 * 1024 * 1024, MAX_MOVIE = 640 * 1024 * 1024;
   const REQUIRED = ['openinga.pcx', 'ALPHC___.TTF', 'arialn.ttf'];
   const WANTED = ['alpha.txt', 'xopeninga.pcx', 'alphax.txt', 'texture.pcx', 'Units.pcx', 'console.pcx', 'Arial.ttf', 'opening menu.wav'];
   const DB_NAME = 'alpha-centauri-wasm', DB_STORE = 'files';
 
-  const log = [];
+  const log = [], logTimes = [];
   let logDirty = false;
   function out(line, isErr) {
     log.push((isErr ? '! ' : '') + line);
-    if (log.length > 4000) log.splice(0, log.length - 4000);
+    logTimes.push(performance.now());
+    if (log.length > 20000) { log.splice(0, log.length - 20000); logTimes.splice(0, logTimes.length - 20000); }
     logDirty = true;
     if (isErr) console.warn(line);
   }
@@ -190,7 +194,8 @@
     for (const f of files) {
       let rel = f.webkitRelativePath || f.name;
       if (f.webkitRelativePath) rel = rel.split('/').slice(1).join('/') || f.name; // drop the chosen folder's own name
-      if (SKIP.test(rel) || f.size > 96 * 1024 * 1024) { ++skipped; continue; }
+      if (/\.wve$/i.test(rel)) seenMovies.add(rel.split('/').pop().replace(/\.wve$/i, '').toLowerCase());
+      if (SKIP.test(rel) || f.size > (/\.amov$/i.test(rel) ? MAX_MOVIE : MAX_FILE)) { ++skipped; continue; }
       const bytes = new Uint8Array(await f.arrayBuffer());
       writeFile(rel, bytes);
       if (keep) entries.push([rel, bytes]);
@@ -198,7 +203,48 @@
     }
     imported += done;
     if (keep && entries.length) { try { await dbPut(entries); } catch (e) { out('Could not keep files in this browser: ' + e, true); } }
-    refreshSetup(`${done} file(s) added${skipped ? `, ${skipped} skipped (movies/programs not used here)` : ''}.`);
+    const prepared = await prepareAudio();
+    refreshSetup(`${done} file(s) added${skipped ? `, ${skipped} skipped (movies/programs not used here)` : ''}${prepared ? `, ${prepared} voice/music file(s) converted for playback` : ''}.`);
+  }
+
+  // ---- in-browser audio preparation ----
+  // The native game reads voice-overs and music as PCM WAV
+  // (tools/prepare_alpha_audio.py converts the original voices/*.mp3 and the
+  // owner's music renders to PCM16 mono 22050 Hz with ffmpeg). Here the
+  // browser's own decoder does the same once per visit: voices/NAME.mp3 ->
+  // voices/NAME.wav, music/NAME.{mp3,ogg,flac,m4a,opus} -> music/NAME.wav.
+  // Existing .wav files are used as they are.
+  const seenMovies = new Set();
+  const COMPRESSED = /^(voices|music)\/[^/]+\.(mp3|ogg|flac|m4a|opus)$/i;
+  function wav16(samples, rate) {
+    const n = samples.length, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const text = (o, t) => { for (let i = 0; i < t.length; ++i) v.setUint8(o + i, t.charCodeAt(i)); };
+    text(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); text(8, 'WAVE'); text(12, 'fmt ');
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, rate, true);
+    v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); text(36, 'data'); v.setUint32(40, n * 2, true);
+    for (let i = 0; i < n; ++i) { const x = Math.max(-1, Math.min(1, samples[i])); v.setInt16(44 + i * 2, Math.round(x * 32767), true); }
+    return new Uint8Array(buf);
+  }
+  async function toWav(bytes) {
+    const ctx = new OfflineAudioContext(1, 1, 22050); // decodeAudioData resamples to 22050 Hz
+    const audio = await ctx.decodeAudioData(bytes.slice().buffer);
+    const mono = new Float32Array(audio.length);
+    for (let c = 0; c < audio.numberOfChannels; ++c) { const d = audio.getChannelData(c); for (let i = 0; i < d.length; ++i) mono[i] += d[i] / audio.numberOfChannels; }
+    return wav16(mono, audio.sampleRate);
+  }
+  async function prepareAudio() {
+    if (!FS) return 0;
+    const todo = listFiles(GAME, '').filter((f) => COMPRESSED.test(f.name) && !exists(f.name.replace(/\.[^.]+$/, '.wav')));
+    let made = 0;
+    for (const f of todo) {
+      if (made % 10 === 0) status(`Converting voices and music for playback... ${made}/${todo.length}`);
+      try {
+        writeFile(f.name.replace(/\.[^.]+$/, '.wav'), await toWav(FS.readFile(GAME + '/' + f.name)));
+        ++made;
+        out(`AUDIO PREPARED ${f.name}`, false);
+      } catch (e) { out(`Could not decode ${f.name}: ${e && e.message || e}`, true); }
+    }
+    return made;
   }
   function refreshSetup(note) {
     const missing = REQUIRED.filter((n) => !exists(n));
@@ -206,7 +252,9 @@
     const all = FS ? listFiles(GAME, '') : [];
     $('file-count').textContent = String(all.length);
     $('missing').textContent = missing.length ? 'Missing (the title screen needs these): ' + missing.join(', ') : 'Title screen files found.';
-    $('optional').textContent = optional.length ? 'Not found (needed later for the map, Crossfire or sound): ' + optional.join(', ') : '';
+    const movies = [...seenMovies].filter((m) => (m === 'opening' || m === 'openingx') && !exists(m + '.amov'));
+    $('optional').textContent = (optional.length ? 'Not found (needed later for the map, Crossfire or sound): ' + optional.join(', ') + '. ' : '') +
+      (movies.length ? `The intro movie (${movies.map((m) => m + '.wve').join(', ')}) needs its prepared .amov cache (native/prepare_startup_movie.py); the browser cannot decode EA TQI video, so V skips with a message.` : '');
     $('start').disabled = !FS || missing.length > 0 || running;
     status(note || (missing.length ? 'Choose your Alpha Centauri folder or files.' : 'Ready. Press Start.'));
     refreshSaves();
@@ -282,6 +330,73 @@
     });
   }
 
+  // ---- "AI turn in progress": the engine yields every ~25 ms (wasm_runtime.cpp) ----
+  // busyStats.gap: the longest stretch between two engine yields and the
+  // yield points at both ends (sites numbered in wasm_runtime.cpp).
+  const busyStats = { yields: 0, longest: 0, shownMs: 0, gap: { ms: 0, from: 0, to: 0 } };
+  let busyShown = false;
+  function busy(ms, gap, from, to) {
+    ++busyStats.yields;
+    if (ms > busyStats.longest) busyStats.longest = ms;
+    if (gap > busyStats.gap.ms) busyStats.gap = { ms: Math.round(gap), from, to };
+    if (ms < 300) return;
+    if (!busyShown) { busyShown = true; $('busy').hidden = false; }
+    busyStats.shownMs = ms;
+    $('busy-time').textContent = (ms / 1000).toFixed(1) + ' s';
+  }
+  function idle() { if (busyShown) { busyShown = false; $('busy').hidden = true; } }
+
+  // ---- sound level of everything the game sends to the speakers ----
+  // Every audio node connected to the output also feeds an analyser, so the
+  // page can show (and tests can check) that real, non-silent sound plays.
+  const audioStats = { contexts: 0, state: 'none', peak: 0, loudMs: 0 };
+  const taps = [];
+  const connect = AudioNode.prototype.connect;
+  AudioNode.prototype.connect = function (dest, ...rest) {
+    const r = connect.call(this, dest, ...rest);
+    try {
+      if (dest instanceof AudioDestinationNode && !taps.some((t) => t.node === this)) {
+        const a = this.context.createAnalyser();
+        a.fftSize = 2048;
+        connect.call(this, a);
+        taps.push({ node: this, ctx: this.context, a, buf: new Float32Array(a.fftSize) });
+        audioStats.contexts = new Set(taps.map((t) => t.ctx)).size;
+      }
+    } catch (e) { /* metering only */ }
+    return r;
+  };
+  // SDL closes an audio device by disconnecting its ScriptProcessorNode but
+  // leaves the node's onaudioprocess handler, which holds the freed device.
+  // An audio block already queued then runs SDL's mixer on freed memory once
+  // the page gets control back (seen as "divide by zero" right after the
+  // world view replaces the title's audio device). A full disconnect also
+  // drops the handler, and the analyser tap goes with the node.
+  if (typeof ScriptProcessorNode !== 'undefined') {
+    const disconnect = AudioNode.prototype.disconnect;
+    ScriptProcessorNode.prototype.disconnect = function (...args) {
+      if (!args.length) {
+        this.onaudioprocess = null;
+        const i = taps.findIndex((t) => t.node === this);
+        if (i >= 0) taps.splice(i, 1);
+      }
+      return disconnect.apply(this, args);
+    };
+  }
+  setInterval(() => {
+    let peak = 0, state = 'none';
+    for (const t of taps) {
+      state = t.ctx.state;
+      if (state !== 'running') continue;
+      t.a.getFloatTimeDomainData(t.buf);
+      for (const v of t.buf) { const m = Math.abs(v); if (m > peak) peak = m; }
+    }
+    audioStats.state = state; audioStats.peak = peak;
+    if (peak > 0.002) audioStats.loudMs += 100;
+    const el = $('sound');
+    if (el) el.textContent = state === 'none' ? 'Sound: none yet' : state !== 'running' ? `Sound: ${state} (click the page)` : peak > 0.002 ? 'Sound: playing' : 'Sound: on, silent';
+  }, 100);
+  document.addEventListener('pointerdown', () => { for (const t of taps) if (t.ctx.state === 'suspended') t.ctx.resume(); });
+
   // ---- the emscripten module ----
   window.Module = {
     canvas,
@@ -290,8 +405,14 @@
     printErr: (t) => out(t, true),
     alphaEvents: events,
     alphaLog: log,
+    alphaLogTimes: logTimes,
     alphaPresent: present,
     alphaAskFile: askFile,
+    alphaBusy: busy,
+    alphaIdle: idle,
+    alphaBusyStats: busyStats,
+    alphaAudioStats: audioStats,
+    alphaAudioEvents: [],
     alphaWaitEvent: (ms) => new Promise((resolve) => {
       if (events.length) { resolve(1); return; }
       const t = setTimeout(() => { if (waiter === done) waiter = null; resolve(0); }, ms);
@@ -307,7 +428,7 @@
         if (stored.length) {
           for (const [k, v] of stored) writeFile(k, v);
           for (const [k] of stored) if (/\.sav$/i.test(k)) { try { const st = FS.stat(GAME + '/' + k); knownSaves.set(k, +st.mtime + ':' + st.size); } catch (e) { /* ignore */ } }
-          refreshSetup(`${stored.length} file(s) restored from this browser.`);
+          prepareAudio().then((n) => refreshSetup(`${stored.length} file(s) restored from this browser${n ? `, ${n} voice/music file(s) converted` : ''}.`));
         } else refreshSetup();
       }).catch(() => refreshSetup());
     },
