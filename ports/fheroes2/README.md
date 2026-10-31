@@ -1,8 +1,12 @@
 # fheroes2 (Heroes of Might and Magic II) for AmigaOS 3.x
 
-Status: **COMPILED**. On AROS m68k (FS-UAE, 68040), without game data, it starts, opens its window, takes a key
-and exits cleanly ([evidence](evidence/RUNTIME-AROS-20261030.md)). It has not yet run with game data or on AmigaOS
-3.2.3. Not TESTING, not RELEASE.
+Status: **COMPILED, lab-played**. On a lab copy of Instance-32 (31 October 2026) with the Heroes II demo it
+shows the title screen, takes the resolution pick, starts a standard game on the adventure map (the hero walks
+and the map scrolls), wins a Battle Only fight and exits cleanly. Not yet checked: sound (the lab is muted),
+music (MIDI, needs Timidity patches), save and load, AmigaOS 3.2.3. Not TESTING, not RELEASE.
+
+`build-amiga.sh` is Cradle's entry (`stove_build`, target `ports/fheroes2`): it builds the SDK and the game and
+stages the demo into its OUT for a lab.
 
 fheroes2 is the free GPL-2.0-or-later engine for Heroes of Might and Magic II.
 The port builds it for **AmigaOS 3.x on a 68040, soft float**: the executable
@@ -97,6 +101,9 @@ python3 ports/fheroes2/stage_data.py --package /work/fheroes2-out/fheroes2 --gam
   the thread's stack address instead.
 - `screen.cpp`: without opengpu.library SDL has no accelerated renderer; the
   game falls back to SDL's software renderer instead of dropping its window.
+  A 32-bit surface with no masks is XRGB8888, which on big-endian AmigaOS
+  matched none of the game's palette formats: the palette stayed zero and the
+  screen black. It now maps XRGB8888 like the little-endian BGRX32.
 
 The port's own files:
 
