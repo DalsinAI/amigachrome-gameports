@@ -1,0 +1,69 @@
+--- a/src/amigaopenup.h
++++ b/src/amigaopenup.h
+@@ -4,6 +4,7 @@
+ #include <exec/types.h>
+ struct RastPort;
+ void GFX2_OpenUpInit(void);
++void GFX2_OpenUpModule(ULONG);
+ void GFX2_OpenUpClose(void);
+ int GFX2_OpenUpPresent(struct RastPort *, UBYTE *, ULONG, LONG, LONG, LONG, LONG);
+ int GFX2_OpenUpFontAvailable(void);
+--- a/src/amigaopenup.c
++++ b/src/amigaopenup.c
+@@ -15,6 +15,8 @@
+ struct Library *OpenRTGBase, *OpenGPUBase, *OpenMulticoreBase, *OpenFontBase;
+ static struct Library *ZBase;
+ static int Initialized;
++static ULONG Program_module;
++void GFX2_OpenUpModule(ULONG module) { Program_module=module; }
+ static ULONG Presents, Fallbacks, Ranges, RangeFallbacks;
+ static int at_least(struct Library *b, UWORD v, UWORD r)
+ { return b && (b->lib_Version>v || (b->lib_Version==v && b->lib_Revision>=r)); }
+@@ -59,13 +61,14 @@
+   struct Process *process;
+   struct CommandLineInterface *cli;
+   UBYTE *input=NULL,*output=NULL;
+-  ULONG args[6],failed=0,y;
++  ULONG args[6],failed=0,y,module;
+   int ok=0;
+   /* Copy only sizeable blocks into grants; never expose editor memory to workers. */
+   if (OpenMulticoreBase && width*rows>=16384 && (opitch&15)==0) {
+     process=(struct Process *)FindTask(NULL);
+     cli=process->pr_CLI ? (struct CommandLineInterface *)BADDR(process->pr_CLI) : NULL;
+-    if (cli && cli->cli_Module) {
++    module=Program_module ? Program_module : (cli ? cli->cli_Module : 0);
++    if (module) {
+       input=OMC_AllocGrant(1024+width*rows,OMCAF_PAGE);
+       output=OMC_AllocGrant(opitch*rows,OMCAF_PAGE);
+       if (input && output) {
+@@ -78,7 +81,7 @@
+         job.omj_Args=args;job.omj_NArgs=6;job.omj_Flags=OMCF_STRICT;
+         if (OMC_AddGrant(&job,input,1024+width*rows,OMCG_READ)==OMCERR_OK &&
+             OMC_AddGrant(&job,output,opitch*rows,OMCG_WRITE)==OMCERR_OK &&
+-            OMC_GrantSeg(&job,cli->cli_Module,OMCG_READ|OMCG_EXEC)>0 &&
++            OMC_GrantSeg(&job,module,OMCG_READ|OMCG_EXEC)>0 &&
+             OMC_RunRange(&job,rows,opitch,&failed)==OMCERR_OK && failed==rows) {
+           for(y=0;y<rows;++y) memcpy(out+y*opitch,output+y*opitch,width*4);
+           ok=1; ++Ranges;
+--- a/src/main.c
++++ b/src/main.c
+@@ -55,6 +55,9 @@
+ const char *__stdiowin = 0;
+ #include <workbench/startup.h>
+ #include <proto/dos.h>
++#ifdef USE_OPENUP
++#include "amigaopenup.h"
++#endif
+ const char GrafX2_amiga_version[] = "$VER: GrafX2 2.9 (31.10.2026) native OS3 68040+FPU";
+ #endif
+ 
+@@ -1605,6 +1608,9 @@
+     struct WBStartup *startup = (struct WBStartup *)argv;
+     int i;
+     argc = 1;
++#ifdef USE_OPENUP
++    if (startup) GFX2_OpenUpModule(startup->sm_Segment);
++#endif
+     if (startup && startup->sm_ArgList)
+       for (i = 1; i < startup->sm_NumArgs && i <= 2; i++)
+       {

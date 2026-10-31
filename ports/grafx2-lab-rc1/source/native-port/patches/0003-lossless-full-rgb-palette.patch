@@ -1,0 +1,14 @@
+--- a/src/palette.c
++++ b/src/palette.c
+@@ -93,6 +93,11 @@
+ /// The result is also in the 0-255 range.
+ byte Round_palette_component(byte comp)
+ {
++#ifdef USE_AMIGA_NATIVE
++  /* A full 8-bit component needs no quantization. A pow/ceil round trip
++   * can move exact RGB values (and drifts further on repeated palette loads). */
++  if (RGB_scale == 256 || comp == 0 || comp == 255) return comp;
++#endif
+   // Apply Gamma correction
+   float fc = pow(comp/255.0,Gamma)*255;
+ 
