@@ -1,48 +1,70 @@
-# Enigma — source-pinned, SDK dependency block
+# Enigma with OXP
 
-Source pin: `6f0c51b26cc013cb6c935046d7d1e6a20bea4179`,
-[upstream](https://github.com/Enigma-Game/Enigma). GPL-2.0-or-later engine,
-SDL2/image/ttf/mixer, Xerces-C, curl, zlib, bundled Lua/ENet/oxydlib/tinygettext.
-Normal levels are in `data/`; no retail Oxyd upload is needed. Audit level,
-sound and font notices before distributing the data tree.
+Source pin: `6f0c51b26cc013cb6c935046d7d1e6a20bea4179`
+([upstream](https://github.com/Enigma-Game/Enigma)), GPL-2.0-or-later.
+The port patch replaces Xerces headers, DOM/parser/serializer calls and CMake
+linkage with the existing OpenAmigaXML OXP parser and its optional schema module.
+No Xerces headers or library are required. The adapter is Enigma-specific;
+OXP retains its own public C API.
+
+## Offline build
+
+Prepare the pinned upstream checkout with the existing source intake command:
 
 ```sh
 python3 scripts/game_port_prepare.py prepare --game enigma --allow-network
-python3 ports/enigma/configure_open3.py --source build/game-ports/sources/enigma \
-  --stove /path/to/verified-open3 --out build/enigma-sdk-gate
 ```
 
-This is an offline dependency/configure gate, not a finished build recipe.
-It exports the exact pin, inventories only the selected target SDK and its
-port-deps prefix, records hashes, and exits 2 when required inputs are absent.
-It never substitutes host libraries or deploys a build.
+Stage a private Open4 stove from the checksummed release archive and explicit
+OpenNDK/SDL SDK donors (never change a shared stove):
 
-On 24 October the selected open3 SDK had all four SDL2 components and zlib,
-but lacked `libxerces-c.a`, `xercesc/util/PlatformUtils.hpp`, `libcurl.a`
-and `curl/curl.h`. A direct cross-CMake run also failed at Xerces-C discovery.
-No Enigma engine has compiled or run in this intake.
+```sh
+python3 ports/enigma/stage_toolchain.py \
+  --archive /path/to/open4.tar.xz --ndk-prefix /path/to/openndk-donor \
+  --sdk-prefix /path/to/target-sdk --destination build/enigma-open4-stove
+```
 
-Curl itself is already ported in
-[OpenAmigaCurl](https://github.com/DalsinAI/openamigacurl). Its build disables
-the command-line executable and supplies static libcurl for applications.
-The missing SDK integration is distinct from porting curl anew. Stage the
-matching curl, TLS/socket dependencies and headers with provenance, then
-cross-link a real consumer. Xerces-C remains a separate dependency gate.
-After configuration: compile/link, level/input, persistence, audio, clean exit
-and intended-ROM repeat. No build or RELEASE claim is made while blocked.
+Build with a committed OXP extension revision and an explicit target overlay:
 
-## Using the refreshed SDK
+```sh
+nice -n 19 sh ports/enigma/build-amiga.sh \
+  --source build/game-ports/sources/enigma \
+  --stove build/enigma-open4-stove --sdk-overlay /path/to/target-overlay \
+  --oxp-source /path/to/openamigaxml \
+  --oxp-ref 303deba5a9ed6d7d38b9cac524b8bd91c080ff67 \
+  --out build/enigma-open4-soft --jobs 4
+```
 
-Pass `--sdk-overlay /path/to/curl-sdk/sdk` to use the isolated Open SDK curl
-output alongside the selected stove. The inventory records actual input
-paths and hashes; CMake searches the explicit target overlay first, and its
-complete native headers stay ahead of older compiler NDK copies. This is
-an explicit target prefix, not permission to use host libraries.
-The new overlay removes curl's missing-input gate; Xerces-C still blocks
-configuration. Presence/hash checks alone do not prove ABI compatibility.
+The historically named `build_open3.py` now requires verified Open4 provenance.
+It exports both source commits into a fresh output directory, applies patches
+without fuzz, builds native host tolua, then cross-builds with OpenNDK,
+68040 soft-float specs and the selected SDK overlay. It records patch and input
+hashes, commands, a link map and executable hash. The final link rejects Xerces
+symbols. `configure_open3.py` is the configuration-only compatibility entry.
+No network access or live-instance deployment occurs during the build.
 
-Curl also requires the application to own/open its task's SocketBase and set
-its errno hook before curl initialization, as OpenBrowser does. The refreshed
-SDK consumer example demonstrates real initialization; merely adding a dummy
-symbol is insufficient. Enigma's native network startup and task ownership
-remain part of its eventual build/runtime integration.
+## XML validation and runtime
+
+The adapter supports Enigma's local schemas, DOM edits/imports, defaulted versus
+explicit attributes, filtered score serialization and UTF-8/UTF-16 conversion.
+Unmapped external resources are rejected. XML files saved by Enigma omit schema
+default attributes, preserving the score checksum/reload semantics.
+See OpenAmigaXML `oxp/SCHEMA.md` for the deliberately bounded XSD subset.
+
+Checks recorded on 31 October 2026: 72 parser fixtures plus API checks,
+96 mutation/schema checks, 28 adapter checks, and all 1,634 supplied Enigma XML
+files validate against the seven schemas. The isolated AROS native test run
+passed 96 schema and 28 adapter checks with the earlier Open3 build. These
+results do not qualify the new Open4 executable or game play. Test sources are
+in `tests/`; OXP evidence is committed in the companion OpenAmigaXML branch.
+
+An earlier experimental executable reached SDL video/audio initialization and
+loaded state, object definitions and 787 objects, then failed network setup in
+the isolated AROS lab. `--robinson` now skips network initialization for offline
+play. Native paths use `PROGDIR:data` and `PROGDIR:User`.
+
+Remaining qualification: Open4 soft-float runtime, instruction audit, rendered
+level/input, save/reload, audio and normal exit, then the intended ROM/hardware.
+The selected SDK currently includes static curl, zlib and SDL_ttf dependencies;
+the project module/OpenFont/z.library policy must be satisfied before release.
+This integration is a draft, not a release or a claim of playable Enigma.

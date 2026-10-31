@@ -1,0 +1,109 @@
+{
+  "source_commit": "6f0c51b26cc013cb6c935046d7d1e6a20bea4179",
+  "oxp_commit": "303deba5a9ed6d7d38b9cac524b8bd91c080ff67",
+  "compiler_release": "16.2.0-open4",
+  "compiler_archive_sha256": "495319a2ffd803278f8827cad70074029c7aa9ecbe05d037e8646ba43ab94ab2",
+  "dependencies": {
+    "found": {
+      "SDL2": {
+        "lib/libSDL2.a": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove/prefix/m68k-amigaos/lib/libSDL2.a",
+          "sha256": "0adabe8d7df786a96c45dd6bf0210580d28ad2a00b7c83304b35e7e67f0a16d9"
+        },
+        "include/SDL2/SDL.h": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove/prefix/m68k-amigaos/include/SDL2/SDL.h",
+          "sha256": "952e89e1dc4e0dd1a7bea6a153df632b8cdb6e433a9b3b0702c5ffe15b9b9360"
+        }
+      },
+      "SDL2_image": {
+        "lib/libSDL2_image.a": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove/prefix/m68k-amigaos/lib/libSDL2_image.a",
+          "sha256": "68f492d6fefa5e8f01fce027997af2223c433938ba1f32c9cac4ce5ac5f9850c"
+        },
+        "include/SDL2/SDL_image.h": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove/prefix/m68k-amigaos/include/SDL2/SDL_image.h",
+          "sha256": "f72b0187df3b81109d0a561db0fbde3f1be1ee10f30552a9fd4756ae11bcf7fd"
+        }
+      },
+      "SDL2_ttf": {
+        "lib/libSDL2_ttf.a": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove/prefix/m68k-amigaos/lib/libSDL2_ttf.a",
+          "sha256": "143d61767fb6ba05855d3df30f383a70ea52051785fd634379ebda22fbce8391"
+        },
+        "include/SDL2/SDL_ttf.h": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove/prefix/m68k-amigaos/include/SDL2/SDL_ttf.h",
+          "sha256": "0b83c6f2ec988e75c2fae73f020ccd4d52b8e0b40e9124b82d35e21406c0b526"
+        }
+      },
+      "SDL2_mixer": {
+        "lib/libSDL2_mixer.a": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove/prefix/m68k-amigaos/lib/libSDL2_mixer.a",
+          "sha256": "2eb815c9d0f9d804a79a4fb2e10e017a4c800bedcecac9611ca3c689f5d542ff"
+        },
+        "include/SDL2/SDL_mixer.h": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove/prefix/m68k-amigaos/include/SDL2/SDL_mixer.h",
+          "sha256": "d7284c74e5abe94049b5b483084edd0980faa0050144631931a7359c14f35851"
+        }
+      },
+      "curl": {
+        "lib/libcurl.a": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk/lib/libcurl.a",
+          "sha256": "87a13a9d9100a4ae70b8e6083c0c116a6bbca31ab029b430ca7a2b469286f39e"
+        },
+        "include/curl/curl.h": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk/include/curl/curl.h",
+          "sha256": "9ec2e9040d8d95545a4c331461c54748651edc3852a6ceca0672f858103e0528"
+        }
+      },
+      "nghttp2": {
+        "lib/libnghttp2.a": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk/lib/libnghttp2.a",
+          "sha256": "ed737a01b8f9d56deb8d26a163b7d62f4b0ed57142196f10a9790063dfb12532"
+        },
+        "include/nghttp2/nghttp2.h": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk/include/nghttp2/nghttp2.h",
+          "sha256": "0bd0ee37b1b08fa38f9b773de201fe431846fda2bd0bed44f642c6c332e2e342"
+        }
+      },
+      "zlib": {
+        "lib/libz.a": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk/lib/libz.a",
+          "sha256": "0df1c8b8e34a4a9eb39d74f3a5f4d525aa35f0cab38ef15394b458e5edcc2552"
+        },
+        "include/zlib.h": {
+          "path": "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk/include/zlib.h",
+          "sha256": "71e0dcf4cacb6b1674550a3d9407344746d27cdce739e6e25189d0b620b005ed"
+        }
+      }
+    },
+    "missing": []
+  },
+  "patches": {
+    "0001-enigma-oxp.patch": "ef3ff361ae047afe10d26a50714a0e5d06ea6ba60013dacdfb326d832b4eae61"
+  },
+  "configure_command": [
+    "cmake",
+    "-S",
+    "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031/source",
+    "-B",
+    "/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031/cmake",
+    "-DCMAKE_TOOLCHAIN_FILE=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/ports/enigma/amigaos3.cmake",
+    "-DAMIGA_STOVE=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-stove",
+    "-DAMIGA_SDK_OVERLAYS=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk",
+    "-DAMIGA_CPU_FLAGS=-m68040 -specs=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031/oxp-source/toolchain/m68k-soft-m68040.specs",
+    "-DAMIGA_RUNTIME=-mcrt=nix20",
+    "-DOXP_SOURCE_DIR=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031/oxp-source/oxp",
+    "-DTOLUA_EXECUTABLE=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031/host-tools/build/tolua",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DHAVE_SDL=ON",
+    "-DCMAKE_C_FLAGS=-m68040 -specs=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031/oxp-source/toolchain/m68k-soft-m68040.specs -mcrt=nix20 -pthread -fno-delete-null-pointer-checks -fno-tree-loop-distribute-patterns -fno-late-combine-instructions -isystem \"/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk/include\" -ffile-prefix-map=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031=/enigma-build",
+    "-DCMAKE_CXX_FLAGS=-m68040 -specs=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031/oxp-source/toolchain/m68k-soft-m68040.specs -mcrt=nix20 -pthread -fno-delete-null-pointer-checks -fno-tree-loop-distribute-patterns -fno-late-combine-instructions -isystem \"/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-sdk/include\" -ffile-prefix-map=/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031=/enigma-build",
+    "-DCMAKE_C_FLAGS_RELEASE=-O2 -DNDEBUG",
+    "-DCMAKE_CXX_FLAGS_RELEASE=-O2 -DNDEBUG",
+    "-DCMAKE_EXE_LINKER_FLAGS=-Wl,-Map,/run/media/da1ek/WorkingSpace/AmigaChrome/enigma-completion-20261031/build/enigma-open4-soft-20261031/enigma.map"
+  ],
+  "state": "compiled",
+  "runtime": "not tested",
+  "executable_sha256": "9f96ba0718738321d0b389d2d251af6a79855ead9b2c11de15c0f8e3c7a95c55",
+  "xerces_symbols": false
+}

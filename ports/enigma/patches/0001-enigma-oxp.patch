@@ -1,0 +1,2051 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,13 +11,25 @@
+ find_package(SDL2_image REQUIRED)
+ find_package(SDL2_ttf REQUIRED)
+ find_package(SDL2_mixer REQUIRED)
+-find_package(XercesC REQUIRED)
++set(OXP_SOURCE_DIR "" CACHE PATH "Existing OpenAmigaXML oxp directory")
++if(NOT EXISTS "${OXP_SOURCE_DIR}/src/oxp.c" OR NOT EXISTS "${OXP_SOURCE_DIR}/src/oxp_schema.cpp")
++    message(FATAL_ERROR "Supply the extended OXP source tree with -DOXP_SOURCE_DIR")
++endif()
++add_library(oxp STATIC "${OXP_SOURCE_DIR}/src/oxp.c" "${OXP_SOURCE_DIR}/src/oxp_dom.c")
++target_include_directories(oxp PUBLIC "${OXP_SOURCE_DIR}/include")
++add_library(oxp-schema STATIC "${OXP_SOURCE_DIR}/src/oxp_schema.cpp")
++target_link_libraries(oxp-schema PUBLIC oxp)
+ find_package(ZLIB REQUIRED)
+ find_package(CURL REQUIRED)
++find_library(ENIGMA_NGHTTP2_LIBRARY NAMES nghttp2 REQUIRED)
++set_property(TARGET CURL::libcurl APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${ENIGMA_NGHTTP2_LIBRARY};ZLIB::ZLIB;atomic;m")
+ 
+ Include(FindIntl)
+ 
+ add_compile_definitions(ENABLE_ASSERT="")
++if(CMAKE_SYSTEM_PROCESSOR STREQUAL "m68k")
++    add_compile_definitions(ENIGMA_AMIGA=1)
++endif()
+ add_compile_definitions(SYSTEM_DATA_DIR="")
+ add_compile_definitions(DOCDIR="")
+ add_compile_definitions(LOCALEDIR="")
+@@ -32,7 +44,15 @@
+ add_subdirectory(lib-src)
+ add_subdirectory(data)
+ add_subdirectory(src)
+-add_subdirectory(tools)
++if(CMAKE_CROSSCOMPILING)
++    if(NOT EXISTS "${TOLUA_EXECUTABLE}")
++        message(FATAL_ERROR "Supply the host tolua generator using -DTOLUA_EXECUTABLE")
++    endif()
++    add_executable(tolua IMPORTED GLOBAL)
++    set_target_properties(tolua PROPERTIES IMPORTED_LOCATION "${TOLUA_EXECUTABLE}")
++else()
++    add_subdirectory(tools)
++endif()
+ 
+ 
+ include(InstallRequiredSystemLibraries)
+--- a/lib-src/enet/unix.c
++++ b/lib-src/enet/unix.c
+@@ -16,6 +16,15 @@
+ #include <errno.h>
+ #include <time.h>
+ 
++#ifdef ENIGMA_AMIGA
++#include <proto/bsdsocket.h>
++#define close(s) CloseSocket(s)
++#define ioctl(s,request,value) IoctlSocket(s,request,value)
++#define select(n,r,w,e,t) WaitSelect(n,r,w,e,t,NULL)
++#define inet_ntoa(a) Inet_NtoA((a).s_addr)
++#undef HAS_FCNTL
++#endif
++
+ #define ENET_BUILDING_LIB 1
+ #include "enet/enet.h"
+ 
+@@ -152,6 +161,9 @@
+ ENetSocket
+ enet_socket_create (ENetSocketType type, const ENetAddress * address)
+ {
++    #ifdef ENIGMA_AMIGA
++    if (!SocketBase) return ENET_SOCKET_NULL;
++#endif
+     ENetSocket newSocket = socket (PF_INET, type == ENET_SOCKET_TYPE_DATAGRAM ? SOCK_DGRAM : SOCK_STREAM, 0);
+     int receiveBufferSize = ENET_HOST_RECEIVE_BUFFER_SIZE,
+         allowBroadcasting = 1;
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -2,6 +2,7 @@
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
+ add_executable(enigma
++    oxp_enigma.cc
+     actors/Balls.cc
+     actors/Balls.hh
+     actors/BugActor.cc
+@@ -448,7 +449,7 @@
+     SDL2::Mixer
+     SDL2::TTF
+     ZLIB::ZLIB
+-    XercesC::XercesC
++    oxp-schema
+     CURL::libcurl
+     tinygettext
+     enet
+@@ -458,3 +459,7 @@
+ )
+ 
+ install(TARGETS enigma DESTINATION bin)
++
++if(CMAKE_SYSTEM_PROCESSOR STREQUAL "m68k")
++    target_sources(enigma PRIVATE amiga_runtime.c)
++endif()
+--- a/src/DOMErrorReporter.cc
++++ b/src/DOMErrorReporter.cc
+@@ -20,12 +20,10 @@
+ #include "DOMErrorReporter.hh"
+ #include "XMLtoLocal.hh"
+ #include <iostream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/util/XMLString.hpp>
+-#include <xercesc/util/XercesDefs.hpp>
++#include "oxp_enigma.hh"
+ 
+-using xercesc::DOMError;
+-using xercesc::XMLString;
++using oxpcompat::DOMError;
++using oxpcompat::XMLString;
+ 
+ namespace enigma
+ {
+--- a/src/DOMErrorReporter.hh
++++ b/src/DOMErrorReporter.hh
+@@ -21,8 +21,7 @@
+ #define ENIGMA_DOMERRORREPORTER_HH
+ 
+ #include <ostream>
+-#include <xercesc/dom/DOMErrorHandler.hpp>
+-#include <xercesc/dom/DOMError.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+@@ -30,7 +29,7 @@
+      * Error handler for DOM parser and serializer.  It reports the error
+      * messages according to their severity as a log note or an alert panel
+      */
+-    class DOMErrorReporter : public xercesc::DOMErrorHandler
++    class DOMErrorReporter : public oxpcompat::DOMErrorHandler
+     {
+     public:
+         /**
+@@ -46,7 +45,7 @@
+          * @param domError  the error description 
+          * @return  true to continue parse or serialization
+          */
+-        bool handleError(const xercesc::DOMError& domError) override;
++        bool handleError(const oxpcompat::DOMError& domError) override;
+ 
+         /**
+          * Returns true if error or warning occured since last reset
+@@ -56,7 +55,7 @@
+         /**
+          * Returns maximum severity of error since last reset
+          */
+-        xercesc::DOMError::ErrorSeverity getSeverity() const;
++        oxpcompat::DOMError::ErrorSeverity getSeverity() const;
+         
+         /**
+          * Resets error flag and severity
+@@ -96,7 +95,7 @@
+         /**
+          * Most significant error type since last reset
+          */
+-        xercesc::DOMError::ErrorSeverity severity;
++        oxpcompat::DOMError::ErrorSeverity severity;
+         
+         /**
+          * Current output stream for error reports
+--- a/src/DOMSchemaResolver.cc
++++ b/src/DOMSchemaResolver.cc
+@@ -22,9 +22,7 @@
+ #include "file.hh"
+ #include "XMLtoLocal.hh"
+ #include "LocalToXML.hh"
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/framework/Wrapper4InputSource.hpp>
+-#include <xercesc/framework/LocalFileInputSource.hpp>
++#include "oxp_enigma.hh"
+ 
+ #include <iostream>
+ 
+@@ -55,7 +53,7 @@
+         substitutions.insert(std::make_pair(schemaSystemId, schemaFilename));
+     }
+ 
+-    xercesc::DOMLSInput * DOMSchemaResolver::resolveResource (
++    oxpcompat::DOMLSInput * DOMSchemaResolver::resolveResource (
+             const XMLCh* const resourceType, const XMLCh* const namespaceUri,
+             const XMLCh *const publicId, const XMLCh *const systemId,
+             const XMLCh *const baseURI) {
+@@ -72,8 +70,8 @@
+             bool result = app.systemFS->findFile( std::string("schemas/") + 
+                     i->second , schemaPath);
+             if (result) {
+-                xercesc::DOMLSInput* inSrc = new xercesc::Wrapper4InputSource(
+-                        new xercesc::LocalFileInputSource(LocalToXML(&schemaPath).x_str()));
++                oxpcompat::DOMLSInput* inSrc = new oxpcompat::Wrapper4InputSource(
++                        new oxpcompat::LocalFileInputSource(LocalToXML(&schemaPath).x_str()));
+ // W3C implementation:
+ //                 DOMLSInput * inSrc = app.domImplementationLS->createLSInput();
+ //                 inSrc->setSystemId(LocalToXML(&schemaPath).x_str()));
+--- a/src/DOMSchemaResolver.hh
++++ b/src/DOMSchemaResolver.hh
+@@ -22,10 +22,7 @@
+ 
+ #include <map>
+ #include <string>
+-#include <xercesc/util/XercesVersion.hpp>
+-#include <xercesc/dom/DOMLSParser.hpp>
+-#include <xercesc/dom/DOMLSResourceResolver.hpp>
+-#include <xercesc/dom/DOMLSInput.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+@@ -37,9 +34,9 @@
+      * are resolved by the parser using the given system id. A flag allows to
+      * check if the XML file did adhere to a given schema.
+      */
+-    class DOMSchemaResolver : public xercesc::DOMLSResourceResolver {
++    class DOMSchemaResolver : public oxpcompat::DOMLSResourceResolver {
+     public:
+-        xercesc::DOMLSInput * resolveResource (
++        oxpcompat::DOMLSInput * resolveResource (
+             const XMLCh* const resourceType, const XMLCh* const namespaceUri,
+             const XMLCh *const publicId, const XMLCh *const systemId,
+             const XMLCh *const baseURI);
+--- a/src/LocalToXML.cc
++++ b/src/LocalToXML.cc
+@@ -19,7 +19,7 @@
+ 
+ #include "LocalToXML.hh"
+ 
+-using xercesc::XMLString;
++using oxpcompat::XMLString;
+ 
+ namespace enigma
+ {
+--- a/src/LocalToXML.hh
++++ b/src/LocalToXML.hh
+@@ -21,7 +21,7 @@
+ #define ENIGMA_LOCALTOXML_HH
+ 
+ #include <iostream>
+-#include <xercesc/util/XMLString.hpp>
++#include "oxp_enigma.hh"
+ 
+ 
+ namespace enigma
+--- a/src/ObjectValidator.cc
++++ b/src/ObjectValidator.cc
+@@ -29,14 +29,13 @@
+ #include "gui/ErrorMenu.hh"
+ #include <iostream>
+ #include <sstream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/util/XMLDouble.hpp>
+-
+-using xercesc::DOMElement;
+-using xercesc::DOMNode;
+-using xercesc::DOMNodeList;
+-using xercesc::XMLDouble;
+-using xercesc::XMLString;
++#include "oxp_enigma.hh"
++
++using oxpcompat::DOMElement;
++using oxpcompat::DOMNode;
++using oxpcompat::DOMNodeList;
++using oxpcompat::XMLDouble;
++using oxpcompat::XMLString;
+ 
+ namespace enigma {
+     ObjectValidator *ObjectValidator::theSingleton = nullptr;
+--- a/src/ObjectValidator.hh
++++ b/src/ObjectValidator.hh
+@@ -27,8 +27,7 @@
+ #include <list>
+ #include <map>
+ #include <string>
+-#include <xercesc/dom/DOMDocument.hpp>
+-#include <xercesc/dom/DOMElement.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+@@ -68,9 +67,9 @@
+         static bool mayInitialize;
+         
+         void init();
+-        void scanAttributeElement(xercesc::DOMElement *attribElement);
+-        void scanMessageElement(xercesc::DOMElement *msgElement);
+-        void scanObjectElement(xercesc::DOMElement *objectElement);
++        void scanAttributeElement(oxpcompat::DOMElement *attribElement);
++        void scanMessageElement(oxpcompat::DOMElement *msgElement);
++        void scanObjectElement(oxpcompat::DOMElement *objectElement);
+         Value parseTypedValue(const XMLCh* xmlSource, const std::string &strSource, validationType type);
+         
+         std::map<std::string, KindDescriptor *> kinds;
+@@ -78,7 +77,7 @@
+         std::map<std::string, AttributeDescriptor *> defaultAttributes;
+         std::list<AttributeDescriptor *> otherAttributes;
+         
+-        xercesc::DOMDocument *doc;
++        oxpcompat::DOMDocument *doc;
+     };
+ } // namespace enigma
+ #endif
+--- a/src/PreferenceManager.cc
++++ b/src/PreferenceManager.cc
+@@ -33,17 +33,14 @@
+ #include "XMLtoUtf8.hh"
+ 
+ #include <iostream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/util/PlatformUtils.hpp>
+-#include <xercesc/util/XMLString.hpp>
+-#include <xercesc/util/XMLUniDefs.hpp>
++#include "oxp_enigma.hh"
+ 
+-using xercesc::DOMDocument;
+-using xercesc::DOMElement;
+-using xercesc::DOMException;
+-using xercesc::DOMNodeList;
+-using xercesc::XMLException;
+-using xercesc::XMLString;
++using oxpcompat::DOMDocument;
++using oxpcompat::DOMElement;
++using oxpcompat::DOMException;
++using oxpcompat::DOMNodeList;
++using oxpcompat::XMLException;
++using oxpcompat::XMLString;
+ 
+ namespace enigma {
+     PreferenceManager *PreferenceManager::theSingleton = nullptr;
+@@ -84,11 +81,11 @@
+                     DOMElement *tmplProperty = dynamic_cast<DOMElement *>(tmplPropList->item(i));
+                     const XMLCh * key = tmplProperty->getAttribute(Utf8ToXML("key").x_str());
+                     DOMElement * lastUserProperty;
+-                    if (key[0] != xercesc::chUnderscore && !hasProperty(key, &lastUserProperty)) {
++                    if (key[0] != oxpcompat::chUnderscore && !hasProperty(key, &lastUserProperty)) {
+                         // a new property in the template
+                         Log << "Preferences: add new Property \"" << XMLtoLocal(key) << "\"\n";
+                         // make a copy
+-                        xercesc::DOMNode * newProperty =  doc->importNode(tmplProperty, false);
++                        oxpcompat::DOMNode * newProperty =  doc->importNode(tmplProperty, false);
+                         if (newProperty == nullptr) {
+                             Log << "Preferences: copy new Property failed!\n";
+                         } else {
+--- a/src/PropertyManager.cc
++++ b/src/PropertyManager.cc
+@@ -24,15 +24,12 @@
+ #include "XMLtoUtf8.hh"
+ #include "ecl_system.hh"
+ #include <cstdio>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/util/XMLDouble.hpp>
+-#include <xercesc/util/XMLString.hpp>
+-#include <xercesc/util/XercesVersion.hpp>
++#include "oxp_enigma.hh"
+ 
+-using xercesc::DOMElement;
+-using xercesc::DOMNodeList;
+-using xercesc::XMLDouble;
+-using xercesc::XMLString;
++using oxpcompat::DOMElement;
++using oxpcompat::DOMNodeList;
++using oxpcompat::XMLDouble;
++using oxpcompat::XMLString;
+ 
+ namespace enigma {
+     PropertyManager::PropertyManager() : doc (nullptr), propertiesElem (nullptr) {
+--- a/src/PropertyManager.hh
++++ b/src/PropertyManager.hh
+@@ -20,8 +20,7 @@
+ #define PROPERTYMGR_HH_INCLUDED
+ 
+ #include <string>
+-#include <xercesc/dom/DOMDocument.hpp>
+-#include <xercesc/dom/DOMElement.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+@@ -49,15 +48,15 @@
+         
+     protected:
+         PropertyManager();
+-        xercesc::DOMDocument *doc;
+-        xercesc::DOMElement *propertiesElem;
++        oxpcompat::DOMDocument *doc;
++        oxpcompat::DOMElement *propertiesElem;
+         
+         /**
+          * force a return of a property element with the given name as key.
+          * @param prefName  the name of the searched or new property
+          * @return  the property element with the given key name.
+          */
+-        xercesc::DOMElement * getPropertyElement(const char *prefName);
++        oxpcompat::DOMElement * getPropertyElement(const char *prefName);
+ 
+         /**
+          * checks if a property exists.
+@@ -66,7 +65,7 @@
+          *                 element found in the preference list (for append usage).
+          * @return validity of element.
+          */
+-         bool hasProperty(const char *prefName, xercesc::DOMElement ** element);
++         bool hasProperty(const char *prefName, oxpcompat::DOMElement ** element);
+         /**
+          * checks if a property exists.
+          * @param key     the preference name.
+@@ -74,7 +73,7 @@
+          *                element found in the preference list (for append usage).
+          * @return validity of element.
+          */
+-        bool hasProperty(const XMLCh * key, xercesc::DOMElement ** element) const;
++        bool hasProperty(const XMLCh * key, oxpcompat::DOMElement ** element) const;
+     };
+ } // namespace enigma
+ #endif
+--- a/src/StateManager.cc
++++ b/src/StateManager.cc
+@@ -34,14 +34,9 @@
+ #include <cstdio>
+ #include <iostream>
+ #include <sstream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/util/XMLDouble.hpp>
+-#include <xercesc/util/XMLString.hpp>
+-#include <xercesc/util/XMLUniDefs.hpp>
+-#include <xercesc/util/PlatformUtils.hpp>
+-#include <xercesc/util/XercesVersion.hpp>
+-
+-using namespace xercesc;
++#include "oxp_enigma.hh"
++
++using namespace oxpcompat;
+ 
+ namespace enigma {
+     StateManager *StateManager::theSingleton = 0;
+--- a/src/StateManager.hh
++++ b/src/StateManager.hh
+@@ -22,7 +22,7 @@
+ #include "PropertyManager.hh"
+ #include <string>
+ #include <vector>
+-#include <xercesc/dom/DOMElement.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+@@ -71,13 +71,13 @@
+         StateManager();
+     private:
+         static StateManager *theSingleton;
+-        xercesc::DOMElement *groupsElem;
+-        xercesc::DOMNodeList *groupList;
+-        xercesc::DOMElement *indicesElem;
+-        xercesc::DOMNodeList *indexList;
+-        xercesc::DOMElement *levelsElem;
++        oxpcompat::DOMElement *groupsElem;
++        oxpcompat::DOMNodeList *groupList;
++        oxpcompat::DOMElement *indicesElem;
++        oxpcompat::DOMNodeList *indexList;
++        oxpcompat::DOMElement *levelsElem;
+         
+-        xercesc::DOMElement *getLevel(std::string id);
++        oxpcompat::DOMElement *getLevel(std::string id);
+     };
+ } // namespace enigma
+ #endif
+--- a/src/Utf8ToXML.cc
++++ b/src/Utf8ToXML.cc
+@@ -22,8 +22,7 @@
+ #include "main.hh"
+ 
+ #include <cstring>
+-#include <xercesc/util/TransService.hpp>
+-#include <xercesc/util/XMLString.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+--- a/src/Utf8ToXML.hh
++++ b/src/Utf8ToXML.hh
+@@ -21,7 +21,7 @@
+ #define ENIGMA_UTF8TOXML_HH
+ 
+ #include <iostream>
+-#include <xercesc/util/XMLString.hpp>
++#include "oxp_enigma.hh"
+ 
+ 
+ namespace enigma
+--- a/src/XMLtoLocal.cc
++++ b/src/XMLtoLocal.cc
+@@ -24,11 +24,11 @@
+     XMLtoLocal::XMLtoLocal(const XMLCh* const toTranscode) {
+         // Use XML for transcoding -- the returned string is owned by us
+         // but managed by XMLString!
+-        localString = xercesc::XMLString::transcode(toTranscode);
++        localString = oxpcompat::XMLString::transcode(toTranscode);
+     }
+ 
+     XMLtoLocal::~XMLtoLocal() {
+-        xercesc::XMLString::release(&localString);
++        oxpcompat::XMLString::release(&localString);
+     }
+ 
+     const char* XMLtoLocal::c_str() const {
+--- a/src/XMLtoLocal.hh
++++ b/src/XMLtoLocal.hh
+@@ -21,7 +21,7 @@
+ #define ENIGMA_XMLTOLOCAL_HH
+ 
+ #include <iostream>
+-#include <xercesc/util/XMLString.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+--- a/src/XMLtoUtf8.cc
++++ b/src/XMLtoUtf8.cc
+@@ -19,11 +19,10 @@
+ 
+ #include "XMLtoUtf8.hh"
+ #include "main.hh"
+-#include <xercesc/util/XMLString.hpp>
+-#include <xercesc/util/TransService.hpp>
++#include "oxp_enigma.hh"
+ 
+-using xercesc::XMLString;
+-using xercesc::XMLTranscoder;
++using oxpcompat::XMLString;
++using oxpcompat::XMLTranscoder;
+ 
+ namespace enigma
+ {
+--- a/src/XMLtoUtf8.hh
++++ b/src/XMLtoUtf8.hh
+@@ -21,7 +21,7 @@
+ #define ENIGMA_XMLTOUTF8_HH
+ 
+ #include <iostream>
+-#include <xercesc/util/XMLString.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+--- a/src/amiga_runtime.c
++++ b/src/amiga_runtime.c
+@@ -0,0 +1,39 @@
++/* Native task-owned sockets and 68040 FPU startup. GPL-2.0-or-later.
++ * Copyright (c) 2026 AmigaChrome Team. */
++#include <exec/execbase.h>
++#include <proto/exec.h>
++#include <proto/bsdsocket.h>
++#include <amitcp/socketbasetags.h>
++#include <errno.h>
++#include <stdlib.h>
++struct Library *SocketBase;
++static void close_network(void)
++{
++    if (SocketBase) { CloseLibrary(SocketBase); SocketBase = 0; }
++}
++int enigma_open_network(void)
++{
++    if (SocketBase) return 0;
++    SocketBase = OpenLibrary("bsdsocket.library", 4);
++    if (!SocketBase) return -1;
++    if (SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (ULONG)&errno, TAG_DONE)) {
++        close_network(); return -1;
++    }
++    atexit(close_network);
++    return 0;
++}
++/* The soft-float game build contains no FPU startup or instructions. */
++#if defined(__HAVE_68881__)
++void __fpucheck(void)
++{
++    ULONG fpcr;
++    if (!(SysBase->AttnFlags & (AFF_68881 | AFF_68882 | AFF_FPU40))) {
++        Alert(0x00068881);
++        exit(20);
++    }
++    __asm__ volatile ("fmove.l %%fpcr,%0" : "=d"(fpcr));
++    fpcr &= ~0x30UL;
++    __asm__ volatile ("fmove.l %0,%%fpcr" : : "d"(fpcr));
++}
++
++#endif
+--- a/src/d_models.cc
++++ b/src/d_models.cc
+@@ -1,3 +1,4 @@
++#include <cassert>
+ /*
+  * Copyright (C) 2002,2003,2005 Daniel Heck
+  *
+--- a/src/file.cc
++++ b/src/file.cc
+@@ -339,7 +339,13 @@
+ 
+ CURL* easycurl;
+ 
++#ifdef ENIGMA_AMIGA
++extern "C" int enigma_open_network(void);
++#endif
+ bool InitCurl() {
++#ifdef ENIGMA_AMIGA
++    if (enigma_open_network()) return false;
++#endif
+     if (curl_global_init(CURL_GLOBAL_ALL) != 0)
+         return false;
+ 
+@@ -348,8 +354,11 @@
+ }
+ 
+ void ShutdownCurl() {
+-    curl_easy_cleanup(easycurl);
+-    curl_global_cleanup();
++    if (easycurl) {
++        curl_easy_cleanup(easycurl);
++        easycurl = nullptr;
++        curl_global_cleanup();
++    }
+ }
+ 
+ size_t curl_writefunction(void* src, size_t size, size_t nmemb, void* dataptr) {
+--- a/src/lev/PersistentIndex.cc
++++ b/src/lev/PersistentIndex.cc
+@@ -36,17 +36,10 @@
+ #include <iostream>
+ #include <set>
+ #include <sstream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/framework/MemBufInputSource.hpp>
+-#include <xercesc/framework/Wrapper4InputSource.hpp>
+-#include <xercesc/util/XercesVersion.hpp>
+-#include <xercesc/util/XMLDouble.hpp>
+-#include <xercesc/util/XMLException.hpp>
+-#include <xercesc/util/XMLString.hpp>
+-#include <xercesc/util/XMLUniDefs.hpp>
++#include "oxp_enigma.hh"
+ 
+ using namespace std;
+-XERCES_CPP_NAMESPACE_USE
++using namespace oxpcompat;
+ 
+ namespace enigma::lev {
+ 
+--- a/src/lev/PersistentIndex.hh
++++ b/src/lev/PersistentIndex.hh
+@@ -24,7 +24,7 @@
+ #include <istream>
+ #include <memory>
+ #include <string>
+-#include <xercesc/dom/DOMDocument.hpp>
++#include "oxp_enigma.hh"
+ 
+ #define INDEX_STD_FILENAME "index.xml"
+ 
+@@ -127,10 +127,10 @@
+     static std::vector<std::shared_ptr<PersistentIndex>> indexCandidates;
+     static std::vector<std::unique_ptr<PersistentIndex>> persistentIndices;
+     std::string absIndexPath;
+-    xercesc::DOMDocument* doc = nullptr;
+-    xercesc::DOMElement* infoElem;
+-    xercesc::DOMElement* updateElem;
+-    xercesc::DOMElement* levelsElem;
++    oxpcompat::DOMDocument* doc = nullptr;
++    oxpcompat::DOMElement* infoElem;
++    oxpcompat::DOMElement* updateElem;
++    oxpcompat::DOMElement* levelsElem;
+ 
+     //        static void checkCandidate(PersistentIndex * candidate);
+     static void checkCandidate(const std::string& thePackPath, bool systemOnly,
+--- a/src/lev/Proxy.cc
++++ b/src/lev/Proxy.cc
+@@ -39,13 +39,7 @@
+ #include <fstream>
+ #include <iostream>
+ #include <sstream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/util/XMLException.hpp>
+-#include <xercesc/util/XMLDouble.hpp>
+-#include <xercesc/util/XMLString.hpp>
+-#include <xercesc/util/XMLUniDefs.hpp>
+-#include <xercesc/framework/MemBufInputSource.hpp>
+-#include <xercesc/framework/Wrapper4InputSource.hpp>
++#include "oxp_enigma.hh"
+ 
+ #ifndef CXXLUA
+ extern "C" {
+@@ -62,7 +56,7 @@
+ 
+ using namespace std;
+ using namespace enigma;
+-XERCES_CPP_NAMESPACE_USE
++using namespace oxpcompat;
+ 
+ namespace enigma { namespace lev {
+ 
+--- a/src/lev/Proxy.hh
++++ b/src/lev/Proxy.hh
+@@ -26,7 +26,7 @@
+ #include <set>
+ #include <string>
+ #include <vector>
+-#include <xercesc/dom/DOMDocument.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma::lev {
+     enum controlType {force, balance, key, other};
+@@ -196,9 +196,9 @@
+          * info in the Proxy as an exception.
+          */
+         GameType engineCompatibility;
+-        xercesc::DOMDocument *doc;
+-        xercesc::DOMElement *infoElem;
+-        xercesc::DOMNodeList *stringList;
++        oxpcompat::DOMDocument *doc;
++        oxpcompat::DOMElement *infoElem;
++        oxpcompat::DOMNodeList *stringList;
+         double loadtime;
+         
+         void load(bool onlyMetadata, bool expectLevel);
+--- a/src/lev/RatingManager.cc
++++ b/src/lev/RatingManager.cc
+@@ -29,12 +29,11 @@
+ #include <iostream>
+ #include <cstdlib>
+ #include <sstream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/util/XercesVersion.hpp>
++#include "oxp_enigma.hh"
+ 
+ using namespace std;
+ using namespace enigma;
+-XERCES_CPP_NAMESPACE_USE 
++using namespace oxpcompat; 
+ 
+ 
+ namespace enigma { namespace lev {
+--- a/src/lev/ScoreManager.cc
++++ b/src/lev/ScoreManager.cc
+@@ -39,18 +39,11 @@
+ #include <fstream>
+ #include <iostream>
+ #include <sstream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/framework/MemBufInputSource.hpp>
+-#include <xercesc/framework/Wrapper4InputSource.hpp>
+-#include <xercesc/util/PlatformUtils.hpp>
+-#include <xercesc/util/XercesVersion.hpp>
+-#include <xercesc/util/XMLDouble.hpp>
+-#include <xercesc/util/XMLString.hpp>
+-#include <xercesc/util/XMLUniDefs.hpp>
++#include "oxp_enigma.hh"
+ #include <zlib.h>
+ 
+ using namespace std;
+-XERCES_CPP_NAMESPACE_USE
++using namespace oxpcompat;
+ 
+ namespace enigma::lev {
+ 
+--- a/src/lev/ScoreManager.hh
++++ b/src/lev/ScoreManager.hh
+@@ -27,7 +27,7 @@
+ 
+ #include <map>
+ #include <string>
+-#include <xercesc/dom/DOMElement.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma::lev {
+     // Constants
+@@ -129,10 +129,10 @@
+         static unsigned ctab[256];
+         static unsigned pol;
+         RatingManager *ratingMgr;
+-        xercesc::DOMElement *levelsElem;
+-        xercesc::DOMNodeList * levelList;
+-        std::map<std::string, xercesc::DOMElement *> allLevelScores; // all scoreversions for each level
+-        std::map<std::string, xercesc::DOMElement *> curLevelScores; // most current scoreversion for each level
++        oxpcompat::DOMElement *levelsElem;
++        oxpcompat::DOMNodeList * levelList;
++        std::map<std::string, oxpcompat::DOMElement *> allLevelScores; // all scoreversions for each level
++        std::map<std::string, oxpcompat::DOMElement *> curLevelScores; // most current scoreversion for each level
+         std::string userId;
+         bool hasValidUserId;
+         bool didUpgrade;
+@@ -140,8 +140,8 @@
+         
+         void finishUserId(unsigned id3);
+         std::string sec(const std::string& target);
+-        xercesc::DOMElement * getLevel(lev::Proxy *levelProxy);
+-        xercesc::DOMElement * getCreateLevel(lev::Proxy *levelProxy);
++        oxpcompat::DOMElement * getLevel(lev::Proxy *levelProxy);
++        oxpcompat::DOMElement * getCreateLevel(lev::Proxy *levelProxy);
+         
+         unsigned idFromLegacyScore();
+         std::string upgradeSum();
+--- a/src/main.cc
++++ b/src/main.cc
+@@ -56,10 +56,7 @@
+ #include <ctime>
+ #include <fstream>
+ #include <iostream>
+-#include <xercesc/dom/DOM.hpp>
+-#include <xercesc/framework/XMLRecognizer.hpp>
+-#include <xercesc/util/XMLUniDefs.hpp>
+-#include <xercesc/util/PlatformUtils.hpp>
++#include "oxp_enigma.hh"
+ #include "SDL_main.h"
+ #include <SDL_image.h>
+ #include <SDL_ttf.h>
+@@ -333,7 +330,7 @@
+     Log << "prefPath = \"" << prefPath << "\"\n";
+ 
+     // initialize XML -- needs log, datapaths
+-    initXerces();
++    initOXP();
+ 
+     // initialize LUA - Run initialization scripts
+     lua_State *L = lua::GlobalState();
+@@ -364,17 +361,25 @@
+     initUserDatapaths();
+ 
+     // set message language
++    Log << "Startup: localization start\n" << std::flush;
+     init_i18n();
++    Log << "Startup: localization complete\n" << std::flush;
+ 
+     // initialize application state
++    Log << "Startup: state start\n" << std::flush;
+     state = StateManager::instance();
++    Log << "Startup: state complete\n" << std::flush;
+ 
+     // ----- Object declarations
+     ObjectValidator::didInitXML();  // enable initialization
++    Log << "Startup: object declarations start\n" << std::flush;
+     ObjectValidator::instance();    // force early initialization (an optional statement)
++    Log << "Startup: object declarations complete\n" << std::flush;
+ 
+     // ----- Initialize object repositories
++    Log << "Startup: world start\n" << std::flush;
+     InitWorld();
++    Log << "Startup: world complete\n" << std::flush;
+     if (ap.dumpinfo) {
+         DumpObjectInfo();
+         exit(0);
+@@ -427,13 +432,13 @@
+     lua::DoSubfolderFile (L, "soundsets", "soundset.lua");
+ 
+     // ----- Initialize TCP network layer
+-    if (!InitCurl()) {
++    if (!Robinson && !InitCurl()) {
+         fprintf (stderr, "An error occurred while initializing Curl.\n");
+         exit (1);
+     }
+ 
+     // ----- Initialize UDP network layer
+-    if (enet_initialize() != 0) {
++    if (!Robinson && enet_initialize() != 0) {
+         fprintf (stderr, "An error occurred while initializing ENet.\n");
+         exit (1);
+     }
+@@ -513,6 +518,19 @@
+     std::string progName;         // filename part of args[0]
+     std::string systemPath = SYSTEM_DATA_DIR; // substituted by configure.ac
+     bool haveHome = (getenv("HOME") != nullptr);
++#ifdef ENIGMA_AMIGA
++    systemAppDataPath = "PROGDIR:data";
++    systemFS = new GameFS();
++    systemFS->append_dir(systemAppDataPath);
++    if (!systemCmdDataPath.empty()) systemFS->prepend_dir(systemCmdDataPath);
++    docPath = "PROGDIR:docs";
++    userStdPath = "PROGDIR:User";
++    if (!ecl::FolderExists(userStdPath) && !ecl::FolderCreate(userStdPath))
++        throw XFrontend("Cannot create PROGDIR:User");
++    prefPath = userStdPath + "/" + prefFilename;
++    return;
++#endif
++
+ 
+ 
+ #ifdef __MINGW32__
+@@ -611,8 +629,8 @@
+     }
+ }
+ 
+-void Application::initXerces() {
+-    using namespace xercesc;
++void Application::initOXP() {
++    using namespace oxpcompat;
+     // init XML
+     try {
+         // Initialize to en_US - we don't know the user prefs yet.
+@@ -644,8 +662,8 @@
+         DOMConfiguration *config = domParser->getDomConfig();
+ 
+         config->setParameter(XMLUni::fgDOMNamespaces, true);
+-        config->setParameter(XMLUni::fgXercesSchema, true);
+-        config->setParameter(XMLUni::fgXercesSchemaFullChecking, true);
++        config->setParameter(XMLUni::fgSchema, true);
++        config->setParameter(XMLUni::fgSchemaFullChecking, true);
+         config->setParameter(XMLUni::fgDOMValidate, true);
+         config->setParameter(XMLUni::fgDOMDatatypeNormalization, true);
+         config->setParameter(XMLUni::fgDOMErrorHandler, domParserErrorHandler);
+@@ -654,7 +672,7 @@
+         //the same document, which causes it to be deleted twice. Adopting documents
+         //prevents Xerces from releasing them, as they will be released by
+         //Enigma in the destructors anyway.
+-        config->setParameter(XMLUni::fgXercesUserAdoptsDOMDocument, true);
++        config->setParameter(XMLUni::fgUserAdoptsDOMDocument, true);
+ 
+         domSer = domImplementationLS->createLSSerializer();
+         config = domSer->getDomConfig();
+@@ -852,6 +870,13 @@
+         }
+     }
+ 
++#ifdef ENIGMA_AMIGA
++    // The C/POSIX locale is untranslated English, not a catalogue name.
++    if (app.language.empty() || app.language == "C" || app.language == "POSIX")
++        app.language = "en";
++    if (app.defaultLanguage.empty() || app.defaultLanguage == "C" || app.defaultLanguage == "POSIX")
++        app.defaultLanguage = "en";
++#endif
+     l10nFS = new GameFS();
+     l10nFS->append_dir(l10nPath);
+     nls::theDictionaryManager.reset(new tinygettext::DictionaryManager(std::make_unique<nls::TinyGetTextFileSystem>(), "UTF-8"));
+@@ -939,14 +964,19 @@
+     app.errorInit = false;
+     VideoShutdown();
+     sound::Shutdown();
+-    enet_deinitialize();
++    if (!Robinson) enet_deinitialize();
+     ShutdownCurl();
+     lua::ShutdownGlobal();
+     lev::PersistentIndex::shutdown();
+     lev::Proxy::shutdown();
+     ObjectValidator::instance()->shutdown();
+     domParser->release();
+-    xercesc::XMLPlatformUtils::Terminate();
++    domSer->release();
++    delete domParserErrorHandler;
++    delete domParserSchemaResolver;
++    delete domSerErrorHandler;
++    delete xmlUtf8Transcoder;
++    oxpcompat::XMLPlatformUtils::Terminate();
+ #ifdef SDL_IMG_INIT
+     IMG_Quit();
+ #endif
+--- a/src/main.hh
++++ b/src/main.hh
+@@ -34,9 +34,7 @@
+ #include "video.hh"
+ #include <string>
+ #include <vector>
+-#include <xercesc/dom/DOMImplementationLS.hpp>
+-#include <xercesc/dom/DOMLSParser.hpp>
+-#include <xercesc/util/TransService.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma {
+ /* -------------------- Application services -------------------- */
+@@ -168,22 +166,22 @@
+         /**
+          * A xerces transcoder for utf-8.
+          */
+-        xercesc::XMLTranscoder* xmlUtf8Transcoder;
++        oxpcompat::XMLTranscoder* xmlUtf8Transcoder;
+         
+         /**
+          * The implementation of DOM Core.
+          */
+-        xercesc::DOMImplementation* domImplementationCore;
++        oxpcompat::DOMImplementation* domImplementationCore;
+ 
+         /**
+          * The implementation of DOM Load and Save.
+          */
+-        xercesc::DOMImplementationLS *domImplementationLS;
++        oxpcompat::DOMImplementationLS *domImplementationLS;
+ 
+         /**
+          * A configured DOM parser for reusage.
+          */
+-        xercesc::DOMLSParser *domParser;
++        oxpcompat::DOMLSParser *domParser;
+         /**
+          * The error handler attached to the domParser
+          */
+@@ -197,7 +195,7 @@
+         /**
+          * A configured DOM serializer for reusage.
+          */
+-        xercesc::DOMLSSerializer *domSer;
++        oxpcompat::DOMLSSerializer *domSer;
+         /**
+          * The error handler attached to the domSer
+          */
+@@ -214,7 +212,7 @@
+ 
+     private:
+         void initSysDatapaths(const std::string &prefFilename);
+-        void initXerces();
++        void initOXP();
+         void initUserDatapaths();
+         void updateMac1_00();
+         void createPreviews();
+--- a/src/oxp_enigma.cc
++++ b/src/oxp_enigma.cc
+@@ -0,0 +1,612 @@
++/* Enigma/OXP adapter. MIT, Copyright (c) 2026 AmigaChrome Team. */
++#include "oxp_enigma.hh"
++#include <cerrno>
++#include <climits>
++#include <cmath>
++#include <cstdio>
++#include <cstdlib>
++#include <fstream>
++#include <functional>
++#include <iterator>
++#include <sstream>
++namespace oxpcompat {
++namespace {
++std::string str(const char *s) { return s ? s : ""; }
++std::string fullname(const char *p, const char *n) {
++  return p ? str(p) + ":" + str(n) : str(n);
++}
++} // namespace
++std::u16string wide(const std::string &s) {
++  std::u16string r;
++  for (size_t i = 0; i < s.size();) {
++    unsigned long c = (unsigned char)s[i++], n = 0, min = 0;
++    if (c >= 0xc2 && c <= 0xdf) {
++      c &= 31;
++      n = 1;
++      min = 0x80;
++    } else if (c >= 0xe0 && c <= 0xef) {
++      c &= 15;
++      n = 2;
++      min = 0x800;
++    } else if (c >= 0xf0 && c <= 0xf4) {
++      c &= 7;
++      n = 3;
++      min = 0x10000;
++    } else if (c >= 128)
++      throw std::runtime_error("Invalid UTF-8");
++    while (n--) {
++      if (i >= s.size() || ((unsigned char)s[i] & 0xc0) != 0x80)
++        throw std::runtime_error("Invalid UTF-8");
++      c = c * 64 + ((unsigned char)s[i++] & 63);
++    }
++    if (c < min || c > 0x10ffff || (c >= 0xd800 && c <= 0xdfff))
++      throw std::runtime_error("Invalid Unicode scalar");
++    if (c > 0xffff) {
++      c -= 0x10000;
++      r += XMLCh(0xd800 + (c >> 10));
++      r += XMLCh(0xdc00 + (c & 1023));
++    } else
++      r += XMLCh(c);
++  }
++  return r;
++}
++std::string utf8(const XMLCh *s) {
++  std::string r;
++  if (!s)
++    return r;
++  for (size_t i = 0; s[i]; ++i) {
++    unsigned long c = s[i];
++    if (c >= 0xd800 && c <= 0xdbff) {
++      unsigned d = s[++i];
++      if (d < 0xdc00 || d > 0xdfff)
++        throw std::runtime_error("Invalid UTF-16");
++      c = 0x10000 + ((c - 0xd800) << 10) + (d - 0xdc00);
++    } else if (c >= 0xdc00 && c <= 0xdfff)
++      throw std::runtime_error("Invalid UTF-16");
++    if (c < 128)
++      r += char(c);
++    else if (c < 2048) {
++      r += char(192 + (c >> 6));
++      r += char(128 + (c & 63));
++    } else if (c < 65536) {
++      r += char(224 + (c >> 12));
++      r += char(128 + ((c >> 6) & 63));
++      r += char(128 + (c & 63));
++    } else {
++      r += char(240 + (c >> 18));
++      r += char(128 + ((c >> 12) & 63));
++      r += char(128 + ((c >> 6) & 63));
++      r += char(128 + (c & 63));
++    }
++  }
++  return r;
++}
++XMLCh *XMLString::transcode(const char *s) {
++  auto w = wide(s ? s : "");
++  auto *r = new XMLCh[w.size() + 1];
++  std::copy(w.begin(), w.end(), r);
++  r[w.size()] = 0;
++  return r;
++}
++char *XMLString::transcode(const XMLCh *s) {
++  auto t = utf8(s);
++  auto *r = new char[t.size() + 1];
++  std::memcpy(r, t.c_str(), t.size() + 1);
++  return r;
++}
++XMLCh *XMLString::replicate(const XMLCh *s) {
++  auto n = stringLen(s);
++  auto *r = new XMLCh[n + 1];
++  if (n)
++    std::copy(s, s + n, r);
++  r[n] = 0;
++  return r;
++}
++int XMLString::parseInt(const XMLCh *s) {
++  std::string v = utf8(s);
++  if (v.empty())
++    throw XMLException("Missing XML integer");
++  char *end;
++  errno = 0;
++  long x = std::strtol(v.c_str(), &end, 10);
++  while (*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n')
++    ++end;
++  if (errno || *end || x < INT_MIN || x > INT_MAX)
++    throw XMLException("Invalid XML integer: " + v);
++  return int(x);
++}
++XMLDouble::XMLDouble(const XMLCh *s) {
++  std::string v = utf8(s);
++  if (v == "INF")
++    number = HUGE_VAL;
++  else if (v == "-INF")
++    number = -HUGE_VAL;
++  else if (v == "NaN")
++    number = NAN;
++  else {
++    if (v.empty())
++      throw XMLException("Missing XML number");
++    char *end;
++    number = std::strtod(v.c_str(), &end);
++    while (*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n')
++      ++end;
++    if (*end)
++      throw XMLException("Invalid XML number: " + v);
++  }
++}
++XMLSize_t XMLTranscoder::transcodeFrom(const XMLByte *s, XMLSize_t n,
++                                       XMLCh *out, XMLSize_t cap,
++                                       XMLSize_t &eaten, unsigned char *sizes) {
++  auto w = wide(std::string(reinterpret_cast<const char *>(s), n));
++  if (w.size() > cap)
++    throw XMLException("XML transcode buffer too small");
++  std::copy(w.begin(), w.end(), out);
++  if (sizes)
++    std::fill(sizes, sizes + w.size(), 1);
++  eaten = n;
++  return w.size();
++}
++XMLSize_t XMLTranscoder::transcodeTo(const XMLCh *s, XMLSize_t n, XMLByte *out,
++                                     XMLSize_t cap, XMLSize_t &eaten,
++                                     UnRepOpts) {
++  std::u16string w(s, n);
++  auto v = utf8(w.c_str());
++  if (n && s[n - 1] == 0)
++    v += '\0';
++  if (v.size() > cap)
++    throw XMLException("XML transcode buffer too small");
++  std::copy(v.begin(), v.end(), out);
++  eaten = n;
++  return v.size();
++}
++static XMLTransService transService;
++XMLTransService *XMLPlatformUtils::fgTransService = &transService;
++short DOMNode::getNodeType() const {
++  if (!raw)
++    return ATTRIBUTE_NODE;
++  switch (raw->type) {
++  case OXP_NODE_DOCUMENT:
++    return DOCUMENT_NODE;
++  case OXP_NODE_ELEMENT:
++    return ELEMENT_NODE;
++  case OXP_NODE_TEXT:
++    return TEXT_NODE;
++  case OXP_NODE_CDATA:
++    return CDATA_SECTION_NODE;
++  case OXP_NODE_COMMENT:
++    return COMMENT_NODE;
++  case OXP_NODE_PI:
++    return PROCESSING_INSTRUCTION_NODE;
++  }
++  return 0;
++}
++const XMLCh *DOMNode::getNodeName() const {
++  return owner->intern(raw->type == OXP_NODE_ELEMENT || raw->type == OXP_NODE_PI
++                           ? fullname(raw->prefix, raw->name)
++                       : raw->type == OXP_NODE_TEXT     ? "#text"
++                       : raw->type == OXP_NODE_DOCUMENT ? "#document"
++                       : raw->type == OXP_NODE_COMMENT  ? "#comment"
++                                                        : "#cdata-section");
++}
++DOMNode *DOMNode::getFirstChild() const { return owner->wrap(raw->first); }
++DOMNode *DOMNode::getNextSibling() const { return owner->wrap(raw->next); }
++DOMNodeList *DOMNode::getChildNodes() { return owner->childList(raw); }
++DOMNode *DOMNode::appendChild(DOMNode *n) { return insertBefore(n, nullptr); }
++DOMNode *DOMNode::insertBefore(DOMNode *n, DOMNode *before) {
++  if (!n || oxp_dom_insert(raw, n->raw, before ? before->raw : nullptr))
++    throw DOMException("Invalid XML insertion");
++  ++owner->revision;
++  return n;
++}
++DOMNode *DOMNode::removeChild(DOMNode *n) {
++  if (!n || n->raw->parent != raw || oxp_dom_detach(n->raw))
++    throw DOMException("Invalid XML removal");
++  ++owner->revision;
++  return n;
++}
++const XMLCh *DOMNode::getTextContent() const {
++  std::vector<char> v(oxp_dom_text(raw, nullptr, 0) + 1);
++  oxp_dom_text(raw, v.data(), v.size());
++  buffer = wide(v.data());
++  return buffer.c_str();
++}
++const std::vector<oxp_node *> &DOMNodeList::list() const {
++  if (stamp == doc->revision)
++    return cache;
++  std::vector<oxp_node *> v;
++  std::function<void(oxp_node *)> visit = [&](oxp_node *n) {
++    for (oxp_node *c = n->first; c; c = c->next) {
++      bool match =
++          direct ||
++          (c->type == OXP_NODE_ELEMENT &&
++           (name == "*" ||
++            (useNS ? str(c->name) : fullname(c->prefix, c->name)) == name) &&
++           (!useNS || uri == "*" || str(c->uri) == uri));
++      if (match)
++        v.push_back(c);
++      if (!direct)
++        visit(c);
++    }
++  };
++  visit(root);
++  cache.swap(v);
++  stamp = doc->revision;
++  return cache;
++}
++XMLSize_t DOMNodeList::getLength() const { return list().size(); }
++DOMNode *DOMNodeList::item(XMLSize_t i) const {
++  const auto &v = list();
++  return i < v.size() ? doc->wrap(v[i]) : nullptr;
++}
++DOMElement::~DOMElement() = default;
++const XMLCh *DOMElement::getAttribute(const XMLCh *k) const {
++  std::string key = utf8(k);
++  for (auto *a = raw->attrs; a; a = a->next)
++    if (fullname(a->prefix, a->local) == key)
++      return owner->intern(a->value);
++  return u"";
++}
++const XMLCh *DOMElement::getAttributeNS(const XMLCh *u, const XMLCh *k) const {
++  std::string uri = utf8(u), key = utf8(k);
++  return owner->intern(
++      str(oxp_dom_attr(raw, uri.empty() ? nullptr : uri.c_str(), key.c_str())));
++}
++DOMAttr *DOMElement::getAttributeNode(const XMLCh *k) const {
++  std::string key = utf8(k);
++  for (auto *a = raw->attrs; a; a = a->next)
++    if (fullname(a->prefix, a->local) == key)
++      return owner->wrap(a);
++  return nullptr;
++}
++void DOMElement::setAttribute(const XMLCh *k, const XMLCh *v) {
++  auto key = utf8(k), value = utf8(v);
++  if (oxp_dom_set_attr(raw, nullptr, nullptr, key.c_str(), value.c_str(), 0))
++    throw DOMException("Invalid XML attribute");
++  ++owner->revision;
++}
++void DOMElement::removeAttribute(const XMLCh *k) {
++  auto key = utf8(k);
++  if (oxp_dom_remove_attr(raw, nullptr, key.c_str()))
++    throw DOMException("Invalid XML attribute removal");
++  ++owner->revision;
++}
++DOMNodeList *DOMElement::getElementsByTagName(const XMLCh *k) {
++  std::string name = utf8(k), key = "tag:" + name;
++  auto &i = queries[key];
++  if (!i)
++    i.reset(new DOMNodeList(owner, raw, name, "", false, false));
++  return i.get();
++}
++DOMNodeList *DOMElement::getElementsByTagNameNS(const XMLCh *u,
++                                                const XMLCh *k) {
++  std::string name = utf8(k), uri = utf8(u), key = "ns:" + uri + "\n" + name;
++  auto &i = queries[key];
++  if (!i)
++    i.reset(new DOMNodeList(owner, raw, name, uri, false, true));
++  return i.get();
++}
++DOMNamedNodeMap *DOMElement::getAttributes() {
++  if (!attributes)
++    attributes.reset(new DOMNamedNodeMap(owner, raw));
++  return attributes.get();
++}
++bool DOMText::isIgnorableWhitespace() const {
++  if (raw->type != OXP_NODE_TEXT)
++    return false;
++  for (size_t i = 0; i < raw->len; ++i)
++    if (raw->text[i] != ' ' && raw->text[i] != '\t' && raw->text[i] != '\r' &&
++        raw->text[i] != '\n')
++      return false;
++  return true;
++}
++const XMLCh *DOMAttr::getNodeName() const {
++  return owner->intern(fullname(a->prefix, a->local));
++}
++const XMLCh *DOMAttr::getValue() const { return owner->intern(a->value); }
++XMLSize_t DOMNamedNodeMap::getLength() const {
++  XMLSize_t n = 0;
++  for (auto *a = node->attrs; a; a = a->next)
++    ++n;
++  return n;
++}
++DOMNode *DOMNamedNodeMap::item(XMLSize_t i) const {
++  for (auto *a = node->attrs; a; a = a->next)
++    if (!i--)
++      return doc->wrap(a);
++  return nullptr;
++}
++DOMDocument::~DOMDocument() {
++  nodes.clear();
++  attrs.clear();
++  oxp_dom_free(tree);
++}
++DOMNode *DOMDocument::wrap(oxp_node *n) {
++  if (!n)
++    return nullptr;
++  if (n == raw)
++    return this;
++  auto &i = nodes[n];
++  if (!i) {
++    if (n->type == OXP_NODE_ELEMENT)
++      i.reset(new DOMElement(this, n));
++    else if (n->type == OXP_NODE_TEXT || n->type == OXP_NODE_CDATA)
++      i.reset(new DOMText(this, n));
++    else
++      i.reset(new DOMNode(this, n));
++  }
++  return i.get();
++}
++DOMAttr *DOMDocument::wrap(oxp_dattr *a) {
++  if (!a)
++    return nullptr;
++  auto &i = attrs[a];
++  if (!i)
++    i.reset(new DOMAttr(this, a));
++  return i.get();
++}
++const XMLCh *DOMDocument::intern(const std::string &s) {
++  auto i = strings.find(s);
++  if (i == strings.end())
++    i = strings.emplace(s, wide(s)).first;
++  return i->second.c_str();
++}
++DOMElement *DOMDocument::getDocumentElement() {
++  return dynamic_cast<DOMElement *>(wrap(oxp_dom_root(tree)));
++}
++DOMElement *DOMDocument::createElement(const XMLCh *k) {
++  auto s = utf8(k);
++  auto *n = oxp_dom_create(tree, OXP_NODE_ELEMENT, nullptr, nullptr, s.c_str(),
++                           nullptr);
++  if (!n)
++    throw DOMException("Invalid XML element");
++  return dynamic_cast<DOMElement *>(wrap(n));
++}
++DOMNode *DOMDocument::importNode(DOMNode *n, bool deep) {
++  auto *r = oxp_dom_import(tree, n->raw, deep);
++  if (!r)
++    throw DOMException("Cannot import XML node");
++  return wrap(r);
++}
++DOMNodeList *DOMDocument::getElementsByTagName(const XMLCh *k) {
++  std::string n = utf8(k), key = "tag:" + n;
++  auto &i = queries[key];
++  if (!i)
++    i.reset(new DOMNodeList(this, raw, n, "", false, false));
++  return i.get();
++}
++DOMNodeList *DOMDocument::getElementsByTagNameNS(const XMLCh *u,
++                                                 const XMLCh *k) {
++  std::string n = utf8(k), uri = utf8(u), key = "ns:" + uri + "\n" + n;
++  auto &i = queries[key];
++  if (!i)
++    i.reset(new DOMNodeList(this, raw, n, uri, false, true));
++  return i.get();
++}
++DOMNodeList *DOMDocument::childList(oxp_node *n) {
++  std::string key =
++      "children:" + std::to_string(reinterpret_cast<uintptr_t>(n));
++  auto &i = queries[key];
++  if (!i)
++    i.reset(new DOMNodeList(this, n, "", "", true, false));
++  return i.get();
++}
++void DOMConfiguration::setParameter(const XMLCh *k, bool v) {
++  auto s = utf8(k);
++  if (s == "validate") {
++    if (!v)
++      throw DOMException("Schema validation may not be disabled");
++    validate = v;
++  } else if (s == "namespaces" || s == "schema" ||
++             s == "schema-full-checking" || s == "datatype-normalization" ||
++             s == "user-adopts-document" || s == "format-pretty-print") {
++    if (!v)
++      throw DOMException("Unsupported XML configuration value");
++  } else
++    throw DOMException("Unsupported XML option: " + s);
++}
++void DOMConfiguration::setParameter(const XMLCh *k, DOMErrorHandler *h) {
++  if (utf8(k) != "error-handler")
++    throw DOMException("Unsupported handler option");
++  errors = h;
++}
++void DOMConfiguration::setParameter(const XMLCh *k, DOMLSResourceResolver *r) {
++  if (utf8(k) != "resource-resolver")
++    throw DOMException("Unsupported resolver option");
++  resolver = r;
++}
++namespace {
++std::string read(DOMLSInput *in) {
++  if (in->memory)
++    return in->data;
++  if (in->path.find("://") != std::string::npos)
++    throw XMLException("Only mapped local XML resources may be read");
++  std::ifstream f(in->path, std::ios::binary);
++  if (!f)
++    throw XMLException("Cannot open XML resource: " + in->path);
++  return std::string((std::istreambuf_iterator<char>(f)), {});
++}
++} // namespace
++void DOMLSParser::error(const std::string &message, const std::string &path,
++                        unsigned long line, unsigned long col) {
++  if (config.errors) {
++    DOMError e;
++    e.message = wide(message);
++    e.location.uri = wide(path);
++    e.location.line = line;
++    e.location.col = col;
++    config.errors->handleError(e);
++  }
++}
++DOMDocument *DOMLSParser::parseURI(const char *p) {
++  DOMLSInput in;
++  in.path = p;
++  return parse(&in);
++}
++DOMDocument *DOMLSParser::parse(DOMLSInput *in) {
++  try {
++    auto data = read(in);
++    char msg[512];
++    oxp_code code;
++    unsigned long line = 0, col = 0;
++    std::unique_ptr<oxp_doc, void (*)(oxp_doc *)> d(
++        oxp_dom_parse(data.data(), data.size(), 0, &code, msg, sizeof msg,
++                      &line, &col),
++        oxp_dom_free);
++    if (!d) {
++      error(msg, in->path, line, col);
++      return nullptr;
++    }
++    auto *root = oxp_dom_root(d.get());
++    const char *xi = "http://www.w3.org/2001/XMLSchema-instance";
++    std::string schema;
++    if (root->uri) {
++      std::istringstream pairs(str(oxp_dom_attr(root, xi, "schemaLocation")));
++      std::string uri, path;
++      while (pairs >> uri) {
++        if (!(pairs >> path))
++          throw XMLException("Malformed schemaLocation");
++        if (uri == root->uri)
++          schema = path;
++      }
++    } else
++      schema = str(oxp_dom_attr(root, xi, "noNamespaceSchemaLocation"));
++    if (schema.empty() || !config.resolver)
++      throw XMLException("Document has no mapped validation schema");
++    auto w = wide(schema), u = wide(str(root->uri)), base = wide(in->path);
++    std::unique_ptr<DOMLSInput> source(config.resolver->resolveResource(
++        u"http://www.w3.org/2001/XMLSchema", u.c_str(), nullptr, w.c_str(),
++        base.c_str()));
++    if (!source)
++      throw XMLException("Unmapped schema: " + schema);
++    std::string key = source->path;
++    auto i = schemas.find(key);
++    oxp_schema_error e;
++    if (i == schemas.end()) {
++      auto text = read(source.get());
++      oxp_schema *s = oxp_schema_compile(text.data(), text.size(), &e);
++      if (!s) {
++        error(e.message, key, e.line);
++        return nullptr;
++      }
++      i = schemas
++              .emplace(key, std::unique_ptr<oxp_schema, void (*)(oxp_schema *)>(
++                                s, oxp_schema_free))
++              .first;
++    }
++    if (oxp_schema_validate(i->second.get(), d.get(), &e)) {
++      error(e.message, in->path, e.line);
++      return nullptr;
++    }
++    return new DOMDocument(d.release());
++  } catch (const std::exception &e) {
++    error(e.what(), in ? in->path : "");
++    throw XMLException(e.what());
++  }
++}
++namespace {
++int append(void *p, const char *s, size_t n) {
++  try {
++    static_cast<std::string *>(p)->append(s, n);
++    return 0;
++  } catch (...) {
++    return -1;
++  }
++}
++} // namespace
++std::string DOMLSSerializer::serialise(DOMNode *n) {
++  oxp_doc *d = oxp_dom_new();
++  if (!d)
++    throw std::bad_alloc();
++  std::unique_ptr<oxp_doc, void (*)(oxp_doc *)> guard(d, oxp_dom_free);
++  std::function<void(oxp_node *, oxp_node *)> copy = [&](oxp_node *src,
++                                                         oxp_node *parent) {
++    auto action = filter ? filter->acceptNode(n->owner->wrap(src))
++                         : DOMNodeFilter::FILTER_ACCEPT;
++    if (action == DOMNodeFilter::FILTER_REJECT)
++      return;
++    if (action == DOMNodeFilter::FILTER_SKIP) {
++      for (auto *c = src->first; c; c = c->next)
++        copy(c, parent);
++      return;
++    }
++    if (src->type == OXP_NODE_DOCUMENT) {
++      for (auto *c = src->first; c; c = c->next)
++        copy(c, parent);
++      return;
++    }
++    if (parent->type == OXP_NODE_DOCUMENT &&
++        (src->type == OXP_NODE_TEXT || src->type == OXP_NODE_CDATA))
++      return;
++    oxp_node *clone = oxp_dom_import(d, src, 0);
++    if (!clone || oxp_dom_insert(parent, clone, nullptr))
++      throw DOMException("XML serialization copy failed");
++    for (auto *a = clone->attrs; a;) {
++      auto *next = a->next;
++      if (a->defaulted)
++        oxp_dom_remove_attr(clone, a->uri, a->local);
++      a = next;
++    }
++    for (auto *c = src->first; c; c = c->next)
++      copy(c, clone);
++  };
++  copy(n->raw, oxp_dom_document(d));
++  std::string out = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
++  if (oxp_dom_write(oxp_dom_document(d), append, &out))
++    throw DOMException("XML serialization failed");
++  return out;
++}
++XMLCh *DOMLSSerializer::writeToString(DOMNode *n) {
++  auto s = serialise(n);
++  return XMLString::transcode(s.c_str());
++}
++bool DOMLSSerializer::writeToURI(DOMNode *n, const XMLCh *uri) {
++  auto path = utf8(uri), tmp = path + ".oxp-tmp",
++       backup = path + ".oxp-previous";
++  auto s = serialise(n);
++  {
++    std::ofstream f(tmp, std::ios::binary | std::ios::trunc);
++    if (!f)
++      return false;
++    f.write(s.data(), s.size());
++    f.flush();
++    if (!f) {
++      f.close();
++      std::remove(tmp.c_str());
++      return false;
++    }
++    f.close();
++    if (!f) {
++      std::remove(tmp.c_str());
++      return false;
++    }
++  }
++  if (std::rename(tmp.c_str(), path.c_str()) == 0)
++    return true;
++  /* AmigaDOS Rename may not replace an existing destination. Keep a recoverable
++   * original and restore it if publishing the completely written file fails. */
++  std::ifstream old(path, std::ios::binary);
++  bool exists = old.good();
++  old.close();
++  if (!exists) {
++    std::remove(tmp.c_str());
++    return false;
++  }
++  std::ifstream recovery(backup, std::ios::binary);
++  if (recovery.good()) {
++    std::remove(tmp.c_str());
++    return false;
++  }
++  recovery.close();
++  if (std::rename(path.c_str(), backup.c_str())) {
++    std::remove(tmp.c_str());
++    return false;
++  }
++  if (std::rename(tmp.c_str(), path.c_str())) {
++    std::rename(backup.c_str(), path.c_str());
++    std::remove(tmp.c_str());
++    return false;
++  }
++  std::remove(backup.c_str());
++  return true;
++}
++} // namespace oxpcompat
+--- a/src/oxp_enigma.hh
++++ b/src/oxp_enigma.hh
+@@ -0,0 +1,377 @@
++/* Enigma's DOM compatibility adapter over the existing OXP parser.
++ * MIT, Copyright (c) 2026 AmigaChrome Team. No Xerces code or binary needed. */
++#ifndef OXP_ENIGMA_HH
++#define OXP_ENIGMA_HH
++#include "oxp_dom.h"
++#include "oxp_schema.h"
++#include <algorithm>
++#include <cstring>
++#include <map>
++#include <memory>
++#include <stdexcept>
++#include <string>
++#include <vector>
++using XMLCh = char16_t;
++using XMLByte = unsigned char;
++using XMLSize_t = size_t;
++namespace oxpcompat {
++std::u16string wide(const std::string &);
++std::string utf8(const XMLCh *);
++struct XMLException : std::runtime_error {
++  std::u16string text;
++  explicit XMLException(const std::string &s)
++      : std::runtime_error(s), text(wide(s)) {}
++  const XMLCh *getMessage() const { return text.c_str(); }
++};
++struct DOMException : std::exception {
++  std::u16string text;
++  const XMLCh *msg;
++  explicit DOMException(const std::string &s)
++      : text(wide(s)), msg(text.c_str()) {}
++  DOMException(const DOMException &o) : text(o.text), msg(text.c_str()) {}
++  const XMLCh *getMessage() const { return msg; }
++};
++struct XMLString {
++  static XMLCh *transcode(const char *);
++  static char *transcode(const XMLCh *);
++  static XMLCh *replicate(const XMLCh *);
++  template <class T> static void release(T **p) {
++    delete[] *p;
++    *p = nullptr;
++  }
++  static XMLSize_t stringLen(const XMLCh *s) {
++    return s ? std::char_traits<XMLCh>::length(s) : 0;
++  }
++  static bool equals(const XMLCh *a, const XMLCh *b) {
++    return std::u16string(a ? a : u"") == std::u16string(b ? b : u"");
++  }
++  static int parseInt(const XMLCh *);
++  static bool isDigit(XMLCh c) { return c >= u'0' && c <= u'9'; }
++  static void subString(XMLCh *out, const XMLCh *in, XMLSize_t a, XMLSize_t b) {
++    if (b < a || b > stringLen(in))
++      throw XMLException("Invalid XML substring");
++    std::memmove(out, in + a, (b - a) * sizeof(XMLCh));
++    out[b - a] = 0;
++  }
++};
++struct XMLDouble {
++  double number;
++  explicit XMLDouble(const XMLCh *);
++  double getValue() const { return number; }
++};
++struct XMLTranscoder {
++  enum UnRepOpts { UnRep_RepChar };
++  XMLSize_t transcodeFrom(const XMLByte *, XMLSize_t, XMLCh *, XMLSize_t,
++                          XMLSize_t &, unsigned char *);
++  XMLSize_t transcodeTo(const XMLCh *, XMLSize_t, XMLByte *, XMLSize_t,
++                        XMLSize_t &, UnRepOpts);
++};
++struct XMLRecognizer {
++  enum Encodings { UTF_8 };
++};
++struct XMLTransService {
++  enum Codes { Ok };
++  XMLTranscoder *makeNewTranscoderFor(XMLRecognizer::Encodings, Codes &c,
++                                      unsigned) {
++    c = Ok;
++    return new XMLTranscoder;
++  }
++};
++struct XMLPlatformUtils {
++  static XMLTransService *fgTransService;
++  static void Initialize() {}
++  static void Terminate() {}
++};
++struct XMLUni {
++  static constexpr const XMLCh *fgDOMNamespaces = u"namespaces";
++  static constexpr const XMLCh *fgSchema = u"schema";
++  static constexpr const XMLCh *fgSchemaFullChecking = u"schema-full-checking";
++  static constexpr const XMLCh *fgDOMValidate = u"validate";
++  static constexpr const XMLCh *fgDOMDatatypeNormalization =
++      u"datatype-normalization";
++  static constexpr const XMLCh *fgDOMErrorHandler = u"error-handler";
++  static constexpr const XMLCh *fgDOMResourceResolver = u"resource-resolver";
++  static constexpr const XMLCh *fgUserAdoptsDOMDocument =
++      u"user-adopts-document";
++  static constexpr const XMLCh *fgDOMWRTFormatPrettyPrint =
++      u"format-pretty-print";
++};
++class DOMDocument;
++class DOMElement;
++class DOMNode;
++class DOMNodeList;
++class DOMAttr;
++class DOMNamedNodeMap;
++class DOMNode {
++public:
++  enum NodeType {
++    ELEMENT_NODE = 1,
++    ATTRIBUTE_NODE = 2,
++    TEXT_NODE = 3,
++    CDATA_SECTION_NODE = 4,
++    PROCESSING_INSTRUCTION_NODE = 7,
++    COMMENT_NODE = 8,
++    DOCUMENT_NODE = 9
++  };
++  DOMDocument *owner;
++  oxp_node *raw;
++  mutable std::u16string buffer;
++  DOMNode(DOMDocument *d, oxp_node *n) : owner(d), raw(n) {}
++  virtual ~DOMNode() = default;
++  virtual short getNodeType() const;
++  virtual const XMLCh *getNodeName() const;
++  DOMNode *getFirstChild() const;
++  DOMNode *getNextSibling() const;
++  DOMNodeList *getChildNodes();
++  DOMNode *appendChild(DOMNode *);
++  DOMNode *insertBefore(DOMNode *, DOMNode *);
++  DOMNode *removeChild(DOMNode *);
++  const XMLCh *getTextContent() const;
++};
++class DOMNodeList {
++  DOMDocument *doc;
++  oxp_node *root;
++  std::string name, uri;
++  bool direct, useNS;
++  mutable std::vector<oxp_node *> cache;
++  mutable size_t stamp = static_cast<size_t>(-1);
++  const std::vector<oxp_node *> &list() const;
++
++public:
++  DOMNodeList(DOMDocument *d, oxp_node *r, std::string n, std::string u,
++              bool dir, bool ns)
++      : doc(d), root(r), name(n), uri(u), direct(dir), useNS(ns) {}
++  XMLSize_t getLength() const;
++  DOMNode *item(XMLSize_t) const;
++};
++class DOMElement : public DOMNode {
++  std::map<std::string, std::unique_ptr<DOMNodeList>> queries;
++  std::unique_ptr<DOMNamedNodeMap> attributes;
++
++public:
++  DOMElement(DOMDocument *d, oxp_node *n) : DOMNode(d, n) {}
++  ~DOMElement() override;
++  const XMLCh *getAttribute(const XMLCh *) const;
++  const XMLCh *getAttributeNS(const XMLCh *, const XMLCh *) const;
++  DOMAttr *getAttributeNode(const XMLCh *) const;
++  void setAttribute(const XMLCh *, const XMLCh *);
++  void removeAttribute(const XMLCh *);
++  DOMNodeList *getElementsByTagName(const XMLCh *);
++  DOMNodeList *getElementsByTagNameNS(const XMLCh *, const XMLCh *);
++  DOMNamedNodeMap *getAttributes();
++};
++class DOMText : public DOMNode {
++public:
++  using DOMNode::DOMNode;
++  bool isIgnorableWhitespace() const;
++};
++class DOMAttr : public DOMNode {
++public:
++  oxp_dattr *a;
++  DOMAttr(DOMDocument *d, oxp_dattr *x) : DOMNode(d, nullptr), a(x) {}
++  short getNodeType() const override { return ATTRIBUTE_NODE; }
++  const XMLCh *getNodeName() const override;
++  const XMLCh *getName() const { return getNodeName(); }
++  const XMLCh *getValue() const;
++  bool getSpecified() const { return !a->defaulted; }
++};
++class DOMNamedNodeMap {
++  DOMDocument *doc;
++  oxp_node *node;
++
++public:
++  DOMNamedNodeMap(DOMDocument *d, oxp_node *n) : doc(d), node(n) {}
++  XMLSize_t getLength() const;
++  DOMNode *item(XMLSize_t) const;
++};
++class DOMDocument : public DOMNode {
++  std::map<oxp_node *, std::unique_ptr<DOMNode>> nodes;
++  std::map<oxp_dattr *, std::unique_ptr<DOMAttr>> attrs;
++  std::map<std::string, std::u16string> strings;
++  std::map<std::string, std::unique_ptr<DOMNodeList>> queries;
++  std::unique_ptr<DOMNodeList> direct;
++
++public:
++  size_t revision = 0;
++  oxp_doc *tree;
++  explicit DOMDocument(oxp_doc *d)
++      : DOMNode(this, oxp_dom_document(d)), tree(d) {}
++  ~DOMDocument() override;
++  DOMNode *wrap(oxp_node *);
++  DOMAttr *wrap(oxp_dattr *);
++  const XMLCh *intern(const std::string &s);
++  DOMElement *getDocumentElement();
++  DOMElement *createElement(const XMLCh *);
++  DOMNode *importNode(DOMNode *, bool);
++  DOMNodeList *getElementsByTagName(const XMLCh *);
++  DOMNodeList *getElementsByTagNameNS(const XMLCh *, const XMLCh *);
++  DOMNodeList *childList(oxp_node *);
++  void release() { delete this; }
++};
++struct DOMLocator {
++  std::u16string uri;
++  unsigned long line = 0, col = 0;
++  const XMLCh *getURI() const { return uri.c_str(); }
++  unsigned long getLineNumber() const { return line; }
++  unsigned long getColumnNumber() const { return col; }
++};
++struct DOMError {
++  enum ErrorSeverity {
++    DOM_SEVERITY_WARNING = 1,
++    DOM_SEVERITY_ERROR = 2,
++    DOM_SEVERITY_FATAL_ERROR = 3
++  };
++  std::u16string message;
++  DOMLocator location;
++  ErrorSeverity getSeverity() const { return DOM_SEVERITY_ERROR; }
++  const XMLCh *getMessage() const { return message.c_str(); }
++  const DOMLocator *getLocation() const { return &location; }
++};
++struct DOMErrorHandler {
++  virtual ~DOMErrorHandler() = default;
++  virtual bool handleError(const DOMError &) = 0;
++};
++struct DOMLSInput {
++  std::string data, path;
++  bool memory = false;
++  virtual ~DOMLSInput() = default;
++  void setSystemId(const XMLCh *p) { path = utf8(p); }
++};
++struct LocalFileInputSource : DOMLSInput {
++  explicit LocalFileInputSource(const XMLCh *p) { path = utf8(p); }
++};
++struct MemBufInputSource : DOMLSInput {
++  MemBufInputSource(const XMLByte *p, XMLSize_t n, const char *id, bool) {
++    data.assign(reinterpret_cast<const char *>(p), n);
++    path = id;
++    memory = true;
++  }
++};
++struct Wrapper4InputSource : DOMLSInput {
++  explicit Wrapper4InputSource(DOMLSInput *p) {
++    std::unique_ptr<DOMLSInput> keep(p);
++    data = p->data;
++    path = p->path;
++    memory = p->memory;
++  }
++};
++struct DOMLSResourceResolver {
++  virtual ~DOMLSResourceResolver() = default;
++  virtual DOMLSInput *resolveResource(const XMLCh *, const XMLCh *,
++                                      const XMLCh *, const XMLCh *,
++                                      const XMLCh *) = 0;
++};
++struct DOMConfiguration {
++  DOMErrorHandler *errors = nullptr;
++  DOMLSResourceResolver *resolver = nullptr;
++  bool validate = true;
++  void setParameter(const XMLCh *, bool);
++  void setParameter(const XMLCh *, DOMErrorHandler *);
++  void setParameter(const XMLCh *, DOMLSResourceResolver *);
++};
++class DOMLSParser {
++  DOMConfiguration config;
++  std::map<std::string, std::unique_ptr<oxp_schema, void (*)(oxp_schema *)>>
++      schemas;
++  void error(const std::string &, const std::string &, unsigned long = 0,
++             unsigned long = 0);
++
++public:
++  DOMConfiguration *getDomConfig() { return &config; }
++  DOMDocument *parseURI(const char *);
++  DOMDocument *parse(DOMLSInput *);
++  void release() { delete this; }
++};
++struct DOMNodeFilter {
++  enum FilterAction { FILTER_ACCEPT = 1, FILTER_REJECT = 2, FILTER_SKIP = 3 };
++  static constexpr unsigned long SHOW_ALL = 0xffffffffUL;
++};
++struct DOMLSSerializerFilter {
++  virtual ~DOMLSSerializerFilter() = default;
++  virtual DOMNodeFilter::FilterAction acceptNode(const DOMNode *) const = 0;
++  virtual unsigned long getWhatToShow() const = 0;
++};
++class DOMLSSerializer {
++  DOMConfiguration config;
++  DOMLSSerializerFilter *filter = nullptr;
++  std::string serialise(DOMNode *);
++
++public:
++  DOMConfiguration *getDomConfig() { return &config; }
++  void setFilter(DOMLSSerializerFilter *f) { filter = f; }
++  XMLCh *writeToString(DOMNode *);
++  bool writeToURI(DOMNode *, const XMLCh *);
++  void release() { delete this; }
++};
++struct DOMImplementation {
++  virtual ~DOMImplementation() = default;
++};
++struct DOMImplementationLS : DOMImplementation {
++  enum { MODE_SYNCHRONOUS };
++  DOMLSParser *createLSParser(int, const XMLCh *) { return new DOMLSParser; }
++  DOMLSSerializer *createLSSerializer() { return new DOMLSSerializer; }
++  DOMLSInput *createLSInput() { return new DOMLSInput; }
++};
++struct DOMImplementationRegistry {
++  static DOMImplementation *getDOMImplementation(const XMLCh *) {
++    static DOMImplementationLS impl;
++    return &impl;
++  }
++};
++constexpr XMLCh chLatin_a = u'a';
++constexpr XMLCh chLatin_b = u'b';
++constexpr XMLCh chLatin_c = u'c';
++constexpr XMLCh chLatin_d = u'd';
++constexpr XMLCh chLatin_e = u'e';
++constexpr XMLCh chLatin_f = u'f';
++constexpr XMLCh chLatin_g = u'g';
++constexpr XMLCh chLatin_h = u'h';
++constexpr XMLCh chLatin_i = u'i';
++constexpr XMLCh chLatin_j = u'j';
++constexpr XMLCh chLatin_k = u'k';
++constexpr XMLCh chLatin_l = u'l';
++constexpr XMLCh chLatin_m = u'm';
++constexpr XMLCh chLatin_n = u'n';
++constexpr XMLCh chLatin_o = u'o';
++constexpr XMLCh chLatin_p = u'p';
++constexpr XMLCh chLatin_q = u'q';
++constexpr XMLCh chLatin_r = u'r';
++constexpr XMLCh chLatin_s = u's';
++constexpr XMLCh chLatin_t = u't';
++constexpr XMLCh chLatin_u = u'u';
++constexpr XMLCh chLatin_v = u'v';
++constexpr XMLCh chLatin_w = u'w';
++constexpr XMLCh chLatin_x = u'x';
++constexpr XMLCh chLatin_y = u'y';
++constexpr XMLCh chLatin_z = u'z';
++constexpr XMLCh chLatin_A = u'A';
++constexpr XMLCh chLatin_B = u'B';
++constexpr XMLCh chLatin_C = u'C';
++constexpr XMLCh chLatin_D = u'D';
++constexpr XMLCh chLatin_E = u'E';
++constexpr XMLCh chLatin_F = u'F';
++constexpr XMLCh chLatin_G = u'G';
++constexpr XMLCh chLatin_H = u'H';
++constexpr XMLCh chLatin_I = u'I';
++constexpr XMLCh chLatin_J = u'J';
++constexpr XMLCh chLatin_K = u'K';
++constexpr XMLCh chLatin_L = u'L';
++constexpr XMLCh chLatin_M = u'M';
++constexpr XMLCh chLatin_N = u'N';
++constexpr XMLCh chLatin_O = u'O';
++constexpr XMLCh chLatin_P = u'P';
++constexpr XMLCh chLatin_Q = u'Q';
++constexpr XMLCh chLatin_R = u'R';
++constexpr XMLCh chLatin_S = u'S';
++constexpr XMLCh chLatin_T = u'T';
++constexpr XMLCh chLatin_U = u'U';
++constexpr XMLCh chLatin_V = u'V';
++constexpr XMLCh chLatin_W = u'W';
++constexpr XMLCh chLatin_X = u'X';
++constexpr XMLCh chLatin_Y = u'Y';
++constexpr XMLCh chLatin_Z = u'Z';
++constexpr XMLCh chNull = 0, chUnderscore = u'_', chColon = u':',
++                chForwardSlash = u'/', chDash = u'-', chPeriod = u'.',
++                chDigit_1 = u'1';
++} // namespace oxpcompat
++#endif
+--- a/src/player.cc
++++ b/src/player.cc
+@@ -1,3 +1,5 @@
++#include <cassert>
++#include <climits>
+ /*
+  * Copyright (C) 2002,2003,2004,2006 Daniel Heck
+  * Copyright (C) 2007,2008,2009,2010 Ronald Lamprecht
+--- a/src/utilXML.cc
++++ b/src/utilXML.cc
+@@ -20,11 +20,11 @@
+ #include "utilXML.hh"
+ #include "XMLtoUtf8.hh"
+ 
+-#include <xercesc/dom/DOM.hpp>
++#include "oxp_enigma.hh"
+ 
+-using xercesc::DOMElement;
+-using xercesc::DOMNode;
+-using xercesc::DOMText;
++using oxpcompat::DOMElement;
++using oxpcompat::DOMNode;
++using oxpcompat::DOMText;
+ 
+ namespace enigma
+ {
+--- a/src/utilXML.hh
++++ b/src/utilXML.hh
+@@ -20,13 +20,12 @@
+ #ifndef ENIGMA_UTILXML_HH
+ #define ENIGMA_UTILXML_HH
+ 
+-#include <xercesc/dom/DOMElement.hpp>
+-#include <xercesc/util/XMLString.hpp>
++#include "oxp_enigma.hh"
+ 
+ namespace enigma
+ {
+     bool boolValue(const XMLCh * string);
+-    void stripIgnorableWhitespace(xercesc::DOMElement * elem);
++    void stripIgnorableWhitespace(oxpcompat::DOMElement * elem);
+ } //namespace enigma
+ 
+ #endif

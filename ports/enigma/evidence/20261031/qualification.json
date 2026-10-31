@@ -1,0 +1,18 @@
+{
+  "executable_bytes": 7914768,
+  "xml_fixtures": 1634,
+  "sdk_tests": 3,
+  "native_open4_schema_checks": 96,
+  "native_open4_schema_failures": 0,
+  "native_open4_schema_fpu": "disabled",
+  "gameplay": "unverified",
+  "release_gates": [
+    "module/OpenFont/z.library dependency policy",
+    "instruction audit",
+    "rendered gameplay and input",
+    "save/load",
+    "audio",
+    "clean exit",
+    "intended-ROM repeat"
+  ]
+}
