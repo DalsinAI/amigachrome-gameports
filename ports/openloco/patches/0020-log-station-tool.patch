@@ -1,0 +1,26 @@
+diff --git a/src/OpenLoco/src/Ui/Windows/Construction/StationTab.cpp b/src/OpenLoco/src/Ui/Windows/Construction/StationTab.cpp
+index bc7423b..7ec41f5 100644
+--- a/src/OpenLoco/src/Ui/Windows/Construction/StationTab.cpp
++++ b/src/OpenLoco/src/Ui/Windows/Construction/StationTab.cpp
+@@ -1,4 +1,5 @@
+ #include "Audio/Audio.h"
++#include <OpenLoco/Diagnostics/Logging.h>
+ #include "GameCommands/Airports/CreateAirport.h"
+ #include "GameCommands/Airports/RemoveAirport.h"
+ #include "GameCommands/Docks/CreatePort.h"
+@@ -520,6 +521,7 @@ namespace OpenLoco::Ui::Windows::Construction::Station
+ 
+         const auto cost = GameCommands::doCommand(*args, GameCommands::Flags::apply | GameCommands::Flags::noErrorWindow | GameCommands::Flags::noPayment | GameCommands::Flags::ghost);
+         const auto& legacyGCReturn = GameCommands::getLegacyReturnState();
++        Diagnostics::Logging::info("station ghost: pos {},{},{} rot {} track {} index {} type {} cost {:x} error {}", args->pos.x, args->pos.y, args->pos.z, (int)args->rotation, (int)args->trackId, (int)args->index, (int)args->trackObjectId, cost, (int)GameCommands::getErrorText());
+ 
+         cState.stationCost = cost;
+ 
+@@ -922,6 +924,7 @@ namespace OpenLoco::Ui::Windows::Construction::Station
+     {
+         const auto res = ViewportInteraction::getMapCoordinatesFromPos(x, y, ~(ViewportInteraction::InteractionItemFlags::track | ViewportInteraction::InteractionItemFlags::station));
+         const auto& interaction = res.first;
++        Diagnostics::Logging::info("station tool: interaction {} at {},{}", (int)interaction.type, interaction.pos.x, interaction.pos.y);
+         if (interaction.type != ViewportInteraction::InteractionItem::track && interaction.type != ViewportInteraction::InteractionItem::trainStation)
+         {
+             return std::nullopt;
