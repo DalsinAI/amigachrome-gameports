@@ -33,6 +33,24 @@ what the game has given the chipset and redraw it, upscaled, on an RTG screen.
    (ACGame's RTG screen, `WritePixelArray`, or straight into the board's
    memory while the game has the machine). The game's own timing, input
    and sound stay as they are.
+   Progress (31 October): `tools/swivharness.py` runs the game's own code
+   from the player's disk image under Unicorn (a 68000 core used only as a
+   study tool on the host), with a floppy that answers DMA reads with
+   AmigaDOS MFM sectors built from the ADF, the vertical blank and copper
+   interrupts, a copper pass per frame, an area-mode blitter, and CIA
+   ports. It boots the game's kernel ("Kernel V 1.0, RPW and JC, 1991",
+   22 sectors at disk offset 0xD9400), loads the file catalogue
+   (AMDLS0.CAT, about 130 files: AMPROG.OBJ, the .LIN sprite sets, .RAW
+   pictures, .MOD music, .SND effects) and AMPROG.OBJ, and reaches the
+   title screen. Every custom-chip write is logged; `--dump` writes the
+   display as the copper last set it up, and `tools/nativertg_frame.c`
+   draws that through nativertg at 1x and upscaled.
+   What the title screen uses: one copper list at $22C00 (double-buffered
+   with $23AE0), 4 lores bitplanes 320x256 with 44-byte rows (BPL1MOD 4),
+   BPLCON2 $3F (sprites behind nothing), all eight sprite pointers set,
+   a fifth plane switched on for a band at lines $34-$3B.
+   Still to do here: input (the title waits for fire), the blitter's line
+   and fill modes if the game uses them, then the in-game frames.
 3. **Further graphics upgrades** (after 2 works): a replacement table keyed
    by a hash of each sprite or tile as it is blitted, so redrawn high
    resolution art can stand in for the original pieces one by one, and a
@@ -44,6 +62,15 @@ what the game has given the chipset and redraw it, upscaled, on an RTG screen.
 tests/run_tests.sh          # host: compose, dual playfield, EHB, sprites, scaler
 cc -std=c99 -O2 -Iinclude src/nativertg.c tools/nativertg_demo.c -o demo
 ./demo 4 native.ppm upscaled.ppm   # a made-up scene, no game data
+```
+
+The harness needs `pip install unicorn`; its stops are taken at block
+starts only, because a stop inside a translated block lost condition codes.
+
+```sh
+python3 tools/swivharness.py SWIV.adf out --frames 1500 --dump
+cc -std=c99 -O2 -Iinclude src/nativertg.c tools/nativertg_frame.c -o nrtgframe
+./nrtgframe out/frame.nrtg 4 native.ppm upscaled.ppm
 ```
 
 Not yet built with the os32-gcc16 stove or run on an Amiga: the cloud has no
