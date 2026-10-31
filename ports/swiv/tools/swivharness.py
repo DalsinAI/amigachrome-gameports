@@ -86,7 +86,9 @@ class Harness:
         self.log = open(os.path.join(out, 'custom.log'), 'w')
         self.pc = 0
         self.blits = 0
+        self.presses = []                   # (first frame, last frame) fire held
         self.copstate = {}
+        self.shadow = None                  # swivhires.Shadow when --hires
 
     # ---- custom chips ----
     def cread(self, uc, off, size, ud):
@@ -101,10 +103,13 @@ class Harness:
         if off == 0x01c: return self.intena
         if off == 0x01e: return self.intreq
         if off == 0x00a or off == 0x00c: return 0          # mouse/joystick counters
-        if off == 0x016: return 0xff00                    # POTGOR: buttons up
+        if off == 0x016: return 0xff00 if not self.fire_now() else 0xbb00  # POTGOR
         if off == 0x010: return 0x1100                    # ADKCONR
         if off == 0x01a: return 0x8000                    # DSKBYTR: byte ready
         return 0
+
+    def fire_now(self):
+        return any(a <= self.frame <= b for a, b in self.presses)
 
     def vpos(self):
         return (self.cycles // 227) % 313
@@ -142,6 +147,9 @@ class Harness:
         """Area-mode blitter: four channels, shifts, masks, modulos,
         descending mode and minterms. Line mode and fill are logged."""
         r = self.regs
+        if self.shadow is not None:
+            before = dict(r)
+            self.shadow.blit(ChipView(self.mu), before, bltsize)
         con0, con1 = r.get(0x040, 0), r.get(0x042, 0)
         h = bltsize >> 6 or 1024
         w = bltsize & 63 or 64
@@ -198,12 +206,16 @@ class Harness:
             if use_d: pd += -md if desc else md
         for a, v in out:
             self.mu.mem_write(a, struct.pack('>H', v))
+        if self.shadow is not None:
+            self.shadow.after_blit(ChipView(self.mu), before, bltsize)
         if fill:
             self.log.write('f%05d blit FILL requested (not done)\n' % self.frame)
         for o, v in ((0x050, pa), (0x04c, pb), (0x048, pcc), (0x054, pd)):
             self.regs[o], self.regs[o + 2] = v >> 16 & 0xffff, v & 0xffff
         self.blits += 1
         self.intreq |= 0x0040
+        if self.shadow is not None and len(self.shadow.pending) > 256:
+            self.shadow.flush(keep=GROUP_KEEP)
 
     def copper(self):
         """Runs the copper list once at the top of the frame: MOVEs land in
@@ -262,6 +274,7 @@ class Harness:
         addr = 0xbfd000 + off
         if addr == 0xbfe001:
             v = 0xc0 | 0x08                 # fire buttons up, write-protected
+            if self.fire_now(): v &= ~0x80       # port 2 fire (active low)
             sel = not self.prb & 0x08          # DF0 selected (active low)
             if sel:
                 if self.cyl == 0: pass
@@ -381,14 +394,78 @@ class Harness:
         self.log.flush()
 
 
+GROUP_KEEP = 8                          # blits held back in case they continue a run
+
+
+class ChipView:
+    """Slices of emulated chip RAM as numpy bytes, read on demand."""
+    def __init__(self, mu):
+        self.mu = mu
+
+    def __getitem__(self, sl):
+        import numpy as np
+        return np.frombuffer(bytes(self.mu.mem_read(sl.start, sl.stop - sl.start)), np.uint8)
+
+
+def copper_lines(chip, pc, first=0x2c, lines=256):
+    """Register state and plane pointers for each display line, from running
+    the copper list against the beam (the in-game screen moves its plane
+    pointers part way down)."""
+    ops = []
+    while pc + 4 <= len(chip):
+        a, b = struct.unpack('>HH', chip[pc:pc + 4]); pc += 4
+        if a == 0xffff and b == 0xfffe: break
+        ops.append((a, b))
+    regs, i, out, ptr = {}, 0, [], [0] * 6
+    for line in range(first, first + lines):
+        while i < len(ops):
+            a, b = ops[i]
+            if a & 1:
+                v = a >> 8
+                if (line & 0xff) < v and not (line >= 0x100 and v < 0x80): break
+                i += 1; continue
+            reg = a & 0x1fe; regs[reg] = b
+            if 0xe0 <= reg < 0xf8:
+                n = (reg - 0xe0) // 4
+                ptr[n] = (ptr[n] & 0xffff0000) | b if reg & 2 else (ptr[n] & 0xffff) | b << 16
+            i += 1
+        mod = regs.get(0x108, 0); mod = mod - 0x10000 if mod & 0x8000 else mod
+        out.append((dict(regs), [p - (40 + mod) for p in ptr]))
+        for n in range(6): ptr[n] += 40 + mod
+    return out
+
+
+def write_png(path, idx, lines, s):
+    """Colour an index image line by line with each line's palette."""
+    import numpy as np, zlib
+    h, w = idx.shape
+    rgb = np.zeros((h, w, 3), np.uint8)
+    for y, (regs, _) in enumerate(lines):
+        pal = np.array([[(c >> 8 & 15) * 17, (c >> 4 & 15) * 17, (c & 15) * 17]
+                        for c in (regs.get(0x180 + 2 * i, 0) for i in range(32))], np.uint8)
+        rgb[y * s:(y + 1) * s] = pal[idx[y * s:(y + 1) * s] & 31]
+    raw = b''.join(b'\0' + rgb[y].tobytes() for y in range(h))
+    chunk = lambda t, d: struct.pack('>I', len(d)) + t + d + struct.pack('>I', zlib.crc32(t + d))
+    open(path, 'wb').write(b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 8, 2, 0, 0, 0))
+                           + chunk(b'IDAT', zlib.compress(raw, 6)) + chunk(b'IEND', b''))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('adf'); ap.add_argument('out'); ap.add_argument('--frames', type=int, default=500)
+    ap.add_argument('--fire', action='append', default=[], metavar='FRAME',
+                    help='hold fire for 10 frames from FRAME (repeatable)')
     ap.add_argument('--dump', action='store_true', help='write the last frame as frame.nrtg for nativertg_frame')
+    ap.add_argument('--hires', action='store_true',
+                    help='keep a 4x copy of every blit and write native.png and hires.png of the last frame')
     a = ap.parse_args()
     adf = open(a.adf, 'rb').read()
     os.makedirs(a.out, exist_ok=True)
     h = Harness(adf, a.out)
+    h.presses = [(int(f), int(f) + 10) for f in a.fire]
+    if a.hires:
+        import swivhires
+        h.shadow = swivhires.Shadow(CHIP)
     mu = h.mu
     boot = adf[:1024]
     k = adf[KERNEL_AT:KERNEL_AT + 22 * 512]
@@ -407,6 +484,15 @@ def main():
     open(os.path.join(a.out, 'slow.bin'), 'wb').write(bytes(mu.mem_read(SLOW, SLOWSIZE)))
     if a.dump:
         h.dump_frame(os.path.join(a.out, 'frame.nrtg'))
+    if a.hires:
+        import numpy as np
+        chip = bytes(mu.mem_read(0, CHIP))
+        cop = (h.regs.get(0x080, 0) << 16 | h.regs.get(0x082, 0)) & 0x1ffffe
+        lines = copper_lines(chip, cop)
+        mem = np.frombuffer(chip, np.uint8)
+        write_png(os.path.join(a.out, 'hires.png'), h.shadow.compose(mem, lines), lines, swivhires.S)
+        write_png(os.path.join(a.out, 'native4x.png'), swivhires.nearest(mem, lines), lines, swivhires.S)
+        print('hires blits', h.shadow.blits, 'runs', h.shadow.groups, 'upscaled sources', h.shadow.upscaled)
     print('frames', h.frame, 'pc %06x' % mu.reg_read(UC_M68K_REG_PC), 'cyl', h.cyl)
 
 

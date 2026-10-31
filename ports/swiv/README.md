@@ -49,8 +49,23 @@ what the game has given the chipset and redraw it, upscaled, on an RTG screen.
    with $23AE0), 4 lores bitplanes 320x256 with 44-byte rows (BPL1MOD 4),
    BPLCON2 $3F (sprites behind nothing), all eight sprite pointers set,
    a fifth plane switched on for a band at lines $34-$3B.
-   Still to do here: input (the title waits for fire), the blitter's line
-   and fill modes if the game uses them, then the in-game frames.
+   `--fire FRAME` holds fire for ten frames; with presses at 1500, 2000
+   and 2500 the game starts and plays (68,000 blits by frame 3500; no
+   line or fill blits seen so far).
+   **Engine change** (`tools/swivhires.py`, `--hires`): every bit of chip
+   RAM has a 4x4 block of sub-pixels, and every blit the game starts is
+   also done on those blocks with the same channels, shifts, masks and
+   minterm, so bobs, map tiles and shadows land in a 1280x1024 picture at
+   the exact places the game puts them. Graphics a blit reads fresh from
+   the disk are upscaled first, in colour: the game draws one bob or tile
+   as a run of blits, one per bitplane, so the run's planes and its
+   cut-out mask are put back together, upscaled once, and split again.
+   Pictures the CPU writes to the screen (title, score panel) are upscaled
+   in colour from the screen. Dithered ground keeps its pixels (a texture
+   test per pixel); outlines are smoothed. The game's own memory is never
+   touched, so play is unchanged. Checked by taking each 4x4 block back
+   to one pixel: 99.2% of an in-game frame matches the original exactly,
+   the rest are smoothed edges.
 3. **Further graphics upgrades** (after 2 works): a replacement table keyed
    by a hash of each sprite or tile as it is blitted, so redrawn high
    resolution art can stand in for the original pieces one by one, and a
