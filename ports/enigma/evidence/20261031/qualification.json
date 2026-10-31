@@ -14,5 +14,8 @@
     "audio",
     "clean exit",
     "intended-ROM repeat"
-  ]
+  ],
+  "native_open4_adapter_checks": 28,
+  "native_open4_adapter_failures": 0,
+  "native_open4_adapter_fpu": "disabled"
 }
