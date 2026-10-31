@@ -1,8 +1,8 @@
 diff --git a/src/Audio/src/AudioEngine.cpp b/src/Audio/src/AudioEngine.cpp
-index a2fb22a..3669225 100644
+index a2fb22a..136dbf5 100644
 --- a/src/Audio/src/AudioEngine.cpp
 +++ b/src/Audio/src/AudioEngine.cpp
-@@ -2,7 +2,38 @@
+@@ -2,7 +2,41 @@
  #include <AL/al.h>
  #include <AL/alc.h>
  #include <AL/alext.h>
@@ -11,6 +11,9 @@ index a2fb22a..3669225 100644
 +#else
 +// This OpenAL has no EFX: ALC_EXT_EFX is absent, so reverb is never turned
 +// on and these are never called. They only let the engine build unchanged.
++#ifndef ALC_HRTF_SOFT
++#define ALC_HRTF_SOFT 0x1992
++#endif
 +#define AL_EFFECT_TYPE 0x8001
 +#define AL_EFFECT_REVERB 0x0001
 +#define AL_EFFECTSLOT_EFFECT 0x0001

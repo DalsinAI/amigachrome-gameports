@@ -92,6 +92,7 @@ if [[ -f "$WORK/done.key" && $(cat "$WORK/done.key") == "$KEY" && -f "$BIN" ]]; 
 fi
 if [[ -f "$WORK/failed.key" && $(cat "$WORK/failed.key") == "$KEY" ]]; then
     echo "FAILED recipe $KEY"; grep -nE 'error|Error' "$WORK/build.log" | head -40; tail -n 60 "$WORK/build.log"
+    grep -nE "error:|Error [0-9]" "$WORK"/tree/*.log | head -30
     rm -f "$WORK/failed.key"   # the next call tries again
     exit 1
 fi
