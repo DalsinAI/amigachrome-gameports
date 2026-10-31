@@ -1,3 +1,40 @@
+diff --git a/src/OpenLoco/src/Map/TileManager.cpp b/src/OpenLoco/src/Map/TileManager.cpp
+index 94029f7..4fea084 100644
+--- a/src/OpenLoco/src/Map/TileManager.cpp
++++ b/src/OpenLoco/src/Map/TileManager.cpp
+@@ -42,6 +42,7 @@
+ #include <OpenLoco/Diagnostics/Assertion.h>
+ #include <OpenLoco/Diagnostics/Logging.h>
+ #include <OpenLoco/Engine/World.hpp>
++#include <OpenLoco/Platform/Platform.h>
+ #include <cstdlib>
+ #include <set>
+ 
+@@ -830,6 +831,7 @@ namespace OpenLoco::World::TileManager
+     {
+         const auto curCursor = Ui::getCursor();
+         Ui::setCursor(Ui::CursorId::busy);
++        Logging::info("S5 save: busy cursor {} ms", Platform::getTime());
+ 
+         try
+         {
+@@ -850,13 +852,16 @@ namespace OpenLoco::World::TileManager
+                     }
+                 }
+             }
++            Logging::info("S5 save: {} tile elements packed {} ms", numEntries, Platform::getTime());
+ 
+             // Copy organised elements back to original element buffer
+             Diagnostics::Assert::eq(tileState().entries.size(), kMaxElements);
+             std::ranges::copy(temp, tileState().entries.begin());
+             tileState().entriesEnd = static_cast<ptrdiff_t>(numEntries);
+ 
++            Logging::info("S5 save: elements copied {} ms", Platform::getTime());
+             updateTilePointers();
++            Logging::info("S5 save: tile pointers {} ms", Platform::getTime());
+         }
+         catch (const std::bad_alloc&)
+         {
 diff --git a/src/OpenLoco/src/S5/S5.cpp b/src/OpenLoco/src/S5/S5.cpp
 index 14e3307..a958b66 100644
 --- a/src/OpenLoco/src/S5/S5.cpp
