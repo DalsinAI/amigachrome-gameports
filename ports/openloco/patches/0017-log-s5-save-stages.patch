@@ -1,0 +1,74 @@
+diff --git a/src/OpenLoco/src/S5/S5.cpp b/src/OpenLoco/src/S5/S5.cpp
+index 14e3307..55bea14 100644
+--- a/src/OpenLoco/src/S5/S5.cpp
++++ b/src/OpenLoco/src/S5/S5.cpp
+@@ -47,6 +47,7 @@
+ #include <OpenLoco/Core/Exception.hpp>
+ #include <OpenLoco/Core/Stream.hpp>
+ #include <OpenLoco/Diagnostics/Logging.h>
++#include <OpenLoco/Platform/Platform.h>
+ #include <fstream>
+ #include <iomanip>
+ 
+@@ -412,6 +413,7 @@ namespace OpenLoco::S5
+             file->saveDetails = prepareSaveDetails(src);
+         }
+ 
++        Logging::info("S5 save: details {} ms", Platform::getTime());
+         // Prepare required objects
+         std::memcpy(file->requiredObjects, requiredObjects.data(), sizeof(file->requiredObjects));
+ 
+@@ -422,6 +424,7 @@ namespace OpenLoco::S5
+         dst.general.savedViewY = savedView.viewY;
+         dst.general.savedViewZoom = static_cast<uint8_t>(static_cast<int8_t>(savedView.zoomLevel));
+         dst.general.savedViewRotation = savedView.rotation;
++        Logging::info("S5 save: state copied {} ms", Platform::getTime());
+ 
+         // Copy tile elements; remove any ghosts before saving
+         const auto entries = TileManager::getEntries();
+@@ -465,6 +468,7 @@ namespace OpenLoco::S5
+         {
+             WindowManager::closeConstructionWindows();
+         }
++        Logging::info("S5 save: start {} ms", Platform::getTime());
+ 
+         if ((flags & SaveFlags::raw) == SaveFlags::none)
+         {
+@@ -474,6 +478,7 @@ namespace OpenLoco::S5
+             StationManager::zeroUnused();
+             Vehicles::OrderManager::zeroUnusedOrderTable();
+         }
++        Logging::info("S5 save: tidied {} ms", Platform::getTime());
+ 
+         if ((flags & SaveFlags::isAutosave) == SaveFlags::none)
+         {
+@@ -492,7 +497,9 @@ namespace OpenLoco::S5
+             }
+ 
+             auto file = prepareGameState(flags, requiredObjects, packedObjects);
++            Logging::info("S5 save: prepared {} ms", Platform::getTime());
+             saveResult = exportGameState(stream, *file, packedObjects);
++            Logging::info("S5 save: written {} ms, ok {}", Platform::getTime(), saveResult);
+         }
+ 
+         if ((flags & SaveFlags::isAutosave) == SaveFlags::none)
+@@ -549,7 +556,9 @@ namespace OpenLoco::S5
+             }
+             const auto objectBytes=StateWire::encodeArray<ObjectHeader>(file.requiredObjects);
+             fs.writeChunk(SawyerEncoding::rotate, objectBytes.data(), objectBytes.size());
++            Logging::info("S5 save: headers {} ms", Platform::getTime());
+             const auto stateBytes=StateWire::encode(file.gameState);
++            Logging::info("S5 save: state encoded {} ms", Platform::getTime());
+ 
+             if (file.header.type == S5Type::scenario)
+             {
+@@ -568,7 +577,9 @@ namespace OpenLoco::S5
+             }
+             else
+             {
++                Logging::info("S5 save: state written {} ms", Platform::getTime());
+                 const auto tileBytes=StateWire::encodeArray<TileElement>(file.tileElements);
++                Logging::info("S5 save: tiles encoded {} ms ({} elements)", Platform::getTime(), file.tileElements.size());
+                 fs.writeChunk(SawyerEncoding::runLengthMulti, tileBytes.data(), tileBytes.size());
+             }
+ 
