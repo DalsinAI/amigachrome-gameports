@@ -48,6 +48,10 @@ install_lab() {
         cp -r "$DATA"/. "$dest/Locomotion/"; touch "$dest/Locomotion/.installed"
     fi
     cp "$OUT/SDL3.module" "$dest/SDL3.module"
+    # The lab gets OpenAL.module only when it has none of its own.
+    local al=$LAB/devices/harddisks/DH0/Libs/OpenGPU/OpenAL.module
+    if [[ ! -f $al ]]; then cp "$OUT/OpenAL.module" "$al"; echo "OpenAL.module put in the lab's LIBS:OpenGPU"; fi
+    sha256sum "$al" "$OUT/OpenAL.module"
     echo "installed in $dest:"; ls "$dest"; ls "$dest/Locomotion" | head; find "$dest/Locomotion" -type f | wc -l
     echo "SDL3.module in the lab:"; find "$LAB/devices/harddisks" -maxdepth 4 -iname 'SDL3.module' -exec sha256sum {} + 2>/dev/null
     sha256sum "$OUT/SDL3.module"
@@ -75,6 +79,7 @@ BIN=$WORK/tree/cmake/OpenLoco
 if [[ -f "$WORK/done.key" && $(cat "$WORK/done.key") == "$KEY" && -f "$BIN" ]]; then
     cp "$BIN" "$OUT/OpenLoco"
     cp "$SDL3_SDK/SDL3.module" "$OUT/SDL3.module"
+    cp "$WORK/OpenAL.module" "$OUT/OpenAL.module"
     cp "$WORK/tree/receipt.json" "$OUT/receipt.json" 2>/dev/null || true
     cp -r "$WORK/tree/source/data" "$OUT/data"
     tail -n 30 "$WORK/build.log" > "$OUT/build-tail.log"
@@ -115,19 +120,33 @@ rm -rf build/game-ports/sources/openloco build/game-ports/dependencies
 mkdir -p build/game-ports/sources
 ln -sfn $WORK/sources/openloco build/game-ports/sources/openloco
 ln -sfn $WORK/sources/dependencies build/game-ports/dependencies
-if [[ ! -f $WORK/tree/cmake/CMakeCache.txt ]]; then
-    rm -rf $WORK/tree
-    python3 scripts/build_sdl3_port.py --manifest ports/openloco/source.json --stove $STAGED \
-        --sdl3-sdk $SDL3_SDK --out $WORK/tree --jobs $JOBS
-    cat $WORK/tree/configure.log $WORK/tree/build.log | tail -n 200
-else
-    rm -rf $WORK/fresh; mkdir -p $WORK/fresh
-    git -C $WORK/sources/openloco archive HEAD | tar x -C $WORK/fresh
-    for p in ports/openloco/patches/*.patch; do patch -s --batch --forward -p1 -d $WORK/fresh < "\$p"; done
-    rsync -rc --delete $WORK/fresh/ $WORK/tree/source/
-    STOVE=$STAGED SOURCE_DATE_EPOCH=\$(git -C $WORK/sources/openloco show -s --format=%ct HEAD) \
-        cmake --build $WORK/tree/cmake --target App -j $JOBS
+# OpenAL.module and its link library, from OpenRTG at the recipe's pin,
+# with the GCC 16 stove (OpenRTG's own build script and defaults).
+OPENRTG=\$(python3 -c "import json; print(json.load(open('ports/openloco/source.json'))['openrtg']['commit'])")
+if [[ ! -f $WORK/openal/\$OPENRTG/libopenal.a ]]; then
+    [[ -d $WORK/openrtg/.git ]] || git clone -q https://github.com/DalsinAI/openrtg.git $WORK/openrtg
+    git -C $WORK/openrtg cat-file -e "\$OPENRTG^{commit}" 2>/dev/null || git -C $WORK/openrtg fetch -q origin
+    git -C $WORK/openrtg checkout -q --detach "\$OPENRTG"
+    rm -rf $WORK/openal/\$OPENRTG
+    sh $WORK/openrtg/library/modules/openal/build.sh $WORK/openal/\$OPENRTG module stub
 fi
+AL=$WORK/openal/\$OPENRTG
+mkdir -p $WORK/openal-cmake
+cat > $WORK/openal-cmake/OpenALConfig.cmake <<CFG
+set(OpenAL_FOUND TRUE)
+if(NOT TARGET OpenAL::OpenAL)
+add_library(OpenAL::OpenAL STATIC IMPORTED GLOBAL)
+set_target_properties(OpenAL::OpenAL PROPERTIES
+ IMPORTED_LOCATION "\$AL/libopenal.a"
+ INTERFACE_INCLUDE_DIRECTORIES "\$AL/include"
+ INTERFACE_LINK_LIBRARIES "m;amiga")
+endif()
+CFG
+export OPENAL_CMAKE_DIR=$WORK/openal-cmake
+cp \$AL/OpenAL.module $WORK/OpenAL.module
+python3 scripts/build_sdl3_port.py --manifest ports/openloco/source.json --stove $STAGED \
+    --sdl3-sdk $SDL3_SDK --out $WORK/tree --jobs $JOBS --reuse-out
+tail -n 40 $WORK/tree/build.log
 echo $KEY > $WORK/done.key
 RUN
 rm -f "$WORK/done.key"

@@ -23,8 +23,8 @@
         "-DOPENLOCO_BUILD_TESTS=OFF",
         "-DOPENLOCO_COPY_ASSETS=OFF",
         "-DOPENLOCO_PARALLEL_RENDERING=OFF",
-        "-DOPENLOCO_DISABLE_AUDIO=ON",
-        "-DOPENLOCO_DISABLED_AUDIO_SOURCE=@PORT_DIR@/compat/AudioEngine.Disabled.cpp",
+        "-DOPENLOCO_DISABLE_AUDIO=OFF",
+        "-DOpenAL_DIR=@ENV:OPENAL_CMAKE_DIR@",
         "-DOPENLOCO_ENABLE_IPO=OFF",
         "-DYAML_ENABLE_PIC=OFF",
         "-DCMAKE_POSITION_INDEPENDENT_CODE=OFF",
@@ -57,5 +57,10 @@
       "submodules": false
     }
   },
-  "compilerRelease": "16.2.0-open3"
+  "compilerRelease": "16.2.0-open3",
+  "openrtg": {
+    "url": "https://github.com/DalsinAI/openrtg.git",
+    "commit": "8b6d09ff1023edc3fb1e62e3db0490ec385820b2",
+    "use": "OpenAL.module and libopenal.a (library/modules/openal/build.sh)"
+  }
 }
