@@ -1,5 +1,5 @@
 diff --git a/src/OpenLoco/src/S5/S5.cpp b/src/OpenLoco/src/S5/S5.cpp
-index 14e3307..55bea14 100644
+index 14e3307..a958b66 100644
 --- a/src/OpenLoco/src/S5/S5.cpp
 +++ b/src/OpenLoco/src/S5/S5.cpp
 @@ -47,6 +47,7 @@
@@ -26,7 +26,7 @@ index 14e3307..55bea14 100644
  
          // Copy tile elements; remove any ghosts before saving
          const auto entries = TileManager::getEntries();
-@@ -465,6 +468,7 @@ namespace OpenLoco::S5
+@@ -465,15 +468,21 @@ namespace OpenLoco::S5
          {
              WindowManager::closeConstructionWindows();
          }
@@ -34,15 +34,21 @@ index 14e3307..55bea14 100644
  
          if ((flags & SaveFlags::raw) == SaveFlags::none)
          {
-@@ -474,6 +478,7 @@ namespace OpenLoco::S5
+             TileManager::reorganise();
++            Logging::info("S5 save: tiles reorganised {} ms", Platform::getTime());
+             EntityManager::resetSpatialIndex();
++            Logging::info("S5 save: spatial index {} ms", Platform::getTime());
+             EntityManager::zeroUnused();
++            Logging::info("S5 save: entities zeroed {} ms", Platform::getTime());
              StationManager::zeroUnused();
++            Logging::info("S5 save: stations zeroed {} ms", Platform::getTime());
              Vehicles::OrderManager::zeroUnusedOrderTable();
          }
 +        Logging::info("S5 save: tidied {} ms", Platform::getTime());
  
          if ((flags & SaveFlags::isAutosave) == SaveFlags::none)
          {
-@@ -492,7 +497,9 @@ namespace OpenLoco::S5
+@@ -492,7 +501,9 @@ namespace OpenLoco::S5
              }
  
              auto file = prepareGameState(flags, requiredObjects, packedObjects);
@@ -52,7 +58,7 @@ index 14e3307..55bea14 100644
          }
  
          if ((flags & SaveFlags::isAutosave) == SaveFlags::none)
-@@ -549,7 +556,9 @@ namespace OpenLoco::S5
+@@ -549,7 +560,9 @@ namespace OpenLoco::S5
              }
              const auto objectBytes=StateWire::encodeArray<ObjectHeader>(file.requiredObjects);
              fs.writeChunk(SawyerEncoding::rotate, objectBytes.data(), objectBytes.size());
@@ -62,7 +68,7 @@ index 14e3307..55bea14 100644
  
              if (file.header.type == S5Type::scenario)
              {
-@@ -568,7 +577,9 @@ namespace OpenLoco::S5
+@@ -568,7 +581,9 @@ namespace OpenLoco::S5
              }
              else
              {

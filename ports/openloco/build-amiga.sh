@@ -128,7 +128,7 @@ if [[ ! -f $WORK/openal/\$OPENRTG/libopenal.a ]]; then
     git -C $WORK/openrtg cat-file -e "\$OPENRTG^{commit}" 2>/dev/null || git -C $WORK/openrtg fetch -q origin
     git -C $WORK/openrtg checkout -q --detach "\$OPENRTG"
     rm -rf $WORK/openal/\$OPENRTG
-    sh $WORK/openrtg/library/modules/openal/build.sh $WORK/openal/\$OPENRTG module stub
+    STOVE=$STAGED/prefix sh $WORK/openrtg/library/modules/openal/build.sh $WORK/openal/\$OPENRTG module stub
 fi
 AL=$WORK/openal/\$OPENRTG
 mkdir -p $WORK/openal-cmake
