@@ -1,0 +1,1986 @@
+diff --git a/src/amigadatatype.c b/src/amigadatatype.c
+new file mode 100644
+--- /dev/null
++++ b/src/amigadatatype.c
+@@ -0,0 +1,309 @@
++/* GrafX2 native picture DataTypes bridge. GPL-2.0-only.
++ * Uses OS3 picture.datatype V43 methods; OpenPNG/png supplies PNG writes.
++ * Pixel-array methods use DoMethodA, never DoDTMethodA (which replaces word 2).
++ */
++#include <stdlib.h>
++#include <string.h>
++#include <exec/types.h>
++#define timerequest TimeRequest
++#include <datatypes/datatypes.h>
++#include <datatypes/datatypesclass.h>
++#include <datatypes/pictureclass.h>
++#include <proto/exec.h>
++#include <proto/datatypes.h>
++#include <proto/dos.h>
++#include <clib/alib_protos.h>
++#undef timerequest
++#include "global.h"
++#include "loadsave.h"
++#include "io.h"
++#include "screen.h"
++#include "gfx2log.h"
++#ifdef USE_OPENUP
++#include "amigaopenup.h"
++#include <datatypes/openimage.h>
++static struct IntuitionBase *PNGIntuitionBase;
++#define INTUITION_BASE_NAME PNGIntuitionBase
++#include <proto/intuition.h>
++#endif
++struct Library *DataTypesBase;
++static int Open_datatypes(void)
++{
++  if (!DataTypesBase) DataTypesBase = OpenLibrary("datatypes.library", 47);
++  if (!DataTypesBase) DataTypesBase = OpenLibrary("datatypes.library", 45);
++  return DataTypesBase != NULL;
++}
++void GFX2_AmigaDataTypesClose(void)
++{
++#ifdef USE_OPENUP
++  if (PNGIntuitionBase) { CloseLibrary((struct Library *)PNGIntuitionBase); PNGIntuitionBase=NULL; }
++#endif
++  if (DataTypesBase) { CloseLibrary(DataTypesBase); DataTypesBase = NULL; }
++}
++void Test_AmigaPNG(T_IO_Context *context, FILE *file)
++{
++  static const byte sig[8] = {137,80,78,71,13,10,26,10};
++  byte bytes[8];
++  (void)context;
++  File_error = fread(bytes,1,8,file) == 8 && !memcmp(bytes,sig,8) ? 0 : 1;
++}
++void Load_AmigaDataType(T_IO_Context *context)
++{
++  Object *object = NULL;
++  struct BitMapHeader *header = NULL;
++  ULONG *colors = NULL, mode = 0, ncolors = 0;
++  struct pdtBlitPixelArray read = {0};
++  byte *row = NULL;
++  char *path;
++  int width, height, indexed, x, y;
++  long length;
++  File_error = 1;
++  if (!Open_datatypes()) return;
++  path = Filepath_append_to_dir(context->File_directory, context->File_name);
++  if (!path) return;
++  length = File_length(path);
++  object = NewDTObjectA((CONST_STRPTR)path, ((struct TagItem[]) {
++    {DTA_SourceType,DTST_FILE}, {DTA_GroupID,GID_PICTURE},
++    {PDTA_Remap,FALSE}, {PDTA_DestMode,PMODE_V43}, {TAG_DONE,0}}));
++  free(path);
++  if (!object) { GFX2_Log(GFX2_WARNING,"Picture DataType could not open image (IoErr %ld)\n",(long)IoErr());return; }
++  if (!GetDTAttrsA(object,((struct TagItem[]) {{PDTA_BitMapHeader,(ULONG)&header},{TAG_DONE,0}})) || !header) goto done;
++  width = header->bmh_Width; height = header->bmh_Height;
++  if (width < 1 || height < 1 || width > 9999 || height > 9999) goto done;
++  GetDTAttrsA(object,((struct TagItem[]) {
++    {PDTA_CRegs,(ULONG)&colors},{PDTA_ModeID,(ULONG)&mode},
++    {PDTA_NumColors,(ULONG)&ncolors},{TAG_DONE,0}}));
++  /* Keep indexed palette/order when available. HAM/EHB must be decoded as RGB. */
++  indexed = header->bmh_Depth <= 8 && colors && ncolors > 0 && ncolors <= 256 && !(mode & (0x800 | 0x80));
++  row = malloc((size_t)width * 4);
++  if (!row) goto done;
++  read.MethodID = PDTM_READPIXELARRAY;
++  read.pbpa_PixelData = row;
++  read.pbpa_PixelFormat = indexed ? PBPAFMT_LUT8 : PBPAFMT_ARGB;
++  read.pbpa_PixelArrayMod = width * (indexed ? 1 : 4);
++  read.pbpa_Width = width; read.pbpa_Height = 1;
++  /* Probe before allocating/changing the destination document. */
++  if (!DoMethodA(object, (Msg)&read))
++  {
++    indexed = 0;
++    read.pbpa_PixelFormat = PBPAFMT_ARGB;
++    read.pbpa_PixelArrayMod = width * 4;
++    if (!DoMethodA(object, (Msg)&read)) { GFX2_Log(GFX2_WARNING,"Picture DataType has no ARGB pixels (IoErr %ld)\n",(long)IoErr());goto done; }
++  }
++  File_error = 0;
++  Pre_load(context, width, height, length, FORMAT_MISC, PIXEL_SIMPLE, indexed ? 8 : 24);
++  if (File_error) goto done;
++  if (indexed)
++  {
++    for (x=0; x<(int)ncolors; x++)
++    {
++      context->Palette[x].R = colors[x*3] >> 24;
++      context->Palette[x].G = colors[x*3+1] >> 24;
++      context->Palette[x].B = colors[x*3+2] >> 24;
++    }
++    if (header->bmh_Masking == mskHasTransparentColor)
++    { context->Background_transparent = 1; context->Transparent_color = header->bmh_Transparent; }
++  }
++  for (y=0; y<height; y++)
++  {
++    read.pbpa_Top = y;
++    if (y && !DoMethodA(object, (Msg)&read)) { File_error=1; goto done; }
++    for (x=0; x<width; x++)
++      if (indexed) Set_pixel(context,x,y,row[x]);
++      else Set_pixel_24b(context,x,y,row[x*4+1],row[x*4+2],row[x*4+3]);
++  }
++  File_error = 0;
++done:
++  free(row);
++  DisposeDTObject(object);
++}
++static Object *Make_png_object(T_IO_Context *context, const char *writer, byte *row)
++{
++  Object *object;
++  struct BitMapHeader *header = NULL;
++  struct pdtBlitPixelArray write = {0};
++  int x,y;
++#ifdef USE_OPENUP
++  byte table[1024];
++  ULONG stride=((ULONG)context->Width*4+15)&~15UL;
++  byte *block=malloc(stride*32);
++  if (!block) return NULL;
++  for(x=0;x<256;++x) {
++    table[x*4]=context->Background_transparent && x==context->Transparent_color ? 0 : 255;
++    table[x*4+1]=context->Palette[x].R;table[x*4+2]=context->Palette[x].G;table[x*4+3]=context->Palette[x].B;
++  }
++#endif
++  object = NewDTObjectA(NULL,((struct TagItem[]) {{DTA_SourceType,DTST_RAM},
++    {DTA_BaseName,(ULONG)writer},{DTA_GroupID,GID_PICTURE},{TAG_DONE,0}}));
++  if (!object) {
++#ifdef USE_OPENUP
++    free(block);
++#endif
++    return NULL;
++  }
++  if (!GetDTAttrsA(object,((struct TagItem[]) {{PDTA_BitMapHeader,(ULONG)&header},{TAG_DONE,0}})) || !header) goto failed;
++  header->bmh_Width = header->bmh_PageWidth = context->Width;
++  header->bmh_Height = header->bmh_PageHeight = context->Height;
++  header->bmh_Depth = 32;
++  header->bmh_Masking = context->Background_transparent ? mskHasAlpha : mskNone;
++  SetDTAttrsA(object,NULL,NULL,((struct TagItem[]) {
++    {DTA_NominalHoriz,(ULONG)context->Width},{DTA_NominalVert,(ULONG)context->Height},
++    {PDTA_SourceMode,PMODE_V43},
++    {PDTA_AlphaChannel,context->Background_transparent ? TRUE : FALSE},{TAG_DONE,0}}));
++  write.MethodID = PDTM_WRITEPIXELARRAY;
++  write.pbpa_PixelData = row;
++  write.pbpa_PixelFormat = PBPAFMT_ARGB;
++  write.pbpa_PixelArrayMod = context->Width*4;
++  write.pbpa_Width = context->Width; write.pbpa_Height = 1;
++  for(y=0;y<context->Height;y++)
++  {
++#ifdef USE_OPENUP
++    if ((y&31)==0) {
++      ULONG rows=context->Height-y; if(rows>32)rows=32;
++      GFX2_OpenUpExpand(context->Target_address+y*context->Pitch,context->Pitch,block,stride,context->Width,rows,table);
++    }
++    write.pbpa_PixelData=block+(y&31)*stride;
++    write.pbpa_PixelArrayMod=stride;
++#else
++    for(x=0;x<context->Width;x++)
++    {
++      byte index=Get_pixel(context,x,y);
++      row[x*4] = context->Background_transparent && index==context->Transparent_color ? 0 : 255;
++      row[x*4+1]=context->Palette[index].R;
++      row[x*4+2]=context->Palette[index].G;
++      row[x*4+3]=context->Palette[index].B;
++    }
++    #endif
++    write.pbpa_Top=y;
++    if (!DoMethodA(object,(Msg)&write)) goto failed;
++  }
++  #ifdef USE_OPENUP
++  free(block);
++  #endif
++  return object;
++failed:
++  #ifdef USE_OPENUP
++  free(block);
++  #endif
++  DisposeDTObject(object);
++  return NULL;
++}
++#ifdef USE_OPENUP
++/* OpenPNG's public encoder takes our ARGB pixels directly. This avoids an
++ * extra picture.datatype image and readback, and works without depending on
++ * the superclass's RAM-picture storage implementation. */
++static int Save_openpng(T_IO_Context *context, const char *temp)
++{
++  struct Library *png=NULL;
++  Object *object=NULL;
++  struct oiEncodePNG encode={0};
++  byte *pixels=NULL,table[1024];
++  ULONG stride,y,rows;
++  int x,saved=0;
++  FILE *file=NULL;
++  if(context->Width>9999 || context->Height>9999 || !context->Target_address) return 0;
++  png=OpenLibrary("datatypes/openpng.datatype",47);
++  if(!png || (png->lib_Version==47 && png->lib_Revision<4)) { GFX2_Log(GFX2_WARNING,"OpenPNG encoder unavailable (base %p, IoErr %ld)\n",png,(long)IoErr());goto done; }
++  if(!PNGIntuitionBase) PNGIntuitionBase=(struct IntuitionBase *)OpenLibrary("intuition.library",39);
++  if(!PNGIntuitionBase) goto done;
++  object=NewObjectA(NULL,(CONST_STRPTR)"openpng.datatype",((struct TagItem[]){{DTA_SourceType,DTST_RAM},{TAG_DONE,0}}));
++  if(!object) { GFX2_Log(GFX2_WARNING,"OpenPNG: cannot create encoder (IoErr %ld)\n",(long)IoErr());goto done; }
++  stride=((ULONG)context->Width*4+15)&~15UL;
++  pixels=malloc(stride*context->Height);if(!pixels)goto done;
++  for(x=0;x<256;++x) {
++    table[x*4]=context->Background_transparent && x==context->Transparent_color ? 0 : 255;
++    table[x*4+1]=context->Palette[x].R;table[x*4+2]=context->Palette[x].G;table[x*4+3]=context->Palette[x].B;
++  }
++  for(y=0;y<(ULONG)context->Height;y+=rows) {
++    rows=context->Height-y;if(rows>32)rows=32;
++    GFX2_OpenUpExpand(context->Target_address+y*context->Pitch,context->Pitch,pixels+y*stride,stride,context->Width,rows,table);
++  }
++  encode.MethodID=OIM_ENCODEPNG;encode.oiep_Pixels=pixels;
++  encode.oiep_Width=context->Width;encode.oiep_Height=context->Height;
++  encode.oiep_Stride=stride;encode.oiep_Level=-1;
++  if(!context->Background_transparent)encode.oiep_Flags=OIEF_OPAQUE;
++  if(!DoMethodA(object,(Msg)&encode)) {
++    GFX2_Log(GFX2_WARNING,"OpenPNG: encoding failed (error %ld)\n",(long)encode.oiep_Error);goto done;
++  }
++  if(!encode.oiep_Data || encode.oiep_Size<8 || memcmp(encode.oiep_Data,"\211PNG\r\n\032\n",8))goto done;
++  file=fopen(temp,"wb");if(!file)goto done;
++  saved=fwrite(encode.oiep_Data,1,encode.oiep_Size,file)==encode.oiep_Size;
++  if(fclose(file))saved=0;
++  file=NULL;
++done:
++  if(file)fclose(file);
++  if(encode.oiep_Data)FreeVec(encode.oiep_Data);
++  free(pixels);
++  if(object)DisposeObject(object);
++  if(png)CloseLibrary(png);
++  if(!saved)DeleteFile((CONST_STRPTR)temp);
++  return saved;
++}
++#endif
++void Save_AmigaPNG(T_IO_Context *context)
++{
++  static const char *writers[] = {"openpng", "png"};
++  static unsigned long serial;
++  byte *row = NULL;
++  char *path = NULL, *temp = NULL, *backup = NULL;
++  unsigned writer;
++  BPTR lock;
++  int saved = 0, attempted = 0, had_original = 0;
++  File_error = 1;
++  if (!Open_datatypes() || context->Width < 1 || context->Height < 1) goto done;
++  path=Filepath_append_to_dir(context->File_directory,context->File_name);
++  if (!path) goto done;
++  temp=malloc(strlen(path)+64); backup=malloc(strlen(path)+64);
++  row=malloc((size_t)context->Width*4);
++  if (!temp || !backup || !row) goto done;
++  snprintf(temp,strlen(path)+64,"%s.gfx2-%08lx-%lu.tmp",path,(unsigned long)FindTask(NULL),++serial);
++  snprintf(backup,strlen(path)+64,"%s.gfx2-%08lx-%lu.bak",path,(unsigned long)FindTask(NULL),serial);
++  /* Never reuse a surviving file from an earlier process. */
++  lock=Lock((CONST_STRPTR)temp,ACCESS_READ); if(lock) {UnLock(lock);goto done;}
++  lock=Lock((CONST_STRPTR)backup,ACCESS_READ); if(lock) {UnLock(lock);goto done;}
++  #ifdef USE_OPENUP
++  saved=Save_openpng(context,temp);
++  if(saved)attempted=1;
++  #endif
++  for(writer=0;!saved && writer<sizeof(writers)/sizeof(writers[0]);writer++)
++  {
++    Object *object=Make_png_object(context,writers[writer],row);
++    if(!object) continue;
++    attempted=1;
++    saved=SaveDTObjectA(object,NULL,NULL,(CONST_STRPTR)temp,DTWM_RAW,FALSE,NULL)!=0;
++    DisposeDTObject(object);
++    if(saved)
++    {
++      static const byte signature[8]={137,80,78,71,13,10,26,10};
++      byte bytes[8];
++      FILE *probe=fopen(temp,"rb");
++      saved=probe && fread(bytes,1,8,probe)==8 && !memcmp(bytes,signature,8);
++      if(probe) fclose(probe);
++    }
++    if(saved) break;
++    DeleteFile((CONST_STRPTR)temp);
++  }
++  if (!saved) goto done;
++  lock=Lock((CONST_STRPTR)path,ACCESS_READ);
++  if(lock)
++  {
++    UnLock(lock);
++    if(!Rename((CONST_STRPTR)path,(CONST_STRPTR)backup)) goto done;
++    had_original=1;
++  }
++  if(Rename((CONST_STRPTR)temp,(CONST_STRPTR)path))
++  {
++    File_error=0;
++    if(had_original) DeleteFile((CONST_STRPTR)backup);
++  }
++  else if(had_original && !Rename((CONST_STRPTR)backup,(CONST_STRPTR)path))
++    GFX2_MessageBox("Save failed. The original file is retained under its .gfx2-*.bak name.","GrafX2",GFX2_MB_ERROR);
++done:
++  if(attempted && temp) DeleteFile((CONST_STRPTR)temp);
++  free(path);free(temp);free(backup);free(row);
++  if(File_error)
++  {
++    GFX2_Log(GFX2_WARNING,"PNG save failed: check disk space, permissions and OpenPNG 47.4+ or another PNG writer.\n");
++    GFX2_MessageBox("PNG could not be saved. Check disk space and permissions. PNG output needs OpenPNG 47.4 or another PNG datatype with write support. GIF and IFF remain available.","GrafX2",GFX2_MB_ERROR);
++  }
++}
+diff --git a/src/amigaexpand.c b/src/amigaexpand.c
+new file mode 100644
+--- /dev/null
++++ b/src/amigaexpand.c
+@@ -0,0 +1,14 @@
++/* Pure worker: no OS, globals, allocation, or library calls. GPL-2.0-only. */
++#include "amigaopenup.h"
++__attribute__((noinline)) LONG GFX2_ExpandRow(ULONG y, const UBYTE *in, UBYTE *out,
++ const UBYTE *table, ULONG width, ULONG ipitch, ULONG opitch)
++{
++  const UBYTE *s = in + y * ipitch;
++  UBYTE *d = out + y * opitch;
++  ULONG x;
++  for (x=0; x<width; ++x) {
++    const UBYTE *p = table + (ULONG)s[x] * 4;
++    d[0]=p[0]; d[1]=p[1]; d[2]=p[2]; d[3]=p[3]; d+=4;
++  }
++  return 0;
++}
+diff --git a/src/amigafont.c b/src/amigafont.c
+new file mode 100644
+--- /dev/null
++++ b/src/amigafont.c
+@@ -0,0 +1,103 @@
++/* OpenFont -> GrafX2 indexed text brush. GPL-2.0-only. */
++#include <stdlib.h>
++#include <string.h>
++#include <limits.h>
++#include <proto/openfont.h>
++#include "global.h"
++#include "misc.h"
++#include "windows.h"
++#include "amigaopenup.h"
++
++struct BrushGlyph { struct OFBitmap bitmap; LONG x,y; };
++static LONG pixel_floor(LONG x) { return x>=0 ? x/64 : -((-x+63)/64); }
++/* GrafX2's classic text field is Latin-1, as SDL_ttf RenderText was. */
++static char *to_utf8(const char *s)
++{
++  size_t i,n=strlen(s),p=0; char *out;
++  if(n>4096) return NULL;
++  out=malloc(n*2+1);if(!out)return NULL;
++  for(i=0;i<n;++i) { unsigned char c=(unsigned char)s[i];
++    if(c>=128) { out[p++]=0xc0|(c>>6);out[p++]=0x80|(c&63); } else out[p++]=c;
++  }
++  out[p]=0;return out;
++}
++byte *GFX2_OpenFontRender(const char *str,const char *path,int size,int aa,int bold,int italic,
++ int *width,int *height,T_Palette palette)
++{
++  struct OFFace *face=NULL;
++  struct OFFaceInfo info;
++  struct OFGlyph *shape=NULL;
++  struct BrushGlyph *glyphs=NULL;
++  char *text=NULL,*line,*next;
++  byte *brush=NULL;
++  ULONG count=0,used=0,i,x,y;
++  LONG baseline=0,lineheight,left=0,top=0,right=0,bottom=0,w,h;
++  LONG penx=0,peny=0;
++  if(!str || !path || !width || !height || size<1 || size>512 || !GFX2_OpenUpFontAvailable()) return NULL;
++  text=to_utf8(str);if(!text)return NULL;
++  face=OF_OpenFaceA((CONST_STRPTR)path,((struct TagItem[]){{OFA_Size,(ULONG)size},{TAG_DONE,0}}));
++  if(!face || OF_GetFaceInfo(face,&info)!=0) goto done;
++  lineheight=(info.fi_Height+63)/64;if(lineheight<1)lineheight=size;
++  baseline=(info.fi_Ascender+63)/64;
++  /* Shaping each line twice measures capacity then fills; no fixed glyph limit. */
++  for(line=text;line;) {
++    next=strchr(line,'\n');if(next)*next=0;
++    count+=OF_ShapeText(face,(CONST_STRPTR)line,strlen(line),NULL,0);
++    if(next)*next='\n';line=next?next+1:NULL;
++  }
++  if(count>16384)goto done;
++  shape=calloc(count?count:1,sizeof(*shape));glyphs=calloc(count?count:1,sizeof(*glyphs));
++  if(!shape || !glyphs)goto done;
++  for(line=text;line;) {
++    ULONG n;
++    next=strchr(line,'\n');if(next)*next=0;
++    n=OF_ShapeText(face,(CONST_STRPTR)line,strlen(line),shape,count);
++    if(*line && !n)goto done;
++    if(n>count || used+n>count)goto done;
++    penx=peny=0;
++    for(i=0;i<n;++i) {
++      struct BrushGlyph *g=&glyphs[used++];
++      struct OFFace *gf=OF_GetFallback(face,shape[i].gl_Face);
++      if(!gf || OF_RasterGlyph(gf,shape[i].gl_Glyph,&g->bitmap)!=0)goto done;
++      g->x=pixel_floor(penx+shape[i].gl_XOffset)+g->bitmap.bm_Left;
++      g->y=baseline-pixel_floor(peny+shape[i].gl_YOffset)-g->bitmap.bm_Top;
++      if(g->x<left)left=g->x;if(g->y<top)top=g->y;
++      /* Synthetic bold and oblique are applied to the brush, never to font state. */
++      if(g->x+(LONG)g->bitmap.bm_Width+(bold?1:0)+(italic?(LONG)g->bitmap.bm_Height/4+1:0)>right)
++        right=g->x+g->bitmap.bm_Width+(bold?1:0)+(italic?g->bitmap.bm_Height/4+1:0);
++      if(g->y+(LONG)g->bitmap.bm_Height>bottom)bottom=g->y+g->bitmap.bm_Height;
++      penx+=shape[i].gl_XAdvance;peny+=shape[i].gl_YAdvance;
++    }
++    if(pixel_floor(penx+63)>right)right=pixel_floor(penx+63);
++    if(baseline-(info.fi_Descender/64)>bottom)bottom=baseline-info.fi_Descender/64;
++    baseline+=lineheight;line=next?next+1:NULL;
++  }
++  w=right-left;h=bottom-top;if(w<1)w=1;if(h<1)h=lineheight;
++  if(w>9999 || h>9999 || (unsigned long)w*h>32UL*1024*1024)goto done;
++  brush=calloc((size_t)w,h);if(!brush)goto done;
++  for(i=0;i<used;++i) {
++    struct BrushGlyph *g=&glyphs[i];struct OFBitmap *b=&g->bitmap;
++    for(y=0;y<b->bm_Height;++y)for(x=0;x<b->bm_Width;++x) {
++      LONG dx=g->x-left+x+(italic?(b->bm_Height-1-y)/4:0),dy=g->y-top+y;
++      byte a=b->bm_Pixels[y*b->bm_Stride+x];
++      if(dx>=0 && dx<w && dy>=0 && dy<h) {
++        byte *d=brush+dy*w+dx;if(*d<a)*d=a;
++        if(bold && dx+1<w && d[1]<a)d[1]=a;
++      }
++    }
++  }
++  if(aa) {
++    for(i=0;i<256;++i)palette[i].R=palette[i].G=palette[i].B=i;
++    palette[0]=palette[Back_color];palette[Back_color]=Main.palette[Back_color];
++    for(i=0;i<(ULONG)w*h;++i) { if(brush[i]==0)brush[i]=Back_color;else if(brush[i]==Back_color)brush[i]=0; }
++  } else {
++    byte fg=Fore_color;
++    if(fg==Back_color)fg=Best_color_perceptual_except(Main.palette[Back_color].R,Main.palette[Back_color].G,Main.palette[Back_color].B,Back_color);
++    memcpy(palette,Main.palette,sizeof(T_Palette));
++    for(i=0;i<(ULONG)w*h;++i)brush[i]=brush[i]>=128?fg:Back_color;
++  }
++  *width=w;*height=h;
++done:
++  if(glyphs)for(i=0;i<used;++i)OF_FreeBitmap(&glyphs[i].bitmap);
++  free(glyphs);free(shape);if(face)OF_CloseFace(face);free(text);return brush;
++}
+diff --git a/src/amigafpu.c b/src/amigafpu.c
+new file mode 100644
+--- /dev/null
++++ b/src/amigafpu.c
+@@ -0,0 +1,19 @@
++/* GPL-2.0-only. libnix hard-FPU startup compatibility for native 68040 AROS.
++ * AROS correctly advertises AFF_FPU40 without also setting AFF_68881.
++ * The open3 libm881 startup check accepts only AFF_68881. Override that
++ * check, retaining FPCR round-to-nearest setup and refusal without an FPU.
++ */
++#include <exec/execbase.h>
++#include <proto/exec.h>
++void __fpucheck(void)
++{
++  ULONG fpcr;
++  if (!(SysBase->AttnFlags & (AFF_68881 | AFF_68882 | AFF_FPU40)))
++  {
++    Alert(0x00068881);
++    for (;;) { }
++  }
++  __asm__ volatile ("fmove.l %%fpcr,%0" : "=d"(fpcr));
++  fpcr &= ~0x30UL;
++  __asm__ volatile ("fmove.l %0,%%fpcr" : : "d"(fpcr));
++}
+diff --git a/src/amigainput.inc b/src/amigainput.inc
+new file mode 100644
+--- /dev/null
++++ b/src/amigainput.inc
+@@ -0,0 +1,99 @@
++/* Included inside Get_input(), GPL-2.0-only. */
++    struct Window *window = GFX2_AmigaNativeWindow();
++    struct IntuiMessage *message;
++    int feedback = 0;
++    Key = Key_ANSI = Key_UNICODE = 0;
++    Mouse_moved = 0;
++    Input_new_mouse_X = Mouse_X;
++    Input_new_mouse_Y = Mouse_Y;
++    Input_new_mouse_K = Mouse_K;
++    Color_cycling();
++    Flush_update();
++    if (Quit_is_required) return 1;
++    if (!window) { Quit_is_required = 1; return 1; }
++    while (!feedback && (message = (struct IntuiMessage *)GetMsg(window->UserPort)))
++    {
++      ULONG event_class = message->Class;
++      UWORD code = message->Code;
++      UWORD qualifier = message->Qualifier;
++      WORD x = message->MouseX, y = message->MouseY;
++      /* Never retain an IntuiMessage beyond ReplyMsg. */
++      ReplyMsg((struct Message *)message);
++      word previous_modifiers = Amiga_key_modifiers;
++      Amiga_key_modifiers = Amiga_modifiers(qualifier);
++      switch(event_class)
++      {
++        case IDCMP_MOUSEMOVE:
++          feedback = Move_cursor_with_constraints(x / Pixel_width / render_scale_x,
++                                                   y / Pixel_height / render_scale_y);
++          break;
++        case IDCMP_MOUSEBUTTONS:
++        {
++          byte mask = 0;
++          if ((code & ~IECODE_UP_PREFIX) == IECODE_LBUTTON) mask = Button_inverter ? 2 : 1;
++          if ((code & ~IECODE_UP_PREFIX) == IECODE_RBUTTON) mask = Button_inverter ? 1 : 2;
++          if (mask)
++          {
++            if (code & IECODE_UP_PREFIX) Input_new_mouse_K &= ~mask;
++            else Input_new_mouse_K |= mask;
++            feedback = Handle_mouse_btn_change();
++          }
++          else if (code == IECODE_MBUTTON)
++          { Key = KEY_MOUSEMIDDLE | Amiga_key_modifiers; feedback = 1; }
++          break;
++        }
++        case IDCMP_RAWKEY:
++        {
++          word text;
++          word key = Amiga_key(code & ~IECODE_UP_PREFIX, qualifier, &text);
++          word released = previous_modifiers & ~Amiga_key_modifiers;
++          if (code & IECODE_UP_PREFIX)
++            feedback = Release_control(key, released);
++          else
++          {
++            word pressed = Amiga_key_modifiers & ~previous_modifiers;
++            if (Config.Swap_buttons && pressed == Config.Swap_buttons && !Button_inverter)
++            {
++              Button_inverter = 1;
++              if (Input_new_mouse_K) { Input_new_mouse_K ^= 3; feedback = Handle_mouse_btn_change(); }
++            }
++            if (key)
++            {
++              Key = key | Amiga_key_modifiers;
++              Key_ANSI = Key_UNICODE = text;
++              Handle_special_key_press();
++              feedback = 1;
++            }
++          }
++          break;
++        }
++        case IDCMP_INACTIVEWINDOW:
++          Amiga_key_modifiers = 0;
++          Input_new_mouse_K = 0;
++          Button_inverter = 0;
++          Directional_emulated = Directional_click = 0;
++          Pan_shortcut_pressed = 0;
++          feedback = Handle_mouse_btn_change();
++          break;
++        case IDCMP_REFRESHWINDOW:
++          BeginRefresh(window);
++          Update_rect(0, 0, 0, 0);
++          Flush_update();
++          EndRefresh(window, TRUE);
++          feedback = 1;
++          break;
++        case IDCMP_CLOSEWINDOW:
++          Quit_is_required = 1;
++          feedback = 1;
++          break;
++      }
++    }
++    Mouse_Emulation();
++    if (Mouse_moved)
++    {
++      Compute_paintbrush_coordinates();
++      Display_cursor();
++      return 1;
++    }
++    if (feedback) return 1;
++    if (sleep_time > 0) Delay((sleep_time + 19) / 20);
+diff --git a/src/amigakeys.h b/src/amigakeys.h
+new file mode 100644
+--- /dev/null
++++ b/src/amigakeys.h
+@@ -0,0 +1,65 @@
++/* Native raw-key to GrafX2 key namespace, GPL-2.0-only. */
++#include "keycodes.h"
++static word Amiga_modifiers(UWORD q)
++{
++  return ((q & (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT)) ? GFX2_MOD_SHIFT : 0)
++       | ((q & IEQUALIFIER_CONTROL) ? GFX2_MOD_CTRL : 0)
++       | ((q & (IEQUALIFIER_LALT|IEQUALIFIER_RALT)) ? GFX2_MOD_ALT : 0)
++       | ((q & (IEQUALIFIER_LCOMMAND|IEQUALIFIER_RCOMMAND)) ? GFX2_MOD_META : 0);
++}
++static word Amiga_key(UWORD raw, UWORD qualifier, word *text)
++{
++  struct InputEvent ie = {0};
++  char chars[8];
++  LONG count;
++  *text = 0;
++  ie.ie_Class = IECLASS_RAWKEY;
++  ie.ie_Code = raw;
++  ie.ie_Qualifier = qualifier;
++  count = MapRawKey(&ie, chars, sizeof(chars), NULL);
++  if (count == 1) *text = (unsigned char)chars[0];
++  if (raw >= 0x50 && raw <= 0x59) return KEY_F1 + raw - 0x50;
++  switch(raw)
++  {
++    case 0x40: return KEY_SPACE;
++    case 0x41: return KEY_BACKSPACE;
++    case 0x42: return KEY_TAB;
++    case 0x43: return KEY_KP_ENTER;
++    case 0x44: return KEY_RETURN;
++    case 0x45: return KEY_ESCAPE;
++    case 0x46: return KEY_DELETE;
++    case 0x4c: return KEY_UP;
++    case 0x4d: return KEY_DOWN;
++    case 0x4e: return KEY_RIGHT;
++    case 0x4f: return KEY_LEFT;
++    case 0x60: return KEY_LSHIFT;
++    case 0x61: return KEY_RSHIFT;
++    case 0x62: return KEY_CAPSLOCK;
++    case 0x63: return KEY_LCTRL;
++    case 0x64: return KEY_LALT;
++    case 0x65: return KEY_RALT;
++    case 0x5f: return KEY_F1; /* Help */
++    case 0x3d: return KEY_KP7;
++    case 0x3e: return KEY_KP8;
++    case 0x3f: return KEY_KP9;
++    case 0x2d: return KEY_KP4;
++    case 0x2e: return KEY_KP5;
++    case 0x2f: return KEY_KP6;
++    case 0x1d: return KEY_KP1;
++    case 0x1e: return KEY_KP2;
++    case 0x1f: return KEY_KP3;
++    case 0x0f: return KEY_KP0;
++    case 0x3c: return KEY_KP_PERIOD;
++    case 0x4a: return KEY_KP_MINUS;
++    case 0x5e: return KEY_KP_PLUS;
++    case 0x5c: return KEY_KP_DIVIDE;
++    case 0x5d: return KEY_KP_MULTIPLY;
++    case 0x7a: return KEY_MOUSEWHEELUP;
++    case 0x7b: return KEY_MOUSEWHEELDOWN;
++  }
++  /* Translate shortcuts without Shift/Control/Alt, text with full qualifiers. */
++  ie.ie_Qualifier = 0;
++  count = MapRawKey(&ie, chars, sizeof(chars), NULL);
++  if (count == 1) return (unsigned char)chars[0];
++  return 0;
++}
+diff --git a/src/amigaopenup.c b/src/amigaopenup.c
+new file mode 100644
+--- /dev/null
++++ b/src/amigaopenup.c
+@@ -0,0 +1,123 @@
++/* Native OpenUp services for GrafX2. GPL-2.0-only. */
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <dos/dosextens.h>
++#include <proto/exec.h>
++#include <proto/dos.h>
++#include <proto/openrtg.h>
++#include <proto/opengpu.h>
++#include <proto/openmulticore.h>
++#include <proto/openfont.h>
++#include "amigaopenup.h"
++#include "zlibrary.h"
++
++struct Library *OpenRTGBase, *OpenGPUBase, *OpenMulticoreBase, *OpenFontBase;
++static struct Library *ZBase;
++static int Initialized;
++static ULONG Presents, Fallbacks, Ranges, RangeFallbacks;
++static int at_least(struct Library *b, UWORD v, UWORD r)
++{ return b && (b->lib_Version>v || (b->lib_Version==v && b->lib_Revision>=r)); }
++static int enabled(const char *name)
++{ char value[8]; LONG n=GetVar((CONST_STRPTR)name,(STRPTR)value,sizeof(value),0); return n!=1 || value[0]!='0'; }
++void GFX2_OpenUpInit(void)
++{
++  if (Initialized) return;
++  Initialized=1;
++  if (enabled("GRAFX2_OPENRTG")) OpenRTGBase=OpenLibrary("openrtg.library",0);
++  if (OpenRTGBase && !at_least(OpenRTGBase,0,4)) { CloseLibrary(OpenRTGBase); OpenRTGBase=NULL; }
++  OpenGPUBase=OpenLibrary(OPENGPU_NAME,0);
++  if (enabled("GRAFX2_OPENFONT")) OpenFontBase=OpenLibrary(OPENFONTNAME,OPENFONT_VERSION);
++  if (enabled("GRAFX2_OPENMULTICORE")) OpenMulticoreBase=OpenLibrary(OPENMULTICORE_NAME,0);
++  if (OpenMulticoreBase && !OMC_HAS_RANGE(OpenMulticoreBase)) { CloseLibrary(OpenMulticoreBase); OpenMulticoreBase=NULL; }
++  ZBase=OpenLibrary(ZL_NAME,ZL_VERSION);
++  fprintf(stderr,"OpenUp: OpenRTG=%s OpenFont=%s OpenMulticore=%s OpenZlib=%s\n",
++    OpenRTGBase?"available":"absent/old",OpenFontBase?"available":"absent",
++    OpenMulticoreBase?"available":"absent/old",ZBase?"available":"absent");
++  if (OpenGPUBase) {
++    ULONG q=OGPU_Query(OGPU_OP_PIXELS,OGPU_FMT_CLUT8);
++    fprintf(stderr,"OpenGPU: indexed upload support=%d backend=%d hardware-GPU=%d\n",
++      OGPU_ANSWER(q),OGPU_BACKEND(q),OGPU_ONGPU(q));
++  }
++}
++int GFX2_OpenUpFontAvailable(void) { GFX2_OpenUpInit(); return OpenFontBase!=NULL; }
++int GFX2_OpenUpPresent(struct RastPort *rp, UBYTE *pixels, ULONG pitch,
++ LONG x, LONG y, LONG width, LONG height)
++{
++  struct OpenRTGPixels p={0};
++  if (!OpenRTGBase) { ++Fallbacks; return 0; }
++  p.data=pixels; p.x=x; p.y=y; p.modulo=pitch; p.format=ORTG_PIX_PEN;
++  p.width=width; p.height=height;
++  /* OpenRTG owns clipping, bitmap recognition, and GPU fences/source lifetime. */
++  if (ORTG_WritePixels(rp,x,y,&p)!=width*height) { ++Fallbacks; return 0; }
++  ++Presents; return 1;
++}
++void GFX2_OpenUpExpand(const UBYTE *in, ULONG ipitch, UBYTE *out, ULONG opitch,
++ ULONG width, ULONG rows, const UBYTE *table)
++{
++  struct OMCJob job;
++  struct Process *process;
++  struct CommandLineInterface *cli;
++  UBYTE *input=NULL,*output=NULL;
++  ULONG args[6],failed=0,y;
++  int ok=0;
++  /* Copy only sizeable blocks into grants; never expose editor memory to workers. */
++  if (OpenMulticoreBase && width*rows>=16384 && (opitch&15)==0) {
++    process=(struct Process *)FindTask(NULL);
++    cli=process->pr_CLI ? (struct CommandLineInterface *)BADDR(process->pr_CLI) : NULL;
++    if (cli && cli->cli_Module) {
++      input=OMC_AllocGrant(1024+width*rows,OMCAF_PAGE);
++      output=OMC_AllocGrant(opitch*rows,OMCAF_PAGE);
++      if (input && output) {
++        memcpy(input,table,1024);
++        for(y=0;y<rows;++y) memcpy(input+1024+y*width,in+y*ipitch,width);
++        OMC_JobInit(&job);
++        job.omj_Entry=(APTR)GFX2_ExpandRow;
++        args[0]=(ULONG)(input+1024);args[1]=(ULONG)output;args[2]=(ULONG)input;
++        args[3]=width;args[4]=width;args[5]=opitch;
++        job.omj_Args=args;job.omj_NArgs=6;job.omj_Flags=OMCF_STRICT;
++        if (OMC_AddGrant(&job,input,1024+width*rows,OMCG_READ)==OMCERR_OK &&
++            OMC_AddGrant(&job,output,opitch*rows,OMCG_WRITE)==OMCERR_OK &&
++            OMC_GrantSeg(&job,cli->cli_Module,OMCG_READ|OMCG_EXEC)>0 &&
++            OMC_RunRange(&job,rows,opitch,&failed)==OMCERR_OK && failed==rows) {
++          for(y=0;y<rows;++y) memcpy(out+y*opitch,output+y*opitch,width*4);
++          ok=1; ++Ranges;
++        } else { ++RangeFallbacks;fprintf(stderr,"OpenMulticore range fallback: status=%ld failed=%lu where=%lu fault=%lu\n",(long)job.omj_Status,(unsigned long)failed,(unsigned long)job.omj_Where,(unsigned long)job.omj_FaultVector); }
++      }
++      if (output) OMC_FreeGrant(output);
++      if (input) OMC_FreeGrant(input);
++    }
++  }
++  if (!ok) for(y=0;y<rows;++y) GFX2_ExpandRow(y,in,out,table,width,ipitch,opitch);
++}
++int GFX2_OpenZUncompress(UBYTE *dst, unsigned long *length, const UBYTE *src, unsigned long bytes)
++{
++  struct zl_stream s={0}; LONG r;
++  GFX2_OpenUpInit();
++  if (!ZBase) return ZL_STREAM_ERROR;
++  s.next_in=src;s.avail_in=bytes;s.next_out=dst;s.avail_out=*length;
++  r=zl_InflateInit2(ZBase,&s,15); if (r!=ZL_OK) return r;
++  r=zl_Inflate(ZBase,&s,ZL_FINISH);
++  *length=s.total_out;
++  zl_InflateEnd(ZBase,&s);
++  return r==ZL_STREAM_END ? ZL_OK : r==ZL_OK ? ZL_BUF_ERROR : r;
++}
++const char *GFX2_OpenZError(int code)
++{
++  if (!ZBase) return "z.library V53 required (OpenZlib)";
++  switch(code) { case 0:return "OK";case -3:return "invalid compressed data";
++    case -4:return "out of memory";case -5:return "output buffer full or truncated stream";
++    default:return "OpenZlib stream error"; }
++}
++void GFX2_OpenUpClose(void)
++{
++  if (!Initialized) return;
++  fprintf(stderr,"OpenUp: presentations=%lu native-fallbacks=%lu conversion-ranges=%lu range-failures=%lu\n",
++    Presents,Fallbacks,Ranges,RangeFallbacks);
++  if (ZBase) { CloseLibrary(ZBase);ZBase=NULL; }
++  if (OpenFontBase) { CloseLibrary(OpenFontBase);OpenFontBase=NULL; }
++  if (OpenMulticoreBase) { CloseLibrary(OpenMulticoreBase);OpenMulticoreBase=NULL; }
++  if (OpenGPUBase) { CloseLibrary(OpenGPUBase);OpenGPUBase=NULL; }
++  if (OpenRTGBase) { CloseLibrary(OpenRTGBase);OpenRTGBase=NULL; }
++  Initialized=0;
++}
+diff --git a/src/amigaopenup.h b/src/amigaopenup.h
+new file mode 100644
+--- /dev/null
++++ b/src/amigaopenup.h
+@@ -0,0 +1,15 @@
++/* GrafX2 OpenUp integration, GPL-2.0-only. */
++#ifndef GFX2_AMIGAOPENUP_H
++#define GFX2_AMIGAOPENUP_H
++#include <exec/types.h>
++struct RastPort;
++void GFX2_OpenUpInit(void);
++void GFX2_OpenUpClose(void);
++int GFX2_OpenUpPresent(struct RastPort *, UBYTE *, ULONG, LONG, LONG, LONG, LONG);
++int GFX2_OpenUpFontAvailable(void);
++/* Convert rows of indexed pixels to ARGB. Output row stride is aligned to 16. */
++void GFX2_OpenUpExpand(const UBYTE *, ULONG, UBYTE *, ULONG, ULONG, ULONG, const UBYTE *);
++LONG GFX2_ExpandRow(ULONG, const UBYTE *, UBYTE *, const UBYTE *, ULONG, ULONG, ULONG);
++int GFX2_OpenZUncompress(UBYTE *, unsigned long *, const UBYTE *, unsigned long);
++const char *GFX2_OpenZError(int);
++#endif
+diff --git a/src/amigascreen.c b/src/amigascreen.c
+new file mode 100644
+--- /dev/null
++++ b/src/amigascreen.c
+@@ -0,0 +1,419 @@
++/*
++ * GrafX2 native Amiga display backend.
++ *
++ * The AmigaOS 4 port in upstream history supplied the platform lineage; this
++ * backend targets the native Intuition/graphics APIs on AmigaOS 3.2. OpenGfx
++ * accelerates the standard graphics.library calls when installed.
++ *
++ * GrafX2 is GPL-2.0-only. See COPYRIGHT.txt and COPYING for upstream notices.
++ */
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <exec/types.h>
++#include <proto/keymap.h>
++#include <devices/input.h>
++#include <devices/inputevent.h>
++#include <exec/memory.h>
++#include <graphics/displayinfo.h>
++#include <graphics/modeid.h>
++#include <intuition/intuition.h>
++#include <intuition/screens.h>
++#include <proto/exec.h>
++#include <proto/graphics.h>
++#include <proto/intuition.h>
++
++#include "global.h"
++#include "screen.h"
++#include "errors.h"
++#include "gfx2log.h"
++#ifdef USE_OPENUP
++#include "amigaopenup.h"
++#endif
++
++struct GfxBase *GfxBase;
++struct IntuitionBase *IntuitionBase;
++struct Library *KeymapBase;
++static UWORD *Invisible_pointer;
++static int Cleanup_registered;
++static struct MsgPort *Input_port;
++static struct IOStdReq *Input_request;
++static int Input_open;
++volatile int Allow_colorcycling = 1;
++
++
++static struct Screen *Native_screen;
++static struct Window *Native_window;
++static UBYTE *Native_pixels;
++static ULONG Native_width;
++static ULONG Native_height;
++static ULONG Native_pitch;
++static T_Palette Native_palette;
++
++static LONG Dirty_left;
++static LONG Dirty_top;
++static LONG Dirty_right;
++static LONG Dirty_bottom;
++
++struct Window *GFX2_AmigaNativeWindow(void)
++{
++  return Native_window;
++}
++
++static void Mark_dirty(LONG left, LONG top, LONG right, LONG bottom)
++{
++  if (left < 0) left = 0;
++  if (top < 0) top = 0;
++  if (right >= (LONG)Native_width) right = Native_width - 1;
++  if (bottom >= (LONG)Native_height) bottom = Native_height - 1;
++  if (left > right || top > bottom) return;
++
++  if (Dirty_left > Dirty_right || Dirty_top > Dirty_bottom)
++  {
++    Dirty_left = left;
++    Dirty_top = top;
++    Dirty_right = right;
++    Dirty_bottom = bottom;
++  }
++  else
++  {
++    if (left < Dirty_left) Dirty_left = left;
++    if (top < Dirty_top) Dirty_top = top;
++    if (right > Dirty_right) Dirty_right = right;
++    if (bottom > Dirty_bottom) Dirty_bottom = bottom;
++  }
++}
++
++static void Close_native_display(void)
++{
++  if (Native_window)
++  {
++    /* CloseWindow owns the dedicated IDCMP port. All fetched messages were replied. */
++    ClearPointer(Native_window);
++    CloseWindow(Native_window);
++    Native_window = NULL;
++  }
++  if (Native_screen)
++  {
++    CloseScreen(Native_screen);
++    Native_screen = NULL;
++  }
++  if (Native_pixels)
++  {
++    FreeVec(Native_pixels);
++    Native_pixels = NULL;
++  }
++  Native_width = Native_height = Native_pitch = 0;
++  Dirty_left = Dirty_top = 1;
++  Dirty_right = Dirty_bottom = 0;
++}
++
++byte Get_Screen_pixel(int x, int y)
++{
++  if (!Native_pixels || x < 0 || y < 0 || x >= (int)Native_width || y >= (int)Native_height)
++    return 0;
++  return Native_pixels[(ULONG)y * Native_pitch + (ULONG)x];
++}
++
++void Set_Screen_pixel(int x, int y, byte value)
++{
++  if (!Native_pixels || x < 0 || y < 0 || x >= (int)Native_width || y >= (int)Native_height)
++    return;
++  Native_pixels[(ULONG)y * Native_pitch + (ULONG)x] = value;
++}
++
++byte *Get_Screen_pixel_ptr(int x, int y)
++{
++  if (!Native_pixels || x < 0 || y < 0 || x >= (int)Native_width || y >= (int)Native_height)
++    return NULL;
++  return Native_pixels + (ULONG)y * Native_pitch + (ULONG)x;
++}
++
++void Screen_FillRect(int x, int y, int w, int h, byte color)
++{
++  int row, left, right, top, bottom;
++  if (!Native_pixels || w <= 0 || h <= 0) return;
++  left = x < 0 ? 0 : x;
++  top = y < 0 ? 0 : y;
++  right = (long)x + w > (long)Native_width ? (int)Native_width : x + w;
++  bottom = (long)y + h > (long)Native_height ? (int)Native_height : y + h;
++  if (left >= right || top >= bottom) return;
++  for (row = top; row < bottom; ++row)
++    memset(Native_pixels + (ULONG)row * Native_pitch + left, color, right - left);
++}
++
++int GFX2_AmigaInit(void)
++{
++  if (GfxBase && IntuitionBase && KeymapBase) return 1;
++  if (!Cleanup_registered) { atexit(GFX2_AmigaClose); Cleanup_registered = 1; }
++  GfxBase = (struct GfxBase *)OpenLibrary("graphics.library", 40);
++  IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 39);
++  KeymapBase = OpenLibrary("keymap.library", 37);
++  if (!GfxBase || !IntuitionBase || !KeymapBase)
++  {
++    fputs("GrafX2 needs graphics.library V40, Intuition V39 and keymap V37.\n", stderr);
++    GFX2_AmigaClose();
++    exit(1);
++  }
++  #ifdef USE_OPENUP
++  GFX2_OpenUpInit();
++  #endif
++  Invisible_pointer = AllocVec(12, MEMF_CHIP | MEMF_CLEAR);
++  Input_port = CreateMsgPort();
++  if (Input_port) Input_request = (struct IOStdReq *)CreateIORequest(Input_port, sizeof(struct IOStdReq));
++  if (Input_request && OpenDevice("input.device", 0, (struct IORequest *)Input_request, 0) == 0)
++    Input_open = 1;
++  return 1;
++}
++
++extern void GFX2_AmigaDataTypesClose(void);
++void GFX2_AmigaClose(void)
++{
++  GFX2_AmigaDataTypesClose();
++  Close_native_display();
++  #ifdef USE_OPENUP
++  GFX2_OpenUpClose();
++  #endif
++  if (Input_open) { CloseDevice((struct IORequest *)Input_request); Input_open = 0; }
++  if (Input_request) { DeleteIORequest((struct IORequest *)Input_request); Input_request = NULL; }
++  if (Input_port) { DeleteMsgPort(Input_port); Input_port = NULL; }
++  if (Invisible_pointer) { FreeVec(Invisible_pointer); Invisible_pointer = NULL; }
++  if (KeymapBase) { CloseLibrary(KeymapBase); KeymapBase = NULL; }
++  if (IntuitionBase) { CloseLibrary((struct Library *)IntuitionBase); IntuitionBase = NULL; }
++  if (GfxBase) { CloseLibrary((struct Library *)GfxBase); GfxBase = NULL; }
++}
++
++int GFX2_AmigaModeOK(int width, int height)
++{
++  struct DimensionInfo dim;
++  ULONG id;
++  if (!GfxBase || width < 320 || height < 200) return 0;
++  const struct TagItem tags[] = {
++    {BIDTAG_NominalWidth,(ULONG)width}, {BIDTAG_NominalHeight,(ULONG)height},
++    {BIDTAG_Depth,8}, {TAG_DONE,0}
++  };
++  id = BestModeIDA(tags);
++  if (id == INVALID_ID || ModeNotAvailable(id)) return 0;
++  if (!GetDisplayInfoData(NULL, (UBYTE *)&dim, sizeof(dim), DTAG_DIMS, id)) return 0;
++  return dim.MaxDepth >= 8 &&
++    dim.Nominal.MaxX - dim.Nominal.MinX + 1 == width &&
++    dim.Nominal.MaxY - dim.Nominal.MinY + 1 == height;
++}
++
++void GFX2_Set_mode(int *width, int *height, int fullscreen)
++{
++  ULONG mode_id;
++  struct Screen *s;
++  struct Window *w;
++  UBYTE *pixels;
++  (void)fullscreen; /* GrafX2's Amiga mode is an owned, borderless RTG screen. */
++
++  if (!width || !height || *width < 1 || *height < 1) return;
++
++  const struct TagItem mode_tags[] = {
++    {BIDTAG_NominalWidth,(ULONG)*width}, {BIDTAG_NominalHeight,(ULONG)*height},
++    {BIDTAG_DesiredWidth,(ULONG)*width}, {BIDTAG_DesiredHeight,(ULONG)*height},
++    {BIDTAG_Depth,8}, {TAG_DONE,0}
++  };
++  mode_id = BestModeIDA(mode_tags);
++  if (mode_id == (ULONG)INVALID_ID)
++  {
++    GFX2_Log(GFX2_ERROR, "No 8-bit Amiga display mode for %dx%d\n", *width, *height);
++    goto failed;
++  }
++
++  const struct TagItem screen_tags[] = {
++    {SA_DisplayID,mode_id}, {SA_Width,(ULONG)*width}, {SA_Height,(ULONG)*height},
++    {SA_Depth,8}, {SA_Type,CUSTOMSCREEN}, {SA_Title,(ULONG)"GrafX2"},
++    {SA_Quiet,TRUE}, {SA_AutoScroll,TRUE}, {TAG_DONE,0}
++  };
++  s = OpenScreenTagList(NULL,screen_tags);
++  if (!s)
++  {
++    GFX2_Log(GFX2_ERROR, "OpenScreenTags failed for mode %08lx\n", mode_id);
++    goto failed;
++  }
++
++  const struct TagItem window_tags[] = {
++    {WA_CustomScreen,(ULONG)s}, {WA_Left,0}, {WA_Top,0},
++    {WA_Width,(ULONG)s->Width}, {WA_Height,(ULONG)s->Height},
++    {WA_Borderless,TRUE}, {WA_Activate,TRUE}, {WA_ReportMouse,TRUE}, {WA_RMBTrap,TRUE},
++    {WA_IDCMP,IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE|IDCMP_RAWKEY|IDCMP_CLOSEWINDOW|
++      IDCMP_REFRESHWINDOW|IDCMP_INACTIVEWINDOW}, {TAG_DONE,0}
++  };
++  w = OpenWindowTagList(NULL,window_tags);
++  if (!w)
++  {
++    CloseScreen(s);
++    GFX2_Log(GFX2_ERROR, "OpenWindowTags failed on GrafX2 screen\n");
++    goto failed;
++  }
++
++  pixels = (UBYTE *)AllocVec((ULONG)s->Width * s->Height, MEMF_ANY | MEMF_CLEAR);
++  if (!pixels)
++  {
++    CloseWindow(w);
++    CloseScreen(s);
++    GFX2_Log(GFX2_ERROR, "Unable to allocate chunky screen\n");
++    goto failed;
++  }
++  /* Commit only after the replacement is complete; preserve unsaved work on failure. */
++  Close_native_display();
++  Native_width = s->Width;
++  Native_height = s->Height;
++  Native_pitch = Native_width;
++  Native_pixels = pixels;
++  Native_screen = s;
++  Native_window = w;
++  if (Invisible_pointer) SetPointer(w, Invisible_pointer, 1, 16, 0, 0);
++  *width = Native_width;
++  *height = Native_height;
++  Dirty_left = Dirty_top = 0;
++  Dirty_right = Native_width - 1;
++  Dirty_bottom = Native_height - 1;
++  GFX2_SetPalette(Native_palette, 0, 256);
++  Flush_update();
++  return;
++failed:
++  if (Native_screen)
++  {
++    *width = Native_width;
++    *height = Native_height;
++    ScreenToFront(Native_screen);
++    GFX2_MessageBox("Unable to open the requested screen. Your drawing is preserved.", "GrafX2", GFX2_MB_ERROR);
++    return;
++  }
++  GFX2_MessageBox("Unable to open an 8-bit screen. Install an appropriate RTG/AGA screen mode.", "GrafX2", GFX2_MB_ERROR);
++  exit(1);
++}
++
++void Update_rect(short x, short y, unsigned short width, unsigned short height)
++{
++  LONG left = x * Pixel_width;
++  LONG top = y * Pixel_height;
++  LONG right;
++  LONG bottom;
++  if (!width || !height)
++  {
++    Mark_dirty(0, 0, Native_width - 1, Native_height - 1);
++    return;
++  }
++  right = left + (LONG)width * Pixel_width - 1;
++  bottom = top + (LONG)height * Pixel_height - 1;
++  Mark_dirty(left, top, right, bottom);
++}
++
++void Flush_update(void)
++{
++  if (!Native_window || !Native_pixels || Dirty_left > Dirty_right || Dirty_top > Dirty_bottom)
++    return;
++  #ifdef USE_OPENUP
++  if (!GFX2_OpenUpPresent(Native_window->RPort, Native_pixels, Native_pitch,
++      Dirty_left, Dirty_top, Dirty_right-Dirty_left+1, Dirty_bottom-Dirty_top+1))
++  #endif
++  WriteChunkyPixels(Native_window->RPort,
++                    Dirty_left, Dirty_top, Dirty_right, Dirty_bottom,
++                    Native_pixels + (ULONG)Dirty_top * Native_pitch + Dirty_left,
++                    Native_pitch);
++  Dirty_left = Dirty_top = 1;
++  Dirty_right = Dirty_bottom = 0;
++}
++
++void Update_status_line(short char_pos, short width)
++{
++  if (width <= 0) return;
++  Update_rect((short)((18 + char_pos * 8) * Menu_factor_X),
++              Menu_status_Y,
++              (unsigned short)(width * 8 * Menu_factor_X),
++              (unsigned short)(8 * Menu_factor_Y));
++}
++
++int GFX2_SetPalette(const T_Components *colors, int firstcolor, int ncolors)
++{
++  int i;
++  if (!Native_screen || !colors || firstcolor < 0 || ncolors < 0 || firstcolor + ncolors > 256)
++    return -1;
++  for (i = 0; i < ncolors; ++i)
++  {
++    const T_Components *c = &colors[i];
++    Native_palette[firstcolor + i] = *c;
++    ULONG r = (ULONG)c->R * 0x01010101UL;
++    ULONG g = (ULONG)c->G * 0x01010101UL;
++    ULONG b = (ULONG)c->B * 0x01010101UL;
++    SetRGB32(&Native_screen->ViewPort, (ULONG)(firstcolor + i), r, g, b);
++  }
++  return 0;
++}
++
++void Clear_border(byte color)
++{
++  LONG content_w = Screen_width * Pixel_width;
++  LONG content_h = Screen_height * Pixel_height;
++  if (!Native_pixels) return;
++  if (content_w < (LONG)Native_width)
++    Screen_FillRect(content_w, 0, Native_width - content_w, Native_height, color);
++  if (content_h < (LONG)Native_height)
++    Screen_FillRect(0, content_h, Native_width, Native_height - content_h, color);
++  Mark_dirty(0, 0, Native_width - 1, Native_height - 1);
++}
++
++void Update_full_screen(void)
++{
++  Mark_dirty(0, 0, Native_width - 1, Native_height - 1);
++  Flush_update();
++}
++
++void Allow_drag_and_drop(int flag)
++{
++  (void)flag; /* AppWindow support is intentionally deferred to a later slice. */
++}
++
++void Define_icon(void)
++{
++  /* The application icon is provided by the Amiga drawer/tool project. */
++}
++
++void Set_mouse_position(void)
++{
++  struct InputEvent event = {0};
++  struct IEPointerPixel position = {0};
++  if (!Native_screen || !Input_open) return;
++  position.iepp_Screen = Native_screen;
++  position.iepp_Position.X = Mouse_X * Pixel_width * render_scale_x;
++  position.iepp_Position.Y = Mouse_Y * Pixel_height * render_scale_y;
++  event.ie_Class = IECLASS_NEWPOINTERPOS;
++  event.ie_SubClass = IESUBCLASS_PIXEL;
++  event.ie_EventAddress = &position;
++  Input_request->io_Command = IND_WRITEEVENT;
++  Input_request->io_Data = &event;
++  Input_request->io_Length = sizeof(event);
++  DoIO((struct IORequest *)Input_request);
++}
++
++int GFX2_GetScreenSize(int *width, int *height)
++{
++  struct Screen workbench = {0};
++  if (!width || !height) return 0;
++  if (!GetScreenData((UBYTE *)&workbench, sizeof(workbench), WBENCHSCREEN, NULL))
++    return 0;
++  *width = workbench.Width;
++  *height = workbench.Height;
++  return 1;
++}
++
++int GFX2_MessageBox(const char *text, const char *caption, unsigned int type)
++{
++  struct EasyStruct es;
++  ULONG result;
++  ULONG args[1];
++  (void)type;
++  es.es_StructSize = sizeof(es);
++  es.es_Flags = 0;
++  es.es_Title = (STRPTR)(caption ? caption : "GrafX2");
++  es.es_TextFormat = (STRPTR)"%s";
++  args[0] = (ULONG)(text ? text : "");
++  es.es_GadgetFormat = (STRPTR)"OK";
++  if (!IntuitionBase) { fputs(text ? text : "GrafX2 error", stderr); return 0; }
++  result = EasyRequestArgs(Native_window, &es, NULL, args);
++  return result != 0;
++}
+diff --git a/src/c64formats.c b/src/c64formats.c
+--- a/src/c64formats.c
++++ b/src/c64formats.c
+@@ -23,7 +23,17 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef USE_OPENUP
++#include "amigaopenup.h"
++typedef unsigned long uLongf;
++#define Z_OK 0
++#define Z_MEM_ERROR (-4)
++#define Z_BUF_ERROR (-5)
++#define uncompress GFX2_OpenZUncompress
++#define zError GFX2_OpenZError
++#else
+ #include <zlib.h>
++#endif
+ #include "engine.h"
+ #include "screen.h"
+ #include "windows.h"
+diff --git a/src/fileformats.c b/src/fileformats.c
+--- a/src/fileformats.c
++++ b/src/fileformats.c
+@@ -41,7 +41,14 @@
+ #elif defined(__FreeBSD__)
+ #include <sys/endian.h>
+ #else
++#if defined(USE_AMIGA_NATIVE)
++#include <machine/endian.h>
++#ifndef be32toh
++#define be32toh(x) (x)
++#endif
++#else
+ #include <endian.h>
++#endif
+ #endif
+ #endif
+ 
+diff --git a/src/graph.c b/src/graph.c
+--- a/src/graph.c
++++ b/src/graph.c
+@@ -467,6 +467,10 @@
+   if (screen_changed)
+     GFX2_Set_mode(&width, &height, fullscreen);
+ 
++#ifdef USE_AMIGA_NATIVE
++  Screen_width = width / Pixel_width / render_scale_x;
++  Screen_height = height / Pixel_height / render_scale_y;
++#endif
+   Clear_border(MC_Black); // Requires up-to-date Screen_* and Pixel_*
+ 
+   // Set menu size (software zoom)
+diff --git a/src/ifformat.c b/src/ifformat.c
+--- a/src/ifformat.c
++++ b/src/ifformat.c
+@@ -47,7 +47,14 @@
+ #elif defined(__FreeBSD__)
+ #include <sys/endian.h>
+ #else
++#if defined(USE_AMIGA_NATIVE)
++#include <machine/endian.h>
++#ifndef be32toh
++#define be32toh(x) (x)
++#endif
++#else
+ #include <endian.h>
++#endif
+ #endif
+ 
+ //////////////////////////////////// IFF ////////////////////////////////////
+diff --git a/src/init.c b/src/init.c
+--- a/src/init.c
++++ b/src/init.c
+@@ -1404,7 +1404,10 @@
+   }
+   if (!fullscreen)
+     supported = 128; // Prefere, non modifiable
+-#if defined(USE_SDL)
++#if defined(USE_AMIGA_NATIVE)
++  else if (GFX2_AmigaModeOK(width, height))
++    supported = 1;
++#elif defined(USE_SDL)
+   else if (SDL_VideoModeOK(width, height, 8, SDL_FULLSCREEN))
+     supported = 1; // supported
+ #elif defined(USE_SDL2)
+@@ -1456,7 +1459,13 @@
+   Set_video_mode( 320,240,0, 1);
+   #else
+   // Window mode, with default size of 640x480
+-  Set_video_mode( 640,480,0, 0);
++  Set_video_mode( 640,480,0,
++#ifdef USE_AMIGA_NATIVE
++  1
++#else
++  0
++#endif
++  );
+   #endif
+ 
+   Set_video_mode( 320,200,0, 1);
+@@ -1573,6 +1582,11 @@
+       // Set the native desktop video mode
+       Set_video_mode(dm.w, dm.h, num_modes + 1, 1);
+     }
++  }
++#elif defined(USE_AMIGA_NATIVE)
++  {
++    int width = 0, height = 0;
++    if (GFX2_GetScreenSize(&width, &height)) Set_video_mode(width,height,0,1);
+   }
+ #elif defined(WIN32)
+   {
+diff --git a/src/input.c b/src/input.c
+--- a/src/input.c
++++ b/src/input.c
+@@ -48,6 +48,18 @@
+ #define strdup _strdup
+ #endif
+ 
++#ifdef USE_AMIGA_NATIVE
++#include "global.h"
++#include <intuition/intuition.h>
++#include <devices/inputevent.h>
++#include <proto/exec.h>
++#include <proto/intuition.h>
++#include <proto/dos.h>
++#include <proto/keymap.h>
++extern struct Window *GFX2_AmigaNativeWindow(void);
++word Amiga_key_modifiers;
++#include "amigakeys.h"
++#endif
+ #include "gfx2log.h"
+ #include "global.h"
+ #include "keyboard.h"
+@@ -1946,6 +1958,8 @@
+     // Nothing significant happened
+     if (sleep_time)
+       SDL_Delay(sleep_time);
++#elif defined(USE_AMIGA_NATIVE)
++#include "amigainput.inc"
+ #elif defined(WIN32)
+     MSG msg;
+ 
+diff --git a/src/io.c b/src/io.c
+--- a/src/io.c
++++ b/src/io.c
+@@ -888,10 +888,22 @@
+ #endif
+ 
+ #define GFX2_LOCK_FILENAME "gfx2.lck"
++#ifdef USE_AMIGA_NATIVE
++static BPTR Amiga_lock;
++#endif
+ 
+ byte Create_lock_file(const char *file_directory)
+ {
+-  #if defined (__amigaos__)||(__AROS__)||(__ANDROID__)
++  #if defined(USE_AMIGA_NATIVE)
++    char *name=Filepath_append_to_dir(file_directory,GFX2_LOCK_FILENAME);
++    BPTR file;
++    if(!name) return -1;
++    file=Open((CONST_STRPTR)name,MODE_READWRITE);
++    if(file) Close(file);
++    Amiga_lock=Lock((CONST_STRPTR)name,EXCLUSIVE_LOCK);
++    free(name);
++    return Amiga_lock ? 0 : -1;
++  #elif defined (__amigaos__)||(__AROS__)||(__ANDROID__)
+     #warning "Missing code for your platform, please check and correct!"
+   #elif defined(__SWITCH__)
+     // The switch can only run one application at a time, so we don't do anything special here
+@@ -941,6 +953,13 @@
+ 
+ void Release_lock_file(const char *file_directory)
+ {
++#ifdef USE_AMIGA_NATIVE
++  char *name;
++  if(!Amiga_lock) return;
++  UnLock(Amiga_lock); Amiga_lock=0;
++  name=Filepath_append_to_dir(file_directory,GFX2_LOCK_FILENAME);
++  if(name) {DeleteFile((CONST_STRPTR)name); free(name);}
++#else
+   char * lock_filename;
+     
+   #ifdef WIN32
+@@ -964,6 +983,7 @@
+ #endif
+   Remove_path(lock_filename);
+   free(lock_filename);
++#endif
+ }
+ 
+ char * Get_current_directory(char * buf, word * * unicode, size_t size)
+@@ -1071,6 +1091,23 @@
+     }
+   }
+   free(cur_dir);
++  return buf;
++#elif defined(USE_AMIGA_NATIVE)
++  /* libnix getcwd(NULL,0) allocates zero bytes; DOS then overruns that buffer. */
++  int allocated = 0;
++  if (unicode) *unicode = NULL;
++  if (!buf)
++  {
++    if (size == 0) size = MAX_PATH_CHARACTERS;
++    buf = GFX2_malloc(size);
++    if (!buf) return NULL;
++    allocated = 1;
++  }
++  if (!size || !getcwd(buf,size))
++  {
++    if (allocated) free(buf);
++    return NULL;
++  }
+   return buf;
+ #else
+   char * ret = getcwd(buf, size);
+diff --git a/src/keyboard.c b/src/keyboard.c
+--- a/src/keyboard.c
++++ b/src/keyboard.c
+@@ -899,6 +899,9 @@
+   }
+   if ((GetKeyState(VK_LWIN) | GetKeyState(VK_RWIN)) & 0x8000)
+     mod |= GFX2_MOD_META;
++#elif defined(USE_AMIGA_NATIVE)
++  extern word Amiga_key_modifiers;
++  mod = Amiga_key_modifiers;
+ #elif defined(USE_X11)
+   mod = X11_key_mod;
+ #else
+diff --git a/src/keycodes.h b/src/keycodes.h
+--- a/src/keycodes.h
++++ b/src/keycodes.h
+@@ -358,6 +358,106 @@
+ #define KEY_F11          VK_F11
+ #define KEY_F12          VK_F12
+ // end of KEY definitions for win32
++#elif defined(USE_AMIGA_NATIVE)
++#define KEY_UNKNOWN          0
++#define KEY_ESCAPE           1024
++#define KEY_RETURN           1025
++#define KEY_BACKSPACE        1026
++#define KEY_TAB              1027
++#define KEY_UP               1028
++#define KEY_DOWN             1029
++#define KEY_LEFT             1030
++#define KEY_RIGHT            1031
++#define KEY_LEFTBRACKET      91
++#define KEY_RIGHTBRACKET     93
++#define KEY_INSERT           1032
++#define KEY_DELETE           1033
++#define KEY_COMMA            44
++#define KEY_BACKQUOTE        96
++#define KEY_PAGEUP           1034
++#define KEY_PAGEDOWN         1035
++#define KEY_HOME             1036
++#define KEY_END              1037
++#define KEY_KP_PLUS          1038
++#define KEY_KP_MINUS         1039
++#define KEY_KP_MULTIPLY      1040
++#define KEY_KP_ENTER         1041
++#define KEY_KP_DIVIDE        1042
++#define KEY_KP_PERIOD        1043
++#define KEY_KP_EQUALS        1044
++#define KEY_EQUALS           61
++#define KEY_MINUS            45
++#define KEY_PERIOD           46
++#define KEY_CAPSLOCK         1045
++#define KEY_CLEAR            1046
++#define KEY_SPACE            32
++#define KEY_PAUSE            1047
++#define KEY_LSHIFT           1048
++#define KEY_RSHIFT           1049
++#define KEY_LCTRL            1050
++#define KEY_RCTRL            1051
++#define KEY_LALT             1052
++#define KEY_RALT             1053
++#define KEY_MENU             1054
++#define KEY_0                48
++#define KEY_1                49
++#define KEY_2                50
++#define KEY_3                51
++#define KEY_4                52
++#define KEY_5                53
++#define KEY_6                54
++#define KEY_7                55
++#define KEY_8                56
++#define KEY_9                57
++#define KEY_a                97
++#define KEY_b                98
++#define KEY_c                99
++#define KEY_d                100
++#define KEY_e                101
++#define KEY_f                102
++#define KEY_g                103
++#define KEY_h                104
++#define KEY_i                105
++#define KEY_j                106
++#define KEY_k                107
++#define KEY_l                108
++#define KEY_m                109
++#define KEY_n                110
++#define KEY_o                111
++#define KEY_p                112
++#define KEY_q                113
++#define KEY_r                114
++#define KEY_s                115
++#define KEY_t                116
++#define KEY_u                117
++#define KEY_v                118
++#define KEY_w                119
++#define KEY_x                120
++#define KEY_y                121
++#define KEY_z                122
++#define KEY_KP0              1055
++#define KEY_KP1              1056
++#define KEY_KP2              1057
++#define KEY_KP3              1058
++#define KEY_KP4              1059
++#define KEY_KP5              1060
++#define KEY_KP6              1061
++#define KEY_KP7              1062
++#define KEY_KP8              1063
++#define KEY_KP9              1064
++#define KEY_SCROLLOCK        1065
++#define KEY_F1               1066
++#define KEY_F2               1067
++#define KEY_F3               1068
++#define KEY_F4               1069
++#define KEY_F5               1070
++#define KEY_F6               1071
++#define KEY_F7               1072
++#define KEY_F8               1073
++#define KEY_F9               1074
++#define KEY_F10              1075
++#define KEY_F11              1076
++#define KEY_F12              1077
+ #else
+ // KEY definitions for others
+ #define KEY_UNKNOWN      0
+diff --git a/src/loadsave.c b/src/loadsave.c
+--- a/src/loadsave.c
++++ b/src/loadsave.c
+@@ -106,6 +106,11 @@
+ 
+ 
+ // ENUM     Name  TestFunc LoadFunc SaveFunc PalOnly Comment Layers Ext Exts
++#ifdef USE_AMIGA_NATIVE
++void Test_AmigaPNG(T_IO_Context *, FILE *);
++void Load_AmigaDataType(T_IO_Context *);
++void Save_AmigaPNG(T_IO_Context *);
++#endif
+ const T_Format File_formats[] = {
+   {FORMAT_ALL_IMAGES, "(all)", NULL, NULL, NULL, 0, 0, 0, "",
+     "gif;png;bmp;2bp;pcx;pkm;iff;lbm;ilbm;sham;ham;ham6;ham8;acbm;pic;anim;img;sci;scq;scf;scn;sco;cel;"
+@@ -121,7 +126,9 @@
+   {FORMAT_ALL_PALETTES, "(pal)", NULL, NULL, NULL, 1, 0, 0, "", "kcf;pal;gpl"},
+   {FORMAT_ALL_FILES, "(*.*)", NULL, NULL, NULL, 0, 0, 0, "", "*"},
+   {FORMAT_GIF, " gif", Test_GIF, Load_GIF, Save_GIF, 0, 1, 1, "gif", "gif"},
+-#ifndef __no_pnglib__
++#ifdef USE_AMIGA_NATIVE
++  {FORMAT_PNG, " png", Test_AmigaPNG, Load_AmigaDataType, Save_AmigaPNG, 0, 0, 0, "png", "png"},
++#elif !defined(__no_pnglib__)
+   {FORMAT_PNG, " png", Test_PNG, Load_PNG, Save_PNG, 0, 1, 0, "png", "png"},
+ #endif
+   {FORMAT_BMP, " bmp", Test_BMP, Load_BMP, Save_BMP, 0, 0, 0, "bmp", "bmp;2bp"},
+@@ -652,7 +659,12 @@
+       Load_Recoil_Image(context);
+       if (File_error)
+ #endif
+-#if defined(USE_SDL) || defined(USE_SDL2)
++#ifdef USE_AMIGA_NATIVE
++      {
++        Load_AmigaDataType(context);
++      }
++      if (File_error)
++#elif defined(USE_SDL) || defined(USE_SDL2)
+       {
+         // Last try: with SDL_image
+         Load_SDL_Image(context);
+diff --git a/src/main.c b/src/main.c
+--- a/src/main.c
++++ b/src/main.c
+@@ -50,9 +50,13 @@
+  */
+ /// declare global variables in main.c
+ #define GLOBAL_VARIABLES
++#ifdef USE_AMIGA_NATIVE
++unsigned long __stack = 262144;
++const char GrafX2_amiga_version[] = "$VER: GrafX2 2.9 (30.10.2026) native OS3 68040+FPU";
++#endif
+ 
+ // time.h defines timeval which conflicts with the one in amiga SDK
+-#ifdef __amigaos__
++#if defined(__amigaos__) && !defined(USE_AMIGA_NATIVE)
+   #include <devices/timer.h>
+ #else
+   #include <time.h>
+@@ -282,6 +286,9 @@
+     if (error_code == ERROR_COMMAND_LINE)
+       Display_syntax();
+ 
++#if defined(USE_AMIGA_NATIVE)
++    GFX2_AmigaClose();
++#endif
+ #if defined(USE_SDL) || defined(USE_SDL2)
+     SDL_Quit();
+ #endif
+@@ -536,13 +543,28 @@
+         else if (File_exists(argv[index]))
+         {
+           buffer = Realpath(argv[index]);
++          if (!buffer) { GFX2_Log(GFX2_ERROR,"Cannot resolve input path: %s\n",argv[index]);return file_in_command_line; }
+           filename = Find_last_separator(buffer);
+           if (filename != NULL)
+           {
++            #ifdef USE_AMIGA_NATIVE
++            if (*filename == ':')
++            {
++              size_t n=filename-buffer+1;
++              directories[file_in_command_line]=malloc(n+1);
++              if(!directories[file_in_command_line]) { free(buffer);return file_in_command_line; }
++              memcpy(directories[file_in_command_line],buffer,n);
++              directories[file_in_command_line][n]=0;
++              filenames[file_in_command_line]=strdup(filename+1);
++            }
++            else
++            #endif
++            {
+             *filename = '\0';
+             filename++;
+             directories[file_in_command_line] = strdup(buffer);
+             filenames[file_in_command_line] = strdup(filename);
++            }
+           }
+           else
+           {
+@@ -593,6 +615,9 @@
+  */
+ int Init_program(int argc,char * argv[])
+ {
++#if defined(USE_AMIGA_NATIVE)
++  if (!GFX2_AmigaInit()) return 0;
++#endif
+   int temp;
+   int starting_videomode;
+   enum IMAGE_MODES starting_image_mode;
+@@ -785,6 +810,13 @@
+ 
+   // Initialize all video modes
+   Set_all_video_modes();
++#ifdef USE_AMIGA_NATIVE
++  if (Nb_video_modes == 0)
++  {
++    GFX2_MessageBox("No compatible 8-bit screen mode is available. Configure an RTG or AGA display mode before starting GrafX2.","GrafX2",GFX2_MB_ERROR);
++    exit(1);
++  }
++#endif
+ 
+ #if defined(USE_JOYSTICK) && (defined(USE_SDL) || defined(USE_SDL2))
+   GFX2_Log(GFX2_DEBUG, "%d joystick(s) attached\n", SDL_NumJoysticks());
+diff --git a/src/osdep.c b/src/osdep.c
+--- a/src/osdep.c
++++ b/src/osdep.c
+@@ -82,6 +82,9 @@
+ #include "unicode.h"
+ #include "gfx2log.h"
+ #include "gfx2mem.h"
++#ifdef USE_AMIGA_NATIVE
++#include <proto/dos.h>
++#endif
+ 
+ dword GFX2_GetTicks(void)
+ {
+@@ -136,7 +139,18 @@
+ 
+ qword GFX2_DiskFreeSpace(const char * path)
+ {
+-#if defined(__WIN32__) || defined(WIN32)
++#if defined(USE_AMIGA_NATIVE)
++  BPTR lock = Lock((CONST_STRPTR)path, ACCESS_READ);
++  struct InfoData info;
++  qword result = 0;
++  if (lock)
++  {
++    if (Info(lock, &info) && info.id_NumBlocks >= info.id_NumBlocksUsed)
++      result = (qword)(info.id_NumBlocks - info.id_NumBlocksUsed) * (qword)info.id_BytesPerBlock;
++    UnLock(lock);
++  }
++  return result;
++#elif defined(__WIN32__) || defined(WIN32)
+   ULARGE_INTEGER tailleU, totalbytes, totalfreebytes;
+   if (GetDiskFreeSpaceExA(path, &tailleU, &totalbytes, &totalfreebytes))
+   {
+diff --git a/src/realpath.c b/src/realpath.c
+--- a/src/realpath.c
++++ b/src/realpath.c
+@@ -15,7 +15,32 @@
+ #include "gfx2mem.h"
+ #endif
+ 
+-#if defined(__AROS__) || defined(__BEOS__) || defined(__MORPHOS__) || defined(__GP2X__) || defined(__WIZ__) || defined(__CAANOO__) || defined(__amigaos__) || defined(__SWITCH__)
++#if defined(USE_AMIGA_NATIVE)
++#include <proto/dos.h>
++/* DOS canonicalizes files and directories alike without changing the caller's
++ * current directory. The legacy chdir/ENOTDIR implementation underallocated
++ * its directory buffer and mishandled native volume paths. */
++char *Realpath(const char *path)
++{
++  BPTR lock;
++  char *resolved=NULL;
++  unsigned long size;
++  LONG error=0;
++  if(!path) { errno=EINVAL;return NULL; }
++  lock=Lock((CONST_STRPTR)path,ACCESS_READ);
++  if(!lock) { errno=ENOENT;return NULL; }
++  for(size=1024;size<=65536;size*=2) {
++    resolved=malloc(size);
++    if(!resolved) { errno=ENOMEM;break; }
++    if(NameFromLock(lock,(STRPTR)resolved,size)) { UnLock(lock);return resolved; }
++    error=IoErr();free(resolved);resolved=NULL;
++    if(error!=ERROR_LINE_TOO_LONG)break;
++  }
++  UnLock(lock);
++  if(error) { SetIoErr(error);errno=error==ERROR_LINE_TOO_LONG?ENAMETOOLONG:EIO; }
++  return NULL;
++}
++#elif defined(__AROS__) || defined(__BEOS__) || defined(__MORPHOS__) || defined(__GP2X__) || defined(__WIZ__) || defined(__CAANOO__) || defined(__amigaos__) || defined(__SWITCH__)
+ 
+ #include "io.h"
+ #include "gfx2log.h"
+diff --git a/src/screen.h b/src/screen.h
+--- a/src/screen.h
++++ b/src/screen.h
+@@ -37,6 +37,12 @@
+ #endif
+ #include "struct.h"
+ #include "global.h"
++
++#if defined(USE_AMIGA_NATIVE)
++int GFX2_AmigaInit(void);
++void GFX2_AmigaClose(void);
++int GFX2_AmigaModeOK(int width, int height);
++#endif
+ 
+ void GFX2_Set_mode(int *width, int *height, int fullscreen);
+ 
+diff --git a/src/text.c b/src/text.c
+--- a/src/text.c
++++ b/src/text.c
+@@ -67,6 +67,10 @@
+ #include "setup.h"
+ #include "loadsave.h"
+ #include "SFont.h"
++#ifdef USE_OPENUP
++#include "amigaopenup.h"
++extern byte *GFX2_OpenFontRender(const char *,const char *,int,int,int,int,int *,int *,T_Palette);
++#endif
+ 
+ /**
+  * Element of the font linked list
+@@ -418,6 +422,11 @@
+         FcStrListDone(dirs);
+        }
+     #endif
++  #elif defined(USE_OPENUP)
++    if (GFX2_OpenUpFontAvailable()) {
++      For_each_file("FONTS:_TrueType", Add_font);
++      For_each_file("FONTS:TrueType", Add_font);
++    }
+   #elif defined(__amigaos4__) || defined(__amigaos__)
+     #ifndef NOTTF
+       For_each_file( "FONTS:_TrueType", Add_font );
+@@ -449,7 +458,9 @@
+ // Informe si texte.c a été compilé avec l'option de support TrueType ou pas.
+ int TrueType_is_supported()
+ {
+-  #if !defined(NOTTF) || defined(WIN32)
++  #if defined(USE_OPENUP)
++  return GFX2_OpenUpFontAvailable();
++  #elif !defined(NOTTF) || defined(WIN32)
+   return 1;
+   #else
+   return 0;
+@@ -833,7 +844,9 @@
+   }
+   if (font->Is_truetype)
+   {
+-  #if !defined(NOTTF)
++  #if defined(USE_OPENUP)
++    return GFX2_OpenFontRender(str, Font_name(font_number), size, antialias, bold, italic, width, height, palette);
++  #elif !defined(NOTTF)
+     return Render_text_TTF(str, font_number, size, antialias, bold, italic, width, height, palette);
+   #elif defined(WIN32)
+     return Render_text_Win32(str, font_number, size, antialias, bold, italic, width, height, palette);
+diff --git a/src/zlibrary.c b/src/zlibrary.c
+new file mode 100644
+--- /dev/null
++++ b/src/zlibrary.c
+@@ -0,0 +1,100 @@
++/*
++ * openamigaimage datatypes: z.library's calls (zlibrary.h), through its jump
++ * table as OpenZlib's z.lvo lists it: the stream in A0, the other arguments
++ * in D0 upwards, the base in A6. D0, D1, A0 and A1 are the library's to
++ * change; the result comes back in D0.
++ *
++ * MIT, Copyright (c) 2026 AmigaChrome Team.
++ * SPDX-License-Identifier: MIT
++ */
++#include <exec/types.h>
++
++#include "zlibrary.h"
++
++#define CALL(lvo, ...)                                                            \
++    __asm volatile("jsr %%a6@(" #lvo ":W)"                                        \
++                   : "+r"(d0), "+r"(d1), "+r"(a0), "+r"(a1)                       \
++                   : "r"(a6), ##__VA_ARGS__                                       \
++                   : "cc", "memory")
++
++#define REGS(base)                                                                \
++    register struct Library *a6 __asm("a6") = (base);                             \
++    register ULONG d0 __asm("d0") = 0;                                            \
++    register ULONG d1 __asm("d1") = 0;                                            \
++    register ULONG a0 __asm("a0") = 0;                                            \
++    register ULONG a1 __asm("a1") = 0
++
++LONG zl_InflateInit2(struct Library *ZBase, struct zl_stream *s, LONG windowBits)
++{
++    REGS(ZBase);
++    a0 = (ULONG)s;
++    d0 = (ULONG)windowBits;
++    CALL(-132);
++    return (LONG)d0;
++}
++
++LONG zl_Inflate(struct Library *ZBase, struct zl_stream *s, LONG flush)
++{
++    REGS(ZBase);
++    a0 = (ULONG)s;
++    d0 = (ULONG)flush;
++    CALL(-60);
++    return (LONG)d0;
++}
++
++LONG zl_InflateEnd(struct Library *ZBase, struct zl_stream *s)
++{
++    REGS(ZBase);
++    a0 = (ULONG)s;
++    CALL(-66);
++    return (LONG)d0;
++}
++
++LONG zl_InflateReset(struct Library *ZBase, struct zl_stream *s)
++{
++    REGS(ZBase);
++    a0 = (ULONG)s;
++    CALL(-162);
++    return (LONG)d0;
++}
++
++LONG zl_DeflateInit2(struct Library *ZBase, struct zl_stream *s, LONG level, LONG method,
++                     LONG windowBits, LONG memLevel, LONG strategy)
++{
++    REGS(ZBase);
++    register LONG d2 __asm("d2") = windowBits;
++    register LONG d3 __asm("d3") = memLevel;
++    register LONG d4 __asm("d4") = strategy;
++    a0 = (ULONG)s;
++    d0 = (ULONG)level;
++    d1 = (ULONG)method;
++    CALL(-72, "r"(d2), "r"(d3), "r"(d4));
++    return (LONG)d0;
++}
++
++LONG zl_Deflate(struct Library *ZBase, struct zl_stream *s, LONG flush)
++{
++    REGS(ZBase);
++    a0 = (ULONG)s;
++    d0 = (ULONG)flush;
++    CALL(-42);
++    return (LONG)d0;
++}
++
++LONG zl_DeflateEnd(struct Library *ZBase, struct zl_stream *s)
++{
++    REGS(ZBase);
++    a0 = (ULONG)s;
++    CALL(-48);
++    return (LONG)d0;
++}
++
++ULONG zl_Crc32(struct Library *ZBase, ULONG crc, const UBYTE *buf, ULONG len)
++{
++    REGS(ZBase);
++    d0 = crc;
++    a0 = (ULONG)buf;
++    d1 = len;
++    CALL(-234);
++    return d0;
++}
+diff --git a/src/zlibrary.h b/src/zlibrary.h
+new file mode 100644
+--- /dev/null
++++ b/src/zlibrary.h
+@@ -0,0 +1,70 @@
++/*
++ * openamigaimage datatypes: the calls they make to z.library (OpenZlib, ours:
++ * DalsinAI amigachrome-guest libraries/openzlib, API and ABI those of the
++ * Aminet z.library). Every inflate and deflate in the datatypes goes
++ * through it: no zlib is linked in.
++ *
++ * The library base is passed to each call, so a datatype keeps it in its
++ * object, not in a global. The init calls take no version or stream size
++ * (the library is the version), as z.library's own.
++ *
++ * On the Amiga the calls are common/zlibrary.c, through z.library's jump
++ * table (openzlib's z.lvo). On x86 or ARM64 cores the tests give their own
++ * (tests/zlhost.c, over OpenZlib's core).
++ *
++ * MIT, Copyright (c) 2026 AmigaChrome Team.
++ * SPDX-License-Identifier: MIT
++ */
++#ifndef ZLIBRARY_H
++#define ZLIBRARY_H
++
++#include <exec/types.h>
++
++struct Library;
++
++#define ZL_NAME    "z.library"
++#define ZL_VERSION 53              /* OpenZlib is 53.12; the Aminet one 53.x */
++
++/* zlib.h's z_stream, as z.library lays it out on the 68k (56 bytes) */
++struct zl_stream {
++    const UBYTE *next_in;
++    ULONG avail_in;
++    ULONG total_in;
++    UBYTE *next_out;
++    ULONG avail_out;
++    ULONG total_out;
++    const char *msg;
++    APTR state;                    /* the library's own */
++    APTR zalloc, zfree, opaque;    /* NULL: z.library allocates for itself */
++    LONG data_type;
++    ULONG adler;
++    ULONG reserved;
++};
++
++/* zlib.h's numbers */
++#define ZL_NO_FLUSH     0
++#define ZL_SYNC_FLUSH   2
++#define ZL_FULL_FLUSH   3
++#define ZL_FINISH       4
++#define ZL_OK           0
++#define ZL_STREAM_END   1
++#define ZL_NEED_DICT    2
++#define ZL_STREAM_ERROR (-2)
++#define ZL_DATA_ERROR   (-3)
++#define ZL_MEM_ERROR    (-4)
++#define ZL_BUF_ERROR    (-5)
++#define ZL_DEFLATED     8
++#define ZL_DEFAULT_STRATEGY 0
++#define ZL_FILTERED     1
++
++LONG zl_InflateInit2(struct Library *ZBase, struct zl_stream *s, LONG windowBits);
++LONG zl_Inflate(struct Library *ZBase, struct zl_stream *s, LONG flush);
++LONG zl_InflateEnd(struct Library *ZBase, struct zl_stream *s);
++LONG zl_InflateReset(struct Library *ZBase, struct zl_stream *s);
++LONG zl_DeflateInit2(struct Library *ZBase, struct zl_stream *s, LONG level, LONG method,
++                     LONG windowBits, LONG memLevel, LONG strategy);
++LONG zl_Deflate(struct Library *ZBase, struct zl_stream *s, LONG flush);
++LONG zl_DeflateEnd(struct Library *ZBase, struct zl_stream *s);
++ULONG zl_Crc32(struct Library *ZBase, ULONG crc, const UBYTE *buf, ULONG len);
++
++#endif

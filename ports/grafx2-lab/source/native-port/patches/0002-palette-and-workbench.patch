@@ -1,0 +1,65 @@
+--- a/src/amigascreen.c
++++ b/src/amigascreen.c
+@@ -342,6 +342,8 @@
+     ULONG b = (ULONG)c->B * 0x01010101UL;
+     SetRGB32(&Native_screen->ViewPort, (ULONG)(firstcolor + i), r, g, b);
+   }
++  /* RTG drivers may expand indices into RGB: re-present after palette edits. */
++  if (ncolors) Mark_dirty(0, 0, Native_width - 1, Native_height - 1);
+   return 0;
+ }
+ 
+--- a/src/main.c
++++ b/src/main.c
+@@ -51,8 +51,11 @@
+ /// declare global variables in main.c
+ #define GLOBAL_VARIABLES
+ #ifdef USE_AMIGA_NATIVE
+-unsigned long __stack = 262144;
+-const char GrafX2_amiga_version[] = "$VER: GrafX2 2.9 (30.10.2026) native OS3 68040+FPU";
++unsigned long __stack = 524288;
++const char *__stdiowin = 0;
++#include <workbench/startup.h>
++#include <proto/dos.h>
++const char GrafX2_amiga_version[] = "$VER: GrafX2 2.9 (31.10.2026) native OS3 68040+FPU";
+ #endif
+ 
+ // time.h defines timeval which conflicts with the one in amiga SDK
+@@ -1592,6 +1595,37 @@
+   // TODO : nCmdShow indicates if the window must be maximized, etc.
+   (void)nCmdShow;
+ #endif
++#ifdef USE_AMIGA_NATIVE
++  /* libnix passes WBStartup in argv when Workbench launches with argc == 0.
++   * Keep all storage alive until shutdown; resolve project locks without chdir. */
++  char *wb_argv[4] = {"PROGDIR:GrafX2", NULL, NULL, NULL};
++  char wb_paths[2][4096];
++  if (argc == 0)
++  {
++    struct WBStartup *startup = (struct WBStartup *)argv;
++    int i;
++    argc = 1;
++    if (startup && startup->sm_ArgList)
++      for (i = 1; i < startup->sm_NumArgs && i <= 2; i++)
++      {
++        struct WBArg *arg = &startup->sm_ArgList[i];
++        if (!arg->wa_Name || !arg->wa_Name[0]) continue;
++        if (arg->wa_Lock)
++        {
++          if (!NameFromLock(arg->wa_Lock, (STRPTR)wb_paths[argc-1], 4096) ||
++              !AddPart((STRPTR)wb_paths[argc-1], arg->wa_Name, 4096)) return 20;
++        }
++        else
++        {
++          if (strlen((const char *)arg->wa_Name) >= 4096) return 20;
++          strcpy(wb_paths[argc-1], (const char *)arg->wa_Name);
++        }
++        wb_argv[argc] = wb_paths[argc-1];
++        argc++;
++      }
++    argv = wb_argv;
++  }
++#endif
+   if(!Init_program(argc,argv))
+   {
+     Program_shutdown();

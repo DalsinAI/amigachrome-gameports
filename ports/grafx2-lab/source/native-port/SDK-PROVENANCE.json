@@ -1,0 +1,16 @@
+{
+  "openamigasdk": "b0579b4b0f437374851af891f0269e2abc68b193",
+  "openamigartg": "48cf02ca8d952457789b8397bb3167178eb58cb9",
+  "openamigafont": "fb2f6161e5129db1b144c300ed26f1a6dfa344be",
+  "openamigamulticore": "d9834bd22b1dea2a5a9f52465236048bd0749292",
+  "opendatatypes": "8d56381b5b535d79ba48517025d715fe0d335cba",
+  "OpenZlib": {
+    "repository": "DalsinAI/amigachrome-guest",
+    "files": {
+      "openzlib_lib.c": "c458d93056a5035dc7ebbc10dabbd6d740954ece",
+      "zlib_core.cpp": "77fb8c3e2ee3c5e22546edc2b3e1b326fdcfec9e",
+      "zlib_core.h": "22bb0ae8557e27a8305e3a42a5a9882ab9b61a4d",
+      "open_arith.c": "6dbb51d2ee6d0b087b778f6b698b11f8f915eb8e"
+    }
+  }
+}
