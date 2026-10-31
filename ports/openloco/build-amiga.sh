@@ -115,7 +115,7 @@ else
     for p in ports/openloco/patches/*.patch; do patch -s --batch --forward -p1 -d $WORK/fresh < "\$p"; done
     rsync -rc --delete $WORK/fresh/ $WORK/tree/source/
     STOVE=$STAGED SOURCE_DATE_EPOCH=\$(git -C $WORK/sources/openloco show -s --format=%ct HEAD) \
-        cmake --build $WORK/tree/cmake --target OpenLoco -j $JOBS
+        cmake --build $WORK/tree/cmake --target App -j $JOBS
 fi
 echo $KEY > $WORK/done.key
 RUN
