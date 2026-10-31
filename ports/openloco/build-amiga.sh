@@ -53,6 +53,16 @@ install_lab() {
     sha256sum "$OUT/SDL3.module"
 }
 
+lab_report() {
+    local u=$LAB/devices/harddisks/DH1/Games/OpenLoco/User f
+    [[ -d $u ]] || return 0
+    echo "== lab User folder"; find "$u" -maxdepth 2 -printf '%TT %s %p\n' | sort | tail -n 25
+    f=$(ls -t "$u"/logs/*.log 2>/dev/null | head -n 1) || true
+    [[ -n $f ]] && { echo "== $f"; tail -n 80 "$f"; }
+    return 0
+}
+lab_report
+
 alive() { [[ -f "$WORK/build.pid" ]] && kill -0 "$(cat "$WORK/build.pid")" 2>/dev/null; }
 if alive; then
     echo "BUILDING recipe $(cat "$WORK/building.key" 2>/dev/null) since $(stat -c %y "$WORK/build.pid")"
