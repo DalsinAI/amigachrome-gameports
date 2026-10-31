@@ -1,5 +1,5 @@
 diff --git a/src/OpenLoco/src/Map/TileManager.cpp b/src/OpenLoco/src/Map/TileManager.cpp
-index 94029f7..4fea084 100644
+index 94029f7..d8621ce 100644
 --- a/src/OpenLoco/src/Map/TileManager.cpp
 +++ b/src/OpenLoco/src/Map/TileManager.cpp
 @@ -42,6 +42,7 @@
@@ -18,7 +18,7 @@ index 94029f7..4fea084 100644
  
          try
          {
-@@ -850,13 +852,16 @@ namespace OpenLoco::World::TileManager
+@@ -850,18 +852,22 @@ namespace OpenLoco::World::TileManager
                      }
                  }
              }
@@ -35,6 +35,12 @@ index 94029f7..4fea084 100644
          }
          catch (const std::bad_alloc&)
          {
+             exitWithError(StringIds::unable_to_allocate_enough_memory, StringIds::game_init_failure);
+         }
++        Logging::info("S5 save: buffer freed {} ms", Platform::getTime());
+ 
+         // Note: original implementation did not revert the cursor
+         Ui::setCursor(curCursor);
 diff --git a/src/OpenLoco/src/S5/S5.cpp b/src/OpenLoco/src/S5/S5.cpp
 index 14e3307..a958b66 100644
 --- a/src/OpenLoco/src/S5/S5.cpp
