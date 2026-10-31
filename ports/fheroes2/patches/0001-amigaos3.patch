@@ -1,0 +1,149 @@
+diff --git a/src/engine/rand.cpp b/src/engine/rand.cpp
+index 8e17899..3240c18 100644
+--- a/src/engine/rand.cpp
++++ b/src/engine/rand.cpp
+@@ -26,6 +26,11 @@
+ #include <numeric>
+ #include <random>
+ 
++#if defined( __AMIGA__ )
++#include <chrono>
++#include <cstdint>
++#endif
++
+ namespace
+ {
+     // Implementation of Fast Random Integer Generation in an Interval (https://arxiv.org/abs/1805.10941)
+@@ -84,8 +89,17 @@ uint32_t Rand::uniformIntDistribution( const uint32_t from, const uint32_t to, P
+ 
+ Rand::PCG32 & Rand::CurrentThreadRandomDevice()
+ {
++#if defined( __AMIGA__ )
++    // AmigaOS has no entropy device, so std::random_device throws. Seed from
++    // the clocks and this thread's stack address instead.
++    thread_local const uint64_t seedStack = 0;
++    const uint64_t wall = static_cast<uint64_t>( std::chrono::system_clock::now().time_since_epoch().count() );
++    const uint64_t tick = static_cast<uint64_t>( std::chrono::steady_clock::now().time_since_epoch().count() );
++    thread_local PCG32 gen( wall ^ ( tick << 21 ), static_cast<uint64_t>( reinterpret_cast<uintptr_t>( &seedStack ) ) | 1 );
++#else
+     thread_local std::random_device rd;
+     thread_local PCG32 gen( rd );
++#endif
+ 
+     return gen;
+ }
+diff --git a/src/engine/screen.cpp b/src/engine/screen.cpp
+index ae9c06a..a80a0f9 100644
+--- a/src/engine/screen.cpp
++++ b/src/engine/screen.cpp
+@@ -1285,6 +1285,13 @@ namespace
+             _createPalette();
+ 
+             _renderer = SDL_CreateRenderer( _window, _driverIndex, SDL_RENDERER_ACCELERATED );
++#if defined( __AMIGA__ )
++            if ( _renderer == nullptr ) {
++                // Without opengpu.library SDL has only its software renderer.
++                _driverIndex = -1;
++                _renderer = SDL_CreateRenderer( _window, _driverIndex, 0 );
++            }
++#endif
+             if ( _renderer == nullptr ) {
+                 ERROR_LOG( "Failed to create a window renderer of " << resolutionInfo.gameWidth << " x " << resolutionInfo.gameHeight
+                                                                     << " size. The error: " << SDL_GetError() )
+diff --git a/src/engine/serialize.h b/src/engine/serialize.h
+index 9d31404..a7856a1 100644
+--- a/src/engine/serialize.h
++++ b/src/engine/serialize.h
+@@ -84,6 +84,21 @@
+ #define be32toh( x ) __builtin_bswap32( x )
+ #define le32toh( x ) ( x )
+ 
++#elif defined( __AMIGA__ )
++// AmigaOS 3.x on the 68k: big-endian, and libnix has no <endian.h>.
++#define BIG_ENDIAN 4321
++#define LITTLE_ENDIAN 1234
++#define BYTE_ORDER BIG_ENDIAN
++
++#define htobe16( x ) ( x )
++#define htole16( x ) __builtin_bswap16( x )
++#define be16toh( x ) ( x )
++#define le16toh( x ) __builtin_bswap16( x )
++#define htobe32( x ) ( x )
++#define htole32( x ) __builtin_bswap32( x )
++#define be32toh( x ) ( x )
++#define le32toh( x ) __builtin_bswap32( x )
++
+ #elif defined( TARGET_NINTENDO_SWITCH )
+ #include <machine/endian.h>
+ #define LITTLE_ENDIAN _LITTLE_ENDIAN
+diff --git a/src/engine/system.cpp b/src/engine/system.cpp
+index e3d7171..0234ca0 100644
+--- a/src/engine/system.cpp
++++ b/src/engine/system.cpp
+@@ -38,7 +38,7 @@
+ 
+ #define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
+-#elif defined( TARGET_PS_VITA )
++#elif defined( TARGET_PS_VITA ) || defined( __AMIGA__ )
+ #include <algorithm>
+ #endif
+ 
+@@ -82,6 +82,10 @@ namespace
+         return System::concatPath( "ux0:data", appName );
+ #elif defined( TARGET_NINTENDO_SWITCH )
+         return System::concatPath( "/switch", appName );
++#elif defined( __AMIGA__ )
++        // AmigaOS: settings and saves live beside the program.
++        (void)appName;
++        return "PROGDIR:User";
+ #elif defined( ANDROID )
+         (void)appName;
+ 
+@@ -312,12 +316,23 @@ bool System::Unlink( const std::string_view path )
+ 
+ std::string System::concatPath( const std::string_view left, const std::string_view right )
+ {
++#if defined( __AMIGA__ )
++    // AmigaDOS: "/" after a volume or assign ("PROGDIR:/x") means the parent.
++    if ( left.empty() || left.back() == ':' || left.back() == '/' ) {
++        return std::string{ left }.append( right );
++    }
++#endif
+     return fsPathToString( std::filesystem::path{ left }.append( right ) );
+ }
+ 
+ void System::appendOSSpecificDirectories( std::vector<std::string> & directories )
+ {
+-#if defined( TARGET_PS_VITA )
++#if defined( __AMIGA__ )
++    const char * path = "PROGDIR:";
++    if ( std::find( directories.begin(), directories.end(), path ) == directories.end() ) {
++        directories.emplace_back( path );
++    }
++#elif defined( TARGET_PS_VITA )
+     const char * path = "ux0:app/FHOMM0002";
+     if ( std::find( directories.begin(), directories.end(), path ) == directories.end() ) {
+         directories.emplace_back( path );
+@@ -450,7 +465,7 @@ bool System::IsDirectory( const std::string_view path )
+ 
+ bool System::GetCaseInsensitivePath( const std::string_view path, std::string & correctedPath )
+ {
+-#if !defined( _WIN32 ) && !defined( ANDROID ) && !defined( TARGET_PS_VITA ) && !defined( __IPHONEOS__ )
++#if !defined( _WIN32 ) && !defined( ANDROID ) && !defined( TARGET_PS_VITA ) && !defined( __IPHONEOS__ ) && !defined( __AMIGA__ )
+     // The following code is based on https://github.com/OneSadCookie/fcaseopen and assumes the use of POSIX IEEE Std 1003.1-2001 pathnames
+     correctedPath.clear();
+ 
+diff --git a/src/fheroes2/system/settings.cpp b/src/fheroes2/system/settings.cpp
+index 353da3b..eb50707 100644
+--- a/src/fheroes2/system/settings.cpp
++++ b/src/fheroes2/system/settings.cpp
+@@ -646,7 +646,7 @@ const std::vector<std::string> & Settings::GetRootDirs()
+     static const std::vector<std::string> rootDirs = []() {
+         std::vector<std::string> result;
+ 
+-#ifdef FHEROES2_DATA
++#if defined( FHEROES2_DATA ) && !defined( __AMIGA__ )
+         // Macro-defined path.
+         result.emplace_back( EXPANDDEF( FHEROES2_DATA ) );
+ #endif

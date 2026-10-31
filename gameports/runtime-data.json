@@ -92,6 +92,19 @@
       "availability": "upstream-linked-freeware",
       "packaging": "fetch-on-demand",
       "notes": "Official OpenTyrian README links this Tyrian 2.1 data. SHA-256 observed on 24 October 2026 and pinned for repeat downloads; not a publisher signature. Keep game data external; freeware does not imply unrestricted redistribution."
+    },
+    "homm2-demo": {
+      "games": [
+        "fheroes2"
+      ],
+      "filename": "h2demo.zip",
+      "urls": [
+        "https://archive.org/download/HeroesofMightandMagicIITheSuccessionWars_1020/h2demo.zip"
+      ],
+      "sha256": "12048c8b03875c81e69534a3813aaf6340975e77b762dc1b79a4ff5514240e3c",
+      "availability": "publisher-demo-public-download",
+      "packaging": "fetch-on-demand",
+      "notes": "The Heroes of Might and Magic II demo that fheroes2's own CMake GET_HOMM2_DEMO option and script/demo/download_demo_version.sh fetch; URL and SHA-256 are upstream's (fheroes2 c0e8128). Stage DATA/ and MAPS/ with ports/fheroes2/stage_data.py. Never commit or bundle it. A player's own full Heroes II DATA/MAPS (and optional ANIM/MUSIC) replace it."
     }
   }
 }
