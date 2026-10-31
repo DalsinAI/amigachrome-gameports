@@ -1,12 +1,15 @@
 # OpenLoco
 
 Target: AmigaOS 3.x / 68040 + FPU / AC090, GCC 16.2.0-open3 and OpenAmiga SDL3.
-Status (24 October): graphics/audio-file/object wire probes pass. S5 headers,
-save-preview and scenario-options metadata now decode explicitly; state copies
-have exact size checks. Full S5 simulation import/export on big-endian hosts is
-still unimplemented and explicitly refused. OpenLoco is not playable yet;
-audio remains disabled. See [S5 boundaries](S5_ENDIAN.md) and the earlier
-[asset-loader results](ASSET_ENDIAN.md). Earlier evidence below is historical.
+Status (31 October): playable on a 68040 lab copy of Instance-32 (OS 3.2.3,
+OpenRTG, AHI). Title screen with its live demo map, scenario list and previews,
+new game (Boulder Breakers), Save Game, autosave, Load Game from the title
+screen and a clean exit all work with the original Locomotion data. Sound is
+built in: OpenAL calls go to OpenRTG's `LIBS:OpenGPU/OpenAL.module` (OpenAL 1.1
+over AHI); the lab reports "OpenAL ... Renderer: AHI Voices, initialized" with
+992 mono and 32 stereo sources (labs are muted, so it has not been heard yet).
+See [Lab results](#lab-results-31-october), [S5 boundaries](S5_ENDIAN.md) and
+[audio](AUDIO_ASSESSMENT.md). Earlier evidence below is historical.
 
 The exact upstream source is `OpenLoco/OpenLoco`
 `6d7f5b1bfb4abd5ae2f1a2ade628a2b0d46f861e` (version 26.09).
@@ -110,3 +113,27 @@ startup reaches the retail assets but cannot interpret packed little-endian G1
 metadata (4122 elements becomes 437256192); CSS loading also reports an invalid
 vector size. No menu/gameplay pass is claimed. See
 [evidence](evidence/noaudio-native-results.json).
+
+## Lab results (31 October)
+
+Built on Daletop through Cradle (`stove_build`, target `ports/openloco`,
+stove `os32-gcc16`); `build-amiga.sh` keeps an incremental work folder,
+builds OpenRTG's OpenAL.module and link stub at the commit in `source.json`
+(`openrtg`), and installs into lab `t3-openloco` only (never an instance).
+
+| Output | Bytes |
+| --- | --- |
+| OpenLoco (HUNK) | 9,835,448 (text 8,253,880) |
+| OpenAL.module | 58,528 |
+
+- New game, date advances, Save Game (763,801 byte .SV5 in under 0.5 s),
+  autosave, Load Game of that save, quit from the window's close box: all OK.
+- Patch 0017 lets the engine build against an OpenAL without EFX (OpenRTG's
+  has none): reverb stays off because `ALC_EXT_EFX` is absent.
+- Patch 0018 fixes the Save Game hang. The engine shows a busy pointer during
+  a save and then puts the system pointer back. SDL3.modules built before
+  OpenRTG 164dd9b (24 October; Instance-32's is one) link a system cursor
+  into SDL's list twice, so `SDL_SetCursor` looped forever. On the Amiga the
+  port now uses SDL's default cursor for the system pointers.
+- Not yet checked: hearing the sound and music on an unmuted instance,
+  building track and running trains for a long session.
