@@ -35,6 +35,8 @@ if alive; then
     echo "BUILDING recipe $(cat "$WORK/building.key" 2>/dev/null) since $(stat -c %y "$WORK/build.pid")"
     grep -E '^\[ *[0-9]+%\]' "$WORK/build.log" | tail -1 || true
     tail -n 15 "$WORK/build.log"
+    L=$HOME/AmigaChrome-dev/labs/t3-openloco
+    find "$L/devices" -maxdepth 2 2>/dev/null | head -20; cat "$L"/state/*.json 2>/dev/null | head -c 1500; ls "$L/state" 2>/dev/null
     exit 0
 fi
 BIN=$WORK/tree/cmake/OpenLoco
@@ -42,6 +44,7 @@ if [[ -f "$WORK/done.key" && $(cat "$WORK/done.key") == "$KEY" && -f "$BIN" ]]; 
     cp "$BIN" "$OUT/OpenLoco"
     cp "$SDL3_SDK/SDL3.module" "$OUT/SDL3.module"
     cp "$WORK/tree/receipt.json" "$OUT/receipt.json" 2>/dev/null || true
+    cp -r "$WORK/tree/source/data" "$OUT/data"
     tail -n 30 "$WORK/build.log" > "$OUT/build-tail.log"
     m68k=$STAGED/prefix/bin/m68k-amigaos-
     "${m68k}size" "$OUT/OpenLoco" > "$OUT/size.txt" 2>&1 || true
