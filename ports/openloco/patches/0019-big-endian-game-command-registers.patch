@@ -1,0 +1,111 @@
+diff --git a/src/OpenLoco/include/OpenLoco/GameCommands/GameCommands.h b/src/OpenLoco/include/OpenLoco/GameCommands/GameCommands.h
+index 8cf2274..afb0b72 100644
+--- a/src/OpenLoco/include/OpenLoco/GameCommands/GameCommands.h
++++ b/src/OpenLoco/include/OpenLoco/GameCommands/GameCommands.h
+@@ -148,6 +148,98 @@ namespace OpenLoco::GameCommands
+      */
+     struct registers
+     {
++#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
++        // On a big-endian CPU the low word and bytes of a 32-bit register
++        // are at its end, as on x86 they are at its start: keep ax/al/ah the
++        // low parts of eax so game command arguments survive packing.
++        union
++        {
++            int32_t eax{ kDefaultRegValue };
++            struct
++            {
++                int16_t axHigh_;
++                int16_t ax;
++            };
++            struct
++            {
++                int16_t axHigh2_;
++                int8_t ah;
++                int8_t al;
++            };
++        };
++        union
++        {
++            int32_t ebx{ kDefaultRegValue };
++            struct
++            {
++                int16_t bxHigh_;
++                int16_t bx;
++            };
++            struct
++            {
++                int16_t bxHigh2_;
++                int8_t bh;
++                int8_t bl;
++            };
++        };
++        union
++        {
++            int32_t ecx{ kDefaultRegValue };
++            struct
++            {
++                int16_t cxHigh_;
++                int16_t cx;
++            };
++            struct
++            {
++                int16_t cxHigh2_;
++                int8_t ch;
++                int8_t cl;
++            };
++        };
++        union
++        {
++            int32_t edx{ kDefaultRegValue };
++            struct
++            {
++                int16_t dxHigh_;
++                int16_t dx;
++            };
++            struct
++            {
++                int16_t dxHigh2_;
++                int8_t dh;
++                int8_t dl;
++            };
++        };
++        union
++        {
++            int32_t esi{ kDefaultRegValue };
++            struct
++            {
++                int16_t siHigh_;
++                int16_t si;
++            };
++        };
++        union
++        {
++            int32_t edi{ kDefaultRegValue };
++            struct
++            {
++                int16_t diHigh_;
++                int16_t di;
++            };
++        };
++        union
++        {
++            int32_t ebp{ kDefaultRegValue };
++            struct
++            {
++                int16_t bpHigh_;
++                int16_t bp;
++            };
++        };
++#else
+         union
+         {
+             int32_t eax{ kDefaultRegValue };
+@@ -203,6 +295,7 @@ namespace OpenLoco::GameCommands
+             int32_t ebp{ kDefaultRegValue };
+             int16_t bp;
+         };
++#endif
+     };
+     static_assert(sizeof(registers) == 7 * 4);
+ #pragma pack(pop)
