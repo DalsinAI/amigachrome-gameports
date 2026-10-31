@@ -123,7 +123,7 @@ builds OpenRTG's OpenAL.module and link stub at the commit in `source.json`
 
 | Output | Bytes |
 | --- | --- |
-| OpenLoco (HUNK) | 9,835,448 (text 8,253,880) |
+| OpenLoco (HUNK) | 9,832,716 |
 | OpenAL.module | 58,528 |
 
 - New game, date advances, Save Game (763,801 byte .SV5 in under 0.5 s),
