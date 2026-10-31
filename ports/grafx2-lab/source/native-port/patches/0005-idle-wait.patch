@@ -1,0 +1,81 @@
+--- a/src/amigascreen.c
++++ b/src/amigascreen.c
+@@ -22,6 +22,8 @@
+ #include <proto/exec.h>
+ #include <proto/graphics.h>
+ #include <proto/intuition.h>
++#include <devices/timer.h>
++#include <proto/dos.h>
+ 
+ #include "global.h"
+ #include "screen.h"
+@@ -39,6 +41,9 @@
+ static struct MsgPort *Input_port;
+ static struct IOStdReq *Input_request;
+ static int Input_open;
++static struct MsgPort *Idle_port;
++static struct TimeRequest *Idle_request;
++static int Idle_open;
+ volatile int Allow_colorcycling = 1;
+ 
+ 
+@@ -166,11 +171,41 @@
+   return 1;
+ }
+ 
++/* Sleep until the window has input or ms milliseconds pass. The editor's main
++ * loop polls with no sleep; without this it presents continuously while idle. */
++void GFX2_AmigaIdleWait(ULONG ms)
++{
++  ULONG window_signal = 0, timer_signal;
++  if (Native_window && Native_window->UserPort)
++    window_signal = 1UL << Native_window->UserPort->mp_SigBit;
++  if (!Idle_open)
++  {
++    if (!Idle_port) Idle_port = CreateMsgPort();
++    if (Idle_port && !Idle_request)
++      Idle_request = (struct TimeRequest *)CreateIORequest(Idle_port, sizeof(struct TimeRequest));
++    if (Idle_request && OpenDevice((CONST_STRPTR)TIMERNAME, UNIT_MICROHZ, (struct IORequest *)Idle_request, 0) == 0)
++      Idle_open = 1;
++    if (!Idle_open) { Delay((ms + 19) / 20); return; }
++  }
++  timer_signal = 1UL << Idle_port->mp_SigBit;
++  Idle_request->tr_node.io_Command = TR_ADDREQUEST;
++  Idle_request->tr_time.tv_secs = ms / 1000;
++  Idle_request->tr_time.tv_micro = (ms % 1000) * 1000;
++  SetSignal(0, timer_signal);
++  SendIO((struct IORequest *)Idle_request);
++  Wait(window_signal | timer_signal);
++  if (!CheckIO((struct IORequest *)Idle_request)) AbortIO((struct IORequest *)Idle_request);
++  WaitIO((struct IORequest *)Idle_request);
++}
++
+ extern void GFX2_AmigaDataTypesClose(void);
+ void GFX2_AmigaClose(void)
+ {
+   GFX2_AmigaDataTypesClose();
+   Close_native_display();
++  if (Idle_open) { CloseDevice((struct IORequest *)Idle_request); Idle_open = 0; }
++  if (Idle_request) { DeleteIORequest((struct IORequest *)Idle_request); Idle_request = NULL; }
++  if (Idle_port) { DeleteMsgPort(Idle_port); Idle_port = NULL; }
+   #ifdef USE_OPENUP
+   GFX2_OpenUpClose();
+   #endif
+--- a/src/amigainput.inc
++++ b/src/amigainput.inc
+@@ -96,4 +96,4 @@
+       return 1;
+     }
+     if (feedback) return 1;
+-    if (sleep_time > 0) Delay((sleep_time + 19) / 20);
++    GFX2_AmigaIdleWait(sleep_time > 0 ? (ULONG)sleep_time : 20);
+--- a/src/input.c
++++ b/src/input.c
+@@ -57,6 +57,7 @@
+ #include <proto/dos.h>
+ #include <proto/keymap.h>
+ extern struct Window *GFX2_AmigaNativeWindow(void);
++extern void GFX2_AmigaIdleWait(ULONG ms);
+ word Amiga_key_modifiers;
+ #include "amigakeys.h"
+ #endif

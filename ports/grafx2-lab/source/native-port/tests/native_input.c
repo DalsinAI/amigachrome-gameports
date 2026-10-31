@@ -25,7 +25,8 @@ struct Message *GetMsg(struct MsgPort *port) {return read_index<count?(void *)&q
 void ReplyMsg(struct Message *msg) {replies++;}
 WORD MapRawKey(const struct InputEvent *ie,STRPTR buffer,WORD n,const struct KeyMap *km)
 {if(ie->ie_Code==0x10){buffer[0]=(ie->ie_Qualifier&IEQUALIFIER_LSHIFT)?'Q':'q';return 1;}return 0;}
-void Delay(LONG ticks) {delays++;}
+static ULONG idle_ms;
+void GFX2_AmigaIdleWait(ULONG ms) {delays++;idle_ms=ms;}
 void BeginRefresh(struct Window *w) {}
 void EndRefresh(struct Window *w,LONG complete) {}
 static void Color_cycling(void) {}
@@ -60,6 +61,7 @@ int main(void)
  event(IDCMP_RAWKEY,0x50,0,0,0);input(0);assert(Key==KEY_F1);
  event(IDCMP_INACTIVEWINDOW,0,0,0,0);input(0);assert(!Mouse_K&&!Amiga_key_modifiers&&!Button_inverter);
  event(IDCMP_CLOSEWINDOW,0,0,0,0);input(0);assert(Quit_is_required);Quit_is_required=0;
- count=read_index=0;input(20);assert(delays==1);assert(replies==10);
- puts("native input: buttons, scaled motion, text/modifiers, key release, wheel, focus and close passed");return 0;
+ count=read_index=0;input(20);assert(delays==1&&idle_ms==20);assert(replies==10);
+ count=read_index=0;input(0);assert(delays==2&&idle_ms==20);
+ puts("native input: buttons, scaled motion, text/modifiers, key release, wheel, focus, close and idle wait passed");return 0;
 }

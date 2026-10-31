@@ -15,12 +15,21 @@ byte Menu_factor_X=1, Menu_factor_Y=1;
 word Menu_status_Y;
 word Mouse_X, Mouse_Y;
 void GFX2_AmigaDataTypesClose(void) {}
-struct MsgPort *CreateMsgPort(void) {return NULL;}
-APTR CreateIORequest(const struct MsgPort *port,ULONG size) {return NULL;}
-BYTE OpenDevice(CONST_STRPTR name,ULONG unit,struct IORequest *io,ULONG flags) {return -1;}
-void CloseDevice(struct IORequest *io) {}
-void DeleteIORequest(APTR io) {}
-void DeleteMsgPort(struct MsgPort *port) {}
+static int timer_ok, ports, requests, timers, delays, sends, aborts, io_done;
+static ULONG waited_mask, sent_secs, sent_micro;
+struct MsgPort *CreateMsgPort(void) {struct MsgPort *p;if(!timer_ok)return NULL;p=calloc(1,sizeof(*p));p->mp_SigBit=20;ports++;return p;}
+APTR CreateIORequest(const struct MsgPort *port,ULONG size) {if(!port)return NULL;requests++;return calloc(1,size);}
+BYTE OpenDevice(CONST_STRPTR name,ULONG unit,struct IORequest *io,ULONG flags) {if(!timer_ok||strcmp((const char *)name,"timer.device")||unit!=UNIT_MICROHZ)return -1;timers++;return 0;}
+void CloseDevice(struct IORequest *io) {if(timer_ok)timers--;}
+void DeleteIORequest(APTR io) {if(io){requests--;free(io);}}
+void DeleteMsgPort(struct MsgPort *port) {if(port){ports--;free(port);}}
+void Delay(LONG ticks) {delays+=ticks;}
+ULONG SetSignal(ULONG value,ULONG mask) {return 0;}
+void SendIO(struct IORequest *io) {struct TimeRequest *t=(void *)io;assert(io->io_Command==TR_ADDREQUEST);sent_secs=t->tr_time.tv_secs;sent_micro=t->tr_time.tv_micro;sends++;}
+ULONG Wait(ULONG mask) {waited_mask=mask;return mask;}
+struct IORequest *CheckIO(struct IORequest *io) {return io_done?io:NULL;}
+void AbortIO(struct IORequest *io) {aborts++;}
+BYTE WaitIO(struct IORequest *io) {return 0;}
 BYTE DoIO(struct IORequest *io) {return 0;}
 static int allocations, windows, screens, writes, fail_screen, fail_window, fail_alloc;
 static UBYTE captured[640*480];
@@ -83,6 +92,12 @@ int main(void)
  }
  fail_screen=fail_window=fail_alloc=0;
  GFX2_Set_mode(&w,&h,1);assert(windows==1&&screens==1&&Native_palette[4].G==34);
+ GFX2_AmigaIdleWait(20);assert(delays==1&&!sends);
  GFX2_AmigaClose();assert(!allocations&&!windows&&!screens);GFX2_AmigaClose();
- puts("native screen: clipping, dirty/scaled refresh, palette, rollback and teardown passed");return 0;
+ timer_ok=1;assert(GFX2_AmigaInit());w=640;h=480;GFX2_Set_mode(&w,&h,1);Native_window->UserPort->mp_SigBit=9;
+ GFX2_AmigaIdleWait(20);assert(sends==1&&sent_secs==0&&sent_micro==20000&&aborts==1&&delays==1);
+ assert(waited_mask==((1UL<<9)|(1UL<<20)));
+ io_done=1;GFX2_AmigaIdleWait(1500);assert(sends==2&&sent_secs==1&&sent_micro==500000&&aborts==1);
+ GFX2_AmigaClose();assert(!allocations&&!windows&&!screens&&!timers&&!requests&&!ports);
+ puts("native screen: clipping, dirty/scaled refresh, palette, rollback, idle wait and teardown passed");return 0;
 }
