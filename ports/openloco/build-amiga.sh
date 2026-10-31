@@ -30,13 +30,34 @@ mkdir -p "$WORK"
 KEY=$( (cd "$HERE" && find source.json patches compat -type f | LC_ALL=C sort | xargs sha256sum) | sha256sum | cut -c1-16)
 echo "recipe $KEY, work $WORK, stove $STAGED, sdl3 $SDL3_SDK, jobs $JOBS"
 
+# Install into the scratch lab (never an instance): its drives are host
+# folders. Only while the lab is stopped, so its file system sees one state.
+LAB=${OPENLOCO_LAB:-$HOME/AmigaChrome-dev/labs/t3-openloco}
+DATA=${OPENLOCO_DATA:-/run/media/da1ek/WorkingSpace/AmigaChrome/mediastore/games/locomotion-pc-cd-es-2004/game-data}
+install_lab() {
+    local dh1=$LAB/devices/harddisks/DH1 dest
+    [[ -d $dh1 ]] || { echo "no lab drive $dh1"; return 0; }
+    case $LAB in */AmigaChromeInstances/*) echo "refusing an instance: $LAB"; return 1;; esac
+    if pgrep -f -- "$LAB" >/dev/null; then echo "lab running: not installing"; return 0; fi
+    dest=$dh1/Games/OpenLoco
+    mkdir -p "$dest"
+    cp "$OUT/OpenLoco" "$dest/OpenLoco"
+    rm -rf "$dest/data"; cp -r "$OUT/data" "$dest/data"
+    if [[ ! -f $dest/Locomotion/.installed ]]; then
+        rm -rf "$dest/Locomotion"; mkdir -p "$dest/Locomotion"
+        cp -r "$DATA"/. "$dest/Locomotion/"; touch "$dest/Locomotion/.installed"
+    fi
+    cp "$OUT/SDL3.module" "$dest/SDL3.module"
+    echo "installed in $dest:"; ls "$dest"; ls "$dest/Locomotion" | head; find "$dest/Locomotion" -type f | wc -l
+    echo "SDL3.module in the lab:"; find "$LAB/devices/harddisks" -maxdepth 4 -iname 'SDL3.module' -exec sha256sum {} + 2>/dev/null
+    sha256sum "$OUT/SDL3.module"
+}
+
 alive() { [[ -f "$WORK/build.pid" ]] && kill -0 "$(cat "$WORK/build.pid")" 2>/dev/null; }
 if alive; then
     echo "BUILDING recipe $(cat "$WORK/building.key" 2>/dev/null) since $(stat -c %y "$WORK/build.pid")"
     grep -E '^\[ *[0-9]+%\]' "$WORK/build.log" | tail -1 || true
     tail -n 15 "$WORK/build.log"
-    L=$HOME/AmigaChrome-dev/labs/t3-openloco
-    find "$L/devices" -maxdepth 2 2>/dev/null | head -20; cat "$L"/state/*.json 2>/dev/null | head -c 1500; ls "$L/state" 2>/dev/null
     exit 0
 fi
 BIN=$WORK/tree/cmake/OpenLoco
@@ -50,6 +71,7 @@ if [[ -f "$WORK/done.key" && $(cat "$WORK/done.key") == "$KEY" && -f "$BIN" ]]; 
     "${m68k}size" "$OUT/OpenLoco" > "$OUT/size.txt" 2>&1 || true
     ls -l "$OUT"; sha256sum "$OUT"/OpenLoco "$OUT"/SDL3.module; cat "$OUT/size.txt"
     echo "READY recipe $KEY"
+    install_lab
     exit 0
 fi
 if [[ -f "$WORK/failed.key" && $(cat "$WORK/failed.key") == "$KEY" ]]; then
