@@ -1,0 +1,9 @@
+{
+  "lab": "isolated AROS A1200/68040, FS-UAE 3.2.35",
+  "zorro_iii_memory_kib": 262144,
+  "ram_mapping": "0x40000000..0x50000000, verified from FS-UAE autoconfig log; RTG begins 0x50000000",
+  "guest_registered_fast_bytes_before": 75497408,
+  "guest_registered_fast_bytes_after": 343932832,
+  "workaround": "Test-only AddMemList helper checks overlap before registering mapped emulator RAM. Native target RAM and official ROM behavior are not qualified.",
+  "source_data": "unmodified pinned upstream models-2d.lua restored after the bounded trace run"
+}
