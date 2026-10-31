@@ -6,6 +6,8 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
+import re
 from pathlib import Path
 import subprocess
 import tarfile
@@ -47,6 +49,16 @@ def verify_stove(stove, release="16.2.0-open3"):
     return receipt
 
 
+def expand(arg, port_dir):
+    """@PORT_DIR@ and @ENV:NAME@ (a required environment variable) in cmake arguments."""
+    arg = arg.replace("@PORT_DIR@", str(port_dir))
+    for name in re.findall(r"@ENV:([A-Z0-9_]+)@", arg):
+        if name not in os.environ:
+            raise ValueError(f"{name} must be set for this recipe")
+        arg = arg.replace(f"@ENV:{name}@", os.environ[name])
+    return arg
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--manifest", required=True, type=Path)
@@ -56,6 +68,8 @@ def main():
     ap.add_argument("--out", type=Path)
     ap.add_argument("--jobs", type=int, default=2)
     ap.add_argument("--configure-only", action="store_true")
+    ap.add_argument("--reuse-out", action="store_true",
+                    help="update an earlier build in --out: re-export, keep unchanged files, configure and build incrementally")
     args = ap.parse_args()
     manifest = args.manifest.resolve()
     spec = json.loads(manifest.read_text())
@@ -64,7 +78,8 @@ def main():
     sdk = args.sdl3_sdk.resolve()
     source = (args.source or ROOT / "build/game-ports/sources" / game).resolve()
     out = (args.out or ROOT / "build/os3-sdl3" / game).resolve()
-    if out.exists():
+    reuse = args.reuse_out and (out / "cmake/CMakeCache.txt").is_file()
+    if out.exists() and not reuse:
         raise ValueError(f"Use a new output directory for each clean build: {out}")
     if args.jobs < 1:
         raise ValueError("jobs must be positive")
@@ -88,8 +103,16 @@ def main():
     if port.get("lockedCodecs"):
         from port_dependencies import verify
         codecs = verify(stove, port["lockedCodecs"])
-    out.mkdir(parents=True)
     work = out / "source"
+    if reuse:
+        # Export beside the old tree, then copy only files whose contents
+        # changed, so make rebuilds what the new recipe changes.
+        fresh = out / "source.new"
+        shutil.rmtree(fresh, ignore_errors=True)
+        work, final = fresh, work
+    else:
+        out.mkdir(parents=True)
+        final = None
     work.mkdir()
     # Export the pinned commit; never patch or reset a source cache.
     with tempfile.TemporaryFile() as archive:
@@ -101,8 +124,12 @@ def main():
     for patch in patches:
         with patch.open() as content:
             subprocess.run(["patch", "--batch", "--forward", "-p1"], cwd=work, stdin=content, check=True)
+    if final is not None:
+        subprocess.run(["rsync", "-rc", "--delete", f"{work}/", f"{final}/"], check=True)
+        shutil.rmtree(work)
+        work = final
     config = out / "sdl3-config"
-    config.mkdir()
+    config.mkdir(exist_ok=True)
     # SDL3::SDL3 is the OpenGPU module CLIENT archive, not a private static SDL.
     (config / "SDL3Config.cmake").write_text(
         'set(SDL3_FOUND TRUE)\n'
@@ -121,7 +148,7 @@ def main():
                f"-DCMAKE_PROJECT_INCLUDE={config}/repro.cmake",
                "-DCMAKE_BUILD_TYPE=Release", "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
                "-DFETCHCONTENT_UPDATES_DISCONNECTED=ON"] + [
-                   x.replace("@PORT_DIR@", str(manifest.parent)) for x in port["cmake"]]
+                   expand(x, manifest.parent) for x in port["cmake"]]
     command += [f"-DFETCHCONTENT_SOURCE_DIR_{name.upper()}={path}" for name, path in deps.items()]
     if codecs:
         command += [f"-DZLIB_ROOT={codecs}", f"-DPNG_PNG_INCLUDE_DIR={codecs}/include",
