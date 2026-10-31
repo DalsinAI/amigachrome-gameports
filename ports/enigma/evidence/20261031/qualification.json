@@ -25,5 +25,6 @@
     "curl": "555736-byte static archive, 197 members",
     "zlib": "71756-byte static archive, 16 members"
   },
-  "72mb_run": "loads XML, video, actor and floor models; fails at st_plaster.png with out-of-memory; not playable"
+  "72mb_run": "loads XML, video, actor and floor models; fails at st_plaster.png with out-of-memory; not playable",
+  "large_ram_run": "328 MiB registered Fast RAM, original model Lua restored; passes former failure point and reaches stone-model loading; menu/gameplay pending"
 }
