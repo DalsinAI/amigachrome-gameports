@@ -1,0 +1,3 @@
+Could not create SDL surface, error message: Couldn't open EnigmaTest:Enigma/data/gfx40/st_plaster.png: Out of memory
+terminate called after throwing an instance of 'ecl::XGeneric'
+  what():  Error: Tried to convert null surface.

@@ -1,0 +1,73 @@
+Enigma v1.3 (development version - v1.31 compatibility branch)
+systemFS = "PROGDIR:data"
+docPath = "PROGDIR:docs"
+prefPath = "PROGDIR:User/enigmarc.xml"
+Preferences: no LUA option "MouseSpeed"
+Preferences: no LUA option "FullScreen"
+Preferences: no LUA option "InGameMusic"
+Preferences: no LUA option "VideoMode"
+Preferences: no LUA option "Gamma"
+Preferences: no LUA option "SoundSet"
+Preferences: no LUA option "SoundVolume"
+Preferences: no LUA option "MusicVolume"
+Preferences: no LUA option "StereoSeparation"
+Preferences: no LUA option "RatingsAutoUpdate"
+Preferences: no LUA option "_MacUpdate1.00"
+userPath = "PROGDIR:User"
+userImagePath = "PROGDIR:User"
+resourceFS = "PROGDIR:User:PROGDIR:data"
+Startup: localization start
+l10nPath = "PROGDIR:data/locale"
+Startup: localization complete
+Startup: state start
+Startup: state complete
+Startup: object declarations start
+Startup: object declarations complete
+Startup: world start
+787 boot registered object
+Startup: world complete
+SDL Version: 2.32.10
+SDL_ttf Version: 2.24.0
+SDL_image Version: 2.8.12
+Found fullscreen mode: 960x720
+Found fullscreen mode: 800x600
+Found fullscreen mode: 640x480
+Found fullscreen mode: 320x240
+Set video tile set 40x40 Enigma 1.30.
+Opening in window mode, 800x600.
+VideoInit done.
+SDL_mixer Version: 2.8.2
+Redefining model 'ac_marble_black-sink0'
+Redefining model 'ac_marble_black-sink1'
+Redefining model 'ac_marble_black-sink2'
+Redefining model 'ac_marble_black-sink3'
+Redefining model 'ac_marble_black-sink4'
+Redefining model 'ac_marble_black-sink5'
+Redefining model 'ac_marble_black-sink6'
+Redefining model 'ac_marble_white-sink0'
+Redefining model 'ac_marble_white-sink1'
+Redefining model 'ac_marble_white-sink2'
+Redefining model 'ac_marble_white-sink3'
+Redefining model 'ac_marble_white-sink4'
+Redefining model 'ac_marble_white-sink5'
+Redefining model 'ac_marble_white-sink6'
+Redefining model 'ac_marble_glass-sink0'
+Redefining model 'ac_marble_glass-sink1'
+Redefining model 'ac_marble_glass-sink2'
+Redefining model 'ac_marble_glass-sink3'
+Redefining model 'ac_marble_glass-sink4'
+Redefining model 'ac_marble_glass-sink5'
+Redefining model 'ac_marble_glass-sink6'
+Redefining model 'ac_pearl_black'
+Redefining model 'ac_pearl_white'
+Redefining model 'ac_pearl_glass'
+Redefining model 'sb-jump1'
+Redefining model 'sb-jump2'
+Redefining model 'sb-jump3'
+Redefining model 'sb-jump4'
+Redefining model 'sb-jump1'
+Redefining model 'sb-jump2'
+Redefining model 'sb-jump3'
+Redefining model 'sb-jump4'
+Redefining model 'ac_bug'
+Redefining model 'ac_horse'

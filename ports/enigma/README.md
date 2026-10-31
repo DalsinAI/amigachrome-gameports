@@ -53,10 +53,11 @@ See OpenAmigaXML `oxp/SCHEMA.md` for the deliberately bounded XSD subset.
 
 Checks recorded on 31 October 2026: 72 parser fixtures plus API checks,
 96 mutation/schema checks, 28 adapter checks, and all 1,634 supplied Enigma XML
-files validate against the seven schemas. The isolated AROS native test run
-passed 96 schema and 28 adapter checks with the earlier Open3 build. These
-results do not qualify the new Open4 executable or game play. Test sources are
-in `tests/`; OXP evidence is committed in the companion OpenAmigaXML branch.
+files validate against the seven schemas. The isolated AROS native tests also pass with the new Open4 soft-float
+build and FPU disabled: 96 schema checks and 28 adapter checks, both exit 0.
+These results qualify the XML paths. The clean full executable renders its
+loading screen and loads actor models; menu/gameplay remain unqualified.
+Test sources are in `tests/`; native logs and build receipts are in `evidence/`.
 
 An earlier experimental executable reached SDL video/audio initialization and
 loaded state, object definitions and 787 objects, then failed network setup in

@@ -17,5 +17,13 @@
   ],
   "native_open4_adapter_checks": 28,
   "native_open4_adapter_failures": 0,
-  "native_open4_adapter_fpu": "disabled"
+  "native_open4_adapter_fpu": "disabled",
+  "game_runtime": "clean Open4 binary renders loading screen; model loading progresses; menu/gameplay unverified",
+  "sdk_dependency_audit": {
+    "SDL2": "115328-byte module stub archive, SDL2_stub.o and SDL2_gl.o",
+    "SDL2_ttf": "595608-byte archive, 23 members including FreeType implementation",
+    "curl": "555736-byte static archive, 197 members",
+    "zlib": "71756-byte static archive, 16 members"
+  },
+  "72mb_run": "loads XML, video, actor and floor models; fails at st_plaster.png with out-of-memory; not playable"
 }

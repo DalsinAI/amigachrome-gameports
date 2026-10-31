@@ -10,6 +10,7 @@ import os
 import subprocess
 import sys
 import tarfile
+import time
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -119,6 +120,7 @@ def main():
               'compiler_release': compiler['release'], 'compiler_archive_sha256': compiler['archive_sha256'],
               'dependencies': dependencies, 'patches': {p.name: digest(p) for p in patches},
               'configure_command': command, 'state': 'attempting', 'runtime': 'not tested'}
+    started = time.monotonic()
     try:
         with (out/'configure.log').open('w') as log:
             subprocess.run(command, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
@@ -132,6 +134,7 @@ def main():
                 raise RuntimeError('Unexpected Xerces reference in final link')
             report.update(state='compiled', executable_sha256=digest(binary), xerces_symbols=False)
     finally:
+        report['configure_build_seconds'] = round(time.monotonic() - started, 3)
         (out/'receipt.json').write_text(json.dumps(report, indent=2)+'\n')
     print(out/'receipt.json')
 
