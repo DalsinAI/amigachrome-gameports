@@ -98,7 +98,8 @@ done
 # Copy this recipe out of Cradle's checkout: Cradle resets it between jobs.
 rm -rf "$WORK/recipe.new"; mkdir -p "$WORK/recipe.new"
 git -C "$ROOT" archive HEAD | tar x -C "$WORK/recipe.new"
-rm -rf "$WORK/recipe"; mv "$WORK/recipe.new" "$WORK/recipe"
+# Unchanged files keep their times, so the incremental build stays small.
+mkdir -p "$WORK/recipe"; rsync -rc --delete --exclude /build "$WORK/recipe.new/" "$WORK/recipe/"; rm -rf "$WORK/recipe.new"
 echo "$KEY" > "$WORK/building.key"
 cat > "$WORK/run.sh" <<RUN
 set -euo pipefail
