@@ -74,6 +74,7 @@ if [[ ! -d $WORK/sources/openloco/.git ]]; then
     cp -a build/game-ports/sources/openloco $WORK/sources/openloco
     cp -a build/game-ports/dependencies $WORK/sources/dependencies
 fi
+rm -rf build/game-ports/sources/openloco build/game-ports/dependencies
 mkdir -p build/game-ports/sources
 ln -sfn $WORK/sources/openloco build/game-ports/sources/openloco
 ln -sfn $WORK/sources/dependencies build/game-ports/dependencies
