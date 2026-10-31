@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "policy": "Bundle data when redistribution is clearly licensed. Otherwise fetch public/freeware/shareware/demo data from the recorded upstream/public source and stage it locally without committing it to source control.",
+  "datasets": {
+    "homm2-demo": {
+      "games": [
+        "fheroes2"
+      ],
+      "filename": "h2demo.zip",
+      "urls": [
+        "https://archive.org/download/HeroesofMightandMagicIITheSuccessionWars_1020/h2demo.zip"
+      ],
+      "sha256": "12048c8b03875c81e69534a3813aaf6340975e77b762dc1b79a4ff5514240e3c",
+      "availability": "publisher-demo-public-download",
+      "packaging": "fetch-on-demand",
+      "notes": "The Heroes of Might and Magic II demo that fheroes2's own CMake GET_HOMM2_DEMO option and script/demo/download_demo_version.sh fetch; URL and SHA-256 are upstream's (fheroes2 c0e8128). Stage DATA/ and MAPS/ with stage_data.py. Never commit or bundle it. A player's own full Heroes II DATA/MAPS (and optional ANIM/MUSIC) replace it."
+    }
+  }
+}
