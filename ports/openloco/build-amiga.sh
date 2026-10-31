@@ -56,8 +56,9 @@ install_lab() {
 alive() { [[ -f "$WORK/build.pid" ]] && kill -0 "$(cat "$WORK/build.pid")" 2>/dev/null; }
 if alive; then
     echo "BUILDING recipe $(cat "$WORK/building.key" 2>/dev/null) since $(stat -c %y "$WORK/build.pid")"
-    grep -E '^\[ *[0-9]+%\]' "$WORK/build.log" | tail -1 || true
-    tail -n 15 "$WORK/build.log"
+    for f in "$WORK/build.log" "$WORK/tree/configure.log" "$WORK/tree/build.log"; do
+        [[ -f $f ]] && { echo "-- $f"; tail -n 4 "$f"; }
+    done
     exit 0
 fi
 BIN=$WORK/tree/cmake/OpenLoco
