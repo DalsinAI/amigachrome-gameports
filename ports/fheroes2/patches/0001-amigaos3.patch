@@ -33,10 +33,26 @@ index 8e17899..3240c18 100644
      return gen;
  }
 diff --git a/src/engine/screen.cpp b/src/engine/screen.cpp
-index ae9c06a..a80a0f9 100644
+index ae9c06a..920c71d 100644
 --- a/src/engine/screen.cpp
 +++ b/src/engine/screen.cpp
-@@ -1285,6 +1285,13 @@ namespace
+@@ -385,6 +385,15 @@ namespace
+                             _palette32Bit[i] = currentRGBPalette[colorIds[i]].getBGRX();
+                         }
+                     }
++#if defined( __AMIGA__ )
++                    // A 32-bit surface with no masks is XRGB8888. On a little-endian machine that is BGRX32; on the
++                    // big-endian Amiga it matched neither branch, the palette stayed zero and the screen black.
++                    else if ( surface->format->format == SDL_PIXELFORMAT_XRGB8888 ) {
++                        for ( size_t i = 0; i < fheroes2::paletteSize; ++i ) {
++                            _palette32Bit[i] = currentRGBPalette[colorIds[i]].getBGRX();
++                        }
++                    }
++#endif
+                 }
+             }
+             else if ( surface->format->BitsPerPixel == 8 ) {
+@@ -1285,6 +1294,13 @@ namespace
              _createPalette();
  
              _renderer = SDL_CreateRenderer( _window, _driverIndex, SDL_RENDERER_ACCELERATED );
