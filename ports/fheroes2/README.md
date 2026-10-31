@@ -97,6 +97,9 @@ python3 ports/fheroes2/stage_data.py --package /work/fheroes2-out/fheroes2 --gam
   the thread's stack address instead.
 - `screen.cpp`: without opengpu.library SDL has no accelerated renderer; the
   game falls back to SDL's software renderer instead of dropping its window.
+  A 32-bit surface with no masks is XRGB8888, which on big-endian AmigaOS
+  matched none of the game's palette formats: the palette stayed zero and the
+  screen black. It now maps XRGB8888 like the little-endian BGRX32.
 
 The port's own files:
 
