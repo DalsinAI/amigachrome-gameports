@@ -6,6 +6,8 @@
 # the port pins its own SDK (build_sdk.sh). OUT gets the package ready for a
 # lab: the game, OpenRTG's SDL2 modules and, with FHEROES2_DEMO=1 (default),
 # the Heroes II demo data, which stays in the lab and is never published.
+# Cradle runs it with sh; the port's scripts need bash.
+[ -n "${BASH_VERSION:-}" ] || exec bash "$0" "$@"
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../.." && pwd)
