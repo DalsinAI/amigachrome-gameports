@@ -61,3 +61,10 @@ Build separate HUNK probes with the verified open3 stove. In an isolated
 guest set `Stack 4194304`, then run `widget-content` and `s5-state`. A cross-link
 alone is not a target test. Keep retail files, decoded state and raw local
 logs outside commits and public artifacts.
+
+## Lab result (31 October)
+
+On the 68040 lab (Instance-32 copy) the converter loads the retail Boulder
+Breakers scenario, saves it (763,801 bytes, 148,484 tile elements), autosaves,
+and loads that save back from the title screen. The earlier "save hangs at
+Please wait" was not in S5: it was the SDL3 cursor loop fixed by patch 0018.

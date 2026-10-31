@@ -169,3 +169,15 @@ dependency until the tested shared OpenAL-to-OpenAHI layer supplies it.
 
 - [OpenAHI implementation and documented gaps](https://github.com/DalsinAI/amigachrome/blob/476d01e07c373b12c7d0d2d67c932b6d75e9b3ec/vendor/amigachrome-guest/devices/ahi.device/README.md)
 - [Native ACAHI host-mixing modes](https://github.com/DalsinAI/amigachrome/blob/476d01e07c373b12c7d0d2d67c932b6d75e9b3ec/vendor/amigachrome-guest/devices/acaudio.audio/README.md)
+
+## Result (31 October)
+
+Done as recommended: OpenRTG's OpenAL.module (OpenAL 1.1 over AHI, the Team's
+own code) is the backend. `source.json` pins OpenRTG
+`8b6d09ff1023edc3fb1e62e3db0490ec385820b2`; `build-amiga.sh` builds the module
+and its link stub with the GCC 16 stove and links OpenLoco with
+`-DOPENLOCO_DISABLE_AUDIO=OFF`. OpenRTG's OpenAL has no EFX, so patch 0017
+supplies the EFX names and reverb stays off. In the lab OpenLoco reports
+"OpenAL 1.1 OpenAL.module 2, Vendor: AmigaChrome Team, Renderer: AHI Voices,
+initialized" with 992 mono and 32 stereo sources. Labs are muted: listening
+on an unmuted instance is still to do.

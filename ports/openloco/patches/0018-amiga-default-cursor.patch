@@ -1,0 +1,22 @@
+diff --git a/src/OpenLoco/src/Ui.cpp b/src/OpenLoco/src/Ui.cpp
+index 51d2c4f..9089749 100644
+--- a/src/OpenLoco/src/Ui.cpp
++++ b/src/OpenLoco/src/Ui.cpp
+@@ -325,7 +325,17 @@ namespace OpenLoco::Ui
+ 
+     static void loadSystemCursor(CursorId id, SDL_SystemCursor sdlId)
+     {
++#ifdef __amigaos__
++        // SDL3.modules before OpenRTG 164dd9b link a system cursor into SDL's
++        // cursor list twice, and SDL_SetCursor then loops forever when it
++        // goes back to it (the end of every save). The Amiga has one system
++        // pointer, so use SDL's default cursor: SDL never looks it up in that
++        // list, and SDL_DestroyCursor leaves it alone.
++        (void)sdlId;
++        auto* sdlCursor = SDL_GetDefaultCursor();
++#else
+         auto* sdlCursor = SDL_CreateSystemCursor(sdlId);
++#endif
+         if (sdlCursor == nullptr)
+         {
+             Logging::error("SDL_CreateSystemCursor() failed. CursorId: {}, SDL_SystemCursor: {}, Error: {}", enumValue(id), (int)sdlId, SDL_GetError());
