@@ -417,6 +417,20 @@
      };
  } // namespace enigma
  #endif
+--- a/src/SoundEngine.cc
++++ b/src/SoundEngine.cc
+@@ -52,7 +52,10 @@
+     sound_enabled = withSound;
+     music_enabled = withMusic;
+     if (!sound_engine.get()) {
+-        sound_engine.reset(new SoundEngine_SDL);
++        if (!withMusic && !withSound)
++            sound_engine.reset(new SoundEngine_Null);
++        else
++            sound_engine.reset(new SoundEngine_SDL);
+     }
+ 
+     if (sound_engine->init()) {
 --- a/src/StateManager.cc
 +++ b/src/StateManager.cc
 @@ -34,14 +34,9 @@
@@ -546,7 +560,7 @@
  
  namespace enigma
  {
---- a/src/amiga_runtime.c
+--- /dev/null
 +++ b/src/amiga_runtime.c
 @@ -0,0 +1,39 @@
 +/* Native task-owned sockets and 68040 FPU startup. GPL-2.0-or-later.
@@ -849,7 +863,12 @@
      if (ap.dumpinfo) {
          DumpObjectInfo();
          exit(0);
-@@ -427,13 +432,13 @@
+@@ -423,23 +428,25 @@
+ 
+     // ----- Initialize sound subsystem
+     sound::Init(!ap.nomusic, !ap.nosound);
++    Log << "Startup: sound complete\n" << std::flush;
+     lua::CheckedDoFile (L, app.systemFS, "sound-defaults.lua");
      lua::DoSubfolderFile (L, "soundsets", "soundset.lua");
  
      // ----- Initialize TCP network layer
@@ -865,7 +884,30 @@
          fprintf (stderr, "An error occurred while initializing ENet.\n");
          exit (1);
      }
-@@ -513,6 +518,19 @@
+ 
+     // ----- Load models
+     display::Init(ap.show_fps);
++    Log << "Startup: models complete\n" << std::flush;
+ 
+     // ----- Load level packs -- needs state
+     lev::Index::initGroups();
+@@ -462,6 +469,7 @@
+     }
+     lev::Index::deleteEmptyGroups();
+     lev::Proxy::countLevels();
++    Log << "Startup: levels complete\n" << std::flush;
+ 
+     // ----- Initialize sound tables -- needs sound, oxyd, video (error messages!)
+     sound::InitSoundSets();
+@@ -489,6 +497,7 @@
+ 
+     // initialize score -- needs random init
+     lev::ScoreManager::instance();
++    Log << "Startup: score complete\n" << std::flush;
+ }
+ 
+ std::string Application::getVersionInfo() {
+@@ -513,6 +522,19 @@
      std::string progName;         // filename part of args[0]
      std::string systemPath = SYSTEM_DATA_DIR; // substituted by configure.ac
      bool haveHome = (getenv("HOME") != nullptr);
@@ -885,7 +927,7 @@
  
  
  #ifdef __MINGW32__
-@@ -611,8 +629,8 @@
+@@ -611,8 +633,8 @@
      }
  }
  
@@ -896,7 +938,7 @@
      // init XML
      try {
          // Initialize to en_US - we don't know the user prefs yet.
-@@ -644,8 +662,8 @@
+@@ -644,8 +666,8 @@
          DOMConfiguration *config = domParser->getDomConfig();
  
          config->setParameter(XMLUni::fgDOMNamespaces, true);
@@ -907,7 +949,7 @@
          config->setParameter(XMLUni::fgDOMValidate, true);
          config->setParameter(XMLUni::fgDOMDatatypeNormalization, true);
          config->setParameter(XMLUni::fgDOMErrorHandler, domParserErrorHandler);
-@@ -654,7 +672,7 @@
+@@ -654,7 +676,7 @@
          //the same document, which causes it to be deleted twice. Adopting documents
          //prevents Xerces from releasing them, as they will be released by
          //Enigma in the destructors anyway.
@@ -916,7 +958,7 @@
  
          domSer = domImplementationLS->createLSSerializer();
          config = domSer->getDomConfig();
-@@ -852,6 +870,13 @@
+@@ -852,6 +874,13 @@
          }
      }
  
@@ -930,7 +972,7 @@
      l10nFS = new GameFS();
      l10nFS->append_dir(l10nPath);
      nls::theDictionaryManager.reset(new tinygettext::DictionaryManager(std::make_unique<nls::TinyGetTextFileSystem>(), "UTF-8"));
-@@ -939,14 +964,19 @@
+@@ -939,14 +968,19 @@
      app.errorInit = false;
      VideoShutdown();
      sound::Shutdown();
@@ -1010,7 +1052,7 @@
          void initUserDatapaths();
          void updateMac1_00();
          void createPreviews();
---- a/src/oxp_enigma.cc
+--- /dev/null
 +++ b/src/oxp_enigma.cc
 @@ -0,0 +1,612 @@
 +/* Enigma/OXP adapter. MIT, Copyright (c) 2026 AmigaChrome Team. */
@@ -1625,7 +1667,7 @@
 +  return true;
 +}
 +} // namespace oxpcompat
---- a/src/oxp_enigma.hh
+--- /dev/null
 +++ b/src/oxp_enigma.hh
 @@ -0,0 +1,377 @@
 +/* Enigma's DOM compatibility adapter over the existing OXP parser.

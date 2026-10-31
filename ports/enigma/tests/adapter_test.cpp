@@ -1,4 +1,6 @@
-/* Tests Enigma-facing behaviour, not only parser calls. MIT, Team 2026. */
+/* Tests Enigma-facing behaviour, not only parser calls.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 AmigaChrome Team */
 #include "oxp_enigma.hh"
 #include <cstdio>
 #include <fstream>

@@ -1,0 +1,13 @@
+{
+  "state": "incremental compiled",
+  "base_receipt": "open4-build.json",
+  "changed_sources": [
+    "src/main.cc",
+    "src/SoundEngine.cc"
+  ],
+  "executable_bytes": 7915164,
+  "executable_sha256": "4032c2ec9108eda4f2b13c22698faf9988ffa3c0a8a130571d35571fa86e1868",
+  "patch_sha256": "9197bb1e9b31876c87b6bdd4842725f22a56a2d0262ebe5c119cc18f0228979f",
+  "xerces_symbols": false,
+  "runtime": "earlier clean executable rendering loading screen; this incremental binary not run"
+}

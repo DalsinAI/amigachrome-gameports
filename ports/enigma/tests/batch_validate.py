@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 AmigaChrome Team
 from pathlib import Path
 import subprocess,json,xml.etree.ElementTree as E,sys
 source=Path(sys.argv[1]);binary=Path(sys.argv[2]);out=Path(sys.argv[3]);out.mkdir(exist_ok=True)
