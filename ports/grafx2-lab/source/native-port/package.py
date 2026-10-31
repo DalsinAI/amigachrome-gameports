@@ -18,7 +18,7 @@ repo=base.parent.parent
 work=Path(os.environ.get('GRAFX2_WORK',base/'.work'))
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--icon',type=Path,required=True)
-parser.add_argument('--output',type=Path,default=repo/'.build/dist/GrafX2-2.9-OpenUp-rc1.zip')
+parser.add_argument('--output',type=Path,default=repo/'.build/dist/GrafX2-2.9-OpenUp-rc2.zip')
 args=parser.parse_args()
 binary=work/'build/GrafX2'
 if binary.read_bytes()[:4]!=b'\0\0\x03\xf3':raise SystemExit('Expected a native Amiga HUNK executable')
@@ -30,7 +30,7 @@ if struct.unpack_from('>I',icon,74)[0]<524288:
 args.output.parent.mkdir(parents=True,exist_ok=True)
 if args.output.exists():raise SystemExit('Output already exists; choose another name')
 with tempfile.TemporaryDirectory(prefix='grafx2-package-') as tmp:
-    root=Path(tmp)/'GrafX2-2.9-OpenUp-rc1'
+    root=Path(tmp)/'GrafX2-2.9-OpenUp-rc2'
     root.mkdir()
     shutil.copy2(binary,root/'GrafX2')
     shutil.copy2(args.icon,root/'GrafX2.info')

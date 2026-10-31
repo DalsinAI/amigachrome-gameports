@@ -1,6 +1,6 @@
 # GrafX2 for OpenUp
 
-Native 68040 + FPU port of GrafX2 2.9, built with GCC open3.
+Native 68040 soft-float port of GrafX2 2.9, built with GCC open3.
 Upstream pin: 678a0f54ea7f3eeebc3fa4135213ea63f45a28bd.
 Target: AmigaOS 3.2.3 / AC090. Runtime testing uses FS-UAE / AROS m68k and AmigaOS 3.2.3 / AGA.
 
@@ -17,9 +17,10 @@ Target: AmigaOS 3.2.3 / AC090. Runtime testing uses FS-UAE / AROS m68k and Amiga
 OpenCompress is an archiver application, not a shared zlib replacement. OpenAudio,
 OpenTLS and OpenPrint have no corresponding feature in this paint-port slice.
 
-The OpenMulticore test exercised its CPU0 range path. Extra-core execution and
-host GPU acceleration still require AC090 testing; the package does not claim
-those performance results. AmigaOS 3.2.3 AGA and Workbench startup are covered by the RC1 validation record.
+On AC090 (a lab copy of Instance-32) the range conversion ran on the cores
+board's extra cores and OpenGPU reported its hardware backend; see the RC2
+validation record. AmigaOS 3.2.3 AGA and Workbench startup are covered by the
+RC1 validation record.
 
 PNG exports preserve RGB and binary transparency. Palette-index ordering, private
 PNG metadata, general partial-alpha import, layers and animation are not promised.

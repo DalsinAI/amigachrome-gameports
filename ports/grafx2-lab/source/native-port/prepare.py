@@ -32,6 +32,6 @@ else:
  import shutil
  shutil.copyfile(src/'3rdparty/6502/sources/6502.c',src/'src/6502.c')
  shutil.copyfile(src/'3rdparty/6502/API/emulation/CPU/6502.h',src/'src/6502.h')
- (src/'src/version.c').write_text('const char SVN_revision[]="native-amiga-openup-rc1";\n')
+ (src/'src/version.c').write_text('const char SVN_revision[]="native-amiga-openup-rc2";\n')
  stamp.write_text(digest)
 print(work)
