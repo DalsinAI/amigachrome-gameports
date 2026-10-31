@@ -133,5 +133,3 @@ rm -f "$WORK/done.key"
 setsid nohup nice -n 19 bash -c "bash '$WORK/run.sh' || echo $KEY > '$WORK/failed.key'" > "$WORK/build.log" 2>&1 < /dev/null &
 echo $! > "$WORK/build.pid"
 echo "STARTED recipe $KEY (pid $(cat "$WORK/build.pid"))"
-echo "== lab layout"; ls -la "$HOME/AmigaChrome-dev/labs/t3-openloco" 2>&1 | head -30
-ls -la "$GP/build" 2>&1 | grep -E 'team1|openloco' | head
