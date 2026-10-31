@@ -63,9 +63,10 @@ what the game has given the chipset and redraw it, upscaled, on an RTG screen.
    Pictures the CPU writes to the screen (title, score panel) are upscaled
    in colour from the screen. Dithered ground keeps its pixels (a texture
    test per pixel); outlines are smoothed. The game's own memory is never
-   touched, so play is unchanged. Checked by taking each 4x4 block back
-   to one pixel: 99.2% of an in-game frame matches the original exactly,
-   the rest are smoothed edges.
+   touched, so play is unchanged. Checked against the original frame:
+   in 99.2% of an in-game frame's pixels the 4x4 block is mostly the
+   original colour; the rest are smoothed edges and a few specks where a
+   cut-out mask and its bob were smoothed apart (to tidy next).
 3. **Further graphics upgrades** (after 2 works): a replacement table keyed
    by a hash of each sprite or tile as it is blitted, so redrawn high
    resolution art can stand in for the original pieces one by one, and a
